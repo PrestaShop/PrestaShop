@@ -203,6 +203,14 @@ module.exports = {
         }, 'product/product');
       }
 
+      if (productData.hasOwnProperty('tax_rule')) {
+        test('should select the "Tax rule" to "' + productData.tax_rule + '"', () => {
+          return promise
+            .then(() => client.scrollWaitForExistAndClick(AddProductPage.tax_rule))
+            .then(() => client.waitForVisibleAndClick(AddProductPage.tax_option.replace('%V', productData.tax_rule)));
+        });
+      }
+
       scenario('Save the created product', client => {
         test('should check then close symfony toolbar', () => client.waitForSymfonyToolbar(AddProductPage, 1000));
         test('should switch the product online and verify the appearance of the green validation', () => {
