@@ -57,12 +57,10 @@
               {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig' %}
             </div>
             <div class="card-footer">
-              <a class="btn btn-outline-primary" href="{{ themeCatalogUrl }}" target="_blank">
-                {{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}
-              </a>
               <button class="btn btn-primary float-right">
                 {{ 'Save'|trans({}, 'Admin.Actions') }}
               </button>
+              <div class="clearfix">&nbsp;</div>
             </div>
           </div>
         {{ form_rest(shopLogosForm) }}
@@ -125,6 +123,24 @@
                 {% endembed %}
               {% endfor %}
             {% endif %}
+
+            {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_catalog_card.html.twig' %}
+              {% block image %}
+                <img src="{{ asset('themes/new-theme/scss/img/pages/themes/icon_themes.png') }}" alt="{{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}">
+              {% endblock %}
+
+              {% block description %}
+                {#todo: new translation#}
+                {{ 'Explore more than %number_of_themes% themes'|trans({'%number_of_themes%': 3900}, 'Admin.Design.Feature') }}
+              {% endblock %}
+
+              {% block button_container %}
+                <a class="btn btn-primary" href="{{ themeCatalogUrl }}" target="_blank">
+                  {{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}
+                </a>
+              {% endblock %}
+
+            {% endembed %}
           </div>
           <div class="card-footer"></div>
         </div>

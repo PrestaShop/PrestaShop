@@ -23,30 +23,7 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-{% extends '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card_container.html.twig' %}
-
-{% block content %}
-  <div class="card theme-card">
-    <div class="active-card-overlay {{ isActive ? 'active' : '' }}"></div>
-
-    {% block image %}
-    {% endblock %}
-
-    <div class="actions-container {{ isActive ? 'active' : '' }}">
-      {% block button_container %}
-      {% endblock %}
-    </div>
-  </div>
-
-  <div class="text-center theme-card-description">
-    <b class="theme-name">
-      {{ themeName }}
-    </b>
-    <span class="theme-version">
-      {{ 'version'|trans({}, 'Admin.Global') }} {{ themeVersion }}
-    </span>
-    <div class="theme-author">
-      {{ 'Designed by %s'|trans({'%s': themeAuthor}, 'Admin.Design.Feature') }}
-    </div>
-  </div>
-{% endblock %}
+<div class="col-lg-3 col-md-4 col-sm-6 theme-card-container">
+  {% block content %}
+  {% endblock %}
+</div>

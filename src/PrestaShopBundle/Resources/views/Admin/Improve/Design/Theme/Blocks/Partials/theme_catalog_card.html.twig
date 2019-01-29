@@ -26,27 +26,22 @@
 {% extends '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card_container.html.twig' %}
 
 {% block content %}
-  <div class="card theme-card">
-    <div class="active-card-overlay {{ isActive ? 'active' : '' }}"></div>
+  <div class="card theme-card theme-catalog-card">
 
-    {% block image %}
-    {% endblock %}
+    <div class="text-center">
+      {% block image %}
+      {% endblock %}
+    </div>
 
-    <div class="actions-container {{ isActive ? 'active' : '' }}">
+    <div class="text-center">
+      {% block description %}
+      {% endblock %}
+    </div>
+
+    <div class="text-center">
       {% block button_container %}
       {% endblock %}
     </div>
   </div>
-
-  <div class="text-center theme-card-description">
-    <b class="theme-name">
-      {{ themeName }}
-    </b>
-    <span class="theme-version">
-      {{ 'version'|trans({}, 'Admin.Global') }} {{ themeVersion }}
-    </span>
-    <div class="theme-author">
-      {{ 'Designed by %s'|trans({'%s': themeAuthor}, 'Admin.Design.Feature') }}
-    </div>
-  </div>
 {% endblock %}
+

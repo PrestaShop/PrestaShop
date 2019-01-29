@@ -1,0 +1,70 @@
+.logo-configuration-card-body {
+  padding: inherit;
+
+  .logo-card {
+    border-radius: 0;
+    border: 0;
+
+    .logo-card-title {
+      font-family: OpenSans;
+      font-size: 1rem;
+      font-weight: 600;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: -0.01875rem;
+      text-align: center;
+      color: #4a4a4a;
+    }
+
+    .nav-pills {
+      .nav-item {
+        padding-right: 0.875rem;
+      }
+
+      border-top: 0;
+      border-bottom: 0;
+
+      .nav-link {
+        &.active {
+          background-color: inherit;
+        }
+
+        height: 1.375rem;
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    .tab-content {
+      padding: 0;
+    }
+
+    .logo-card-description {
+      &.description-in-tab {
+        padding-top: 1.0625rem;
+      }
+
+      padding-top: 1.25rem;
+      font-family: OpenSans;
+      font-size: 0.75rem;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: -0.0125rem;
+      color: #6c868e;
+    }
+
+    .logo-image {
+      height: 6.625rem;
+      padding-top: 2rem;
+      padding-bottom: 1.6875rem;
+    }
+  }
+
+  .logo-card:not(:last-child) {
+    border-right: 0.0625rem solid #dedede;
+  }
+}
