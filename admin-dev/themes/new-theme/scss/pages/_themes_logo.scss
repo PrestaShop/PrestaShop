@@ -3,6 +3,38 @@
     width: 18.75rem;
   }
 
+  .btn-tertiary {
+    border-radius: 2px;
+    background-color: #6c868e;
+    font-family: OpenSans;
+    font-size: 14px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.2px;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  .btn-tertiary-outline {
+    font-family: OpenSans;
+    font-size: 14px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.2px;
+    text-align: center;
+    color: #363a41;
+    border: 1px solid #6C858C;
+    background-color: transparent;
+  }
+
+  .btn-tertiary:hover {
+    background-color: #363a41;
+  }
+
   @import "partials/theme_logo_configuration";
   @import "partials/theme_logo_theme_card";
 

@@ -1,13 +1,34 @@
 {% block layouts_configuration %}
   <div class="col-12 layout-configuration">
     <div class="inner-content">
-      <div class="d-inline-block layout-logo">
-        <img src="{{ asset('themes/new-theme/scss/img/pages/themes/icon_layouts.png') }}" alt="{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}">
+      <div class="float-left">
+        <div class="d-inline-block layout-logo">
+          <img src="{{ asset('themes/new-theme/scss/img/pages/themes/icon_layouts.png') }}" alt="{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}">
+        </div>
+        <div class="d-inline-block">
+          <span class="title">{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}</span>
+          <p class="mb-0 description">{{ 'Each page can use a different layout, choose it among the layouts bundled in your theme.'|trans({}, 'Admin.Design.Feature') }}</p>
+        </div>
       </div>
-      <div class="d-inline-block">
-        <span class="title">{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}</span>
-        <p class="mb-0 description">{{ 'Each page can use a different layout, choose it among the layouts bundled in your theme.'|trans({}, 'Admin.Design.Feature') }}</p>
+      <div class="float-right">
+        <a href="{{ path('admin_theme_customize_layouts') }}"
+           class="btn btn-tertiary"
+        >
+          {{ 'Choose layouts'|trans({}, 'Admin.Design.Feature') }}
+        </a>
+
+        {% if isDevModeOn %}
+          <button class="btn btn-tertiary-outline js-reset-theme-layouts-btn"
+                  type="button"
+                  data-submit-url="{{ path('admin_themes_reset_layouts', {'themeName': currentlyUsedTheme.name}) }}"
+                  data-csrf-token="{{ csrf_token('reset-theme-layouts') }}"
+          >
+            <i class="material-icons">settings_backup_restore</i>
+            {{ 'Reset to defaults'|trans({}, 'Admin.Design.Feature') }}
+          </button>
+        {% endif %}
       </div>
+      <div class="clearfix"></div>
     </div>
   </div>
 {% endblock %}
