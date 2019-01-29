@@ -272,44 +272,40 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function editRootAction($categoryId, Request $request)
     {
-        /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing((int) $categoryId));
+        try {
+            /** @var EditableCategory $editableCategory */
+            $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing((int) $categoryId));
 
-        if (!$editableCategory->isRootCategory()) {
-            return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId]);
+            if (!$editableCategory->isRootCategory()) {
+                return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId]);
+            }
+        } catch (CategoryNotFoundException $e) {
+            $this->addFlash(
+                'success',
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_category_listing');
         }
 
-        $rootCategoryForm = $this->createForm(RootCategoryType::class, [
-            'name' => $editableCategory->getName(),
-            'active' => $editableCategory->isActive(),
-            'description' => $editableCategory->getDescription(),
-            'meta_title' => $editableCategory->getMetaTitle(),
-            'meta_description' => $editableCategory->getMetaDescription(),
-            'meta_keyword' => $editableCategory->getMetaKeywords(),
-            'link_rewrite' => $editableCategory->getLinkRewrite(),
-            'group_association' => $editableCategory->getGroupAssociationIds(),
-            'shop_association' => $editableCategory->getShopAssociationIds(),
-        ]);
-        $rootCategoryForm->handleRequest($request);
+        $rootCategoryFormBuilder =
+            $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
+        $rootCategoryFormHandler =
+            $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
 
-        if ($rootCategoryForm->isSubmitted()) {
-            $data = $rootCategoryForm->getData();
+        try {
+            $rootCategoryForm = $rootCategoryFormBuilder->getForm();
+            $rootCategoryForm->handleRequest($request);
 
-            try {
-                $command = new EditRootCategoryCommand((int) $categoryId);
+            $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
 
-                $this->populateCommandWithFormData($command, $data);
-
-                $this->getCommandBus()->handle($command);
-
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_edit_root', [
-                    'categoryId' => $categoryId->getValue(),
-                ]);
-            } catch (CategoryException $e) {
-                $this->addFlash('error', $this->handleEditException($e));
+                return $this->redirectToRoute('admin_category_listing');
             }
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleEditException($e));
         }
 
         /** @var DefaultGroups $defaultGroups */
