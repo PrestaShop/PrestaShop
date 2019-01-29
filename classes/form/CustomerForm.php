@@ -127,6 +127,13 @@ class CustomerFormCore extends AbstractForm
             }
         }
 
+        $passwordField = $this->getField('password');
+        if (!Validate::isPasswd($passwordField->getValue())) {
+            $passwordField->addError($this->translator->trans(
+                'The password is not in a valid format.', array(), 'Shop.Notifications.Error'
+            ));
+        }
+        
         $this->validateFieldsLengths();
         $this->validateByModules();
 
