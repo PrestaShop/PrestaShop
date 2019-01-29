@@ -668,13 +668,10 @@ class CategoryController extends FrameworkBundleAdminController
     private function getErrorMessages()
     {
         return [
-            CannotDeleteImageException::class =>
-                $this->trans('Unable to delete associated images.', 'Admin.Notifications.Error'),
-            CategoryNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CannotDeleteImageException::class => $this->trans('Unable to delete associated images.', 'Admin.Notifications.Error'),
+            CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             CategoryConstraintException::class => [
-                CategoryConstraintException::EMPTY_BULK_DELETE_DATA =>
-                    $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error'),
+                CategoryConstraintException::EMPTY_BULK_DELETE_DATA => $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error'),
                 CategoryConstraintException::TOO_MANY_MENU_THUMBNAILS => sprintf(
                     '%s %s',
                     $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
