@@ -34,9 +34,15 @@
   <div class="card-block row">
     <div class="card-text">
       <div class="form-group row">
-        {{ ps.label_with_help(('Name'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
+        <label class="form-control-label">
+          <span class="text-danger">*</span>
+          {{ 'Name'|trans({}, 'Admin.Global') }}
+        </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.name) }}
+          <small class="form-text">
+            {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+          </small>
         </div>
       </div>
 
@@ -66,33 +72,52 @@
 
       {% if categoryForm.description is defined %}
       <div class="form-group row">
-        {{ ps.label_with_help(('Description'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
+        <label class="form-control-label">
+          {{ 'Description'|trans({}, 'Admin.Global') }}
+        </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.description) }}
+          <small class="form-text">
+            {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+          </small>
         </div>
       </div>
       {% endif %}
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Category Cover Image'|trans), ('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.'|trans({}, 'Admin.Catalog.Help'))) }}
+        <label class="form-control-label">
+          {{ 'Category Cover Image'|trans({}, 'Admin.Catalog.Feature') }}
+        </label>
         <div class="col-sm">
           {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig' %}
 
           {{ form_widget(categoryForm.cover_image) }}
+
+          <small class="form-text">
+            {{ 'This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.'|trans({}, 'Admin.Catalog.Help') }}
+          </small>
         </div>
       </div>
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Category thumbnail'|trans), ('Displays a small image in the parent category\'s page, if the theme allows it.'|trans({}, 'Admin.Catalog.Help'))) }}
+        <label class="form-control-label">
+          {{ 'Category thumbnail'|trans({}, 'Admin.Catalog.Feature') }}
+        </label>
         <div class="col-sm">
           {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/thumbnail_image.html.twig' %}
 
           {{ form_widget(categoryForm.thumbnail_image) }}
+
+          <small class="form-text">
+            {{ 'Displays a small image in the parent category\'s page, if the theme allows it.'|trans({}, 'Admin.Catalog.Help') }}
+          </small>
         </div>
       </div>
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Menu thumbnails'|trans), ('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.'|trans({}, 'Admin.Catalog.Help'))) }}
+        <label class="form-control-label">
+          {{ 'Menu thumbnails'|trans({}, 'Admin.Catalog.Feature') }}
+        </label>
         <div class="col-sm">
           {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/menu_thumbnail_images.html.twig' %}
 
@@ -107,44 +132,72 @@
               </p>
             </div>
           {% endif %}
+          <small class="form-text">
+            {{ 'The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.'|trans({}, 'Admin.Catalog.Help') }}
+          </small>
         </div>
       </div>
 
       {{ renderhook('displayBackOfficeCategory') }}
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Meta title'|trans({}, 'Admin.Global')), ('Forbidden characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}') }}
+        <label class="form-control-label">
+          {{ 'Meta title'|trans({}, 'Admin.Global') }}
+        </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.meta_title) }}
+          <small class="form-text">{{ 'Forbidden characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}</small>
         </div>
       </div>
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Meta description'|trans({}, 'Admin.Global')), ('Forbidden characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}') }}
+        <label class="form-control-label">
+          {{ 'Meta description'|trans({}, 'Admin.Global') }}
+        </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.meta_description) }}
+          <small class="form-text">
+            {{ 'Forbidden characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+          </small>
         </div>
       </div>
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Meta keywords'|trans({}, 'Admin.Global')), ('To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help')) ~ ('Forbidden characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}') }}
+        <label class="form-control-label">
+          {{ 'Meta keywords'|trans({}, 'Admin.Global') }}
+        </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.meta_keyword) }}
+          <small class="form-text">
+            {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') ~ ('Forbidden characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}' }}
+          </small>
         </div>
       </div>
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Friendly URL'|trans({}, 'Admin.Global')), ('Only letters, numbers, underscore (_) and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help'))) }}
+        <label class="form-control-label">
+          <span class="text-danger">*</span>
+          {{ 'Friendly URL'|trans({}, 'Admin.Global') }}
+        </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.link_rewrite) }}
+          <small class="form-text">
+            {{ 'Only letters, numbers, underscore (_) and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help') }}
+          </small>
         </div>
       </div>
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Group access'|trans), ('Mark all of the customer groups which you would like to have access to this category.'|trans({}, 'Admin.Catalog.Help'))) }}
+        <label class="form-control-label">
+          {{ 'Group access'|trans({}, 'Admin.Global') }}
+        </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.group_association) }}
-          <div class="alert alert-info">
+          <small class="form-text">
+            {{ 'Mark all of the customer groups which you would like to have access to this category.'|trans({}, 'Admin.Catalog.Help') }}
+          </small>
+
+          <div class="alert alert-info mt-3">
             <p class="mb-1">
               <strong>{{ 'You now have three default customer groups.'|trans({}, 'Admin.Catalog.Help') }}</strong>
             </p>
