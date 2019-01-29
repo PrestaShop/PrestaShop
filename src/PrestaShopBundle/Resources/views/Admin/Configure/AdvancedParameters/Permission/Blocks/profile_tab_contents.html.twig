@@ -23,15 +23,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row">
-    <div class="col-2">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/profile_tabs.html.twig' %}
+<div id="profileTabContents">
+  {% for profile in configurable_permissions.profiles %}
+    <div class="tab-pane fade"
+         id="profileTabContent_{{ profile.id }}"
+         role="tabpanel"
+         aria-labelledby="profileListItem_{{ profile.id }}"
+    >
+      <div class="row">
+        {% if not profile.is_administrator %}
+            <div class="col"></div>
+            <div class="col"></div>
+        {% else %}
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                {{ 'Administrator permissions cannot be modified.'|trans({}, 'Admin.Advparameters.Notification') }}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
     </div>
-    <div class="col-10">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/profile_tab_contents.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+  {% endfor %}
+</div>

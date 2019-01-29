@@ -23,15 +23,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row">
-    <div class="col-2">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/profile_tabs.html.twig' %}
-    </div>
-    <div class="col-10">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/profile_tab_contents.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+<div class="list-group" id="profileTabs" role="tablist">
+  {% for profile in configurable_permissions.profiles %}
+    <a class="list-group-item list-group-item-action p-2"
+       id="profileListItem_{{ profile.id }}"
+       data-toggle="list"
+       href="#profileTabContent_{{ profile.id }}"
+       role="tab"
+       aria-controls="home"
+    >
+      {{ profile.name }}
+    </a>
+  {% endfor %}
+</div>

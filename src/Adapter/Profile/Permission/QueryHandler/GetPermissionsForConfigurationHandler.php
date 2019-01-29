@@ -47,9 +47,11 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     {
         $nonConfigurableTabs = $this->getNonConfigurableTabs();
 
-        $profiles = Profile::getProfiles(Context::getContext()->language->id);
+        $profiles = $this->getProfilesForPermissionsConfiguration();
 
-        return new ConfigurablePermissions($profiles);
+        return new ConfigurablePermissions(
+            $profiles
+        );
     }
 
     /**
@@ -60,5 +62,23 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         return [
             Tab::getIdFromClassName('AdminLogin'),
         ];
+    }
+
+    private function getProfilesForPermissionsConfiguration()
+    {
+        $legacyProfiles = Profile::getProfiles(Context::getContext()->language->id);
+        $profiles = [];
+
+        foreach ($legacyProfiles as $profile) {
+            $isAdministrator = (int) $profile['id_profile'] === _PS_ADMIN_PROFILE_;
+
+            $profiles[] = [
+                'id' => $profile['id_profile'],
+                'name' => $profile['name'],
+                'is_administrator' => $isAdministrator,
+            ];
+        }
+
+        return $profiles;
     }
 }
