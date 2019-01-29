@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotAdaptThemeToRTLLangu
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
@@ -503,6 +504,15 @@ class ThemeController extends AbstractAdminController
         $errorMessages = [
             CannotEnableThemeException::class => $e->getMessage(),
         ];
+
+        if ($e instanceof ThemeConstraintException &&
+            $e->getCode() === ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP
+        ) {
+            return $this->trans(
+                'You must select a shop from the above list if you wish to choose a theme.',
+                'Admin.Design.Help'
+            );
+        }
 
         if (isset($errorMessages[$type])) {
             return $errorMessages[$type];
