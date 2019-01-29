@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,27 +22,27 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult;
 
-{% block content %}
-  <div class="row">
-    <div class="col-2">
-      <div class="list-group" id="profileTabs" role="tablist">
-        {% for profile in configurable_permissions.profiles %}
-          <a class="list-group-item list-group-item-action p-2"
-             id="profileListItem_{{ profile.id_profile }}"
-             data-toggle="list"
-             href="#profileTabContent_{{ profile.id_profile }}"
-             role="tab"
-             aria-controls="home"
-          >
-            {{ profile.name }}
-          </a>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="col-10"></div>
-  </div>
-{% endblock %}
+class ConfigurablePermissions
+{
+    /**
+     * @var array
+     */
+    private $profiles;
+
+    public function __construct(array $profiles)
+    {
+        $this->profiles = $profiles;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProfiles()
+    {
+        return $this->profiles;
+    }
+}
