@@ -44,6 +44,14 @@
     <div class="row">
       <div class="col">
 
+        {% if not isSingleShopContext %}
+          <div class="alert alert-info">
+            <p class="alert-text">
+              {{ 'You must select a shop from the above list if you wish to choose a theme.'|trans({}, 'Admin.Design.Help') }}
+            </p>
+          </div>
+        {% endif %}
+
         {% if isInstalledRtlLanguage %}
           {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
         {% endif %}
