@@ -82,7 +82,6 @@ module.exports = {
     confirmation_shipping_price:'//*[@id="order-items"]//tr[2]/td[2]',
     confirmation_total_price:'//*[@id="order-items"]//tr[3]/td[2]',
     confirmation_sub_total_price:'//*[@id="order-items"]//tr[1]/td[2]',
-    country_list: '//*[@id="delivery-address"]//select[@name="id_country"]',
     basic_price_product: '//*[@id="order-items"]//div[%I]/div[contains(@class,"qty")]/div/div[1]',
     product_combination: '//*[@id="order-items"]//div[%I]/div[contains(@class,"details")]/span',
     quantity_product: '//*[@id="order-items"]//div[%I]/div[contains(@class,"qty")]//div[2]',
@@ -91,6 +90,8 @@ module.exports = {
     order_total_tax_excl_value: '//*[@id="order-items"]/div[@class="order-confirmation-table"]//tr[4]/td[2]',
     order_amount: '//*[@id="content-hook_payment_return"]//dd[1]',
     payment_method: '//*[@id="order-details"]//li[2]',
+    product_details_tab: '//*[@id="main"]//a[@href="#product-details"]',
+    product_available_quantity_span: '//*[@id="main"]//div[contains(@class,"product-quantities")]//span',
   },
   CustomerAccount: {
     order_history_button: '//*[@id="history-link"]',

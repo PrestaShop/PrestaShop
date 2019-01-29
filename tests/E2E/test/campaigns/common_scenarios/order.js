@@ -12,13 +12,15 @@ const {Customer} = require('../../selectors/BO/customers/customer');
 
 let dateFormat = require('dateformat');
 let data = require('../../datas/customer_and_address_data');
+let dateSystem = dateFormat(new Date(), 'mm/dd/yyyy');
 let promise = Promise.resolve();
 global.orderInformation = [];
 
 module.exports = {
-  createOrderFO: function (authentication = "connected", login = 'pub@prestashop.com', password = '123456789') {
+  createOrderFO: function (authentication = "connected", login = 'pub@prestashop.com', password = '123456789', checkAvailableQuantity = false) {
     scenario('Create order in the Front Office', client => {
       test('should set the language of shop to "English"', () => client.changeLanguage());
+      test('should get the first product name', () => client.getTextInVar(productPage.first_product, 'first_product_name'));
       test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product, 2000));
       test('should select product "size M" ', () => client.waitAndSelectByValue(productPage.first_product_size, '2'));
       test('should select product "color Black"', () => client.waitForExistAndClick(productPage.first_product_color));
@@ -27,6 +29,12 @@ module.exports = {
           .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4"))
           .then(() => client.getTextInVar(CheckoutOrderPage.product_current_price, "first_basic_price"));
       });
+      if (checkAvailableQuantity === true) {
+        test('should click on "product details" tab', () => client.waitForExistAndClick(CheckoutOrderPage.product_details_tab, 2000));
+        test('should get the product "available quantity"', async () => {
+          await client.getAttributeInVar(CheckoutOrderPage.product_available_quantity_span, 'data-stock', 'available_quantity')
+        });
+      }
       test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button, 3000));
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
       /**
@@ -156,7 +164,7 @@ module.exports = {
       test('should click on "Create the order"', () => client.waitForExistAndClick(CreateOrder.create_order_button));
     }, 'order');
   },
-  checkOrderInBO: function (clientType = "client") {
+  checkOrderInBO: function (clientType = "client", checkCustomer = false) {
     scenario('Check the created order information in the Back Office', client => {
       test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       test('should search for the created order by reference', () => client.waitAndSetValue(OrderPage.search_by_reference_input, global.tab['reference']));
@@ -165,18 +173,49 @@ module.exports = {
       test('should check that the customer name is "John DOE"', () => client.checkTextValue(OrderPage.customer_name, 'John DOE', 'contain'));
       if (clientType === "guest") {
         test('should check that the order has been placed by a guest', () => client.isExisting(OrderPage.transform_guest_customer_button));
+      } else if (checkCustomer === true) {
+        test('should check the customer email', () => client.checkTextValue(OrderPage.customer_email, 'pub@prestashop.com', 'contain'));
+        test('should check the "Account registered""' + dateSystem + '"', () => client.checkTextValue(OrderPage.customer_created, dateSystem, 'contain'));
+        test('should check the "valid orders placed" ', () => client.checkTextValue(OrderPage.valid_order_placed, global.tab['valid_orders']));
+        test('should check the "Total spent since registration" ', () => client.checkTextValue(OrderPage.total_registration, global.tab['total_amount'].split('€')[1], 'contain'));
       }
-      test('should status be equal to "Awaiting bank wire payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting bank wire payment'));
-      test('should check the shipping price', () => client.checkTextValue(OrderPage.shipping_cost, global.tab['shipping_price']));
+
+      //Check shipping and invoice address
+      test('should check the "Shipping Address"', () => client.checkTextValue(OrderPage.shipping_address, 'John DOE', 'contain'));
+      test('should click on "Invoice Address" subtab', () => client.waitForVisibleAndClick(OrderPage.tab_invoice, 1000));
+      test('should check "Invoice Address"', () => client.checkTextValue(OrderPage.invoice_address, 'John DOE', 'contain'));
+
+      //Check shipping information
+      test('should check the "Date" of shipping', () => client.checkTextValue(OrderPage.date_shipping, dateSystem, 'contain'));
+      test('should check shipping carrier', () => client.checkTextValue(OrderPage.shipping_method, global.tab["method"].split('\n')[0], 'contain'));
+      test('should check the "weight" is equal  "0.000 kg"', () => client.checkTextValue(OrderPage.weight_shipping, '0.000', 'contain'));
+      test('should check the shipping cost', () => client.checkTextValue(OrderPage.shipping_cost, global.tab['shipping_price']));
+      test('should check the shipping tracking number', () => client.checkTextValue(OrderPage.tracking_number_column, ''));
+
+      //Check payment information
+      test('should check the "Method" of payment', () => client.checkTextValue(OrderPage.payment_method, '', 'contain'));
+      test('should check the "Amount" of payment', () => client.checkTextValue(OrderPage.amount_payment, '', 'contain'));
+      test('should check the "date" of payment', () => client.checkTextValue(OrderPage.payment_date_column, '', 'contain'));
+
+      //Check products information
       test('should check the product name', () => client.checkTextValue(OrderPage.product_name.replace("%NUMBER", 1), global.tab['product']));
+      test('should check the  "Base price" of the product ', () => client.checkTextValue(OrderPage.product_unit_price_tax_included, global.tab['basic_price']));
+      test('should check the "quantity" of the product', () => client.checkTextValue(OrderPage.order_quantity.replace("%NUMBER", 1), '4'));
+      test('should check the "Available quantity" of the product', () => client.checkTextValue(OrderPage.order_available_quantity.replace("%NUMBER", 1), (global.tab['available_quantity'] - 4), 'contain'));
+      test('should check that the "Total" of the product', () => client.checkTextValue(OrderPage.total_product_price.replace("%NUMBER", 1), 4 * (global.tab['basic_price'].split('€')[1]), 'contain'));
+
+      //Check total products
+      test('should check the total of "Products" tax included', () => client.checkTextValue(OrderPage.total_price, global.tab["total_price"]));
+      test('should check the total of "Shipping"', () => client.checkTextValue(OrderPage.shipping_cost_price, global.tab['shipping_price']));
+      test('should check the "Total" for orders tax included', () => client.checkTextValue(OrderPage.total_order_price, Number(global.tab["total_price"].split('€')[1]) + Number(global.tab['shipping_price'].split('€')[1]), 'contain'));
+      test('should check that the status is equal to "Awaiting bank wire payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting bank wire payment'));
+
       test('should check the order message', () => client.checkTextValue(OrderPage.message_order, 'Order message test'));
-      test('should check the total price', () => client.checkTextValue(OrderPage.total_price, global.tab["total_price"]));
       test('should check basic product price', () => {
         return promise
           .then(() => client.scrollWaitForExistAndClick(OrderPage.edit_product_button))
-          .then(() => client.checkAttributeValue(OrderPage.product_basic_price.replace("%NUMBER", 1), 'value', global.tab["basic_price"].replace('€', '')))
+          .then(() => client.checkAttributeValue(OrderPage.product_basic_price.replace("%NUMBER", 1), 'value', global.tab["basic_price"].replace('€', '')));
       });
-      test('should check shipping method', () => client.checkTextValue(OrderPage.shipping_method, global.tab["method"].split('\n')[0], 'contain'));
     }, "order");
   },
 

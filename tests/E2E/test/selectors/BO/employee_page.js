@@ -21,5 +21,6 @@ module.exports = {
     edit_button: '//*[@id="table-employee"]//a[contains(@class, "edit")]',
     language_select: '//*[@id="id_lang"]',
     selected_language_option: '//*[@id="id_lang"]/option[@selected="selected"]',
+    employee_column_information: '//*[@id="table-employee"]//tr[1]/td[%COL]',
   }
 };

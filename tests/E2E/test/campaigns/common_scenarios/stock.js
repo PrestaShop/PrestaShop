@@ -28,23 +28,31 @@ module.exports = {
     }
   },
 
-  checkMovementHistory: function (client, Menu, Movement, movementIndex, itemNumber, option, type, reference = "", dateAndTime = "", employee = "", productName = "") {
+  checkMovementHistory: function (client, Menu, Movement, movementIndex, itemNumber, option, type, reference = "", dateAndTime = "", productName = "") {
     test('should go to "Movements" tab', () => {
       return promise
         .then(() => client.goToStockMovements(Menu, Movement))
         .then(() => client.pause(5000));
     });
-    test('should search for the movement', async () => {
-      await client.isVisible(Movement.searched_product_close_icon);
-      if (global.isVisible) {
-        await client.waitForExistAndClick(Movement.searched_product_close_icon);
+    if (productName !== '') {
+      test('should search for the movement', async () => {
+        await client.isVisible(Movement.searched_product_close_icon);
+        if (global.isVisible) {
+          await client.waitForExistAndClick(Movement.searched_product_close_icon);
+        }
+        await client.waitAndSetValue(Movement.search_input, productName, 2000);
+        await client.waitForExistAndClick(Movement.search_button);
+        await client.waitForExistAndClick(Movement.advanced_filters_button, 1000);
+        await client.waitAndSelectByVisibleText(Movement.movement_type_select, type, 1000);
+      });
+    }
+    test('should check movement history', async () => {
+      let employee = await "";
+      if (global.tab["employee_first_name"] !== undefined && global.tab["employee_last_name"] !== undefined) {
+        employee = await global.tab["employee_first_name"] + " " + global.tab["employee_last_name"];
       }
-      await client.waitAndSetValue(Movement.search_input, productName, 2000);
-      await client.waitForExistAndClick(Movement.search_button);
-      await client.waitForExistAndClick(Movement.advanced_filters_button, 1000);
-      await client.waitAndSelectByVisibleText(Movement.movement_type_select, type, 1000);
+      await client.checkMovement(Movement, movementIndex, itemNumber, option, type, reference, dateAndTime, employee, productName)
     });
-    test('should check movement history', () => client.checkMovement(Movement, movementIndex, itemNumber, option, type, reference, dateAndTime, employee, productName));
   },
 
   checkStockProduct: function (client, productName, Menu, Stock, availableQuantity, reservedQuantity, physicalQuantity) {
