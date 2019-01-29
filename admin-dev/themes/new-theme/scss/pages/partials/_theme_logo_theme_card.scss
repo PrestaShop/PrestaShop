@@ -90,6 +90,14 @@
         }
       }
 
+      .action-button:disabled {
+        i,
+        span {
+          opacity: 0.5;
+        }
+
+      }
+
       .delete-button {
         @include action-button;
         position: relative;
@@ -101,7 +109,7 @@
         }
       }
 
-      .action-button:not(:first-child):hover,
+      .action-button:not(:first-child):not(:disabled):hover,
       .delete-button:hover {
         box-shadow: 0 0 0.9375rem 0 rgba(0, 0, 0, 0.2);
         background-color: #3ed1f0;
