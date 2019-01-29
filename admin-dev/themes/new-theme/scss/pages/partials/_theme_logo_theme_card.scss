@@ -9,6 +9,10 @@
 
 @mixin card-width() {
   max-width: 24.1875rem;
+
+  @include media-breakpoint-down(sm){
+    max-width: 100%;
+  }
 }
 
 @mixin card-width-and-height() {
