@@ -1,7 +1,7 @@
 #themes-logo-page {
 
   #adapt_theme_to_rtl_languages_theme_to_adapt {
-    width: 300px;
+    width: 18.75rem;
   }
 
   .logo-configuration-card-body {
@@ -13,19 +13,19 @@
 
       .logo-card-title {
         font-family: OpenSans;
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: 600;
         font-style: normal;
         font-stretch: normal;
         line-height: normal;
-        letter-spacing: -0.3px;
+        letter-spacing: -0.01875rem;
         text-align: center;
         color: #4a4a4a;
       }
 
       .nav-pills {
         .nav-item {
-          padding-right: 14px;
+          padding-right: 0.875rem;
         }
 
         border-top: 0;
@@ -36,7 +36,7 @@
             background-color: inherit;
           }
 
-          height: 22px;
+          height: 1.375rem;
           padding-top: 0;
           padding-left: 0;
           padding-right: 0;
@@ -49,29 +49,29 @@
 
       .logo-card-description {
         &.description-in-tab {
-          padding-top: 17px;
+          padding-top: 1.0625rem;
         }
 
-        padding-top: 20px;
+        padding-top: 1.25rem;
         font-family: OpenSans;
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: normal;
         font-style: normal;
         font-stretch: normal;
         line-height: normal;
-        letter-spacing: -0.2px;
+        letter-spacing: -0.0125rem;
         color: #6c868e;
       }
 
       .logo-image {
-        height: 106px;
-        padding-top: 32px;
-        padding-bottom: 27px;
+        height: 6.625rem;
+        padding-top: 2rem;
+        padding-bottom: 1.6875rem;
       }
     }
 
     .logo-card:not(:last-child) {
-      border-right: 1px solid #dedede;
+      border-right: 0.0625rem solid #dedede;
     }
   }
 
@@ -102,10 +102,10 @@
         display: none;
       }
 
-      max-width: 386px;
-      max-height: 242px;
+      max-width: 24.125rem;
+      max-height: 2.5rem;
       overflow-y: hidden;
-      border-radius: 4px;
+      border-radius: 0.25rem;
 
       img {
         max-width: 100%;
@@ -126,8 +126,8 @@
         }
 
         @mixin action-button {
-          height: 40px;
-          border-radius: 19.9px;
+          height: 2.5rem;
+          border-radius: -0.0125rem;
           background-color: #ffffff;
         }
 
@@ -137,7 +137,7 @@
           font-style: normal;
           font-stretch: normal;
           line-height: normal;
-          letter-spacing: -0.2px;
+          letter-spacing: -0.0125rem;
           text-align: center;
           color: #363a41;
 
@@ -149,7 +149,7 @@
         .delete-button {
           @include action-button;
           position: relative;
-          width: 40px;
+          width: 2.5rem;
           i {
             position: absolute;
             bottom: 25%;
@@ -159,7 +159,7 @@
 
         .action-button:not(:first-child):hover,
         .delete-button:hover {
-          box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
+          box-shadow: 0 0 0.9375rem 0 rgba(0, 0, 0, 0.2);
           background-color: #3ed1f0;
           color: #ffffff;
         }
@@ -168,11 +168,11 @@
 
     @mixin theme-name-and-version() {
       font-family: OpenSans;
-      font-size: 16px;
+      font-size: 1rem;
       font-style: normal;
       font-stretch: normal;
       line-height: normal;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.01875rem;
       text-align: center;
       color: #363a41;
     }
@@ -188,14 +188,15 @@
 
     .theme-author {
       font-family: OpenSans;
-      font-size: 13px;
+      font-size: 0.8125rem;
       font-weight: normal;
       font-style: normal;
       font-stretch: normal;
       line-height: normal;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.01875rem;
       text-align: center;
       color: #618596;
+      padding-bottom: 1.6875rem;
     }
   }
 
