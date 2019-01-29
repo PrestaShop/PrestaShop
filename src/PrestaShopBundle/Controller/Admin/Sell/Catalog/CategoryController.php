@@ -26,16 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
@@ -47,15 +42,12 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
 use PrestaShop\PrestaShop\Core\Domain\Group\QueryResult\DefaultGroups;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
-use PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -134,7 +126,7 @@ class CategoryController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_category_listing');
             }
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleAddException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         /** @var DefaultGroups $defaultGroups */
@@ -178,7 +170,7 @@ class CategoryController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_category_listing');
             }
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleAddException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         /** @var DefaultGroups $defaultGroups */
@@ -213,11 +205,8 @@ class CategoryController extends FrameworkBundleAdminController
             if ($editableCategory->isRootCategory()) {
                 return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId]);
             }
-        } catch (CategoryNotFoundException $e) {
-            $this->addFlash(
-                'success',
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
-            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_category_listing');
         }
@@ -241,7 +230,7 @@ class CategoryController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_category_listing');
             }
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleAddException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         /** @var DefaultGroups $defaultGroups */
@@ -280,10 +269,7 @@ class CategoryController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId]);
             }
         } catch (CategoryNotFoundException $e) {
-            $this->addFlash(
-                'success',
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
-            );
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_category_listing');
         }
@@ -305,7 +291,7 @@ class CategoryController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_category_listing');
             }
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleEditException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         /** @var DefaultGroups $defaultGroups */
@@ -352,7 +338,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleImageDeletingException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_category_edit', [
@@ -395,130 +381,12 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleImageDeletingException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_category_edit', [
             'categoryId' => $categoryId,
         ]);
-    }
-
-    /**
-     * @param AbstractCategoryCommand $command
-     * @param array $data
-     */
-    protected function populateCommandWithFormData(AbstractCategoryCommand $command, array $data)
-    {
-        if (null !== $data['description']) {
-            $command->setLocalizedDescriptions($data['description']);
-        }
-
-        if (null !== $data['meta_title']) {
-            $command->setLocalizedMetaTitles($data['meta_title']);
-        }
-
-        if (null !== $data['meta_description']) {
-            $command->setLocalizedMetaDescriptions($data['meta_description']);
-        }
-
-        if (null !== $data['meta_keyword']) {
-            $command->setLocalizedMetaKeywords($data['meta_keyword']);
-        }
-
-        if (null !== $data['group_association']) {
-            $command->setAssociatedGroupIds($data['group_association']);
-        }
-
-        if (null !== $data['shop_association']) {
-            $command->setAssociatedShopIds($data['shop_association']);
-        }
-
-        if (null !== $data['cover_image']) {
-            $command->setCoverImage($data['cover_image']);
-        }
-
-        if (null !== $data['thumbnail_image']) {
-            $command->setThumbnailImage($data['thumbnail_image']);
-        }
-
-        if (null !== $data['menu_thumbnail_images']) {
-            $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
-        }
-    }
-
-    /**
-     * @param CategoryException $exception
-     *
-     * @return string User friendly error message for exception
-     */
-    protected function handleAddException(CategoryException $exception)
-    {
-        $type = get_class($exception);
-
-        if (CategoryConstraintException::class === $type) {
-            return $this->handleConstraintException($exception);
-        }
-
-        $errorMessagesForDisplay = [
-            CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-        ];
-
-        if (isset($errorMessagesForDisplay[$type])) {
-            return $errorMessagesForDisplay[$type];
-        }
-
-        return $this->trans('An error occurred while creating an object.', 'Admin.Notifications.Error');
-    }
-
-    /**
-     * @param CategoryException $exception
-     *
-     * @return string User friendly error message for exception
-     */
-    protected function handleEditException(CategoryException $exception)
-    {
-        $type = get_class($exception);
-
-        if (CategoryConstraintException::class === $type) {
-            return $this->handleConstraintException($exception);
-        }
-
-        $errorMessagesForDisplay = [
-            CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-            MenuThumbnailsLimitException::class => sprintf(
-                '%s %s',
-                $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
-                $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
-            ),
-        ];
-
-        if (isset($errorMessagesForDisplay[$type])) {
-            return $errorMessagesForDisplay[$type];
-        }
-
-        return $this->trans('An error occurred while updating an object.', 'Admin.Notifications.Error');
-    }
-
-    /**
-     * @param CategoryConstraintException $e
-     *
-     * @return string
-     */
-    protected function handleConstraintException(CategoryConstraintException $e)
-    {
-        $errorMessagesForDisplay = [
-            CategoryConstraintException::TOO_MANY_MENU_THUMBNAILS => sprintf(
-                '%s %s',
-                $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
-                $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
-            ),
-        ];
-
-        if (isset($errorMessagesForDisplay[$e->getCode()])) {
-            return $errorMessagesForDisplay[$e->getCode()];
-        }
-
-        return $this->trans('Unexpected error occurred', 'Admin.Notifications.Error');
     }
 
     /**
@@ -559,7 +427,7 @@ class CategoryController extends FrameworkBundleAdminController
         } catch (CategoryException $e) {
             $response = [
                 'status' => false,
-                'message' => $this->handleUpdateStatusException($e),
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
             ];
         }
 
@@ -596,7 +464,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleUpdateStatusException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_category_listing');
@@ -632,7 +500,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleUpdateStatusException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_category_listing');
@@ -676,7 +544,7 @@ class CategoryController extends FrameworkBundleAdminController
                     $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
                 );
             } catch (CategoryException $e) {
-                $this->addFlash('error', $this->handleDeleteException($e));
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
 
@@ -715,7 +583,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
             } catch (CategoryException $e) {
-                $this->addFlash('error', $this->handleDeleteException($e));
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
 
@@ -769,79 +637,9 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle exception which occurs when updating category status.
-     *
-     * @param CategoryException $e
-     *
-     * @return string Error message
-     */
-    protected function handleUpdateStatusException(CategoryException $e)
-    {
-        $type = get_class($e);
-
-        $errors = [
-            CategoryNotFoundException::class => sprintf(
-                '%s %s',
-                $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
-                $this->trans('(cannot load object)', 'Admin.Notifications.Error')
-            ),
-            CannotUpdateCategoryStatusException::class => $this->trans(
-                'An error occurred while updating the status for an object.',
-                'Admin.Notifications.Error'
-            ),
-        ];
-
-        if (isset($errors[$type])) {
-            return $errors[$type];
-        }
-
-        return $this->trans('Failed to update the status', 'Admin.Notifications.Error');
-    }
-
-    /**
-     * Handle exception which occurred when deleting category.
-     *
-     * @param CategoryException $e
-     *
-     * @return string
-     */
-    protected function handleDeleteException(CategoryException $e)
-    {
-        $type = get_class($e);
-
-        if (CategoryConstraintException::class === $type) {
-            $constraintErrors = [
-                CategoryConstraintException::EMPTY_BULK_DELETE_DATA => $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error'),
-            ];
-
-            if (isset($constraintErrors[$e->getCode()])) {
-                return $constraintErrors[$e->getCode()];
-            }
-        }
-
-        $errors = [
-            CategoryNotFoundException::class => sprintf(
-                '%s %s',
-                $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
-                $this->trans('(cannot load object)', 'Admin.Notifications.Error')
-            ),
-            CannotDeleteRootCategoryForShopException::class => $this->trans(
-                'You cannot remove this category because one of your shops uses it as a root category.',
-                'Admin.Catalog.Notification'
-            ),
-        ];
-
-        if (isset($errors[$type])) {
-            return $errors[$type];
-        }
-
-        return $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error');
-    }
-
-    /**
      * @return array
      */
-    protected function getCategoryToolbarButtons()
+    private function getCategoryToolbarButtons()
     {
         $toolbarButtons = [];
 
@@ -863,29 +661,39 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle exception which occurs when deleting category image (cover, thumbnails).
+     * Get translated error messsages for category exceptions
      *
-     * @param CategoryException $e
-     *
-     * @return string
+     * @return array
      */
-    private function handleImageDeletingException(CategoryException $e)
+    private function getErrorMessages()
     {
-        $type = get_class($e);
-
-        $errorMessages = [
-            CannotDeleteImageException::class => $this->trans('Unable to delete associated images.', 'Admin.Notifications.Error'),
-            CategoryNotFoundException::class => sprintf(
+        return [
+            CannotDeleteImageException::class =>
+                $this->trans('Unable to delete associated images.', 'Admin.Notifications.Error'),
+            CategoryNotFoundException::class =>
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CategoryConstraintException::class => [
+                CategoryConstraintException::EMPTY_BULK_DELETE_DATA =>
+                    $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error'),
+                CategoryConstraintException::TOO_MANY_MENU_THUMBNAILS => sprintf(
+                    '%s %s',
+                    $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
+                    $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
+                ),
+            ],
+            CannotDeleteRootCategoryForShopException::class => $this->trans(
+                'You cannot remove this category because one of your shops uses it as a root category.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotUpdateCategoryStatusException::class => $this->trans(
+                'An error occurred while updating the status for an object.',
+                'Admin.Notifications.Error'
+            ),
+            MenuThumbnailsLimitException::class => sprintf(
                 '%s %s',
-                $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
-                $this->trans('(cannot load object)', 'Admin.Notifications.Error')
+                $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
+                $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
             ),
         ];
-
-        if (isset($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 }
