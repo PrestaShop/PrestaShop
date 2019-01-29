@@ -112,11 +112,11 @@
                   {% block button_container %}
                     <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
                       <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}" />
-                      <button type="submit" class="btn action-button">
+                      <button type="submit" class="btn action-button" {{ (not isSingleShopContext) ? 'disabled' : '' }}>
                         <i class="material-icons">
                           present_to_all
                         </i>
-                        {{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}
+                        <span>{{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}</span>
                       </button>
                     </form>
                     <form action="{{ path('admin_themes_delete', {'themeName': theme.name}) }}" method="post" class="d-inline">
