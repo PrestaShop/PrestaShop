@@ -33,6 +33,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Performance" servers block management.
@@ -41,12 +42,18 @@ class MemcacheServerController extends FrameworkBundleAdminController
 {
     const CONTROLLER_NAME = 'AdminPerformance';
 
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @return JsonResponse
+     */
     public function listAction()
     {
         return new JsonResponse($this->getMemcacheManager()->getServers());
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
@@ -71,6 +78,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="Access denied.")
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
@@ -129,6 +137,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
