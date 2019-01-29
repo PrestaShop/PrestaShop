@@ -84,6 +84,12 @@
               {% block image %}
                 <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.name }}">
               {% endblock %}
+              {% block button_container %}
+                <button class="btn">
+                  <i class="material-icons icon-current-theme">done</i>
+                  {{ 'My current theme'|trans({}, 'Admin.Design.Feature') }}
+                </button>
+              {% endblock %}
             {% endembed %}
 
             {% if notUsedThemes is not empty %}
@@ -96,6 +102,14 @@
                 }  %}
                   {% block image %}
                     <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.name }}">
+                  {% endblock %}
+                  {% block button_container %}
+                    <button class="btn">
+                      <i class="material-icons">
+                        present_to_all
+                      </i>
+                      {{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}
+                    </button>
                   {% endblock %}
                 {% endembed %}
               {% endfor %}

@@ -26,10 +26,15 @@
 <div class="col-3">
   <div class="card theme-card">
 
-      <div class="active-card-overlay {{ isActive ? 'active' : '' }}"></div>
+    <div class="active-card-overlay {{ isActive ? 'active' : '' }}"></div>
 
     {% block image %}
     {% endblock %}
+
+    <div class="actions-container {{ isActive ? 'active' : '' }}">
+      {% block button_container %}
+      {% endblock %}
+    </div>
   </div>
   <div class="text-center">
     <b>{{ themeName }}</b> <span>{{ 'version'|trans({}, 'Admin.Global') }} {{ themeVersion }}</span>
