@@ -44,10 +44,12 @@ class PermissionController extends FrameworkBundleAdminController
     {
         $configurablePermissions = $this->getQueryBus()->handle(new GetPermissionsForConfiguration());
 
+        dump($configurablePermissions);
+
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/index.html.twig',
             [
-                'configurable_permissions' => $configurablePermissions,
+                'configurablePermissions' => $configurablePermissions,
             ]
         );
     }
