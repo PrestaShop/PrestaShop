@@ -131,7 +131,7 @@
 
               {% block description %}
                 {#todo: new translation#}
-                {{ 'Explore more than %number_of_themes% themes'|trans({'%number_of_themes%': 3900}, 'Admin.Design.Feature') }}
+                {{ 'Explore more than thousand themes'|trans({}, 'Admin.Design.Feature') }}
               {% endblock %}
 
               {% block button_container %}
@@ -141,8 +141,9 @@
               {% endblock %}
 
             {% endembed %}
+
+            {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/layouts_configuration.html.twig' %}
           </div>
-          <div class="card-footer"></div>
         </div>
 
         {#todo - remove#}
@@ -172,8 +173,8 @@
                   </div>
 
                   <div class="col-6">
-                    <p class="mb-0">{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}</p>
-                    <p class="mb-0 small-text">{{ 'Each page can use a different layout, choose it among the layouts bundled in your theme.'|trans({}, 'Admin.Design.Feature') }}</p>
+                    <p class="mb-0"></p>
+                    <p class="mb-0 small-text"></p>
                   </div>
 
                   <div class="col-6">
