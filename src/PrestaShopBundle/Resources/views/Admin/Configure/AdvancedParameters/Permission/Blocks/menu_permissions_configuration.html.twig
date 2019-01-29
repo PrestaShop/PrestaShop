@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,55 +21,32 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult;
+{% set enableBulkView, enableBulkAdd, enableBulkEdit, enableBulkDelete, enableBulkAll = true, true, true, true, true %}
 
-class ConfigurablePermissions
-{
-    /**
-     * @var array
-     */
-    private $tabPermissions;
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Menu'|trans({}, 'Admin.Advparameters.Feature') }}
+  </h3>
+  <div class="card-body">
+    <table class="table">
+      {% if configurablePermissions.tabs is empty %}
+        <tr>
+          <td colspan="6">{{ 'No menu'|trans({}, 'Admin.Advparameters.Feature') }}</td>
+        </tr>
+      {% else %}
+        {% for tab in configurablePermissions.tabs %}
+          {% set permissions = configurablePermissions.tabPermissions[profile.id] %}
+          <tr>
+            {% set hasAllPermissions = true %}
 
-    /**
-     * @var array
-     */
-    private $profiles;
-
-    /**
-     * @var array
-     */
-    private $tabs;
-
-    public function __construct(array $tabPermissions, array $profiles, array $tabs)
-    {
-        $this->tabPermissions = $tabPermissions;
-        $this->profiles = $profiles;
-        $this->tabs = $tabs;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTabPermissions()
-    {
-        return $this->tabPermissions;
-    }
-
-    /**
-     * @return array
-     */
-    public function getProfiles()
-    {
-        return $this->profiles;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTabs()
-    {
-        return $this->tabs;
-    }
-}
+            {% for permission in permissions %}
+              <td>{{ tab.name }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </table>
+  </div>
+</div>
