@@ -40,6 +40,9 @@
 <script lang="ts">
   import Vue from 'vue';
 
+  /**
+   * @deprecated since 8.0, use app/components/checkbox.vue instead
+   */
   export default Vue.extend({
     props: {
       id: {

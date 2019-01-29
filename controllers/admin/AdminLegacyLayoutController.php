@@ -91,6 +91,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         // This makes sure that user cannot switch shop contexts
         // when in one of pages (controller) below.
         $controllers = [
+            'AdminAccess',
             'AdminFeatureFlag',
             'AdminLanguages',
             'AdminProfiles',

@@ -1,0 +1,129 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="tab-content p-lg-0 bg-transparent px-0" id="profileTabContents">
+  {% set employeeProfileTabPermissions = configurablePermissions.profilePermissionsForTabs[employeeProfileId] %}
+
+  {% for profile in configurablePermissions.profiles %}
+    {% set profileTabPermissions = configurablePermissions.profilePermissionsForTabs[profile.id] %}
+    <div class="tab-pane fade js-permissions-content{% if profile.id == employeeProfileId %} active show{% endif %}"
+      id="profileTabContent_{{ profile.id }}"
+      data-profile-id="{{ profile.id }}"
+      data-profile-permissions="{{ profileTabPermissions|json_encode }}"
+      data-modules-permissions="{{ profilePermissionsForModules[profile.id]|json_encode }}"
+      data-employee-permissions="{{ configurablePermissions.profilePermissionsForTabs[employeeProfileId]|json_encode }}"
+      data-employee-modules-permissions="{{ profilePermissionsForModules[employeeProfileId]|json_encode }}"
+      role="tabpanel"
+      aria-labelledby="profileListItem_{{ profile.id }}"
+    >
+      <div class="row">
+        {% if profile.is_administrator %}
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                {{ 'Administrator permissions cannot be modified.'|trans({}, 'Admin.Advparameters.Notification') }}
+              </div>
+            </div>
+          </div>
+        {% else %}
+          {%
+            set profileTypes = {
+              'view': {
+                'value': configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
+                'label': ('View'|trans({}, 'Admin.Actions')),
+              },
+              'add': {
+                'value': configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
+                'label': ('Add'|trans({}, 'Admin.Actions')),
+              },
+              'edit': {
+                'value': configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
+                'label': ('Edit'|trans({}, 'Admin.Actions')),
+              },
+              'delete': {
+                'value': configurablePermissions.isBulkDeleteConfigurationEnabled(profile.id),
+                'label': ('Delete'|trans({}, 'Admin.Actions')),
+              },
+              'all': {
+                'value': configurablePermissions.isBulkAllConfigurationEnabled(profile.id),
+                'label': ('All'|trans({}, 'Admin.Actions')),
+              }
+            }
+          %}
+          <div class="col-xl-6">
+            <div
+              id="profile-content-{{ profile.id }}"
+              data-update-url="{{ path('admin_permissions_update_tab_permissions') }}"
+              data-can-edit="{{ configurablePermissions.hasEmployeeEditPermission ? 'true' : 'false' }}"
+              data-types="{{ profileTypes|json_encode }}"
+              data-permissions="{{ configurablePermissions.tabs|json_encode}}"
+              data-title="{{ 'Menu'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
+              data-empty="{{ 'No menu'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
+            >
+            </div>
+          </div>
+
+          {%
+            set moduleTypes = {
+              'view': {
+                'value': configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
+                'label': ('View'|trans({}, 'Admin.Actions')),
+              },
+              'configure': {
+                'value': configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
+                'label': ('Configure'|trans({}, 'Admin.Actions')),
+              },
+              'uninstall': {
+                'value': configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
+                'label': ('Uninstall'|trans({}, 'Admin.Actions')),
+              }
+            }
+          %}
+          <div class="col-xl-6">
+            <div
+              id="module-content-{{ profile.id }}"
+              data-update-url="{{ path('admin_permissions_update_module_permissions') }}"
+              data-can-edit="{{ configurablePermissions.hasEmployeeEditPermission ? 'true' : 'false' }}"
+              data-types="{{ moduleTypes|json_encode }}"
+              data-permissions="{{ profilePermissionsForModules[profile.id]|json_encode}}"
+              data-title="{{ 'Modules'|trans({}, 'Admin.Global')|escape }}"
+              data-empty="{{ 'No module'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
+            >
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% block javascripts %}
+  <script>
+    var permissionsMessages = {
+      success: "{{ 'Update successful'|trans({}, 'Admin.Notifications.Success')|escape('js') }}",
+      error: "{{ 'Unable to update settings.'|trans({}, 'Admin.Notifications.Error')|escape('js') }}",
+    };
+  </script>
+{% endblock %}

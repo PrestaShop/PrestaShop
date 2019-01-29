@@ -1,5 +1,4 @@
-<?php
-/**
+<!--**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,14 +21,30 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *-->
+<script lang="ts">
+  /**
+   * This mixin component will help you to calculate your col size
+   * depending on object size.
+   */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+  // Bootstrap row length
+  const ROW_LENGTH = 12;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+  export default {
+    methods: {
+      getClasses(object: Record<string, any>, offsetCondition = true): Array<string> {
+        const objectLength = Object.keys(object).length;
+        const size = Math.floor(ROW_LENGTH / objectLength);
+        const left = Math.ceil(ROW_LENGTH % objectLength);
+        const classes = [`col-${size}`];
 
-header('Location: ../../../../../../../');
-exit;
+        if (left !== 0 && offsetCondition) {
+          classes.push(`offset-${left}`);
+        }
+
+        return classes;
+      },
+    },
+  };
+</script>
