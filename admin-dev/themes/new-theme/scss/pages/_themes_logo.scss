@@ -83,85 +83,119 @@
     opacity:0.25;
   }
 
-  .theme-card {
-    position: relative;
+  .theme-container {
+    .theme-card {
+      position: relative;
 
-    .active-card-overlay {
-      &.active {
-        display: block;
-      }
-      display: none;
-      @include theme-card-overlay;
-    }
-
-    .actions-container {
-      &.active {
-        display: block;
-      }
-      display: none;
-    }
-
-    max-width: 386px;
-    max-height: 242px;
-    overflow-y: hidden;
-    border-radius: 4px;
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .actions-container.active {
-      left: 30%;
-    }
-
-    .actions-container {
-      position: absolute;
-      top: 70%;
-      left: 25%;
-
-      &:first-child {
-
+      .active-card-overlay {
+        &.active {
+          display: block;
+        }
+        display: none;
+        @include theme-card-overlay;
       }
 
-      @mixin action-button {
-        height: 40px;
-        border-radius: 19.9px;
-        background-color: #ffffff;
+      .actions-container {
+        &.active {
+          display: block;
+        }
+        display: none;
       }
 
-      .action-button {
-        @include action-button;
-        font-weight: normal;
-        font-style: normal;
-        font-stretch: normal;
-        line-height: normal;
-        letter-spacing: -0.2px;
-        text-align: center;
-        color: #363a41;
+      max-width: 386px;
+      max-height: 242px;
+      overflow-y: hidden;
+      border-radius: 4px;
 
-        .icon-current-theme {
-          color: #25b9d7;
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .actions-container.active {
+        left: 30%;
+      }
+
+      .actions-container {
+        position: absolute;
+        top: 70%;
+        left: 25%;
+
+        &:first-child {
+
+        }
+
+        @mixin action-button {
+          height: 40px;
+          border-radius: 19.9px;
+          background-color: #ffffff;
+        }
+
+        .action-button {
+          @include action-button;
+          font-weight: normal;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: normal;
+          letter-spacing: -0.2px;
+          text-align: center;
+          color: #363a41;
+
+          .icon-current-theme {
+            color: #25b9d7;
+          }
+        }
+
+        .delete-button {
+          @include action-button;
+          position: relative;
+          width: 40px;
+          i {
+            position: absolute;
+            bottom: 25%;
+            right: 25%;
+          }
+        }
+
+        .action-button:not(:first-child):hover,
+        .delete-button:hover {
+          box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
+          background-color: #3ed1f0;
+          color: #ffffff;
         }
       }
+    }
 
-      .delete-button {
-        @include action-button;
-        position: relative;
-        width: 40px;
-        i {
-          position: absolute;
-          bottom: 25%;
-          right: 25%;
-        }
-      }
+    @mixin theme-name-and-version() {
+      font-family: OpenSans;
+      font-size: 16px;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: -0.3px;
+      text-align: center;
+      color: #363a41;
+    }
 
-      .action-button:not(:first-child):hover,
-      .delete-button:hover {
-        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
-        background-color: #3ed1f0;
-        color: #ffffff;
-      }
+    .theme-name {
+      font-weight: bold;
+      @include theme-name-and-version;
+    }
+
+    .theme-version {
+      @include theme-name-and-version;
+    }
+
+    .theme-author {
+      font-family: OpenSans;
+      font-size: 13px;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: -0.3px;
+      text-align: center;
+      color: #618596;
     }
   }
 

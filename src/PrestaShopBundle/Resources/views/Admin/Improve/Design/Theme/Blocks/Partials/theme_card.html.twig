@@ -23,7 +23,7 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-<div class="col-3">
+<div class="col-3 theme-container">
   <div class="card theme-card">
 
     <div class="active-card-overlay {{ isActive ? 'active' : '' }}"></div>
@@ -37,7 +37,14 @@
     </div>
   </div>
   <div class="text-center">
-    <b>{{ themeName }}</b> <span>{{ 'version'|trans({}, 'Admin.Global') }} {{ themeVersion }}</span>
-    <div>{{ 'Designed by %s'|trans({'%s': themeAuthor}, 'Admin.Design.Feature') }}</div>
+    <b class="theme-name">
+      {{ themeName }}
+    </b>
+    <span class="theme-version">
+      {{ 'version'|trans({}, 'Admin.Global') }} {{ themeVersion }}
+    </span>
+    <div class="theme-author">
+      {{ 'Designed by %s'|trans({'%s': themeAuthor}, 'Admin.Design.Feature') }}
+    </div>
   </div>
 </div>
