@@ -137,7 +137,16 @@
   }
 
   .theme-catalog-card {
-
+    background-color: #f8f8f8;
+    .catalog-image {
+      padding-top: 3.7rem;
+    }
+    .catalog-description {
+      padding-top: 0.975rem;
+    }
+    .catalog-button {
+      padding-top: 1.125rem;
+    }
   }
 }
 
