@@ -53,3 +53,7 @@ _feature_flags:
 _security:
   resource: "security.yml"
   prefix: /security
+
+_permission:
+  resource: "permission.yml"
+  prefix: /permissions
