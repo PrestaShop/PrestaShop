@@ -119,51 +119,26 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function addAction(Request $request)
     {
+        $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
+        $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
+
+        $categoryForm = $categoryFormBuilder->getForm();
+        $categoryForm->handleRequest($request);
+
+        $result = $categoryFormHandler->handle($categoryForm);
+
+        if (null !== $result->getIdentifiableObjectId()) {
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_category_listing');
+        }
+
         /** @var DefaultGroups $defaultGroups */
         $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
-        $emptyCategoryData = [
-            'group_association' => [
-                $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
-                $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
-                $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
-            ],
-            'shop_association' => [
-                $this->getContextShopId(),
-            ],
-        ];
-
-        $categoryAddForm = $this->createForm(CategoryType::class, $emptyCategoryData);
-        $categoryAddForm->handleRequest($request);
-
-        if ($categoryAddForm->isSubmitted()) {
-            $data = $categoryAddForm->getData();
-
-            try {
-                $command = new AddCategoryCommand(
-                    $data['name'],
-                    $data['link_rewrite'],
-                    (bool) $data['active'],
-                    (int) $data['id_parent']
-                );
-                $this->populateCommandWithFormData($command, $data);
-
-                /** @var CategoryId $categoryId */
-                $categoryId = $this->getCommandBus()->handle($command);
-
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_category_edit', [
-                    'categoryId' => $categoryId->getValue(),
-                ]);
-            } catch (CategoryException $e) {
-                $this->addFlash('error', $this->handleAddException($e));
-            }
-        }
-
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
             'allowMenuThumbnailsUpload' => true,
-            'categoryForm' => $categoryAddForm->createView(),
+            'categoryForm' => $categoryForm->createView(),
             'defaultGroups' => $defaultGroups,
         ]);
     }
