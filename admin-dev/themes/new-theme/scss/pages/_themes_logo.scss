@@ -130,7 +130,7 @@
         background-color: #ffffff;
       }
 
-      .first-button {
+      .action-button {
         @include action-button;
         font-weight: normal;
         font-style: normal;
@@ -154,6 +154,13 @@
           bottom: 25%;
           right: 25%;
         }
+      }
+
+      .action-button:not(:first-child):hover,
+      .delete-button:hover {
+        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
+        background-color: #3ed1f0;
+        color: #ffffff;
       }
     }
   }
