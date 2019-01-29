@@ -15,3 +15,8 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand' }
+
+    prestashop.adapter.profile.permission.query_handler.get_permissions_for_configuration_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandler'
+        tags:
+            - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration' }
