@@ -296,12 +296,14 @@ class AttributeGroupCore extends ObjectModel
         foreach ($values as $value) {
             $ids[] = (int) ($value['id']);
         }
-        Db::getInstance()->execute(
-            '
-			DELETE FROM `' . _DB_PREFIX_ . 'attribute`
-			WHERE `id_attribute_group` = ' . (int) $this->id . '
-			AND `id_attribute` NOT IN (' . implode(',', $ids) . ')'
-        );
+        if (!empty($ids)) {
+            Db::getInstance()->execute(
+                '
+                DELETE FROM `' . _DB_PREFIX_ . 'attribute`
+                WHERE `id_attribute_group` = ' . (int) $this->id . '
+                AND `id_attribute` NOT IN (' . implode(',', $ids) . ')'
+            );
+        }
         $ok = true;
         foreach ($values as $value) {
             $result = Db::getInstance()->execute(
