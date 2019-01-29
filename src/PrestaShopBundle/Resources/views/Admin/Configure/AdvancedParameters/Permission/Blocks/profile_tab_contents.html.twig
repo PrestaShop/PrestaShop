@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div id="profileTabContents">
-  {% for profile in configurable_permissions.profiles %}
+<div class="tab-content p-0 bg-transparent" id="profileTabContents">
+  {% for profile in configurablePermissions.profiles %}
     <div class="tab-pane fade"
          id="profileTabContent_{{ profile.id }}"
          role="tabpanel"
@@ -32,7 +32,9 @@
     >
       <div class="row">
         {% if not profile.is_administrator %}
-            <div class="col"></div>
+            <div class="col">
+              {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/menu_permissions_configuration.html.twig' %}
+            </div>
             <div class="col"></div>
         {% else %}
           <div class="col">
