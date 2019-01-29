@@ -35,14 +35,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
     public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
-        // Compatibility with legacy behavior.
-        // Languages can only be used in "All shops" context.
-        // This makes sure that user cannot switch shop contexts
-        // when on Languages page.
-        if ('AdminLanguages' === $controllerName) {
-            $this->multishop_context = Shop::CONTEXT_ALL;
-        }
-
         parent::__construct($controllerName, 'new-theme');
 
         $this->title = $title;
@@ -57,6 +49,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
+
+        // Compatibility with legacy behavior.
+        // Languages can only be used in "All shops" context.
+        // This makes sure that user cannot switch shop contexts
+        // when on Languages page.
+        if ('AdminLanguages' === $controllerName) {
+            $this->multishop_context = Shop::CONTEXT_ALL;
+        }
     }
 
     public function setMedia($isNewTheme = false)
