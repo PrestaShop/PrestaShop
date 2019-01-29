@@ -125,12 +125,16 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryForm = $categoryFormBuilder->getForm();
         $categoryForm->handleRequest($request);
 
-        $result = $categoryFormHandler->handle($categoryForm);
+        try {
+            $handlerResult = $categoryFormHandler->handle($categoryForm);
 
-        if (null !== $result->getIdentifiableObjectId()) {
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_category_listing');
+                return $this->redirectToRoute('admin_category_listing');
+            }
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleAddException($e));
         }
 
         /** @var DefaultGroups $defaultGroups */
@@ -157,46 +161,28 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function addRootAction(Request $request)
     {
-        /** @var DefaultGroups $defaultGroups */
-        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+        $rootCategoryFormBuilder =
+            $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
+        $rootCategoryFormHandler =
+            $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
 
-        $emptyCategoryData = [
-            'group_association' => [
-                $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
-                $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
-                $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
-            ],
-            'shop_association' => [
-                $this->getContextShopId(),
-            ],
-        ];
-
-        $rootCategoryForm = $this->createForm(RootCategoryType::class, $emptyCategoryData);
+        $rootCategoryForm = $rootCategoryFormBuilder->getForm();
         $rootCategoryForm->handleRequest($request);
 
-        if ($rootCategoryForm->isSubmitted()) {
-            $data = $rootCategoryForm->getData();
+        try {
+            $handlerResult = $rootCategoryFormHandler->handle($rootCategoryForm);
 
-            try {
-                $command = new AddRootCategoryCommand(
-                    $data['name'],
-                    $data['link_rewrite'],
-                    $data['active']
-                );
-                $this->populateCommandWithFormData($command, $data);
-
-                /** @var CategoryId $categoryId */
-                $categoryId = $this->getCommandBus()->handle($command);
-
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_edit_root', [
-                    'categoryId' => $categoryId->getValue(),
-                ]);
-            } catch (CategoryException $e) {
-                $this->addFlash('error', $this->handleAddException($e));
+                return $this->redirectToRoute('admin_category_listing');
             }
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleAddException($e));
         }
+
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
             'allowMenuThumbnailsUpload' => true,
