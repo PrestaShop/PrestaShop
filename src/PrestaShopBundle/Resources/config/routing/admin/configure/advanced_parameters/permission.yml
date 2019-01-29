@@ -3,3 +3,4 @@ admin_permissions_index:
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:index
+    _legacy_controller: AdminAccess

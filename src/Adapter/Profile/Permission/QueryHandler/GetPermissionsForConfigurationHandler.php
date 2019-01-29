@@ -24,31 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
+namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler;
 
+use Context;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
+use Profile;
+use Tab;
 
 /**
- * Allows permissions configuration for employee profiles in "Configure > Advanced Parameters > Team > Permissions"
+ * Get configuratble permissions
+ *
+ * @internal
  */
-class PermissionController extends FrameworkBundleAdminController
+final class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigurationHandlerInterface
 {
     /**
-     * Show permissions configuration page
-     *
-     * @return Response
+     * {@inheritdoc}
      */
-    public function indexAction()
+    public function handle(GetPermissionsForConfiguration $query)
     {
-        $configurablePermissions = $this->getQueryBus()->handle(new GetPermissionsForConfiguration());
+        $nonConfigurableTabs = $this->getNonConfigurableTabs();
 
-        return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/index.html.twig',
-            [
-                'configurable_permissions' => $configurablePermissions,
-            ]
-        );
+        $profiles = Profile::getProfiles(Context::getContext()->language->id);
+
+        return new ConfigurablePermissions($profiles);
+    }
+
+    /**
+     * @return int[] IDs of non configurable tabs
+     */
+    private function getNonConfigurableTabs()
+    {
+        return [
+            Tab::getIdFromClassName('AdminLogin'),
+        ];
     }
 }
