@@ -19,7 +19,10 @@ module.exports = {
     taxes: {
       filter_name_input: '//*[@id="table-tax"]//input[@name="taxFilter_name"]',
       filter_search_button: '//*[@id="submitFilterButtontax"]',
-      tax_field_column: '//*[@id="table-tax"]//tr[%L]//td[%C]'
+      tax_field_column: '//*[@id="table-tax"]//tr[%L]//td[%C]',
+      display_tax: '//*[@id="conf_id_PS_TAX_DISPLAY"]//label[@for="PS_TAX_DISPLAY_%D"]',
+      save_button: '//*[@id="tax_fieldset_general"]/div[3]/button',
+
     }
   }
 };

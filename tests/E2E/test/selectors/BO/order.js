@@ -80,7 +80,10 @@ module.exports = {
     invoice_address_tab: '//*[@id="tabAddresses"]/li[2]/a',
     invoice_address: '//*[@id="addressInvoice"]',
     date_shipping: '//*[@id="shipping_table"]//tr/td[1]',
-    weight_shipping: '//*[@id="shipping_table"]//tr/td[4]'
+    weight_shipping: '//*[@id="shipping_table"]//tr/td[4]',
+    page_title:'//*[@id="content"]//h1[@class="page-title"]',
+    view_invoice_button: '//*[@id="content"]//div[contains(@class, "hidden-print")]/a[contains(@href, "generateInvoicePDF")]',
+    date_invoice: '(//*[@id="documents_table"]//a[contains(@href, "generateInvoicePDF")])[1]',
   },
 
   CreateOrder: {
