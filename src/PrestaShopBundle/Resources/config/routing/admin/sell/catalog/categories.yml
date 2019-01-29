@@ -19,35 +19,35 @@ admin_categories_bulk_enable_status:
     path: /bulk-status-enable
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkStatusEnable
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkEnableStatus
         _legacy_controller: AdminCategories
 
 admin_categories_bulk_disable_status:
     path: /bulk-status-disable
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkStatusDisable
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkDisableStatus
         _legacy_controller: AdminCategories
 
 admin_categories_toggle_status:
     path: /{categoryId}/toggle-status
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processStatusToggle
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:toggleStatus
         _legacy_controller: AdminCategories
 
 admin_categories_bulk_delete:
     path: /bulk-delete
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkDelete
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkDelete
         _legacy_controller: AdminCategories
 
 admin_categories_delete:
     path: /delete
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processDelete
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:delete
         _legacy_controller: AdminCategories
 
 admin_categories_export:

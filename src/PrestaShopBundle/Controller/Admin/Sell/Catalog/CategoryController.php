@@ -397,7 +397,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function processStatusToggleAction(Request $request, $categoryId)
+    public function toggleStatusAction(Request $request, $categoryId)
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
@@ -448,7 +448,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processBulkStatusEnableAction(Request $request)
+    public function bulkEnableStatusAction(Request $request)
     {
         try {
             $categoryIds = array_map(function ($categoryId) {
@@ -484,7 +484,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processBulkStatusDisableAction(Request $request)
+    public function bulkDisableStatusAction(Request $request)
     {
         try {
             $categoryIds = array_map(function ($categoryId) {
@@ -520,7 +520,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processBulkDeleteAction(Request $request)
+    public function bulkDeleteAction(Request $request)
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
@@ -565,7 +565,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processDeleteAction(Request $request)
+    public function deleteAction(Request $request)
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
