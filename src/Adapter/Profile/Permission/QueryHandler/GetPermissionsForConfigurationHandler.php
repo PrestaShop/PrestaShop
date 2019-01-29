@@ -45,12 +45,15 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      */
     public function handle(GetPermissionsForConfiguration $query)
     {
-        $nonConfigurableTabs = $this->getNonConfigurableTabs();
-
         $profiles = $this->getProfilesForPermissionsConfiguration();
+        $tabs = $this->getTabsForPermissionsConfiguration();
+
+        $tabPermissions = $this->getTabPermissionsForProfiles($profiles);
 
         return new ConfigurablePermissions(
-            $profiles
+            $tabPermissions,
+            $profiles,
+            $tabs
         );
     }
 
@@ -64,6 +67,9 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         ];
     }
 
+    /**
+     * @return array
+     */
     private function getProfilesForPermissionsConfiguration()
     {
         $legacyProfiles = Profile::getProfiles(Context::getContext()->language->id);
@@ -80,5 +86,72 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         }
 
         return $profiles;
+    }
+
+    /**
+     * @return array
+     */
+    private function getTabsForPermissionsConfiguration()
+    {
+        $nonConfigurableTabs = $this->getNonConfigurableTabs();
+        $legacyTabs = Tab::getTabs(Context::getContext()->language->id);
+        $tabs = [];
+
+        foreach ($legacyTabs as $tab) {
+            // Don't allow permissions for unnamed tabs (ie. AdminLogin)
+            if (empty($tab['name'])) {
+                continue;
+            }
+
+            if (in_array($tab['id_tab'], $nonConfigurableTabs)) {
+                continue;
+            }
+
+            $tabs[] = [
+                'id' => $tab['id_tab'],
+                'id_parent' => $tab['id_parent'],
+                'name' => $tab['name'],
+            ];
+        }
+
+        return $this->buildTabsTree($tabs);
+    }
+
+    /**
+     * @param array $tabs
+     * @param int $parentId
+     *
+     * @return array
+     */
+    private function buildTabsTree(array &$tabs, $parentId = 0)
+    {
+        $children = [];
+
+        foreach ($tabs as &$tab) {
+            $id = $tab['id'];
+
+            if ((int) $tab['id_parent'] === (int) $parentId) {
+                $children[$id] = $tab;
+                $children[$id]['children'] = $this->buildTabsTree($tabs, $id);
+            }
+        }
+
+        return $children;
+    }
+
+    /**
+     * @param array $profiles
+     *
+     * @return array
+     */
+    private function getTabPermissionsForProfiles(array $profiles)
+    {
+        $permissions = [];
+
+        foreach ($profiles as $profile) {
+            $permissions[$profile['id']] = Profile::getProfileAccesses($profile['id']);
+        }
+
+        return $permissions;
     }
 }
