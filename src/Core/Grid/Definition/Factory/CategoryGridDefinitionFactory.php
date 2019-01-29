@@ -133,7 +133,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
-                    'route' => 'admin_category_edit',
+                    'route' => 'admin_categories_edit',
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                 ])
@@ -151,7 +151,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_category',
-                    'route' => 'admin_category_process_status_toggle',
+                    'route' => 'admin_categories_toggle_status',
                     'route_param_name' => 'categoryId',
                 ])
             )
@@ -257,7 +257,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Export', [], 'Admin.Actions'))
                 ->setIcon('cloud_download')
                 ->setOptions([
-                    'route' => 'admin_category_export',
+                    'route' => 'admin_categories_export',
                 ])
             )
             ->add(
@@ -287,21 +287,21 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_category_process_bulk_status_enable',
+                    'submit_route' => 'admin_categories_bulk_enable_status',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_category_process_bulk_status_disable',
+                    'submit_route' => 'admin_categories_bulk_disable_status',
                 ])
             )
             ->add(
                 (new DeleteCategoriesBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'categories_bulk_delete_route' => 'admin_category_process_bulk_delete',
+                    'categories_bulk_delete_route' => 'admin_categories_bulk_delete',
                 ])
             );
     }
@@ -317,7 +317,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('View', [], 'Admin.Actions'))
                 ->setIcon('zoom_in')
                 ->setOptions([
-                    'route' => 'admin_category_listing',
+                    'route' => 'admin_categories_index',
                     'route_param_name' => 'id_category',
                     'route_param_field' => 'id_category',
                     'accessibility_checker' => $this->categoryForViewAccessibilityChecker,
@@ -328,7 +328,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                 ->setIcon('edit')
                 ->setOptions([
-                    'route' => 'admin_category_edit',
+                    'route' => 'admin_categories_edit',
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                 ])
@@ -339,7 +339,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setIcon('delete')
                 ->setOptions([
                     'category_id_field' => 'id_category',
-                    'category_delete_route' => 'admin_category_process_delete',
+                    'category_delete_route' => 'admin_categories_delete',
                 ])
             );
     }

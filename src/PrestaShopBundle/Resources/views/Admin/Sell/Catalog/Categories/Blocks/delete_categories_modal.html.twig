@@ -35,7 +35,7 @@
 } %}
   {% block content %}
     <div class="modal-body">
-      {{ form_start(deleteCategoriesForm, {'action': path('admin_category_process_delete')}) }}
+      {{ form_start(deleteCategoriesForm, {'action': path('admin_categories_delete')}) }}
 
       <div class="form-group mb-0">
         {{ form_widget(deleteCategoriesForm.delete_mode) }}

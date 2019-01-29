@@ -123,7 +123,7 @@ class CategoryController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_listing');
+                return $this->redirectToRoute('admin_categories_index');
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -167,7 +167,7 @@ class CategoryController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_listing');
+                return $this->redirectToRoute('admin_categories_index');
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -203,12 +203,12 @@ class CategoryController extends FrameworkBundleAdminController
             $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing((int) $categoryId));
 
             if ($editableCategory->isRootCategory()) {
-                return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId]);
+                return $this->redirectToRoute('admin_categories_edit_root', ['categoryId' => $categoryId]);
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            return $this->redirectToRoute('admin_category_listing');
+            return $this->redirectToRoute('admin_categories_index');
         }
 
         try {
@@ -227,7 +227,7 @@ class CategoryController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_listing');
+                return $this->redirectToRoute('admin_categories_index');
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -266,12 +266,12 @@ class CategoryController extends FrameworkBundleAdminController
             $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing((int) $categoryId));
 
             if (!$editableCategory->isRootCategory()) {
-                return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId]);
+                return $this->redirectToRoute('admin_categories_edit', ['categoryId' => $categoryId]);
             }
         } catch (CategoryNotFoundException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            return $this->redirectToRoute('admin_category_listing');
+            return $this->redirectToRoute('admin_categories_index');
         }
 
         $rootCategoryFormBuilder =
@@ -288,7 +288,7 @@ class CategoryController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_listing');
+                return $this->redirectToRoute('admin_categories_index');
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -324,7 +324,7 @@ class CategoryController extends FrameworkBundleAdminController
     {
         if (!$this->isCsrfTokenValid('delete-cover-image', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
-                'uri' => $this->generateUrl('admin_category_edit', [
+                'uri' => $this->generateUrl('admin_categories_edit', [
                     'categoryId' => $categoryId,
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
@@ -341,7 +341,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_category_edit', [
+        return $this->redirectToRoute('admin_categories_edit', [
             'categoryId' => $categoryId,
         ]);
     }
@@ -364,7 +364,7 @@ class CategoryController extends FrameworkBundleAdminController
     {
         if (!$this->isCsrfTokenValid('delete-menu-thumbnail', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
-                'uri' => $this->generateUrl('admin_category_edit', [
+                'uri' => $this->generateUrl('admin_categories_edit', [
                     'categoryId' => $categoryId,
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
@@ -384,7 +384,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_category_edit', [
+        return $this->redirectToRoute('admin_categories_edit', [
             'categoryId' => $categoryId,
         ]);
     }
@@ -439,10 +439,10 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_category_listing",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_category_listing")
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param Request $request
      *
@@ -467,7 +467,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_category_listing');
+        return $this->redirectToRoute('admin_categories_index');
     }
 
     /**
@@ -475,10 +475,10 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_category_listing",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_category_listing")
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param Request $request
      *
@@ -503,7 +503,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_category_listing');
+        return $this->redirectToRoute('admin_categories_index');
     }
 
     /**
@@ -511,10 +511,10 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_category_listing",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to delete this."
      * )
-     * @DemoRestricted(redirectRoute="admin_category_listing")
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param Request $request
      *
@@ -548,7 +548,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_category_listing');
+        return $this->redirectToRoute('admin_categories_index');
     }
 
     /**
@@ -556,10 +556,10 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_category_listing",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to delete this."
      * )
-     * @DemoRestricted(redirectRoute="admin_category_listing")
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param Request $request
      *
@@ -587,7 +587,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_category_listing');
+        return $this->redirectToRoute('admin_categories_index');
     }
 
     /**
@@ -595,10 +595,10 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_category_listing",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to view this."
      * )
-     * @DemoRestricted(redirectRoute="admin_category_listing")
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @param CategoryFilters $filters
      *
@@ -645,14 +645,14 @@ class CategoryController extends FrameworkBundleAdminController
 
         if ($this->get('prestashop.adapter.feature.multistore')->isUsed()) {
             $toolbarButtons['add_root'] = [
-                'href' => $this->generateUrl('admin_category_add_root'),
+                'href' => $this->generateUrl('admin_categories_add_root'),
                 'desc' => $this->trans('Add new root category', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle_outline',
             ];
         }
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_category_add'),
+            'href' => $this->generateUrl('admin_categories_add'),
             'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];

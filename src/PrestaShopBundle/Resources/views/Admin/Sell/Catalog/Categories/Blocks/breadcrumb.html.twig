@@ -37,7 +37,7 @@
                   {{ 'Edit'|trans({}, 'Admin.Actions') }}
                 </a>
               {% else %}
-                <a href="{{ path('admin_category_listing', {'id_category': category.id_category}) }}">
+                <a href="{{ path('admin_categories_index', {'id_category': category.id_category}) }}">
                   {{ category.name }}
                 </a>
               {% endif %}

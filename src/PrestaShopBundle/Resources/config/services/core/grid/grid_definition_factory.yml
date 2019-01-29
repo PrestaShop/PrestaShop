@@ -61,7 +61,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'category', 'action': 'index'})"
-            - "@=service('router').generate('admin_category_listing')"
+            - "@=service('router').generate('admin_categories_index')"
             - '@prestashop.adapter.shop.context'
             - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
         public: true
