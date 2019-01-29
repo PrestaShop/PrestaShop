@@ -139,6 +139,18 @@ module.exports = {
         }
       }
 
+      if (productData.hasOwnProperty('quantities')) {
+        scenario('Edit availibility preferences', client => {
+          test('should click on "Quantities"', () => client.scrollWaitForExistAndClick(AddProductPage.variations_tab, 50));
+          if (productData.quantities.stock === 'deny') {
+            test('should check "Deny orders"', () => client.waitForExistAndClick(AddProductPage.combination_availability_preferences.replace("%NUMBER", 0)));
+          }
+          else {
+            test('should check "Allow orders"', () => client.waitForExistAndClick(AddProductPage.combination_availability_preferences.replace("%NUMBER", 1)));
+          }
+        }, 'product/product');
+      }
+
       if (productData.hasOwnProperty('pricing')) {
         scenario('Edit product pricing', client => {
           test('should click on "Pricing"', () => client.scrollWaitForExistAndClick(AddProductPage.product_pricing_tab, 50));
@@ -192,15 +204,19 @@ module.exports = {
       }
 
       scenario('Save the created product', client => {
+        test('should check then close symfony toolbar', () => client.waitForSymfonyToolbar(AddProductPage, 1000));
         test('should switch the product online and verify the appearance of the green validation', () => {
           return promise
             .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000))
             .then(() => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 3000));
         });
-        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 7000));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 'equal', 2000));
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 5000));
+        test('should check and close the green validation', async () => {
+          return promise
+            .then(() => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 'equal', 2000))
+            .then(() => client.waitForExistAndClick(AddProductPage.close_validation_button, 1000));
+        });
       }, 'product/product');
-
     }, 'product/product');
 
   },
@@ -400,13 +416,13 @@ module.exports = {
     await client.signInFO(AccessPageFO);
     await client.changeLanguage();
     await client.scrollWaitForExistAndClick(productPage.see_all_products);
-    for (let i = 0; i <= pagination; i++) {
+    for (let i = 0; i <= global.pagination; i++) {
       for (let j = 0; j < 4; j++) {
         await client.pause(4000);
         await client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time));
         await client.middleClick(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time), global.isVisible);
       }
-      if (i !== pagination) {
+      if (i !== global.pagination) {
         await client.isVisible(productPage.pagination_next);
         if (global.isVisible) {
           await client.clickPageNext(productPage.pagination_next);
@@ -624,5 +640,13 @@ module.exports = {
     }
     await client.waitForExistAndClick(ProductList.filter_by_category_button);
     await client.waitForExistAndClick(ProductList.unselect_filter_link);
+  },
+
+  checkProductQuantity(Menu, AddProductPage, productName, quantity) {
+    scenario('Check the quantity of the "' + productName + '"', client => {
+      test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+      test('should search for product by name', () => client.searchProductByName(productName));
+      test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, quantity));
+    }, 'product/check_product');
   },
 };

@@ -107,7 +107,7 @@ module.exports = {
     combination_generate_button: '//*[@id="create-combinations"]',
     combination_impact_price_input: '//*[@id="attribute_%NUMBER"]/td[@class="attribute-price"]//input',
     combination_final_price_span: '//*[@id="attribute_%NUMBER"]/td[contains(@class, "attribute-finalprice")]/span',
-    combination_availability_preferences: '//*[@id="form_step3_out_of_stock_0"]',
+    combination_availability_preferences: '//*[@id="form_step3_out_of_stock_%NUMBER"]',
     combination_label_in_stock: '//*[@id="form_step3_available_now_1"]',
     combination_label_out_stock: '//*[@id="form_step3_available_later_1"]',
     combination_panel: '//*[@id="accordion_combinations"]/tr[%NUMBER]',

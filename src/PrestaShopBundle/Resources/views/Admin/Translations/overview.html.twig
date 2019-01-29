@@ -54,3 +54,9 @@
     {% endif %}
 
 {% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/translations.css') }}">
+{% endblock %}

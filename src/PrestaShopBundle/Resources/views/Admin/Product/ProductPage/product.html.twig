@@ -288,8 +288,14 @@
 
 {% endblock %}
 
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product_page.css') }}">
+{% endblock %}
+
 {% block javascripts %}
   {{ parent() }}
+
   <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/catalog_product.bundle.js') }}"></script>
 
@@ -301,6 +307,7 @@
   <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/modal-confirmation.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/product_page.bundle.js') }}"></script>
   <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>

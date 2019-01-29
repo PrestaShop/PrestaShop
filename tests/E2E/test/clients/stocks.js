@@ -29,7 +29,7 @@ class ModifyQuantity extends CommonClient {
       .then((text) => expect(text.substring(14)).to.be.equal((Number(global.tab["productQuantity"]) + quantity).toString()));
   }
 
-  checkMovement(selector, order, quantity, variation, type, reference = "") {
+  checkMovement(selector, order, quantity, variation, type, reference = "", dateAndTime = "", employee = "", productName = "") {
     return this.client
       .waitForVisible(selector.variation_value.replace('%P', order), 90000)
       .then(() => this.client.getText(selector.variation_value.replace('%P', order)))
@@ -39,8 +39,13 @@ class ModifyQuantity extends CommonClient {
       .then(() => this.client.getText(selector.type_value.replace('%P', order)))
       .then((text) => expect(text.indexOf(type)).to.not.equal(-1))
       .then(() => this.client.getText(selector.reference_value.replace('%P', order)))
-      .then((text) => expect(text).to.be.equal(reference));
-  }
+      .then((text) => expect(text).to.be.equal(reference))
+      .then(() => this.client.getText(selector.time_movement.replace('%P', order)))
+      .then((text) => expect(text).to.be.contain(dateAndTime))
+      .then(() => this.client.getText(selector.employee_value.replace('%P', order)))
+      .then((text) => expect(text).to.be.equal(employee))
+      .then(() => this.client.getText(selector.product_value.replace('%P', order)))
+      .then((text) => expect(text).to.be.equal(productName));  }
 
   checkOrderMovement(Movement, client) {
     return promise

@@ -42,7 +42,7 @@
   };
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
   @import "../../../scss/config/_settings.scss";
   .product-title {
     .has-combination & {

@@ -136,7 +136,7 @@
   };
 </script>
 
-<style lang="sass" type="text/scss" scoped>
+<style lang="scss" type="text/scss" scoped>
   @import "~jquery-ui-dist/jquery-ui.css";
   *{
     outline: none;
