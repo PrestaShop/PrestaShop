@@ -215,7 +215,7 @@ class LinkCore
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['category'] = (!$category) ? $product->category : $category;
             $cats = array();
-            foreach ($product->getParentCategories($idLang) as $cat) {
+            foreach ($product->getProductCategoriesFull($product->id, $idLang) as $cat) {
                 if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
                     //remove root and home category from the URL
                     $cats[] = $cat['link_rewrite'];
