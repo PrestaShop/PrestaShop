@@ -84,13 +84,21 @@
   }
 
   .theme-card {
+    position: relative;
+
     .active-card-overlay {
+      &.active {
+        display: block;
+      }
       display: none;
       @include theme-card-overlay;
     }
 
-    .active-card-overlay.active {
-      display: block;
+    .actions-container {
+      &.active {
+        display: block;
+      }
+      display: none;
     }
 
     max-width: 386px;
@@ -102,9 +110,34 @@
       max-width: 100%;
       height: auto;
     }
+
+    .actions-container {
+      button {
+        position: absolute;
+        height: 40px;
+        top: 70%;
+        left: 30%;
+        border-radius: 19.9px;
+        background-color: #ffffff;
+
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.2px;
+        text-align: center;
+        color: #363a41;
+
+        .icon-current-theme {
+          color: #25b9d7;
+        }
+      }
+    }
   }
 
-  .theme-card:hover .active-card-overlay {
+  .theme-card:hover .active-card-overlay,
+  .theme-card:hover .actions-container,
+  {
     display: block;
   }
 }
