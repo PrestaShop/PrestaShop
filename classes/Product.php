@@ -6072,7 +6072,9 @@ class ProductCore extends ObjectModel
     {
         $result = $this->getCover($this->id);
 
-        if (!is_array($result)) return null;
+        if (!is_array($result)) {
+            return null;
+        }
 
         return $result['id_image'];
     }
