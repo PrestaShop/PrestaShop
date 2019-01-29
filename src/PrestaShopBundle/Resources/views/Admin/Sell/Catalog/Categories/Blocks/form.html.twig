@@ -62,7 +62,7 @@
       {% if categoryForm.id_parent is defined %}
       <div class="form-group row">
         <label class="form-control-label">
-          {{ 'Parent category'|trans }}
+          {{ 'Parent category'|trans({}, 'Admin.Catalog.Feature') }}
         </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.id_parent) }}
