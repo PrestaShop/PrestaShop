@@ -1,0 +1,5 @@
+admin_permissions_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:index
