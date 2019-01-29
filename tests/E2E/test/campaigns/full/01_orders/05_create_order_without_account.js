@@ -25,6 +25,7 @@ let promise = Promise.resolve();
 const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
+const {Employee} = require('../../../selectors/BO/employee_page');
 
 let productData = [{
   name: 'ProductA',
@@ -293,10 +294,16 @@ scenario('Create order by a guest from the Front Office', client => {
   stockCommonScenarios.checkStockProduct(client, productData[0].name + date_time, Menu, Stock, "50", "0", "50");
   stockCommonScenarios.checkStockProduct(client, productData[1].name + date_time, Menu, Stock, "50", "0", "50");
   scenario('Check the movement of the "' + productData[0].name + date_time + '"', client => {
-    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[0].reference, dateSystem, "John DOE", productData[0].name + date_time);
+    test('should go to "Employee" page', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
+    test('should get  the Employee "Name" and "Last Name"', async () => {
+      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 3), "employee_last_name");
+      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 2), "employee_first_name");
+    });
+    test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
+    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[0].reference, dateSystem, productData[0].name + date_time);
   }, 'stocks');
   scenario('Check the movement of the "' + productData[1].name + date_time + '"', client => {
-    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[1].reference, dateSystem, "John DOE", productData[1].name + date_time);
+    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[1].reference, dateSystem,  productData[1].name + date_time);
   }, 'stocks');
   scenario('Check that the created order is opened in a new window', client => {
     test('should click on "Customer Order" link  ', () => client.waitForExistAndClick(Movement.type_value.replace("%P", 1)));

@@ -202,7 +202,9 @@ class CommonClient {
       return this.client
         .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
-        .then((variable) => global.tab[globalVar] = variable);
+        .then((variable) => {
+          global.tab[globalVar] = variable
+        });
     }
   }
 
