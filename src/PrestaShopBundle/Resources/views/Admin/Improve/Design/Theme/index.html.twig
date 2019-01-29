@@ -85,7 +85,7 @@
                 <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.name }}">
               {% endblock %}
               {% block button_container %}
-                <button class="btn first-button">
+                <button class="btn action-button">
                   <i class="material-icons icon-current-theme">done</i>
                   {{ 'My current theme'|trans({}, 'Admin.Design.Feature') }}
                 </button>
@@ -106,7 +106,7 @@
                   {% block button_container %}
                     <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
                       <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}" />
-                      <button type="submit" class="btn first-button">
+                      <button type="submit" class="btn action-button">
                         <i class="material-icons">
                           present_to_all
                         </i>
