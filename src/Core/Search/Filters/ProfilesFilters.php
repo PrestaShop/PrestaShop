@@ -1,5 +1,6 @@
-/*!
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,48 +22,28 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *
  */
 
-.form-horizontal {
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-  .card-block {
-    justify-content: center;
-    padding: 1.875rem $card-spacer-x;
-    &.row {
-      margin: 0; // used to override negative margins brought by .row
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * Class ProfilesFilters is responsible for providing default filter values for Profiles grid.
+ */
+final class ProfilesFilters extends Filters
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_profile',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
-  }
-
-  .card-text {
-    @extend .col-sm-10;
-  }
-
-  .form-group.row {
-    margin-bottom: 1.2rem;
-
-    // label column in forms
-    > .form-control-label:first-of-type {
-      @extend .col-sm-4;
-      @extend .col-form-label;
-
-      @include media-breakpoint-up('sm') {
-        text-align: right;
-        padding-right: 25px;
-      }
-    }
-  }
-
-  // make ps-switch align with label
-  .ps-switch:not(.ps-switch-lg) {
-    @include media-breakpoint-up('sm') {
-      margin-top: 5px;
-    }
-  }
-
-  // small size form controls
-  .size-small {
-    width: 150px;
-  }
-
 }

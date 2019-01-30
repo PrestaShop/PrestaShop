@@ -92,3 +92,10 @@ services:
             - '@prestashop.core.grid.definition.factory.currency'
             - '@prestashop.core.currency.grid_data_factory'
             - '@prestashop.core.grid.filter.form_factory'
+
+    prestashop.core.grid.factory.profiles:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.profiles'
+            - '@prestashop.core.grid.data_factory.profiles'
+            - '@prestashop.core.grid.filter.form_factory'

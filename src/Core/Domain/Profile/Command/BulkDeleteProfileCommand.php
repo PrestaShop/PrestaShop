@@ -1,4 +1,5 @@
-/*!
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,48 +22,45 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *
  */
 
-.form-horizontal {
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
 
-  .card-block {
-    justify-content: center;
-    padding: 1.875rem $card-spacer-x;
-    &.row {
-      margin: 0; // used to override negative margins brought by .row
+use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+
+/**
+ * Class BulkDeleteProfileCommand is a command to bulk delete profiles by given ids.
+ */
+class BulkDeleteProfileCommand
+{
+    /**
+     * @var ProfileId[]
+     */
+    private $profileIds = [];
+
+    /**
+     * @param array $profileIds
+     */
+    public function __construct(array $profileIds)
+    {
+        $this->setProfileIds($profileIds);
     }
-  }
 
-  .card-text {
-    @extend .col-sm-10;
-  }
-
-  .form-group.row {
-    margin-bottom: 1.2rem;
-
-    // label column in forms
-    > .form-control-label:first-of-type {
-      @extend .col-sm-4;
-      @extend .col-form-label;
-
-      @include media-breakpoint-up('sm') {
-        text-align: right;
-        padding-right: 25px;
-      }
+    /**
+     * @return ProfileId[]
+     */
+    public function getProfileIds()
+    {
+        return $this->profileIds;
     }
-  }
 
-  // make ps-switch align with label
-  .ps-switch:not(.ps-switch-lg) {
-    @include media-breakpoint-up('sm') {
-      margin-top: 5px;
+    /**
+     * @param array $profileIds
+     */
+    private function setProfileIds(array $profileIds)
+    {
+        foreach ($profileIds as $profileId) {
+            $this->profileIds[] = new ProfileId($profileId);
+        }
     }
-  }
-
-  // small size form controls
-  .size-small {
-    width: 150px;
-  }
-
 }

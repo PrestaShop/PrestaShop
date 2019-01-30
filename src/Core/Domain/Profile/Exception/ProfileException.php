@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class ProfileException.
+ * Class ProfileException is a base exception for profiles context.
  */
 class ProfileException extends DomainException
 {
