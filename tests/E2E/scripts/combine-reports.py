@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import uuid
 import glob
 import json
+import os
+import re
+import sys
 import time
+import uuid
 from datetime import datetime, timedelta
 
 
@@ -185,8 +186,15 @@ class MochawesomeCombine:
             'rootEmpty': True
         }
 
-        with open(output, 'w') as f:
+        output_name = re.sub('\.json$', '', output)
+        # Create a full report
+        with open('{}.json'.format(output_name), 'w') as f:
             f.write(json.dumps(result))
+
+        # Create only a stats report in case you need to retrieve
+        # information without downloading a 10MB file
+        with open('{}-stats.json'.format(output_name), 'w') as f:
+            f.write(json.dumps(result['stats']))
 
 
 if __name__ == '__main__':
@@ -199,4 +207,6 @@ if __name__ == '__main__':
         print('Nothing to add, report is empty')
     else:
         mc.write_report(data, sys.argv[2])
-        print('Report generated: {}'.format(sys.argv[2]))
+        print('Reports generated:')
+        print("\t{}.json".format(sys.argv[2]))
+        print("\t{}-stats.json".format(sys.argv[2]))
