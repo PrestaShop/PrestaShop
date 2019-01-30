@@ -26,9 +26,11 @@
 {% if parentTab.children is not empty %}
   {% for childTab in parentTab.children %}
     {% if profileTabPermissions[childTab.id] is defined %}
+
+
       {% set isChild, resultPermissions, hasAllPermissions = true, 0, true %}
       <tr>
-        <td>&raquo; {{ childTab.name }}</td>
+        <td>&nbsp;&nbsp; &raquo; {{ childTab.name }}</td>
         {% for permission in permissions %}
           {% set permissionId = permissionIds[permission] %}
 
@@ -76,6 +78,7 @@
       </tr>
     {% endif %}
 
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/level_3_tab_permissions.html.twig' with {'parentTab': childTab} %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/level_4_tab_permissions.html.twig' with {'parentTab': childTab} %}
+
   {% endfor %}
 {% endif %}
