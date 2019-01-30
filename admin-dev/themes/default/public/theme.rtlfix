@@ -103,3 +103,27 @@ svg {
 #header_infos #header_logo {
   background-position: right;
 }
+
+/* fix notification dropdown */
+.notification-center .dropdown-menu {
+  right: auto !important;
+  left: 85px !important;
+}
+
+/* fix popover */
+.popover {
+  right: auto !important;
+  left: 5px !important;
+  margin-right: 0;
+  margin-left: 8px;
+}
+.popover .arrow {
+  left: -8px !important;
+  right: auto !important;
+  transform: scaleX(-1) !important;
+}
+
+/* fix stock quantity arrow direction */
+.stock-app .stock-overview .table .qty-update .material-icons {
+  transform: scaleX(-1) !important;
+}
