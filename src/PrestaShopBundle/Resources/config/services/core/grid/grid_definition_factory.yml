@@ -23,7 +23,7 @@ services:
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'email', 'action': 'index'})"
             - "@=service('router').generate('admin_emails_index')"
-            - '@prestashop.core.form.choice_provider.language_by_id'
+            - '@prestashop.core.form.choice_provider.active_language_by_id'
         public: true
 
     prestashop.core.grid.definition.factory.request_sql:
