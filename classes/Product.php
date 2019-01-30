@@ -6066,7 +6066,7 @@ class ProductCore extends ObjectModel
     /**
      * Webservice getter : get virtual field id_default_image in category.
      *
-     * @return int
+     * @return int|null
      */
     public function getCoverWs()
     {
