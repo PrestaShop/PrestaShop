@@ -153,7 +153,7 @@
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
-          <i class="material-icons">error_outline</i> <u>{{ '%count% errors'|trans({'%count%': popoverErrors|length}, 'Admin.Global') }}</u>
+          <i class="material-icons form-error-icon">error_outline</i> <u>{{ '%count% errors'|trans({'%count%': popoverErrors|length}, 'Admin.Global') }}</u>
         </span>
       {% endset %}
 
@@ -165,11 +165,16 @@
             {{ errorPopover }}
           </div>
         {% else %}
-          {% for error in errors %}
-            <div class="text-danger">
-              {{ error }}
-            </div>
-          {% endfor %}
+          <div class="d-inline-block text-danger align-top">
+            <i class="material-icons form-error-icon">error_outline</i>
+          </div>
+          <div class="d-inline-block">
+            {% for error in errors %}
+              <div class="text-danger">
+                {{ error }}
+              </div>
+            {% endfor %}
+          </div>
       {% endif %}
 
     </div>
