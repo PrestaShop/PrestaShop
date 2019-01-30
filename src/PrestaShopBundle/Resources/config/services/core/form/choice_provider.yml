@@ -184,3 +184,8 @@ services:
 
   prestashop.core.form.choice_provider.tax_rule_group_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'
+
+  prestashop.core.form.choice_provider.accessible_tab:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.tab").getAccessibleTabs(service("prestashop.adapter.legacy.context").getLanguage().id)'
