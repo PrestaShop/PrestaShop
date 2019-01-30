@@ -26,11 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
 
-/**
- * Class ProfileId
- */
 class ProfileId
 {
     /**
@@ -45,12 +42,9 @@ class ProfileId
      */
     public function __construct($profileId)
     {
-        // Strict type should be used in next major
-        if (!is_int($profileId)) {
-            @trigger_error('Invalid type, int is expected', E_STRICT);
-        }
+        $this->assertProfileIdIsGreaterThanZero($profileId);
 
-        $this->setProfileId($profileId);
+        $this->profileId = $profileId;
     }
 
     /**
@@ -66,12 +60,12 @@ class ProfileId
      *
      * @throws ProfileException
      */
-    private function setProfileId($profileId)
+    private function assertProfileIdIsGreaterThanZero($profileId)
     {
-        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 >= $profileId) {
-            throw new ProfileException(sprintf('Invalid Profile id %s supplied', var_export($profileId, true)));
+        if (!is_int($profileId) || 0 > $profileId) {
+            throw new ProfileConstraintException(
+                sprintf('Invalid profile id %s provided', var_export($profileId, true))
+            );
         }
-
-        $this->profileId = (int) $profileId;
     }
 }
