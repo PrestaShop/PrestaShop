@@ -27,3 +27,9 @@ services:
         tags:
             - name: tactician.handler
               command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateProfileTabPermissionsCommand'
+
+    prestashop.adapter.profile.permission.command_handler.update_module_permission_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateModulePermissionHandler'
+        tags:
+            - name: tactician.handler
+              command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand'
