@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 
 /**
- * Class PageName
+ * Class Name
  */
-class PageName
+class Name
 {
     /**
      * @var string

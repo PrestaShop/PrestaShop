@@ -90,11 +90,11 @@ final class AddMetaHandler implements AddMetaHandlerInterface
         try {
             $entity = new Meta();
             $entity->page = $command->getPageName()->getValue();
-            $entity->title = $command->getPageTitle();
-            $entity->description = $command->getMetaDescription();
-            $entity->keywords = $command->getMetaKeywords();
+            $entity->title = $command->getLocalisedPageTitles();
+            $entity->description = $command->getLocalisedMetaDescription();
+            $entity->keywords = $command->getLocalisedMetaKeywords();
 
-            $rewriteUrls = $command->getRewriteUrl();
+            $rewriteUrls = $command->getLocalisedRewriteUrls();
             foreach ($rewriteUrls as $idLang => $rewriteUrl) {
                 if (!$rewriteUrl) {
                     $rewriteUrls[$idLang] = $rewriteUrls[$this->defaultLanguageId];
@@ -130,7 +130,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
     private function assertUrlRewriteHasDefaultLanguage(AddMetaCommand $command)
     {
         $urlRewriteErrors = $this->validator->validate(
-            $command->getRewriteUrl(),
+            $command->getLocalisedRewriteUrls(),
             new DefaultLanguage()
         );
 
@@ -149,7 +149,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
      */
     private function assertIsUrlRewriteValid(AddMetaCommand $command)
     {
-        foreach ($command->getRewriteUrl() as $idLang => $rewriteUrl) {
+        foreach ($command->getLocalisedRewriteUrls() as $idLang => $rewriteUrl) {
             $errors = $this->validator->validate($rewriteUrl, new IsUrlRewrite());
 
             if (0 !== count($errors)) {

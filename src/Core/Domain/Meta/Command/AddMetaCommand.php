@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\PageName;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\Name;
 
 /**
  * Class AddMetaCommand is responsible for saving meta entities data.
@@ -35,29 +35,29 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\PageName;
 class AddMetaCommand extends AbstractMetaCommand
 {
     /**
-     * @var PageName
+     * @var Name
      */
     private $pageName;
 
     /**
      * @var string[]
      */
-    private $pageTitle;
+    private $localisedPageTitle;
 
     /**
      * @var string[]
      */
-    private $metaDescription;
+    private $localisedMetaDescription;
 
     /**
      * @var string[]
      */
-    private $metaKeywords;
+    private $localisedMetaKeywords;
 
     /**
      * @var string[]
      */
-    private $rewriteUrl;
+    private $LocalisedRewriteUrls;
 
     /**
      * @param string $pageName
@@ -66,11 +66,11 @@ class AddMetaCommand extends AbstractMetaCommand
      */
     public function __construct($pageName)
     {
-        $this->pageName = new PageName($pageName);
+        $this->pageName = new Name($pageName);
     }
 
     /**
-     * @return PageName
+     * @return Name
      */
     public function getPageName()
     {
@@ -80,25 +80,25 @@ class AddMetaCommand extends AbstractMetaCommand
     /**
      * @return string[]
      */
-    public function getPageTitle()
+    public function getLocalisedPageTitles()
     {
-        return $this->pageTitle;
+        return $this->localisedPageTitle;
     }
 
     /**
-     * @param string[] $pageTitle
+     * @param string[] $localisedPageTitle
      *
      * @return self
      *
      * @throws MetaConstraintException
      */
-    public function setPageTitle(array $pageTitle)
+    public function setLocalisedPageTitle(array $localisedPageTitle)
     {
-        foreach ($pageTitle as $idLang => $title) {
+        foreach ($localisedPageTitle as $idLang => $title) {
             $this->assertNameMatchesRegexPattern($idLang, $title, MetaConstraintException::INVALID_PAGE_TITLE);
         }
 
-        $this->pageTitle = $pageTitle;
+        $this->localisedPageTitle = $localisedPageTitle;
 
         return $this;
     }
@@ -106,25 +106,25 @@ class AddMetaCommand extends AbstractMetaCommand
     /**
      * @return string[]
      */
-    public function getMetaDescription()
+    public function getLocalisedMetaDescription()
     {
-        return $this->metaDescription;
+        return $this->localisedMetaDescription;
     }
 
     /**
-     * @param string[] $metaDescription
+     * @param string[] $localisedMetaDescription
      *
      * @return self
      *
      * @throws MetaConstraintException
      */
-    public function setMetaDescription(array $metaDescription)
+    public function setLocalisedMetaDescription(array $localisedMetaDescription)
     {
-        foreach ($metaDescription as $idLang => $description) {
+        foreach ($localisedMetaDescription as $idLang => $description) {
             $this->assertNameMatchesRegexPattern($idLang, $description, MetaConstraintException::INVALID_META_DESCRIPTION);
         }
 
-        $this->metaDescription = $metaDescription;
+        $this->localisedMetaDescription = $localisedMetaDescription;
 
         return $this;
     }
@@ -132,25 +132,25 @@ class AddMetaCommand extends AbstractMetaCommand
     /**
      * @return string[]
      */
-    public function getMetaKeywords()
+    public function getLocalisedMetaKeywords()
     {
-        return $this->metaKeywords;
+        return $this->localisedMetaKeywords;
     }
 
     /**
-     * @param string[] $metaKeywords
+     * @param string[] $localisedMetaKeywords
      *
      * @return self
      *
      * @throws MetaConstraintException
      */
-    public function setMetaKeywords(array $metaKeywords)
+    public function setLocalisedMetaKeywords(array $localisedMetaKeywords)
     {
-        foreach ($metaKeywords as $idLang => $metaKeyword) {
+        foreach ($localisedMetaKeywords as $idLang => $metaKeyword) {
             $this->assertNameMatchesRegexPattern($idLang, $metaKeyword, MetaConstraintException::INVALID_META_KEYWORDS);
         }
 
-        $this->metaKeywords = $metaKeywords;
+        $this->localisedMetaKeywords = $localisedMetaKeywords;
 
         return $this;
     }
@@ -158,19 +158,19 @@ class AddMetaCommand extends AbstractMetaCommand
     /**
      * @return string[]
      */
-    public function getRewriteUrl()
+    public function getLocalisedRewriteUrls()
     {
-        return $this->rewriteUrl;
+        return $this->LocalisedRewriteUrls;
     }
 
     /**
-     * @param string[] $rewriteUrl
+     * @param string[] $LocalisedRewriteUrls
      *
      * @return self
      */
-    public function setRewriteUrl(array $rewriteUrl)
+    public function setLocalisedRewriteUrls(array $LocalisedRewriteUrls)
     {
-        $this->rewriteUrl = $rewriteUrl;
+        $this->LocalisedRewriteUrls = $LocalisedRewriteUrls;
 
         return $this;
     }

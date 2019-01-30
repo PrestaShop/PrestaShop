@@ -56,7 +56,7 @@ class AddMetaCommandTest extends TestCase
 
         $command = new AddMetaCommand('correct-page-name');
 
-        $command->setPageTitle($incorrectNames);
+        $command->setLocalisedPageTitle($incorrectNames);
     }
 
     /**
@@ -69,7 +69,7 @@ class AddMetaCommandTest extends TestCase
 
         $command = new AddMetaCommand('correct-page-name');
 
-        $command->setMetaDescription($incorrectNames);
+        $command->setLocalisedMetaDescription($incorrectNames);
     }
 
     /**
@@ -82,7 +82,7 @@ class AddMetaCommandTest extends TestCase
 
         $command = new AddMetaCommand('correct-page-name');
 
-        $command->setMetaKeywords($incorrectNames);
+        $command->setLocalisedMetaKeywords($incorrectNames);
     }
 
     public function getIncorrectPageNames()

@@ -67,7 +67,7 @@ class EditMetaCommandTest extends TestCase
 
         $command = new EditMetaCommand(1);
 
-        $command->setPageTitle($incorrectNames);
+        $command->setLocalisedPageTitles($incorrectNames);
     }
 
     /**
@@ -80,7 +80,7 @@ class EditMetaCommandTest extends TestCase
 
         $command = new EditMetaCommand(1);
 
-        $command->setMetaDescription($incorrectNames);
+        $command->setLocalisedMetaDescriptions($incorrectNames);
     }
 
     /**
@@ -93,7 +93,7 @@ class EditMetaCommandTest extends TestCase
 
         $command = new EditMetaCommand(1);
 
-        $command->setMetaKeywords($incorrectNames);
+        $command->setLocalisedMetaKeywords($incorrectNames);
     }
 
     public function getIncorrectPageNames()

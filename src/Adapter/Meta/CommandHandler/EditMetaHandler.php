@@ -79,20 +79,20 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 $entity->page = $command->getPageName()->getValue();
             }
 
-            if (null !== $command->getRewriteUrl()) {
-                $entity->url_rewrite = $command->getRewriteUrl();
+            if (null !== $command->getLocalisedRewriteUrls()) {
+                $entity->url_rewrite = $command->getLocalisedRewriteUrls();
             }
 
-            if (null !== $command->getPageTitle()) {
-                $entity->title = $command->getPageTitle();
+            if (null !== $command->getLocalisedPageTitles()) {
+                $entity->title = $command->getLocalisedPageTitles();
             }
 
-            if (null !== $command->getMetaDescription()) {
-                $entity->description = $command->getMetaDescription();
+            if (null !== $command->getLocalisedMetaDescriptions()) {
+                $entity->description = $command->getLocalisedMetaDescriptions();
             }
 
-            if (null !== $command->getMetaKeywords()) {
-                $entity->keywords = $command->getMetaKeywords();
+            if (null !== $command->getLocalisedMetaKeywords()) {
+                $entity->keywords = $command->getLocalisedMetaKeywords();
             }
 
             $this->assertUrlRewriteHasDefaultLanguage($entity);

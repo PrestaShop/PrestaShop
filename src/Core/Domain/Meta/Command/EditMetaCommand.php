@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
-use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\PageName;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\Name;
 
 /**
  * Class EditMetaCommand
@@ -42,29 +42,29 @@ class EditMetaCommand extends AbstractMetaCommand
     private $metaId;
 
     /**
-     * @var PageName
+     * @var Name
      */
     private $pageName;
 
     /**
      * @var string[]
      */
-    private $pageTitle;
+    private $localisedPageTitles;
 
     /**
      * @var string[]
      */
-    private $metaDescription;
+    private $localisedMetaDescriptions;
 
     /**
      * @var string[]
      */
-    private $metaKeywords;
+    private $localisedMetaKeywords;
 
     /**
      * @var string[]
      */
-    private $rewriteUrl;
+    private $localisedRewriteUrls;
 
     /**
      * @param int $metaId
@@ -85,7 +85,7 @@ class EditMetaCommand extends AbstractMetaCommand
     }
 
     /**
-     * @return PageName
+     * @return Name
      */
     public function getPageName()
     {
@@ -101,25 +101,25 @@ class EditMetaCommand extends AbstractMetaCommand
      */
     public function setPageName($pageName)
     {
-        $this->pageName = new PageName($pageName);
+        $this->pageName = new Name($pageName);
 
         return $this;
     }
 
     /**
-     * @param string[] $pageTitle
+     * @param string[] $localisedPageTitles
      *
      * @return self
      *
      * @throws MetaConstraintException
      */
-    public function setPageTitle(array $pageTitle)
+    public function setLocalisedPageTitles(array $localisedPageTitles)
     {
-        foreach ($pageTitle as $idLang => $title) {
+        foreach ($localisedPageTitles as $idLang => $title) {
             $this->assertNameMatchesRegexPattern($idLang, $title, MetaConstraintException::INVALID_PAGE_TITLE);
         }
 
-        $this->pageTitle = $pageTitle;
+        $this->localisedPageTitles = $localisedPageTitles;
 
         return $this;
     }
@@ -127,25 +127,25 @@ class EditMetaCommand extends AbstractMetaCommand
     /**
      * @return string[]
      */
-    public function getPageTitle()
+    public function getLocalisedPageTitles()
     {
-        return $this->pageTitle;
+        return $this->localisedPageTitles;
     }
 
     /**
-     * @param string[] $metaDescription
+     * @param string[] $localisedMetaDescriptions
      *
      * @return self
      *
      * @throws MetaConstraintException
      */
-    public function setMetaDescription(array $metaDescription)
+    public function setLocalisedMetaDescriptions(array $localisedMetaDescriptions)
     {
-        foreach ($metaDescription as $idLang => $description) {
+        foreach ($localisedMetaDescriptions as $idLang => $description) {
             $this->assertNameMatchesRegexPattern($idLang, $description, MetaConstraintException::INVALID_META_DESCRIPTION);
         }
 
-        $this->metaDescription = $metaDescription;
+        $this->localisedMetaDescriptions = $localisedMetaDescriptions;
 
         return $this;
     }
@@ -153,25 +153,25 @@ class EditMetaCommand extends AbstractMetaCommand
     /**
      * @return string[]
      */
-    public function getMetaDescription()
+    public function getLocalisedMetaDescriptions()
     {
-        return $this->metaDescription;
+        return $this->localisedMetaDescriptions;
     }
 
     /**
-     * @param string[] $metaKeywords
+     * @param string[] $localisedMetaKeywords
      *
      * @return self
      *
      * @throws MetaConstraintException
      */
-    public function setMetaKeywords(array $metaKeywords)
+    public function setLocalisedMetaKeywords(array $localisedMetaKeywords)
     {
-        foreach ($metaKeywords as $idLang => $metaKeyword) {
+        foreach ($localisedMetaKeywords as $idLang => $metaKeyword) {
             $this->assertNameMatchesRegexPattern($idLang, $metaKeyword, MetaConstraintException::INVALID_META_KEYWORDS);
         }
 
-        $this->metaKeywords = $metaKeywords;
+        $this->localisedMetaKeywords = $localisedMetaKeywords;
 
         return $this;
     }
@@ -179,27 +179,27 @@ class EditMetaCommand extends AbstractMetaCommand
     /**
      * @return string[]
      */
-    public function getMetaKeywords()
+    public function getLocalisedMetaKeywords()
     {
-        return $this->metaKeywords;
+        return $this->localisedMetaKeywords;
     }
 
     /**
      * @return string[]
      */
-    public function getRewriteUrl()
+    public function getLocalisedRewriteUrls()
     {
-        return $this->rewriteUrl;
+        return $this->localisedRewriteUrls;
     }
 
     /**
-     * @param string[] $rewriteUrl
+     * @param string[] $localisedRewriteUrls
      *
      * @return self
      */
-    public function setRewriteUrl(array $rewriteUrl)
+    public function setLocalisedRewriteUrls(array $localisedRewriteUrls)
     {
-        $this->rewriteUrl = $rewriteUrl;
+        $this->localisedRewriteUrls = $localisedRewriteUrls;
 
         return $this;
     }

@@ -58,10 +58,10 @@ final class MetaFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $addMetaCommand = (new AddMetaCommand($data['page_name']))
-            ->setPageTitle($data['page_title'])
-            ->setMetaDescription($data['meta_description'])
-            ->setMetaKeywords($data['meta_keywords'])
-            ->setRewriteUrl($data['url_rewrite'])
+            ->setLocalisedPageTitle($data['page_title'])
+            ->setLocalisedMetaDescription($data['meta_description'])
+            ->setLocalisedMetaKeywords($data['meta_keywords'])
+            ->setLocalisedRewriteUrls($data['url_rewrite'])
         ;
 
         /** @var MetaId $metaId */
@@ -79,10 +79,10 @@ final class MetaFormDataHandler implements FormDataHandlerInterface
     {
         $editMetaCommand = (new EditMetaCommand((int) $metaId))
             ->setPageName($data['page_name'])
-            ->setPageTitle($data['page_title'])
-            ->setMetaDescription($data['meta_description'])
-            ->setMetaKeywords($data['meta_keywords'])
-            ->setRewriteUrl($data['url_rewrite'])
+            ->setLocalisedPageTitles($data['page_title'])
+            ->setLocalisedMetaDescriptions($data['meta_description'])
+            ->setLocalisedMetaKeywords($data['meta_keywords'])
+            ->setLocalisedRewriteUrls($data['url_rewrite'])
         ;
 
         /** @var MetaId $metaId */

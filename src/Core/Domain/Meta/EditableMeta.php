@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
-use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\PageName;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\Name;
 
 /**
  * Class EditableMeta is responsible for providing data for meta form.
@@ -41,7 +41,7 @@ class EditableMeta
     private $metaId;
 
     /**
-     * @var PageName
+     * @var Name
      */
     private $pageName;
 
@@ -86,7 +86,7 @@ class EditableMeta
         array $urlRewrite
     ) {
         $this->metaId = new MetaId($metaId);
-        $this->pageName = new PageName($pageName);
+        $this->pageName = new Name($pageName);
         $this->pageTitle = $pageTitle;
         $this->metaDescription = $metaDescription;
         $this->metaKeywords = $metaKeywords;
@@ -102,7 +102,7 @@ class EditableMeta
     }
 
     /**
-     * @return PageName
+     * @return Name
      */
     public function getPageName()
     {
