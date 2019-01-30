@@ -27,13 +27,13 @@ const $ = window.$;
 
 /**
  * class TokenField is responsible for providing functionality from bootstrap-tokenfield plugin.
- * It allows to have taggable fields with copy/paste and keyboard support.
+ * It allows to have taggable fields which are split in separate blocks once you click enter.
  */
 export default class TokenField {
   /**
    * @param {string} tokenFieldSelector -  a selector which is used within jQuery object.
    * @param {object} options - extends basic tokenField behavior with additional options such as minLength, delimiter.
-   * See bootstrap-tokenfield docs for more information
+   * See bootstrap-tokenfield docs for more information.
    */
   constructor({tokenFieldSelector, options = {}}) {
     $(tokenFieldSelector).tokenfield(options);

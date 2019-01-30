@@ -56,7 +56,13 @@ $(() => {
   const helperBlock = new ShowcaseCard('seo-urls-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
 
-  new TokenField({tokenFieldSelector: 'input.js-token-field'});
+  new TokenField({
+    tokenFieldSelector: 'input.js-token-field',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
+
   new TranslatableInput();
   new PageNameOptionHandler();
 });
