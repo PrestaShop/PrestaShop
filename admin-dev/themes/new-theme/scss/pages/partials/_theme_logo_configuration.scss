@@ -57,10 +57,33 @@
       color: #6c868e;
     }
 
-    .logo-image {
+    .logo-image-container {
       height: 6.625rem;
       padding-top: 2rem;
       padding-bottom: 1.6875rem;
+
+      .header-logo {
+        max-width: 6.25rem;
+        max-height: 6.625rem;
+      }
+      .email-logo,
+      .invoice-logo
+      {
+        max-width: 4.6125rem;
+        max-height: 3.25rem;
+      }
+
+      .favicon-container {
+        width: 3.375rem;
+        height: 3.375rem;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+        border-radius: 1.3125rem;
+        background-color: #ffffff;
+      }
+      .favicon-logo {
+        max-width: 2.41875rem;
+        max-height: 2.19375rem;
+      }
     }
   }
 

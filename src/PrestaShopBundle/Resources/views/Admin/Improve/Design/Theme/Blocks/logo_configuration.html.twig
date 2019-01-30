@@ -35,9 +35,9 @@
         {{ 'Will appear on main page. Recommended size for the default theme: height %height% and width %width%.'|trans({'%height%': '40px', '%width%': '200px'}, 'Admin.Design.Help') }}
       </p>
 
-      <div class="text-center logo-image">
+      <div class="text-center logo-image-container">
         <img
-          class="img-fluid"
+          class="header-logo"
           src="{{ headerLogoPath }}"
           alt="{{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}"
           title="{{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}"
@@ -86,9 +86,9 @@
             {{ 'Will appear on email headers. If undefined, the header logo will be used.'|trans({}, 'Admin.Design.Help') }}
           </p>
 
-          <div class="text-center logo-image">
+          <div class="text-center logo-image-container">
             <img
-              class="img-fluid"
+              class="email-logo"
               src="{{ mailLogoPath }}"
               alt="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}"
               title="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}"
@@ -102,9 +102,9 @@
             {{ 'Will appear on invoice headers.'|trans({}, 'Admin.Design.Help') }}
           </p>
 
-          <div class="text-center logo-image">
+          <div class="text-center logo-image-container">
             <img
-              class="img-fluid"
+              class="invoice-logo"
               src="{{ invoiceLogoPath }}"
               alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
               title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
@@ -127,13 +127,15 @@
         {{ 'It is the small icon that appears in browser tabs, next to the title'|trans({}, 'Admin.Design.Help') }}
       </p>
 
-      <div class="text-center logo-image">
-        <img
-          class="img-fluid"
-          src="{{ faviconPath }}"
-          alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
-          title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
-        >
+      <div class="text-center logo-image-container">
+        <div class="favicon-container d-inline-block">
+          <img
+            class="favicon-logo"
+            src="{{ faviconPath }}"
+            alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
+            title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
+          >
+        </div>
       </div>
 
       {{ ps.form_group_row(shopLogosForm.favicon, {}, {'help': 'Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!'|trans({'[1]': '<a href="https://addons.prestashop.com/create-favicon.php?pab=1" target="_blank">', '[/1]': '</a>'}, 'Admin.Design.Help')|raw }) }}
