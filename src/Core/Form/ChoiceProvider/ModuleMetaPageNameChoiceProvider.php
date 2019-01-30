@@ -65,7 +65,7 @@ final class ModuleMetaPageNameChoiceProvider implements FormChoiceProviderInterf
      */
     public function getChoices()
     {
-        $defaultPages = $this->dataProvider->getModuleMetaPageNamesExcludingFilled();
+        $defaultPages = $this->dataProvider->getNotConfiguredModuleMetaPageNames();
         $currentPage = $this->getCurrentPage();
 
         if (null !== $currentPage) {

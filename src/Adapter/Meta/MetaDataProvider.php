@@ -107,7 +107,7 @@ class MetaDataProvider implements MetaDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getModuleMetaPageNamesExcludingFilled()
+    public function getNotConfiguredModuleMetaPageNames()
     {
         $pages = Meta::getPages(true);
 

@@ -203,14 +203,10 @@ class MetaController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_meta_index');
             }
-        } catch (MetaNotFoundException $e) {
-            $this->addFlash(
-                'error',
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
-            );
+        } catch (MetaException $e) {
+            $this->addFlash('error', $this->handleException($e));
 
             return $this->redirectToRoute('admin_meta_index');
-        } catch (MetaException $e) {
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
@@ -371,6 +367,13 @@ class MetaController extends FrameworkBundleAdminController
         return $this->get('prestashop.core.form.identifiable_object.meta_form_handler');
     }
 
+    /**
+     * Handles exception by its type and status code or by its type only and returns error message.
+     *
+     * @param MetaException $exception
+     *
+     * @return string
+     */
     private function handleException(MetaException $exception)
     {
         if (0 !== $exception->getCode()) {
@@ -396,8 +399,9 @@ class MetaController extends FrameworkBundleAdminController
                         'Admin.Notifications.Error',
                         [
                             sprintf(
-                                '%s',
-                                $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')),
+                                '"%s"',
+                                $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')
+                            ),
                         ]
                     ),
                 MetaConstraintException::INVALID_PAGE_NAME => $this->trans(
@@ -405,8 +409,9 @@ class MetaController extends FrameworkBundleAdminController
                         'Admin.Notifications.Error',
                         [
                             sprintf(
-                                '%s',
-                                $this->trans('Page name', 'Admin.Shopparameters.Feature')),
+                                '"%s"',
+                                $this->trans('Page name', 'Admin.Shopparameters.Feature')
+                            ),
                         ]
                     ),
                 MetaConstraintException::INVALID_PAGE_TITLE => $this->trans(
@@ -414,8 +419,9 @@ class MetaController extends FrameworkBundleAdminController
                         'Admin.Notifications.Error',
                         [
                             sprintf(
-                                '%s',
-                                $this->trans('Page title', 'Admin.Shopparameters.Feature')),
+                                '"%s"',
+                                $this->trans('Page title', 'Admin.Shopparameters.Feature')
+                            ),
                         ]
                     ),
                 MetaConstraintException::INVALID_META_DESCRIPTION => $this->trans(
@@ -423,8 +429,9 @@ class MetaController extends FrameworkBundleAdminController
                         'Admin.Notifications.Error',
                         [
                             sprintf(
-                                '%s',
-                                $this->trans('Meta description', 'Admin.Global')),
+                                '"%s"',
+                                $this->trans('Meta description', 'Admin.Global')
+                            ),
                         ]
                     ),
                 MetaConstraintException::INVALID_META_KEYWORDS => $this->trans(
@@ -432,8 +439,9 @@ class MetaController extends FrameworkBundleAdminController
                         'Admin.Notifications.Error',
                         [
                             sprintf(
-                                '%s',
-                                $this->trans('Meta keywords', 'Admin.Global')),
+                                '"%s"',
+                                $this->trans('Meta keywords', 'Admin.Global')
+                            ),
                         ]
                     ),
             ],

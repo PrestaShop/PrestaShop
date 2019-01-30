@@ -70,5 +70,5 @@ interface MetaDataProviderInterface
      *
      * @return array
      */
-    public function getModuleMetaPageNamesExcludingFilled();
+    public function getNotConfiguredModuleMetaPageNames();
 }

@@ -156,7 +156,8 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                         'Url rewrite %s for language with id %s is not valid',
                         $rewriteUrl,
                         $idLang
-                    )
+                    ),
+                    MetaConstraintException::INVALID_URL_REWRITE
                 );
             }
         }
