@@ -80,6 +80,15 @@
         {{ ps.form_group_row(employeeForm.language, {}, {
           'label': 'Language'|trans({}, 'Admin.Global')
         }) }}
+
+        {{ ps.form_group_row(employeeForm.active, {}, {
+          'label': 'Active'|trans({}, 'Admin.Global'),
+          'help': 'Allow or disallow this employee to log in to the Admin panel.'|trans({}, 'Admin.Advparameters.Help')
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.profile, {}, {
+          'label': 'Permission profile'|trans({}, 'Admin.Advparameters.Feature')
+        }) }}
       </div>
 
       {{ form_rest(employeeForm) }}

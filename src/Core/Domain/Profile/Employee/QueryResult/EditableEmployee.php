@@ -72,6 +72,16 @@ class EditableEmployee
     private $languageId;
 
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
+     * @var int
+     */
+    private $profileId;
+
+    /**
      * @param EmployeeId $employeeId
      * @param FirstName $firstName
      * @param LastName $lastName
@@ -79,6 +89,8 @@ class EditableEmployee
      * @param bool $isSubscribedToNewsletter
      * @param int $defaultPageId
      * @param int $languageId
+     * @param bool $active
+     * @param int $profileId
      */
     public function __construct(
         EmployeeId $employeeId,
@@ -87,7 +99,9 @@ class EditableEmployee
         Email $email,
         $isSubscribedToNewsletter,
         $defaultPageId,
-        $languageId
+        $languageId,
+        $active,
+        $profileId
     ) {
         $this->employeeId = $employeeId;
         $this->firstName = $firstName;
@@ -96,6 +110,8 @@ class EditableEmployee
         $this->isSubscribedToNewsletter = $isSubscribedToNewsletter;
         $this->defaultPageId = $defaultPageId;
         $this->languageId = $languageId;
+        $this->active = $active;
+        $this->profileId = $profileId;
     }
 
     /**
@@ -152,5 +168,21 @@ class EditableEmployee
     public function getLanguageId()
     {
         return $this->languageId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProfileId()
+    {
+        return $this->profileId;
     }
 }

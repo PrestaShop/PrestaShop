@@ -181,3 +181,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider'
     arguments:
       - '@=service("prestashop.adapter.data_provider.tab").getAccessibleTabs(service("prestashop.adapter.legacy.context").getLanguage().id)'
+
+  prestashop.core.form.choice_provider.profile:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.profile").getProfiles(service("prestashop.adapter.legacy.context").getLanguage().id)'

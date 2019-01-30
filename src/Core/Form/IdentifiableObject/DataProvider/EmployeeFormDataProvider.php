@@ -62,6 +62,8 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
             'optin' => $editableEmployee->isSubscribedToNewsletter(),
             'default_page' => $editableEmployee->getDefaultPageId(),
             'language' => $editableEmployee->getLanguageId(),
+            'active' => $editableEmployee->isActive(),
+            'profile' => $editableEmployee->getProfileId(),
         ];
     }
 
