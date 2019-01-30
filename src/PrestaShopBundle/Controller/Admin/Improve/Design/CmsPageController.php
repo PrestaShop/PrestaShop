@@ -61,10 +61,11 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param CmsPageCategoryFilters $filters
+     * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(CmsPageCategoryFilters $filters)
+    public function indexAction(CmsPageCategoryFilters $filters, Request $request)
     {
         $cmsCategoryParentId = (int) $filters->getFilters()['id_cms_category_parent'];
         $viewData = [];
@@ -87,7 +88,7 @@ class CmsPageController extends FrameworkBundleAdminController
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
             'cmsPageView' => $viewData,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminCmsContent'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
