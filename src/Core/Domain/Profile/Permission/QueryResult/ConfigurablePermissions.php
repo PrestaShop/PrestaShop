@@ -31,7 +31,7 @@ class ConfigurablePermissions
     /**
      * @var array
      */
-    private $tabPermissions;
+    private $profilePermissionsForTabs;
 
     /**
      * @var array
@@ -43,9 +43,9 @@ class ConfigurablePermissions
      */
     private $tabs;
 
-    public function __construct(array $tabPermissions, array $profiles, array $tabs)
+    public function __construct(array $profilePermissionsForTabs, array $profiles, array $tabs)
     {
-        $this->tabPermissions = $tabPermissions;
+        $this->profilePermissionsForTabs = $profilePermissionsForTabs;
         $this->profiles = $profiles;
         $this->tabs = $tabs;
     }
@@ -53,9 +53,9 @@ class ConfigurablePermissions
     /**
      * @return array
      */
-    public function getTabPermissions()
+    public function getProfilePermissionsForTabs()
     {
-        return $this->tabPermissions;
+        return $this->profilePermissionsForTabs;
     }
 
     /**
