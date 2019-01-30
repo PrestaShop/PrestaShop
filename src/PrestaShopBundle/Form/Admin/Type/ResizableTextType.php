@@ -67,13 +67,13 @@ class ResizableTextType extends AbstractTypeExtension
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         if (isset($options['size'])) {
-            $sizeClass = 'size-'.$options['size'];
+            $sizeClass = 'size-' . $options['size'];
 
             if (!isset($view->vars['attr']['class'])) {
                 $view->vars['attr']['class'] = '';
             }
 
-            $view->vars['attr']['class'] = trim($view->vars['attr']['class'].' '.$sizeClass);
+            $view->vars['attr']['class'] = trim($view->vars['attr']['class'] . ' ' . $sizeClass);
         }
     }
 }
