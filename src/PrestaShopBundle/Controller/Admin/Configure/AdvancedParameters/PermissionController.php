@@ -46,7 +46,9 @@ class PermissionController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $configurablePermissions = $this->getQueryBus()->handle(new GetPermissionsForConfiguration());
+        $configurablePermissions = $this->getQueryBus()->handle(new GetPermissionsForConfiguration(
+            (int) $this->getContext()->employee->id_profile
+        ));
 
         dump($configurablePermissions);
 
@@ -63,7 +65,7 @@ class PermissionController extends FrameworkBundleAdminController
 
                 'permissions' => $permissions,
                 'permissionIds' => $permissionIds,
-                'employeeProfileId' => $employeeProfileId,
+                'employeeProfileId' => $employeeProfileId
             ]
         );
     }

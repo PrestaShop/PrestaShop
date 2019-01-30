@@ -30,6 +30,7 @@ use Context;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 use Profile;
 use Tab;
 
@@ -155,5 +156,66 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         dump($permissions);
 
         return $permissions;
+    }
+
+    /**
+     * @todo: check if this can be used or removed
+     *
+     * @param ProfileId $employeeProfileId
+     * @param bool $hasEmployeeEditPermission
+     * @param array $profileTabPermissions
+     * @param array $profiles
+     * @param array $tabs
+     * @param array $permissions
+     *
+     * @return array
+     */
+    private function getBulkConfigurationForProfiles(
+        ProfileId $employeeProfileId,
+        $hasEmployeeEditPermission,
+        array $profileTabPermissions,
+        array $profiles,
+        array $tabs,
+        array $permissions
+    ) {
+        $bulkConfiguration = [];
+
+        foreach ($profiles as $profile) {
+            $bulkConfiguration[$profile['id']] = [
+                'view' => true,
+                'add' => true,
+                'edit' => true,
+                'delete' => true,
+                'all' => true,
+            ];
+
+            // if employee does not have "edit" permission
+            // then configuration is disabled
+            if ($hasEmployeeEditPermission) {
+                $bulkConfiguration[$profile['id']] = [
+                    'view' => false,
+                    'add' => false,
+                    'edit' => false,
+                    'delete' => false,
+                    'all' => false,
+                ];
+
+                continue;
+            }
+
+            foreach ($tabs as $tab) {
+                foreach ($permissions as $permission) {
+                    if (!$profileTabPermissions[$employeeProfileId->getValue()][$tab['id']][$permission]) {
+                        $bulkConfiguration[$profile['id']]['view'] = false;
+
+                        break;
+                    }
+                }
+
+
+            }
+        }
+
+        return $bulkConfiguration;
     }
 }
