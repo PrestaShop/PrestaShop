@@ -19,4 +19,11 @@ services:
     prestashop.adapter.profile.permission.query_handler.get_permissions_for_configuration_handler:
         class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandler'
         tags:
-            - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration' }
+            - name: tactician.handler
+              command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration'
+
+    prestashop.adapter.profile.permission.command_handler.update_profile_tab_permissions_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateProfileTabPermissionsHandler'
+        tags:
+            - name: tactician.handler
+              command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateProfileTabPermissionsCommand'
