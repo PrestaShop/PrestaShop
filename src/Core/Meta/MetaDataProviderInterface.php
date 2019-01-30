@@ -45,7 +45,7 @@ interface MetaDataProviderInterface
      *
      * @param int $metaId
      *
-     * @return string
+     * @return string|null
      */
     public function getDefaultPageById($metaId);
 
@@ -54,7 +54,7 @@ interface MetaDataProviderInterface
      *
      * @param int $metaId
      *
-     * @return string
+     * @return string|null
      */
     public function getModulePageById($metaId);
 

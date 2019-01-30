@@ -68,7 +68,7 @@ final class ModulePageChoiceProvider implements FormChoiceProviderInterface
         $defaultPages = $this->dataProvider->getModulePagesExcludingFilled();
         $currentPage = $this->getCurrentPage();
 
-        if ($currentPage) {
+        if (null !== $currentPage) {
             $defaultPages[str_replace('module-', '', $currentPage)] = $currentPage;
             asort($defaultPages);
         }
@@ -79,7 +79,7 @@ final class ModulePageChoiceProvider implements FormChoiceProviderInterface
     /**
      * Gets current page.
      *
-     * @return string
+     * @return string|null
      */
     private function getCurrentPage()
     {
@@ -90,11 +90,11 @@ final class ModulePageChoiceProvider implements FormChoiceProviderInterface
             $metaId = $currentRequest->attributes->get('metaId');
         }
 
-        $page = '';
         if ($metaId) {
-            $page = $this->dataProvider->getModulePageById($metaId);
+
+            return $this->dataProvider->getModulePageById($metaId);
         }
 
-        return $page;
+        return null;
     }
 }

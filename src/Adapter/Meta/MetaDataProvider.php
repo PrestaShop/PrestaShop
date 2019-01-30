@@ -68,11 +68,7 @@ class MetaDataProvider implements MetaDataProviderInterface
         $query->where('`page` NOT LIKE "module-%"');
         $result = Db::getInstance()->getValue($query);
 
-        if (is_string($result)) {
-            return $result;
-        }
-
-        return '';
+        return is_string($result) ? $result : null;
     }
 
     /**
@@ -88,11 +84,7 @@ class MetaDataProvider implements MetaDataProviderInterface
 
         $result = Db::getInstance()->getValue($query);
 
-        if (is_string($result)) {
-            return $result;
-        }
-
-        return '';
+        return is_string($result) ? $result : null;
     }
 
     /**
