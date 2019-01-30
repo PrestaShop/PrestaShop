@@ -43,8 +43,31 @@ class ConfigurablePermissions
      */
     private $tabs;
 
-    public function __construct(array $profilePermissionsForTabs, array $profiles, array $tabs)
-    {
+    /**
+     * @var bool
+     */
+    private $bulkViewPermissionConfiguration;
+
+    /**
+     * @var bool
+     */
+    private $bulkAddPermissionConfiguration;
+
+    /**
+     * @var bool
+     */
+    private $bulkEditPermissionConfiguration;
+
+    /**
+     * @var bool
+     */
+    private $bulkDeletePermissionConfiguration;
+
+    public function __construct(
+        array $profilePermissionsForTabs,
+        array $profiles,
+        array $tabs
+    ) {
         $this->profilePermissionsForTabs = $profilePermissionsForTabs;
         $this->profiles = $profiles;
         $this->tabs = $tabs;

@@ -26,9 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+
 /**
  * Get profile permissons data for configuration
  */
 class GetPermissionsForConfiguration
 {
+    /**
+     * @var ProfileId
+     */
+    private $employeeProfileId;
+
+    /**
+     * @param int $employeeProfileId Profile id of employee who configures permissions
+     */
+    public function __construct($employeeProfileId)
+    {
+        $this->employeeProfileId = new ProfileId($employeeProfileId);
+    }
+
+    /**
+     * @return ProfileId
+     */
+    public function getEmployeeProfileId()
+    {
+        return $this->employeeProfileId;
+    }
 }
