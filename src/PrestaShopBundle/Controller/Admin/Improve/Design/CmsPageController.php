@@ -86,6 +86,8 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/Design/Cms/index.html.twig', [
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
             'cmsPageView' => $viewData,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminCmsContent'),
         ]);
     }
 
