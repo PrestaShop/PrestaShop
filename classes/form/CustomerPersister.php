@@ -131,6 +131,10 @@ class CustomerPersisterCore
             }
         }
 
+        if ($customer->email != $this->context->customer->email) {
+            $customer->removeResetPasswordToken();
+        }
+
         $ok = $customer->save();
 
         if ($ok) {
