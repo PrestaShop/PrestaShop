@@ -51,7 +51,7 @@ final class SearchParameters implements SearchParametersInterface
     {
         $filters = [];
 
-        foreach (SearchParametersInterface::FILTER_TYPES as $type) {
+        foreach (static::FILTER_TYPES as $type) {
             if ($request->request->has($type)) {
                 $filters[$type] = $request->request->get($type);
             } elseif ($request->query->has($type)) {
