@@ -47,6 +47,20 @@ final class EmployeeType extends AbstractType
     use TranslatorAwareTrait;
 
     /**
+     * @var array
+     */
+    private $languagesChoices;
+
+    /**
+     * @param array $languagesChoices
+     */
+    public function __construct(
+        array $languagesChoices
+    ) {
+        $this->languagesChoices = $languagesChoices;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -100,8 +114,14 @@ final class EmployeeType extends AbstractType
             ->add('optin', SwitchType::class, [
                 'required' => false,
             ])
-            ->add('default_page', ChoiceType::class)
-            ->add('language', ChoiceType::class)
+            ->add('default_page', ChoiceType::class, [
+                'choices' => [
+
+                ],
+            ])
+            ->add('language', ChoiceType::class, [
+                'choices' => $this->languagesChoices,
+            ])
         ;
     }
 }

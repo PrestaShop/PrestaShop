@@ -437,7 +437,7 @@ services:
     form.type.localization_configuration:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
         arguments:
-            - '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.active_language_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.timezone_by_name").getChoices()'
@@ -735,6 +735,8 @@ services:
 
     prestashop.bundle.form.admin.configure.advanced_parameters.employee.employee:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
