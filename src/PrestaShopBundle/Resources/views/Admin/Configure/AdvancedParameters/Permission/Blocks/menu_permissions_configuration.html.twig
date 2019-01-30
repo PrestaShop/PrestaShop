@@ -37,15 +37,17 @@
         </tr>
       {% else %}
         {% for tab in configurablePermissions.tabs %}
-          {% set profileTabPermissions = configurablePermissions.tabPermissions[profile.id] %}
+          {% set profileTabPermissions = configurablePermissions.profilePermissionsForTabs[profile.id] %}
+          {% set employeeProfileTabPermissions = configurablePermissions.profilePermissionsForTabs[employeeProfileId] %}
+          {% set resultPermissions = 0 %}
+          {% set hasAllPermissions = true %}
+
           <tr>
             <td>&raquo;<strong>{{ tab.name }}</td>
-
-            {% set hasAllPermissions = true %}
             {% for permission in permissions %}
               {% set permissionId = permissionIds[permission] %}
               <td>
-                {% if hasEditPermission and configurablePermissions.tabPermissions[employeeProfileId][tab.id][permission] %}
+                {% if hasEditPermission and employeeProfileTabPermissions[tab.id][permission] %}
                   <div class="md-checkbox md-checkbox-inline">
                     <label>
                       <input type="checkbox"
@@ -59,20 +61,33 @@
                   </div>
                 {% else %}
                   {% set hasAllPermissions, enableBulkView = false, false %}
-
                   <div class="md-checkbox md-checkbox-inline">
                     <label>
                       <input type="checkbox"
                              disabled
-                             {% if configurablePermissions.tabPermissions[tab.id][permission] %}checked{% endif %}
+                             {% if configurablePermissions.profilePermissionsForTabs[tab.id][permission] %}checked{% endif %}
                       />
                       <i class="md-checkbox-control"></i>
                     </label>
                   </div>
                 {% endif %}
               </td>
+              {% set resultPermissions = resultPermissions + profileTabPermissions[tab.id][permission] %}
             {% endfor %}
+            <td>
+              <div class="md-checkbox md-checkbox-inline">
+                <label>
+                  <input type="checkbox"
+                  />
+                  <i class="md-checkbox-control"></i>
+                </label>
+              </div>
+            </td>
           </tr>
+
+          {% if tab.children is not empty %}
+            
+          {% endif %}
         {% endfor %}
       {% endif %}
     </table>
