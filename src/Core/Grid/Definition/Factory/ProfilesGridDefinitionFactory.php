@@ -180,6 +180,7 @@ final class ProfilesGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('id_profile', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'size' => 'small',
                     'attr' => [
                         'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                     ],
