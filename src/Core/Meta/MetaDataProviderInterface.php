@@ -47,7 +47,7 @@ interface MetaDataProviderInterface
      *
      * @return string|null
      */
-    public function getDefaultPageById($metaId);
+    public function getDefaultMetaPageNameById($metaId);
 
     /**
      * Gets module page by meta id.
@@ -56,19 +56,19 @@ interface MetaDataProviderInterface
      *
      * @return string|null
      */
-    public function getModulePageById($metaId);
+    public function getModuleMetaPageNameById($metaId);
 
     /**
      * Gets default pages which are not configured in Seo & urls page.
      *
      * @return array
      */
-    public function getDefaultPagesExcludingFilled();
+    public function getDefaultMetaPageNamesExcludingFilled();
 
     /**
      * Gets module pages which are not configured in Seo & urls page.
      *
      * @return array
      */
-    public function getModulePagesExcludingFilled();
+    public function getModuleMetaPageNamesExcludingFilled();
 }

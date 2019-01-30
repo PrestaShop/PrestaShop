@@ -59,7 +59,7 @@ class MetaDataProvider implements MetaDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultPageById($metaId)
+    public function getDefaultMetaPageNameById($metaId)
     {
         $query = new DbQuery();
         $query->select('`page`');
@@ -74,7 +74,7 @@ class MetaDataProvider implements MetaDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getModulePageById($metaId)
+    public function getModuleMetaPageNameById($metaId)
     {
         $query = new DbQuery();
         $query->select('`page`');
@@ -90,7 +90,7 @@ class MetaDataProvider implements MetaDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultPagesExcludingFilled()
+    public function getDefaultMetaPageNamesExcludingFilled()
     {
         $pages = Meta::getPages(true);
 
@@ -107,7 +107,7 @@ class MetaDataProvider implements MetaDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getModulePagesExcludingFilled()
+    public function getModuleMetaPageNamesExcludingFilled()
     {
         $pages = Meta::getPages(true);
 

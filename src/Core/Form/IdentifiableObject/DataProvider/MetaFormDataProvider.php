@@ -58,10 +58,10 @@ final class MetaFormDataProvider implements FormDataProviderInterface
 
         return [
             'page_name' => $result->getPageName()->getValue(),
-            'page_title' => $result->getPageTitle(),
-            'meta_description' => $result->getMetaDescription(),
-            'meta_keywords' => $result->getMetaKeywords(),
-            'url_rewrite' => $result->getUrlRewrite(),
+            'page_title' => $result->getLocalisedPageTitles(),
+            'meta_description' => $result->getLocalisedMetaDescriptions(),
+            'meta_keywords' => $result->getLocalisedMetaKeywords(),
+            'url_rewrite' => $result->getLocalisedUrlRewrites(),
         ];
     }
 

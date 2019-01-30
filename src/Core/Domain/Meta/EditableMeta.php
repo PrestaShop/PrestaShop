@@ -48,49 +48,50 @@ class EditableMeta
     /**
      * @var string[]
      */
-    private $pageTitle;
+    private $localisedPageTitles;
 
     /**
      * @var string[]
      */
-    private $metaDescription;
+    private $localisedMetaDescriptions;
 
     /**
      * @var string[]
      */
-    private $metaKeywords;
+    private $localisedMetaKeywords;
 
     /**
      * @var string[]
      */
-    private $urlRewrite;
+    private $localisedUrlRewrites;
 
     /**
      * EditableMeta constructor.
      *
      * @param int $metaId
      * @param string $pageName
-     * @param string[] $pageTitle
-     * @param string[] $metaDescription
-     * @param string[] $metaKeywords
-     * @param string[] $urlRewrite
+     * @param string[] $localisedPageTitles
+     * @param string[] $localisedMetaDescriptions
+     * @param string[] $localisedMetaKeywords
+     * @param string[] $localisedUrlRewrites
      *
+     * @throws Exception\MetaConstraintException
      * @throws MetaException
      */
     public function __construct(
         $metaId,
         $pageName,
-        array $pageTitle,
-        array $metaDescription,
-        array $metaKeywords,
-        array $urlRewrite
+        array $localisedPageTitles,
+        array $localisedMetaDescriptions,
+        array $localisedMetaKeywords,
+        array $localisedUrlRewrites
     ) {
         $this->metaId = new MetaId($metaId);
         $this->pageName = new Name($pageName);
-        $this->pageTitle = $pageTitle;
-        $this->metaDescription = $metaDescription;
-        $this->metaKeywords = $metaKeywords;
-        $this->urlRewrite = $urlRewrite;
+        $this->localisedPageTitles = $localisedPageTitles;
+        $this->localisedMetaDescriptions = $localisedMetaDescriptions;
+        $this->localisedMetaKeywords = $localisedMetaKeywords;
+        $this->localisedUrlRewrites = $localisedUrlRewrites;
     }
 
     /**
@@ -112,32 +113,32 @@ class EditableMeta
     /**
      * @return string[]
      */
-    public function getPageTitle()
+    public function getLocalisedPageTitles()
     {
-        return $this->pageTitle;
+        return $this->localisedPageTitles;
     }
 
     /**
      * @return string[]
      */
-    public function getMetaDescription()
+    public function getLocalisedMetaDescriptions()
     {
-        return $this->metaDescription;
+        return $this->localisedMetaDescriptions;
     }
 
     /**
      * @return string[]
      */
-    public function getMetaKeywords()
+    public function getLocalisedMetaKeywords()
     {
-        return $this->metaKeywords;
+        return $this->localisedMetaKeywords;
     }
 
     /**
      * @return string[]
      */
-    public function getUrlRewrite()
+    public function getLocalisedUrlRewrites()
     {
-        return $this->urlRewrite;
+        return $this->localisedUrlRewrites;
     }
 }

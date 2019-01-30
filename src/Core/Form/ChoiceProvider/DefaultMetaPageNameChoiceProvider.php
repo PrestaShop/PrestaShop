@@ -31,10 +31,10 @@ use PrestaShop\PrestaShop\Core\Meta\MetaDataProviderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class ModulePageChoiceProvider is responsible for providing module page choices in
+ * Class DefaultMetaPageNameChoiceProvider is responsible for providing default page choices in
  * Shop parameters -> Traffic & Seo -> Seo & Urls -> form.
  */
-final class ModulePageChoiceProvider implements FormChoiceProviderInterface
+final class DefaultMetaPageNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var RequestStack
@@ -65,11 +65,11 @@ final class ModulePageChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $defaultPages = $this->dataProvider->getModulePagesExcludingFilled();
+        $defaultPages = $this->dataProvider->getDefaultMetaPageNamesExcludingFilled();
         $currentPage = $this->getCurrentPage();
 
         if (null !== $currentPage) {
-            $defaultPages[str_replace('module-', '', $currentPage)] = $currentPage;
+            $defaultPages[$currentPage] = $currentPage;
             asort($defaultPages);
         }
 
@@ -92,7 +92,7 @@ final class ModulePageChoiceProvider implements FormChoiceProviderInterface
 
         if ($metaId) {
 
-            return $this->dataProvider->getModulePageById($metaId);
+            return $this->dataProvider->getDefaultMetaPageNameById($metaId);
         }
 
         return null;
