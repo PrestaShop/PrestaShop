@@ -26,23 +26,17 @@
 const $ = window.$;
 
 /**
- * Class PageNameOptionHandler is responsible for handling any logic related with current page name.
+ * Class MetaPageNameOptionHandler is responsible for checking the index page condition - if index page is selected it
+ * does not allow to enter url rewrite field by disabling that input. In another cases url rewrite field is mandatory to
+ * enter.
  */
-export default class PageNameOptionHandler {
+export default class MetaPageNameOptionHandler {
   constructor() {
-    const currentPage = $(this.pageNameSelector).val();
+    const pageNameSelector = '.js-meta-page-name';
+    const currentPage = $(pageNameSelector).val();
     this.setUrlRewriteDisabledStatusByCurrentPage(currentPage);
 
-    $(document).on('change', this.pageNameSelector, event => this.changePageNameEvent(event));
-  }
-
-  /**
-   * Gets page name selector name.
-   * @returns {string}
-   * @private
-   */
-  get pageNameSelector() {
-    return '.js-meta-page-name';
+    $(document).on('change', pageNameSelector, event => this.changePageNameEvent(event));
   }
 
   /**

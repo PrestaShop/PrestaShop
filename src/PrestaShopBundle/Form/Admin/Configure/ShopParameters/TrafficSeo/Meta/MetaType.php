@@ -146,7 +146,7 @@ class MetaType extends AbstractType
                         ]),
                     ],
                     'attr' => [
-                        'class' => 'js-token-field',
+                        'class' => 'js-taggable-field',
                         'placeholder' => $this->trans('Add tag', [], 'Admin.Actions'),
                     ],
                     'required' => false,

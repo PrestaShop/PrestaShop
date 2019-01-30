@@ -37,7 +37,7 @@ import ShowcaseCard from '../../components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 import TaggableField from '../../components/taggable-field';
 import TranslatableInput from '../../components/translatable-input';
-import PageNameOptionHandler from './page-name-option-handler';
+import MetaPageNameOptionHandler from './meta-page-name-option-handler';
 
 const $ = window.$;
 
@@ -57,12 +57,12 @@ $(() => {
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
 
   new TaggableField({
-    tokenFieldSelector: 'input.js-token-field',
+    tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,
     },
   });
 
   new TranslatableInput();
-  new PageNameOptionHandler();
+  new MetaPageNameOptionHandler();
 });
