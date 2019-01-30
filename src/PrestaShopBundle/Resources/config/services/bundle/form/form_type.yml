@@ -737,6 +737,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:

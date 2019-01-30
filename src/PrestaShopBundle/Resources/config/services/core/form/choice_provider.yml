@@ -176,3 +176,8 @@ services:
     arguments:
       - '@request_stack'
       - '@prestashop.adapter.meta.data_provider'
+
+  prestashop.core.form.choice_provider.accessible_tab:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.tab").getAccessibleTabs(service("prestashop.adapter.legacy.context").getLanguage().id)'
