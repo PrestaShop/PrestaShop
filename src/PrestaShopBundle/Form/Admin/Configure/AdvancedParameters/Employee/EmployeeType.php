@@ -52,12 +52,20 @@ final class EmployeeType extends AbstractType
     private $languagesChoices;
 
     /**
+     * @var array
+     */
+    private $tabChoices;
+
+    /**
      * @param array $languagesChoices
+     * @param array $tabChoices
      */
     public function __construct(
-        array $languagesChoices
+        array $languagesChoices,
+        array $tabChoices
     ) {
         $this->languagesChoices = $languagesChoices;
+        $this->tabChoices = $tabChoices;
     }
 
     /**
@@ -115,9 +123,7 @@ final class EmployeeType extends AbstractType
                 'required' => false,
             ])
             ->add('default_page', ChoiceType::class, [
-                'choices' => [
-
-                ],
+                'choices' => $this->tabChoices,
             ])
             ->add('language', ChoiceType::class, [
                 'choices' => $this->languagesChoices,

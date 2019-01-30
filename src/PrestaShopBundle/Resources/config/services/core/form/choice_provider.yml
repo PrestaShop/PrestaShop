@@ -189,3 +189,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CmsCategoriesChoiceProvider'
     arguments:
       - '@=service("prestashop.adapter.cms_page.categories_provider").getAllNestedCategories()'
+
+  prestashop.core.form.choice_provider.accessible_tab:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.tab").getAccessibleTabs(service("prestashop.adapter.legacy.context").getLanguage().id)'
