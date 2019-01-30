@@ -17,7 +17,6 @@ module.exports = {
     customer_name: '//*[@id="content"]//div[@class="message-body"]//h4[@class="message-item-heading"]',
     order_submenu: '//*[@id="subtab-AdminOrders"]/a',
     document_submenu: '//*[@id="tabOrder"]//a[@href="#documents"]',
-    download_invoice_button: '(//*[@id="documents_table"]//a[contains(@href, "generateInvoicePDF")])[1]',
     download_delivery_button: '//*[@id="documents_table"]//tr[3]/td[3]/a',
     product_name: '//*[@id="orderProducts"]//tr[%NUMBER]//span[@class="productName"]',
     total_price: '//*[@id="total_products"]/td[contains(@class,"amount")]',
@@ -90,9 +89,12 @@ module.exports = {
     invoice_address: '//*[@id="addressInvoice"]',
     date_shipping: '//*[@id="shipping_table"]//tr/td[1]',
     weight_shipping: '//*[@id="shipping_table"]//tr/td[4]',
-    page_title:'//*[@id="content"]//h1[@class="page-title"]',
     view_invoice_button: '//*[@id="content"]//div[contains(@class, "hidden-print")]/a[contains(@href, "generateInvoicePDF")]',
     date_invoice: '(//*[@id="documents_table"]//a[contains(@href, "generateInvoicePDF")])[1]',
+    download_invoice_button: '(//*[@id="documents_table"]//a[contains(@href, "generateInvoicePDF")])[1]',
+    view_delivery_slip: '//*[@id="content"]//div[contains(@class, "hidden-print")]/a[contains(@href, "generateDeliverySlipPDF")]',
+    date_delivery_slip:'//*[@id="documents_table"]//tr[3]/td[1]',
+    page_title:'//*[@id="content"]//h1[@class="page-title"]',
   },
 
   CreateOrder: {

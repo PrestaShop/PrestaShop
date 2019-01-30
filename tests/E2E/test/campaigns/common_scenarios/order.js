@@ -451,6 +451,8 @@ module.exports = {
             })
           })
           .then(() => client.getTextInVar(OrderPage.product_total_price, "ProductTotal"))
+          .then(() => client.getTextInVar(OrderPage.shipping_method, "method"))
+          .then(() => client.getTextInVar(OrderPage.payment_method, "PaymentMethod"))
           .then(() => {
             global.orderInformation[index] = {
               "OrderId": global.tab['OrderID'].replace("#", ''),
@@ -460,7 +462,9 @@ module.exports = {
               "ProductCombination": global.tab['ProductCombination'],
               "ProductQuantity": global.tab['ProductQuantity'],
               "ProductName": global.tab['ProductName'],
-              "ProductTotal": global.tab['ProductTotal']
+              "ProductTotal": global.tab['ProductTotal'],
+              "Method": global.tab['method'],
+              "PaymentMethod": global.tab['PaymentMethod']
             }
           });
       });
