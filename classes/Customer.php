@@ -747,6 +747,14 @@ class CustomerCore extends ObjectModel
         if (!Validate::isUnsignedId($idCustomer)) {
             die(Tools::displayError());
         }
+
+        // Check that customers password hasn't changed since last login
+        $context = Context::getContext();
+        if ($passwordHash != $context->cookie->__get('passwd')) {
+            $context->customer->logout();
+            return false;
+        }
+
         $cacheId = 'Customer::checkPassword' . (int) $idCustomer . '-' . $passwordHash;
         if (!Cache::isStored($cacheId)) {
             $sql = new DbQuery();
