@@ -25,24 +25,17 @@
 
 const $ = window.$;
 
-import Bloodhound from 'typeahead.js';
-
 /**
  * class TokenField is responsible for providing functionality from bootstrap-tokenfield plugin.
+ * It allows to have taggable fields with copy/paste and keyboard support.
  */
 export default class TokenField {
-  constructor() {
-    const engine = new Bloodhound({
-      datumTokenizer: function(d) {
-        return Bloodhound.tokenizers.whitespace(d.value);
-      },
-      queryTokenizer: Bloodhound.tokenizers.whitespace
-    });
-
-    engine.initialize();
-
-    $('input.js-token-field').tokenfield({
-      typeahead: [null, { source: engine.ttAdapter() }]
-    });
+  /**
+   * @param {string} tokenFieldSelector -  a selector which is used within jQuery object.
+   * @param {object} options - extends basic tokenField behavior with additional options such as minLength, delimiter.
+   * See bootstrap-tokenfield docs for more information
+   */
+  constructor({tokenFieldSelector, options = {}}) {
+    $(tokenFieldSelector).tokenfield(options);
   }
 }
