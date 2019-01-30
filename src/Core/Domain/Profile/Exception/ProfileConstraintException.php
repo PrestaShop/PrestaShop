@@ -24,33 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
-
-/**
- * Get profile permissons data for configuration
- */
-class GetPermissionsForConfiguration
+class ProfileConstraintException extends ProfileException
 {
-    /**
-     * @var ProfileId
-     */
-    private $employeeProfileId;
-
-    /**
-     * @param int $employeeProfileId Profile id of employee who configures permissions
-     */
-    public function __construct($employeeProfileId)
-    {
-        $this->employeeProfileId = new ProfileId($employeeProfileId);
-    }
-
-    /**
-     * @return ProfileId
-     */
-    public function getEmployeeProfileId()
-    {
-        return $this->employeeProfileId;
-    }
 }
