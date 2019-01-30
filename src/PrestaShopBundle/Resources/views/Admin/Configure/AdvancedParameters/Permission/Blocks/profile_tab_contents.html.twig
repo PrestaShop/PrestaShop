@@ -25,7 +25,7 @@
 
 <div class="tab-content p-0 bg-transparent" id="profileTabContents">
   {% for profile in configurablePermissions.profiles %}
-    <div class="tab-pane fade"
+    <div class="tab-pane fade {% if profile.id == employeeProfileId %}active show{% endif %}"
          id="profileTabContent_{{ profile.id }}"
          role="tabpanel"
          aria-labelledby="profileListItem_{{ profile.id }}"
