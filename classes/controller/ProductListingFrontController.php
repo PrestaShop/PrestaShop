@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\Facet;
+use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Product\Search\Facet;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
-use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 /**
  * This class is the base class for all front-end "product listing" controllers,
@@ -51,8 +51,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     private function prepareProductForTemplate(array $rawProduct)
     {
         $product = (new ProductAssembler($this->context))
-            ->assembleProduct($rawProduct)
-        ;
+            ->assembleProduct($rawProduct);
 
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
@@ -94,8 +93,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 $this->context->customer ?
                     $this->context->customer->id :
                     null
-            )
-        ;
+            );
     }
 
     /**
@@ -242,8 +240,6 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 return $provider;
             }
         }
-
-        return;
     }
 
     /**
@@ -281,8 +277,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         // we need to set a few parameters from back-end preferences
         $query
             ->setResultsPerPage($resultsPerPage)
-            ->setPage(max((int) Tools::getValue('page'), 1))
-        ;
+            ->setPage(max((int) Tools::getValue('page'), 1));
 
         // set the sort order if provided in the URL
         if (($encodedSortOrder = Tools::getValue('order'))) {
@@ -364,6 +359,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             foreach ($sort_orders as $order) {
                 if (isset($order['current']) && true === $order['current']) {
                     $sort_selected = $order['label'];
+
                     break;
                 }
             }
@@ -411,8 +407,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             ->setPage($query->getPage())
             ->setPagesCount(
                 ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
-            )
-        ;
+            );
 
         $totalItems = $result->getTotalProductsCount();
         $itemsShownFrom = ($query->getResultsPerPage() * ($query->getPage() - 1)) + 1;

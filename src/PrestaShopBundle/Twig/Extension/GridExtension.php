@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -73,6 +73,9 @@ class GridExtension extends AbstractExtension
                 'is_safe' => ['html'],
             ]),
             new SimpleFunction('column_header', [$this, 'renderColumnHeader'], [
+                'is_safe' => ['html'],
+            ]),
+            new SimpleFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
                 'is_safe' => ['html'],
             ]),
         ];
@@ -156,6 +159,32 @@ class GridExtension extends AbstractExtension
             'column' => $column,
             'grid' => $grid,
         ]);
+    }
+
+    /**
+     * @param array $grid
+     *
+     * @return bool
+     */
+    public function isOrderingColumn(array $grid)
+    {
+        if (empty($grid['columns'])
+            || empty($grid['sorting']['order_by'])
+            || empty($grid['sorting']['order_way'])
+            || 'asc' != strtolower($grid['sorting']['order_way'])) {
+            return false;
+        }
+
+        foreach ($grid['columns'] as $column) {
+            if ('position' == $column['type']) {
+                $positionField = $column['id'];
+                if (strtolower($positionField) == strtolower($grid['sorting']['order_by'])) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

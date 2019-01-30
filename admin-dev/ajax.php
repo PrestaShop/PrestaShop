@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,15 +27,15 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 /* Getting cookie or logout */
-require_once(_PS_ADMIN_DIR_.'/init.php');
+require_once _PS_ADMIN_DIR_.'/init.php';
 
 $context = Context::getContext();
 
 if (Tools::isSubmit('ajaxReferrers')) {
-    require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
+    require _PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php';
 }
 
 if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
@@ -74,19 +74,20 @@ if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_par
 }
 
 if (Tools::isSubmit('getNotifications')) {
-    $notification = new Notification;
+    $notification = new Notification();
     die(json_encode($notification->getLastElements()));
 }
 
 if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
-    $notification = new Notification;
+    $notification = new Notification();
     die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
 }
 
 if (Tools::isSubmit('searchCategory')) {
     $q = Tools::getValue('q');
     $limit = Tools::getValue('limit');
-    $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
+    $results = Db::getInstance()->executeS(
+        'SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0

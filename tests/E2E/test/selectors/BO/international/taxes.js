@@ -1,5 +1,5 @@
 module.exports = {
-  Taxes:{
+  Taxes: {
     taxRules: {
       add_new_tax_rules_group_button: '//*[@id="page-header-desc-tax_rules_group-new_tax_rules_group"]',
       name_input: '//*[@id="name"]',
@@ -13,7 +13,16 @@ module.exports = {
       dropdown_button: '//*[@id="table-tax_rules_group"]/tbody//button[@data-toggle="dropdown"]',
       delete_button: '//*[@id="table-tax_rules_group"]/tbody//a[@title="Delete"]',
       bulk_action_button: '//*[@id="bulk_action_menu_tax_rules_group"]',
-      action_group_button: '(//*[@id="form-tax_rules_group"]//div[contains(@class, "bulk-actions")]//a)[%ID]'
+      action_group_button: '(//*[@id="form-tax_rules_group"]//div[contains(@class, "bulk-actions")]//a)[%ID]',
+      tax_field_column: '//*[@id="table-tax_rules_group"]//tr[%L]//td[%C]'
+    },
+    taxes: {
+      filter_name_input: '//*[@id="table-tax"]//input[@name="taxFilter_name"]',
+      filter_search_button: '//*[@id="submitFilterButtontax"]',
+      tax_field_column: '//*[@id="table-tax"]//tr[%L]//td[%C]',
+      display_tax: '//*[@id="conf_id_PS_TAX_DISPLAY"]//label[@for="PS_TAX_DISPLAY_%D"]',
+      save_button: '//*[@id="tax_fieldset_general"]/div[3]/button',
+
     }
   }
 };

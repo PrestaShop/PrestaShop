@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <entity_product>
   <product id="Hummingbird_printed_t-shirt" id_shop="1">
-	<description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;&lt;span style="font-size:10pt;font-style:normal;color:#efefef;"&gt;نماد ظرافت و سبکی، پرنده زرین بال باعث کنجکاوی و لذت بردن می شود.&lt;/span&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;کلکسیون استودیو طراحی پلی فان شامل محصولات کلاسیک با بافت رنگی متنوع، برگرفته از  اوریگامی سنتی ژاپن می باشد. برای پوشیدن با شلوار چینی یا جین. پروسه چاپ روی منسوجات عدم برگشت رنگ و تغییر رنگ البسه را تضمین می کند.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
+	<description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;نماد ظرافت و سبکی، پرنده زرین بال باعث کنجکاوی و لذت بردن می شود.&lt;/span&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;کلکسیون استودیو طراحی پلی فان شامل محصولات کلاسیک با بافت رنگی متنوع، برگرفته از  اوریگامی سنتی ژاپن می باشد. برای پوشیدن با شلوار چینی یا جین. پروسه چاپ روی منسوجات عدم برگشت رنگ و تغییر رنگ البسه را تضمین می کند.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
     <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;فیت سایزهای معمول، یقه گرد، آستین کوتاه. ساخته شده از پنبه یکدست. &lt;/span&gt;&lt;/p&gt;&#xD;
 &lt;p&gt;&lt;/p&gt;</description_short>
     <link_rewrite>hummingbird-printed-t-shirt</link_rewrite>
@@ -25,7 +25,7 @@
   </product>
   <product id="The_best_is_yet_to_come_Framed_poster" id_shop="1">
     <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;بهترین ها در راهند! با استفاده از پوسترهای درون قاب به دیوارهای خود صدا بخشید. این پوستر زیبا و مثبت روی میز شما یا در یک فضای باز یا در فضای کار شما بسیار نمای خوبی خواهد داشت. قاب نقاشی شده بین دو شیشه برای عمق بیشتر.&lt;/span&gt;&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;color:#000000;"&gt;چاپ شده روی کاغذ سفت و سخت مات با رویه ی نرم و لطیف.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;"&gt;چاپ شده روی کاغذ سفت و سخت مات با رویه ی نرم و لطیف.&lt;/span&gt;&lt;/p&gt;</description_short>
     <link_rewrite>the-best-is-yet-to-come-framed-poster</link_rewrite>
     <meta_description/>
     <meta_keywords/>
@@ -36,7 +36,7 @@
   </product>
   <product id="The_adventure_begins_Framed_poster" id_shop="1">
     <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;بهترین ها در راهند! با استفاده از پوسترهای درون قاب به دیوارهای خود صدا بخشید. این پوستر زیبا و مثبت روی میز شما یا در یک فضای باز یا در فضای کار شما بسیار نمای خوبی خواهد داشت. قاب نقاشی شده بین دو شیشه برای عمق بیشتر.&lt;/span&gt;&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;color:#000000;"&gt;چاپ شده با رنگ روغن مات با رویه نرم و لطیف.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;"&gt;چاپ شده با رنگ روغن مات با رویه نرم و لطیف.&lt;/span&gt;&lt;/p&gt;</description_short>
     <link_rewrite>the-adventure-begins-framed-poster</link_rewrite>
     <meta_description/>
     <meta_keywords/>
@@ -47,7 +47,7 @@
   </product>
   <product id="Today_is_a_good_day_Framed_poster" id_shop="1">
     <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;بهترین ها در راهند! با استفاده از پوسترهای درون قاب به دیوارهای خود صدا بخشید. این پوستر زیبا و مثبت روی میز شما یا در یک فضای باز یا در فضای کار شما بسیار نمای خوبی خواهد داشت. قاب نقاشی شده بین دو شیشه برای عمق بیشتر.&lt;/span&gt;&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;color:#000000;"&gt;چاپ شده روی کاغذ سفت و سخت همراه رنگ روغن مات و رویه نرم و لطیف.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;"&gt;چاپ شده روی کاغذ سفت و سخت همراه رنگ روغن مات و رویه نرم و لطیف.&lt;/span&gt;&lt;/p&gt;</description_short>
     <link_rewrite>today-is-a-good-day-framed-poster</link_rewrite>
     <meta_description/>
     <meta_keywords/>
@@ -90,7 +90,7 @@
     <available_later/>
   </product>
   <product id="Mountain_fox_cushion" id_shop="1">
-    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;color:#000000;"&gt;کوسن روباه کوهستانی به مبلمان، صندلی یا تخت خواب شما جلوه و رنگ می بخشد. یک جو مدرن و عالی که باعث آرامش و راحتی می شود را خلق کنید. رویه 100% پنبه، قابل شستشو در ماشین لباس شویی در 60&#xB0; / پر شده با پلی استر 100% ضد حساسیت.&lt;/span&gt;&lt;/p&gt;</description>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;"&gt;کوسن روباه کوهستانی به مبلمان، صندلی یا تخت خواب شما جلوه و رنگ می بخشد. یک جو مدرن و عالی که باعث آرامش و راحتی می شود را خلق کنید. رویه 100% پنبه، قابل شستشو در ماشین لباس شویی در 60&#xB0; / پر شده با پلی استر 100% ضد حساسیت.&lt;/span&gt;&lt;/p&gt;</description>
     <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;کوسن با رویه جدا شدنی و زیپ مخفی در پست آن. 32x32 سانتی متر&lt;/span&gt;&lt;/p&gt;</description_short>
     <link_rewrite>mountain-fox-cushion</link_rewrite>
     <meta_description/>
@@ -101,7 +101,7 @@
     <available_later/>
   </product>
   <product id="Brown_bear_cushion" id_shop="1">
-    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;color:#000000;"&gt;کوسن خرس قهوه ای به مبلمان، صندلی یا تخت خواب شما جلوه و رنگ می بخشد. یک جو مدرن و عالی که باعث آرامش و راحتی می شود را خلق کنید. رویه 100% پنبه، قابل شستشو در ماشین لباس شویی در 60&#xB0; / پر شده با پلی استر 100% ضد حساسیت.&lt;/span&gt;&lt;/p&gt;</description>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;"&gt;کوسن خرس قهوه ای به مبلمان، صندلی یا تخت خواب شما جلوه و رنگ می بخشد. یک جو مدرن و عالی که باعث آرامش و راحتی می شود را خلق کنید. رویه 100% پنبه، قابل شستشو در ماشین لباس شویی در 60&#xB0; / پر شده با پلی استر 100% ضد حساسیت.&lt;/span&gt;&lt;/p&gt;</description>
     <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;کوسن با رویه جدا شدنی و زیپ مخفی در پست آن. 32x32 سانتی متر&lt;/span&gt;&lt;/p&gt;</description_short>
     <link_rewrite>brown-bear-cushion</link_rewrite>
     <meta_description/>
@@ -112,7 +112,7 @@
     <available_later/>
   </product>
   <product id="Hummingbird_cushion" id_shop="1">
-    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;color:#000000;"&gt;کوسن زرین بال به مبلمان، صندلی یا تخت خواب شما جلوه و رنگ می بخشد. یک جو مدرن و عالی که باعث آرامش و راحتی می شود را خلق کنید. رویه 100% پنبه، قابل شستشو در ماشین لباس شویی در 60&#xB0; / پر شده با پلی استر 100% ضد حساسیت.&lt;/span&gt;&lt;/p&gt;</description>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-weight:normal;font-style:normal;"&gt;کوسن زرین بال به مبلمان، صندلی یا تخت خواب شما جلوه و رنگ می بخشد. یک جو مدرن و عالی که باعث آرامش و راحتی می شود را خلق کنید. رویه 100% پنبه، قابل شستشو در ماشین لباس شویی در 60&#xB0; / پر شده با پلی استر 100% ضد حساسیت.&lt;/span&gt;&lt;/p&gt;</description>
     <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;کوسن با رویه جدا شدنی و زیپ مخفی در پست آن. 32x32 سانتی متر&lt;/span&gt;&lt;/p&gt;</description_short>
     <link_rewrite>hummingbird-cushion</link_rewrite>
     <meta_description/>
@@ -200,7 +200,7 @@
     <available_later/>
   </product>
   <product id="Customizable_mug" id_shop="1">
-    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;ماگ خود را با متن دلخواه خود شخصی سازی کنید. یک مود، پیام، نقل قول... بستگی به خودتان دارد! حداکثر تعداد کاراکتر:&lt;/span&gt;&lt;span style="font-size:10pt;font-style:normal;color:#ff9900;"&gt; ---&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;ماگ خود را با متن دلخواه خود شخصی سازی کنید. یک مود، پیام، نقل قول... بستگی به خودتان دارد! حداکثر تعداد کاراکتر:&lt;/span&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt; ---&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
     <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;ماگ سرامیکی سفید. 325 میلی لیتر&lt;/span&gt;&lt;/p&gt;</description_short>
     <link_rewrite>customizable-mug</link_rewrite>
     <meta_description/>

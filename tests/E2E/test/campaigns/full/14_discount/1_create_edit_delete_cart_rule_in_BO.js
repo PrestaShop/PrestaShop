@@ -1,6 +1,11 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-54"][Name="create a cart rule"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const commonScenarios = require('../../common_scenarios/discount');
-
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let cartRuleData = [
   {
     name: 'Percent',
@@ -23,6 +28,7 @@ scenario('Create, edit, check and delete "Cart Rule" in the Back Office', () => 
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'discount');
+  welcomeScenarios.findAndCloseWelcomeModal();
   for (let i = 0; i < cartRuleData.length; i++) {
     commonScenarios.createCartRule(cartRuleData[i], 'code' + (i + 1));
     commonScenarios.checkCartRule(cartRuleData[i], 'code' + (i + 1));

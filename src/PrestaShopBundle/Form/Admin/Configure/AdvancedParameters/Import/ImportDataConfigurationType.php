@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -89,9 +89,9 @@ class ImportDataConfigurationType extends TranslatorAwareType
                 'entry_type' => ChoiceType::class,
                 'entry_options' => [
                     'choices' => [
-                            $this->trans('Ignore this column', 'Admin.Advparameters.Feature') => 'no',
-                        ] +
-                        $this->entityFieldChoices,
+                        $this->trans('Ignore this column', 'Admin.Advparameters.Feature') => 'no',
+                    ] +
+                    $this->entityFieldChoices,
                     'choice_translation_domain' => false,
                     'label' => false,
                 ],
@@ -106,7 +106,6 @@ class ImportDataConfigurationType extends TranslatorAwareType
             ->add('forceIDs', HiddenType::class)
             ->add('sendemail', HiddenType::class)
             ->add('separator', HiddenType::class)
-            ->add('multiple_value_separator', HiddenType::class)
-        ;
+            ->add('multiple_value_separator', HiddenType::class);
     }
 }

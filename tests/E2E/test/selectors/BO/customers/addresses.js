@@ -30,6 +30,11 @@ module.exports = {
     submit_field: '//button[contains(@name,"submitFields")]',
     select_all_field_name: '//input[contains(@name,"checkme")]',
     address_id: '//*[@id="table-address"]//td[2]',
-    empty_class: '//*[@id="table-address"]//div[contains(@class,"list-empty-msg")]'
+    empty_class: '//*[@id="table-address"]//div[contains(@class,"list-empty-msg")]',
+    first_name_value: '//*[@id="table-address"]//tr[%ID]/td[3]',
+    last_name_value: '//*[@id="table-address"]//tr[%ID]/td[4]',
+    zip_code_value: '//*[@id="table-address"]//tr[%ID]/td[6]',
+    city_value: '//*[@id="table-address"]//tr[%ID]/td[7]',
+    country_value: '//*[@id="table-address"]//tr[%ID]/td[8]'
   }
 };

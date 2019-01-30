@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -32,11 +32,11 @@
       <img class="avatar rounded-circle" src="{$employee->getImage()}" />
       <span>{$employee->firstname} {$employee->lastname}</span>
     </div>
-    <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee">
+    <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}">
       <i class="material-icons">settings_applications</i>
       {l s='Your profile'}
     </a>
-    <a class="dropdown-item employee-link" id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout">
+    <a class="dropdown-item employee-link" id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}">
       <i class="material-icons">power_settings_new</i>
       <span>{l s='Sign out'}</span>
     </a>

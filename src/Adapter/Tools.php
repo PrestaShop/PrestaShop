@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -126,7 +126,8 @@ class Tools
      */
     private function generateHtaccessOnMultiViews($disableMultiView = false)
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -141,7 +142,8 @@ class Tools
      */
     public function generateHtaccessWithMultiViews()
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -156,7 +158,8 @@ class Tools
      */
     public function generateHtaccessWithoutMultiViews()
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -200,5 +203,32 @@ class Tools
     public function isModRewriteActive()
     {
         return LegacyTools::modRewriteActive();
+    }
+
+    /**
+     * Copy content.
+     *
+     * @param string $source
+     * @param string $destination
+     * @param resource|null $streamContext
+     *
+     * @return bool|int
+     */
+    public function copy($source, $destination, $streamContext = null)
+    {
+        return LegacyTools::copy($source, $destination, $streamContext);
+    }
+
+    /**
+     * Sanitize a string.
+     *
+     * @param string $value
+     * @param bool $allowHtml
+     *
+     * @return string
+     */
+    public function sanitize($value, $allowHtml = false)
+    {
+        return LegacyTools::safeOutput($value, $allowHtml);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Webservice;
+namespace tests\Unit\Core\Webservice;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -38,42 +38,40 @@ class ServerRequirementsCheckerTest extends TestCase
     /**
      * @var TranslatorInterface
      */
-    private $translator;
+    private $mockedTranslator;
 
     /**
      * @var Configuration
      */
-    private $configuration;
+    private $mockedConfiguration;
 
     /**
      * @var HostingInformation
      */
-    private $hostingInformation;
+    private $mockedHostingInformation;
 
     /**
      * @var PhpExtensionCheckerInterface
      */
-    private $phpExtensionChecker;
+    private $mockedPhpExtensionChecker;
 
-    public function setUp()
+    protected function setUp()
     {
-        $this->translator = $this->createMock(TranslatorInterface::class);
-        $this->translator
+        $this->mockedTranslator = $this->createMock(TranslatorInterface::class);
+        $this->mockedTranslator
             ->method('trans')
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
-        $this->configuration = $this->createMock(Configuration::class);
-        $this->hostingInformation = $this->createMock(HostingInformation::class);
-        $this->phpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);
+        $this->mockedConfiguration = $this->createMock(Configuration::class);
+        $this->mockedHostingInformation = $this->createMock(HostingInformation::class);
+        $this->mockedPhpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);
     }
 
     public function testErrorIsReturnedWhenNonApacheWebServerIsUsed()
     {
-        $this->hostingInformation
+        $this->mockedHostingInformation
             ->method('getServerInformation')
-            ->willReturn(['version' => 'nginx'])
-        ;
+            ->willReturn(['version' => 'nginx']);
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
@@ -82,10 +80,9 @@ class ServerRequirementsCheckerTest extends TestCase
 
     public function testNoErrorsAreReturnedWhenUsingApacheWebServer()
     {
-        $this->hostingInformation
+        $this->mockedHostingInformation
             ->method('getServerInformation')
-            ->willReturn(['version' => 'Apache/2.4.29 (Ubuntu)'])
-        ;
+            ->willReturn(['version' => 'Apache/2.4.29 (Ubuntu)']);
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
@@ -94,7 +91,7 @@ class ServerRequirementsCheckerTest extends TestCase
 
     public function testNoErrorsAreReturnedWhenSslIsEnabled()
     {
-        $this->configuration
+        $this->mockedConfiguration
             ->method('getBoolean')
             ->will($this->returnValue(true));
 
@@ -105,7 +102,7 @@ class ServerRequirementsCheckerTest extends TestCase
 
     public function testThatErrorIsReturnedWhenSslIsNotEnabled()
     {
-        $this->configuration
+        $this->mockedConfiguration
             ->method('getBoolean')
             ->will($this->returnValue(false));
 
@@ -114,13 +111,16 @@ class ServerRequirementsCheckerTest extends TestCase
         $this->assertContains('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', $errors);
     }
 
+    /**
+     * @return ServerRequirementsChecker
+     */
     private function createNewServerRequirementsChecker()
     {
         return new ServerRequirementsChecker(
-            $this->translator,
-            $this->configuration,
-            $this->hostingInformation,
-            $this->phpExtensionChecker
+            $this->mockedTranslator,
+            $this->mockedConfiguration,
+            $this->mockedHostingInformation,
+            $this->mockedPhpExtensionChecker
         );
     }
 }

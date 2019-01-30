@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -70,7 +70,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 			</label>
 			<label>
 				<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'lite'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
-				<?php echo $this->translator->trans('No', array(), 'Install');; ?>
+				<?php echo $this->translator->trans('No', array(), 'Install'); ?>
 			</label>
 		</div>
 		<p class="userInfos aligned"><?php echo $this->translator->trans('Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.', array(), 'Install'); ?></p>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,9 +98,9 @@ class CurrencyCore extends ObjectModel
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
-        $this->cldr = Tools::getCldr(Context::getContext());
-
         parent::__construct($id, $idLang, $idShop);
+
+        $this->cldr = Tools::getCldr(Context::getContext());
 
         if ($this->iso_code) {
             $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
@@ -379,7 +379,7 @@ class CurrencyCore extends ObjectModel
 
     public static function getPaymentCurrenciesSpecial($idModule, $idShop = null)
     {
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             $idShop = Context::getContext()->shop->id;
         }
 
@@ -397,11 +397,11 @@ class CurrencyCore extends ObjectModel
      * @param int $idModule Module ID
      * @param null $idShop Shop ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getPaymentCurrencies($idModule, $idShop = null)
     {
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             $idShop = Context::getContext()->shop->id;
         }
 
@@ -423,7 +423,7 @@ class CurrencyCore extends ObjectModel
      * @param int $idModule Module ID
      * @param null $idShop Shop ID
      *
-     * @return array|null|PDOStatement|resource
+     * @return array|PDOStatement|resource|null
      */
     public static function checkPaymentCurrencies($idModule, $idShop = null)
     {
@@ -431,7 +431,7 @@ class CurrencyCore extends ObjectModel
             return array();
         }
 
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             $idShop = Context::getContext()->shop->id;
         }
 
@@ -451,7 +451,7 @@ class CurrencyCore extends ObjectModel
      *
      * @param int $idCurrency Currency ID
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public static function getCurrency($idCurrency)
     {
@@ -527,6 +527,7 @@ class CurrencyCore extends ObjectModel
             foreach ($data->currency as $currency) {
                 if ($currency['iso_code'] == $defaultCurrency->iso_code) {
                     $exchangeRate = round((float) $currency['rate'], 6);
+
                     break;
                 }
             }
@@ -539,8 +540,9 @@ class CurrencyCore extends ObjectModel
                 $rate = 1;
             } else {
                 foreach ($data->currency as $obj) {
-                    if ($this->iso_code == strval($obj['iso_code'])) {
+                    if ($this->iso_code == (string) ($obj['iso_code'])) {
                         $rate = (float) $obj['rate'];
+
                         break;
                     }
                 }
@@ -584,7 +586,7 @@ class CurrencyCore extends ObjectModel
         }
 
         // Default feed currency (EUR)
-        $isoCodeSource = strval($feed->source['iso_code']);
+        $isoCodeSource = (string) ($feed->source['iso_code']);
 
         if (!$defaultCurrency = Currency::getDefaultCurrency()) {
             return Context::getContext()->getTranslator()->trans('No default currency', array(), 'Admin.Notifications.Error');

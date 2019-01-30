@@ -1,9 +1,9 @@
 const {getClient} = require('../common.webdriverio.js');
-const {selector} = require('../globals.webdriverio.js');
-const {languageFO} = require('../../test/selectors/FO/index');
+const {languageFO} = require('../selectors/FO/index');
 let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
+const exec = require('child_process').exec;
 
 global.tab = [];
 global.isOpen = false;
@@ -202,7 +202,9 @@ class CommonClient {
       return this.client
         .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
-        .then((variable) => global.tab[globalVar] = variable);
+        .then((variable) => {
+          global.tab[globalVar] = variable
+        });
     }
   }
 
@@ -242,6 +244,13 @@ class CommonClient {
           .waitForExist(selector, 9000)
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.not.equal(textToCheckWith));
+        break;
+      case "greaterThan":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 9000)
+          .then(() => this.client.getText(selector))
+          .then((text) => expect(parseInt(text)).to.be.gt(textToCheckWith));
         break;
     }
   }
@@ -315,9 +324,10 @@ class CommonClient {
    * @param text
    * @returns {*}
    */
-  checkDocument(folderPath, fileName, text) {
-    pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
-      global.indexText = data.indexOf(text)
+  async checkDocument(folderPath, fileName, text) {
+    await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+      global.indexText = data.indexOf(text);
+      global.data = global.data + data;
     });
 
     return this.client
@@ -331,14 +341,14 @@ class CommonClient {
    * @param fileName
    * @returns {*}
    */
-  checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function(err, stats) {
+  async checkFile(folderPath, fileName, pause = 2000) {
+    await fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
     return this.client
       .pause(pause)
-      .then(() => expect(global.existingFile).to.be.true)
+      .then(() => expect(global.existingFile, "Expected File was not find in the folder " + folderPath).to.be.true)
   }
 
   waitForVisible(selector, timeout = 90000) {
@@ -417,6 +427,18 @@ class CommonClient {
 
   alertAccept() {
     return this.client.alertAccept();
+  }
+
+  alertDismiss() {
+    return this.client.alertDismiss();
+  }
+
+  getText(selector) {
+    return this.client.getText(selector);
+  }
+
+  alertText() {
+    return this.client.alertText();
   }
 
   showElement(className, order) {
@@ -507,7 +529,6 @@ class CommonClient {
     return deca[Math.floor(number / 10) - 2] + 'y-' + special[number % 10];
   }
 
-
   /**
    * This function searches the data in the table in case a filter input exists
    * @param selector
@@ -539,6 +560,11 @@ class CommonClient {
         expect(text).to.be.equal(data);
       });
     }
+  }
+
+  refresh() {
+    return this.client
+      .refresh();
   }
 
   deleteCookie() {
@@ -592,6 +618,133 @@ class CommonClient {
     }
   }
 
+  checkList(selector) {
+    this.client
+      .element(selector)
+      .then(function (elements) {
+        expect(elements).to.have.lengthOf.above(0);
+      })
+  }
+
+  /**
+   * These functions are used to sort table then check the sorted table
+   * elementsTable, elementsSortedTable are two global variables that must be initialized in the sort table function
+   * "normalize('NFKD').replace(/[\u0300-\u036F]/g, '')" is used to replace special characters example ô to o
+   * * "normalize('NFKD').replace(/[\u0300-\u036F]/g, '')" is used to replace special characters example € to o
+   */
+  getTableField(element_list, i, sorted = false, priceWithCurrency = false) {
+    return this.client
+      .getText(element_list.replace("%ID", i + 1)).then(function (name) {
+        if (sorted) {
+          if (priceWithCurrency === true) {
+            elementsSortedTable[i] = name.normalize('NFKD').replace(/[^\x00-\x7F]/g, '').toLowerCase();
+          } else {
+            elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          }
+        }
+        else {
+          if (priceWithCurrency === true) {
+            elementsTable[i] = name.normalize('NFKD').replace(/[^\x00-\x7F]/g, '').toLowerCase();
+          } else {
+            elementsTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          }
+        }
+      });
+  }
+
+  /**
+   * This function checks the sort of a table
+   * @param isNumber= true if we sort by a number, isNumber= false if we sort by a string
+   * @param sortWay equal to 'ASC' or 'DESC'
+   */
+  async checkSortTable(isNumber = false, sortWay = 'ASC') {
+    return await this.client
+      .pause(2000)
+      .then(async () => {
+        if (isNumber) {
+          if (sortWay === 'ASC') {
+            await expect(elementsTable.sort(function (a, b) {
+              return a - b;
+            })).to.deep.equal(elementsSortedTable);
+          } else {
+            await expect(elementsTable.sort(function (a, b) {
+              return a - b
+            }).reverse()).to.deep.equal(elementsSortedTable);
+          }
+        } else {
+          if (sortWay === 'ASC') {
+            await expect(elementsTable.sort()).to.deep.equal(elementsSortedTable);
+          } else {
+            await expect(elementsTable.sort().reverse()).to.deep.equal(elementsSortedTable);
+          }
+        }
+      });
+  }
+
+  displayHiddenBlock(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementsByClassName(selector).style = '';
+      })
+  }
+
+  changeOrderState(selector, state) {
+    return this.client
+      .waitForExist(selector.order_state_select, 90000)
+      .execute(function () {
+        document.querySelector('#id_order_state').style = "";
+      })
+      .selectByVisibleText(selector.order_state_select, state)
+      .waitForExistAndClick(selector.update_status_button)
+  }
+
+  getDocumentName(selector) {
+    return this.client
+      .then(() => this.client.getText(selector))
+      .then((name) => {
+        global.invoiceFileName = name.replace('#', '')
+      });
+  }
+
+  deleteFile(folderPath, fileName, extension = "", pause = 0) {
+    fs.unlinkSync(folderPath + fileName + extension);
+    return this.client
+      .pause(pause)
+  }
+
+  checkAutoUpgrade() {
+    fs.readFile(rcTarget + 'admin-dev/autoupgrade/tmp/log.txt', 'utf8', (err, content) => {
+      global.upgradeError = content.indexOf("upgradeDbError");
+    });
+    return this.client
+      .pause(2000)
+      .then(() => {
+        expect(global.upgradeError, "Upgrade process done, but some warnings/errors have been found").to.equal(-1)
+      });
+  }
+
+  signOutWithoutCookiesFO(selector) {
+    return this.client.signOutWithoutCookiesFO(selector);
+  }
+
+  waitForSymfonyToolbar(AddProductPage, pause = 0) {
+    return this.client
+      .pause(pause)
+      .isVisible(AddProductPage.symfony_toolbar, 4000)
+      .then((isVisible) => {
+        if (global.ps_mode_dev && isVisible) {
+          this.client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+        }
+      })
+  }
+
+  goToFrame(id) {
+    return this.client.frame(id);
+  }
+
+  closeFrame() {
+    return this.client.frameParent();
+  }
 }
 
 module.exports = CommonClient;

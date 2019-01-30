@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,7 +36,8 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers' . (int) Ta
         );
     } elseif (Tools::isSubmit('ajaxFillProducts')) {
         $json_array = array();
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
 			SELECT p.id_product, pl.name
 			FROM ' . _DB_PREFIX_ . 'product p
 			LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl
@@ -506,7 +507,8 @@ class AdminReferrersControllerCore extends AdminController
             'order_rate' => $this->trans('Order rate', array(), 'Admin.Shopparameters.Feature'),
             'click_fee' => $this->trans('Click fee', array(), 'Admin.Shopparameters.Feature'),
             'base_fee' => $this->trans('Base fee', array(), 'Admin.Shopparameters.Feature'),
-            'percent_fee' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'), );
+            'percent_fee' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'),
+        );
 
         $this->tpl_view_vars = array(
             'enable_calendar' => $this->enableCalendar(),

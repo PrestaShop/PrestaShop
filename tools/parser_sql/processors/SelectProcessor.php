@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/SelectExpressionProcessor.php');
+require_once dirname(__FILE__) . '/SelectExpressionProcessor.php';
 
 /**
  * 
@@ -40,7 +40,6 @@ require_once(dirname(__FILE__) . '/SelectExpressionProcessor.php');
  * 
  */
 class SelectProcessor extends SelectExpressionProcessor {
-
     public function process($tokens) {
         $expression = "";
         $expressionList = array();
@@ -68,6 +67,7 @@ class SelectProcessor extends SelectExpressionProcessor {
                     $expression['delim'] = ' ';
                     $expressionList[] = $expression;
                     $expression = "";
+
                     break;
 
                 default:
@@ -80,7 +80,7 @@ class SelectProcessor extends SelectExpressionProcessor {
             $expression['delim'] = false;
             $expressionList[] = $expression;
         }
+
         return $expressionList;
     }
 }
-?>

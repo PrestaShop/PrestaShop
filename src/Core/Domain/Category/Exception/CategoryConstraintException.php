@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,17 +32,37 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 class CategoryConstraintException extends CategoryException
 {
     /**
-     * Code is used when Category status is created with invalid value.
+     * Code is used when category does not have name.
      */
-    const INVALID_STATUS = 10;
+    const EMPTY_NAME = 1;
 
     /**
-     * Code is used when Category delete mode is created with invalid value.
+     * Code is used when category does not have link rewrite.
      */
-    const INVALID_DELETE_MODE = 20;
+    const EMPTY_LINK_REWRITE = 2;
 
     /**
-     * Code is used when bulk delete command is dispatched without any data.
+     * Code is used when invalid status is set to category.
      */
-    const EMPTY_BULK_DELETE_DATA = 30;
+    const INVALID_STATUS = 4;
+
+    /**
+     * Code is used when invalid parent id is supplied.
+     */
+    const INVALID_PARENT_ID = 6;
+
+    /**
+     * Code is used when too many menu thumbnails is being set for category.
+     */
+    const TOO_MANY_MENU_THUMBNAILS = 8;
+
+    /**
+     * Code is used when category's parent is same category itself.
+     */
+    const CANNOT_BE_PARENT_OF_ITSELF = 10;
+
+    /**
+     * Code is used when performing bulk delete of categories with empty data.
+     */
+    const EMPTY_BULK_DELETE_DATA = 12;
 }

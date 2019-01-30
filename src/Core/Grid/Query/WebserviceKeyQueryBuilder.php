@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -75,8 +75,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
                 $searchCriteria->getOrderWay()
             )
-            ->groupBy('wa.`id_webservice_account`')
-        ;
+            ->groupBy('wa.`id_webservice_account`');
 
         $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
 
@@ -89,8 +88,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT wa.`id_webservice_account`)')
-        ;
+            ->select('COUNT(DISTINCT wa.`id_webservice_account`)');
 
         return $qb;
     }
@@ -112,8 +110,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'webservice_account_shop',
                 'was',
                 'was.`id_webservice_account` = wa.`id_webservice_account`'
-            )
-        ;
+            );
 
         $qb->andWhere('was.`id_shop` IN (:shops)');
 

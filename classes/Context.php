@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
+use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
-use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 
 /**
  * Class ContextCore.
@@ -36,7 +36,7 @@ use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
  */
 class ContextCore
 {
-    /* @var Context */
+    /** @var Context */
     protected static $instance;
 
     /** @var Cart */
@@ -183,16 +183,19 @@ class ContextCore
                             if ($this->isMobile() && !$this->isTablet()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                         case 2: // Only for touchpads
                             if ($this->isTablet() && !$this->isMobile()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                         case 3: // For touchpad or mobile devices
                             if ($this->isMobile() || $this->isTablet()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                     }
                 }
@@ -250,8 +253,7 @@ class ContextCore
             }
         }
 
-        return isset($_SERVER['HTTP_USER_AGENT'])
-            && isset(Context::getContext()->cookie)
+        return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;
@@ -349,10 +351,7 @@ class ContextCore
         }
 
         $translator = $this->getTranslatorFromLocale($this->language->locale);
-        // In case we have at least 1 translated message, we return the current translator.
-        if (count($translator->getCatalogue($this->language->locale)->all())) {
-            $this->translator = $translator;
-        }
+        $this->translator = $translator;
 
         return $translator;
     }
@@ -392,7 +391,7 @@ class ContextCore
         $translator->addLoader('xlf', new XliffFileLoader());
 
         $sqlTranslationLoader = new SqlTranslationLoader();
-        if (!is_null($this->shop)) {
+        if (null !== $this->shop) {
             $sqlTranslationLoader->setTheme($this->shop->theme);
         }
 
@@ -403,8 +402,7 @@ class ContextCore
             ->files()
             ->name('*.' . $locale . '.xlf')
             ->notName($notName)
-            ->in($this->getTranslationResourcesDirectories())
-        ;
+            ->in($this->getTranslationResourcesDirectories());
 
         foreach ($finder as $file) {
             list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
@@ -425,7 +423,7 @@ class ContextCore
     {
         $locations = array(_PS_ROOT_DIR_ . '/app/Resources/translations');
 
-        if (!is_null($this->shop)) {
+        if (null !== $this->shop) {
             $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
             if (is_dir($activeThemeLocation)) {
                 $locations[] = $activeThemeLocation;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 $module = Tools::getValue('module');
 $render = Tools::getValue('render');
@@ -42,7 +42,6 @@ $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
 $id_employee = (int)(Tools::getValue('id_employee'));
 $id_lang = (int)(Tools::getValue('id_lang'));
 
-
 if (!isset($cookie->id_employee) || !$cookie->id_employee  || $cookie->id_employee != $id_employee) {
     die(Tools::displayError());
 }
@@ -55,8 +54,7 @@ if (!Tools::file_exists_cache($module_path = _PS_ROOT_DIR_.'/modules/'.$module.'
     die(Tools::displayError());
 }
 
-    
-$shop_id = '';
+    $shop_id = '';
 Shop::setContext(Shop::CONTEXT_ALL);
 if (Context::getContext()->cookie->shopContext) {
     $split = explode('-', Context::getContext()->cookie->shopContext);
@@ -94,9 +92,8 @@ if (!$shop_id) {
 } elseif (Context::getContext()->shop->id != $shop_id) {
     Context::getContext()->shop = new Shop($shop_id);
 }
-    
-    
-require_once($module_path);
+
+require_once $module_path;
 
 $grid = new $module();
 $grid->setEmployee($id_employee);
@@ -104,6 +101,6 @@ $grid->setLang($id_lang);
 if ($option) {
     $grid->setOption($option);
 }
-    
+
 $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
 $grid->render();

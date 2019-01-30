@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -201,13 +201,14 @@ class StockAvailableCore extends ObjectModel
 
                     $product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
 
-                    Hook::exec('actionUpdateQuantity',
+                    Hook::exec(
+                        'actionUpdateQuantity',
                                     array(
                                         'id_product' => $id_product,
                                         'id_product_attribute' => 0,
                                         'quantity' => $product_quantity,
                                         'id_shop' => $id_shop,
-                                        )
+                                    )
                     );
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute
@@ -255,7 +256,8 @@ class StockAvailableCore extends ObjectModel
 
                         $product_quantity += $quantity;
 
-                        Hook::exec('actionUpdateQuantity',
+                        Hook::exec(
+                            'actionUpdateQuantity',
                                     array(
                                         'id_product' => $id_product,
                                         'id_product_attribute' => $id_product_attribute,
@@ -381,6 +383,7 @@ class StockAvailableCore extends ObjectModel
                 'id_product_attribute' => $id_product_attribute,
                 'location' => $location,
             ];
+
             throw new \InvalidArgumentException(sprintf(
                 'Could not update location as input data is not valid: %s',
                 json_encode($serializedInputData)
@@ -500,13 +503,15 @@ class StockAvailableCore extends ObjectModel
                 foreach ($colors as $color) {
                     if ($product->isColorUnavailable((int) $color['id_attribute'], (int) $this->id_shop)) {
                         Tools::clearColorListCache($product->id);
+
                         break;
                     }
                 }
             }
         }
 
-        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT SUM(quantity) as quantity
 			FROM ' . _DB_PREFIX_ . 'stock_available
 			WHERE id_product = ' . (int) $this->id_product . '
@@ -610,7 +615,8 @@ class StockAvailableCore extends ObjectModel
                 }
             }
 
-            Hook::exec('actionUpdateQuantity',
+            Hook::exec(
+                'actionUpdateQuantity',
                 array(
                     'id_product' => $id_product,
                     'id_product_attribute' => $id_product_attribute,

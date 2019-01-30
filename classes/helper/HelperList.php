@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
  */
 class HelperListCore extends Helper
 {
+    /** @var int size which is used for lists image thumbnail generation. */
+    const LIST_THUMBNAIL_SIZE = 45;
+
     /** @var array Cache for query results */
     protected $_list = array();
 
@@ -69,6 +72,9 @@ class HelperListCore extends Helper
     public $position_identifier;
 
     public $table_id;
+
+    /** @var string */
+    public $title_icon = null;
 
     /**
      * @var array Customize list display
@@ -313,8 +319,8 @@ class HelperListCore extends Helper
                     } else {
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . Image::getImgFolderStatic($tr['id_image']) . (int) $tr['id_image'] . '.' . $this->imageType;
                     }
-                    $this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table . '_mini_' . $item_id . '_' . $this->context->shop->id . '.' . $this->imageType, 45, $this->imageType);
-                } elseif (isset($params['icon']) && isset($tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
+                    $this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table . '_mini_' . $item_id . '_' . $this->context->shop->id . '.' . $this->imageType, self::LIST_THUMBNAIL_SIZE, $this->imageType);
+                } elseif (isset($params['icon'], $tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
                     if (!$this->bootstrap) {
                         if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]])) {
                             $this->_list[$index][$key] = array(
@@ -496,6 +502,7 @@ class HelperListCore extends Helper
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
                 }
+
                 break;
             default:
         }
@@ -528,7 +535,7 @@ class HelperListCore extends Helper
             self::$cache_lang['Name'] = Context::getContext()->getTranslator()->trans('Name:', array(), 'Admin.Global');
         }
 
-        if (!is_null($name)) {
+        if (null !== $name) {
             $name = addcslashes('\n\n' . self::$cache_lang['Name'] . ' ' . $name, '\'');
         }
 
@@ -543,6 +550,7 @@ class HelperListCore extends Helper
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
                 }
+
                 break;
             default:
         }
@@ -554,7 +562,7 @@ class HelperListCore extends Helper
         );
 
         if ($this->specificConfirmDelete !== false) {
-            $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r' . $this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name);
+            $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name);
         }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
@@ -663,6 +671,7 @@ class HelperListCore extends Helper
                     if (isset($params['ajax']) && $params['ajax']) {
                         $ajax = true;
                     }
+
                     break;
 
                 case 'date':
@@ -680,6 +689,7 @@ class HelperListCore extends Helper
                     $params['name_date'] = $name;
 
                     $this->context->controller->addJqueryUI('ui.datepicker');
+
                     break;
 
                 case 'select':
@@ -690,6 +700,7 @@ class HelperListCore extends Helper
                             $this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
                         }
                     }
+
                     break;
 
                 case 'text':
@@ -712,6 +723,7 @@ class HelperListCore extends Helper
                 }
 
                 $has_value = true;
+
                 break;
             }
             if (!(isset($field['search']) && $field['search'] === false)) {
@@ -736,6 +748,10 @@ class HelperListCore extends Helper
             'has_bulk_actions' => $this->hasBulkActions($has_value),
             'filters_has_value' => (bool) $has_value,
         ));
+
+        if (null !== $this->title_icon) {
+            Context::getContext()->smarty->assign(['icon' => $this->title_icon]);
+        }
 
         $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
 

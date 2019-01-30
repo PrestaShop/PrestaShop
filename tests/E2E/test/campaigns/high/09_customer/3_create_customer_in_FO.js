@@ -20,7 +20,7 @@ scenario('Check the creation of customer account', client => {
     test('should "Sign out"', () => client.signOutFO(AccessPageFO));
     test('should change the Front Office language to "English"', () => client.changeLanguage());
     test('should login successfully with the created account', () => client.waitForExistAndClick(AccessPageFO.sign_in_button));
-    test('should set the "Email" input', () => client.waitAndSetValue(accountPage.email_input, 'new' + data.customer.email.replace("%ID", date_time)));
+    test('should set the "Email" input', () => client.waitAndSetValue(accountPage.signin_email_input, 'new' + data.customer.email.replace("%ID", date_time)));
     test('should set the "Password" input', () => client.waitAndSetValue(accountPage.password_input, data.customer.password));
     test('should click on "SIGN IN" button', () => client.waitForExistAndClick(AccessPageFO.login_button));
 }, 'common_client');
@@ -36,8 +36,8 @@ scenario('Create "Address"', client => {
 
 scenario('Check the creation of the address', client => {
     test('should click on "update" link', () => client.waitForExistAndClick(accountPage.adr_update));
-    test('should check that the "First name" of customer is equal to "John"', () => client.checkAttributeValue(accountPage.firstname_input, 'value', data.customer.firstname));
-    test('should check that the "Last name" of customer is equal to "Doe"', () => client.checkAttributeValue(accountPage.lastname_input, 'value', data.customer.lastname));
+    test('should check that the "First name" of customer is equal to "John"', () => client.checkAttributeValue(accountPage.address_firstname_input, 'value', data.customer.firstname));
+    test('should check that the "Last name" of customer is equal to "Doe"', () => client.checkAttributeValue(accountPage.address_lastname_input, 'value', data.customer.lastname));
     test('should check that the "Address" of customer is equal to "16, Main street"', () => client.checkAttributeValue(accountPage.adr_address, 'value', data.address.address));
     test('should check that the "Zip/Postal Code" of customer is equal to "75002"', () => client.checkAttributeValue(accountPage.adr_postcode, 'value', data.address.postalCode));
     test('should check that the "City" of customer is equal to "Paris"', () => client.checkAttributeValue(accountPage.adr_city, 'value', data.address.city));

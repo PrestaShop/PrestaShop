@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,14 +59,15 @@ class AdminCmsCategoriesControllerCore extends AdminController
         $this->tpl_list_vars['icon'] = 'icon-folder-close';
         $this->tpl_list_vars['title'] = $this->trans('Categories', array(), 'Admin.Catalog.Feature');
         $this->fields_list = array(
-        'id_cms_category' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-        'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
-        'description' => array('title' => $this->trans('Description', array(), 'Admin.Global'), 'maxlength' => 90, 'orderby' => false),
-        'position' => array('title' => $this->trans('Position', array(), 'Admin.Global'), 'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
-        'active' => array(
-            'title' => $this->trans('Displayed', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'active' => 'status',
-            'align' => 'center', 'type' => 'bool', 'orderby' => false,
-        ), );
+            'id_cms_category' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
+            'description' => array('title' => $this->trans('Description', array(), 'Admin.Global'), 'maxlength' => 90, 'orderby' => false),
+            'position' => array('title' => $this->trans('Position', array(), 'Admin.Global'), 'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
+            'active' => array(
+                'title' => $this->trans('Displayed', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'active' => 'status',
+                'align' => 'center', 'type' => 'bool', 'orderby' => false,
+            ),
+        );
 
         // The controller can't be call directly
         // In this case, AdminCmsContentController::getCurrentCMSCategory() is null

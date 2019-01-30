@@ -5,6 +5,7 @@
     "require": {
         "php": ">=5.6.0",
         "ext-curl": "*",
+        "ext-fileinfo": "*",
         "ext-intl": "*",
         "ext-zip": "*",
         "beberlei/DoctrineExtensions": "^1.0",
@@ -35,7 +36,7 @@
         "nikic/php-parser": "^2.1",
         "paragonie/random_compat": "^1.4|^2.0",
         "pear/archive_tar": "~1.4.2",
-        "phpoffice/phpexcel": "~1.8",
+        "phpoffice/phpspreadsheet": "~1.5",
         "prestashop/blockreassurance": "^3",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
@@ -45,7 +46,7 @@
         "prestashop/decimal": "^1.0.0",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
-        "prestashop/gsitemap": "^3",
+        "prestashop/gsitemap": "^4.0",
         "prestashop/pagesnotfound": "^2",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_categorytree": "^2",
@@ -57,6 +58,7 @@
         "prestashop/ps_customtext": "^4",
         "prestashop/ps_emailsubscription": "^2",
         "prestashop/ps_facetedsearch": "^2",
+        "prestashop/ps_faviconnotificationbo": "^1",
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_imageslider": "^3",
         "prestashop/ps_languageselector": "^2",
@@ -101,10 +103,14 @@
         "swiftmailer/swiftmailer": "~5.4.3",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
+        "symfony/polyfill-php73": "^1.10",
         "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony/symfony": ">=3.4.8",
         "tecnickcom/tcpdf": "^6.2.12",
         "twig/twig": "^1.0||^2.0"
+    },
+    "conflict": {
+        "twig/twig": "1.37.0|2.6.1"
     },
     "repositories": [
         {
@@ -115,12 +121,14 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.12",
         "johnkary/phpunit-speedtrap": "^1.1",
+        "mikey179/vfsStream": "^1.6",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0"
     },
     "autoload-dev": {
         "psr-4": {
+            "LegacyTests\\": "tests-legacy/",
             "Tests\\": "tests/"
         },
         "files": [
@@ -138,7 +146,6 @@
         "post-install-cmd": [
             "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-update-cmd": [
@@ -146,11 +153,11 @@
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "Tests\\PrestaShopBundle\\Utils\\DatabaseCreator::createTestDB"
+            "@php ./tests-legacy/create-test-db.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
         ],
         "test-all": [
             "composer phpunit-legacy",
@@ -160,19 +167,26 @@
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
+        ],
+        "unit-tests": [
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
         ],
         "phpunit-admin": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
+        ],
+        "phpunit-routing": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-routing.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
         ],
         "phpunit-controllers": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",

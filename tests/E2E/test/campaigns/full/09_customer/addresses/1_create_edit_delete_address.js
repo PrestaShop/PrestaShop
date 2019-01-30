@@ -1,3 +1,10 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-63"][Name="create an address"]
+ * [id="PS-64"][Name="edit an address"]
+ * [id="PS-65"][Name="delete an address"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Addresses} = require('../../../../selectors/BO/customers/addresses');
 const {Menu} = require('../../../../selectors/BO/menu.js');
@@ -5,6 +12,7 @@ const common_scenarios = require('../../../common_scenarios/addresses');
 const customer_common_scenarios = require('../../../common_scenarios/customer');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const {BO} = require('../../../../selectors/BO/customers/index');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 
@@ -59,9 +67,8 @@ scenario('Login in the Back Office', client => {
   test('should open the browser', () => client.open());
   test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
 }, 'customer');
-
+welcomeScenarios.findAndCloseWelcomeModal();
 customer_common_scenarios.createCustomer(customerData);
-
 scenario('Edit, delete and delete with bulk actions "Address"', () => {
 
   scenario('Go to "Addresses" page', client => {

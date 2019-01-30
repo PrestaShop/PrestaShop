@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminModulesControllerCore extends AdminController
 {
-    private $_modules_ad = array(
+    protected $_modules_ad = array(
         'blockcart' => array('cartabandonmentpro'),
         /* 'bloctopmenu' => array('advancedtopmenu'), */
         'blocklayered' => array('pm_advancedsearch4'),
@@ -303,7 +303,7 @@ class AdminModulesControllerCore extends AdminController
         $modules_list_sort = array(
             'installed' => $installed,
             'not_installed' => $uninstalled,
-            );
+        );
 
         $this->context->smarty->assign(array(
             'currentIndex' => self::$currentIndex,
@@ -583,15 +583,19 @@ class AdminModulesControllerCore extends AdminController
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
                         $this->errors[] = $this->trans('File too large (limit of %s bytes).', array(Tools::getMaxUploadSize()), 'Admin.Notifications.Error');
+
                         break;
                     case UPLOAD_ERR_PARTIAL:
                         $this->errors[] = $this->trans('File upload was not completed.', array(), 'Admin.Notifications.Error');
+
                         break;
                     case UPLOAD_ERR_NO_FILE:
                         $this->errors[] = $this->trans('No file was uploaded.', array(), 'Admin.Notifications.Error');
+
                         break;
                     default:
                         $this->errors[] = $this->trans('Internal error #%s', array($_FILES['newfile']['error']), 'Admin.Notifications.Error');
+
                         break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
@@ -752,9 +756,7 @@ class AdminModulesControllerCore extends AdminController
             } elseif ($key == 'updateAll') {
                 $loggedOnAddons = false;
 
-                if (isset($this->context->cookie->username_addons)
-                    && isset($this->context->cookie->password_addons)
-                    && !empty($this->context->cookie->username_addons)
+                if (!empty($this->context->cookie->username_addons)
                     && !empty($this->context->cookie->password_addons)) {
                     $loggedOnAddons = true;
                 }
@@ -801,7 +803,7 @@ class AdminModulesControllerCore extends AdminController
                         }
 
                         foreach ($module_to_update as $name => $attr) {
-                            if ((is_null($attr) && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0)) {
+                            if ((null === $attr && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0)) {
                                 $this->errors[] = $this->trans(
                                     'You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s',
                                     array(
@@ -812,7 +814,7 @@ class AdminModulesControllerCore extends AdminController
                                     ),
                                     'Admin.Modules.Notification'
                                 );
-                            } elseif (!is_null($attr['id'])) {
+                            } elseif (null !== $attr['id']) {
                                 $download_ok = false;
                                 if ($attr['need_loggedOnAddons'] == 0
                                         && file_put_contents(
@@ -1348,7 +1350,7 @@ class AdminModulesControllerCore extends AdminController
         if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
                 && ((is_array($module->limited_countries) && count($module->limited_countries)
                 && !in_array(strtolower($this->iso_default_country), $module->limited_countries))
-                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries))))) {
+                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != (string) ($module->limited_countries))))) {
             return true;
         }
 

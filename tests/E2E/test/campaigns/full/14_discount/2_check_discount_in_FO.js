@@ -72,14 +72,9 @@ scenario('Create "Catalog price rule"', () => {
   }, 'common_client');
   scenario('Delete the created specific price', client => {
     test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
-    test('should close the "Symphony" toolbar', () => {
+    test('should close the "Symfony" toolbar', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
         .then(() => client.pause(1000));
     });
     test('should search for the created product', () => client.searchProductByName(productData["name"] + date_time));

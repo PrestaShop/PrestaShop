@@ -3,6 +3,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {Translations} = require('../../../selectors/BO/international/translations');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 scenario('Edit a translation', () => {
@@ -10,19 +11,15 @@ scenario('Edit a translation', () => {
     test('should open the browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Edit a translation of "Sign in" in the "classic Theme"', client => {
     test('should go to "Translations" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.translations_submenu));
     test('should select "themes translations" in the "MODIFY TRANSLATIONS" section', () => client.waitAndSelectByValue(Translations.translations_type, "themes"));
     test('should select the language "English (English)" in the "MODIFY TRANSLATIONS" section', () => client.waitAndSelectByValue(Translations.translations_language, "en"));
     test('should click on "Modify" button', () => client.waitForExistAndClick(Translations.modify_button));
-    test('should click on "Shop" button', () =>  {
+    test('should click on "Shop" button', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
         .then(() => client.waitForVisibleAndClick(Translations.shop_button));
     });
     test('should click on "Theme" button', () => client.waitForVisibleAndClick(Translations.theme_button));
@@ -38,8 +35,8 @@ scenario('Edit a translation', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'common_client');
   scenario('Check the change of "Sign out" to "Sign out English" ', client => {
-    test('should set the shop language to "English"', () => client.changeLanguage('english'));
-    test('should check the "Sign out" button text is equal to "Sign out English"', () => client.checkTextValue(Translations.sign_out_FO_text, 'Sign out English', "contain"));
+    test('should set the shop language to "English"', () => client.changeLanguage());
+    test('should check the "Sign out" button text is equal to "Sign out English"', () => client.checkTextValue(Translations.sign_out_FO_text, 'Sign out English', "contain", 2000));
   }, 'common_client');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));

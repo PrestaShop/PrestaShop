@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,28 +16,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Command;
 
+use PhpParser\ParserFactory;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use PhpParser\ParserFactory;
 
 class UpdateLicensesCommand extends Command
 {
     private $text = '/**
- * 2007-{currentYear} PrestaShop
+ * 2007-{currentYear} PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -53,10 +53,10 @@ class UpdateLicensesCommand extends Command
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-{currentYear} PrestaShop SA
+ * @copyright 2007-{currentYear} PrestaShop SA and Contributors
  * @license   {licenseLink} {licenseName}
  * International Registered Trademark & Property of PrestaShop SA
  */';
@@ -141,22 +141,28 @@ class UpdateLicensesCommand extends Command
                     } catch (\PhpParser\Error $exception) {
                         $output->writeln('Syntax error on file ' . $file->getRelativePathname() . '. Continue ...');
                     }
+
                     break;
                 case 'js':
                 case 'css':
                     $this->addLicenseToFile($file);
+
                     break;
                 case 'tpl':
                     $this->addLicenseToSmartyTemplate($file);
+
                     break;
                 case 'twig':
                     $this->addLicenseToTwigTemplate($file);
+
                     break;
                 case 'json':
                     $this->addLicenseToJsonFile($file);
+
                     break;
                 case 'vue':
                     $this->addLicenseToHtmlFile($file);
+
                     break;
             }
             $progress->advance();

@@ -1,14 +1,12 @@
 <?php
-include('config/config.php');
+include 'config/config.php';
 
 $_SESSION["verify"] = "RESPONSIVEfilemanager";
 
 if (isset($_POST['submit'])) {
-    include('upload.php');
+    include 'upload.php';
 } else {
-    include('include/utils.php');
-
-
+    include 'include/utils.php';
 
     if (isset($_GET['fldr'])
         && !empty($_GET['fldr'])
@@ -33,7 +31,6 @@ if (isset($_POST['submit'])) {
     if ($subdir == '/') {
         $subdir = '';
     }
-
 
     /***
      *SUB-DIR CODE
@@ -81,7 +78,7 @@ if (isset($_POST['submit'])) {
             $parent = '';
         }
         if (file_exists($current_path.$parent.'config.php')) {
-            require_once($current_path.$parent.'config.php');
+            require_once $current_path.$parent.'config.php';
             $cycle = false;
         }
 
@@ -102,7 +99,7 @@ if (isset($_POST['submit'])) {
         $popup = 0;
     }
 //Sanitize popup
-    $popup = !!$popup;
+    $popup = (bool) $popup;
 
 //view type
     if (!isset($_SESSION['view_type'])) {
@@ -139,7 +136,6 @@ if (isset($_POST['submit'])) {
         $descending = $_SESSION['descending'];
     }
 
-
     $lang = $default_language;
     if (isset($_GET['lang']) && $_GET['lang'] != 'undefined' && $_GET['lang'] != '') {
         $lang = $_GET['lang'];
@@ -154,7 +150,6 @@ if (isset($_POST['submit'])) {
             $lang = $default_language;
         }
     }
-
 
     require_once $language_file;
 
@@ -171,7 +166,7 @@ if (isset($_POST['submit'])) {
             'lang' => Tools::safeOutput($lang),
             'popup' => $popup,
             'field_id' => isset($_GET['field_id']) ? (int)$_GET['field_id'] : '',
-            'fldr' => ''
+            'fldr' => '',
         )
     );
     ?>
@@ -347,9 +342,9 @@ if (isset($_POST['submit'])) {
     ?>"/>
 	<input type="hidden" id="descending" value="<?php echo $descending ? "true" : "false";
     ?>"/>
-	<?php $protocol = 'http';
+	<?php $protocol = Tools::getShopProtocol();
     ?>
-	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol."://".$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
+	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol.$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
     ?>"/>
 	<input type="hidden" id="lang_show_url" value="<?php echo Tools::safeOutput(lang_Show_url);
     ?>"/>
@@ -504,15 +499,19 @@ if (isset($_POST['submit'])) {
     switch ($sort_by) {
         case 'name':
             usort($sorted, 'filenameSort');
+
             break;
         case 'date':
             usort($sorted, 'dateSort');
+
             break;
         case 'size':
             usort($sorted, 'sizeSort');
+
             break;
         case 'extension':
             usort($sorted, 'extensionSort');
+
             break;
         default:
             break;
@@ -790,7 +789,7 @@ if (isset($_POST['submit'])) {
         "midi",
         "mid",
         "ogg",
-        "wav"
+        "wav",
     );
     foreach ($files as $file_array) {
         $file = $file_array['file'];

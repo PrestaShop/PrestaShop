@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/FromProcessor.php');
+require_once dirname(__FILE__) . '/FromProcessor.php';
 
 /**
  * 
@@ -40,6 +40,4 @@ require_once(dirname(__FILE__) . '/FromProcessor.php');
  * 
  */
 class UpdateProcessor extends FromProcessor {
-
 }
-?>

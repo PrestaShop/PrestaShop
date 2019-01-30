@@ -6,7 +6,7 @@ module.exports = {
         orders_menu: '//*[@id="subtab-AdminParentOrders"]/a',
         orders_submenu: '#subtab-AdminOrders',
         invoices_submenu: '#subtab-AdminInvoices',
-        credit_slips_submenu: '#subtab-AdminSlip',
+        credit_slips_submenu: '#subtab-AdminSlip a',
         delivery_slips_submenu: '#subtab-AdminDeliverySlip',
         shopping_carts_submenu: '#subtab-AdminCarts'
       },
@@ -44,21 +44,25 @@ module.exports = {
     Improve: {
       Modules: {
         modules_menu: '//*[@id="subtab-AdminParentModulesSf"]/a',
-        modules_services_submenu: '#subtab-AdminModulesSf',
-        modules_catalog: '#subtab-AdminParentModulesCatalog > a',
+        modules_manager_submenu: '#subtab-AdminModulesSf > a',
+        modules_catalog_submenu: '#subtab-AdminParentModulesCatalog > a',
         installed_modules_tabs: '//*[@id="subtab-AdminModulesManage"]',
-        notifications_tabs: '//*[@id="subtab-AdminModulesNotifications"]',
-        selection_tab: '//*[@id="subtab-AdminModulesCatalog"]',
-        modules_catalog_submenu: '#subtab-AdminParentModulesCatalog'
+        catalog_tab: '//*[@id="subtab-AdminModulesCatalog"] | //*[@id="subtab-AdminPsMboModule"]',
+        modules_selections_submenu: '#subtab-AdminAddonsCatalog',
+        selection_tab: '#subtab-AdminAddonsCatalog',
+        alerts_subTab: '//*[@id="subtab-AdminModulesNotifications"]',
+        updates_subTab: '//*[@id="subtab-AdminModulesUpdates"]',
       },
       Design: {
         design_menu: '//*[@id="subtab-AdminParentThemes"]/a',
         theme_logo_submenu: '#subtab-AdminThemesParent',
-        theme_catalog_submenu: '#subtab-AdminThemesCatalog',
+        theme_catalog_submenu: '#subtab-AdminPsMboTheme',
         pages_submenu: '#subtab-AdminCmsContent',
         positions_submenu: '#subtab-AdminModulesPositions',
         image_settings_submenu: '#subtab-AdminImages',
-        link_widget_submenu: '#subtab-AdminLinkWidget'
+        link_widget_submenu: '#subtab-AdminLinkWidget',
+        homepage_configuration_subTab: '//*[@id="subtab-AdminPsThemeCustoConfiguration"]',
+        advanced_customization_subTab: '//*[@id="subtab-AdminPsThemeCustoAdvanced"]',
       },
       Shipping: {
         shipping_menu: '//*[@id="subtab-AdminParentShipping"]/a',
@@ -96,12 +100,13 @@ module.exports = {
         groups_tab: '//*[@id="subtab-AdminGroups"]',
         titles_tab: '//*[@id="subtab-AdminGenders"]',
         contact_submenu: '#subtab-AdminParentStores',
-        stores_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Stores"]',
-        search_engines_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Search Engines"]',
-        referrers_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Referrers"]',
+        stores_tab: '#subtab-AdminStores',
+        search_engines_tab: '//*[@id="subtab-AdminSearchEngines"]',
+        referrers_tab: '//*[@id="subtab-AdminReferrers"]',
         search_submenu: '#subtab-AdminParentSearchConf',
         tags_tab: '//*[@id="subtab-AdminTags"]',
-        merchant_expertise_submenu: '#subtab-AdminGamification'
+        merchant_expertise_submenu: '#subtab-AdminGamification',
+        traffic_seo_submenu: '#subtab-AdminParentMeta',
       },
       AdvancedParameters: {
         advanced_parameters_menu: '//*[@id="subtab-AdminAdvancedParameters"]/a',
@@ -116,7 +121,8 @@ module.exports = {
         database_submenu: '#subtab-AdminParentRequestSql',
         logs_submenu: '#subtab-AdminLogs',
         webservice_submenu: '#subtab-AdminWebservice',
-        multistore_submenu: '#subtab-AdminShopGroup'
+        multistore_submenu: '#subtab-AdminShopGroup',
+        db_backup_tab: '#subtab-AdminBackup',
       }
     }
   }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
-    private $headerToolbarBtn = array();
-    private $title;
-    private $showContentHeader = true;
-    private $headerTabContent = '';
-    private $enableSidebar = false;
-    private $helpLink;
+    protected $headerToolbarBtn = array();
+    protected $title;
+    protected $showContentHeader = true;
+    protected $headerTabContent = '';
+    protected $enableSidebar = false;
+    protected $helpLink;
 
     public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
@@ -49,6 +49,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
+
+        // Compatibility with legacy behavior.
+        // Languages can only be used in "All shops" context.
+        // This makes sure that user cannot switch shop contexts
+        // when on Languages page.
+        if ('AdminLanguages' === $controllerName) {
+            $this->multishop_context = Shop::CONTEXT_ALL;
+        }
     }
 
     public function setMedia($isNewTheme = false)
@@ -67,7 +75,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         return true;
     }
 
-    private function addHeaderToolbarBtn()
+    protected function addHeaderToolbarBtn()
     {
         $this->page_header_toolbar_btn = array_merge($this->page_header_toolbar_btn, $this->headerToolbarBtn);
     }
@@ -93,7 +101,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
         );
 
-        if (!empty($this->helpLink)) {
+        if ($this->helpLink === false || !empty($this->helpLink)) {
             $vars['help_link'] = $this->helpLink;
         }
 

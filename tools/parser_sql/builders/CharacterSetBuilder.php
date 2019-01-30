@@ -55,19 +55,21 @@ require_once dirname(__FILE__) . '/IndexTypeBuilder.php';
  *  
  */
 class CharacterSetBuilder {
-
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -88,7 +90,7 @@ class CharacterSetBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }
-?>

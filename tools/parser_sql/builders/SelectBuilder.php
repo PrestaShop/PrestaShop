@@ -54,36 +54,42 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  *  
  */
 class SelectBuilder {
-
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSelectExpression($parsed) {
         $builder = new SelectExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSelectBracketExpression($parsed) {
         $builder = new SelectBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
+
     /**
      * Returns a well-formatted delimiter string. If you don't need nice SQL,
      * you could simply return $parsed['delim'].
@@ -92,7 +98,7 @@ class SelectBuilder {
      * @return a string, which is added right after the expression
      */
     protected function getDelimiter($parsed) {
-        return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
+        return $parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' ');
     }
 
     public function build($parsed) {
@@ -112,7 +118,7 @@ class SelectBuilder {
 
             $sql .= $this->getDelimiter($v);
         }
+
         return "SELECT " . $sql;
     }
 }
-?>

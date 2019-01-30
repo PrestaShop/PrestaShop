@@ -1,7 +1,7 @@
 
-[{shop_url}]
+[{shop_url}] 
 
-Hi,
+Hi, 
 
 The remaining stock is now less than the specified minimum of
 {last_qty}.
@@ -9,7 +9,8 @@ The remaining stock is now less than the specified minimum of
 REMAINING STOCK: {qty}
 
 You are advised to open the product's admin Product Page in order to
-replenish your inventory.
+replenish your inventory. 		 
 
 {shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/]
+PrestaShop(tm) [http://www.prestashop.com/] 
+

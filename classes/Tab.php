@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -127,7 +127,7 @@ class TabCore extends ObjectModel
      *
      * @return bool true if succeed
      */
-    public static function initAccess($idTab, \Context $context = null)
+    public static function initAccess($idTab, Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -222,7 +222,8 @@ class TabCore extends ObjectModel
         $cacheId = 'Tab::getTab_' . (int) $idLang . '-' . (int) $idTab;
         if (!Cache::isStored($cacheId)) {
             /* Tabs selection */
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+                '
 				SELECT *
 				FROM `' . _DB_PREFIX_ . 'tab` t
 				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl
@@ -272,7 +273,8 @@ class TabCore extends ObjectModel
         if (!isset(self::$_cache_tabs[$idLang])) {
             self::$_cache_tabs[$idLang] = array();
             // Keep t.*, tl.name instead of only * because if translations are missing, the join on tab_lang will overwrite the id_tab in the results
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
 				SELECT t.*, tl.name
 				FROM `' . _DB_PREFIX_ . 'tab` t
 				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
@@ -360,7 +362,7 @@ class TabCore extends ObjectModel
      */
     public static function getCollectionFromModule($module, $idLang = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
 
@@ -435,10 +437,11 @@ class TabCore extends ObjectModel
 
     public static function getNbTabs($idParent = null)
     {
-        return (int) Db::getInstance()->getValue('
+        return (int) Db::getInstance()->getValue(
+            '
 			SELECT COUNT(*)
 			FROM `' . _DB_PREFIX_ . 'tab` t
-			' . (!is_null($idParent) ? 'WHERE t.`id_parent` = ' . (int) $idParent : '')
+			' . (null !== $idParent ? 'WHERE t.`id_parent` = ' . (int) $idParent : '')
         );
     }
 
@@ -451,7 +454,8 @@ class TabCore extends ObjectModel
      */
     public static function getNewLastPosition($idParent)
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT IFNULL(MAX(position),0)+1
 			FROM `' . _DB_PREFIX_ . 'tab`
 			WHERE `id_parent` = ' . (int) $idParent
@@ -475,7 +479,8 @@ class TabCore extends ObjectModel
         }
 
         $newPosition = ($direction == 'l') ? $this->position - 1 : $this->position + 1;
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'tab` t
 			SET position = ' . (int) $this->position . '
 			WHERE id_parent = ' . (int) $this->id_parent . '
@@ -503,7 +508,8 @@ class TabCore extends ObjectModel
 		');
         $sizeof = count($result);
         for ($i = 0; $i < $sizeof; ++$i) {
-            Db::getInstance()->execute('
+            Db::getInstance()->execute(
+                '
 				UPDATE `' . _DB_PREFIX_ . 'tab`
 				SET `position` = ' . ($i + 1) . '
 				WHERE `id_tab` = ' . (int) $result[$i]['id_tab']
@@ -523,7 +529,8 @@ class TabCore extends ObjectModel
      */
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
+        if (!$res = Db::getInstance()->executeS(
+            '
 			SELECT t.`id_tab`, t.`position`, t.`id_parent`
 			FROM `' . _DB_PREFIX_ . 'tab` t
 			WHERE t.`id_parent` = ' . (int) $this->id_parent . '
@@ -624,7 +631,7 @@ class TabCore extends ObjectModel
      * @param int $idParent
      * @param int $idProfile
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getTabByIdProfile($idParent, $idProfile)
     {

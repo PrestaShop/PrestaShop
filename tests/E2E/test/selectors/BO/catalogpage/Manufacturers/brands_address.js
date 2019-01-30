@@ -10,7 +10,9 @@ module.exports = {
     city_input: '//*[@id="city"]',
     country: '//*[@id="id_country"]',
     phone_input: '//*[@id="phone"]',
+    mobile_phone_input: '//*[@id="phone_mobile"]',
     other_input: '//*[@id="other"]',
-    save_button: '//*[@id="address_form_submit_btn"]'
+    save_button: '//*[@id="address_form_submit_btn"]',
+    toolbar_add_new_brand_address_button: '//*[@id="desc-address-new"]',
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -135,7 +135,7 @@ class TranslateCore
     public static function getGenericAdminTranslation($string, $key, &$langArray)
     {
         $string = preg_replace("/\\\*'/", "\'", $string);
-        if (is_null($key)) {
+        if (null === $key) {
             $key = md5($string);
         }
 
@@ -160,7 +160,7 @@ class TranslateCore
      * @param string $source
      * @param null $sprintf
      * @param bool $js
-     * @param null|string $locale
+     * @param string|null $locale
      *
      * @return mixed|string
      */
@@ -175,7 +175,7 @@ class TranslateCore
 
         $name = $module instanceof Module ? $module->name : $module;
 
-        if (!is_null($locale)) {
+        if (null !== $locale) {
             $iso = Language::getIsoByLocale($locale);
         }
 
@@ -264,9 +264,9 @@ class TranslateCore
             }
         }
 
-        if (!is_array($sprintf) && !is_null($sprintf)) {
+        if (!is_array($sprintf) && null !== $sprintf) {
             $sprintf_for_trans = array($sprintf);
-        } elseif (is_null($sprintf)) {
+        } elseif (null === $sprintf) {
             $sprintf_for_trans = array();
         } else {
             $sprintf_for_trans = $sprintf;
@@ -334,7 +334,7 @@ class TranslateCore
      */
     public static function checkAndReplaceArgs($string, $args)
     {
-        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($args)) {
+        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && null !== $args) {
             if (!is_array($args)) {
                 $args = array($args);
             }

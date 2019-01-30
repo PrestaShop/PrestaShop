@@ -52,19 +52,21 @@ require_once dirname(__FILE__) . '/UpdateBuilder.php';
  *  
  */
 class UpdateStatementBuilder {
-
     protected function buildWHERE($parsed) {
         $builder = new WhereBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSET($parsed) {
         $builder = new SetBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildUPDATE($parsed) {
         $builder = new UpdateBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -73,7 +75,7 @@ class UpdateStatementBuilder {
         if (isset($parsed['WHERE'])) {
             $sql .= " " . $this->buildWHERE($parsed['WHERE']);
         }
+
         return $sql;
     }
 }
-?>

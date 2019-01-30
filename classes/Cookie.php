@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,7 +28,7 @@ use Defuse\Crypto\Key;
 class CookieCore
 {
     /** @var array Contain cookie content in a key => value format */
-    protected $_content;
+    protected $_content = array();
 
     /** @var array Crypted cookie name for setcookie() */
     protected $_name;
@@ -65,7 +65,7 @@ class CookieCore
     {
         $this->_content = array();
         $this->_standalone = $standalone;
-        $this->_expire = is_null($expire) ? time() + 1728000 : (int) $expire;
+        $this->_expire = null === $expire ? time() + 1728000 : (int) $expire;
         $this->_path = trim(($this->_standalone ? '' : Context::getContext()->shop->physical_uri) . $path, '/\\') . '/';
         if ($this->_path[0] != '/') {
             $this->_path = '/' . $this->_path;
@@ -120,6 +120,7 @@ class CookieCore
                 }
                 if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,4})?\..{2,3})$/Ui', $shared_url, $res)) {
                     $domain = '.' . $res[1];
+
                     break;
                 }
             }
@@ -181,14 +182,14 @@ class CookieCore
         if (preg_match('/¤|\|/', $key . $value)) {
             throw new Exception('Forbidden chars in cookie');
         }
-        if (!$this->_modified && (!isset($this->_content[$key]) || (isset($this->_content[$key]) && $this->_content[$key] != $value))) {
+        if (!$this->_modified && (!array_key_exists($key, $this->_content) || $this->_content[$key] != $value)) {
             $this->_modified = true;
         }
         $this->_content[$key] = $value;
     }
 
     /**
-     * Magic method wich delete data into _content array.
+     * Magic method which delete data into _content array.
      *
      * @param string $key key wanted
      */
@@ -236,8 +237,7 @@ class CookieCore
         return $this->id_employee
             && Validate::isUnsignedId($this->id_employee)
             && Employee::checkPassword((int) $this->id_employee, $this->passwd)
-            && (!isset($this->_content['remote_addr']) || $this->_content['remote_addr'] == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
-        ;
+            && (!isset($this->_content['remote_addr']) || $this->_content['remote_addr'] == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'));
     }
 
     /**
@@ -259,25 +259,29 @@ class CookieCore
      */
     public function mylogout()
     {
-        unset($this->_content['id_customer']);
-        unset($this->_content['id_guest']);
-        unset($this->_content['is_guest']);
-        unset($this->_content['id_connections']);
-        unset($this->_content['customer_lastname']);
-        unset($this->_content['customer_firstname']);
-        unset($this->_content['passwd']);
-        unset($this->_content['logged']);
-        unset($this->_content['email']);
-        unset($this->_content['id_cart']);
-        unset($this->_content['id_address_invoice']);
-        unset($this->_content['id_address_delivery']);
+        unset(
+            $this->_content['id_customer'],
+            $this->_content['id_guest'],
+            $this->_content['is_guest'],
+            $this->_content['id_connections'],
+            $this->_content['customer_lastname'],
+            $this->_content['customer_firstname'],
+            $this->_content['passwd'],
+            $this->_content['logged'],
+            $this->_content['email'],
+            $this->_content['id_cart'],
+            $this->_content['id_address_invoice'],
+            $this->_content['id_address_delivery']
+        );
         $this->_modified = true;
     }
 
     public function makeNewLog()
     {
-        unset($this->_content['id_customer']);
-        unset($this->_content['id_guest']);
+        unset(
+            $this->_content['id_customer'],
+            $this->_content['id_guest']
+        );
         Guest::setNewGuest($this);
         $this->_modified = true;
     }

@@ -9,7 +9,7 @@ module.exports = {
     language_button: '//*[@id="conf_id_PS_MAINTENANCE_TEXT"]//button[@type= "button" and contains(@class, "dropdown-toggle")]',
     language_option: '(//a[contains(text(), "%LANG")])[%ID]',
     save_button: '//button[contains(text(), "Save")]',
-    enable_multistore: '//label[contains(@for, "form_general_multishop_feature_active_1")]',
+    enable_disable_multistore_toggle_button: '//label[@for="form_general_multishop_feature_active_%ID"]',
     general_save_button: '//*[@id="configuration_form"]//button',
     textarea_input: '(//*[@id="form_general_maintenance_text"]//div[@class="mce-tinymce mce-container mce-panel"])[%ID]',
     maintenance_message: '//*[@id="content"]',
@@ -19,8 +19,8 @@ module.exports = {
   },
   TrafficAndSeo: {
     SeoAndUrls: {
-      friendly_url_button: '//*[@id="conf_id_PS_REWRITING_SETTINGS"]//label[contains(@for, "%s")]',
-      save_button: '//*[@id="meta_form"]//button[text()=" Save"]'
+      friendly_url_button: '//*[@id="main-div"]//label[contains(@for, "meta_settings_form_set_up_urls_friendly_url_%s")]',
+      save_button: '(//*[@id="main-div"]//form[@name="meta_settings_form"]//button)[1]'
     }
   },
   Contact: {

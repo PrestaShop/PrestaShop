@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,41 +16,41 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use AdminProductsController;
 use Attachment;
+use Category;
+use Combination;
+use Configuration;
+use Context;
+use Customer;
+use Db;
+use Hook;
+use Image;
+use Language;
+use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShopBundle\Utils\FloatParser;
-use SpecificPrice;
-use Customer;
-use Combination;
-use Image;
-use SpecificPriceRule;
 use Product;
 use ProductDownload;
-use AdminProductsController;
+use Shop;
+use ShopUrl;
+use SpecificPrice;
+use SpecificPriceRule;
+use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
-use StockAvailable;
-use Hook;
 use Validate;
-use Db;
-use Shop;
-use Language;
-use ObjectModel;
-use Configuration;
-use Context;
-use ShopUrl;
-use Category;
 
 /**
  * Admin controller wrapper for new Architecture, about Product admin controller.
@@ -552,7 +552,7 @@ class AdminProductWrapper
     /**
      * Get price priority.
      *
-     * @param null|int $idProduct
+     * @param int|null $idProduct
      *
      * @return array
      */

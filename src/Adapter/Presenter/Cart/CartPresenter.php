@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,31 +16,31 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
+use Cart;
+use CartRule;
+use Configuration;
+use Context;
+use Hook;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use Context;
-use Cart;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
-use Configuration;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
-use CartRule;
 use Tools;
-use Hook;
 
 class CartPresenter implements PresenterInterface
 {
@@ -131,6 +131,7 @@ class CartPresenter implements PresenterInterface
             'customizable',
             'online_only',
             'reduction',
+            'reduction_without_tax',
             'new',
             'condition',
             'pack',
@@ -214,10 +215,12 @@ class CartPresenter implements PresenterInterface
                                                 $field['image'] = $this->imageRetriever->getCustomizationImage(
                                                     $data['value']
                                                 );
+
                                                 break;
                                             case Product::CUSTOMIZE_TEXTFIELD:
                                                 $field['type'] = 'text';
                                                 $field['text'] = $data['value'];
+
                                                 break;
                                             default:
                                                 $field['type'] = null;
@@ -414,8 +417,7 @@ class CartPresenter implements PresenterInterface
 
         $summary_string = $products_count === 1 ?
             $this->translator->trans('1 item', array(), 'Shop.Theme.Checkout') :
-            $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout')
-        ;
+            $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout');
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
@@ -460,12 +462,12 @@ class CartPresenter implements PresenterInterface
             'vouchers' => $vouchers,
             'discounts' => $discounts,
             'minimalPurchase' => $minimalPurchase,
-            'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
+            'minimalPurchaseRequired' => ($productsTotalExcludingTax < $minimalPurchase) ?
                 $this->translator->trans(
                     'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
                     array(
-                        '%amount%' => $this->priceFormatter->convertAndFormat($minimalPurchase),
-                        '%total%' => $this->priceFormatter->convertAndFormat($productsTotalExcludingTax),
+                        '%amount%' => $this->priceFormatter->format($minimalPurchase),
+                        '%total%' => $this->priceFormatter->format($productsTotalExcludingTax),
                     ),
                     'Shop.Theme.Checkout'
                 ) :
@@ -478,7 +480,7 @@ class CartPresenter implements PresenterInterface
         $cartVouchers = $cart->getCartRules();
         $vouchers = array();
 
-        $cartHasTax = is_null($cart->id) ? false : $cart::getTaxesAverageUsed($cart);
+        $cartHasTax = null === $cart->id ? false : $cart::getTaxesAverageUsed($cart);
 
         foreach ($cartVouchers as $cartVoucher) {
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];

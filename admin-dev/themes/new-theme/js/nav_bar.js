@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -74,6 +74,9 @@ export default class NavBar {
 
       $('.nav-bar').on('click', '.menu-collapse', function() {
         $('body').toggleClass('page-sidebar-closed');
+
+        $('.popover.show').remove();
+        $('.help-box[aria-describedby]').removeAttr('aria-describedby');
 
         if ($('body').hasClass('page-sidebar-closed')) {
           $('nav.nav-bar ul.main-menu > li')

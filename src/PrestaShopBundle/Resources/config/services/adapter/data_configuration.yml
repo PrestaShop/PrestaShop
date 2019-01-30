@@ -216,6 +216,7 @@ services:
         arguments:
             - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
 
     prestashop.adapter.meta.url_schema.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
@@ -228,15 +229,3 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.team.employee.configuration.options_checker'
-
-    prestashop.adapter.import.import_data_match.configuration:
-        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportDataMatchConfiguration'
-        arguments:
-            - '@translator'
-            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
-            - '@=service("prestashop.core.import.dir")'
-            - '@prestashop.core.import.factory.data_row.collection_factory'
-            - '@doctrine.dbal.default_connection'
-            - '%database_prefix%'
-            - '@prestashop.core.admin.import_match.repository'
-            - '@session'

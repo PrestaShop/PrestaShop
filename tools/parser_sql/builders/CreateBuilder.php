@@ -52,14 +52,15 @@ require_once dirname(__FILE__) . '/SubTreeBuilder.php';
  *  
  */
 class CreateBuilder {
-
     protected function buildCreateTable($parsed) {
         $builder = new CreateTableBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSubTree($parsed) {
         $builder = new SubTreeBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -74,6 +75,4 @@ class CreateBuilder {
         // TODO: add more expr_types here (like VIEW), if available
         return "CREATE " . $sql;
     }
-
 }
-?>

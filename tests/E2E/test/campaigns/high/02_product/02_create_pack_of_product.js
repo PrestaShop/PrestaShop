@@ -38,13 +38,13 @@ scenario('Create a pack of products in the Back Office', client => {
     test('should upload the product picture', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.pack.new_category_name + date_time));
-    test('should click on "Create"', () => client.createCategory());
+    test('should click on "Create" button', () => client.createCategory());
+  //  test('should open all categories', () => client.openAllCategories()); //TODO: Verify if we should close then open all categories
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))
-        .then(() => client.waitForExistAndClick(AddProductPage.home_delete_button));
+        .then(() => client.scrollWaitForExistAndClick(AddProductPage.home_delete_button));
     });
-    test('should choose the created category as default', () => client.waitForExistAndClick(AddProductPage.home_delete_button));
     test('should click on "ADD A BRAND"', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select brand', () => {
       return promise
@@ -54,17 +54,12 @@ scenario('Create a pack of products in the Back Office', client => {
     });
     test('should click on "ADD RELATED PRODUCT"', () => client.scrollWaitForExistAndClick(AddProductPage.add_related_product_btn, 50));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-    test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('pack'));
+    test('should click on "ADD A FEATURE" and select one', () => client.addFeature('pack'));
     test('should set the "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should switch the product online', () =>  {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
         .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000))
     });
   }, 'product/product');

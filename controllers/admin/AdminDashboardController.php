@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -99,7 +99,7 @@ class AdminDashboardControllerCore extends AdminController
                         array(
                             '%currency' => $currency->iso_code,
                             '%module%' => $module->displayName,
-                            ),
+                        ),
                         'Admin.Dashboard.Help'
                     ),
                     'validation' => 'isPrice',
@@ -133,7 +133,8 @@ class AdminDashboardControllerCore extends AdminController
                             array(
                                 '%module%' => $module->displayName,
                             ),
-                            'Admin.Dashboard.Help'),
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -179,7 +180,7 @@ class AdminDashboardControllerCore extends AdminController
                     'For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.',
                     array(
                         '%s' => $carrier['name'],
-                ),
+                    ),
                     'Admin.Dashboard.Help'
                 ),
                 'validation' => 'isPercentage',
@@ -213,9 +214,9 @@ class AdminDashboardControllerCore extends AdminController
         );
 
         Media::addJsDef(array(
-                'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
-                'read_more' => '',
-            ));
+            'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
+            'read_more' => '',
+        ));
 
         return $forms;
     }
@@ -242,27 +243,33 @@ class AdminDashboardControllerCore extends AdminController
                 case 'day':
                     $date_from = date('Y-m-d');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-day':
                     $date_from = date('Y-m-d', strtotime('-1 day'));
                     $date_to = date('Y-m-d', strtotime('-1 day'));
+
                     break;
                 case 'month':
                 default:
                     $date_from = date('Y-m-01');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-month':
                     $date_from = date('Y-m-01', strtotime('-1 month'));
                     $date_to = date('Y-m-t', strtotime('-1 month'));
+
                     break;
                 case 'year':
                     $date_from = date('Y-01-01');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-year':
                     $date_from = date('Y-m-01', strtotime('-1 year'));
                     $date_to = date('Y-12-t', strtotime('-1 year'));
+
                     break;
             }
             $this->context->employee->stats_date_from = $date_from;
@@ -280,11 +287,11 @@ class AdminDashboardControllerCore extends AdminController
         $stats_compare_from = $this->context->employee->stats_compare_from;
         $stats_compare_to = $this->context->employee->stats_compare_to;
 
-        if (is_null($stats_compare_from) || $stats_compare_from == '0000-00-00') {
+        if (null === $stats_compare_from || $stats_compare_from == '0000-00-00') {
             $stats_compare_from = null;
         }
 
-        if (is_null($stats_compare_to) || $stats_compare_to == '0000-00-00') {
+        if (null === $stats_compare_to || $stats_compare_to == '0000-00-00') {
             $stats_compare_to = null;
         }
 
@@ -456,7 +463,7 @@ class AdminDashboardControllerCore extends AdminController
             if ($rss) {
                 foreach ($rss->channel->item as $item) {
                     if ($articles_limit > 0 && Validate::isCleanHtml((string) $item->title) && Validate::isCleanHtml((string) $item->description)
-                        && isset($item->link) && isset($item->title)) {
+                        && isset($item->link, $item->title)) {
                         if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
                             $utm_content = 'cloud';
                         } else {
@@ -466,10 +473,10 @@ class AdminDashboardControllerCore extends AdminController
                         $shop_default_country_id = (int) Configuration::get('PS_COUNTRY_DEFAULT');
                         $shop_default_iso_country = (string) Tools::strtoupper(Country::getIsoById($shop_default_country_id));
                         $analytics_params = array('utm_source' => 'back-office',
-                                                'utm_medium' => 'rss',
-                                                'utm_campaign' => 'back-office-' . $shop_default_iso_country,
-                                                'utm_content' => $utm_content,
-                                            );
+                            'utm_medium' => 'rss',
+                            'utm_campaign' => 'back-office-' . $shop_default_iso_country,
+                            'utm_content' => $utm_content,
+                        );
                         $url_query = parse_url($item->link, PHP_URL_QUERY);
                         parse_str($url_query, $link_query_params);
 

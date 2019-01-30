@@ -1,0 +1,17 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.profile.command_handler.delete_profile:
+        class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\DeleteProfileHandler'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand' }
+
+    prestashop.adapter.profile.command_handler.bulk_delete_profile:
+        class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\BulkDeleteProfileHandler'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand' }

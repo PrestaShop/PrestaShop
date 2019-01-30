@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Class AbstractGridDefinitionFactory implements grid definition creation.
@@ -58,7 +59,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getBulkActions()
         );
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridDefinitionModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDefinitionModifier', [
             'definition' => $definition,
         ]);
 

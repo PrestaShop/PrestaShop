@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,6 +57,7 @@ class AdminWebserviceControllerCore extends AdminController
             'key' => array(
                 'title' => $this->trans('Key', array(), 'Admin.Advparameters.Feature'),
                 'class' => 'fixed-width-md',
+                'filter_key' => 'a!key',
             ),
             'description' => array(
                 'title' => $this->trans('Key description', array(), 'Admin.Advparameters.Feature'),
@@ -74,21 +75,21 @@ class AdminWebserviceControllerCore extends AdminController
         );
 
         $this->fields_options = array(
-                'general' => array(
-                    'title' => $this->trans('Configuration', array(), 'Admin.Global'),
-                    'fields' => array(
-                        'PS_WEBSERVICE' => array('title' => $this->trans('Enable PrestaShop\'s webservice', array(), 'Admin.Advparameters.Feature'),
-                            'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.Advparameters.Help') .
-                                                '<ol>
+            'general' => array(
+                'title' => $this->trans('Configuration', array(), 'Admin.Global'),
+                'fields' => array(
+                    'PS_WEBSERVICE' => array('title' => $this->trans('Enable PrestaShop\'s webservice', array(), 'Admin.Advparameters.Feature'),
+                        'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.Advparameters.Help') .
+                                            '<ol>
 													<li>' . $this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.Advparameters.Help') . '</li>
 													<li>' . $this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.Advparameters.Help') . '</li>
 												</ol>',
-                            'cast' => 'intval',
-                            'type' => 'bool', ),
-                    ),
-                    'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
+                        'cast' => 'intval',
+                        'type' => 'bool', ),
                 ),
-            );
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
+            ),
+        );
 
         if (!defined('_PS_HOST_MODE_')) {
             $this->fields_options['general']['fields']['PS_WEBSERVICE_CGI_HOST'] = array(
@@ -222,9 +223,9 @@ class AdminWebserviceControllerCore extends AdminController
             $this->setHelperDisplay($helper);
             $helper->toolbar_scroll = true;
             $helper->toolbar_btn = array('save' => array(
-                                'href' => '#',
-                                'desc' => $this->trans('Save', array(), 'Admin.Actions'),
-                            ));
+                'href' => '#',
+                'desc' => $this->trans('Save', array(), 'Admin.Actions'),
+            ));
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;
             $options = $helper->generateOptions($this->fields_options);

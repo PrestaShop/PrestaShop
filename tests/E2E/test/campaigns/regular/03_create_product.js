@@ -1,9 +1,11 @@
 const common_scenarios = require('../common_scenarios/product');
+const welcomeScenarios = require('../common_scenarios/welcome');
 const {AccessPageBO} = require('../../selectors/BO/access_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
 const {productPage} = require('../../selectors/FO/product_page');
 const {AccessPageFO} = require('../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../selectors/FO/search_product_page');
+
 let promise = Promise.resolve();
 
 let productData = {
@@ -19,6 +21,7 @@ scenario('Create "Product"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, productData);
   common_scenarios.checkProductBO(AddProductPage, productData);
   scenario('Logout from the Back Office', client => {

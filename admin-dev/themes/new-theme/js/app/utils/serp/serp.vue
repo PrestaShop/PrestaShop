@@ -1,6 +1,6 @@
 
 <!--**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,19 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div id="serp"">
+  <div id="serp">
     <div class="serp-preview">
-      <div class="serp-title">{{title}}</div>
-      <div class="serp-url">{{url}}<span class="serp-arrow"></span></div>
-      <div class="serp-description">{{description}}</div>
+      <div class="serp-title">{{ displayedTitle }}</div>
+      <div class="serp-url">{{ url }}<span class="serp-arrow"></span></div>
+      <div class="serp-description">{{ displayedDescription }}</div>
     </div>
   </div>
 </template>
@@ -36,41 +36,44 @@
 <script>
   export default {
     name: 'serp',
-    props: {
-        title: {
-          type: String,
-          default: '',
-        },
-        url: {
-          type: String,
-          default: 'http://example.com/',
-        },
-        description: {
-          type: String,
-          default: '',
-        },
+    data() {
+      return {
+        title: '',
+        url: 'http://example.com/',
+        description: '',
+      };
+    },
+    computed: {
+      displayedTitle() {
+        if (this.title.length > 70) {
+          return `${this.title.substring(0, 70)}...`;
+        }
+
+        return this.title;
+      },
+      displayedDescription() {
+        if (this.description.length > 150) {
+          return `${this.description.substring(0, 150)}...`;
+        }
+
+        return this.description;
+      },
     },
     methods: {
-        setTitle(title) {
-            if(title.length > 70) {
-                title = title.substring(0, 70) + ' ...';
-            }
-            this.title = title;
-        },
-        setUrl(url) {
-            this.url = url;
-        },
-        setDescription(description) {
-            if(description.length > 150) {
-                description = description.substring(0, 150) + ' ...';
-            }
-            this.description = description;
-        }
-    }
+      setTitle(title) {
+        this.title = title;
+      },
+      setUrl(url) {
+        this.url = url;
+      },
+      setDescription(description) {
+        this.description = description;
+      },
+    },
   };
 </script>
 
-<style lang="sass" type="text/scss" scoped>
+<style lang="scss" type="text/scss" scoped>
     .serp-preview {
         margin-top: 15px;
         margin-bottom: 15px;
@@ -132,7 +135,6 @@
             line-height: 24px;
             text-align: left;
             visibility: visible;
-            white-space: nowrap;
         }
 
         .serp-description {

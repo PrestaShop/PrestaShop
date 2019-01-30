@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,8 +31,8 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -80,6 +80,14 @@ class ModuleTabRegister
      */
     private $languages;
 
+    /**
+     * @param TabRepository $tabRepository
+     * @param LangRepository $langRepository
+     * @param LoggerInterface $logger
+     * @param TranslatorInterface $translator
+     * @param Filesystem $filesystem
+     * @param array $languages
+     */
     public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Filesystem $filesystem, array $languages)
     {
         $this->langRepository = $langRepository;
@@ -175,6 +183,10 @@ class ModuleTabRegister
         if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
             $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
         }
+        //Check if the tab was already added manually
+        if (!empty($this->tabRepository->findOneIdByClassName($className))) {
+            throw new Exception(sprintf('Cannot register tab "%s" because it already exists', $className));
+        }
 
         return true;
     }
@@ -263,9 +275,12 @@ class ModuleTabRegister
     {
         $this->checkIsValid($module->get('name'), $tabDetails);
 
-        // Legacy Tab, to be replaced with Doctrine entity when right management
-        // won't be directly linked to the tab creation
-        // @ToDo
+        /**
+         * Legacy Tab, to be replaced with Doctrine entity when right management
+         * won't be directly linked to the tab creation
+         *
+         * @ToDo
+         */
         $tab = new Tab();
         $tab->active = $tabDetails->getBoolean('visible', true);
         $tab->class_name = $tabDetails->get('class_name');
@@ -279,7 +294,9 @@ class ModuleTabRegister
                 $this->translator->trans(
                     'Failed to install admin tab "%name%".',
                     array('%name%' => $tab->name),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
     }
 

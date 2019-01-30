@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -101,14 +101,13 @@ class AdminFilterRepository extends EntityRepository
             'action' => $action,
         ]);
 
-        $adminFilter = is_null($adminFilter) ? new AdminFilter() : $adminFilter;
+        $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
 
         $adminFilter->setAction($action)
             ->setController($controller)
             ->setEmployee($employeeId)
             ->setShop($shopId)
-            ->setFilter(json_encode($filters))
-        ;
+            ->setFilter(json_encode($filters));
 
         $this->getEntityManager()->persist($adminFilter);
 

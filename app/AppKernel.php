@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,26 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 use Doctrine\DBAL\DriverManager;
-use Symfony\Component\HttpKernel\Kernel;
 use PrestaShopBundle\Kernel\ModuleRepository;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.5.0';
+    const VERSION = '1.7.6.0';
     const MAJOR_VERSION_STRING = '1.7';
     const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 5;
+    const MINOR_VERSION = 6;
     const RELEASE_VERSION = 0;
 
     /**
@@ -168,7 +168,7 @@ class AppKernel extends Kernel
     private function getParameters()
     {
         if ($this->parametersFileExists()) {
-            $config = require($this->getParametersFile());
+            $config = require $this->getParametersFile();
 
             return $config['parameters'];
         }

@@ -27,8 +27,8 @@ module.exports = {
     second_footer_block: '//*[@id="footer"]//div[@class="col-md-6 wrapper"][2]/p',
     footer_block_link_widget: '//*[@class="footer-container"]//p[contains(text(),"%FOOTERBLOCKNAME")]',
     footer_block_second_link_widget: '//*[@class="footer-container"]//div[@class="col-md-6 wrapper"][2]/p',
-    display_before_footer_linkwidget:'//*[@id="footer"]/div[1]/div/div[3]/div//p[contains(text(),"%NAME")]',
-    display_before_footer_second_linkwidget:'//*[@id="footer"]/div[1]/div/div[3]/div/div[2]/p',
+    display_before_footer_linkwidget: '//*[@id="footer"]/div[1]/div/div[3]/div//p[contains(text(),"%NAME")]',
+    display_before_footer_second_linkwidget: '//*[@id="footer"]/div[1]/div/div[3]/div/div[2]/p',
     home_link_widget: '//*[@id="content"]/div[3]/div//p[contains(text(),"%HOMELINKWIDGET")]',
     second_home_link_widget: '//*[@id="content"]/div[3]//div[2]//p',
     display_nav1_link_widget: '//*[@id="header"]/nav/div/div/div[1]/div[1]/div[2]/div//p[contains(text(),"%NAVLINKWIDGET")]',
@@ -44,10 +44,19 @@ module.exports = {
     second_shopping_cart_link_widget: '(//*[@class="card cart-summary"]//div[contains(@class,"links")]//p)[2]',
     nav_shopping_cart_footer_link_widget: '//div[contains(@class,"cart-grid-body")]//p[contains(text(),"%NAVSHOPPINGCARTFOOTERLINKWIDGET")]',
     second_nav_shopping_cart_footer_link_widget: '//div[contains(@class,"cart-grid-body")]//div[2]/p',
-    display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div//p[contains(text(),"%DISPLAYTOP")]',
-    second_display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div/div[2]/p',
+    display_top_link_widget: '//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div//p[contains(text(),"%DISPLAYTOP")]',
+    second_display_top_link_widget: '//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div/div[2]/p',
     not_found_error_message: '//*[@id="main"]//h1',
     product_name: '//*[@id="js-product-list"]//h2//a[contains(text(),"%PAGENAME")]',
-    personal_info: '//*[@id="footer_account_list"]//a[@title="Personal info"]'
+    personal_info: '//*[@id="footer_account_list"]//a[@title="Personal info"]',
+    currency_list_select: '//*[@id="_desktop_currency_selector"]//button',
+    currency_list_element: '//*[@id="_desktop_currency_selector"]//li/a[contains(text(),"%NAME")]',
+    selected_currency_option: '//*[@id="_desktop_currency_selector"]//select/option[@selected="selected" and (text()="%D")]',
+    selected_language_option: '//*[@id="_desktop_language_selector"]//select/option[@selected="selected" and (text()="%D")]',
+    account: '//*[@id="_desktop_user_info"]/div[@class="user-info"]/a[@class="account"]/span',
+    selected_language_by_isocode_option: '//*[@id="_desktop_language_selector"]//select/option[@selected="selected" and @data-iso-code="%ID"]',
+    language_bloc: '//*[@id="_desktop_language_selector"]',
+    popular_products_block:'//*[@id="content-hook-order-confirmation-footer"]/section',
+    category_title:'//*[@id="js-product-list-header"]//h1'
   }
 };

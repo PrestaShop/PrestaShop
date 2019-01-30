@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Configuration;
+use Hook;
+use Language;
+use Link;
 use PrestaShop\Decimal\Number;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Entity\Product;
@@ -36,9 +40,6 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Configuration;
-use Language;
-use Link;
 use Tools;
 
 class ProductLazyArray extends AbstractLazyArray
@@ -191,7 +192,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getAddToCartUrl()
     {
@@ -231,6 +232,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Used', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/UsedCondition',
                 );
+
                 break;
             case 'refurbished':
                 return array(
@@ -238,6 +240,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Refurbished', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
                 );
+
                 break;
             default:
                 return false;
@@ -247,7 +250,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getDeliveryInformation()
     {
@@ -281,7 +284,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getFileSizeFormatted()
     {
@@ -330,16 +333,16 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getReferenceToDisplay()
     {
-        if ('' !== $this->product['reference']) {
-            return $this->product['reference'];
-        }
-
         if (isset($this->product['attributes'])) {
             foreach ($this->product['attributes'] as $attribute) {
                 if (isset($attribute['reference']) && $attribute['reference'] != null) {
                     return $attribute['reference'];
                 }
             }
+        }
+
+        if ('' !== $this->product['reference']) {
+            return $this->product['reference'];
         }
 
         return null;
@@ -465,6 +468,11 @@ class ProductLazyArray extends AbstractLazyArray
                 'label' => $this->translator->trans('Pack', array(), 'Shop.Theme.Catalog'),
             );
         }
+
+        Hook::exec('actionProductFlagsModifier', array(
+            'flags' => &$flags,
+            'product' => $this->product,
+        ));
 
         return $flags;
     }
@@ -623,12 +631,18 @@ class ProductLazyArray extends AbstractLazyArray
             // TODO: add percent sign according to locale preferences
             $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
             $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
-            // TODO: Fix issue with tax calculation
-            $this->product['discount_amount'] = $this->priceFormatter->format(
-                $product['reduction']
-            );
+            if ($settings->include_taxes) {
+                $regular_price = $product['price_without_reduction'];
+                $this->product['discount_amount'] = $this->priceFormatter->format(
+                    $product['reduction']
+                );
+            } else {
+                $regular_price = $product['price_without_reduction_without_tax'];
+                $this->product['discount_amount'] = $this->priceFormatter->format(
+                    $product['reduction_without_tax']
+                );
+            }
             $this->product['discount_amount_to_display'] = '-' . $this->product['discount_amount'];
-            $regular_price = $product['price_without_reduction'];
         }
 
         $this->product['price_amount'] = $price;
@@ -720,7 +734,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            $canonical ? Product::getDefaultAttribute($this->product['id_product']) : $product['id_product_attribute'],
+            $canonical ? null : $product['id_product_attribute'],
             false,
             false,
             true
@@ -762,7 +776,7 @@ class ProductLazyArray extends AbstractLazyArray
                     : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'available';
-            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] >= 0) {
+            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
                     array(),

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -127,6 +127,7 @@ class ReleaseCreator
         'app/cache/..*$',
         '.idea',
         'tools/build$',
+        'tools/foreignkeyGenerator$',
         '.*node_modules.*',
     ];
 
@@ -231,12 +232,12 @@ class ReleaseCreator
                 "--- Release will have the installer and will be zipped.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
-        } else if ($this->useZip) {
+        } elseif ($this->useZip) {
             $this->consoleWriter->displayText(
                 "--- Release will be zipped.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
-        } else if ($this->useInstaller) {
+        } elseif ($this->useInstaller) {
             $this->consoleWriter->displayText(
                 "--- Release will have the installer.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
@@ -362,7 +363,7 @@ class ReleaseCreator
             '~const VERSION = \'(.*)\';~',
             $kernelFileContent,
             $matches
-        ); 
+        );
 
         return $matches[1];
     }
@@ -377,7 +378,6 @@ class ReleaseCreator
     {
         $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
         $version = new Version($this->version);
-
 
         $kernelFileContent = file_get_contents($kernelFile);
         $kernelFileContent = preg_replace(
@@ -645,6 +645,7 @@ class ReleaseCreator
                     if ($folder.'/'.$file_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -f {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -654,6 +655,7 @@ class ReleaseCreator
                     if ($folder.'/'.$folder_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -663,6 +665,7 @@ class ReleaseCreator
                     if (preg_match('#'.$pattern_to_remove.'#', $value) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -674,6 +677,7 @@ class ReleaseCreator
                     if ($folder.'/'.$folder_to_remove == $key) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
+
                         continue 2;
                     }
                 }
@@ -683,6 +687,7 @@ class ReleaseCreator
                     if (preg_match('#'.$pattern_to_remove.'#', $key) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
+
                         continue 2;
                     }
                 }

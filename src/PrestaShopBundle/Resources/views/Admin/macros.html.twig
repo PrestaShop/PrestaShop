@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -86,4 +86,51 @@
     <a class="list-group-item list-group-item-action" href="{{ path('admin_import_sample_download', {'sampleName': filename}) }}">
         {{ label|trans({}, 'Admin.Advparameters.Feature') }}
     </a>
+{% endmacro %}
+
+{# Show form widget with errors rendered below it #}
+{% macro form_widget_with_error(form, vars, extraVars) %}
+  {% set vars = vars|default({}) %}
+  {% set extraVars = extraVars|default({}) %}
+
+  {{ form_widget(form, vars) }}
+
+  {% if extraVars.help is defined %}
+    <small class="form-text">{{ extraVars.help }}</small>
+  {% endif %}
+
+  {% for error in form.vars.errors %}
+    <div class="text-danger">
+      {{ error.message }}
+    </div>
+  {% endfor %}
+{% endmacro %}
+
+ {#
+  Helper function to render most common structure for single input
+  @param form - form view to render
+  @param vars - custom vars that are passed to form_widget
+  @param form - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
+ #}
+{% macro form_group_row(form, vars, extraVars) %}
+  {% import '@PrestaShop/Admin/macros.html.twig' as self %}
+
+  {% set class = extraVars.class|default('') %}
+
+  <div class="form-group row {{ class }}">
+    {% set extraVars = extraVars|default({}) %}
+
+    {% if extraVars.label is defined %}
+      <label for="{{ form.vars.id }}" class="form-control-label">
+        {% if form.vars.required %}
+          <span class="text-danger">*</span>
+        {% endif %}
+        {{ extraVars.label }}
+      </label>
+    {% endif %}
+
+    <div class="col-sm">
+      {{ self.form_widget_with_error(form, vars, extraVars) }}
+    </div>
+  </div>
 {% endmacro %}

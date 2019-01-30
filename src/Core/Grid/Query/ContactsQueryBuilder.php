@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -79,13 +79,11 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('c.id_contact, c.email, cl.name, cl.description')
-            ->groupBy('c.id_contact')
-        ;
+            ->groupBy('c.id_contact');
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
-            ->applyPagination($searchCriteria, $qb)
-        ;
+            ->applyPagination($searchCriteria, $qb);
 
         return $qb;
     }
@@ -96,8 +94,7 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT c.id_contact)')
-        ;
+            ->select('COUNT(DISTINCT c.id_contact)');
 
         return $qb;
     }
@@ -126,8 +123,7 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('cl.`id_lang`= :language')
             ->andWhere('cs.`id_shop` IN (:shops)')
             ->setParameter('language', $this->languageId)
-            ->setParameter('shops', $this->contextShopsIds, Connection::PARAM_INT_ARRAY)
-        ;
+            ->setParameter('shops', $this->contextShopsIds, Connection::PARAM_INT_ARRAY);
 
         foreach ($filters as $name => $value) {
             if (!in_array($name, $allowedFilters, true)) {

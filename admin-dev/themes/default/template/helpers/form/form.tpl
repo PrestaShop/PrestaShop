@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -34,7 +34,7 @@
 {if isset($identifier_bk) && $identifier_bk == $identifier}{capture name='identifier_count'}{counter name='identifier_count'}{/capture}{/if}
 {assign var='identifier_bk' value=$identifier scope='parent'}
 {if isset($table_bk) && $table_bk == $table}{capture name='table_count'}{counter name='table_count'}{/capture}{/if}
-{assign var='table_bk' value=$table scope='parent'}
+{assign var='table_bk' value=$table scope='root'}
 <form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if isset($smarty.capture.table_count) && $smarty.capture.table_count}_{$smarty.capture.table_count|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}" value="{$form_id}" />
@@ -489,8 +489,6 @@
 											</script>
 										{/if}
 									{/if}
-									<div class="input-group">
-									{if isset($input.maxchar) && $input.maxchar}</div>{/if}
 								{elseif $input.type == 'checkbox'}
 									{if isset($input.expand)}
 										<a class="btn btn-default show_checkbox{if strtolower($input.expand.default) == 'hide'} hidden{/if}" href="#">
@@ -852,7 +850,7 @@
 						</button>
 						{/if}
 						{if isset($show_cancel_button) && $show_cancel_button}
-						<a href="{$back_url|escape:'html':'UTF-8'}" class="btn btn-default" {if $table}id="{$table}_form_cancel_btn"{/if} onclick="window.history.back();">
+						<a href="#" class="btn btn-default" {if $table}id="{$table}_form_cancel_btn"{/if} onclick="window.history.back();">
 							<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 						</a>
 						{/if}
@@ -915,10 +913,10 @@
 		// precedence conflicts with other document.ready() blocks
 		{foreach $languages as $k => $language}
 			languages[{$k}] = {
-				id_lang: {$language.id_lang},
-				iso_code: '{$language.iso_code}',
-				name: '{$language.name}',
-				is_default: '{$language.is_default}'
+				id_lang: {$language.id_lang|escape:'javascript'},
+				iso_code: '{$language.iso_code|escape:'javascript'}',
+				name: '{$language.name|escape:'javascript'}',
+				is_default: '{$language.is_default|escape:'javascript'}'
 			};
 		{/foreach}
 		// we need allowEmployeeFormLang var in ajax request

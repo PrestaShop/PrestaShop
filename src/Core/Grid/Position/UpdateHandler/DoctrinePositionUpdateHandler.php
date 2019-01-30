@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,14 +69,12 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
         $qb
             ->from($this->dbPrefix . $positionDefinition->getTable(), 't')
             ->select('t.' . $positionDefinition->getIdField() . ', t.' . $positionDefinition->getPositionField())
-            ->addOrderBy('t.' . $positionDefinition->getPositionField(), 'ASC')
-        ;
+            ->addOrderBy('t.' . $positionDefinition->getPositionField(), 'ASC');
 
         if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
             $qb
                 ->andWhere('t.' . $positionDefinition->getParentIdField() . ' = :parentId')
-                ->setParameter('parentId', $parentId)
-            ;
+                ->setParameter('parentId', $parentId);
         }
 
         $positions = $qb->execute()->fetchAll();
@@ -104,8 +102,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                     ->set($positionDefinition->getPositionField(), ':position')
                     ->andWhere($positionDefinition->getIdField() . ' = :rowId')
                     ->setParameter('rowId', $rowId)
-                    ->setParameter('position', $positionIndex)
-                ;
+                    ->setParameter('position', $positionIndex);
 
                 $statement = $qb->execute();
                 if ($statement instanceof Statement && $statement->errorCode()) {

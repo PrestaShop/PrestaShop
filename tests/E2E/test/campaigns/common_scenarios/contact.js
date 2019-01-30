@@ -58,7 +58,7 @@ module.exports = {
   },
   checkContactFO: function (contactData, isDeleted = false) {
     scenario('Check the created "Contact"', client => {
-      test('should set the shop language to "English"', () => client.changeLanguage('english'));
+      test('should set the shop language to "English"', () => client.changeLanguage());
       test('should click on "Contact us" button', () => client.waitForExistAndClick(ContactUsPageFO.contact_us_button));
       test('should click on "Subject" select', () => client.waitForExistAndClick(ContactUsPageFO.subject_select));
       if (isDeleted) {
@@ -70,13 +70,14 @@ module.exports = {
   },
   configureContactFormModule: function () {
     scenario('Configure the "Contact form" module', client => {
-      test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
+      test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
       test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, 'contactform'));
       test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
-      test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join('contactform')));
+      test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_link.replace('%moduleTechName', 'contactform')));
       test('should switch the "Send confirmation email" to "YES"', () => client.waitForExistAndClick(ModulePage.ContactFormPage.send_confirmation_email_button.replace('%S', 'on')));
       test('should switch the "Receive customers messages by email" to "YES"', () => client.waitForExistAndClick(ModulePage.ContactFormPage.receive_customers_messages_label.replace('%S', 'on')));
       test('should click on "Save" button', () => client.waitForExistAndClick(ModulePage.ContactFormPage.save_button));
+      //Related issue: 9646
       test('should verify the appearance of the green validation', () => client.checkTextValue(ModulePage.success_msg, '×\nSuccessful update.'));
     }, 'common_client');
   },
@@ -89,7 +90,7 @@ module.exports = {
    */
   sendMessageFO: function (messageData) {
     scenario('Check the created "Contact"', client => {
-      test('should set the shop language to "English"', () => client.changeLanguage('english'));
+      test('should set the shop language to "English"', () => client.changeLanguage());
       test('should click on "Contact us" button', () => client.waitForExistAndClick(ContactUsPageFO.contact_us_button));
       test('should choose the created contact from the dropdown list', () => client.waitAndSelectByValue(ContactUsPageFO.subject_select, param['id_contact']));
       test('should set the contact\'s "Email address"', () => client.waitAndSetValue(ContactUsPageFO.email_address_input, messageData.email));

@@ -13,6 +13,8 @@ if [ -f /var/www/html/config/settings.inc.php -o -f /var/www/html/app/config/par
   echo "\n* Remove PrestaShop configuraiton files...";
   rm -f /var/www/html/config/settings.inc.php
   rm -f /var/www/html/app/config/parameters.php
+  rm -f /var/www/html/app/config/parameters.yml
+  rm -rf /var/www/html/var/cache/*
 fi
 
 if [ $PS_DEV_MODE -ne 0 ]; then

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,7 +53,7 @@ class AdminTaxesControllerCore extends AdminController
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto'),
             'rate' => array('title' => $this->trans('Rate', array(), 'Admin.International.Feature'), 'align' => 'center', 'suffix' => '%', 'class' => 'fixed-width-md'),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm', 'remove_onclick' => true),
-            );
+        );
 
         $ecotax_desc = '';
         if (Configuration::get('PS_USE_ECOTAX')) {
@@ -81,20 +81,20 @@ class AdminTaxesControllerCore extends AdminController
                             array(
                                 'name' => $this->trans('Invoice address', array(), 'Admin.International.Feature'),
                                 'id' => 'id_address_invoice',
-                                ),
+                            ),
                             array(
                                 'name' => $this->trans('Delivery address', array(), 'Admin.International.Feature'),
                                 'id' => 'id_address_delivery', ),
-                                ),
-                        'identifier' => 'id',
                         ),
+                        'identifier' => 'id',
+                    ),
                     'PS_USE_ECOTAX' => array(
                         'title' => $this->trans('Use ecotax', array(), 'Admin.International.Feature'),
                         'desc' => $ecotax_desc,
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
-                        ),
+                    ),
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
@@ -108,7 +108,7 @@ class AdminTaxesControllerCore extends AdminController
                 'type' => 'select',
                 'identifier' => 'id_tax_rules_group',
                 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions(),
-                );
+            );
         }
 
         $this->_where .= ' AND a.deleted = 0';

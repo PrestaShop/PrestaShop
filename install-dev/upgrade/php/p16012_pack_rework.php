@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,6 +42,7 @@ function p16012_pack_rework()
         foreach ($products as $product) {
             if ($product != 1) {
                 $work_with_stock = 0;
+
                 break;
             }
         }
@@ -70,6 +71,7 @@ function getDefaultAttribute($id_product)
     $combinations[$id_product]['default'] = $result ? $result : ($result = Db::getInstance()->getValue('SELECT id_product_attribute
 			FROM '._DB_PREFIX_.'product_attribute
 			WHERE id_product = '.(int)$id_product));
+
     return $result;
 }
 
@@ -81,5 +83,6 @@ function getItems($id_product)
         $p = Db::getInstance()->executeS('SELECT `advanced_stock_management` FROM '._DB_PREFIX_.'product WHERE `id_product` = '.(int)$row['id_product_item']);
         $array_result[] = $p[0]['advanced_stock_management'];
     }
+
     return $array_result;
 }

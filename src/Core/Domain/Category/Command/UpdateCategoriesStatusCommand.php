@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
- * Class ChangeCategoriesStatusCommand updates provided categories status to new given status.
+ * Updates provided categories to new status
  */
 class UpdateCategoriesStatusCommand
 {
@@ -48,12 +48,12 @@ class UpdateCategoriesStatusCommand
 
     /**
      * @param int[] $categoryIds
-     * @param CategoryStatus $newStatus
+     * @param string $newStatus
      *
      * @throws CategoryConstraintException
      * @throws CategoryException
      */
-    public function __construct(array $categoryIds, CategoryStatus $newStatus)
+    public function __construct(array $categoryIds, $newStatus)
     {
         $this
             ->setCategoryIds($categoryIds)
@@ -92,20 +92,20 @@ class UpdateCategoriesStatusCommand
         }
 
         foreach ($categoryIds as $categoryId) {
-            $this->categoryIds[] = new CategoryId($categoryId);
+            $this->categoryIds[] = new CategoryId((int) $categoryId);
         }
 
         return $this;
     }
 
     /**
-     * @param CategoryStatus $newStatus
+     * @param string $newStatus
      *
      * @return self
      */
-    private function setNewStatus(CategoryStatus $newStatus)
+    private function setNewStatus($newStatus)
     {
-        $this->newStatus = $newStatus;
+        $this->newStatus = new CategoryStatus($newStatus);
 
         return $this;
     }

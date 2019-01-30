@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,34 +52,34 @@ namespace {
 }
 
 namespace PrestaShopBundle\Install {
-    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-    use Symfony\Component\Yaml\Yaml;
-    use Symfony\Component\Filesystem\Filesystem;
-    use Symfony\Component\Filesystem\Exception\IOException;
     use AppKernel;
-    use Context;
     use Cache;
-    use Shop;
-    use Validate;
-    use Country;
     use Cart;
-    use Employee;
-    use RandomLib;
-    use Language;
-    use Configuration;
     use Composer\Script\Event;
-    use PhpEncryption;
+    use Configuration;
+    use Context;
+    use Country;
     use Db;
-    use Tools;
+    use Employee;
+    use FileLogger;
+    use Language;
     use Module;
-    use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+    use PhpEncryption;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+    use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
     use PrestaShop\PrestaShop\Core\Cldr\Update;
-    use FileLogger;
     use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
+    use RandomLib;
+    use Shop;
+    use Symfony\Component\Filesystem\Exception\IOException;
+    use Symfony\Component\Filesystem\Filesystem;
+    use Symfony\Component\Yaml\Yaml;
+    use Tools;
+    use Validate;
 
     class Upgrade
     {
@@ -219,7 +219,7 @@ namespace PrestaShopBundle\Install {
             }
 
             // if _PS_ROOT_DIR_ is defined, use it instead of "guessing" the module dir.
-            if (defined('_PS_ROOT_DIR_') and !defined('_PS_MODULE_DIR_')) {
+            if (defined('_PS_ROOT_DIR_') && !defined('_PS_MODULE_DIR_')) {
                 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
             } elseif (!defined('_PS_MODULE_DIR_')) {
                 define('_PS_MODULE_DIR_', _PS_INSTALL_PATH_ . '/../modules/');
@@ -250,19 +250,19 @@ namespace PrestaShopBundle\Install {
             if (empty($this->oldVersion)) {
                 $this->oldVersion = Configuration::get('PS_INSTALL_VERSION');
             }
-            // fix : complete version number if there is not all 4 numbers
-            // for example replace 1.4.3 by 1.4.3.0
-            // consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
-            // @since 1.4.4.0
+            // Since 1.4.4.0
+            // Fix complete version number if there is not all 4 numbers
+            // Eg. replace 1.4.3 by 1.4.3.0
+            // Will result in file 1.4.3.0.sql will be skipped if oldversion is 1.4.3
             $arrayVersion = preg_split('#\.#', $this->oldVersion);
-            $versionNumbers = sizeof($arrayVersion);
+            $versionNumbers = count($arrayVersion);
 
             if ($versionNumbers != 4) {
                 $arrayVersion = array_pad($arrayVersion, 4, '0');
             }
 
             $this->oldVersion = implode('.', $arrayVersion);
-            // end of fix
+            // End of fix
 
             if (!defined('_PS_CACHE_ENABLED_')) {
                 define('_PS_CACHE_ENABLED_', '0');
@@ -364,8 +364,11 @@ namespace PrestaShopBundle\Install {
             }
 
             if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
-                $this->logError('%install_version% is not a valid version number.', 40,
-                    array('%install_version%' => _PS_INSTALL_VERSION_));
+                $this->logError(
+                    '%install_version% is not a valid version number.',
+                    40,
+                    array('%install_version%' => _PS_INSTALL_VERSION_)
+                );
             }
         }
 
@@ -480,7 +483,7 @@ namespace PrestaShopBundle\Install {
                                 /* Or an object method, not supported */
                                 $this->logWarning('[ERROR] ' . $version . ' PHP - Object Method call is forbidden (' . $php[0] . '::' . str_replace($pattern[0], '', $php[1]) . ')', 42, array(), true);
                             }
-                            if ((is_array($phpRes) and !empty($phpRes['error'])) || $phpRes === false) {
+                            if ((is_array($phpRes) && !empty($phpRes['error'])) || $phpRes === false) {
                                 $this->logWarning('[ERROR] PHP ' . $version . ' ' . $query . "\n" . '
 								' . (empty($phpRes['error']) ? '' : $phpRes['error'] . "\n") . '
 								' . (empty($phpRes['msg']) ? '' : ' - ' . $phpRes['msg']), $version, array(), true);
@@ -620,7 +623,7 @@ namespace PrestaShopBundle\Install {
             foreach ($arrayToClean as $dir) {
                 if (file_exists($dir)) {
                     foreach (scandir($dir, SCANDIR_SORT_NONE) as $file) {
-                        if ($file[0] != '.' and $file != 'index.php' and $file != '.htaccess') {
+                        if ($file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
                             if (is_file($dir . $file)) {
                                 unlink($dir . $file);
                             } elseif (is_dir($dir . $file . DIRECTORY_SEPARATOR)) {
@@ -1141,25 +1144,25 @@ namespace PrestaShopBundle\Install {
 
                 $parameters = array(
                     'parameters' => array(
-                            'database_host' => $db_server,
-                            'database_port' => $db_port,
-                            'database_user' => _LEGACY_DB_USER_,
-                            'database_password' => _LEGACY_DB_PASSWD_,
-                            'database_name' => _LEGACY_DB_NAME_,
-                            'database_prefix' => _LEGACY_DB_PREFIX_,
-                            'database_engine' => defined(_LEGACY_MYSQL_ENGINE_) ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
-                            'cookie_key' => _LEGACY_COOKIE_KEY_,
-                            'cookie_iv' => _LEGACY_COOKIE_IV_,
-                            'new_cookie_key' => _LEGACY_NEW_COOKIE_KEY_,
-                            'ps_caching' => defined(_LEGACY_PS_CACHING_SYSTEM_) ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
-                            'ps_cache_enable' => defined(_LEGACY_PS_CACHE_ENABLED_) ? _LEGACY_PS_CACHE_ENABLED_ : false,
-                            'ps_creation_date' => defined(_LEGACY_PS_CREATION_DATE_) ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
-                            'secret' => $secret,
-                            'mailer_transport' => 'smtp',
-                            'mailer_host' => '127.0.0.1',
-                            'mailer_user' => '',
-                            'mailer_password' => '',
-                        ) + $default_parameters['parameters'],
+                        'database_host' => $db_server,
+                        'database_port' => $db_port,
+                        'database_user' => _LEGACY_DB_USER_,
+                        'database_password' => _LEGACY_DB_PASSWD_,
+                        'database_name' => _LEGACY_DB_NAME_,
+                        'database_prefix' => _LEGACY_DB_PREFIX_,
+                        'database_engine' => defined(_LEGACY_MYSQL_ENGINE_) ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
+                        'cookie_key' => _LEGACY_COOKIE_KEY_,
+                        'cookie_iv' => _LEGACY_COOKIE_IV_,
+                        'new_cookie_key' => _LEGACY_NEW_COOKIE_KEY_,
+                        'ps_caching' => defined(_LEGACY_PS_CACHING_SYSTEM_) ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
+                        'ps_cache_enable' => defined(_LEGACY_PS_CACHE_ENABLED_) ? _LEGACY_PS_CACHE_ENABLED_ : false,
+                        'ps_creation_date' => defined(_LEGACY_PS_CREATION_DATE_) ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
+                        'secret' => $secret,
+                        'mailer_transport' => 'smtp',
+                        'mailer_host' => '127.0.0.1',
+                        'mailer_user' => '',
+                        'mailer_password' => '',
+                    ) + $default_parameters['parameters'],
                 );
             } elseif (file_exists($root_dir . '/app/config/parameters.yml')) {
                 $parameters = Yaml::parse(file_get_contents($root_dir . '/app/config/parameters.yml'));

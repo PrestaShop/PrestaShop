@@ -49,7 +49,6 @@
  *
  */
 class ExpressionType {
-
     const USER_VARIABLE = "user_variable";
     const SESSION_VARIABLE = "session_variable";
     const GLOBAL_VARIABLE = "global_variable";
@@ -113,4 +112,3 @@ class ExpressionType {
     const COLUMN_TYPE = "column-type";
     const DEF_VALUE = "default-value";
 }
-?>

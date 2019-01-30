@@ -9,3 +9,32 @@ services:
       - '@prestashop.adapter.data_provider.language'
       - '@prestashop.core.cache.clearer.cache_clearer_chain'
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
+
+  prestashop.adapter.language.language_flag_thumbnail_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageFlagThumbnailProvider'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+
+  prestashop.adapter.language.rtl.installed_language_checker:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\RTL\InstalledLanguageChecker'
+    arguments:
+      - '@prestashop.adapter.data_provider.language'
+
+  prestashop.adapter.language.command_handler.add_language_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\AddLanguageHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand'
+
+  prestashop.adapter.language.command_handler.edit_language_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\EditLanguageHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand'
+
+  prestashop.adapter.language.query_handler.get_language_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\QueryHandler\GetLanguageForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing'

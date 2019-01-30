@@ -51,9 +51,9 @@ require_once dirname(__FILE__) . '/SubTreeBuilder.php';
  *  
  */
 class InListBuilder {
-
     protected function buildSubTree($parsed, $delim) {
         $builder = new SubTreeBuilder();
+
         return $builder->build($parsed, $delim);
     }
 
@@ -62,7 +62,7 @@ class InListBuilder {
             return "";
         }
         $sql = $this->buildSubTree($parsed, ", ");
+
         return "(" . $sql . ")";
     }
 }
-?>

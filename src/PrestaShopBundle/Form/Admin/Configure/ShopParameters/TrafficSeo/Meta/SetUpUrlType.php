@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
-use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -44,9 +43,9 @@ class SetUpUrlType extends AbstractType
     private $canonicalUrlChoices;
 
     /**
-     * @var UrlFileCheckerInterface
+     * @var bool
      */
-    private $htaccessFileChecker;
+    private $isHtaccessFileWritable;
 
     /**
      * @var bool
@@ -57,16 +56,16 @@ class SetUpUrlType extends AbstractType
      * SetUpUrlType constructor.
      *
      * @param array $canonicalUrlChoices
-     * @param UrlFileCheckerInterface $htaccessFileChecker
+     * @param bool $isHtaccessFileWritable
      * @param bool $isHostMode
      */
     public function __construct(
         array $canonicalUrlChoices,
-        UrlFileCheckerInterface $htaccessFileChecker,
+        $isHtaccessFileWritable,
         $isHostMode
     ) {
         $this->canonicalUrlChoices = $canonicalUrlChoices;
-        $this->htaccessFileChecker = $htaccessFileChecker;
+        $this->isHtaccessFileWritable = $isHtaccessFileWritable;
         $this->isHostMode = $isHostMode;
     }
 
@@ -78,18 +77,19 @@ class SetUpUrlType extends AbstractType
         $builder
             ->add('friendly_url', SwitchType::class)
             ->add('accented_url', SwitchType::class)
-            ->add('canonical_url_redirection', ChoiceType::class, [
+            ->add(
+                'canonical_url_redirection',
+                ChoiceType::class,
+                [
                     'choices' => $this->canonicalUrlChoices,
                     'translation_domain' => false,
                 ]
-            )
-        ;
+            );
 
-        if (!$this->isHostMode && $this->htaccessFileChecker->isValidFile()) {
+        if (!$this->isHostMode && $this->isHtaccessFileWritable) {
             $builder
                 ->add('disable_apache_multiview', SwitchType::class)
-                ->add('disable_apache_mod_security', SwitchType::class)
-            ;
+                ->add('disable_apache_mod_security', SwitchType::class);
         }
     }
 }

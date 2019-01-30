@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,28 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use AdminController;
+use AdminLegacyLayoutControllerCore;
+use Context;
 use Employee;
+use Language;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
-use Context;
-use Language;
-use AdminController;
-use Link;
 use Tab;
-use Tools as ToolsLegacy;
-use Dispatcher;
-use AdminLegacyLayoutControllerCore;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -58,7 +55,7 @@ class LegacyContext
     {
         static $legacyContext = null;
 
-        if (is_null($legacyContext)) {
+        if (null === $legacyContext) {
             $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
@@ -102,21 +99,29 @@ class LegacyContext
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $id_lang = Context::getContext()->language->id;
-        $params = $extraParams;
-        if ($withToken) {
-            $params['token'] = ToolsLegacy::getAdminTokenLite($controller);
-        }
+        return $this->getContext()->link->getAdminLink($controller, $withToken, $extraParams, $extraParams);
+    }
 
-        $link = new Link();
-
-        return $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+    /**
+     * Returns the controller link in its legacy form, without trying to convert it in symfony url.
+     *
+     * @param string $controller
+     * @param bool $withToken
+     * @param array $extraParams
+     *
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
+    {
+        return $this->getContext()->link->getLegacyAdminLink($controller, $withToken, $extraParams);
     }
 
     /**
      * Adapter to get Front controller HTTP link.
      *
      * @param string $controller the controller name
+     *
+     * @return string
      */
     public function getFrontUrl($controller)
     {

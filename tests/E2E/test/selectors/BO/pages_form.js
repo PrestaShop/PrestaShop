@@ -3,9 +3,9 @@ module.exports = {
     calendar_form: '//*[@id="calendar_form"]',
     Orders: {
       order_form: '//*[@id="form-order"]',
-      invoice_form: '//*[@id="main-div"]//form[@name="generate_by_date"]',
+      status_block: '//*[@id="by-status-block"]',
       order_slip_form: '//*[@id="form-order_slip"]',
-      delivery_form: '//*[@id="delivery_pdf_fieldset"]',
+      delivery_pdf_fieldset: '//*[@id="delivery_pdf_fieldset"]',
       shopping_cart_form: '//*[@id="form-cart"]',
     },
     Catalog: {
@@ -18,7 +18,7 @@ module.exports = {
       supplier_form: '//*[@id="subtab-AdminSuppliers"]',
       attachment_form: '//*[@id="form-attachment"]',
       cart_rule_form: '//*[@id="form-cart_rule"]',
-      cart_price_rule_form: '//*[@id="subtab-AdminSpecificPriceRule"]',
+      cart_price_rule_form: '//*[@id="form-specific_price_rule"]',
       search_box: '//*[@id="search"]' // Search products in stock and movements page
     },
     Customers: {
@@ -37,15 +37,20 @@ module.exports = {
       modules_list: '//*[@id="modules-list-container-all"]',
       modules_search_input: '.pstaggerAddTagInput', // search input in installed modules tab
       modules_to_configure: '//*[@id="module-short-list-configure"]', // the text in notifications tab
-      addons_search_form: '//*[@id="addons-search-form"]'
+      addons_search_form: '//*[@id="addons-search-form"]',
+      module_list_updates: '//*[@id="modules-list-container-update"]',
     },
     Design: {
       design_form: '//*[@id="configuration_form"]',
       catalog_theme: '//div[contains(@class, "addons-catalog-theme")]/div[1]',
+      configuration_fieldset: '//*[@id="configuration_fieldset_appearance"]',
       cms_category_form: '//*[@id="form-cms_category"]',
       position_module_form: '//*[@id="module-positions-form"]',
       image_type_form: '//*[@id="form-image_type"]',
-      configuration_link_form: '//*[@id="configuration_form"]'
+      configuration_link_form: '//*[@id="configuration_form"]',
+      menu_module_name: '(//*[@id="psthemecusto"]//div[@data-module_name="menu"])[2]',
+      download_theme_button: '//*[@id="download_child_theme"]',
+      prestashop_content_div: '//*[@id="prestastore-content"]',
     },
     Shipping: {
       carrier_form: '//*[@id="form-carrier"]',
@@ -56,7 +61,7 @@ module.exports = {
       currency_form: '//*[@id="main-div"]/div[@class="content-div  "]//form'
     },
     International: {
-      localization_pack_select: '//*[@id="main-div"]/div[3]/div/div/div[2]/div/form',
+      localization_pack_select: '//*[@id="main-div"]//form[@name="import_localization_pack"]',
       languages_form: '//*[@id="form-lang"]',
       currency_form: '//*[@id="form-currency"]',
       geolocation_by_address: '//*[@id="main-div"]/div[@class="content-div  with-tabs"]//form',
@@ -84,20 +89,22 @@ module.exports = {
       alias_form: '//*[@id="form-alias"]', //Search page
       tags_form: '//*[@id="form-tag"]',
       gamification_box: '//*[@id="intro_gamification"]',
+      seo_url_showcase_card: '//*[@id="seo-urls-showcase-card"]',
     },
     AdvancedParameters: {
       check_configuration_box: '//*[@id="checkConfiguration"]',
       debug_mode_button: '//form[contains(@class, "form-horizontal")]', // performance page
       administration_form: '//form[contains(@class, "form-horizontal")]',
-      mail_form: '//*[@id="main-div"]//form[@name="form"]',
+      mail_form: '//*[@id="email_logs_grid_panel"] | //*[@id="form_mail"]',
       preview_import_form: '//form[contains(@class, "import")]',
       employee_form: '//*[@id="form-employee"]', //team page
       profiles_form: '//*[@id="form-profile"]',
       permissions_form: '//*[@id="access_form"]',
-      request_sql_form: '//*[@id="request_sql_grid_panel"]', //database page
+      request_sql_form: '//*[@id="sql_request_grid_panel"]', //database page
       log_form: '//*[@id="logs_grid_panel"]',
       webservice_form: '//*[@id="form-webservice_account"]',
-      multistore_form: '//*[@id="form-shop_group"]'
+      multistore_form: '//*[@id="form-shop_group"]',
+      backup_filter_form: '//*[@id="backup_filter_form"]',
     }
   }
 };

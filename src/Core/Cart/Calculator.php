@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,6 +59,11 @@ class Calculator
     protected $fees;
 
     /**
+     * @var CartRuleCalculator
+     */
+    protected $cartRuleCalculator;
+
+    /**
      * indicates if cart was already processed.
      *
      * @var bool
@@ -72,6 +77,7 @@ class Calculator
         $this->cartRows = new CartRowCollection();
         $this->fees = new Fees();
         $this->cartRules = new CartRuleCollection();
+        $this->cartRuleCalculator = new CartRuleCalculator();
     }
 
     /**
@@ -256,11 +262,10 @@ class Calculator
      */
     public function calculateCartRules()
     {
-        $cartRuleCalculator = new CartRuleCalculator();
-        $cartRuleCalculator->setCartRules($this->cartRules)
-                           ->setCartRows($this->cartRows)
-                           ->setCalculator($this);
-        $cartRuleCalculator->applyCartRules();
+        $this->cartRuleCalculator->setCartRules($this->cartRules)
+            ->setCartRows($this->cartRows)
+            ->setCalculator($this)
+            ->applyCartRules();
     }
 
     /**
@@ -271,5 +276,13 @@ class Calculator
     public function calculateFees($computePrecision)
     {
         $this->fees->processCalculation($this->cart, $this->cartRows, $computePrecision, $this->id_carrier);
+    }
+
+    /**
+     * @return CartRuleCollection
+     */
+    public function getCartRulesData()
+    {
+        return $this->cartRuleCalculator->getCartRulesData();
     }
 }

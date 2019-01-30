@@ -4,6 +4,7 @@ const {accountPage} = require('../../selectors/FO/add_account_page');
 const {productPage} = require('../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {BO} = require('../../selectors/BO/customers/index');
+const {AccessPageFO} = require('../../selectors/FO/access_page');
 
 let promise = Promise.resolve();
 
@@ -92,13 +93,13 @@ module.exports = {
       });
       test('should click on "Delete" button', () => {
         return promise
-          .then(() => client.waitForExistAndClick(Customer.dropdown_toggle))
+          .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 2000))
           .then(() => client.waitForExistAndClick(Customer.delete_button, 1000));
       });
       test('should accept the currently displayed alert dialog', () => client.alertAccept());
       test('should choose the option that allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_first_option));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.', 'equal', 2000));
     }, 'customer');
   },
   deleteCustomerWithBulkActions: function (customerEmail) {
@@ -133,5 +134,58 @@ module.exports = {
         .then(() => client.waitForExistAndClick(accountPage.customer_form_continue_button))
         .then(() => client.waitForVisible(accountPage.checkout_step_complete));
     });
+  },
+  checkCustomerInfo: function (country) {
+    scenario('Check address format for a customer ', client => {
+      test('should choose "Corse" from "Country" list', () => client.waitAndSelectByVisibleText(accountPage.country_list, country));
+      test('should verify that the "Last name" input exist', () => client.waitForVisible(accountPage.last_name_input));
+      test('should verify that the "First name" input exist', () => client.waitForVisible(accountPage.first_name_input));
+      test('should verify that the "Address" input exist', () => client.waitForVisible(accountPage.address1_input));
+      test('should verify that the "Address Complement" input exist', () => client.waitForVisible(accountPage.address2_input));
+      test('should verify that the "Identification number" input exist', () => client.waitForVisible(accountPage.dni_input));
+      test('should verify that the "Zip/Postal Code" input exist', () => client.waitForVisible(accountPage.poste_code_input));
+      test('should verify that the "City" input exist', () => client.waitForVisible(accountPage.city_input));
+      test('should verify that the "Phone" input exist', () => client.waitForVisible(accountPage.phone_input));
+      test('should verify that the "Country" list exist', () => client.waitForVisible(accountPage.country_list));
+      /**
+       * This error is due to the bug described in this issue
+       * https://github.com/PrestaShop/PrestaShop/issues/11166
+       **/
+      test('should verify that the "Birthday" list exist', () => client.waitForVisible(accountPage.date_birthday_input));
+    }, 'customer');
+  },
+  fillCustomerInfoFromAGuest: function (customerData, password = true) {
+    scenario('Fill customer informations from a guest', client => {
+      test('should click on "Add to cart" button', () => client.waitForExistAndClick(productPage.quick_view_add_to_cart));
+      test('should click on "Proceed to checkout" button', () => {
+        return promise
+          .then(() => client.pause(2000))
+          .then(() => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
+      });
+      test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
+      test('should set the "First name" input', () => client.waitAndSetValue(accountPage.firstname_input, customerData.first_name));
+      test('should set the "Last name" input', () => client.waitAndSetValue(accountPage.lastname_input, customerData.last_name));
+      test('should set the "Email" input', () => client.waitAndSetValue(accountPage.email_input, date_time + customerData.email));
+      if (password) {
+        test('should set the "Password" input', () => client.waitAndSetValue(accountPage.password_account_input, date_time + customerData.password));
+      }
+      test('should click on "CONTINUE" button', () => client.waitForExistAndClick(accountPage.customer_form_continue_button));
+    }, 'customer');
+  },
+  signInFromCheckout: function (customerData) {
+    scenario('Sign in from checkout', client => {
+      test('should click on "my store" button', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(AccessPageFO.logo_home_page))
+          .then(() => client.changeLanguage());
+      });
+      test('should click on "Cart" button', () => client.waitForExistAndClick(AccessPageFO.shopping_cart_button));
+      test('should click on "Proceed to checkout" button', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
+      test('should click on "PERSONAL INFORMATION" title', () => client.waitForExistAndClick(accountPage.personal_information_tab));
+      test('should click on "Sign in" tab', () => client.waitForExistAndClick(accountPage.sign_tab));
+      test('should set the "Email" input', () => client.waitAndSetValue(accountPage.signin_email_input, date_time + customerData.email_address));
+      test('should set the "Password" input', () => client.waitAndSetValue(accountPage.signin_password_input, customerData.password));
+      test('should click on "Continue" button', () => client.waitForExistAndClick(accountPage.continue_button));
+    }, 'common_client');
   }
 };

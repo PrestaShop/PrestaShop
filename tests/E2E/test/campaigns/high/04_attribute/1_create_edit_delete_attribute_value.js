@@ -3,6 +3,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonScenarios = require('../../common_scenarios/product');
 const commonAttribute = require('../../common_scenarios/attribute');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = {
   name: 'Att',
@@ -41,6 +42,7 @@ scenario('Create, edit and delete "Attribute"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonAttribute.createAttribute(attributeData);
   commonScenarios.createProduct(AddProductPage, productData);
 
@@ -52,7 +54,7 @@ scenario('Create, edit and delete "Attribute"', () => {
 
   /* Update the created attribute */
   scenario('Go back to the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+    test('should login successfully in the Back Office', () => client.accessToBO(AccessPageBO));
   }, 'attribute_and_feature');
   commonAttribute.updateAttribute(attributeData);
 
@@ -64,7 +66,7 @@ scenario('Create, edit and delete "Attribute"', () => {
 
   /* Delete attribute value */
   scenario('Go back to the Back Office', client => {
-    test('should lgo back to the Back Office', () => client.accessToBO(AccessPageBO));
+    test('should login successfully in the Back Office', () => client.accessToBO(AccessPageBO));
   }, 'attribute_and_feature');
   commonAttribute.deleteAttributeValue(attributeData);
 
@@ -76,7 +78,7 @@ scenario('Create, edit and delete "Attribute"', () => {
 
   /* Delete the created attribute */
   scenario('Go back to the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+    test('should login successfully in the Back Office', () => client.accessToBO(AccessPageBO));
   }, 'attribute_and_feature');
   commonAttribute.deleteAttribute(attributeData);
   scenario('Logout from the Back Office', client => {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -75,7 +75,8 @@ class ProfileCore extends ObjectModel
             $idLang = Configuration::get('PS_LANG_DEFAULT');
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            '
 			SELECT `name`
 			FROM `' . _DB_PREFIX_ . 'profile` p
 			LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
@@ -94,8 +95,7 @@ class ProfileCore extends ObjectModel
         if (parent::delete()) {
             return
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'access` WHERE `id_profile` = ' . (int) $this->id)
-                && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $this->id)
-            ;
+                && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $this->id);
         }
 
         return false;

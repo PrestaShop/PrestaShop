@@ -4,7 +4,7 @@
   top: $size-header-height;
   left: $size-navbar-width;
   right: 0;
-  z-index: 10;
+  z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
   border-bottom: 0.0625rem solid $color-separator;
 
   transition: left .5s ease; // transition when collapsing the nav menu

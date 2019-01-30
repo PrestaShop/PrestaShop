@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -95,12 +95,12 @@ class LanguageCore extends ObjectModel
     );
 
     protected $translationsFilesAndVars = array(
-            'fields' => '_FIELDS',
-            'errors' => '_ERRORS',
-            'admin' => '_LANGADM',
-            'pdf' => '_LANGPDF',
-            'tabs' => 'tabs',
-        );
+        'fields' => '_FIELDS',
+        'errors' => '_ERRORS',
+        'admin' => '_LANGADM',
+        'pdf' => '_LANGPDF',
+        'tabs' => 'tabs',
+    );
 
     public function __construct($id = null, $id_lang = null)
     {
@@ -160,11 +160,11 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
+        $themes = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))
                         ->buildRepository()
                         ->getList();
         foreach ($themes as $theme) {
-            /* @var Theme $theme */
+            /** @var Theme $theme */
             $theme_dir = $theme->getDirectory();
             if (file_exists(_PS_ALL_THEMES_DIR_ . $theme_dir . '/lang/' . $this->iso_code . '.php')) {
                 rename(_PS_ALL_THEMES_DIR_ . $theme_dir . '/lang/' . $this->iso_code . '.php', _PS_ALL_THEMES_DIR_ . $theme_dir . '/lang/' . $newIso . '.php');
@@ -422,7 +422,7 @@ class LanguageCore extends ObjectModel
 
         $return = true;
 
-        /* @var Shop[] $shops */
+        /** @var Shop[] $shops */
         $shops = Shop::getShopsCollection(false);
         foreach ($shops as $shop) {
             // retrieve default language to duplicate database rows
@@ -709,7 +709,7 @@ class LanguageCore extends ObjectModel
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
@@ -956,7 +956,7 @@ class LanguageCore extends ObjectModel
 
         $flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/' . $iso_code . '.jpg');
         if ($flag != null && !preg_match('/<body>/', $flag)) {
-            $file = fopen(_PS_ROOT_DIR_ . '/img/l/' . (int) $lang->id . '.jpg', 'w');
+            $file = fopen(_PS_ROOT_DIR_ . '/img/l/' . (int) $lang->id . '.jpg', 'wb');
             if ($file) {
                 fwrite($file, $flag);
                 fclose($file);

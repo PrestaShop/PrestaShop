@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,7 +41,7 @@ class AdminCategoriesControllerCore extends AdminController
     /** @var bool does the product have to be disable during the delete process */
     public $disable_products = false;
 
-    private $original_filter = '';
+    protected $original_filter = '';
 
     public function __construct()
     {
@@ -564,8 +564,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
                     'delete_url' => self::$currentIndex . '&' . $this->identifier . '=' . $this->_category->id . '&token=' . $this->token . '&deleteImage=1',
-                   'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
-                   'format' => $format['category'],
+                    'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
+                    'format' => $format['category'],
                 ),
                 array(
                     'type' => 'file',
@@ -592,8 +592,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Meta title', array(), 'Admin.Global'),
                     'name' => 'meta_title',
-                    'maxlength' => 70,
-                    'maxchar' => 70,
+                    'maxlength' => 255,
+                    'maxchar' => 255,
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 100,
@@ -603,8 +603,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'type' => 'textarea',
                     'label' => $this->trans('Meta description', array(), 'Admin.Global'),
                     'name' => 'meta_description',
-                    'maxlength' => 160,
-                    'maxchar' => 160,
+                    'maxlength' => 512,
+                    'maxchar' => 512,
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 100,
@@ -875,9 +875,9 @@ class AdminCategoriesControllerCore extends AdminController
     {
         /* Delete or link products which were not in others categories */
         $fatherless_products = Db::getInstance()->executeS('
-			SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
+            SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            WHERE NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
 
         foreach ($fatherless_products as $id_poor_product) {
             $poor_product = new Product((int) $id_poor_product['id_product']);
@@ -988,8 +988,9 @@ class AdminCategoriesControllerCore extends AdminController
         if (is_array($positions)) {
             foreach ($positions as $key => $value) {
                 $pos = explode('_', $value);
-                if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
+                if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
                     $position = $key;
+
                     break;
                 }
             }
@@ -1088,8 +1089,14 @@ class AdminCategoriesControllerCore extends AdminController
                 }
 
                 //Add image preview and delete url
-                $file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
-                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg', 100, 'jpg', true, true);
+                $file['image'] = ImageManager::thumbnail(
+                    _PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    100,
+                    'jpg',
+                    true,
+                    true
+                );
                 $file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories') . '&deleteThumb='
                     . $id . '&id_category=' . (int) $category->id . '&updatecategory';
             }

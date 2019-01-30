@@ -1,3 +1,10 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-60"][Name="create a customer"]
+ * [id="PS-61"][Name="edit a customer"]
+ * [id="PS-62"][Name="delete a customer"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const {accountPage} = require('../../../../selectors/FO/add_account_page');
@@ -12,7 +19,7 @@ let promise = Promise.resolve();
 let customerData = {
   first_name: 'demo',
   last_name: 'demo',
-  email_address: global.adminEmail,
+  email_address: 'demo' + global.adminEmail,
   password: '123456789',
   birthday: {
     day: '18',
@@ -99,8 +106,8 @@ scenario('Create, Edit, delete "Customer"', () => {
   scenario('Check the ability to create the same deleted customer from the Front Office', client => {
     test('should click on shop logo', () => client.waitForExistAndClick(AccessPageFO.logo_home_page));
     test('should set the language of shop to "English"', () => client.changeLanguage());
-    test('should click on "Sign In" button', () => client.waitForExistAndClick(AccessPageFO.sign_in_button));
-    test('should click on "No account? Create one here" button', () => client.waitForExistAndClick(AccessPageFO.create_account_button));
+    test('should click on "Sign In" button', () => client.waitForExistAndClick(AccessPageFO.sign_in_button, 2000));
+    test('should click on "No account? Create one here" button', () => client.waitForExistAndClick(AccessPageFO.create_account_button, 2000));
     test('should check "Mrs" radio button', () => client.waitForExistAndClick(accountPage.gender_radio_button));
     test('should set the "First Name" input', () => client.waitAndSetValue(accountPage.firstname_input, editCustomerData.first_name));
     test('should set the "Last Name" input', () => client.waitAndSetValue(accountPage.lastname_input, editCustomerData.last_name));
@@ -120,13 +127,13 @@ scenario('Create, Edit, delete "Customer"', () => {
     });
     test('should click on "Delete" button', () => {
       return promise
-        .then(() => client.waitForExistAndClick(Customer.dropdown_toggle))
+        .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 1000))
         .then(() => client.waitForExistAndClick(Customer.delete_button, 1000));
     });
     test('should accept the currently displayed alert dialog', () => client.alertAccept());
     test('should choose the option that Doesn\'t allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_second_option));
-    test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.'));
+    test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button, 2000));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.', 'equal', 2000));
     test('should go to the Front Office', () => client.switchWindow(1));
   }, 'customer');
 

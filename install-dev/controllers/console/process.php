@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,19 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShopBundle\Install\Install;
 use PrestaShopBundle\Install\Database;
+use PrestaShopBundle\Install\Install;
 
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
-
     public $process_steps = array();
     public $previous_button = false;
 
@@ -132,12 +131,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
-        if (in_array('fixtures', $steps)) {
-            if (!$this->processInstallFixtures()) {
-                $this->printErrors();
-            }
-        }
-
         if (in_array('modules', $steps)) {
             if (!$this->processInstallModules()) {
                 $this->printErrors();
@@ -156,6 +149,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
+        if (in_array('fixtures', $steps)) {
+            if (!$this->processInstallFixtures()) {
+                $this->printErrors();
+            }
+        }
+
         // Update fixtures lang
         foreach (Language::getLanguages() as $lang) {
             Language::updateMultilangTable($lang['iso_code']);
@@ -163,12 +162,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         if ($this->datas->newsletter) {
             $params = http_build_query(array(
-                    'email' => $this->datas->admin_email,
-                    'method' => 'addMemberToNewsletter',
-                    'language' => $this->datas->lang,
-                    'visitorType' => 1,
-                    'source' => 'installer'
-                ));
+                'email' => $this->datas->admin_email,
+                'method' => 'addMemberToNewsletter',
+                'language' => $this->datas->lang,
+                'visitorType' => 1,
+                'source' => 'installer',
+            ));
             Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
@@ -283,6 +282,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
         $result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
+
         return $result;
     }
 
@@ -302,6 +302,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public function processInstallTheme()
     {
         $this->initializeContext();
+
         return $this->model_install->installTheme($this->datas->theme);
     }
 

@@ -4,6 +4,7 @@ admin_order_delivery_slip:
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Order/Delivery:slip
         _legacy_controller: AdminDeliverySlip
+        _legacy_link: AdminDeliverySlip
 
 admin_order_delivery_slip_pdf:
     path: /pdf
@@ -11,3 +12,4 @@ admin_order_delivery_slip_pdf:
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Order/Delivery:generatePdf
         _legacy_controller: AdminDeliverySlip
+        _legacy_link: AdminDeliverySlip:submitAdddelivery

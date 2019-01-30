@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,6 +36,12 @@ import CategoryPositionExtension from "../../components/grid/extension/column/ca
 import AsyncToggleColumnExtension from "../../components/grid/extension/column/common/async-toggle-column-extension";
 import DeleteCategoryRowActionExtension from "../../components/grid/extension/action/row/category/delete-category-row-action-extension";
 import DeleteCategoriesBulkActionExtension from "../../components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension";
+import TranslatableInput from "../../components/translatable-input";
+import ChoiceTable from "../../components/choice-table";
+import TextWithLengthCounter from "../../components/form/text-with-length-counter";
+import NameToLinkRewriteCopier from "./name-to-link-rewrite-copier";
+import ChoiceTree from "../../components/form/choice-tree";
+import FormSubmitButton from "../../components/form-submit-button";
 
 const $ = window.$;
 
@@ -54,4 +60,16 @@ $(() => {
   categoriesGrid.addExtension(new AsyncToggleColumnExtension());
   categoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   categoriesGrid.addExtension(new DeleteCategoriesBulkActionExtension());
+
+  new TranslatableInput();
+  new ChoiceTable();
+  new TextWithLengthCounter();
+  new NameToLinkRewriteCopier();
+  new FormSubmitButton();
+
+  new ChoiceTree('#category_id_parent');
+  new ChoiceTree('#category_shop_association').enableAutoCheckChildren();
+
+  new ChoiceTree('#root_category_id_parent');
+  new ChoiceTree('#root_category_shop_association').enableAutoCheckChildren();
 });

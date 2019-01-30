@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -103,11 +103,11 @@ class RangeWeightCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT count(*)
             FROM `' . _DB_PREFIX_ . 'range_weight` rw' .
-            (is_null($id_carrier) && $id_reference ? '
+            (null === $id_carrier && $id_reference ? '
             INNER JOIN `' . _DB_PREFIX_ . 'carrier` c on (rw.`id_carrier` = c.`id_carrier`)' : '') . '
             WHERE' .
             ($id_carrier ? ' `id_carrier` = ' . (int) $id_carrier : '') .
-            (is_null($id_carrier) && $id_reference ? ' c.`id_reference` = ' . (int) $id_reference : '') . '
+            (null === $id_carrier && $id_reference ? ' c.`id_reference` = ' . (int) $id_reference : '') . '
             AND `delimiter1` = ' . (float) $delimiter1 . ' AND `delimiter2` = ' . (float) $delimiter2);
     }
 
@@ -122,6 +122,6 @@ class RangeWeightCore extends ObjectModel
                 OR (' . (float) $delimiter1 . ' > `delimiter1` AND ' . (float) $delimiter1 . ' < `delimiter2`)
                 OR (' . (float) $delimiter2 . ' < `delimiter1` AND ' . (float) $delimiter2 . ' > `delimiter2`)
             )
-            ' . (!is_null($id_rang) ? ' AND `id_range_weight` != ' . (int) $id_rang : ''));
+            ' . (null !== $id_rang ? ' AND `id_range_weight` != ' . (int) $id_rang : ''));
     }
 }

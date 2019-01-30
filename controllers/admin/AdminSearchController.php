@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -170,7 +170,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a specific string in the products and categories.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchCatalog()
     {
@@ -182,7 +182,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a specific name in the customers.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchCustomer()
     {
@@ -217,7 +217,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a feature in all store.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchFeatures()
     {
@@ -230,7 +230,8 @@ class AdminSearchControllerCore extends AdminController
 
         $tabs = array();
         $key_match = array();
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
 		SELECT class_name, name
 		FROM ' . _DB_PREFIX_ . 'tab t
 		INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
@@ -456,10 +457,7 @@ class AdminSearchControllerCore extends AdminController
     protected function isCountableAndNotEmpty(array $array, $key)
     {
         return isset($array[$key]) &&
-            (
-                $array[$key] instanceof Countable ||
-                is_array($array[$key])
-            ) &&
+            is_countable($array[$key]) &&
             count($array[$key]);
     }
 }

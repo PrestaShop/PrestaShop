@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,16 +36,14 @@ class CategoryId
     /**
      * @var int
      */
-    private $id;
+    private $categoryId;
 
     /**
-     * @param int $id
-     *
-     * @throws CategoryException
+     * @param int $categoryId
      */
-    public function __construct($id)
+    public function __construct($categoryId)
     {
-        $this->setId($id);
+        $this->setCategoryId($categoryId);
     }
 
     /**
@@ -53,22 +51,30 @@ class CategoryId
      */
     public function getValue()
     {
-        return $this->id;
+        return $this->categoryId;
     }
 
     /**
-     * @param int $id
+     * @param CategoryId $categoryId
      *
-     * @throws CategoryException
+     * @return bool
      */
-    private function setId($id)
+    public function isEqual(CategoryId $categoryId)
     {
-        if (!is_numeric($id) || 0 >= $id) {
+        return $this->getValue() === $categoryId->getValue();
+    }
+
+    /**
+     * @param int $categoryId
+     */
+    private function setCategoryId($categoryId)
+    {
+        if (!is_int($categoryId) || 0 >= $categoryId) {
             throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($id, true))
+                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
             );
         }
 
-        $this->id = (int) $id;
+        $this->categoryId = $categoryId;
     }
 }
