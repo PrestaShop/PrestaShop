@@ -11,15 +11,26 @@ namespace PrestaShop\PrestaShop\Core\Search;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Contract that define how we can retrieve Grid filters
- * from an User request or Repository.
+ * Contract that define how we can retrieve Grid filters from an User request or Repository.
+ * IMPORTANT NOTE: these methods should ONLY return the filters of their respective scope (no
+ * default replacement) otherwise you can't know where the values exactly come from which make
+ * it impossible to fine tune overrides (which one has the priority).
  *
  * @see SearchParametersResolver class for usage.
  */
 interface SearchParametersInterface
 {
+    const FILTER_TYPES = array(
+        'limit',
+        'offset',
+        'orderBy',
+        'sortOrder',
+        'filters',
+    );
+
     /**
-     * Retrieve list of filters from User Request.
+     * Retrieve list of filters from User Request (ONLY those present in
+     * the request).
      *
      * @param Request $request
      * @param string $filterClass the filter class
@@ -29,7 +40,7 @@ interface SearchParametersInterface
     public function getFiltersFromRequest(Request $request, $filterClass);
 
     /**
-     * Retrieve list of filters from User searches.
+     * Retrieve list of filters from User searches (ONLY those saved in repository).
      *
      * @param int $employeeId
      * @param int $shopId
