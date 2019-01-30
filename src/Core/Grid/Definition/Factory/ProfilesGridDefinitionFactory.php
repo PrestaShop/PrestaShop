@@ -177,7 +177,13 @@ final class ProfilesGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_profile', SearchByIdType::class))
+            ->add((new Filter('id_profile', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                ])
                 ->setAssociatedColumn('id_profile')
             )
             ->add((new Filter('name', TextType::class))

@@ -646,13 +646,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.search_by_id:
-        class: 'PrestaShopBundle\Form\Admin\Type\SearchByIdType'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
-        tags:
-            - { name: form.type }
-
     form.type.database.sql_request:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType'
         calls:
