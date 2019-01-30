@@ -95,31 +95,8 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 $entity->keywords = $command->getMetaKeywords();
             }
 
-            $urlRewriteErrors = $this->validator->validate(
-                $entity->url_rewrite,
-                new DefaultLanguage()
-            );
-
-            if ('index' !== $entity->page && 0 !== count($urlRewriteErrors)) {
-                throw new MetaConstraintException(
-                    'The url rewrite is missing for the default language when editing meta record',
-                    MetaConstraintException::INVALID_URL_REWRITE
-                );
-            }
-
-            foreach ($entity->url_rewrite as $idLang => $rewriteUrl) {
-                $errors = $this->validator->validate($rewriteUrl, new IsUrlRewrite());
-
-                if (0 !== count($errors)) {
-                    throw new MetaConstraintException(
-                        sprintf(
-                            'Url rewrtie %s for language with id %s is not valid',
-                            $rewriteUrl,
-                            $idLang
-                        )
-                    );
-                }
-            }
+            $this->assertUrlRewriteHasDefaultLanguage($entity);
+            $this->assertIsUrlRewriteValid($entity);
 
             if (false === $entity->update()) {
                 throw new CannotEditMetaException(
@@ -141,5 +118,47 @@ final class EditMetaHandler implements EditMetaHandlerInterface
         }
 
         return new MetaId((int) $entity->id);
+    }
+
+    /**
+     * @param Meta $entity
+     *
+     * @throws MetaConstraintException
+     */
+    private function assertUrlRewriteHasDefaultLanguage(Meta $entity)
+    {
+        $urlRewriteErrors = $this->validator->validate(
+            $entity->url_rewrite,
+            new DefaultLanguage()
+        );
+
+        if ('index' !== $entity->page && 0 !== count($urlRewriteErrors)) {
+            throw new MetaConstraintException(
+                'The url rewrite is missing for the default language when editing meta record',
+                MetaConstraintException::INVALID_URL_REWRITE
+            );
+        }
+    }
+
+    /**
+     * @param Meta $entity
+     *
+     * @throws MetaConstraintException
+     */
+    private function assertIsUrlRewriteValid(Meta $entity)
+    {
+        foreach ($entity->url_rewrite as $idLang => $rewriteUrl) {
+            $errors = $this->validator->validate($rewriteUrl, new IsUrlRewrite());
+
+            if (0 !== count($errors)) {
+                throw new MetaConstraintException(
+                    sprintf(
+                        'Url rewrite %s for language with id %s is not valid',
+                        $rewriteUrl,
+                        $idLang
+                    )
+                );
+            }
+        }
     }
 }

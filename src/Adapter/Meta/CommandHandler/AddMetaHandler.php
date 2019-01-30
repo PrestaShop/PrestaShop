@@ -84,31 +84,8 @@ final class AddMetaHandler implements AddMetaHandlerInterface
      */
     public function handle(AddMetaCommand $command)
     {
-        $urlRewriteErrors = $this->validator->validate(
-            $command->getRewriteUrl(),
-            new DefaultLanguage()
-        );
-
-        if (0 !== count($urlRewriteErrors) && 'index' !== $command->getPageName()->getValue()) {
-            throw new MetaConstraintException(
-                'The url rewrite is missing for the default language when creating new meta record',
-                MetaConstraintException::INVALID_URL_REWRITE
-            );
-        }
-
-        foreach ($command->getRewriteUrl() as $idLang => $rewriteUrl) {
-            $errors = $this->validator->validate($rewriteUrl, new IsUrlRewrite());
-
-            if (0 !== count($errors)) {
-                throw new MetaConstraintException(
-                    sprintf(
-                        'Url rewrtie %s for language with id %s is not valid',
-                        $rewriteUrl,
-                        $idLang
-                    )
-                );
-            }
-        }
+        $this->assertUrlRewriteHasDefaultLanguage($command);
+        $this->assertIsUrlRewriteValid($command);
 
         try {
             $entity = new Meta();
@@ -143,5 +120,47 @@ final class AddMetaHandler implements AddMetaHandlerInterface
         $this->hookDispatcher->dispatchWithParameters('actionAdminMetaSave');
 
         return new MetaId((int) $entity->id);
+    }
+
+    /**
+     * @param AddMetaCommand $command
+     *
+     * @throws MetaConstraintException
+     */
+    private function assertUrlRewriteHasDefaultLanguage(AddMetaCommand $command)
+    {
+        $urlRewriteErrors = $this->validator->validate(
+            $command->getRewriteUrl(),
+            new DefaultLanguage()
+        );
+
+        if (0 !== count($urlRewriteErrors) && 'index' !== $command->getPageName()->getValue()) {
+            throw new MetaConstraintException(
+                'The url rewrite is missing for the default language when creating new meta record',
+                MetaConstraintException::INVALID_URL_REWRITE
+            );
+        }
+    }
+
+    /**
+     * @param AddMetaCommand $command
+     *
+     * @throws MetaConstraintException
+     */
+    private function assertIsUrlRewriteValid(AddMetaCommand $command)
+    {
+        foreach ($command->getRewriteUrl() as $idLang => $rewriteUrl) {
+            $errors = $this->validator->validate($rewriteUrl, new IsUrlRewrite());
+
+            if (0 !== count($errors)) {
+                throw new MetaConstraintException(
+                    sprintf(
+                        'Url rewrite %s for language with id %s is not valid',
+                        $rewriteUrl,
+                        $idLang
+                    )
+                );
+            }
+        }
     }
 }
