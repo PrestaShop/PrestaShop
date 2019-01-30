@@ -62,7 +62,9 @@ final class GetEmployeeForEditingHandler implements GetEmployeeForEditingHandler
             new Email($employee->email),
             (bool) $employee->optin,
             (int) $employee->default_tab,
-            (int) $employee->id_lang
+            (int) $employee->id_lang,
+            (bool) $employee->active,
+            (int) $employee->id_profile
         );
     }
 }
