@@ -25,7 +25,7 @@
 
 <div class="list-group" id="profileTabs" role="tablist">
   {% for profile in configurablePermissions.profiles %}
-    <a class="list-group-item list-group-item-action p-2"
+    <a class="list-group-item list-group-item-action p-2 {% if profile.id == employeeProfileId %}active{% endif %}"
        id="profileListItem_{{ profile.id }}"
        data-toggle="list"
        href="#profileTabContent_{{ profile.id }}"
