@@ -39,14 +39,14 @@
               'help': 'Name of the related page.'|trans({}, 'Admin.Shopparameters.Help')
             }) }}
 
-            {% set pageTilteHelpLabel %}
+            {% set pageTitleHelpLabel %}
               {{ 'Title of this page.'|trans({}, 'Admin.Shopparameters.Help') }}
               {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ '  &lt;&gt;;=#{}'}}
             {% endset %}
 
             {{ ps.form_group_row(metaForm.page_title, {}, {
               'label': 'Page title'|trans({}, 'Admin.Shopparameters.Feature'),
-              'help': pageTilteHelpLabel
+              'help': pageTitleHelpLabel
             }) }}
 
             {% set metaDescriptionHelpLabel %}

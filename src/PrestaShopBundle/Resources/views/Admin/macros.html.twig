@@ -88,7 +88,12 @@
     </a>
 {% endmacro %}
 
-{# Show form widget with errors rendered below it #}
+{#
+  Show form widget with errors rendered below it. It displays all nested errors for any form type.
+  If form type has errors_by_locale parameter set then the errors are being assigned to the locales and are displayed
+  in the popover template - on page load, user sees only the errors count but then user hovers over the element the popover
+  appears with the errors combined by language.
+#}
 {% macro form_widget_with_error(form, vars, extraVars) %}
   {% set vars = vars|default({}) %}
   {% set extraVars = extraVars|default({}) %}
