@@ -85,9 +85,7 @@
             </td>
           </tr>
 
-          {% if tab.children is not empty %}
-            
-          {% endif %}
+          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/level_2_tab_permissions.html.twig' with {'parentTab': tab} %}
         {% endfor %}
       {% endif %}
     </table>
