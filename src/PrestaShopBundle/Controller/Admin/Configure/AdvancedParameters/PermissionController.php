@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -38,18 +40,30 @@ class PermissionController extends FrameworkBundleAdminController
     /**
      * Show permissions configuration page
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $configurablePermissions = $this->getQueryBus()->handle(new GetPermissionsForConfiguration());
 
         dump($configurablePermissions);
 
+        $permissions = array('view', 'add', 'edit', 'delete');
+        $permissionIds = array('view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4);
+        $employeeProfileId = (int) $this->getContext()->employee->id_profile;
+
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/index.html.twig',
             [
+                'hasEditPermission' =>
+                    $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller') . '_'),
                 'configurablePermissions' => $configurablePermissions,
+
+                'permissions' => $permissions,
+                'permissionIds' => $permissionIds,
+                'employeeProfileId' => $employeeProfileId,
             ]
         );
     }
