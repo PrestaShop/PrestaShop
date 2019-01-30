@@ -154,9 +154,9 @@ class MetaType extends AbstractType
             ])
             ->add('url_rewrite', TranslatableType::class, [
                 'options' => [
-//                    'constraints' => [
-//                        new IsUrlRewrite(),
-//                    ],
+                    'constraints' => [
+                        new IsUrlRewrite(),
+                    ],
                 ],
             ])
         ;
@@ -168,13 +168,13 @@ class MetaType extends AbstractType
                 $form = $event->getForm();
                 $form->add('url_rewrite', TranslatableType::class, [
                     'error_bubbling' => false,
-//                    'constraints' => [
-//                        new DefaultLanguage(),
-//                    ],
+                    'constraints' => [
+                        new DefaultLanguage(),
+                    ],
                     'options' => [
-//                        'constraints' => [
-//                            new IsUrlRewrite(),
-//                        ],
+                        'constraints' => [
+                            new IsUrlRewrite(),
+                        ],
                     ],
                 ]);
             }
