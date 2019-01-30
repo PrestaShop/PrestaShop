@@ -105,6 +105,13 @@ class TranslatableType extends AbstractType
         return 'translatable';
     }
 
+    /**
+     * If there are more then one locale it gets nested errors and if found prepares the errors for usage in twig.
+     *
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $locales
+     */
     private function setErrorsByLocale(FormView $view, FormInterface $form, array $locales)
     {
         if (count($locales) <= 1) {

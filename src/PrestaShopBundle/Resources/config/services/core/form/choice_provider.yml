@@ -113,7 +113,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CategoryDeleteModeChoiceProvider'
     arguments:
     - '@translator'
-    -
+
   prestashop.core.form.choice_provider.customer_required_fields:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerRequiredFieldsChoiceProvider'
     arguments:
