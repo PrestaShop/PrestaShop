@@ -152,6 +152,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             $permissions[$profile['id']] = Profile::getProfileAccesses($profile['id']);
         }
 
+        dump($permissions);
+
         return $permissions;
     }
 }
