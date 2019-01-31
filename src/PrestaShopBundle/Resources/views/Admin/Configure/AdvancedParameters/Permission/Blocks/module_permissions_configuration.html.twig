@@ -29,14 +29,14 @@
   </h3>
   <div class="card-body">
     <table class="table">
-      <thead>
-      </thead>
       <tbody>
         {% if profilePermissionsForModules[profile.id] is empty %}
           <tr>
             <td colspan="3">{{ 'No module has been installed.'|trans({}, 'Admin.Notifications.Warning') }}</td>
           </tr>
         {% else %}
+          {% set enableBulkView, enableBulkConfigure, enableBulkUninstall = true, true, true %}
+
           {% for key, module in profilePermissionsForModules[profile.id] %}
             {% set canEmployeeViewModule = profilePermissionsForModules[employeeProfileId][key].view %}
             {% set canEmployeeConfigureModule = profilePermissionsForModules[employeeProfileId][key].configure %}
@@ -47,16 +47,17 @@
               <td>
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
+                    {% if hasEmployeeEditPermission and canEmployeeViewModule %}
+                      {% set checkboxAttributes = ' data-rel="' ~ module.id_module ~ '||view||' ~ profile.id ~ '"' %}
+                    {% else %}
+                      {% set enableBulkView = false %}
+                      {% set checkboxAttributes = ' disabled' %}
+                    {% endif %}
+
                     <input type="checkbox"
                            value="1"
                            {% if module.view %}checked{% endif %}
-                           {% if hasEmployeeEditPermission and canEmployeeViewModule %}
-                             class=""
-                             data-rel="{{ module.id_module }}||view||{{ profile.id }}"
-                           {% else %}
-                             class=""
-                             disabled
-                           {% endif %}
+                           {{ checkboxAttributes }}
                     >
                     <i class="md-checkbox-control"></i>
                   </label>
@@ -65,16 +66,17 @@
               <td>
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
+                    {% if hasEmployeeEditPermission and canEmployeeConfigureModule %}
+                      {% set checkboxAttributes = ' data-rel="' ~  module.id_module  ~ '||configure||' ~ profile.id ~ '"' %}
+                    {% else %}
+                      {% set enableBulkConfigure = false %}
+                      {% set checkboxAttributes = ' disabled' %}
+                    {% endif %}
+
                     <input type="checkbox"
                            value="1"
                            {% if module.view %}checked{% endif %}
-                           {% if hasEmployeeEditPermission and canEmployeeConfigureModule %}
-                             class=""
-                             data-rel="{{ module.id_module }}||configure||{{ profile.id }}"
-                           {% else %}
-                             class=""
-                             disabled
-                           {% endif %}
+                           {{ checkboxAttributes }}
                     >
                     <i class="md-checkbox-control"></i>
                   </label>
@@ -83,16 +85,17 @@
               <td>
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
+                    {% if hasEmployeeEditPermission and canEmployeeUninstallModule %}
+                      {% set checkboxAttributes = ' data-rel="' ~ module.id_module ~ '||uninstall||' ~ profile.id ~ '"' %}
+                    {% else %}
+                      {% set enableBulkConfigure = false %}
+                      {% set enableBulkUninstall = ' disabled' %}
+                    {% endif %}
+
                     <input type="checkbox"
                            value="1"
                            {% if module.view %}checked{% endif %}
-                           {% if hasEmployeeEditPermission and canEmployeeViewModule %}
-                             class=""
-                             data-rel="{{ module.id_module }}||view||{{ profile.id }}"
-                           {% else %}
-                             class=""
-                             disabled
-                           {% endif %}
+                           {{ checkboxAttributes }}
                     >
                     <i class="md-checkbox-control"></i>
                   </label>
@@ -102,6 +105,65 @@
           {% endfor %}
         {% endif %}
       </tbody>
+      <thead>
+        <tr>
+          <th></th>
+          <th>
+            {% if hasEmployeeEditPermission and enableBulkView %}
+              {% set checkboxAttributes = ' data-rel="-1||view||' ~ profile.id ~ '"' %}
+            {% else %}
+              {% set checkboxAttributes = ' disabled' %}
+            {% endif %}
+
+            <div class="md-checkbox md-checkbox-inline">
+              <label>
+                <input type="checkbox"
+                       value="1"
+                       {{ checkboxAttributes }}
+                >
+                <i class="md-checkbox-control"></i>
+              </label>
+            </div>
+            {{ 'View'|trans({}, 'Admin.Actions') }}
+          </th>
+          <th>
+            {% if hasEmployeeEditPermission and enableBulkConfigure %}
+              {% set checkboxAttributes = ' data-rel="-1||configure||' ~ profile.id ~ '"' %}
+            {% else %}
+              {% set checkboxAttributes = ' disabled' %}
+            {% endif %}
+
+            <div class="md-checkbox md-checkbox-inline">
+              <label>
+                <input type="checkbox"
+                       value="1"
+                  {{ checkboxAttributes }}
+                >
+                <i class="md-checkbox-control"></i>
+              </label>
+            </div>
+            {{ 'Configure'|trans({}, 'Admin.Actions') }}
+          </th>
+          <th>
+            {% if hasEmployeeEditPermission and enableBulkUninstall %}
+              {% set checkboxAttributes = ' data-rel="-1||uninstall||' ~ profile.id ~ '"' %}
+            {% else %}
+              {% set checkboxAttributes = ' disabled' %}
+            {% endif %}
+
+            <div class="md-checkbox md-checkbox-inline">
+              <label>
+                <input type="checkbox"
+                       value="1"
+                  {{ checkboxAttributes }}
+                >
+                <i class="md-checkbox-control"></i>
+              </label>
+            </div>
+            {{ 'Uninstall'|trans({}, 'Admin.Actions') }}
+          </th>
+        </tr>
+      </thead>
     </table>
   </div>
 </div>
