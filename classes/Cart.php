@@ -1914,7 +1914,7 @@ class CartCore extends ObjectModel
             return 0;
         }
         if ($virtual && $type == Cart::BOTH) {
-            $type = Cart::BOTH_WITHOUT_SHIPPING;
+            $type = Cart::BOTH;
         }
 
         // filter products
