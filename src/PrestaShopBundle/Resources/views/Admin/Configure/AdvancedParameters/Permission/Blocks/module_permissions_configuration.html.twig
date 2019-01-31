@@ -28,7 +28,12 @@
     {{ 'Modules'|trans({}, 'Admin.Global') }}
   </h3>
   <div class="card-body">
-    <table class="table">
+    <table class="table"
+           id="modulePermissionsTable"
+           data-url="{{ path('admin_permissions_update_module_permissions') }}"
+           data-success-message="{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}"
+           data-error-message="{{ 'Unable to update settings.'|trans({}, 'Admin.Notifications.Error') }}"
+    >
       <tbody>
         {% if profilePermissionsForModules[profile.id] is empty %}
           <tr>
@@ -48,7 +53,7 @@
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
                     {% if hasEmployeeEditPermission and canEmployeeViewModule %}
-                      {% set checkboxAttributes = ' data-rel="' ~ module.id_module ~ '||view||' ~ profile.id ~ '"' %}
+                      {% set checkboxAttributes = ' data-rel=' ~ module.id_module ~ '||view||' ~ profile.id %}
                     {% else %}
                       {% set enableBulkView = false %}
                       {% set checkboxAttributes = ' disabled' %}
@@ -56,6 +61,7 @@
 
                     <input type="checkbox"
                            value="1"
+                           class="js-module-permission-checkbox"
                            {% if module.view %}checked{% endif %}
                            {{ checkboxAttributes }}
                     >
@@ -67,7 +73,7 @@
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
                     {% if hasEmployeeEditPermission and canEmployeeConfigureModule %}
-                      {% set checkboxAttributes = ' data-rel="' ~  module.id_module  ~ '||configure||' ~ profile.id ~ '"' %}
+                      {% set checkboxAttributes = ' data-rel=' ~  module.id_module  ~ '||configure||' ~ profile.id %}
                     {% else %}
                       {% set enableBulkConfigure = false %}
                       {% set checkboxAttributes = ' disabled' %}
@@ -75,6 +81,7 @@
 
                     <input type="checkbox"
                            value="1"
+                           class="js-module-permission-checkbox"
                            {% if module.view %}checked{% endif %}
                            {{ checkboxAttributes }}
                     >
@@ -86,7 +93,7 @@
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
                     {% if hasEmployeeEditPermission and canEmployeeUninstallModule %}
-                      {% set checkboxAttributes = ' data-rel="' ~ module.id_module ~ '||uninstall||' ~ profile.id ~ '"' %}
+                      {% set checkboxAttributes = ' data-rel=' ~ module.id_module ~ '||uninstall||' ~ profile.id %}
                     {% else %}
                       {% set enableBulkConfigure = false %}
                       {% set enableBulkUninstall = ' disabled' %}
@@ -94,6 +101,7 @@
 
                     <input type="checkbox"
                            value="1"
+                           class="js-module-permission-checkbox"
                            {% if module.view %}checked{% endif %}
                            {{ checkboxAttributes }}
                     >
@@ -109,17 +117,13 @@
         <tr>
           <th></th>
           <th>
-            {% if hasEmployeeEditPermission and enableBulkView %}
-              {% set checkboxAttributes = ' data-rel="-1||view||' ~ profile.id ~ '"' %}
-            {% else %}
-              {% set checkboxAttributes = ' disabled' %}
-            {% endif %}
-
             <div class="md-checkbox md-checkbox-inline">
               <label>
                 <input type="checkbox"
                        value="1"
-                       {{ checkboxAttributes }}
+                       data-rel="-1||view||{{ profile.id }}"
+                       class="js-module-permission-checkbox"
+                       {% if not hasEmployeeEditPermission or not enableBulkView %}disabled{% endif %}
                 >
                 <i class="md-checkbox-control"></i>
               </label>
@@ -127,17 +131,13 @@
             {{ 'View'|trans({}, 'Admin.Actions') }}
           </th>
           <th>
-            {% if hasEmployeeEditPermission and enableBulkConfigure %}
-              {% set checkboxAttributes = ' data-rel="-1||configure||' ~ profile.id ~ '"' %}
-            {% else %}
-              {% set checkboxAttributes = ' disabled' %}
-            {% endif %}
-
             <div class="md-checkbox md-checkbox-inline">
               <label>
                 <input type="checkbox"
                        value="1"
-                  {{ checkboxAttributes }}
+                       data-rel="-1||configure||{{ profile.id }}"
+                       class="js-module-permission-checkbox"
+                       {% if not hasEmployeeEditPermission or not enableBulkConfigure %}disabled{% endif %}
                 >
                 <i class="md-checkbox-control"></i>
               </label>
@@ -145,17 +145,13 @@
             {{ 'Configure'|trans({}, 'Admin.Actions') }}
           </th>
           <th>
-            {% if hasEmployeeEditPermission and enableBulkUninstall %}
-              {% set checkboxAttributes = ' data-rel="-1||uninstall||' ~ profile.id ~ '"' %}
-            {% else %}
-              {% set checkboxAttributes = ' disabled' %}
-            {% endif %}
-
             <div class="md-checkbox md-checkbox-inline">
               <label>
                 <input type="checkbox"
                        value="1"
-                  {{ checkboxAttributes }}
+                       data-rel="-1||uninstall||{{ profile.id }}"
+                       class="js-module-permission-checkbox"
+                       {% if not hasEmployeeEditPermission or not enableBulkUninstall %}disabled{% endif %}
                 >
                 <i class="md-checkbox-control"></i>
               </label>
