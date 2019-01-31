@@ -121,7 +121,7 @@ class PermissionController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function updateModulePermissions(Request $request)
+    public function updateModulePermissionsAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json(['success' => false]);
