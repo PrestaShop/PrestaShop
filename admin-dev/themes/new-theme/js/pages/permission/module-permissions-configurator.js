@@ -48,6 +48,12 @@ export default class ModulePermissionsConfigurator {
 
     [moduleId, permission, profileId] = $checkbox.data('rel').split('||');
 
+    if ('-1' === moduleId) {
+      const permissionColumn = $checkbox.data('permission');
+
+      this.$table.find(`.js-module-${permissionColumn}-checkbox`).attr('checked', isChecked);
+    }
+
     $.ajax(this.$table.data('url'), {
       method: 'POST',
       data: {
