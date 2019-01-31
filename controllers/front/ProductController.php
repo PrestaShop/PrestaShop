@@ -436,6 +436,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
+            'product_title' => $product['title'],
         )));
 
         return;
@@ -1078,6 +1079,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $group_reduction = Group::getReduction((int) $this->context->cookie->id_customer) / 100;
         }
         $product_full['customer_group_discount'] = $group_reduction;
+        $product_full['title'] = $this->getProductPageTitle();
 
         $presenter = $this->getProductPresenter();
 
@@ -1278,18 +1280,39 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $page['body_classes']['product-customizable'] = true;
         }
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
+        $page['meta']['title'] = $this->getProductPageTitle($page['meta']);
 
-        $idProductAttribute = $this->getIdProductAttributeByRequest();
+        return $page;
+    }
+
+    /**
+     * @param array|null $meta
+     *
+     * @return string
+     */
+    private function getProductPageTitle(array $meta = null)
+    {
+        $title = $this->product->name;
+        if (isset($meta['title'])) {
+            $title = $meta['title'];
+        } elseif (isset($meta['meta_title'])) {
+            $title = $meta['meta_title'];
+        }
+        if (!Configuration::get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
+            return $title;
+        }
+
+        $idProductAttribute = $this->getIdProductAttributeByRequestOrGroup();
         if ($idProductAttribute) {
             $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
             if (is_array($attributes) && count($attributes) > 0) {
                 foreach ($attributes as $attribute) {
-                    $page['meta']['title'] .= ' ' . $attribute['group_name'] . ' ' . $attribute['attribute_name'];
+                    $title .= ' ' . $attribute['group_name'] . ' ' . $attribute['attribute_name'];
                 }
             }
         }
 
-        return $page;
+        return $title;
     }
 
     /**

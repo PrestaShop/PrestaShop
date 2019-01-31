@@ -320,11 +320,24 @@ $(document).ready(() => {
     if (!args.product_url || !args.id_product_attribute) {
       return;
     }
+
+    // If quickview modal is present we are not on product page, so we don't change the url nor title
+    const quickView = $('.modal.quickview');
+    if (quickView.length) {
+      return;
+    }
+
+    let pageTitle = document.title;
+    if (args.product_title) {
+      pageTitle = args.product_title;
+      $(document).attr('title', pageTitle);
+    }
+
     window.history.replaceState(
       {
         id_product_attribute: args.id_product_attribute
       },
-      document.title,
+      pageTitle,
       args.product_url
     );
   });
