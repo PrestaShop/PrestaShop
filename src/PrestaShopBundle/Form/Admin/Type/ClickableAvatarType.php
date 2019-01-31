@@ -42,7 +42,6 @@ class ClickableAvatarType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['click_url'] = $options['click_url'];
-        $view->vars['image_url'] = $options['image_url'];
         $view->vars['image_alt'] = $options['image_alt'];
     }
 
@@ -54,11 +53,10 @@ class ClickableAvatarType extends AbstractType
         $resolver
             ->setDefaults([
                 'click_url' => 'http://www.prestashop.com/forums/index.php?app=core&module=usercp',
-                'image_url' => '',
                 'image_alt' => '',
+                'required' => false,
             ])
             ->setAllowedTypes('click_url', 'string')
-            ->setAllowedTypes('image_url', 'string')
             ->setAllowedTypes('image_alt', 'string')
         ;
     }
