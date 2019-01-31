@@ -875,7 +875,7 @@ class AdminProductsControllerCore extends AdminController
                 $features = isset($form['step1']['features']) ? $form['step1']['features'] : array();
                 if (is_array($features)) {
                     foreach ($features as $feature) {
-                        if (!(int)($feature['feature'])) {
+                        if (!(int) ($feature['feature'])) {
                             continue;
                         }
                         if (!empty($feature['value'])) {
