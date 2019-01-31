@@ -30,12 +30,16 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInte
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Class GridFactory is responsible for creating final Grid instance.
  */
 final class GridFactory implements GridFactoryInterface
 {
+    use HookDispatcherAwareTrait;
+
     /**
      * @var GridDefinitionFactoryInterface
      */
@@ -73,6 +77,10 @@ final class GridFactory implements GridFactoryInterface
     {
         $definition = $this->definitionFactory->getDefinition();
         $data = $this->dataFactory->getData($searchCriteria);
+
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDataModifier', [
+            'data' => $data,
+        ]);
 
         $filterForm = $this->filterFormFactory->create($definition);
         $filterForm->setData($searchCriteria->getFilters());
