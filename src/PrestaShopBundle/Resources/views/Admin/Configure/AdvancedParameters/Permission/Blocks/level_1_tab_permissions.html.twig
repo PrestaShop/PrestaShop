@@ -27,14 +27,13 @@
   {% set profileTabPermissions = configurablePermissions.profilePermissionsForTabs[profile.id] %}
   {% set employeeProfileTabPermissions = configurablePermissions.profilePermissionsForTabs[employeeProfileId] %}
   {% set resultPermissions = 0 %}
-  {% set hasAllPermissions = true %}
 
   <tr>
     <td>&raquo;<strong>{{ tab.name }}</strong></td>
     {% for permission in permissions %}
       {% set permissionId = permissionIds[permission] %}
       <td>
-        {% if hasEditPermission and employeeProfileTabPermissions[tab.id][permission] %}
+        {% if hasEmployeeEditPermission and employeeProfileTabPermissions[tab.id][permission] %}
           <div class="md-checkbox md-checkbox-inline">
             <label>
               <input type="checkbox"
@@ -47,7 +46,6 @@
             </label>
           </div>
         {% else %}
-          {% set hasAllPermissions, enableBulkView = false, false %}
           <div class="md-checkbox md-checkbox-inline">
             <label>
               <input type="checkbox"
