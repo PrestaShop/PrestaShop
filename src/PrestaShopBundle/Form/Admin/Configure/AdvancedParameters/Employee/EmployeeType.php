@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\ClickableAvatarType;
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
@@ -62,18 +63,26 @@ final class EmployeeType extends AbstractType
     private $profilesChoices;
 
     /**
+     * @var bool
+     */
+    private $isMultistoreFeatureActive;
+
+    /**
      * @param array $languagesChoices
      * @param array $tabChoices
      * @param array $profilesChoices
+     * @param bool $isMultistoreFeatureActive
      */
     public function __construct(
         array $languagesChoices,
         array $tabChoices,
-        array $profilesChoices
+        array $profilesChoices,
+        $isMultistoreFeatureActive
     ) {
         $this->languagesChoices = $languagesChoices;
         $this->tabChoices = $tabChoices;
         $this->profilesChoices = $profilesChoices;
+        $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
     }
 
     /**
@@ -143,5 +152,16 @@ final class EmployeeType extends AbstractType
                 'choices' => $this->profilesChoices,
             ])
         ;
+
+        if ($this->isMultistoreFeatureActive) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ]);
+        }
     }
 }

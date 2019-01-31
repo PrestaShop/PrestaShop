@@ -82,6 +82,11 @@ class EditableEmployee
     private $profileId;
 
     /**
+     * @var array
+     */
+    private $shopAssociation;
+
+    /**
      * @param EmployeeId $employeeId
      * @param FirstName $firstName
      * @param LastName $lastName
@@ -91,6 +96,7 @@ class EditableEmployee
      * @param int $languageId
      * @param bool $active
      * @param int $profileId
+     * @param array $shopAssociation
      */
     public function __construct(
         EmployeeId $employeeId,
@@ -101,7 +107,8 @@ class EditableEmployee
         $defaultPageId,
         $languageId,
         $active,
-        $profileId
+        $profileId,
+        array $shopAssociation
     ) {
         $this->employeeId = $employeeId;
         $this->firstName = $firstName;
@@ -112,6 +119,7 @@ class EditableEmployee
         $this->languageId = $languageId;
         $this->active = $active;
         $this->profileId = $profileId;
+        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -184,5 +192,13 @@ class EditableEmployee
     public function getProfileId()
     {
         return $this->profileId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShopAssociation()
+    {
+        return $this->shopAssociation;
     }
 }

@@ -64,6 +64,7 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
             'language' => $editableEmployee->getLanguageId(),
             'active' => $editableEmployee->isActive(),
             'profile' => $editableEmployee->getProfileId(),
+            'shop_association' => $editableEmployee->getShopAssociation(),
         ];
     }
 

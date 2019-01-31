@@ -89,6 +89,11 @@
         {{ ps.form_group_row(employeeForm.profile, {}, {
           'label': 'Permission profile'|trans({}, 'Admin.Advparameters.Feature')
         }) }}
+
+        {{ ps.form_group_row(employeeForm.shop_association, {}, {
+          'label': 'Shop association'|trans({}, 'Admin.Global'),
+          'help': 'Select the shops the employee is allowed to access.'|trans({}, 'Admin.Advparameters.Help')
+        }) }}
       </div>
 
       {{ form_rest(employeeForm) }}
