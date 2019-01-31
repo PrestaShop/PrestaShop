@@ -103,35 +103,49 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         $filtersClass = $argument->getType();
         list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
 
+        /** @var Filters $filters */
+        $filters = new $filtersClass($filtersClass::getDefaults());
+
+        //Override with saved filters if present
+        if ($request->isMethod('GET')) {
+            /** @var Filters $savedFilters */
+            $savedFilters = $this->searchParameters->getFiltersFromRepository(
+                $this->employee->getId(),
+                $this->shopId,
+                $controller,
+                $action,
+                $filtersClass
+            );
+
+            if ($savedFilters) {
+                $filters->add($savedFilters->all());
+            }
+        }
+
+        //Then override with query filters if present
         $query = $request->query;
-        $doesTheUrlContainsFilters = ($query->has('filters') || $query->has('limit') || $query->has('sortOrder'));
+        $queryHasFilters = false;
+        foreach (SearchParametersInterface::FILTER_TYPES as $filterType) {
+            if ($query->has($filterType)) {
+                $queryHasFilters = true;
+                break;
+            }
+        }
+        if ($queryHasFilters) {
+            /** @var Filters $queryFilters */
+            $queryFilters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
+            $filters->add($queryFilters->all());
 
-        if ($doesTheUrlContainsFilters) {
-            $filters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
-
+            //Update the saved filters (which have been modified by the query)
+            $filtersToSave = $filters->all();
+            unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
             $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
                 $this->employee->getId(),
                 $this->shopId,
-                $filters->all(),
+                $filtersToSave,
                 $controller,
                 $action
             );
-        } else {
-            // do we have a saved search in DB?
-            if ($request->isMethod('GET')) {
-                $filters = $this->searchParameters->getFiltersFromRepository(
-                    $this->employee->getId(),
-                    $this->shopId,
-                    $controller,
-                    $action,
-                    $filtersClass
-                );
-            }
-
-            if (empty($filters)) {
-                $defaultFilters = $filtersClass::getDefaults();
-                $filters = new $filtersClass($defaultFilters);
-            }
         }
 
         yield $filters;
