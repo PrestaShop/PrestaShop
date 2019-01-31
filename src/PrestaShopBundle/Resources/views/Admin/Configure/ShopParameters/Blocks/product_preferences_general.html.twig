@@ -35,10 +35,17 @@
     <div class="card-block row">
       <div class="card-text">
         <div class="form-group row">
-          {{ ps.label_with_help(('Catalog mode'|trans), ('The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          {{ ps.label_with_help(('Catalog mode'|trans), ('Catalog mode makes your store look like a retail website.'|trans({}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(generalForm.catalog_mode) }}
             {{ form_widget(generalForm.catalog_mode) }}
+          </div>
+        </div>
+        <div class="form-group row catalog-mode-option">
+          {{ ps.label_with_help(('Show prices'|trans), ('You can display prices in catalog mode, only cart actions are hidden.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.catalog_mode_with_prices) }}
+            {{ form_widget(generalForm.catalog_mode_with_prices) }}
           </div>
         </div>
         <div class="form-group row">

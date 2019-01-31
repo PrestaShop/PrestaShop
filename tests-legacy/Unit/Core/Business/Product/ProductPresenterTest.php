@@ -47,6 +47,7 @@ class PriceFormatter extends BasePricePresenter
 
 class ProductPresenterTest extends UnitTestCase
 {
+    /** @var ProductPresentationSettings */
     private $settings;
     private $product;
     private $language;
@@ -126,9 +127,16 @@ class ProductPresenterTest extends UnitTestCase
         return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter', $field);
     }
 
-    public function testPriceShouldBeShownInCatalogMode()
+    public function testPriceShouldNotBeShownInCatalogMode()
     {
         $this->settings->catalog_mode = true;
+        $this->assertFalse($this->getPresentedProduct('show_price'));
+    }
+
+    public function testPriceShouldBeShownInCatalogModeWithPrices()
+    {
+        $this->settings->catalog_mode = true;
+        $this->settings->catalog_mode_with_prices = true;
         $this->assertTrue($this->getPresentedProduct('show_price'));
     }
 

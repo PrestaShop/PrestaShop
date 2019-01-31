@@ -52,6 +52,7 @@ class GeneralConfiguration implements DataConfigurationInterface
     {
         return [
             'catalog_mode' => $this->configuration->getBoolean('PS_CATALOG_MODE'),
+            'catalog_mode_with_prices' => $this->configuration->getBoolean('PS_CATALOG_MODE_WITH_PRICES'),
             'new_days_number' => $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT'),
             'short_description_limit' => $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
             'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'),
@@ -68,7 +69,9 @@ class GeneralConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_CATALOG_MODE', (int) $config['catalog_mode']);
+            $catalogMode = (int) $config['catalog_mode'];
+            $this->configuration->set('PS_CATALOG_MODE', $catalogMode);
+            $this->configuration->set('PS_CATALOG_MODE_WITH_PRICES', $catalogMode ? (int) $config['catalog_mode_with_prices'] : 0);
             $this->configuration->set('PS_NB_DAYS_NEW_PRODUCT', (int) $config['new_days_number']);
             $this->configuration->set('PS_PRODUCT_SHORT_DESC_LIMIT', (int) $config['short_description_limit']);
             $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
@@ -87,6 +90,7 @@ class GeneralConfiguration implements DataConfigurationInterface
         $resolver = new OptionsResolver();
         $resolver->setRequired([
             'catalog_mode',
+            'catalog_mode_with_prices',
             'new_days_number',
             'short_description_limit',
             'quantity_discount',
