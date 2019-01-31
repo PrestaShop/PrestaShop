@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 /**
  * Updates tab permissions for employee's profile
  */
-class UpdateProfileTabPermissionsCommand
+class UpdateTabPermissionsCommand
 {
     /**
      * @var ProfileId

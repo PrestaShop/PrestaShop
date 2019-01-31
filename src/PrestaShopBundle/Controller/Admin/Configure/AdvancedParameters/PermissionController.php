@@ -26,9 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -68,5 +71,34 @@ class PermissionController extends FrameworkBundleAdminController
                 'employeeProfileId' => $employeeProfileId
             ]
         );
+    }
+
+    /**
+     * Update tab permissions for profile
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updateTabPermissionsAction(Request $request)
+    {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json(['success' => false]);
+        }
+
+        try {
+            $this->getQueryBus()->handle(new UpdateTabPermissionsCommand(
+                $request->request->getInt('profile_id'),
+                $request->request->getInt('tab_id'),
+                $request->request->get('permission'),
+                $request->request->getBoolean('expected_status')
+            ));
+
+            $response['success'] = true;
+        } catch (ProfileException $e) {
+            $response['false'] = true;
+        }
+
+        return $this->json($response);
     }
 }
