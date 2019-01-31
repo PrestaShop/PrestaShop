@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,26 +51,36 @@ class PermissionController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        /** @var ConfigurablePermissions $configurablePermissions */
         $configurablePermissions = $this->getQueryBus()->handle(new GetPermissionsForConfiguration(
             (int) $this->getContext()->employee->id_profile
         ));
-
-        dump($configurablePermissions);
 
         $permissions = array('view', 'add', 'edit', 'delete');
         $permissionIds = array('view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4);
         $employeeProfileId = (int) $this->getContext()->employee->id_profile;
 
+        $profilePermissionsForModules = [];
+        foreach ($configurablePermissions->getProfiles() as $profile) {
+            $profilePermissionsForModules[$profile['id']] = \Module::getModulesAccessesByIdProfile($profile['id']);
+            uasort($profilePermissionsForModules[$profile['id']], function($a, $b) {
+                return strnatcmp($a['name'], $b['name']);
+            });
+        }
+
+        dump($profilePermissionsForModules);
+
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/index.html.twig',
             [
-                'hasEditPermission' =>
+                'hasEmployeeEditPermission' =>
                     $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller') . '_'),
                 'configurablePermissions' => $configurablePermissions,
+                'profilePermissionsForModules' => $profilePermissionsForModules,
 
                 'permissions' => $permissions,
                 'permissionIds' => $permissionIds,
-                'employeeProfileId' => $employeeProfileId
+                'employeeProfileId' => $employeeProfileId,
             ]
         );
     }
