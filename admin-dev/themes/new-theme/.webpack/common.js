@@ -49,6 +49,7 @@ module.exports = {
     manufacturer_address: './js/pages/manufacturer/address',
     cms_page: './js/pages/cms-page',
     form_popover_error: './js/components/form/form-popover-error',
+    tax: './js/pages/tax',
     permission: './js/pages/permission',
   },
   output: {
