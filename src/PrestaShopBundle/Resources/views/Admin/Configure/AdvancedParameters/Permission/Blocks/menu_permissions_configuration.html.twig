@@ -32,119 +32,15 @@
   <div class="card-body">
     <table class="table">
       <thead>
-        <tr>
-          <th></th>
-          <th>
-            <div class="md-checkbox md-checkbox-inline">
-              <label>
-                <input type="checkbox"
-                />
-                <i class="md-checkbox-control"></i>
-              </label>
-            </div>
-            {{ 'View'|trans({}, 'Admin.Actions') }}
-          </th>
-          <th>
-            <div class="md-checkbox md-checkbox-inline">
-              <label>
-                <input type="checkbox"
-                />
-                <i class="md-checkbox-control"></i>
-              </label>
-            </div>
-            {{ 'Add'|trans({}, 'Admin.Actions') }}
-          </th>
-          <th>
-            <div class="md-checkbox md-checkbox-inline">
-              <label>
-                <input type="checkbox"
-                />
-                <i class="md-checkbox-control"></i>
-              </label>
-            </div>
-            {{ 'Edit'|trans({}, 'Admin.Actions') }}
-          </th>
-          <th>
-            <div class="md-checkbox md-checkbox-inline">
-              <label>
-                <input type="checkbox"
-                />
-                <i class="md-checkbox-control"></i>
-              </label>
-            </div>
-            {{ 'Delete'|trans({}, 'Admin.Actions') }}
-          </th>
-          <th>
-            <div class="md-checkbox md-checkbox-inline">
-              <label>
-                <input type="checkbox"
-                />
-                <i class="md-checkbox-control"></i>
-              </label>
-            </div>
-            {{ 'All'|trans({}, 'Admin.Actions') }}
-          </th>
-        </tr>
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/permissions_bulk_configuration.html.twig' %}
       </thead>
-
       <tbody>
         {% if configurablePermissions.tabs is empty %}
           <tr>
             <td colspan="6">{{ 'No menu'|trans({}, 'Admin.Advparameters.Feature') }}</td>
           </tr>
         {% else %}
-          {% for tab in configurablePermissions.tabs %}
-            {% set profileTabPermissions = configurablePermissions.profilePermissionsForTabs[profile.id] %}
-            {% dump profileTabPermissions %}
-            {% set employeeProfileTabPermissions = configurablePermissions.profilePermissionsForTabs[employeeProfileId] %}
-            {% set resultPermissions = 0 %}
-            {% set hasAllPermissions = true %}
-
-            <tr>
-              <td>&raquo;<strong>{{ tab.name }}</strong></td>
-              {% for permission in permissions %}
-                {% set permissionId = permissionIds[permission] %}
-                <td>
-                  {% if hasEditPermission and employeeProfileTabPermissions[tab.id][permission] %}
-                    <div class="md-checkbox md-checkbox-inline">
-                      <label>
-                        <input type="checkbox"
-                               data-id="{{ permissionId }}"
-                               data-parent="0"
-                               data-type="{{ permission }}"
-                               {% if profileTabPermissions[tab.id][permission] %}checked{% endif %}
-                        />
-                        <i class="md-checkbox-control"></i>
-                      </label>
-                    </div>
-                  {% else %}
-                    {% set hasAllPermissions, enableBulkView = false, false %}
-                    <div class="md-checkbox md-checkbox-inline">
-                      <label>
-                        <input type="checkbox"
-                               disabled
-                               {% if configurablePermissions.profilePermissionsForTabs[tab.id][permission] %}checked{% endif %}
-                        />
-                        <i class="md-checkbox-control"></i>
-                      </label>
-                    </div>
-                  {% endif %}
-                </td>
-                {% set resultPermissions = resultPermissions + profileTabPermissions[tab.id][permission] %}
-              {% endfor %}
-              <td>
-                <div class="md-checkbox md-checkbox-inline">
-                  <label>
-                    <input type="checkbox"
-                    />
-                    <i class="md-checkbox-control"></i>
-                  </label>
-                </div>
-              </td>
-            </tr>
-
-            {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/level_2_tab_permissions.html.twig' with {'parentTab': tab} %}
-          {% endfor %}
+          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/level_1_tab_permissions.html.twig' %}
         {% endif %}
       </tbody>
     </table>
