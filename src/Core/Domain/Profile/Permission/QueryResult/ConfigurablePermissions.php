@@ -44,33 +44,20 @@ class ConfigurablePermissions
     private $tabs;
 
     /**
-     * @var bool
+     * @var array
      */
-    private $bulkViewPermissionConfiguration;
-
-    /**
-     * @var bool
-     */
-    private $bulkAddPermissionConfiguration;
-
-    /**
-     * @var bool
-     */
-    private $bulkEditPermissionConfiguration;
-
-    /**
-     * @var bool
-     */
-    private $bulkDeletePermissionConfiguration;
+    private $bulkConfiguration;
 
     public function __construct(
         array $profilePermissionsForTabs,
         array $profiles,
-        array $tabs
+        array $tabs,
+        array $bulkConfiguration
     ) {
         $this->profilePermissionsForTabs = $profilePermissionsForTabs;
         $this->profiles = $profiles;
         $this->tabs = $tabs;
+        $this->bulkConfiguration = $bulkConfiguration;
     }
 
     /**
@@ -95,5 +82,55 @@ class ConfigurablePermissions
     public function getTabs()
     {
         return $this->tabs;
+    }
+
+    /**
+     * @param int $profileId
+     *
+     * @return bool
+     */
+    public function isBulkViewConfigurationEnabled($profileId)
+    {
+        return $this->bulkConfiguration[$profileId]['view'];
+    }
+
+    /**
+     * @param int $profileId
+     *
+     * @return bool
+     */
+    public function isBulkAddConfigurationEnabled($profileId)
+    {
+        return $this->bulkConfiguration[$profileId]['add'];
+    }
+
+    /**
+     * @param int $profileId
+     *
+     * @return bool
+     */
+    public function isBulkEditConfigurationEnabled($profileId)
+    {
+        return $this->bulkConfiguration[$profileId]['edit'];
+    }
+
+    /**
+     * @param int $profileId
+     *
+     * @return bool
+     */
+    public function isBulkDeleteConfigurationEnabled($profileId)
+    {
+        return $this->bulkConfiguration[$profileId]['delete'];
+    }
+
+    /**
+     * @param int $profileId
+     *
+     * @return bool
+     */
+    public function isBulkAllConfigurationEnabled($profileId)
+    {
+        return $this->bulkConfiguration[$profileId]['all'];
     }
 }
