@@ -98,7 +98,9 @@
         {% endif %}
       </div>
 
-      {{ form_rest(employeeForm) }}
+      {% block employee_form_rest %}
+        {{ form_rest(employeeForm) }}
+      {% endblock %}
     </div>
     <div class="card-footer">
       <a href="{{ path('admin_employees_index') }}" class="btn btn-outline-secondary">
