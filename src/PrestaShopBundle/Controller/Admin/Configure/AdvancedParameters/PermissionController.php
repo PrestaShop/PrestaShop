@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -96,7 +97,36 @@ class PermissionController extends FrameworkBundleAdminController
 
             $response['success'] = true;
         } catch (ProfileException $e) {
-            $response['false'] = true;
+            $response['success'] = false;
+        }
+
+        return $this->json($response);
+    }
+
+    /**
+     * Updates module permissions for profile
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updateModulePermissions(Request $request)
+    {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json(['success' => false]);
+        }
+
+        try {
+            $this->getQueryBus()->handle(new UpdateModulePermissionsCommand(
+                $request->request->getInt('profile_id'),
+                $request->request->getInt('module_id'),
+                $request->request->get('permission'),
+                $request->request->getBoolean('expected_status')
+            ));
+
+            $response['success'] = true;
+        } catch (ProfileException $e) {
+            $response['success'] = false;
         }
 
         return $this->json($response);
