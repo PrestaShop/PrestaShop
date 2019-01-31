@@ -98,11 +98,11 @@
             'help': 'Select the shops the employee is allowed to access.'|trans({}, 'Admin.Advparameters.Help')
           }) }}
         {% endif %}
-      </div>
 
-      {% block employee_form_rest %}
-        {{ form_rest(employeeForm) }}
-      {% endblock %}
+        {% block employee_form_rest %}
+          {{ form_rest(employeeForm) }}
+        {% endblock %}
+      </div>
     </div>
     <div class="card-footer">
       <a href="{{ path('admin_employees_index') }}" class="btn btn-outline-secondary">
