@@ -232,8 +232,8 @@
 {%- block clickable_avatar_widget -%}
   {%- set classes = (attr.class|default('') ~ ' img-thumbnail clickable-avatar')|trim -%}
 
-  <a href="{{ form.vars.click_url }}" target="_blank">
-    <img class="{{ classes }}" src="{{ form.vars.value }}" alt="{{ form.vars.image_alt }}">
+  <a href="{{ click_url }}" target="_blank">
+    <img class="{{ classes }}" src="{{ value }}" alt="{{ image_alt }}">
   </a>
 {%- endblock clickable_avatar_widget -%}
 
