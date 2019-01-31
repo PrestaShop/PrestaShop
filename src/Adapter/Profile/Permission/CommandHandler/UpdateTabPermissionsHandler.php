@@ -27,19 +27,19 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler;
 
 use Access;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateProfileTabPermissionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\CommandHandler\UpdateProfileTabPermissionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\CommandHandler\UpdateTabPermissionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\PermissionUpdateException;
 
 /**
  * @internal
  */
-final class UpdateProfileTabPermissionsHandler implements UpdateProfileTabPermissionsHandlerInterface
+final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProfileTabPermissionsCommand $command)
+    public function handle(UpdateTabPermissionsCommand $command)
     {
         $access = new Access();
 

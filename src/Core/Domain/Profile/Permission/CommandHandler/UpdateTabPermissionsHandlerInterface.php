@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateProfileTabPermissionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 
-interface UpdateProfileTabPermissionsHandlerInterface
+interface UpdateTabPermissionsHandlerInterface
 {
     /**
-     * @param UpdateProfileTabPermissionsCommand $command
+     * @param UpdateTabPermissionsCommand $command
      */
-    public function handle(UpdateProfileTabPermissionsCommand $command);
+    public function handle(UpdateTabPermissionsCommand $command);
 }
