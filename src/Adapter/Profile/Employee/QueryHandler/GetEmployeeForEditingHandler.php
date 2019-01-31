@@ -60,6 +60,7 @@ final class GetEmployeeForEditingHandler implements GetEmployeeForEditingHandler
             new FirstName($employee->firstname),
             new LastName($employee->lastname),
             new Email($employee->email),
+            $employee->getImage(),
             (bool) $employee->optin,
             (int) $employee->default_tab,
             (int) $employee->id_lang,

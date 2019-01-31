@@ -42,7 +42,9 @@
           'label': 'Last name'|trans({}, 'Admin.Global')
         }) }}
 
-        {{ ps.form_group_row(employeeForm.avatar) }}
+        {{ ps.form_group_row(employeeForm.avatar, {}, {
+          'label': ''
+        }) }}
 
         <div class="form-group row">
           <label class="form-control-label"></label>
