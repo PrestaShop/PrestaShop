@@ -82,7 +82,7 @@
                     <input type="checkbox"
                            value="1"
                            class="js-module-permission-checkbox"
-                           {% if module.view %}checked{% endif %}
+                           {% if module.configure %}checked{% endif %}
                            {{ checkboxAttributes }}
                     >
                     <i class="md-checkbox-control"></i>
@@ -102,7 +102,7 @@
                     <input type="checkbox"
                            value="1"
                            class="js-module-permission-checkbox"
-                           {% if module.view %}checked{% endif %}
+                           {% if module.uninstall %}checked{% endif %}
                            {{ checkboxAttributes }}
                     >
                     <i class="md-checkbox-control"></i>
