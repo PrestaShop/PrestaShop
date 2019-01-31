@@ -87,10 +87,16 @@ class EditableEmployee
     private $shopAssociation;
 
     /**
+     * @var string
+     */
+    private $avatarUrl;
+
+    /**
      * @param EmployeeId $employeeId
      * @param FirstName $firstName
      * @param LastName $lastName
      * @param Email $email
+     * @param string $avatarUrl
      * @param bool $isSubscribedToNewsletter
      * @param int $defaultPageId
      * @param int $languageId
@@ -103,6 +109,7 @@ class EditableEmployee
         FirstName $firstName,
         LastName $lastName,
         Email $email,
+        $avatarUrl,
         $isSubscribedToNewsletter,
         $defaultPageId,
         $languageId,
@@ -120,6 +127,7 @@ class EditableEmployee
         $this->active = $active;
         $this->profileId = $profileId;
         $this->shopAssociation = $shopAssociation;
+        $this->avatarUrl = $avatarUrl;
     }
 
     /**
@@ -200,5 +208,13 @@ class EditableEmployee
     public function getShopAssociation()
     {
         return $this->shopAssociation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAvatarUrl()
+    {
+        return $this->avatarUrl;
     }
 }
