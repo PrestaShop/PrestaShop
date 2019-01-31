@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\PermissionUpd
 /**
  * @internal
  */
-final class UpdateModulePermissionHandler implements UpdateModulePermissionsHandlerInterface
+final class UpdateModulePermissionsHandler implements UpdateModulePermissionsHandlerInterface
 {
     /**
      * @param UpdateModulePermissionsCommand $command
