@@ -61,7 +61,7 @@
 
                     <input type="checkbox"
                            value="1"
-                           class="js-module-permission-checkbox"
+                           class="js-module-permission-checkbox js-module-view-checkbox"
                            {% if module.view %}checked{% endif %}
                            {{ checkboxAttributes }}
                     >
@@ -81,7 +81,7 @@
 
                     <input type="checkbox"
                            value="1"
-                           class="js-module-permission-checkbox"
+                           class="js-module-permission-checkbox js-module-configure-checkbox"
                            {% if module.configure %}checked{% endif %}
                            {{ checkboxAttributes }}
                     >
@@ -101,7 +101,7 @@
 
                     <input type="checkbox"
                            value="1"
-                           class="js-module-permission-checkbox"
+                           class="js-module-permission-checkbox js-module-uninstall-checkbox"
                            {% if module.uninstall %}checked{% endif %}
                            {{ checkboxAttributes }}
                     >
@@ -122,6 +122,7 @@
                 <input type="checkbox"
                        value="1"
                        data-rel="-1||view||{{ profile.id }}"
+                       data-permission="view"
                        class="js-module-permission-checkbox"
                        {% if not hasEmployeeEditPermission or not enableBulkView %}disabled{% endif %}
                 >
@@ -136,6 +137,7 @@
                 <input type="checkbox"
                        value="1"
                        data-rel="-1||configure||{{ profile.id }}"
+                       data-permission="configure"
                        class="js-module-permission-checkbox"
                        {% if not hasEmployeeEditPermission or not enableBulkConfigure %}disabled{% endif %}
                 >
@@ -150,6 +152,7 @@
                 <input type="checkbox"
                        value="1"
                        data-rel="-1||uninstall||{{ profile.id }}"
+                       data-permission="uninstall"
                        class="js-module-permission-checkbox"
                        {% if not hasEmployeeEditPermission or not enableBulkUninstall %}disabled{% endif %}
                 >
