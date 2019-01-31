@@ -30,7 +30,6 @@ use Context;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
-use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 use Profile;
 use Tab;
 
@@ -48,13 +47,24 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     {
         $profiles = $this->getProfilesForPermissionsConfiguration();
         $tabs = $this->getTabsForPermissionsConfiguration();
+        $permissions = ['view', 'add', 'edit', 'delete'];
 
         $tabPermissions = $this->getTabPermissionsForProfiles($profiles);
+
+        $bulkConfiguration = $this->getBulkConfigurationForProfiles(
+            $query->getEmployeeProfileId()->getValue(),
+            true, //@todo: fix
+            $tabPermissions,
+            $profiles,
+            $tabs,
+            $permissions
+        );
 
         return new ConfigurablePermissions(
             $tabPermissions,
             $profiles,
-            $tabs
+            $tabs,
+            $bulkConfiguration
         );
     }
 
@@ -161,7 +171,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     /**
      * @todo: check if this can be used or removed
      *
-     * @param ProfileId $employeeProfileId
+     * @param int $employeeProfileId
      * @param bool $hasEmployeeEditPermission
      * @param array $profileTabPermissions
      * @param array $profiles
@@ -171,7 +181,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      * @return array
      */
     private function getBulkConfigurationForProfiles(
-        ProfileId $employeeProfileId,
+        $employeeProfileId,
         $hasEmployeeEditPermission,
         array $profileTabPermissions,
         array $profiles,
@@ -191,7 +201,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
             // if employee does not have "edit" permission
             // then configuration is disabled
-            if ($hasEmployeeEditPermission) {
+            if (!$hasEmployeeEditPermission) {
                 $bulkConfiguration[$profile['id']] = [
                     'view' => false,
                     'add' => false,
@@ -205,14 +215,46 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
             foreach ($tabs as $tab) {
                 foreach ($permissions as $permission) {
-                    if (!$profileTabPermissions[$employeeProfileId->getValue()][$tab['id']][$permission]) {
+                    if (!$profileTabPermissions[$employeeProfileId][$tab['id']][$permission]) {
                         $bulkConfiguration[$profile['id']]['view'] = false;
+                        $bulkConfiguration[$profile['id']]['all'] = false;
 
                         break;
                     }
                 }
 
+                foreach ($tab['children'] as $childTab) {
+                    foreach ($permissions as $permission) {
+                        if (!$profileTabPermissions[$employeeProfileId][$childTab['id']][$permission]) {
+                            $bulkConfiguration[$profile['id']]['add'] = false;
+                            $bulkConfiguration[$profile['id']]['all'] = false;
 
+                            break;
+                        }
+                    }
+
+                    foreach ($childTab['children'] as $subChild) {
+                        foreach ($permissions as $permission) {
+                            if (!$profileTabPermissions[$employeeProfileId][$subChild['id']][$permission]) {
+                                $bulkConfiguration[$profile['id']]['edit'] = false;
+                                $bulkConfiguration[$profile['id']]['all'] = false;
+
+                                break;
+                            }
+                        }
+
+                        foreach ($subChild['children'] as $subSubChild) {
+                            foreach ($permissions as $permission) {
+                                if (!$profileTabPermissions[$employeeProfileId][$subSubChild['id']][$permission]) {
+                                    $bulkConfiguration[$profile['id']]['delete'] = false;
+                                    $bulkConfiguration[$profile['id']]['all'] = false;
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
