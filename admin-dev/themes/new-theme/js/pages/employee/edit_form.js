@@ -23,7 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import ChoiceTree from "../../components/form/choice-tree";
+import AddonsConnector from "../../components/addons-connector";
 
 $(() => {
   new ChoiceTree('#employee_shop_association').enableAutoCheckChildren();
+  new AddonsConnector('#addons-connect-form', '#addons_login_btn');
 });

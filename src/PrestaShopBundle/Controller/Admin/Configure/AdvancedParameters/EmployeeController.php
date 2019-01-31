@@ -248,6 +248,8 @@ class EmployeeController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeForm' => $employeeForm->createView(),
+            'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
+            'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
         ]);
     }
 
