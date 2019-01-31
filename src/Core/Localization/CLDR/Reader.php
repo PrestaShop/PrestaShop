@@ -554,6 +554,12 @@ class Reader implements ReaderInterface
                     '//currencyData/fractions/info[@iso4217="' . $currencyCode . '"]'
                 );
 
+                if (empty($fractionsData)) {
+                    $fractionsData = $this->supplementalXml->supplementalData->xpath(
+                        '//currencyData/fractions/info[@iso4217="DEFAULT"]'
+                    );
+                }
+
                 if (!empty($fractionsData)) {
                     /** @var SimplexmlElement $fractionsData */
                     $fractionsData = $fractionsData[0];

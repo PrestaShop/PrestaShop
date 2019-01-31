@@ -107,7 +107,9 @@ class CurrencyCore extends ObjectModel
     public $blank;
 
     /**
-     * Number of decimal digits to use when displaying a price in this currency
+     * Use decimals when displaying a price in this currency
+     *
+     * @deprecated since 1.7.0
      *
      * @var int
      */

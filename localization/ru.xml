@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Russia" version="1.0">
 	<currencies>
-		<currency name="Ruble" iso_code="RUB" iso_code_num="643" sign="руб" blank="1" conversion_rate="41.7632" format="2" decimals="2" />
+		<currency name="Ruble" iso_code="RUB" iso_code_num="643" sign="руб" blank="1" conversion_rate="41.7632" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="ru" />
