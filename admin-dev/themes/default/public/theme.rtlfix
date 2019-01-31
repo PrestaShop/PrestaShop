@@ -106,24 +106,24 @@ svg {
 
 /* fix notification dropdown */
 .notification-center .dropdown-menu {
-  right: auto !important;
+  right: auto;
   left: 85px !important;
 }
 
 /* fix popover */
 .popover {
-  right: auto !important;
-  left: 5px !important;
+  right: auto;
+  left: 5px;
   margin-right: 0;
   margin-left: 8px;
 }
 .popover .arrow {
-  left: -8px !important;
-  right: auto !important;
-  transform: scaleX(-1) !important;
+  left: -8px;
+  right: auto;
+  transform: scaleX(-1);
 }
 
 /* fix stock quantity arrow direction */
 .stock-app .stock-overview .table .qty-update .material-icons {
-  transform: scaleX(-1) !important;
+  transform: scaleX(-1);
 }
