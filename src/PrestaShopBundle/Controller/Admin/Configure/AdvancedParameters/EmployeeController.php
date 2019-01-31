@@ -246,7 +246,6 @@ class EmployeeController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig', [
             'layoutTitle' => $this->trans('Employees', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
-            'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeForm' => $employeeForm->createView(),
         ]);
