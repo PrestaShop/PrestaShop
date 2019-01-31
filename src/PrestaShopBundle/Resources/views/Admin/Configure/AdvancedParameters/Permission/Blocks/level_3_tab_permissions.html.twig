@@ -35,7 +35,7 @@
           {% set permissionId = permissionIds[permission] %}
 
           <td>
-            {% if hasEditPermission and employeeProfileTabPermissions[childTab.id][permission] %}
+            {% if hasEmployeeEditPermission and employeeProfileTabPermissions[childTab.id][permission] %}
               <div class="md-checkbox md-checkbox-inline">
                 <label>
                   <input type="checkbox"
