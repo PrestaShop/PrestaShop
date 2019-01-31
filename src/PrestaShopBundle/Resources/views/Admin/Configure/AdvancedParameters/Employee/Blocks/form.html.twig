@@ -51,7 +51,12 @@
           <div class="col-sm">
             <div class="alert alert-info" role="alert">
               <p class="alert-text">
-                {{ 'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.'|trans({}, 'Admin.Advparameters.Help')|replace({ '%url%': '<a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>', '%email%': employeeForm.email.vars.value })|raw }}
+                {{ 'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.'|trans({}, 'Admin.Advparameters.Help')
+                    |replace({
+                      '%url%': '<a href="' ~ employeeForm.avatar.vars.click_url ~ '" class="alert-link" target="_blank">PrestaShop.com</a>',
+                      '%email%': employeeForm.email.vars.value
+                    })|raw
+                }}
               </p>
             </div>
           </div>
