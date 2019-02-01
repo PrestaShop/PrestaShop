@@ -23,8 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set enableBulkView, enableBulkAdd, enableBulkEdit, enableBulkDelete, enableBulkAll = true, true, true, true, true %}
-
 <div class="card">
   <h3 class="card-header">
     {{ 'Menu'|trans({}, 'Admin.Advparameters.Feature') }}
@@ -32,7 +30,7 @@
   <div class="card-body">
     <table class="table">
       <thead>
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/permissions_bulk_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/permissions_bulk_configuration.html.twig' %}
       </thead>
       <tbody>
         {% if configurablePermissions.tabs is empty %}
@@ -40,7 +38,11 @@
             <td colspan="6">{{ 'No menu'|trans({}, 'Admin.Advparameters.Feature') }}</td>
           </tr>
         {% else %}
-          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/level_1_tab_permissions.html.twig' %}
+          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/tab_permissions_level.html.twig' with {
+            'level_depth': 1,
+            'max_level_depth': 4,
+            'tabs': configurablePermissions.tabs
+          } %}
         {% endif %}
       </tbody>
     </table>
