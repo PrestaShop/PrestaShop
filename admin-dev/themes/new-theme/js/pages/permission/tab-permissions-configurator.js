@@ -23,42 +23,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Manages module permissions configuration table
- */
-export default class ModulePermissionsConfigurator {
-  constructor() {
-    this.$table = $('#modulePermissionsTable');
+const $ = window.$;
 
-    this.$table.on('change', '.js-module-permission-checkbox', (event) => {
+export default class TabPermissionsConfigurator {
+  constructor() {
+    this.$table = $('#tabPermissionsTable');
+
+    this.$table.on('change', '.js-tab-permissions-checkbox', (event) => {
       this._updatePermissions($(event.currentTarget));
     });
 
     return {};
   }
 
-  /**
-   * Update module permissions for profile via AJAX
-   *
-   * @param {jQuery} $checkbox
-   *
-   * @private
-   */
   _updatePermissions($checkbox) {
-    const isChecked = $checkbox.is(':checked');
-    let moduleId, permission, profileId;
+    let tabId, profileId, permission;
 
-    [moduleId, permission, profileId] = $checkbox.data('rel').split('||');
+    [tabId, profileId, permission] = $checkbox.data('rel').split('||');
+
+    const parentId = $checkbox.data('parent');
+    const isChecked = $checkbox.is(':checked');
+
+    console.log(parentId);
+
+    // preselect parent
+    if (0 !== parentId) {
+      const $parentCheckbox = this.$table.find(`.js-checkbox-tab-${parentId}-permission-${permission}`);
+
+      if ($parentCheckbox.is(':checked')) {
+
+      } else if (isChecked && this._isChildrenChecked()) {
+        $parentCheckbox.prop('checked', false).change();
+      }
+    }
 
     $.ajax(this.$table.data('url'), {
       method: 'POST',
       data: {
         profile_id: profileId,
-        module_id: moduleId,
+        tab_id: tabId,
         permission: permission,
         expected_status: isChecked
       }
-    }).then((response) => {
+    }).then(response => {
       if (response.success) {
         showSuccessMessage(this.$table.data('success-message'));
 
@@ -67,5 +74,9 @@ export default class ModulePermissionsConfigurator {
 
       showErrorMessage(this.$table.data('error-message'));
     });
+  }
+
+  _isChildrenChecked() {
+
   }
 }
