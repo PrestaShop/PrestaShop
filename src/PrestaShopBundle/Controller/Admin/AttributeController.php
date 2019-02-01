@@ -174,8 +174,20 @@ class AttributeController extends FrameworkBundleAdminController
         if (count($combinations)) {
             $defaultProductAttributeId = $product->getDefaultIdProductAttribute();
             if (!$defaultProductAttributeId) {
-                list(, $firstAttributeCombination) = each($combinations[0]);
-                $product->setDefaultAttribute($firstAttributeCombination['id_product_attribute']);
+                /*
+                 * Combinations indexed by position, then attribute id
+                 * ex: $combinations = [
+                 *  3 => [ //4th position attribute
+                 *      45 => [ //product_attribute id
+                 *      ]
+                 *  ]
+                 * ]
+                 */
+                $firstPosition = array_keys($combinations)[0];
+                if (!empty($combinations[$firstPosition])) {
+                    $firstAttributeId = array_keys($combinations[$firstPosition])[0];
+                    $product->setDefaultAttribute($firstAttributeId);
+                }
             }
         }
     }
