@@ -24,7 +24,10 @@
  *#}
 
 <div class="tab-content p-0 bg-transparent" id="profileTabContents">
+  {% set employeeProfileTabPermissions = configurablePermissions.profilePermissionsForTabs[employeeProfileId] %}
+
   {% for profile in configurablePermissions.profiles %}
+    {% set profileTabPermissions = configurablePermissions.profilePermissionsForTabs[profile.id] %}
     <div class="tab-pane fade {% if profile.id == employeeProfileId %}active show{% endif %}"
          id="profileTabContent_{{ profile.id }}"
          role="tabpanel"
