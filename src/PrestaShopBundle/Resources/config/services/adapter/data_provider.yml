@@ -10,7 +10,6 @@ services:
             - '@prestashop.module.zip.manager'
         properties:
             cacheDir: "%kernel.cache_dir%"
-        public: false
 
     prestashop.adapter.admin.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
