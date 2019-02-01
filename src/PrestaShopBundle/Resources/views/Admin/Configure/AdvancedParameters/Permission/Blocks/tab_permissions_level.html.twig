@@ -37,6 +37,7 @@
             <div class="md-checkbox md-checkbox-inline">
               <label>
                 <input type="checkbox"
+                       class="js-tab-permissions-checkbox js-checkbox-tab-{{ tab.id }}-permission{{ permission }}"
                        data-id="{{ permissionId }}"
                        data-parent="{{ tab.id_parent }}"
                        data-type="{{ permission }}"
@@ -51,6 +52,7 @@
             <div class="md-checkbox md-checkbox-inline">
               <label>
                 <input type="checkbox"
+                       class="js-tab-permissions-checkbox"
                        disabled
                        {% if childTabPermissions[permission] %}checked{% endif %}
                 >
@@ -66,15 +68,16 @@
         <div class="md-checkbox md-checkbox-inline">
           <label>
             <input type="checkbox"
-              {% if hasEmployeeEditPermission and hasAllPermissions %}
-                data-id="4"
-                data-parent="{{ tab.id_parent }}"
-                data-type="all"
-                data-rel="{{ childTabPermissions['id_tab'] }}||{{ profile.id }}||all||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
-              {% else %}
-                disabled
-              {% endif %}
-              {% if resultPermissions == 4 %}checked{% endif %}
+                   class="js-tab-permissions-checkbox"
+                   {% if hasEmployeeEditPermission and hasAllPermissions %}
+                     data-id="4"
+                     data-parent="{{ tab.id_parent }}"
+                     data-type="all"
+                     data-rel="{{ childTabPermissions['id_tab'] }}||{{ profile.id }}||all||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+                   {% else %}
+                     disabled
+                   {% endif %}
+                   {% if resultPermissions == 4 %}checked{% endif %}
             >
             <i class="md-checkbox-control"></i>
           </label>
