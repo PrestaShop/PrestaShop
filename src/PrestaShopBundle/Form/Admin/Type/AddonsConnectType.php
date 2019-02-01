@@ -28,9 +28,48 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
-class ConnectToAddonsType extends AbstractType
+/**
+ * Class AddonsConnectType defines addons connection form type.
+ * When not connected to addons, it shows a button to sign in.
+ * When connected to addons it shows the connected email and sign out button.
+ */
+class AddonsConnectType extends AbstractType
 {
+    /**
+     * @var bool
+     */
+    private $isAddonsConnected;
+
+    /**
+     * @var string
+     */
+    private $addonsUsername;
+
+    /**
+     * @param bool $isAddonsConnected
+     * @param string $addonsUsername
+     */
+    public function __construct($isAddonsConnected, $addonsUsername)
+    {
+        $this->isAddonsConnected = $isAddonsConnected;
+        $this->addonsUsername = $addonsUsername;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['is_addons_connected'] = $this->isAddonsConnected;
+        $view->vars['addons_username'] = $this->addonsUsername;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getParent()
     {
         return ButtonType::class;
