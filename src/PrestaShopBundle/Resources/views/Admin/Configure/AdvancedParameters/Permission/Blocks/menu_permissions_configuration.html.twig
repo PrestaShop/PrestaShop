@@ -28,7 +28,12 @@
     {{ 'Menu'|trans({}, 'Admin.Advparameters.Feature') }}
   </h3>
   <div class="card-body">
-    <table class="table">
+    <table class="table"
+           id="tabPermissionsTable"
+           data-url="{{ path('admin_permissions_update_tab_permissions') }}"
+           data-success-message="{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}"
+           data-error-message="{{ 'Unable to update settings.'|trans({}, 'Admin.Notifications.Error') }}"
+    >
       <thead>
         {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/permissions_bulk_configuration.html.twig' %}
       </thead>
