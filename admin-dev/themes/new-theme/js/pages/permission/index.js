@@ -24,9 +24,11 @@
  */
 
 import ModulePermissionsConfigurator from "./module-permissions-configurator";
+import TabPermissionsConfigurator from "./tab-permissions-configurator";
 
 const $ = window.$;
 
 $(document).ready(() => {
+  new TabPermissionsConfigurator();
   new ModulePermissionsConfigurator();
 });
