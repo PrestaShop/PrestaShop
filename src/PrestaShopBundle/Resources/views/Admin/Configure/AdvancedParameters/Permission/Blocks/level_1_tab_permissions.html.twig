@@ -26,7 +26,8 @@
 {% for tab in configurablePermissions.tabs %}
   {% set profileTabPermissions = configurablePermissions.profilePermissionsForTabs[profile.id] %}
   {% set employeeProfileTabPermissions = configurablePermissions.profilePermissionsForTabs[employeeProfileId] %}
-  {% set resultPermissions = 0 %}
+  {% set currentTabPermissions = profileTabPermissions[tab.id] %}
+  {% set totalPermissions, hasAllPermissions = 0, true %}
 
   <tr>
     <td>&raquo;<strong>{{ tab.name }}</strong></td>
@@ -40,29 +41,40 @@
                      data-id="{{ permissionId }}"
                      data-parent="0"
                      data-type="{{ permission }}"
-                     {% if profileTabPermissions[tab.id][permission] %}checked{% endif %}
+                     data-rel="{{ currentTabPermissions['id_tab'] }}||{{ profile.id }}||{{ permission }}||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+                     {% if currentTabPermissions[permission] %}checked{% endif %}
               />
               <i class="md-checkbox-control"></i>
             </label>
           </div>
         {% else %}
+          {% set hasAllPermissions = false %}
           <div class="md-checkbox md-checkbox-inline">
             <label>
               <input type="checkbox"
                      disabled
-                     {% if configurablePermissions.profilePermissionsForTabs[tab.id][permission] %}checked{% endif %}
+                     {% if currentTabPermissions[permission] %}checked{% endif %}
               />
               <i class="md-checkbox-control"></i>
             </label>
           </div>
         {% endif %}
       </td>
-      {% set resultPermissions = resultPermissions + profileTabPermissions[tab.id][permission] %}
+      {% set totalPermissions = totalPermissions + profileTabPermissions[tab.id][permission] %}
     {% endfor %}
     <td>
       <div class="md-checkbox md-checkbox-inline">
         <label>
           <input type="checkbox"
+                 {% if hasEmployeeEditPermission and hasAllPermissions %}
+                   data-id="4"
+                   data-parent="0"
+                   data-type="all"
+                   data-rel="{{ currentTabPermissions['id_tab'] }}||{{ profile.id }}||all||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+                 {% else %}
+                   disabled
+                 {% endif %}
+                 {% if totalPermissions == 4 %}checked{% endif %}
           />
           <i class="md-checkbox-control"></i>
         </label>

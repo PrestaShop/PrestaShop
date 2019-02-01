@@ -26,47 +26,55 @@
 {% if parentTab.children is not empty %}
   {% for childTab in parentTab.children %}
     {% if profileTabPermissions[childTab.id] is defined %}
+      {% set childTabPermissions = profileTabPermissions[childTab.id] %}
+      {% set employeeTabPermissions = employeeProfileTabPermissions[childTab.id] %}
       {% set isChild, resultPermissions, hasAllPermissions = true, 0, true %}
       <tr>
         <td>&raquo; {{ childTab.name }}</td>
         {% for permission in permissions %}
           {% set permissionId = permissionIds[permission] %}
-
           <td>
-            {% if hasEmployeeEditPermission and employeeProfileTabPermissions[childTab.id][permission] %}
+            {% if hasEmployeeEditPermission and employeeTabPermissions[permission] %}
               <div class="md-checkbox md-checkbox-inline">
                 <label>
                   <input type="checkbox"
                          data-id="{{ permissionId }}"
                          data-parent="{{ parentTab.id_parent }}"
                          data-type="{{ permission }}"
-                         {% if profileTabPermissions[childTab.id][permission] %}checked{% endif %}
+                         data-rel="{{ childTabPermissions['id_tab'] }}||{{ profile.id }}||{{ permission }}||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+                         {% if childTabPermissions[permission] %}checked{% endif %}
                   >
                   <i class="md-checkbox-control"></i>
                 </label>
               </div>
             {% else %}
               {% set hasAllPermission = false %}
-              {#@todo: disable bulk add#}
               <div class="md-checkbox md-checkbox-inline">
                 <label>
                   <input type="checkbox"
                          disabled
-                         {% if profileTabPermissions[childTab.id][permission] %}checked{% endif %}
+                         {% if childTabPermissions[permission] %}checked{% endif %}
                   >
                   <i class="md-checkbox-control"></i>
                 </label>
               </div>
             {% endif %}
           </td>
-
-          {% set resultPermissions = resultPermissions + profileTabPermissions[childTab.id][permission] %}
+          {% set resultPermissions = resultPermissions + childTabPermissions[permission] %}
         {% endfor %}
 
         <td>
           <div class="md-checkbox md-checkbox-inline">
             <label>
               <input type="checkbox"
+                     {% if hasEmployeeEditPermission and hasAllPermissions %}
+                       data-id="4"
+                       data-parent="{{ childTab.id_parent }}"
+                       data-type="all"
+                       data-rel="{{ childTabPermissions['id_tab'] }}||{{ profile.id }}||all||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+                     {% else %}
+                       disabled
+                     {% endif %}
                      {% if resultPermissions == 4 %}checked{% endif %}
               >
               <i class="md-checkbox-control"></i>
