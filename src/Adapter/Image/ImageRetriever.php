@@ -83,8 +83,7 @@ class ImageRetriever
 
         $images = array_map(function (array $image) use (
             $productInstance,
-            $imageToCombinations,
-            $productAttributeId
+            $imageToCombinations
         ) {
             $image = array_merge($this->getImage(
                 $productInstance,

@@ -270,7 +270,7 @@ class LegacyContext
             throw new RuntimeException('Cannot retrieve default employee tab. Employee does not exist in context!');
         }
 
-        $idTab = $idTab = $employee->default_tab;
+        $idTab = $employee->default_tab;
         $tab = new Tab($idTab);
 
         return $tab->class_name;
