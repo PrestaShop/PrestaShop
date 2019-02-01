@@ -31,6 +31,13 @@
          aria-labelledby="profileListItem_{{ profile.id }}"
     >
       <div class="row">
+        {% set maxTabCount = configurablePermissions.tabs|length %}
+        {% for tab in configurablePermissions.tabs %}
+          {% if tab.id > maxTabCount %}
+            {% set maxTabCount = tab.id %}
+          {% endif %}
+        {% endfor %}
+
         {% if not profile.is_administrator %}
             <div class="col">
               {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/menu_permissions_configuration.html.twig' %}
