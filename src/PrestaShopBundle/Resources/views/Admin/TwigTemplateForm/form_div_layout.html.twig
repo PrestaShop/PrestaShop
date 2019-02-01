@@ -436,10 +436,22 @@
 {%- endblock addons_connected_information -%}
 
 {%- block addons_connect_button -%}
-  {% set label = is_addons_connected ?
-    'Sign out from PrestaShop Addons'|trans({}, 'Admin.Advparameters.Feature') :
-    'Sign in'|trans({}, 'Admin.Advparameters.Feature')
-  %}
+  {% if is_addons_connected %}
+    {% set label, target =
+      'Sign out from PrestaShop Addons'|trans({}, 'Admin.Advparameters.Feature'),
+      '#module-modal-addons-logout'
+    %}
+  {% else %}
+    {% set label, target =
+      'Sign in'|trans({}, 'Admin.Advparameters.Feature'),
+      '#module-modal-addons-connect'
+    %}
+  {% endif %}
+
+  {% set attr = attr|merge({
+    'data-toggle': 'modal',
+    'data-target': target,
+  }) %}
 
   {{ block('button_widget') }}
 {%- endblock -%}
