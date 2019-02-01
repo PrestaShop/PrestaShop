@@ -52,7 +52,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     const DEFAULT_WRAPPING_FEE = 0;
 
     const PRODUCT_FIXTURES = [
-        1 => ['price' => 19.812],
+        1 => ['price' => 19.812, 'isVirtual' => true],
         2 => ['price' => 32.388],
         3 => ['price' => 31.188],
         4 => ['price' => 35.567, 'outOfStock' => true],
@@ -192,6 +192,10 @@ abstract class AbstractCartTest extends IntegrationTestCase
             $product->price    = $productFixture['price'];
             $product->name     = 'product name';
             $product->quantity = !empty($productFixture['quantity']) ? $productFixture['quantity'] : 1000;
+
+            if (!empty($productFixture['isVirtual'])) {
+                $product->is_virtual = $productFixture['isVirtual'];
+            }
 
             if (!empty($productFixture['outOfStock'])) {
                 $product->out_of_stock = 0;
