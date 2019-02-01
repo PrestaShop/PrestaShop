@@ -26,44 +26,40 @@
 
 namespace Tests\Unit\Core\Util\Url;
 
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileChecker;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 
 class UrlFileCheckerTest extends TestCase
 {
+    /**
+     * @var vfsStreamDirectory
+     */
+    private $root;
+
     protected function setUp()
     {
-        touch(realpath(__DIR__) . '/not_writable_files/.htaccess');
-        touch(realpath(__DIR__) . '/not_writable_files/robots.txt');
-        chmod(realpath(__DIR__) . '/not_writable_files/.htaccess', 111);
-        chmod(realpath(__DIR__) . '/not_writable_files/robots.txt', 111);
+        $this->root = vfsStream::setup('foo');
 
-        touch(realpath(__DIR__) . '/writable_files/.htaccess');
-        touch(realpath(__DIR__) . '/writable_files/robots.txt');
-        chmod(realpath(__DIR__) . '/writable_files/.htaccess', 755);
-        chmod(realpath(__DIR__) . '/writable_files/robots.txt', 755);
-    }
+        vfsStream::newFile('not_writable_files/.htaccess', 0111)->at($this->root);
+        vfsStream::newFile('not_writable_files/robots.txt', 0111)->at($this->root);
 
-    protected function tearDown()
-    {
-        unlink(realpath(__DIR__) . '/not_writable_files/.htaccess');
-        unlink(realpath(__DIR__) . '/not_writable_files/robots.txt');
-
-        unlink(realpath(__DIR__) . '/writable_files/.htaccess');
-        unlink(realpath(__DIR__) . '/writable_files/robots.txt');
+        vfsStream::newFile('writable_files/.htaccess', 0755)->at($this->root);
+        vfsStream::newFile('writable_files/robots.txt', 0755)->at($this->root);
     }
 
     public function testIsValidImplementation()
     {
-        $checker = new UrlFileChecker(realpath(__DIR__));
+        $checker = new UrlFileChecker($this->root->url());
 
         $this->assertInstanceOf(UrlFileCheckerInterface::class, $checker);
     }
 
     public function testNotWritableFiles()
     {
-        $checker = new UrlFileChecker(realpath(__DIR__ . '/not_writable_files'));
+        $checker = new UrlFileChecker($this->root->url() . '/not_writable_files');
 
         $this->assertFalse($checker->isHtaccessFileWritable());
         $this->assertFalse($checker->isRobotsFileWritable());
@@ -71,7 +67,7 @@ class UrlFileCheckerTest extends TestCase
 
     public function testWritableFiles()
     {
-        $checker = new UrlFileChecker(realpath(__DIR__ . '/writable_files'));
+        $checker = new UrlFileChecker($this->root->url() . '/writable_files');
 
         $this->assertTrue($checker->isHtaccessFileWritable());
         $this->assertTrue($checker->isRobotsFileWritable());
