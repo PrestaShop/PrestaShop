@@ -744,3 +744,11 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    form.type.addons_connect:
+        class: 'PrestaShopBundle\Form\Admin\Type\AddonsConnectType'
+        arguments:
+            - '@=service("prestashop.adapter.admin.data_provider.addons").isAddonsAuthenticated()'
+            - '@=service("prestashop.adapter.admin.data_provider.addons").getAddonsEmail()["username_addons"]'
+        tags:
+            - { name: form.type }

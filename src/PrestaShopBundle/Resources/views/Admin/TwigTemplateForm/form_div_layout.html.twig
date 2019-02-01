@@ -237,6 +237,16 @@
   </a>
 {%- endblock clickable_avatar_widget -%}
 
+{%- block addons_connect_widget -%}
+  {% if is_addons_connected %}
+    {{ block('addons_connected_information') }}
+  {% endif %}
+
+  <div>
+    {{ block('addons_connect_button') }}
+  </div>
+{%- endblock addons_connect_widget -%}
+
 {# Labels #}
 
 {%- block form_label -%}
@@ -420,3 +430,16 @@
     {%- endif -%}
   {%- endfor -%}
 {%- endblock attributes -%}
+
+{%- block addons_connected_information -%}
+  {{ 'You are currently connected as %username%'|trans({}, 'Admin.Advparameters.Feature')|replace({ '%username%': addons_username }) }}
+{%- endblock addons_connected_information -%}
+
+{%- block addons_connect_button -%}
+  {% set label = is_addons_connected ?
+    'Sign out from PrestaShop Addons'|trans({}, 'Admin.Advparameters.Feature') :
+    'Sign in'|trans({}, 'Admin.Advparameters.Feature')
+  %}
+
+  {{ block('button_widget') }}
+{%- endblock -%}

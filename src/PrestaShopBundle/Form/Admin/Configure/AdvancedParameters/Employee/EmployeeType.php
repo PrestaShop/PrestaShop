@@ -30,12 +30,11 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\ClickableAvatarType;
-use PrestaShopBundle\Form\Admin\Type\ConnectToAddonsType;
+use PrestaShopBundle\Form\Admin\Type\AddonsConnectType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -134,7 +133,7 @@ final class EmployeeType extends AbstractType
                 ],
             ])
             ->add('change_password', ChangePasswordType::class)
-            ->add('prestashop_addons', ConnectToAddonsType::class, [
+            ->add('prestashop_addons', AddonsConnectType::class, [
                 'label' => $this->trans('Sign in', [], 'Admin.Advparameters.Feature')
             ])
             ->add('optin', SwitchType::class, [

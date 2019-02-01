@@ -421,6 +421,13 @@
     </div>
 {% endblock %}
 
+{% block addons_connected_information %}
+  <p>
+    <i class="material-icons">account_circle</i>
+    {{ parent() }}
+  </p>
+{% endblock addons_connected_information %}
+
 {# Labels #}
 
 {% block form_label -%}
