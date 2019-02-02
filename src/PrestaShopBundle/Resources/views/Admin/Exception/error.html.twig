@@ -39,16 +39,20 @@
       <div class="col">
         <div class="card">
           <div class="card-body text-center">
-            <img class="img-responsive" src="{{ asset('themes/new-theme/img/error/500.svg') }}">
+            <img class="img-responsive"
+                 src="{{ asset('themes/new-theme/img/error/500.svg') }}"
+                 alt="{{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}"
+            >
 
             <div class="mt-3">
-              <p class="error-header">{{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}</p>
+              <p class="error-header">
+                {{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}
+              </p>
 
               {% if exception %}
-                <div class="mx-auto error-info-block">
-                  <p class="mb-0 text-left">{{ 'Error type:' }} {{ exception.class }}</p>
-                  <p class="mb-0 text-left">{{ 'Error code:' }} {{ exception.code }}</p>
-                  <p class="mb-0 text-left">{{ 'Error message:' }} {{ exception.message }}</p>
+                <div class="mx-auto">
+                  <p class="mb-0">{{ exception.message }}</p>
+                  <p class="mb-0">[{{ exception.class }} {{ exception.code }}]</p>
                 </div>
               {% endif %}
 
@@ -60,7 +64,7 @@
                     {{ 'Enable debug mode' }}
                   </button>
                 </form>
-                <button class="btn btn-primary mr-1 js-go-back-btn" type="button">
+                <button class="btn btn-primary js-go-back-btn ml-3" type="button">
                   {{ 'Back to previous page' }}
                 </button>
               </div>
