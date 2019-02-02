@@ -126,7 +126,7 @@ class DbPDOCore extends Db
         } catch (PDOException $e) {
             throw new PrestaShopException('Link to database cannot be established: ' . $e->getMessage());
         }
-        
+
         // UTF-8 support
         if (!$this->setCharsetUTF8($this->link)) {
             throw new PrestaShopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
@@ -468,11 +468,12 @@ class DbPDOCore extends Db
 
         return ($result === false) ? false : true;
     }
-    
+
     /**
      * Sets UTF-8 to given connection.
      *
      * @param PDO $link connection instance
+     *
      * @return bool if setting UTF-8 charset was successful
      */
     public static function setCharsetUTF8($link)
