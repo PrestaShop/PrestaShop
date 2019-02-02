@@ -47,12 +47,12 @@
                             {$shop_data['name']}
                         </a>
 
-                        {if $shop_data['uri'] == NULL}
+                        {if $shop_data['fulluri'] == NULL}
                             <a class="link-shop" href="{$link->getAdminLink('AdminShop', true)|escape:'html':'UTF-8'}" target="_blank">
                                 <i class="material-icons">&#xE869;</i>
                             </a>
                         {else}
-                            <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
+                            <a class="link-shop" href="{$shop_data['fulluri']}" target="_blank">
                                 <i class="material-icons">&#xE8F4;</i>
                             </a>
                         {/if}

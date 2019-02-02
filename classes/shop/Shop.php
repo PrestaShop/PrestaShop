@@ -703,6 +703,8 @@ class ShopCore extends ObjectModel
                 }
 
                 $row = $row + array('theme_name' => '');
+				$domain_with_protocol = (Configuration::get('PS_SSL_ENABLED', null, $row['id_shop_group'], $row['id_shop']) 
+										&& $row['domain_ssl'] ? 'https://'. $row['domain_ssl'] : 'http://' . $row['domain'];
 
                 self::$shops[$row['id_shop_group']]['shops'][$row['id_shop']] = array(
                     'id_shop' =>        $row['id_shop'],
@@ -713,7 +715,8 @@ class ShopCore extends ObjectModel
                     'domain' =>            $row['domain'],
                     'domain_ssl' =>        $row['domain_ssl'],
                     'uri' =>            $row['physical_uri'].$row['virtual_uri'],
-                    'active' =>            $row['active'],
+					'active' =>            $row['active'],
+					'fulluri' =>	  ($row['physical_uri'].$row['virtual_uri']) ? $domain_with_protocol.$row['physical_uri'].$row['virtual_uri'] : null,
                 );
             }
         }
