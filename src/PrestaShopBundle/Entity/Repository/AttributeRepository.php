@@ -34,6 +34,16 @@ namespace PrestaShopBundle\Entity\Repository;
  */
 class AttributeRepository extends \Doctrine\ORM\EntityRepository
 {
+    
+    public function createQueryBuilder($alias, $indexBy = null)
+    {
+        $qb = parent::createQueryBuilder($alias, $indexBy);
+        
+        // support UTF8
+        $qb->getEntityManager()->getConnection()->executeQuery('SET NAMES \'UTF8\'');
+        return $qb;
+    }
+    
     public function findByLangAndShop($idLang, $idShop)
     {
         $attributeGroups = array();
