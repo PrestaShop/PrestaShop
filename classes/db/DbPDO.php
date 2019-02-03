@@ -478,7 +478,7 @@ class DbPDOCore extends Db
      */
     public static function setCharsetUTF8($link)
     {
-        return ($link->query('SET NAMES \'utf8\'') === false) ? false : true;
+        return $link->query('SET NAMES \'utf8\'') !== false;
     }
 
     /**
