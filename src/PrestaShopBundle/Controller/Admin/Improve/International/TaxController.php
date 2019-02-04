@@ -152,7 +152,6 @@ class TaxController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
-     *     message="You do not have permission to delete this."
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
