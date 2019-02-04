@@ -241,7 +241,7 @@ class OrderInvoiceCore extends ObjectModel
             $row['unit_price_tax_incl_including_ecotax'] = $row['unit_price_tax_incl'];
             $row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'];
             $row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'];
-            
+
             /* Stock product */
             $result_array[(int) $row['id_order_detail']] = $row;
         }
