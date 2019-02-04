@@ -28,16 +28,25 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,23 +59,26 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Show currency page.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_currencies_index"
-     * )
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param CurrencyFilters $filters
+     * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(CurrencyFilters $filters)
+    public function indexAction(CurrencyFilters $filters, Request $request)
     {
         $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency');
         $currencyGrid = $currencyGridFactory->getGrid($filters);
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
+        $settingsForm = $this->getSettingsFormHandler()->getForm();
+
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/index.html.twig', [
             'currencyGrid' => $gridPresenter->present($currencyGrid),
+            'currencySettingsForm' => $settingsForm->createView(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
@@ -95,24 +107,43 @@ class CurrencyController extends FrameworkBundleAdminController
     }
 
     /**
-     * Displays currency form.
+     * Displays and handles currency form.
      *
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to add this."
+     *     message="You need permission to create this."
      * )
      *
-     * @return RedirectResponse
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        //todo: drop legacy and after having post add @DemoRestricted
-        $legacyLink = $this->getAdminLink('AdminCurrencies', [
-            'addcurrency' => 1,
-        ]);
+        $multiStoreFeature = $this->get('prestashop.adapter.multistore_feature');
 
-        return $this->redirect($legacyLink);
+        $currencyForm = $this->getCurrencyFormBuilder()->getForm();
+        $currencyForm->handleRequest($request);
+
+        try {
+            $result = $this->getCurrencyFormHandler()->handle($currencyForm);
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_currencies_index');
+            }
+        } catch (CurrencyException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
+            'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
+            'currencyForm' => $currencyForm->createView(),
+        ]);
     }
 
     /**
@@ -121,22 +152,38 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to edit this."
+     *     message="You need permission to edit this."
      * )
      *
      * @param int $currencyId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($currencyId)
+    public function editAction($currencyId, Request $request)
     {
-        //todo: drop legacy and after having post add @DemoRestricted
-        $legacyLink = $this->getAdminLink('AdminCurrencies', [
-            'id_currency' => $currencyId,
-            'updatecurrency' => 1,
-        ]);
+        $multiStoreFeature = $this->get('prestashop.adapter.multistore_feature');
+        $currencyForm = null;
 
-        return $this->redirect($legacyLink);
+        try {
+            $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
+            $currencyForm->handleRequest($request);
+
+            $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_currencies_index');
+            }
+        } catch (CurrencyException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Currency/edit.html.twig', [
+            'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
+            'currencyForm' => null !== $currencyForm ? $currencyForm->createView() : null,
+        ]);
     }
 
     /**
@@ -145,7 +192,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to delete this."
+     *     message="You need permission to delete this."
      * )
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
@@ -156,10 +203,9 @@ class CurrencyController extends FrameworkBundleAdminController
     public function deleteAction($currencyId)
     {
         try {
-            $currencyId = new CurrencyId($currencyId);
-            $this->getCommandBus()->handle(new DeleteCurrencyCommand($currencyId));
+            $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currencyId));
         } catch (CurrencyException $exception) {
-            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+            $this->addFlash('error', $this->handleException($exception));
 
             return $this->redirectToRoute('admin_currencies_index');
         }
@@ -180,7 +226,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to edit this."
+     *     message="You need permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
@@ -189,10 +235,9 @@ class CurrencyController extends FrameworkBundleAdminController
     public function toggleStatusAction($currencyId)
     {
         try {
-            $currencyId = new CurrencyId($currencyId);
-            $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand($currencyId));
+            $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currencyId));
         } catch (CurrencyException $exception) {
-            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+            $this->addFlash('error', $this->handleException($exception));
 
             return $this->redirectToRoute('admin_currencies_index');
         }
@@ -203,6 +248,135 @@ class CurrencyController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_currencies_index');
+    }
+
+    /**
+     * Refresh exchange rates.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_currencies_index",
+     *     message="You need permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_currencies_index")
+     *
+     * @return RedirectResponse
+     */
+    public function refreshExchangeRatesAction()
+    {
+        try {
+            $this->getCommandBus()->handle(new RefreshExchangeRatesCommand());
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (CannotRefreshExchangeRatesException $exception) {
+            $this->addFlash('error', $exception->getMessage());
+        }
+
+        return $this->redirectToRoute('admin_currencies_index');
+    }
+
+    /**
+     * Handles ajax request which updates live exchange rates.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updateLiveExchangeRatesAction(Request $request)
+    {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                    'status' => false,
+                    'message' => $this->getDemoModeErrorMessage(),
+                ],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
+
+        if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
+            return $this->json([
+                    'status' => false,
+                    'message' => $this->trans(
+                        'You need permission to edit this.',
+                        'Admin.Notifications.Error'
+                    ),
+                ],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $settingsFormHandler = $this->getSettingsFormHandler();
+        $settingsForm = $settingsFormHandler->getForm();
+
+        $settingsForm->handleRequest($request);
+
+        $response = [
+            'status' => false,
+            'message' => $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error'),
+        ];
+        $statusCode = Response::HTTP_BAD_REQUEST;
+
+        if ($settingsForm->isSubmitted()) {
+            try {
+                $settingsFormHandler->save($settingsForm->getData());
+                $response = [
+                    'status' => true,
+                    'message' => $this->trans(
+                        'The status has been successfully updated.',
+                        'Admin.Notifications.Success'
+                    ),
+                ];
+                $statusCode = Response::HTTP_OK;
+            } catch (CurrencyException $exception) {
+                $response['message'] = $this->handleException($exception);
+            }
+        }
+
+        return $this->json($response, $statusCode);
+    }
+
+    /**
+     * Gets form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getCurrencyFormBuilder()
+    {
+        return $this->get('prestashop.core.form.builder.currency_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getCurrencyFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.currency_form_handler');
+    }
+
+    /**
+     * @return \PrestaShop\PrestaShop\Core\Form\FormHandlerInterface
+     */
+    private function getSettingsFormHandler()
+    {
+        return $this->get('prestashop.admin.currency_settings.form_handler');
+    }
+
+    /**
+     * Gets error message by comparing exception code or by just comparing exception class.
+     *
+     * @param CurrencyException $exception
+     *
+     * @return string
+     */
+    private function handleException(CurrencyException $exception)
+    {
+        if (0 !== $exception->getCode()) {
+            return $this->getErrorByExceptionCode($exception);
+        }
+
+        return $this->getErrorByExceptionType($exception);
     }
 
     /**
@@ -239,6 +413,84 @@ class CurrencyController extends FrameworkBundleAdminController
             return $exceptionTypeDictionary[$exceptionType];
         }
 
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+        return $this->getFallbackErrorMessage($exceptionType, $exception->getCode());
+    }
+
+    /**
+     * Gets an error by exception class and its code.
+     *
+     * @param CurrencyException $exception
+     *
+     * @return string
+     */
+    private function getErrorByExceptionCode(CurrencyException $exception)
+    {
+        $exceptionDictionary = [
+            CurrencyConstraintException::class => [
+                CurrencyConstraintException::INVALID_ISO_CODE => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Currency', 'Admin.Global')),
+                        ]
+                    ),
+                CurrencyConstraintException::INVALID_EXCHANGE_RATE => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Exchange rate', 'Admin.International.Feature')),
+                        ]
+                    ),
+                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS => $this->trans(
+                        'This currency already exists.',
+                        'Admin.International.Notification'
+                    ),
+            ],
+            AutomateExchangeRatesUpdateException::class => [
+                AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
+                    'Please install the %module_name% module before using this feature.',
+                    'Admin.International.Notification',
+                    [
+                        '%module_name%' => 'cronjobs',
+                    ]
+                ),
+            ],
+        ];
+
+        if ($exception instanceof DefaultCurrencyInMultiShopException) {
+            switch ($exception->getCode()) {
+                case DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY:
+                    return $this->trans(
+                        '%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association',
+                        'Admin.International.Notification',
+                        [
+                            '%currency%' => $exception->getCurrencyName(),
+                            '%shop_name%' => $exception->getShopName(),
+                        ]
+                    );
+                case DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY:
+                    return $this->trans(
+                        '%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled',
+                        'Admin.International.Notification',
+                        [
+                            '%currency%' => $exception->getCurrencyName(),
+                            '%shop_name%' => $exception->getShopName(),
+                        ]
+                    );
+            }
+        }
+
+        $exceptionClass = get_class($exception);
+        $exceptionCode = $exception->getCode();
+
+        if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
+            return $exceptionDictionary[$exceptionClass][$exceptionCode];
+        }
+
+        return $this->getFallbackErrorMessage($exceptionClass, $exceptionCode);
     }
 }

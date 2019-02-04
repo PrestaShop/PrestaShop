@@ -152,7 +152,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'attr' => [
                     'placeholder' => $this->trans('ISO code', [], 'Admin.International.Feature'),
                 ],
-            ])
+                ])
                 ->setAssociatedColumn('iso_code')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
