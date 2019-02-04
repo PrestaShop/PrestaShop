@@ -134,18 +134,6 @@ class TaxController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_taxes_index', ['filters' => $filters]);
     }
 
-    public function createAction()
-    {
-        //@todo: implement create action
-        return $this->redirectToRoute('admin_taxes_index');
-    }
-
-    public function editAction($taxId)
-    {
-        //@todo: implement edit
-        return $this->redirectToRoute('admin_taxes_index');
-    }
-
     /**
      * Deletes tax.
      *

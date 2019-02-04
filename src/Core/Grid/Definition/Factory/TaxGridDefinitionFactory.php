@@ -203,10 +203,6 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'action' => 'index',
                     ],
                     'redirect_route' => 'admin_taxes_index',
-                    'attr' => [
-                        'data-url' => $this->resetUrl,
-                        'data-redirect' => $this->redirectUrl,
-                    ],
                 ])
                 ->setAssociatedColumn('actions')
             );
