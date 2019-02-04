@@ -151,6 +151,9 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_tax', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                        ],
                     ])
                     ->setAssociatedColumn('id_tax')
             )
@@ -158,6 +161,9 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('name', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('name')
             )
@@ -165,6 +171,9 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('rate', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search rate', [], 'Admin.International.Feature'),
+                    ],
                 ])
                 ->setAssociatedColumn('rate')
             )
