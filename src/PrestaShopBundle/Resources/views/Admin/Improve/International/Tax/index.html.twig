@@ -31,6 +31,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-12">
       {% include '@PrestaShop/Admin/Improve/International/Tax/Blocks/tax_options.html.twig' %}
+      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxGrid} %}
     </div>
   </div>
 {% endblock %}
@@ -39,4 +40,5 @@
   {{ parent() }}
 
   <script src="{{ asset('themes/new-theme/public/tax.bundle.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}

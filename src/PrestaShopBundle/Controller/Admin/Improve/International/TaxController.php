@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,18 +43,23 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Show taxes page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_tax_index"
+     * )
      *
-     * @param Request $request
+     * @param TaxFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(TaxFilters $filters)
     {
-        $taxOptionsForm = $this->getTaxOptionsFormHandler()->getForm();
+        $taxGridFactory = $this->get('prestashop.core.grid.factory.tax');
+        $taxGrid = $taxGridFactory->getGrid($filters);
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/index.html.twig', [
-            'taxOptionsForm' => $taxOptionsForm->createView(),
+            'taxGrid' => $gridPresenter->present($taxGrid),
         ]);
     }
 
@@ -88,6 +95,67 @@ class TaxController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
+        return $this->redirectToRoute('admin_taxes_index');
+    }
+
+    /**
+     * Provides filters functionality.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.tax');
+        $definitionFactory = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
+        $searchParametersForm->handleRequest($request);
+
+        $filters = [];
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_taxes_index', ['filters' => $filters]);
+    }
+
+    /**
+     * Edit tax
+     *
+     * @param $taxId
+     *
+     * @return RedirectResponse
+     */
+    public function editAction($taxId)
+    {
+        //@todo: implement edit
+        return $this->redirectToRoute('admin_taxes_index');
+    }
+
+    /**
+     * Delete tax
+     *
+     * @param $taxId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($taxId)
+    {
+        //@todo: implement delete action
+        return $this->redirectToRoute('admin_taxes_index');
+    }
+
+    /**
+     * @param $taxId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction($taxId)
+    {
+        //@todo: implement toggle action
         return $this->redirectToRoute('admin_taxes_index');
     }
 

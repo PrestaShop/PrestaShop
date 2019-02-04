@@ -141,3 +141,11 @@ services:
             - '@prestashop.core.grid.filter.cms_page_category_form_factory'
         calls:
           - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+
+    prestashop.core.grid.factory.tax:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.tax'
+            - '@prestashop.core.grid.data_factory.tax'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'

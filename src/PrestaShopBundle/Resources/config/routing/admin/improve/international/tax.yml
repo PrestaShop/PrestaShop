@@ -11,3 +11,37 @@ admin_taxes_save_options:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:saveOptions'
     _legacy_controller: AdminTaxes
+
+admin_currencies_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:search'
+    _legacy_controller: AdminTaxes
+
+admin_tax_edit:
+  path: /{taxId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:edit'
+    _legacy_controller: AdminTaxes
+  requirements:
+    taxId: \d+
+
+admin_tax_delete:
+  path: /{taxId}/delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:delete'
+    _legacy_controller: AdminTaxes
+  requirements:
+    taxId: \d+
+
+admin_tax_toggle_status:
+  path: /{taxId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:toggleStatus'
+    _legacy_controller: AdminTaxes
+  requirements:
+    taxId: \d+
