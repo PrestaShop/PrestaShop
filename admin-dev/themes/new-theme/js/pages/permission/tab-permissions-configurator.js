@@ -26,8 +26,8 @@
 const $ = window.$;
 
 export default class TabPermissionsConfigurator {
-  constructor() {
-    this.$table = $('#tabPermissionsTable');
+  constructor(tabPermissionsTableSelector) {
+    this.$table = $(tabPermissionsTableSelector);
 
     this.$table.on('change', '.js-tab-permissions-checkbox', (event) => {
       this._updatePermissions($(event.currentTarget));
@@ -37,6 +37,8 @@ export default class TabPermissionsConfigurator {
   }
 
   _updatePermissions($checkbox) {
+    const checkboxData = this._getData($checkbox);
+
     let tabId, profileId, permission;
     const rel = $checkbox.data('rel');
 
@@ -47,24 +49,14 @@ export default class TabPermissionsConfigurator {
 
     //this._toggleParent(isChecked, parentId, permission, rel);
     this._handleAllPermissionColumn($checkbox);
+    this._handleMultiplePermissions(checkboxData);
 
-    // $.ajax(this.$table.data('url'), {
-    //   method: 'POST',
-    //   data: {
-    //     profile_id: profileId,
-    //     tab_id: tabId,
-    //     permission: permission,
-    //     expected_status: isChecked
-    //   }
-    // }).then(response => {
-    //   if (response.success) {
-    //     showSuccessMessage(this.$table.data('success-message'));
-    //
-    //     return;
-    //   }
-    //
-    //   showErrorMessage(this.$table.data('error-message'));
-    // });
+    this._sendPermissions({
+      profile_id: profileId,
+      tab_id: tabId,
+      permission: permission,
+      expected_status: isChecked
+    });
   }
 
   _isChildrenChecked(parentId, permission, rel) {
@@ -143,22 +135,28 @@ export default class TabPermissionsConfigurator {
    * @private
    */
   _getData($checkbox) {
-    const data = {};
+    let tabId, profileId, permission, tabSize, tabNumber;
 
-    let tabId, profileId, permission;
-    const rel = $checkbox.data('rel');
+    [tabId, profileId, permission, tabSize, tabNumber] = $checkbox.data('rel').split('||');
 
-    [tabId, profileId, permission] = rel.split('||');
+    return {
+      tabId: tabId,
+      parentTabId: $checkbox.data('parent'),
+      profileId: profileId,
+      permission: permission,
+      isChecked: $checkbox.is(':checked'),
+      tabSize: tabSize,
+      tabNumber: tabNumber,
+    };
+  }
 
-    const parentId = $checkbox.data('parent');
-    const isChecked = $checkbox.is(':checked');
+  _handleMultiplePermissions(checkboxData) {
+    if ('-1' === checkboxData.tabId && 'all' === checkboxData.permission) {
+      this.$table.find('tbody .js-tab-permissions-checkbox').attr('checked', checkboxData.isChecked);
 
-    data.tabId = tabId;
-    data.parentTabId = parentId;
-    data.profileId = profileId;
-    data.permission = permission;
-    data.isChecked = isChecked;
+      return;
+    }
 
-    return data;
+
   }
 }

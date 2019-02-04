@@ -28,8 +28,8 @@
     {{ 'Menu'|trans({}, 'Admin.Advparameters.Feature') }}
   </h3>
   <div class="card-body">
-    <table class="table"
-           id="tabPermissionsTable"
+    <table class="table js-permissions-table"
+           id="tabPermissionsTable_{{ profile.id }}"
            data-url="{{ path('admin_permissions_update_tab_permissions') }}"
            data-success-message="{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}"
            data-error-message="{{ 'Unable to update settings.'|trans({}, 'Admin.Notifications.Error') }}"
