@@ -129,7 +129,7 @@ class DbPDOCore extends Db
 
         // UTF-8 support
         if (!$this->setCharsetUTF8($this->link)) {
-            throw new PrestaShopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+            throw new PrestaShopDatabaseException('Charset utf8 is not supported. Please check your database server configuration.');
         }
 
         $this->link->exec('SET SESSION sql_mode = \'\'');
