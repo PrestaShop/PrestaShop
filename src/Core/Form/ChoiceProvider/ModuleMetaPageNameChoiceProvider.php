@@ -91,7 +91,6 @@ final class ModuleMetaPageNameChoiceProvider implements FormChoiceProviderInterf
         }
 
         if ($metaId) {
-
             return $this->dataProvider->getModuleMetaPageNameById($metaId);
         }
 

@@ -93,7 +93,6 @@ final class DefaultMetaPageNameChoiceProvider implements FormChoiceProviderInter
         }
 
         if ($metaId) {
-
             return $this->dataProvider->getDefaultMetaPageNameById($metaId);
         }
 
