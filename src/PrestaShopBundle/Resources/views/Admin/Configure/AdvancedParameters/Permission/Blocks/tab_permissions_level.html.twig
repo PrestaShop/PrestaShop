@@ -28,7 +28,7 @@
     {% set childTabPermissions = profileTabPermissions[tab.id] %}
     {% set employeeTabPermissions = employeeProfileTabPermissions[tab.id] %}
     {% set isChild, resultPermissions, hasAllPermissions = true, 0, true %}
-    <tr>
+    <tr class="{% if tab.id_parent == 0 %}parent{% else %}js-child-{{ tab.id_parent }}{% endif %}" >
       <td>&nbsp;&nbsp; &raquo; {{ tab.name }}</td>
       {% for permission in permissions %}
         {% set permissionId = permissionIds[permission] %}
@@ -37,11 +37,11 @@
             <div class="md-checkbox md-checkbox-inline">
               <label>
                 <input type="checkbox"
-                       class="js-tab-permissions-checkbox js-checkbox-tab-{{ tab.id }}-permission-{{ permission }}"
+                       class="js-tab-permissions-checkbox js-checkbox-tab-{{ tab.id }}-permission-{{ permission }} js-permission-{{ permission }} js-checkbox-parent-id-{{ tab.id_parent }}"
                        data-id="{{ permissionId }}"
                        data-parent="{{ tab.id_parent }}"
                        data-type="{{ permission }}"
-                       data-rel="{{ childTabPermissions['id_tab'] }}||{{ profile.id }}||{{ permission }}||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+                       data-rel="{{ tab.id }}||{{ profile.id }}||{{ permission }}||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
                        {% if childTabPermissions[permission] %}checked{% endif %}
                 >
                 <i class="md-checkbox-control"></i>
