@@ -35,14 +35,12 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 const $ = window.$;
 
 $(() => {
-  const tax = new Grid('tax');
-  tax.addExtension(new SortingExtension());
-  tax.addExtension(new FiltersResetExtension());
-  tax.addExtension(new ReloadListActionExtension());
-  tax.addExtension(new ColumnTogglingExtension());
-  tax.addExtension(new SubmitRowActionExtension());
-  tax.addExtension(new SubmitBulkExtension());
-  tax.addExtension(new BulkActionCheckboxExtension());
-
-
+  const taxGrid = new Grid('tax');
+  taxGrid.addExtension(new SortingExtension());
+  taxGrid.addExtension(new FiltersResetExtension());
+  taxGrid.addExtension(new ReloadListActionExtension());
+  taxGrid.addExtension(new ColumnTogglingExtension());
+  taxGrid.addExtension(new SubmitRowActionExtension());
+  taxGrid.addExtension(new SubmitBulkExtension());
+  taxGrid.addExtension(new BulkActionCheckboxExtension());
 });

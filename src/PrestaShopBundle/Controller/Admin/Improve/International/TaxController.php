@@ -82,7 +82,7 @@ class TaxController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_tax_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_taxes_index', ['filters' => $filters]);
     }
 
     /**
@@ -95,7 +95,7 @@ class TaxController extends FrameworkBundleAdminController
     public function editAction($taxId)
     {
         //@todo: implement edit
-        return $this->redirectToRoute('admin_tax_index');
+        return $this->redirectToRoute('admin_taxes_index');
     }
 
     /**
@@ -108,7 +108,7 @@ class TaxController extends FrameworkBundleAdminController
     public function deleteAction($taxId)
     {
         //@todo: implement delete action
-        return $this->redirectToRoute('admin_tax_index');
+        return $this->redirectToRoute('admin_taxes_index');
     }
 
     /**
@@ -119,6 +119,6 @@ class TaxController extends FrameworkBundleAdminController
     public function toggleStatusAction($taxId)
     {
         //@todo: implement toggle action
-        return $this->redirectToRoute('admin_tax_index');
+        return $this->redirectToRoute('admin_taxes_index');
     }
 }

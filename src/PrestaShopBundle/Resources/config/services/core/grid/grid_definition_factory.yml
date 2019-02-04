@@ -121,7 +121,4 @@ services:
     prestashop.core.grid.definition.factory.tax:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'tax', 'action': 'index'})"
-            - "@=service('router').generate('admin_tax_index')"
-        public: tru
+        public: true
