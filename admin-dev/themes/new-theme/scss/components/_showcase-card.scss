@@ -14,8 +14,8 @@
     vertical-align: top;
   }
 
-  &__team {
-    background-image: url('img/helper-card/team-background.png');
+  &__team, &__customer {
+    background-image: url('img/helper-card/wave-shape-background.png');
   }
 
   &__left {

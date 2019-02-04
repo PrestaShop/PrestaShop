@@ -39,6 +39,7 @@ import DeleteCustomersBulkActionExtension
   from "../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension";
 import DeleteCustomerRowActionExtension
   from "../../components/grid/extension/action/row/customer/delete-customer-row-action-extension";
+import HelperCard from "../../components/helper-card";
 
 const $ = window.$;
 
@@ -65,4 +66,5 @@ $(() => {
   // where you click any row
   // and it redirects user to related page
   new LinkableItem();
+  new HelperCard();
 });
