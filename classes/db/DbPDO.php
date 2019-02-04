@@ -476,7 +476,7 @@ class DbPDOCore extends Db
      *
      * @return bool if setting UTF-8 charset was successful
      */
-    public static function setCharsetUTF8($link)
+    public static function setCharsetUTF8(PDO $link)
     {
         return (bool) ($link->query('SET NAMES \'utf8\''));
     }
