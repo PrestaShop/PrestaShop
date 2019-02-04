@@ -47,7 +47,8 @@ final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerIn
             $command->getProfileId()->getValue(),
             $command->getTabId(),
             $command->getPermission()->getValue(),
-            $command->getExpectedStatus()
+            $command->getExpectedStatus(),
+            $command->isAddedFromParent()
         );
 
         if ('error' === $result) {
