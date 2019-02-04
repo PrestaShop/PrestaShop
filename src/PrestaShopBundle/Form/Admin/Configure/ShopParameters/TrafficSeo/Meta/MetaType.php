@@ -74,8 +74,6 @@ class MetaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        todo: remove
-        $this->defaultPageChoices['error{}'] = 'errrorrr{}';
         $builder
             ->add('page_name', ChoiceType::class, [
                 'choices' => [
@@ -100,7 +98,6 @@ class MetaType extends AbstractType
                             'Admin.Notifications.Error'
                         ),
                     ]),
-                    new GreaterThan(1000)
                 ],
                 'choice_translation_domain' => false,
             ])

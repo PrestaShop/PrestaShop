@@ -164,11 +164,10 @@
 
       {% set errorPopover %}
         <span
-          class="js-locale-input-error-popover-trigger"
-          data-toggle="locale-input-popover"
+          data-toggle="form-popover-error"
           data-placement="bottom"
           data-html="true"
-          data-template='<div class="popover js-locale-input-error-popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+          data-template='<div class="popover form-popover-error" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
           data-content='{{ popoverErrorContent }}'
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"

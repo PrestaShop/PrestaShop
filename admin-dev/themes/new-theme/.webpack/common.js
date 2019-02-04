@@ -42,6 +42,7 @@ module.exports = {
     themes: './js/pages/themes',
     profiles: './js/pages/profiles',
     cms_page: './js/pages/cms-page',
+    form_popover_error: './js/components/form/form-popover-error.js',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

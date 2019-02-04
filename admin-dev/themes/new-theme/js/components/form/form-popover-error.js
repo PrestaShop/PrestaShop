@@ -25,51 +25,48 @@
 
 const $ = window.$;
 
-export default class LocaleInputErrorPopover {
-  constructor() {
-    this.initEvents();
-  }
+/**
+ * Component responsible for displaying form popover errors with modified width which is calculated based on the
+ * form group width.
+ */
+$(() => {
+  // loads form popover instance
+  $('[data-toggle="form-popover-error"]').popover();
 
   /**
-   * creates new popover instance and registers events related with it.
-   */
-  initEvents() {
-    $('[data-toggle="locale-input-popover"]').popover();
-
-    $(document).on('shown.bs.popover', '[data-toggle="locale-input-popover"]', (event) => this.repositionPopover(event));
-  }
-
-  /**
-   * Recalculates popover position so it is always aligned with locale input group horizontally and width is identical
-   * to the child elements of locale input group.
+   * Recalculates popover position so it is always aligned horizontally and width is identical
+   * to the child elements of the form.
    * @param {Object} event
    */
-  repositionPopover(event) {
+  const repositionPopover = (event) => {
     const $element = $(event.currentTarget);
     const $formGroup = $element.closest('.form-group');
-    const $localeInputGroup = $formGroup.find('.js-locale-input-group');
-    const $errorPopover = $formGroup.find('.js-locale-input-error-popover');
+    const $invalidFeedbackContainer = $formGroup.find('.invalid-feedback-container');
+    const $errorPopover = $formGroup.find('.form-popover-error');
 
-    const localeVisibleElementWidth = $localeInputGroup.find('.js-locale-input:visible').width();
+    const localeVisibleElementWidth = $invalidFeedbackContainer.width();
 
     $errorPopover.css('width', localeVisibleElementWidth);
 
-    const horizontalDifference = this.getHorizontalDifference($localeInputGroup, $errorPopover);
+    const horizontalDifference = getHorizontalDifference($invalidFeedbackContainer, $errorPopover);
 
     $errorPopover.css('left', `${horizontalDifference}px`);
-  }
+  };
 
   /**
    * gets horizontal difference which helps to align popover horizontally.
-   * @param {jQuery} $localeInputGroup
+   * @param {jQuery} $invalidFeedbackContainer
    * @param {jQuery} $errorPopover
    * @returns {number}
    */
-  getHorizontalDifference($localeInputGroup, $errorPopover)
-  {
-    const localeInputHorizontalPosition = $localeInputGroup.offset().left;
+  const getHorizontalDifference = ($invalidFeedbackContainer, $errorPopover) => {
+    const inputHorizontalPosition = $invalidFeedbackContainer.offset().left;
     const popoverHorizontalPosition = $errorPopover.offset().left;
 
-    return localeInputHorizontalPosition - popoverHorizontalPosition;
-  }
-}
+    return inputHorizontalPosition - popoverHorizontalPosition;
+  };
+
+  // registers the event which displays the popover
+  $(document).on('shown.bs.popover', '[data-toggle="form-popover-error"]', (event) => repositionPopover(event));
+});
+

@@ -23,8 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import LocaleInputErrorPopover from './locale-input-error-popover';
-
 const $ = window.$;
 
 class TranslatableInput {
@@ -36,8 +34,6 @@ class TranslatableInput {
         this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
 
         $('body').on('click', this.localeItemSelector, this.toggleInputs.bind(this));
-
-        new LocaleInputErrorPopover();
     }
 
     /**
