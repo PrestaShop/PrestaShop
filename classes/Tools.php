@@ -4040,6 +4040,48 @@ exit;
         }
         exit;
     }
+    /**
+     * HELPER: Add SQL string to sort products: inStock, OutOfStock & OOSP, outOfStock
+     *
+     * @return string sql
+     */
+    public static function sqlOrderByOOSP($orderyBy)
+    {
+        $orderByFacets = array('orderprice', 'price', 'p.price'); // All used "facets" when ordering by price
+        $sql = '';
+        if (in_array(Tools::strtolower($orderyBy), $orderByFacets)) {
+            $sql = 'stock.quantity DESC, FIELD(stock.out_of_stock, 1, 2, 0) ASC, ';
+        }
+        return $sql;
+    }
+
+    /**
+     * Rearange Products array. Sort products like so: inStock, OutOfStock & OOSP, outOfStock
+     *
+     * @param array $result
+     *
+     * @return array products
+     */
+    public static function orderByOOSP($array)
+    {
+        $outOfStockProducts = array();
+        $outOfStockOOPSProducts = array();
+
+        foreach($array as $subKey => $subArray){
+            // SPLIT & UNSET"out_of_stock but available for order" PRODUCTS
+            if(Product::isAvailableWhenOutOfStock($subArray['out_of_stock']) == 1 && $subArray['quantity'] == 0) {
+                $outOfStockOOPSProducts[] = $array[$subKey];
+                unset($array[$subKey]);
+            }
+
+            // SPLIT & UNSET "out_of_stock" PRODUCTS
+            if(Product::isAvailableWhenOutOfStock($subArray['out_of_stock']) == 0 && $subArray['quantity'] == 0) {
+                $outOfStockProducts[] = $array[$subKey];
+                unset($array[$subKey]);
+            }
+         }
+        return array_merge($array, $outOfStockOOPSProducts, $outOfStockProducts);
+    }
 }
 
 /**

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -65,7 +66,8 @@ class PaginationType extends AbstractType
                 ],
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
-            ]);
+            ])
+            ->add('display_out_of_stock_last', SwitchType::class);
     }
 
     /**

@@ -822,12 +822,12 @@ class CategoryCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_category`, cl.`name`, c.id_parent
 		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl 
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 		ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		'.Shop::addSqlAssociation('category', 'c').'
 		WHERE cl.`id_lang` = '.(int) $idLang.'
         AND c.`nleft` >= '.(int) $rootTreeInfo['nleft'].'
-        AND c.`nright` <= '.(int) $rootTreeInfo['nright'].'		
+        AND c.`nright` <= '.(int) $rootTreeInfo['nright'].'
 		GROUP BY c.id_category
 		ORDER BY c.`id_category`, category_shop.`position`');
     }
@@ -1003,7 +1003,9 @@ class CategoryCore extends ObjectModel
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT '.(int) $randomNumberProducts;
         } else {
-            $sql .= ' ORDER BY '.(!empty($orderByPrefix) ? $orderByPrefix.'.' : '').'`'.bqSQL($orderyBy).'` '.pSQL($orderWay).'
+            $sql .= ' ORDER BY ';
+            $sql .= (Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST') ? Tools::sqlOrderByOOSP($order_by) : '');
+            $sql .= (!empty($orderByPrefix) ? $orderByPrefix.'.' : '').'`'.bqSQL($orderyBy).'` '.pSQL($orderWay).'
 			LIMIT '.(((int) $p - 1) * (int) $n).','.(int) $n;
         }
 
@@ -1015,6 +1017,9 @@ class CategoryCore extends ObjectModel
 
         if ($orderyBy == 'orderprice') {
             Tools::orderbyPrice($result, $orderWay);
+            if(Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST')) {
+                $result = Tools::orderByOOSP($result);
+            }
         }
 
         // Modify SQL result
@@ -1523,7 +1528,7 @@ class CategoryCore extends ObjectModel
 
         if (!empty($treeInfo)) {
             $rootTreeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-                'SELECT c.`nleft`, c.`nright` FROM `'._DB_PREFIX_.'category` c 
+                'SELECT c.`nleft`, c.`nright` FROM `'._DB_PREFIX_.'category` c
             WHERE c.`id_category` = '.(int) $context->shop->id_category
             );
 

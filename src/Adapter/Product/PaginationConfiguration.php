@@ -54,6 +54,7 @@ class PaginationConfiguration implements DataConfigurationInterface
             'products_per_page' => $this->configuration->get('PS_PRODUCTS_PER_PAGE'),
             'default_order_by' => $this->configuration->get('PS_PRODUCTS_ORDER_BY'),
             'default_order_way' => $this->configuration->get('PS_PRODUCTS_ORDER_WAY'),
+            'display_out_of_stock_last' => $this->configuration->getBoolean('PS_DISPLAY_OUT_OF_STOCK_LAST'),
         ];
     }
 
@@ -68,6 +69,7 @@ class PaginationConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_PRODUCTS_PER_PAGE', (int) $config['products_per_page']);
             $this->configuration->set('PS_PRODUCTS_ORDER_BY', (int) $config['default_order_by']);
             $this->configuration->set('PS_PRODUCTS_ORDER_WAY', (int) $config['default_order_way']);
+            $this->configuration->set('PS_DISPLAY_OUT_OF_STOCK_LAST', (int) $config['display_out_of_stock_last']);
         }
 
         return $errors;
@@ -83,6 +85,7 @@ class PaginationConfiguration implements DataConfigurationInterface
             'products_per_page',
             'default_order_by',
             'default_order_way',
+            'display_out_of_stock_last',
         ]);
 
         $resolver->resolve($configuration);
