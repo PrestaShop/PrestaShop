@@ -1648,21 +1648,11 @@ class CartCore extends ObjectModel
             CartRule::autoAddToCart($context, $useOrderPrices);
         }
 
-        if ($product->customizable) {
-            return $this->_updateCustomizationQuantity(
-                (int) $quantity,
-                (int) $id_customization,
-                (int) $id_product,
-                (int) $id_product_attribute,
-                (int) $id_address_delivery,
-                $operator
-            );
-        }
-
         return true;
     }
 
     /**
+     * @deprecated 8.0.0
      * Customization management.
      *
      * @param int $quantity Quantity value to add or subtract
@@ -1881,18 +1871,6 @@ class CartCore extends ObjectModel
 
         if ($result === false) {
             return false;
-        }
-
-        /* If the product still possesses customization it does not have to be deleted */
-        if (Db::getInstance()->numRows() && (int) $result['quantity']) {
-            return Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                SET `quantity` = ' . (int) $result['quantity'] . '
-                WHERE `id_cart` = ' . (int) $this->id . '
-                AND `id_product` = ' . (int) $id_product . '
-                AND `id_customization` = ' . (int) $id_customization .
-                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
-            );
         }
 
         $preservedGifts = [];
