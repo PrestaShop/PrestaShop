@@ -29,11 +29,12 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
-               {% if configurablePermissions.isBulkViewConfigurationEnabled(profile.id) %}
-
-               {% else %}
-                 disabled
-               {% endif %}
+               class="js-tab-permissions-checkbox"
+               data-id="0"
+               data-parent="0"
+               data-type="view"
+               data-rel="-1||{{ profile.id }}||view||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+               {% if not configurablePermissions.isBulkViewConfigurationEnabled(profile.id) %}disabled{% endif %}
         />
         <i class="md-checkbox-control"></i>
       </label>
@@ -44,11 +45,12 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
-               {% if configurablePermissions.isBulkAddConfigurationEnabled(profile.id) %}
-
-               {% else %}
-                 disabled
-               {% endif %}
+               class="js-tab-permissions-checkbox"
+               data-id="0"
+               data-parent="0"
+               data-type="add"
+               data-rel="-1||{{ profile.id }}||add||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+               {% if not configurablePermissions.isBulkAddConfigurationEnabled(profile.id) %}disabled{% endif %}
         />
         <i class="md-checkbox-control"></i>
       </label>
@@ -59,11 +61,12 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
-               {% if configurablePermissions.isBulkEditConfigurationEnabled(profile.id) %}
-
-               {% else %}
-                 disabled
-               {% endif %}
+               class="js-tab-permissions-checkbox"
+               data-id="0"
+               data-parent="0"
+               data-type="edit"
+               data-rel="-1||{{ profile.id }}||edit||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+               {% if not configurablePermissions.isBulkEditConfigurationEnabled(profile.id) %}disabled{% endif %}
         />
         <i class="md-checkbox-control"></i>
       </label>
@@ -74,11 +77,12 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
-               {% if configurablePermissions.isBulkDeleteConfigurationEnabled(profile.id) %}
-
-               {% else %}
-                 disabled
-               {% endif %}
+               class="js-tab-permissions-checkbox"
+               data-id="0"
+               data-parent="0"
+               data-type="delete"
+               data-rel="-1||{{ profile.id }}||delete||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+               {% if not configurablePermissions.isBulkDeleteConfigurationEnabled(profile.id) %}disabled{% endif %}
         />
         <i class="md-checkbox-control"></i>
       </label>
@@ -89,11 +93,12 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
-               {% if configurablePermissions.isBulkAllConfigurationEnabled(profile.id) %}
-
-               {% else %}
-                 disabled
-               {% endif %}
+               class="js-tab-permissions-checkbox"
+               data-id="0"
+               data-parent="0"
+               data-type="all"
+               data-rel="-1||{{ profile.id }}||all||{{ maxTabCount }}||{{ configurablePermissions.tabs|length }}"
+               {% if not configurablePermissions.isBulkAllConfigurationEnabled(profile.id) %}disabled{% endif %}
         />
         <i class="md-checkbox-control"></i>
       </label>
