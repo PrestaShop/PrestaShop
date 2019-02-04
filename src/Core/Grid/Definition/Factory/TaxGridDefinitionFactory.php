@@ -50,22 +50,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var string
-     */
-    private $resetUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectUrl;
-
-    public function __construct($resetUrl, $redirectUrl)
-    {
-        $this->resetUrl = $resetUrl;
-        $this->redirectUrl = $redirectUrl;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getId()
@@ -88,7 +72,7 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new ColumnCollection())
             ->add(
-                (new BulkActionColumn('customers_bulk'))
+                (new BulkActionColumn('bulk'))
                     ->setOptions([
                         'bulk_field' => 'id_tax',
                     ])
@@ -119,7 +103,7 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_tax',
-                    'route' => 'admin_tax_toggle_status',
+                    'route' => 'admin_taxes_toggle_status',
                     'route_param_name' => 'taxId',
                 ])
             )
@@ -133,7 +117,7 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                 ->setIcon('edit')
                                 ->setOptions([
-                                    'route' => 'admin_tax_edit',
+                                    'route' => 'admin_taxes_edit',
                                     'route_param_name' => 'taxId',
                                     'route_param_field' => 'id_tax',
                                 ])
@@ -148,7 +132,7 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                                         [],
                                         'Admin.Notifications.Warning'
                                     ),
-                                    'route' => 'admin_tax_delete',
+                                    'route' => 'admin_taxes_delete',
                                     'route_param_name' => 'taxId',
                                     'route_param_field' => 'id_tax',
                                 ])
@@ -194,10 +178,12 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetUrl,
-                            'data-redirect' => $this->redirectUrl,
+                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route_params' => [
+                            'controller' => 'tax',
+                            'action' => 'index',
                         ],
+                        'redirect_route' => 'admin_taxes_index',
                     ])
                     ->setAssociatedColumn('actions')
             );
@@ -227,21 +213,21 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                     ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_tax_index',
+                        'submit_route' => 'admin_taxes_index',
                     ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                     ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_tax_index',
+                        'submit_route' => 'admin_taxes_index',
                     ])
             )
             ->add(
                 (new SubmitBulkAction('delete_selection'))
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_tax_index',
+                        'submit_route' => 'admin_taxes_index',
                         'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                     ])
             );
