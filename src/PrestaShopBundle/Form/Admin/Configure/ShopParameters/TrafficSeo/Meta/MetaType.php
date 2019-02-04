@@ -35,6 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -73,6 +74,8 @@ class MetaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+//        todo: remove
+        $this->defaultPageChoices['error{}'] = 'errrorrr{}';
         $builder
             ->add('page_name', ChoiceType::class, [
                 'choices' => [
@@ -97,6 +100,7 @@ class MetaType extends AbstractType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new GreaterThan(1000)
                 ],
                 'choice_translation_domain' => false,
             ])
