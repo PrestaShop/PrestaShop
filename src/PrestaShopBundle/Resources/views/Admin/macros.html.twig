@@ -129,7 +129,7 @@
     {% set errorPopover = null %}
 
     {% if errors|length > 1 %}
-      {% set popoverContainer = 'locale-input-error-popover-container-'~form.vars.id %}
+      {% set popoverContainer = 'popover-error-container-'~form.vars.id %}
       <div class="{{ popoverContainer }}"></div>
 
       {% if form.vars.errors_by_locale is defined %}
