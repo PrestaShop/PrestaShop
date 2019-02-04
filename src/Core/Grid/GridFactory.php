@@ -79,7 +79,7 @@ final class GridFactory implements GridFactoryInterface
         $data = $this->dataFactory->getData($searchCriteria);
 
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDataModifier', [
-            'data' => $data,
+            'data' => &$data,
         ]);
 
         $filterForm = $this->filterFormFactory->create($definition);
