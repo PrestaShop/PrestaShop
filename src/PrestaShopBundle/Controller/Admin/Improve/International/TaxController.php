@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,9 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,13 +94,13 @@ class TaxController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_taxes_index', ['filters' => $filters]);
     }
 
-    /**
-     * Edit tax
-     *
-     * @param $taxId
-     *
-     * @return RedirectResponse
-     */
+    public function createAction()
+    {
+        //@todo: implement create action
+        return $this->redirectToRoute('admin_taxes_index');
+    }
+
+
     public function editAction($taxId)
     {
         //@todo: implement edit
@@ -104,20 +108,39 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete tax
+     * Deletes currency.
      *
-     * @param $taxId
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     *     message="You do not have permission to delete this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_taxes_index")
+     *
+     * @param int $taxId
      *
      * @return RedirectResponse
      */
     public function deleteAction($taxId)
     {
-        //@todo: implement delete action
+        try {
+            $this->getCommandBus()->handle(new DeleteTaxCommand((int) $taxId));
+        } catch (TaxException $exception) {
+            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+        );
+
         return $this->redirectToRoute('admin_taxes_index');
     }
 
     /**
-     * @param $taxId
+     * @param int $taxId
      *
      * @return RedirectResponse
      */
@@ -125,5 +148,30 @@ class TaxController extends FrameworkBundleAdminController
     {
         //@todo: implement toggle action
         return $this->redirectToRoute('admin_taxes_index');
+    }
+
+    /**
+     * Gets error by exception type.
+     *
+     * @param TaxException $exception
+     *
+     * @return string
+     */
+    private function getErrorByExceptionType(TaxException $exception)
+    {
+        $exceptionTypeDictionary = [
+            TaxNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+        ];
+
+        $exceptionType = get_class($exception);
+
+        if (isset($exceptionTypeDictionary[$exceptionType])) {
+            return $exceptionTypeDictionary[$exceptionType];
+        }
+
+        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 }

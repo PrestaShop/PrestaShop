@@ -12,6 +12,15 @@ admin_taxes_search:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:search'
     _legacy_controller: AdminTaxes
 
+admin_taxes_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:create'
+    _legacy_controller: AdminTaxes
+  requirements:
+    taxId: \d+
+
 admin_taxes_edit:
   path: /{taxId}/edit
   methods: [GET, POST]
