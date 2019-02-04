@@ -30,6 +30,8 @@ export default class TabPermissionsConfigurator {
     this.$table = $('#tabPermissionsTable');
 
     this.$table.on('change', '.js-tab-permissions-checkbox', (event) => {
+      console.log('changed');
+      console.log($(event.currentTarget));
       this._updatePermissions($(event.currentTarget));
     });
 
@@ -38,45 +40,58 @@ export default class TabPermissionsConfigurator {
 
   _updatePermissions($checkbox) {
     let tabId, profileId, permission;
+    const rel = $checkbox.data('rel');
 
-    [tabId, profileId, permission] = $checkbox.data('rel').split('||');
+    [tabId, profileId, permission] = rel.split('||');
 
     const parentId = $checkbox.data('parent');
     const isChecked = $checkbox.is(':checked');
 
-    console.log(parentId);
+    this._toggleParent(isChecked, parentId, permission, rel);
 
-    // preselect parent
+    // $.ajax(this.$table.data('url'), {
+    //   method: 'POST',
+    //   data: {
+    //     profile_id: profileId,
+    //     tab_id: tabId,
+    //     permission: permission,
+    //     expected_status: isChecked
+    //   }
+    // }).then(response => {
+    //   if (response.success) {
+    //     showSuccessMessage(this.$table.data('success-message'));
+    //
+    //     return;
+    //   }
+    //
+    //   showErrorMessage(this.$table.data('error-message'));
+    // });
+  }
+
+  _isChildrenChecked(parentId, permission, rel) {
+    const $children = this.$table.find(`[data-parent="${parentId}"][data-type="${permission}"]:not([data-rel="${rel}"])`);
+    let isChecked = false;
+
+    $children.each((i, element) => {
+      if ($(element).is(':checked')) {
+        isChecked = true;
+      }
+    });
+
+    console.log('children is checked ' + isChecked);
+
+    return isChecked;
+  }
+
+  _toggleParent(isChecked, parentId, permission, rel) {
     if (0 !== parentId) {
       const $parentCheckbox = this.$table.find(`.js-checkbox-tab-${parentId}-permission-${permission}`);
 
-      if ($parentCheckbox.is(':checked')) {
-
-      } else if (isChecked && this._isChildrenChecked()) {
+      if (!$parentCheckbox.is(':checked')) {
+        $parentCheckbox.prop('checked', true).change();
+      } else if (!isChecked && !this._isChildrenChecked(parentId, permission, rel)) {
         $parentCheckbox.prop('checked', false).change();
       }
     }
-
-    $.ajax(this.$table.data('url'), {
-      method: 'POST',
-      data: {
-        profile_id: profileId,
-        tab_id: tabId,
-        permission: permission,
-        expected_status: isChecked
-      }
-    }).then(response => {
-      if (response.success) {
-        showSuccessMessage(this.$table.data('success-message'));
-
-        return;
-      }
-
-      showErrorMessage(this.$table.data('error-message'));
-    });
-  }
-
-  _isChildrenChecked() {
-
   }
 }
