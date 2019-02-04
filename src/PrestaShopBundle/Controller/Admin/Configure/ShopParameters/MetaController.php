@@ -56,7 +56,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(MetaFilters $filters)
+    public function indexAction(MetaFilters $filters, Request $request)
     {
         $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.meta');
 
@@ -95,7 +95,7 @@ class MetaController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_meta_create'),
+                    'href' => $this->generateUrl('admin_metas_create'),
                     'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -112,7 +112,7 @@ class MetaController extends FrameworkBundleAdminController
             'isShopFeatureActive' => $isShopFeatureActive,
             'isHostMode' => $hostingInformation->isHostMode(),
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminMeta'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
             'indexPageId' => $metaDataProvider->getIdByPage('index'),
             'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
@@ -124,7 +124,7 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
-     * @DemoRestricted(redirectRoute="admin_meta_index")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
      *
@@ -144,7 +144,7 @@ class MetaController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_meta_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_metas_index', ['filters' => $filters]);
     }
 
     /**
@@ -168,7 +168,7 @@ class MetaController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_meta_index');
+                return $this->redirectToRoute('admin_metas_index');
             }
         } catch (MetaException $exception) {
             $this->addFlash('error', $this->handleException($exception));
@@ -201,12 +201,12 @@ class MetaController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_meta_index');
+                return $this->redirectToRoute('admin_metas_index');
             }
         } catch (MetaException $e) {
             $this->addFlash('error', $this->handleException($e));
 
-            return $this->redirectToRoute('admin_meta_index');
+            return $this->redirectToRoute('admin_metas_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
@@ -220,8 +220,6 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
-     *
-     * @DemoRestricted(redirectRoute="admin_meta_index")
      *
      * @param int $metaId
      *
@@ -241,7 +239,7 @@ class MetaController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_meta_index');
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
@@ -249,8 +247,6 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
-     *
-     * @DemoRestricted(redirectRoute="admin_meta_index")
      *
      * @param Request $request
      *
@@ -272,7 +268,7 @@ class MetaController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_meta_index');
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
@@ -280,8 +276,6 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
-     *
-     * @DemoRestricted(redirectRoute="admin_meta_index")
      *
      * @param Request $request
      *
@@ -307,7 +301,7 @@ class MetaController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_meta_index');
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
@@ -315,8 +309,6 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_metas_index")
-     *
-     * @DemoRestricted(redirectRoute="admin_meta_index")
      *
      * @return RedirectResponse
      */
@@ -338,7 +330,7 @@ class MetaController extends FrameworkBundleAdminController
                 )
             );
 
-            return $this->redirectToRoute('admin_meta_index');
+            return $this->redirectToRoute('admin_metas_index');
         }
 
         $this->addFlash(
@@ -346,7 +338,7 @@ class MetaController extends FrameworkBundleAdminController
             $this->trans('Successful update.', 'Admin.Notifications.Success')
         );
 
-        return $this->redirectToRoute('admin_meta_index');
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**

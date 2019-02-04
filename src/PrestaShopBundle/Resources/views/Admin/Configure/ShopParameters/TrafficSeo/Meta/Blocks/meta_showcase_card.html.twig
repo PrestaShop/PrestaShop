@@ -36,7 +36,7 @@
       <p>{{ 'Edit information about your pages to gain visibility and therefore reach more visitors. We advise you to start with the index page, it stands for your homepage.'|trans }}</p>
       <a class="btn btn-outline-secondary" href="{{ helperDocLink }}" target="_blank">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
       {% if indexPageId and isGridDisplayed %}
-        <a class="btn btn-primary" href="{{ path('admin_meta_edit', {'metaId': indexPageId}) }}">{{ 'Configure index page'|trans }}</a>
+        <a class="btn btn-primary" href="{{ path('admin_metas_edit', {'metaId': indexPageId}) }}">{{ 'Configure index page'|trans }}</a>
       {% endif %}
     </div>
     <i class="showcase-card__close material-icons js-remove-helper-block" data-card-name="{{ metaShowcaseCardName }}" data-close-url="{{ path('admin_close_showcase_card') }}">close</i>

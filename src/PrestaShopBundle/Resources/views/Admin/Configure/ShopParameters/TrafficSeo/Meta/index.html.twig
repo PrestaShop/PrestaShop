@@ -52,7 +52,7 @@
 
   <div class="row justify-content-center">
       <div class="col">
-        {{ form_start(metaForm, {'action': path('admin_meta_save_options')}) }}
+        {{ form_start(metaForm, {'action': path('admin_metas_save_options')}) }}
 
           {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig' %}
           {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig' %}
@@ -66,7 +66,7 @@
 
         {{ form_end(metaForm) }}
 
-        {{ form_start(robotsForm, {'action': path('admin_meta_generate_robots_text_file')}) }}
+        {{ form_start(robotsForm, {'action': path('admin_metas_generate_robots_text_file')}) }}
           {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig' %}
           {{ form_rest(robotsForm) }}
         {{ form_end(robotsForm) }}

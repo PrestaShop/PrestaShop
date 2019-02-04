@@ -112,7 +112,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                             (new LinkRowAction('edit'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_meta_edit',
+                                'route' => 'admin_metas_edit',
                                 'route_param_name' => 'metaId',
                                 'route_param_field' => 'id_meta',
                             ])
@@ -123,7 +123,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_meta_delete',
+                                'route' => 'admin_metas_delete',
                                 'route_param_name' => 'metaId',
                                 'route_param_field' => 'id_meta',
                                 'confirm_message' => $this->trans(
@@ -179,7 +179,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                             'controller' => 'meta',
                             'action' => 'index',
                         ],
-                        'redirect_route' => 'admin_meta_index',
+                        'redirect_route' => 'admin_metas_index',
                     ])
                 ->setAssociatedColumn('actions')
             );
@@ -218,7 +218,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('delete_seo_urls'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_meta_delete_bulk',
+                    'submit_route' => 'admin_metas_delete_bulk',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             );
