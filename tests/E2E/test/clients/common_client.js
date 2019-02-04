@@ -215,7 +215,7 @@ class CommonClient {
       .then((variable) => global.tab[globalVar] = variable);
   }
 
-  checkTextValue(selector, textToCheckWith, parameter = 'equal', pause = 0) {
+  checkTextValue(selector, textToCheckWith, parameter = 'equal', pause = 0, type = "") {
     switch (parameter) {
       case "contain":
         return this.client
@@ -229,7 +229,14 @@ class CommonClient {
           .pause(pause)
           .waitForExist(selector, 9000)
           .then(() => this.client.getText(selector))
-          .then((text) => expect(text).to.equal(textToCheckWith));
+          .then((text) => {
+            if (type === "int") {
+              let textValue = parseInt(text);
+              expect(textValue).to.equal(textToCheckWith);
+            } else {
+              expect(text).to.equal(textToCheckWith)
+            }
+          });
         break;
       case "deepequal":
         return this.client
@@ -744,6 +751,34 @@ class CommonClient {
 
   closeFrame() {
     return this.client.frameParent();
+  }
+
+  checkStockColumn(selector, textToCheckWith) {
+    return this.client
+      .waitForExist(selector, 9000)
+      .then(() => this.client.getText(selector))
+      .then((text) => expect(text.split(' trending_flat ')[0]).to.equal(textToCheckWith));
+  }
+
+  checkElementValidation(selector, validationText, parameter = 'equal') {
+    return this.client
+      .pause(3000)
+      .execute(function (selector) {
+        let message = document.querySelector(selector).validationMessage;
+        return message;
+      }, selector)
+      .then((message) => {
+        switch (parameter) {
+          case "equal":
+            expect(message.value).to.be.equal(validationText);
+            break;
+          case "contain":
+            expect(message.value).to.contain(validationText);
+            break;
+          default:
+            break;
+        }
+      });
   }
 }
 

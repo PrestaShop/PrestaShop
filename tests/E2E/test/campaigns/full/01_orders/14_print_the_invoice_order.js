@@ -188,7 +188,7 @@ scenario('Print the invoice of an order', () => {
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName)
         }
       });
-      test('should check that the "invoice customer" is : Johan DOE', async () => {
+      test('should check that the "invoice customer" is : John DOE', async () => {
         await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + '.pdf');
         if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
