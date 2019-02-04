@@ -37,4 +37,14 @@
       }
     }
   }
+
+  .token-input {
+    width: auto !important;
+  }
+}
+
+.locale-input-group {
+  .js-taggable-field {
+    width: 80%;
+  }
 }
