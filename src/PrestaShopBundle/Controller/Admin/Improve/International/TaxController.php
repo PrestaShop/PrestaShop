@@ -46,18 +46,23 @@ class TaxController extends FrameworkBundleAdminController
      *     redirectRoute="admin_tax_index"
      * )
      *
+     * @param Request $request
      * @param TaxFilters $filters
      *
      * @return Response
      */
-    public function indexAction(TaxFilters $filters)
+    public function indexAction(Request $request, TaxFilters $filters)
     {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
         $taxGridFactory = $this->get('prestashop.core.grid.factory.tax');
         $taxGrid = $taxGridFactory->getGrid($filters);
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/index.html.twig', [
             'taxGrid' => $gridPresenter->present($taxGrid),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
         ]);
     }
 
