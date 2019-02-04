@@ -41,7 +41,7 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int $employeeIdLang
+     * @var int
      */
     private $employeeIdLang;
 
