@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotDeleteTaxException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
@@ -100,7 +102,6 @@ class TaxController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_taxes_index');
     }
 
-
     public function editAction($taxId)
     {
         //@todo: implement edit
@@ -164,6 +165,11 @@ class TaxController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
+            TaxConstraintException::INVALID_TAX_ID => $this->trans(
+                'The %s field is invalid.',
+                'Admin.Notifications.Error',
+                [sprintf('"%s"', $this->trans('Id', 'Admin.International.Feature'))]
+            )
         ];
 
         $exceptionType = get_class($exception);
