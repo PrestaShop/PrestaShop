@@ -29,6 +29,11 @@ import TabPermissionsConfigurator from "./tab-permissions-configurator";
 const $ = window.$;
 
 $(document).ready(() => {
-  new TabPermissionsConfigurator();
+  // create new configurator for every table
+  $('.js-permissions-table').each((i, element) => {
+    console.log(`#${$(element).attr('id')}`);
+    new TabPermissionsConfigurator(`#${$(element).attr('id')}`);
+  });
+
   new ModulePermissionsConfigurator();
 });
