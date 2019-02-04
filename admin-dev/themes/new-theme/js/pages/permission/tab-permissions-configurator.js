@@ -30,8 +30,6 @@ export default class TabPermissionsConfigurator {
     this.$table = $('#tabPermissionsTable');
 
     this.$table.on('change', '.js-tab-permissions-checkbox', (event) => {
-      console.log('changed');
-      console.log($(event.currentTarget));
       this._updatePermissions($(event.currentTarget));
     });
 
@@ -47,7 +45,8 @@ export default class TabPermissionsConfigurator {
     const parentId = $checkbox.data('parent');
     const isChecked = $checkbox.is(':checked');
 
-    this._toggleParent(isChecked, parentId, permission, rel);
+    //this._toggleParent(isChecked, parentId, permission, rel);
+    this._handleAllPermissionColumn($checkbox);
 
     // $.ajax(this.$table.data('url'), {
     //   method: 'POST',
@@ -93,5 +92,73 @@ export default class TabPermissionsConfigurator {
         $parentCheckbox.prop('checked', false).change();
       }
     }
+  }
+
+  _handleAllPermissionColumn($checkbox) {
+    const $row = $checkbox.closest('tr');
+    if ('all' !== $checkbox.data('type') || !$row.hasClass('parent')) {
+      return;
+    }
+
+    const data = this._getData($checkbox);
+    const $childCheckboxes = this.$table.find(`.js-child-${data.tabId} input[type="checkbox"]`);
+    $childCheckboxes.prop('checked', $checkbox.is(':checked'));
+
+    this._sendPermissions({
+          profile_id: data.profileId,
+          tab_id: data.tabId,
+          permission: data.permission,
+          expected_status: data.isChecked,
+          from_parent: true,
+    });
+  }
+
+  /**
+   * Sends permissions to server for updating
+   *
+   * @param {Object} data
+   *
+   * @private
+   */
+  _sendPermissions(data) {
+    $.ajax(this.$table.data('url'), {
+      method: 'POST',
+      data: data
+    }).then(response => {
+      if (response.success) {
+        showSuccessMessage(this.$table.data('success-message'));
+
+        return;
+      }
+
+      showErrorMessage(this.$table.data('error-message'));
+    });
+  }
+
+  /**
+   * Get permission data from checkbox
+   *
+   * @param {jQuery} $checkbox
+   *
+   * @private
+   */
+  _getData($checkbox) {
+    const data = {};
+
+    let tabId, profileId, permission;
+    const rel = $checkbox.data('rel');
+
+    [tabId, profileId, permission] = rel.split('||');
+
+    const parentId = $checkbox.data('parent');
+    const isChecked = $checkbox.is(':checked');
+
+    data.tabId = tabId;
+    data.parentTabId = parentId;
+    data.profileId = profileId;
+    data.permission = permission;
+    data.isChecked = isChecked;
+
+    return data;
   }
 }
