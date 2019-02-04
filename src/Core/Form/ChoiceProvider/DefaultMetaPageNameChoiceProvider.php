@@ -51,6 +51,8 @@ final class DefaultMetaPageNameChoiceProvider implements FormChoiceProviderInter
      *
      * @param RequestStack $requestStack
      * @param MetaDataProviderInterface $dataProvider
+     *
+     * @todo: get rid of request stack by creating new interface.
      */
     public function __construct(
         RequestStack $requestStack,
