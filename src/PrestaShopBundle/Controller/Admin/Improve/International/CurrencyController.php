@@ -62,10 +62,11 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param CurrencyFilters $filters
+     * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(CurrencyFilters $filters)
+    public function indexAction(CurrencyFilters $filters, Request $request)
     {
         $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency');
         $currencyGrid = $currencyGridFactory->getGrid($filters);
@@ -76,6 +77,8 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/index.html.twig', [
             'currencyGrid' => $gridPresenter->present($currencyGrid),
             'currencySettingsForm' => $settingsForm->createView(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller'))
         ]);
     }
 
