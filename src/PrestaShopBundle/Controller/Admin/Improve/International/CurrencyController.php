@@ -78,7 +78,7 @@ class CurrencyController extends FrameworkBundleAdminController
             'currencyGrid' => $gridPresenter->present($currencyGrid),
             'currencySettingsForm' => $settingsForm->createView(),
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller'))
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
