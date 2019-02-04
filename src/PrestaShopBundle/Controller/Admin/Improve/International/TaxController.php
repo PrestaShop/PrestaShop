@@ -27,13 +27,14 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
+use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -207,6 +208,11 @@ class TaxController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
+            TaxConstraintException::INVALID_TAX_ID => $this->trans(
+                'The %s field is invalid.',
+                'Admin.Notifications.Error',
+                [sprintf('"%s"', $this->trans('Id', 'Admin.International.Feature'))]
+            )
         ];
 
         $exceptionType = get_class($exception);
