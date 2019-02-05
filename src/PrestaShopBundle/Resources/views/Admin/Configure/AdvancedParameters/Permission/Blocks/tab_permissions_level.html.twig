@@ -28,8 +28,22 @@
     {% set childTabPermissions = profileTabPermissions[tab.id] %}
     {% set employeeTabPermissions = employeeProfileTabPermissions[tab.id] %}
     {% set isChild, resultPermissions, hasAllPermissions = true, 0, true %}
-    <tr class="{% if tab.id_parent == 0 %}parent{% else %}js-child-{{ tab.id_parent }}{% endif %}" >
-      <td>&nbsp;&nbsp; &raquo; {{ tab.name }}</td>
+    <tr class="{% if tab.id_parent == 0 %}parent{% else %}js-child-{{ tab.id_parent }}{% endif %}{% if level_depth == 1 %} bg-light{% endif %}" >
+      <td>
+        {% if level_depth == 3 %}
+          &nbsp;&nbsp;
+        {% elseif level_depth == 4 %}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+        {% endif %}
+
+        &raquo;
+
+        {% if level_depth == 1 %}
+          <strong>{{ tab.name }}</strong>
+        {% else %}
+          {{ tab.name }}
+        {% endif %}
+      </td>
       {% for permission in permissions %}
         {% set permissionId = permissionIds[permission] %}
         <td>
@@ -37,7 +51,7 @@
             <div class="md-checkbox md-checkbox-inline">
               <label>
                 <input type="checkbox"
-                       class="js-tab-permissions-checkbox js-checkbox-tab-{{ tab.id }}-permission-{{ permission }} js-permission-{{ permission }} js-tab-{{ tab.id }} js-permission-{{ permission }} js-checkbox-parent-id-{{ tab.id_parent }}"
+                       class="js-tab-permissions-checkbox js-tab-id-{{ tab.id }} js-permission-{{ permission }} js-parent-tab-id-{{ tab.id_parent }}"
                        data-id="{{ permissionId }}"
                        data-parent="{{ tab.id_parent }}"
                        data-type="{{ permission }}"
