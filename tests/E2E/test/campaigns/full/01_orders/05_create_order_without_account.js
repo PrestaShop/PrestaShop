@@ -300,10 +300,10 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.getTextInVar(Employee.employee_column_information.replace('%COL', 2), "employee_first_name");
     });
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
-    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[0].reference, dateSystem, productData[0].name + date_time);
+    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[0].reference, dateSystem, productData[0].name + date_time, true);
   }, 'stocks');
   scenario('Check the movement of the "' + productData[1].name + date_time + '"', client => {
-    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[1].reference, dateSystem,  productData[1].name + date_time);
+    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[1].reference, dateSystem,  productData[1].name + date_time, true);
   }, 'stocks');
   scenario('Check that the created order is opened in a new window', client => {
     test('should click on "Customer Order" link  ', () => client.waitForExistAndClick(Movement.type_value.replace("%P", 1)));
