@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesComman
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\BulkDeleteLanguagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
+use Shop;
 
 /**
  * Deletes languages using legacy Language object model
@@ -46,6 +47,9 @@ final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implement
      */
     public function handle(BulkDeleteLanguagesCommand $command)
     {
+        // language can only be modified in "ALL SHOPS" context
+        Shop::setContext(Shop::CONTEXT_ALL);
+
         foreach ($command->getLanguageIds() as $languageId) {
             $language = $this->getLegacyLanguageObject($languageId);
 

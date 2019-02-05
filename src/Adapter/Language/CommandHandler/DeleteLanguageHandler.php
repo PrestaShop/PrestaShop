@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\DeleteLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
+use Shop;
 
 /**
  * Deletes language using legacy object model
@@ -50,6 +51,9 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
 
         $this->assertLanguageIsNotDefault($language);
         $this->assertLanguageIsNotInUse($language);
+
+        // language must be deleted in "ALL SHOPS" context
+        Shop::setContext(Shop::CONTEXT_ALL);
 
         if (false === $language->delete()) {
             throw new LanguageException(sprintf('Failed to delele language "%s"', $language->iso_code));
