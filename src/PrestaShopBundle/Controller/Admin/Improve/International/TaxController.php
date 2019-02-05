@@ -257,8 +257,6 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Delete taxes on bulk action.
      *
-     * @param Request $request
-     *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
