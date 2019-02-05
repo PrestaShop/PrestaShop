@@ -26,12 +26,15 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkUpdateTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
+use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -109,6 +112,7 @@ class TaxController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_taxes_index');
     }
 
+
     /**
      * Deletes currency.
      *
@@ -174,6 +178,28 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Request $request
+     * @param $newStatus
+     *
+     * @return RedirectResponse
+     */
+    public function bulkStatusUpdateAction(Request $request, $newStatus)
+    {
+        $taxesIds = $request->request->get('tax_bulk');
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateTaxStatusCommand($taxesIds, new TaxStatus($newStatus))
+            );
+        } catch (TaxException $exception) {
+            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        return $this->redirectToRoute('admin_taxes_index');
+    }
+
+    /**
      * Gets error by exception type.
      *
      * @param TaxException $exception
@@ -192,7 +218,7 @@ class TaxController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error',
                 [sprintf('"%s"', $this->trans('Id', 'Admin.International.Feature'))]
             ),
-            CannotToggleTaxException::class => $this->trans(
+            CannotToggleTaxStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
             ),

@@ -27,52 +27,31 @@
 namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotDeleteTaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use Tax;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\DeleteTaxHandlerInterface;
-use PrestaShopException;
 
 /**
  * Handles command which deletes Tax using legacy object model
  */
-final class DeleteTaxHandler implements DeleteTaxHandlerInterface
+final class DeleteTaxHandler extends AbstractTaxHandler implements DeleteTaxHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(DeleteTaxCommand $command)
     {
-        $taxId = $command->getTaxId()->getValue();
-        $entity = new Tax($taxId);
+        $taxIdValue = $command->getTaxId()->getValue();
+        $this->assertTaxWasFound($command->getTaxId(), $entity = new Tax($taxIdValue));
 
-        if ($taxId !== $entity->id) {
-            throw new TaxNotFoundException(
+        if (false === $entity->delete()) {
+            throw new CannotDeleteTaxException(
                 sprintf(
-                    'Tax object with id "%s" has not been found for deletion.',
-                    $taxId
+                    'An error occurred when deleting Tax object with id "%s"',
+                    $taxIdValue
                 )
             );
         }
 
-        try {
-            if (false === $entity->delete()) {
-                throw new CannotDeleteTaxException(
-                    sprintf(
-                        'Unable to delete Tax object with id "%s"',
-                        $taxId
-                    )
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CannotDeleteTaxException(
-                sprintf(
-                    'An error occurred when deleting Tax object with id "%s"',
-                    $taxId
-                ),
-                0,
-                $e
-            );
-        }
     }
 }

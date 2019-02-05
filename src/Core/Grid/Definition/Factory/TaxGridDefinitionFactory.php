@@ -232,7 +232,10 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                     ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_taxes_index',
+                        'submit_route' => 'admin_taxes_bulk_update_status',
+                        'route_params' => [
+                            'newStatus' => 'enabled',
+                        ],
                     ])
             )
             ->add(
