@@ -24,30 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Language\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Language\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
- * Is thrown when invalid data is supplied for language
+ * Deletes given languages
  */
-class LanguageConstraintException extends LanguageException
+class BulkDeleteLanguagesCommand
 {
     /**
-     * @var int Code is used when invalid language IETF tag is encountered
+     * @var LanguageId[]
      */
-    const INVALID_IETF_TAG = 1;
+    private $languageIds = [];
 
     /**
-     * @var int Code is used when invalid language ISO code in encountered
+     * @param int[] $languageIds
      */
-    const INVALID_ISO_CODE = 2;
+    public function __construct(array $languageIds)
+    {
+        $this->setLanguageIds($languageIds);
+    }
 
     /**
-     * @var int Code is used when duplicate language ISO code in encountered when creating new language
+     * @return LanguageId[]
      */
-    const DUPLICATE_ISO_CODE = 3;
+    public function getLanguageIds()
+    {
+        return $this->languageIds;
+    }
 
     /**
-     * @var int Code is used when empty data is used when deleting languages
+     * @param int[] $languageIds
      */
-    const EMPTY_BULK_DELETE = 4;
+    private function setLanguageIds(array $languageIds)
+    {
+        if (empty($languageIds)) {
+            throw new LanguageConstraintException(
+                'At least one language must be provided for deleting',
+                LanguageConstraintException::EMPTY_BULK_DELETE
+            );
+        }
+
+        foreach ($languageIds as $languageId) {
+            $this->languageIds[] = new LanguageId($languageId);
+        }
+    }
 }

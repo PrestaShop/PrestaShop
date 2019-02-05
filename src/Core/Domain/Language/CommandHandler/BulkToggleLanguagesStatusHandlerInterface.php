@@ -24,30 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Language\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand;
 
 /**
- * Is thrown when invalid data is supplied for language
+ * Interface for service that toggles status for multiple languages
  */
-class LanguageConstraintException extends LanguageException
+interface BulkToggleLanguagesStatusHandlerInterface
 {
     /**
-     * @var int Code is used when invalid language IETF tag is encountered
+     * @param BulkToggleLanguagesStatusCommand $command
      */
-    const INVALID_IETF_TAG = 1;
-
-    /**
-     * @var int Code is used when invalid language ISO code in encountered
-     */
-    const INVALID_ISO_CODE = 2;
-
-    /**
-     * @var int Code is used when duplicate language ISO code in encountered when creating new language
-     */
-    const DUPLICATE_ISO_CODE = 3;
-
-    /**
-     * @var int Code is used when empty data is used when deleting languages
-     */
-    const EMPTY_BULK_DELETE = 4;
+    public function handle(BulkToggleLanguagesStatusCommand $command);
 }

@@ -38,3 +38,27 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing'
+
+  prestashop.adapter.language.command_handler.toggle_language_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\ToggleLanguageStatusHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommand'
+
+  prestashop.adapter.language.command_handler.bulk_toggle_languages_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkToggleLanguagesStatusHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand'
+
+  prestashop.adapter.language.command_handler.bulk_delete_languages_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkDeleteLanguagesHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand'
+
+  prestashop.adapter.language.command_handler.delete_language_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\DeleteLanguageHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand'

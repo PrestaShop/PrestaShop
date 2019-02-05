@@ -26,3 +26,37 @@ admin_languages_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Language:edit'
     _legacy_controller: AdminLanguages
+  requirements:
+    languageId: \d+
+
+admin_languages_delete:
+  path: /{languageId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:delete'
+    _legacy_controller: AdminLanguages
+  requirements:
+    languageId: \d+
+
+admin_languages_bulk_delete:
+  path: /bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:bulkDelete'
+    _legacy_controller: AdminLanguages
+
+admin_languages_toggle_status:
+  path: /{languageId}/toggle-status
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:toggleStatus'
+    _legacy_controller: AdminLanguages
+
+admin_languages_bulk_toggle_status:
+  path: /bulk-toggle-status/{status}
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:bulkToggleStatus'
+    _legacy_controller: AdminLanguages
+  requirements:
+    status: enable|disable

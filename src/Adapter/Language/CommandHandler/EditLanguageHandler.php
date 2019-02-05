@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\EditLanguageHandle
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
@@ -64,25 +63,6 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         $this->uploadFlagImageIfChanged($language, $command);
 
         return new LanguageId((int) $language->id);
-    }
-
-    /**
-     * @param LanguageId $languageId
-     *
-     * @return Language
-     */
-    private function getLegacyLanguageObject(LanguageId $languageId)
-    {
-        $language = new Language($languageId->getValue());
-
-        if ($languageId->getValue() !== $language->id) {
-            throw new LanguageNotFoundException(
-                $languageId,
-                sprintf('Language with id "%s" was not found', $languageId->getValue())
-            );
-        }
-
-        return $language;
     }
 
     /**
