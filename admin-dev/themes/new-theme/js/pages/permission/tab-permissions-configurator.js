@@ -39,7 +39,7 @@ export default class TabPermissionsConfigurator {
   _updatePermissions($checkbox) {
     const checkboxData = this._getData($checkbox);
 
-    //this._toggleParent(isChecked, parentId, permission, rel);
+    this._toggleParent(checkboxData);
     this._handleAllPermissionColumn(checkboxData, $checkbox);
     this._handleMultiplePermissions(checkboxData);
 
@@ -64,14 +64,18 @@ export default class TabPermissionsConfigurator {
     return isChecked;
   }
 
-  _toggleParent(isChecked, parentId, permission, rel) {
-    if (0 !== parentId) {
-      const $parentCheckbox = this.$table.find(`.js-checkbox-tab-${parentId}-permission-${permission}`);
+  _toggleParent(checkboxData) {
+    if (0 !== checkboxData.parentTabId) {
+      const $parentCheckbox = this.$table.find(`.js-tab-id-${checkboxData.parentTabId}.js-permission-${checkboxData.permission}`);
+      console.log(`.js-parent-tab-id-${checkboxData.parentTabId}.js-permission-${checkboxData.permission}`);
+      console.log($parentCheckbox.length);
 
       if (!$parentCheckbox.is(':checked')) {
-        $parentCheckbox.prop('checked', true).change();
-      } else if (!isChecked && !this._isChildrenChecked(parentId, permission, rel)) {
-        $parentCheckbox.prop('checked', false).change();
+        //$parentCheckbox.prop('checked', true).change();
+        $parentCheckbox.attr('checked', true).change();
+      } else if (!checkboxData.isChecked && !this._isChildrenChecked(checkboxData.parentTabId, checkboxData.permission, checkboxData.rel)) {
+        //$parentCheckbox.prop('checked', false).change();
+        $parentCheckbox.attr('checked', false).change();
       }
     }
   }
@@ -136,6 +140,7 @@ export default class TabPermissionsConfigurator {
       isChecked: $checkbox.is(':checked'),
       tabSize: tabSize,
       tabNumber: tabNumber,
+      rel: $checkbox.data('rel'),
     };
   }
 
@@ -149,7 +154,7 @@ export default class TabPermissionsConfigurator {
 
     // toggle all row
     if ('all' === checkboxData.permission) {
-      this.$table.find(`.js-tab-${checkboxData.tabId}`).attr('checked', checkboxData.isChecked);
+      this.$table.find(`.js-tab-id-${checkboxData.tabId}`).attr('checked', checkboxData.isChecked);
 
       return;
     }
