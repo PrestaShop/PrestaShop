@@ -2587,7 +2587,9 @@ class ProductCore extends ObjectModel
 				WHERE cp.`id_product` = p.`id_product`)');
         }
 
-        $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way));
+        $sql->orderBy(
+            (Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST') ? Tools::sqlOrderByOOSP($order_by) : '').
+            (isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way));
         $sql->limit($nb_products, (int)(($page_number-1) * $nb_products));
 
         if (Combination::isFeatureActive()) {
@@ -2604,6 +2606,9 @@ class ProductCore extends ObjectModel
 
         if ($order_by == 'price') {
             Tools::orderbyPrice($result, $order_way);
+            if(Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST')) {
+                $result = Tools::orderByOOSP($result);
+            }
         }
         $products_ids = array();
         foreach ($result as $row) {

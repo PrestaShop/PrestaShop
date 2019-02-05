@@ -4047,7 +4047,7 @@ exit;
      */
     public static function sqlOrderByOOSP($orderyBy)
     {
-        $orderByFacets = array('orderprice', 'price', 'p.price'); // All used "facets" when ordering by price
+        $orderByFacets = array('orderprice', 'price', 'p.price', 'date_add'); // All "facets" where we allow to sort products
         $sql = '';
         if (in_array(Tools::strtolower($orderyBy), $orderByFacets)) {
             $sql = 'stock.quantity DESC, FIELD(stock.out_of_stock, 1, 2, 0) ASC, ';

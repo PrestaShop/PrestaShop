@@ -149,10 +149,18 @@ class ProductSaleCore
 					LIMIT '.(int) (($pageNumber-1) * $nbProducts).', '.(int) $nbProducts;
         }
 
+        if (Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST') && $finalOrderBy == 'price') {
+            $sql .= '
+                ORDER BY ' . Tools::substr(Tools::sqlOrderByOOSP($finalOrderBy),0,-2);
+        }
+
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
         if ($finalOrderBy == 'price') {
             Tools::orderbyPrice($result, $orderWay);
+            if(Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST')) {
+                $result = Tools::orderByOOSP($result); // EDVINAS - PRODUCTS to ORDER BY: inStock, OutOfStock & OOSP, outOfStock
+            }
             $result = array_slice($result, (int) (($pageNumber-1) * $nbProducts), (int) $nbProducts);
         }
         if (!$result) {

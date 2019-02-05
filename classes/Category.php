@@ -1004,7 +1004,7 @@ class CategoryCore extends ObjectModel
             $sql .= ' ORDER BY RAND() LIMIT '.(int) $randomNumberProducts;
         } else {
             $sql .= ' ORDER BY ';
-            $sql .= (Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST') ? Tools::sqlOrderByOOSP($order_by) : '');
+            $sql .= (Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST') ? Tools::sqlOrderByOOSP($orderyBy) : '');
             $sql .= (!empty($orderByPrefix) ? $orderByPrefix.'.' : '').'`'.bqSQL($orderyBy).'` '.pSQL($orderWay).'
 			LIMIT '.(((int) $p - 1) * (int) $n).','.(int) $n;
         }
