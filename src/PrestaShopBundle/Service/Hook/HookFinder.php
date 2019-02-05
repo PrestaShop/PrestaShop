@@ -162,7 +162,7 @@ class HookFinder
     public function addExpectedInstanceClasses($expectedInstanceClasses)
     {
         if (is_array($expectedInstanceClasses)) {
-            array_merge($this->expectedInstanceClasses, $expectedInstanceClasses);
+            $this->expectedInstanceClasses = array_merge($this->expectedInstanceClasses, $expectedInstanceClasses);
         } else {
             $this->expectedInstanceClasses[] = $expectedInstanceClasses;
         }
