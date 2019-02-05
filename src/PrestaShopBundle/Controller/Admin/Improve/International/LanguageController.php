@@ -57,11 +57,12 @@ class LanguageController extends AbstractAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param LanguageFilters $filters
      *
      * @return Response
      */
-    public function indexAction(LanguageFilters $filters)
+    public function indexAction(Request $request, LanguageFilters $filters)
     {
         $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
         $languageGrid = $languageGridFactory->getGrid($filters);
@@ -69,6 +70,7 @@ class LanguageController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
             'languageGrid' => $this->presentGrid($languageGrid),
             'isHtaccessFileWriter' => $this->get('prestashop.core.util.url.url_file_checker')->isHtaccessFileWritable(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
