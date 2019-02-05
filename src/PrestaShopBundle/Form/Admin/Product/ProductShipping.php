@@ -68,7 +68,7 @@ class ProductShipping extends CommonAbstractType
         );
         $this->carriersChoices = [];
         foreach ($carriers as $carrier) {
-            $this->carriersChoices[$carrier['name'] . ' (' . $carrier['delay'] . ')'] = $carrier['id_reference'];
+            $this->carriersChoices[$carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')'] = $carrier['id_reference'];
         }
     }
 
