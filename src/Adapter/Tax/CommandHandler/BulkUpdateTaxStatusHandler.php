@@ -34,7 +34,7 @@ use PrestaShopException;
 use Tax;
 
 /**
- * Class BulkUpdateTaxStatusHandler handles command which updates Taxes status in bulk action
+ * Class BulkUpdateTaxStatusHandler handles command which updates Taxes status on bulk action using legacy object model
  */
 final class BulkUpdateTaxStatusHandler extends AbstractTaxHandler implements BulkUpdateTaxStatusHandlerInterface
 {
