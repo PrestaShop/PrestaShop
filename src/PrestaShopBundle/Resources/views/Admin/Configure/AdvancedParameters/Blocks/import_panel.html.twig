@@ -76,7 +76,7 @@
           {{ form_errors(importForm.file) }}
           {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': maxFileUploadSize }}) }}
         </div>
-        <div class="col pt-sm-2 pt-md-0">
+        <div class="col">
           <span>{{ 'or'|trans({}, 'Admin.Global') }}</span>
           <button type="button"
                   class="btn btn-outline-primary btn-sm js-from-files-history-btn"
