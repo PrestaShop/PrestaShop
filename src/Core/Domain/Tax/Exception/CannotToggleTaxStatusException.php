@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\Exception;
 
 /**
- * Class CannotToggleTaxStatusException is thrown when Tax status cannot be toggled
+ * Class CannotToggleTaxStatusException is thrown when Tax status cannot be changed
  */
 class CannotToggleTaxStatusException extends TaxException
 {

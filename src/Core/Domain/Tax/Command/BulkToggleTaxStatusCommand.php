@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
 
 /**
- * Class BulkUpdateTaxStatusCommand updates Taxes status on bulk action
+ * Class BulkUpdateTaxStatusCommand toggles Taxes status on bulk action
  */
-class BulkUpdateTaxStatusCommand
+class BulkToggleTaxStatusCommand
 {
     /**
      * @var TaxStatus

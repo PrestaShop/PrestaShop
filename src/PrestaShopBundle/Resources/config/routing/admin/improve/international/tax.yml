@@ -48,11 +48,11 @@ admin_taxes_toggle_status:
     requirements:
         taxId: \d+
 
-admin_taxes_bulk_update_status:
+admin_taxes_bulk_toggle_status:
     path: /bulk-update-status/{newStatus}
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkStatusUpdate'
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkToggleStatus'
         _legacy_controller: AdminTaxes
     requirements:
         newStatus: enabled|disabled
