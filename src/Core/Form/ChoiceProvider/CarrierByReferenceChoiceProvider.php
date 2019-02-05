@@ -72,7 +72,7 @@ final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterf
         );
 
         foreach ($carriers as $carrier) {
-            $choices[$carrier['name'] . ' (' . $carrier['delay'] . ')'] = $carrier['id_reference'];
+            $choices[$carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')'] = $carrier['id_reference'];
         }
 
         return $choices;
