@@ -71,16 +71,22 @@
 
     <div class="form-group js-file-upload-form-group">
       <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
-      {{ form_errors(importForm.file) }}
-      {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': maxFileUploadSize }}) }}
-      <span>{{ 'or'|trans({}, 'Admin.Global') }}</span>
-      <button type="button"
-              class="btn btn-outline-primary btn-sm js-from-files-history-btn"
-              {% if importFileNames is empty %}disabled{% endif %}
-      >
-        <span class="badge badge-primary js-files-history-number">{{ importFileNames|length }}</span>
-        {{ 'Choose from history / FTP'|trans({}, 'Admin.Advparameters.Feature') }}
-      </button>
+      <div class="row">
+        <div class="col">
+          {{ form_errors(importForm.file) }}
+          {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': maxFileUploadSize }}) }}
+        </div>
+        <div class="col pt-sm-2 pt-md-0">
+          <span>{{ 'or'|trans({}, 'Admin.Global') }}</span>
+          <button type="button"
+                  class="btn btn-outline-primary btn-sm js-from-files-history-btn"
+                  {% if importFileNames is empty %}disabled{% endif %}
+          >
+            <span class="badge badge-primary js-files-history-number">{{ importFileNames|length }}</span>
+            {{ 'Choose from history / FTP'|trans({}, 'Admin.Advparameters.Feature') }}
+          </button>
+        </div>
+      </div>
       <small class="form-text">{{ 'Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'|trans({}, 'Admin.Advparameters.Help') }}</small>
       <small class="form-text">{{ 'Only UTF-8 and ISO 8859-1 encodings are allowed'|trans({}, 'Admin.Advparameters.Help') }}</small>
       <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({'%s': importDirectory}, 'Admin.Advparameters.Help') }}</small>
