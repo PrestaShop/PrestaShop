@@ -159,7 +159,7 @@ class ProductSaleCore
         if ($finalOrderBy == 'price') {
             Tools::orderbyPrice($result, $orderWay);
             if(Configuration::get('PS_DISPLAY_OUT_OF_STOCK_LAST')) {
-                $result = Tools::orderByOOSP($result); // EDVINAS - PRODUCTS to ORDER BY: inStock, OutOfStock & OOSP, outOfStock
+                $result = Tools::orderByOOSP($result);
             }
             $result = array_slice($result, (int) (($pageNumber-1) * $nbProducts), (int) $nbProducts);
         }
