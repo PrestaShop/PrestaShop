@@ -39,23 +39,15 @@ export default class TabPermissionsConfigurator {
   _updatePermissions($checkbox) {
     const checkboxData = this._getData($checkbox);
 
-    let tabId, profileId, permission;
-    const rel = $checkbox.data('rel');
-
-    [tabId, profileId, permission] = rel.split('||');
-
-    const parentId = $checkbox.data('parent');
-    const isChecked = $checkbox.is(':checked');
-
     //this._toggleParent(isChecked, parentId, permission, rel);
-    this._handleAllPermissionColumn($checkbox);
+    this._handleAllPermissionColumn(checkboxData, $checkbox);
     this._handleMultiplePermissions(checkboxData);
 
     this._sendPermissions({
-      profile_id: profileId,
-      tab_id: tabId,
-      permission: permission,
-      expected_status: isChecked
+      profile_id: checkboxData.profileId,
+      tab_id: checkboxData.tabId,
+      permission: checkboxData.permission,
+      expected_status: checkboxData.isChecked
     });
   }
 
@@ -68,8 +60,6 @@ export default class TabPermissionsConfigurator {
         isChecked = true;
       }
     });
-
-    console.log('children is checked ' + isChecked);
 
     return isChecked;
   }
@@ -86,21 +76,20 @@ export default class TabPermissionsConfigurator {
     }
   }
 
-  _handleAllPermissionColumn($checkbox) {
+  _handleAllPermissionColumn(checkboxData, $checkbox) {
     const $row = $checkbox.closest('tr');
     if ('all' !== $checkbox.data('type') || !$row.hasClass('parent')) {
       return;
     }
 
-    const data = this._getData($checkbox);
-    const $childCheckboxes = this.$table.find(`.js-child-${data.tabId} input[type="checkbox"]`);
-    $childCheckboxes.prop('checked', $checkbox.is(':checked'));
+    const $childCheckboxes = this.$table.find(`.js-child-${checkboxData.tabId} input[type="checkbox"]`);
+    $childCheckboxes.attr('checked', checkboxData.isChecked);
 
     this._sendPermissions({
-          profile_id: data.profileId,
-          tab_id: data.tabId,
-          permission: data.permission,
-          expected_status: data.isChecked,
+          profile_id: checkboxData.profileId,
+          tab_id: checkboxData.tabId,
+          permission: checkboxData.permission,
+          expected_status: checkboxData.isChecked,
           from_parent: true,
     });
   }
@@ -151,12 +140,25 @@ export default class TabPermissionsConfigurator {
   }
 
   _handleMultiplePermissions(checkboxData) {
+    // toggle all table
     if ('-1' === checkboxData.tabId && 'all' === checkboxData.permission) {
       this.$table.find('tbody .js-tab-permissions-checkbox').attr('checked', checkboxData.isChecked);
 
       return;
     }
 
+    // toggle all row
+    if ('all' === checkboxData.permission) {
+      this.$table.find(`.js-tab-${checkboxData.tabId}`).attr('checked', checkboxData.isChecked);
 
+      return;
+    }
+
+    // toggle all column
+    if ('-1' === checkboxData.tabId) {
+      this.$table.find(`.js-permission-${checkboxData.permission}`).attr('checked', checkboxData.isChecked);
+
+      return;
+    }
   }
 }
