@@ -71,11 +71,9 @@ export default class TabPermissionsConfigurator {
       console.log($parentCheckbox.length);
 
       if (!$parentCheckbox.is(':checked')) {
-        //$parentCheckbox.prop('checked', true).change();
-        $parentCheckbox.attr('checked', true).change();
+        $parentCheckbox.prop('checked', true);
       } else if (!checkboxData.isChecked && !this._isChildrenChecked(checkboxData.parentTabId, checkboxData.permission, checkboxData.rel)) {
-        //$parentCheckbox.prop('checked', false).change();
-        $parentCheckbox.attr('checked', false).change();
+        $parentCheckbox.prop('checked', false);
       }
     }
   }
@@ -87,7 +85,12 @@ export default class TabPermissionsConfigurator {
     }
 
     const $childCheckboxes = this.$table.find(`.js-child-${checkboxData.tabId} input[type="checkbox"]`);
-    $childCheckboxes.attr('checked', checkboxData.isChecked);
+
+    if (checkboxData.isChecked) {
+      $childCheckboxes.attr('checked', 'checked');
+    } else {
+      $childCheckboxes.removeAttr('checked');
+    }
 
     this._sendPermissions({
           profile_id: checkboxData.profileId,
