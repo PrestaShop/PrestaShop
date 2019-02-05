@@ -4,12 +4,14 @@ services:
 
   prestashop.adapter.tax.ecotax.ecotax_resetter:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\Ecotax\ProductEcotaxResetter'
-    _defaults:
-      public: true
 
     # Command handlers
-
   prestashop.adapter.tax.command_handler.delete_tax_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\DeleteTaxHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand' }
+
+  prestashop.adapter.tax.command_handler.toggle_tax_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\ToggleTaxStatusHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand' }

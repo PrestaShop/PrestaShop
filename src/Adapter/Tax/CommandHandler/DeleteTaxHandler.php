@@ -44,7 +44,7 @@ final class DeleteTaxHandler implements DeleteTaxHandlerInterface
     public function handle(DeleteTaxCommand $command)
     {
         $taxId = $command->getTaxId()->getValue();
-        $entity = new Tax();
+        $entity = new Tax($taxId);
 
         if ($taxId !== $entity->id) {
             throw new TaxNotFoundException(

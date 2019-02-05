@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
@@ -176,13 +178,34 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
+     * Toggles status.
+     *
      * @param int $taxId
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @return RedirectResponse
      */
     public function toggleStatusAction($taxId)
     {
-        //@todo: implement toggle action
+        try {
+            $this->getCommandBus()->handle(new ToggleTaxStatusCommand((int) $taxId));
+        } catch (TaxException $exception) {
+            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
+
         return $this->redirectToRoute('admin_taxes_index');
     }
 
@@ -212,7 +235,11 @@ class TaxController extends FrameworkBundleAdminController
                 'The %s field is invalid.',
                 'Admin.Notifications.Error',
                 [sprintf('"%s"', $this->trans('Id', 'Admin.International.Feature'))]
-            )
+            ),
+            CannotToggleTaxException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
         ];
 
         $exceptionType = get_class($exception);
