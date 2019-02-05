@@ -15,3 +15,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\ToggleTaxStatusHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand' }
+      -
+    prestashop.adapter.tax.command_handler.bulk_update_tax_status_handler:
+      class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\BulkUpdateTaxStatusHandler'
+      tags:
+        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkUpdateTaxStatusCommand' }
