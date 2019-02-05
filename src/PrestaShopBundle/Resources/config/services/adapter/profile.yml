@@ -15,12 +15,12 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand' }
-            -
+
     prestashop.adapter.profile.permission.command_handler.update_tab_permissions_handler:
         class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateTabPermissionsHandler'
         tags:
             - name: tactician.handler
-              command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateProfileTabPermissionsCommand'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand'
 
     prestashop.adapter.profile.permission.query_handler.get_permissions_for_configuration_handler:
         class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandler'
@@ -28,20 +28,8 @@ services:
             - name: tactician.handler
               command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration'
 
-    prestashop.adapter.profile.permission.command_handler.update_profile_tab_permissions_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateProfileTabPermissionsHandler'
+    prestashop.adapter.profile.permission.command_handler.update_module_permissions_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateModulePermissionsHandler'
         tags:
-            - name: tactician.handler
-              command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateProfileTabPermissionsCommand'
-
-    prestashop.adapter.profile.permission.command_handler.update_module_permission_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateModulePermissionHandler'
-        tags:
-            - name: tactician.handler
-              command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand'
-
-  prestashop.adapter.profile.permission.command_handler.update_module_permissions_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateModulePermissionsHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand'
+          - name: tactician.handler
+            command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand'
