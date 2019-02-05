@@ -62,7 +62,5 @@ final class DeleteTaxHandler extends AbstractTaxHandler implements DeleteTaxHand
                 )
             );
         }
-
-
     }
 }

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 
 /**
- * Class TaxStatus.
+ * Class TaxStatus provides Tax status data
  */
 class TaxStatus
 {
@@ -51,6 +51,7 @@ class TaxStatus
 
     /**
      * @param string $status
+     *
      * @throws TaxConstraintException
      */
     public function __construct($status)
@@ -78,6 +79,7 @@ class TaxStatus
 
     /**
      * @param string $status
+     *
      * @throws TaxConstraintException
      */
     private function assertStatusExists($status)

@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 
 /**
- * Class TaxId is responsible for providing tax id data.
+ * Class TaxId is responsible for providing tax id data
  */
 class TaxId
 {

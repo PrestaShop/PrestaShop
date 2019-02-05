@@ -113,7 +113,6 @@ class TaxController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_taxes_index');
     }
 
-
     /**
      * Deletes currency.
      *
