@@ -5,7 +5,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
 
 /**
- * Interface ToggleTaxStatusHandlerInterface responsible for changing tax status
+ * Interface ToggleTaxStatusHandlerInterface defines contract for ToggleTaxStatusHandler
  */
 interface ToggleTaxStatusHandlerInterface
 {
