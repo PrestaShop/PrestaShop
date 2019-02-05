@@ -1,3 +1,6 @@
+imports:
+  - { resource: 'form_type/*' }
+
 services:
     _defaults:
         public: true

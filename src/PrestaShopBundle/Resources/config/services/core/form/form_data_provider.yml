@@ -27,3 +27,9 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+
+  prestashop.core.form.identifiable_object.data_provider.webservice_key_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\WebserviceKeyFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'

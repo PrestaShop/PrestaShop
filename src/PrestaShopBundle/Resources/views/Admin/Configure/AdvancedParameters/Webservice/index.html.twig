@@ -26,6 +26,16 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
+{% set layoutTitle = 'Webservice'|trans({}, 'Admin.Navigation.Menu') %}
+{% set enableSidebar = true %}
+{% set layoutHeaderToolbarBtn = {
+  'add': {
+    'href': path('admin_webservice_keys_create'),
+    'desc': 'Add new webservice key'|trans({}, 'Admin.Advparameters.Feature'),
+    'icon': 'add_circle_outline'
+  }
+} %}
+
 {% block content %}
 
   {% block webservice_list_notifications %}
@@ -50,9 +60,9 @@
 
     <div class="row justify-content-center">
       <div class="col">
-        {{ form_start(form, {'action': path('admin_webservice_settings_save') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+        {{ form_start(form, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
 
-        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/WebservicePage/webservice_settings.html.twig') }}
+        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
 
         {% block webservice_configuration_form_rest %}
           {{ form_rest(form) }}

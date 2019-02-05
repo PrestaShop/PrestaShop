@@ -142,6 +142,8 @@ class SurvivalTest extends WebTestCase
             'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
             'admin_backups_index' => ['DB Backup', 'admin_backups_index'],
             'admin_currencies_index' => ['Currencies', 'admin_currencies_index'],
+            'admin_webservice_keys_index' => ['Webservice', 'admin_webservice_keys_index'],
+            'admin_webservice_keys_create' => ['Webservice', 'admin_webservice_keys_create'],
         ];
     }
 
