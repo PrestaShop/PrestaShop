@@ -14,17 +14,13 @@ use Tax;
 final class BulkUpdateTaxStatusHandler extends AbstractTaxHandler implements BulkUpdateTaxStatusHandlerInterface
 {
     /**
-     * @param BulkUpdateTaxStatusCommand $command
-     *
-     * @throws TaxException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException
+     * {@inheritdoc}
      */
     public function handle(BulkUpdateTaxStatusCommand $command)
     {
         foreach ($command->getTaxesIds() as $taxId) {
             $tax = new Tax($taxId->getValue());
             $this->assertTaxWasFound($taxId, $tax);
-            $tax->active = $command->getStatus()->isEnabled();
 
             try {
                 if (!$tax->save()) {
@@ -38,7 +34,7 @@ final class BulkUpdateTaxStatusHandler extends AbstractTaxHandler implements Bul
             } catch (\PrestaShopException $e) {
                 throw new TaxException(
                     sprintf(
-                        'An error occurred when enabling Tax with id "%s"',
+                        'An error occurred when updating Tax status with id "%s"',
                         $taxId->getValue()
                     )
                 );

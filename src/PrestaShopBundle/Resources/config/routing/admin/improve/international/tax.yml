@@ -20,13 +20,13 @@ admin_taxes_search:
     _legacy_controller: AdminTaxes
 
 admin_taxes_delete:
-  path: /{taxId}/delete
-  methods: POST
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:delete'
-    _legacy_controller: AdminTaxes
-  requirements:
-    taxId: \d+
+    path: /{taxId}/delete
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:delete'
+        _legacy_controller: AdminTaxes
+    requirements:
+        taxId: \d+
 
 admin_taxes_bulk_enable_status:
   path: /bulk-enable-status
