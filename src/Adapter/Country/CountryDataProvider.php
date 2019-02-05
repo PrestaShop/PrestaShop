@@ -30,7 +30,7 @@ use Configuration;
 use Country;
 
 /**
- * This class will provide data from DB / ORM about Country.
+ * This class will provide data from DB / ORM about Country
  */
 class CountryDataProvider
 {
