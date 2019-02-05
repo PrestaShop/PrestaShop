@@ -102,8 +102,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
-                    'route' => 'admin_cms_pages_edit_cms_category',
-                    'route_param_name' => 'cmsCategoryId',
+                    'route' => 'admin_cms_pages_index',
+                    'route_param_name' => 'id_cms_category',
                     'route_param_field' => 'id_cms_category',
                 ])
             )
