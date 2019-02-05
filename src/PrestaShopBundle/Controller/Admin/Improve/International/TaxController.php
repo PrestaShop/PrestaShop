@@ -31,7 +31,12 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
+<<<<<<< HEAD
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\DeleteTaxException;
+=======
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
+>>>>>>> dcec22066a... Tax status toggle action
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
@@ -222,6 +227,7 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
+<<<<<<< HEAD
      * Disables taxes status on bulk action.
      *
      * @param Request $request
@@ -231,11 +237,24 @@ class TaxController extends FrameworkBundleAdminController
      *     redirectRoute="admin_taxes_index",
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
+=======
+     * Toggles status.
+     *
+     * @param int $taxId
+>>>>>>> dcec22066a... Tax status toggle action
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @return RedirectResponse
      */
     public function bulkDisableStatusAction(Request $request)
     {
+<<<<<<< HEAD
         $taxIds = $request->request->get('tax_bulk');
         try {
             $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, false));
@@ -247,6 +266,21 @@ class TaxController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
+=======
+        try {
+            $this->getCommandBus()->handle(new ToggleTaxStatusCommand((int) $taxId));
+        } catch (TaxException $exception) {
+            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
+
+>>>>>>> dcec22066a... Tax status toggle action
         return $this->redirectToRoute('admin_taxes_index');
     }
 
@@ -299,6 +333,7 @@ class TaxController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
+<<<<<<< HEAD
             UpdateTaxException::class => [
                 UpdateTaxException::FAILED_BULK_UPDATE_STATUS => [
                     $this->trans(
@@ -323,6 +358,17 @@ class TaxController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+=======
+            TaxConstraintException::INVALID_TAX_ID => $this->trans(
+                'The %s field is invalid.',
+                'Admin.Notifications.Error',
+                [sprintf('"%s"', $this->trans('Id', 'Admin.International.Feature'))]
+            ),
+            CannotToggleTaxException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+>>>>>>> dcec22066a... Tax status toggle action
         ];
     }
 }
