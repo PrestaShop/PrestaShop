@@ -711,6 +711,8 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
 
     form.type.currency_exchange_rate:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
