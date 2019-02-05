@@ -2,6 +2,9 @@ const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 const {ProductList, AddProductPage} = require('../../selectors/BO/add_product_page');
 const {CategorySubMenu} = require('../../selectors/BO/catalogpage/category_submenu');
+const {TrafficAndSeo} = require('../../selectors/BO/shopParameters/shop_parameters');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../selectors/FO/access_page');
 let data = require('../../datas/product-data');
 global.productVariations = [];
 global.productCategories = {HOME: {}};
@@ -201,6 +204,14 @@ module.exports = {
             test('should delete the home category', () => client.waitForExistAndClick(AddProductPage.default_category));
           }
         }, 'product/product');
+      }
+
+      if (productData.hasOwnProperty('tax_rule')) {
+        test('should select the "Tax rule" to "' + productData.tax_rule + '"', () => {
+          return promise
+            .then(() => client.scrollWaitForExistAndClick(AddProductPage.tax_rule))
+            .then(() => client.waitForVisibleAndClick(AddProductPage.tax_option.replace('%V', productData.tax_rule)));
+        });
       }
 
       scenario('Save the created product', client => {
@@ -649,4 +660,24 @@ module.exports = {
       test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, quantity));
     }, 'product/check_product');
   },
+  checkProductPaginationFO(client, productPage, enableOrDisable, url, window = 1) {
+    test('should go to "Shop Parameters > Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.traffic_seo_submenu));
+    test('should close symfony toolbar if it exists', () => client.waitForSymfonyToolbar(AddProductPage, 3000));
+    test('should ' + enableOrDisable + ' the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', url)));
+    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 1000));
+    test('should go to the Front Office', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
+        .then(() => client.switchWindow(window))
+        .then(() => client.changeLanguage());
+    });
+    test('should click on "Display all products" link', () => client.scrollWaitForExistAndClick(productPage.see_all_products));
+    test('should verify that we are redirected to the "Home" category', () => client.checkTextValue(AccessPageFO.category_title, 'HOME'));
+    test('should click on "Next" link', () => client.clickPageNext(productPage.pagination_next, 3000));
+    test('should click on "Previous" link', () => client.clickPageNext(productPage.pagination_previous, 3000));
+    test('should click on "2" link', () => client.clickPageNext(productPage.pagination_number_link.replace('%NUM', 2), 3000));
+    test('should click on "1" link', () => client.clickPageNext(productPage.pagination_number_link.replace('%NUM', 1), 3000));
+    test('should go back to the Back Office', () => client.switchWindow(0));
+  }
+
 };

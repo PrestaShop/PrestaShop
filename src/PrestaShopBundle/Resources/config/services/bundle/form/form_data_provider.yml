@@ -159,3 +159,9 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.team.employee.configuration.employee_options_configuration'
+
+    prestashop.admin.currency.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyFormDataProvider'
+        arguments:
+          - '@prestashop.core.command_bus'
+          - '@=service("prestashop.adapter.legacy.configuration").get("PS_ACTIVE_CRONJOB_EXCHANGE_RATE")'

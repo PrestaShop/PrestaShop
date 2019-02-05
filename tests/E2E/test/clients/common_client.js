@@ -202,7 +202,9 @@ class CommonClient {
       return this.client
         .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
-        .then((variable) => global.tab[globalVar] = variable);
+        .then((variable) => {
+          global.tab[globalVar] = variable
+        });
     }
   }
 
@@ -324,8 +326,8 @@ class CommonClient {
    */
   async checkDocument(folderPath, fileName, text) {
     await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+      global.indexText = data.indexOf(text);
       global.data = global.data + data;
-      global.indexText = global.data.indexOf(text);
     });
 
     return this.client

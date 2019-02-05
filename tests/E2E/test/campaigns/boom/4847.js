@@ -30,8 +30,9 @@ scenario('BOOM-4847: Check that the pagination works fine on the product page in
         .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should go to "Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.traffic_seo_submenu));
-    test('should disable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 'off')));
-    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 50));
+    test('should close symfony toolbar if it exists', () => client.waitForSymfonyToolbar(AddProductPage, 3000));
+    test('should disable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 0)));
+    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 1000));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, "The settings have been successfully updated."));
   }, 'common_client');
 
@@ -56,8 +57,9 @@ scenario('BOOM-4847: Check that the pagination works fine on the product page in
 
   scenario('Enable the Friendly URL', client => {
     test('should go to "Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.traffic_seo_submenu));
-    test('should enable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 'on')));
-    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 50));
+    test('should close symfony toolbar if it exists', () => client.waitForSymfonyToolbar(AddProductPage, 3000));
+    test('should enable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 1)));
+    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 1000));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, "The settings have been successfully updated."));
   }, 'common_client');
 

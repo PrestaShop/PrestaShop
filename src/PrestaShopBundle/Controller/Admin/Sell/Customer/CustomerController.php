@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -89,6 +89,7 @@ class CustomerController extends AbstractAdminController
         $customerGrid = $customerGridFactory->getGrid($filters);
 
         $deleteCustomerForm = $this->createForm(DeleteCustomersType::class);
+        $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -97,6 +98,7 @@ class CustomerController extends AbstractAdminController
             'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
             'deleteCustomersForm' => $deleteCustomerForm->createView(),
+            'helperCardDocumentationLink' => $helperBlockLinkProvider->getLink('customer'),
         ]);
     }
 

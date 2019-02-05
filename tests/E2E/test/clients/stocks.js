@@ -41,11 +41,24 @@ class ModifyQuantity extends CommonClient {
       .then(() => this.client.getText(selector.reference_value.replace('%P', order)))
       .then((text) => expect(text).to.be.equal(reference))
       .then(() => this.client.getText(selector.time_movement.replace('%P', order)))
-      .then((text) => expect(text).to.be.contain(dateAndTime))
+      .then((text) => {
+        if (dateAndTime !== "") {
+          expect(text).to.be.contain(dateAndTime)
+        }
+      })
       .then(() => this.client.getText(selector.employee_value.replace('%P', order)))
-      .then((text) => expect(text).to.be.equal(employee))
+      .then((text) => {
+        if(employee !== '') {
+          expect(text).to.be.equal(employee)
+        }
+      })
       .then(() => this.client.getText(selector.product_value.replace('%P', order)))
-      .then((text) => expect(text).to.be.equal(productName));  }
+      .then((text) => {
+        if(productName !== '') {
+          expect(text).to.be.equal(productName)
+        }
+      });
+  }
 
   checkOrderMovement(Movement, client) {
     return promise

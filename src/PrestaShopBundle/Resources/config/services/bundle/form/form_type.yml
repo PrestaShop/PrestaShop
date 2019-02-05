@@ -670,6 +670,14 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
+
+    form.type.currency:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.currency_name_by_iso_code").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
@@ -700,5 +708,10 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
+
+    form.type.currency_exchange_rate:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.module").isInstalled("cronjobs")'
         tags:
             - { name: form.type }

@@ -28,6 +28,9 @@ module.exports = {
     customer_link: '//*[@id="table-address"]//td[contains(text(),"%ID")]',
     Partner_offers: '//*[@id="fieldset_0"]//label[contains(@for,"optin_on")]',
     first_name_value:'//*[@id="table-customer"]//tr[%ID]/td[4]',
-    last_name_value:'//*[@id="table-customer"]//tr[%ID]/td[5]'
+    last_name_value:'//*[@id="table-customer"]//tr[%ID]/td[5]',
+    view_button: '//*[@id="form-customer"]//a[@title="View"]',
+    valid_orders: '//*[@id="container-customer"]//div[contains(@class,"panel")]//i/../span[contains(@class,"label-success")]',
+    total_amount: '//*[@id="container-customer"]//div[contains(@class,"panel")]//i[contains(@class,"icon-ok-circle icon-big")]/..',
   }
 };
