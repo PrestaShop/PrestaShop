@@ -4,6 +4,7 @@ namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkUpdateTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\BulkUpdateTaxStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use Tax;
 
@@ -25,10 +26,19 @@ final class BulkUpdateTaxStatusHandler extends AbstractTaxHandler implements Bul
             $this->assertTaxWasFound($taxId, $tax);
             $tax->active = $command->getStatus()->isEnabled();
 
-            if (false === $tax->save()) {
+            try {
+                if (!$tax->save()) {
+                    throw new CannotToggleTaxStatusException(
+                        sprintf(
+                            'Unable to toggle Tax with id "%s"',
+                            $taxId->getValue()
+                        )
+                    );
+                }
+            } catch (\PrestaShopException $e) {
                 throw new TaxException(
                     sprintf(
-                        'An error occurred when enabling status for Tax object with id "%s"',
+                        'An error occurred when enabling Tax with id "%s"',
                         $taxId->getValue()
                     )
                 );
