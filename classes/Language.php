@@ -545,7 +545,7 @@ class LanguageCore extends ObjectModel
             foreach ($modList as $mod) {
                 Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod . '/mails/' . $this->iso_code);
                 $files = @scandir(_PS_MODULE_DIR_ . $mod . '/mails/', SCANDIR_SORT_NONE);
-                if (count($files) <= 2) {
+                if (is_array($files) && count($files) <= 2) {
                     Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod . '/mails/');
                 }
 
