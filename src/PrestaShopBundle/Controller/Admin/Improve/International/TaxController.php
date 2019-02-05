@@ -246,6 +246,10 @@ class TaxController extends FrameworkBundleAdminController
         } catch (TaxException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
 
         return $this->redirectToRoute('admin_taxes_index');
     }
