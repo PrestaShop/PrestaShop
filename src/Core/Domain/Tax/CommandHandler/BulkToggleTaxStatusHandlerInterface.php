@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 
 /**
- * Interface BulkUpdateTaxStatusHandlerInterface defines contract for BulkUpdateTaxStatus
+ * Interface BulkUpdateTaxStatusHandlerInterface defines contract for BulkToggleTaxStatus
  */
-interface BulkUpdateTaxStatusHandlerInterface
+interface BulkToggleTaxStatusHandlerInterface
 {
     /**
      * @param BulkToggleTaxStatusCommand $command

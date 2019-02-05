@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkUpdateTaxStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusException;
@@ -149,7 +149,7 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
-     * Deletes currency.
+     * Deletes tax.
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
@@ -213,7 +213,7 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
-     * Update taxes status in bulk action.
+     * Update taxes status on bulk action.
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
@@ -226,12 +226,12 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkStatusUpdateAction(Request $request, $newStatus)
+    public function bulkToggleStatusAction(Request $request, $newStatus)
     {
         $taxIds = $request->request->get('tax_bulk');
         try {
             $this->getCommandBus()->handle(
-                new BulkUpdateTaxStatusCommand($taxIds, new TaxStatus($newStatus))
+                new BulkToggleTaxStatusCommand($taxIds, new TaxStatus($newStatus))
             );
         } catch (TaxException $exception) {
             $this->addFlash('error', $this->getErrorByExceptionType($exception));
@@ -247,7 +247,7 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete taxes in bulk action.
+     * Delete taxes on bulk action.
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
