@@ -43,10 +43,10 @@ final class ToggleTaxStatusHandler extends AbstractTaxHandler implements ToggleT
     public function handle(ToggleTaxStatusCommand $command)
     {
         $taxIdValue = $command->getTaxId()->getValue();
-        $this->assertTaxWasFound($command->getTaxId(), $entity = new Tax($taxIdValue));
+        $this->assertTaxWasFound($command->getTaxId(), $tax = new Tax($taxIdValue));
 
         try {
-            if (false === $entity->toggleStatus()) {
+            if (false === $tax->toggleStatus()) {
                 throw new CannotToggleTaxStatusException(
                     sprintf(
                         'Unable to toggle Tax with id "%s"',

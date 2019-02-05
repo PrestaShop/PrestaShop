@@ -36,35 +36,35 @@ class BulkDeleteTaxCommand
     /**
      * @var TaxId[]
      */
-    private $taxesIds;
+    private $taxIds;
 
     /**
-     * @param TaxId[] $taxesIds
+     * @param TaxId[] $taxIds
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
      */
-    public function __construct(array $taxesIds)
+    public function __construct(array $taxIds)
     {
-        $this->setTaxesIds($taxesIds);
+        $this->setTaxIds($taxIds);
     }
 
     /**
      * @return TaxId[]
      */
-    public function getTaxesIds()
+    public function getTaxIds()
     {
-        return $this->taxesIds;
+        return $this->taxIds;
     }
 
     /**
-     * @param int[] $taxesIds
+     * @param int[] $taxIds
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
      */
-    private function setTaxesIds(array $taxesIds)
+    private function setTaxIds(array $taxIds)
     {
-        foreach ($taxesIds as $taxId) {
-            $this->taxesIds[] = new TaxId($taxId);
+        foreach ($taxIds as $taxId) {
+            $this->taxIds[] = new TaxId($taxId);
         }
     }
 }

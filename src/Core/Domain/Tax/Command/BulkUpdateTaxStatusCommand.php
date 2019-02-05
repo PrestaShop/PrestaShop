@@ -42,18 +42,18 @@ class BulkUpdateTaxStatusCommand
     /**
      * @var TaxId[]
      */
-    private $taxesIds;
+    private $taxIds;
 
     /**
-     * @param int[] $taxesIds
+     * @param int[] $taxIds
      * @param TaxStatus $status
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
      */
-    public function __construct(array $taxesIds, TaxStatus $status)
+    public function __construct(array $taxIds, TaxStatus $status)
     {
         $this->status = $status;
-        $this->setTaxesIds($taxesIds);
+        $this->setTaxIds($taxIds);
     }
 
     /**
@@ -67,9 +67,9 @@ class BulkUpdateTaxStatusCommand
     /**
      * @return TaxId[]
      */
-    public function getTaxesIds()
+    public function getTaxIds()
     {
-        return $this->taxesIds;
+        return $this->taxIds;
     }
 
     /**
@@ -77,10 +77,10 @@ class BulkUpdateTaxStatusCommand
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
      */
-    private function setTaxesIds(array $taxesIds)
+    private function setTaxIds(array $taxesIds)
     {
         foreach ($taxesIds as $taxId) {
-            $this->taxesIds[] = new TaxId($taxId);
+            $this->taxIds[] = new TaxId($taxId);
         }
     }
 }
