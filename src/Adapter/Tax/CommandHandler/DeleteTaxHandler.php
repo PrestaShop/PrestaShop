@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotDeleteTaxException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use Tax;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\DeleteTaxHandlerInterface;
@@ -44,14 +45,24 @@ final class DeleteTaxHandler extends AbstractTaxHandler implements DeleteTaxHand
         $taxIdValue = $command->getTaxId()->getValue();
         $this->assertTaxWasFound($command->getTaxId(), $entity = new Tax($taxIdValue));
 
-        if (false === $entity->delete()) {
-            throw new CannotDeleteTaxException(
+        try {
+            if (!$entity->delete()) {
+                throw new CannotDeleteTaxException(
+                    sprintf(
+                        'Cannot delete Tax object with id "%s"',
+                        $taxIdValue
+                    )
+                );
+            }
+        } catch (\PrestaShopException $e) {
+            throw new TaxException(
                 sprintf(
                     'An error occurred when deleting Tax object with id "%s"',
                     $taxIdValue
                 )
             );
         }
+
 
     }
 }
