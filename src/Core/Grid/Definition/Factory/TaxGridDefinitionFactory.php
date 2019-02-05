@@ -226,7 +226,6 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions()
     {
-        //@todo: implement bulk actions
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('enable_selection'))
@@ -242,14 +241,17 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('disable_selection'))
                     ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_taxes_index',
+                        'submit_route' => 'admin_taxes_bulk_update_status',
+                        'route_params' => [
+                            'newStatus' => 'disabled',
+                        ],
                     ])
             )
             ->add(
                 (new SubmitBulkAction('delete_selection'))
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_taxes_index',
+                        'submit_route' => 'admin_taxes_bulk_delete',
                         'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                     ])
             );

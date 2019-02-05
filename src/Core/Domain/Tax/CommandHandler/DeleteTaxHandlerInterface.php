@@ -29,13 +29,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 
 /**
- * Interface DeleteTaxHandlerInterface defines contract for DeleteTaxHandler.
+ * Interface DeleteTaxHandlerInterface defines contract for DeleteTaxHandler
  */
 interface DeleteTaxHandlerInterface
 {
     /**
-     * Handles the deletion logic of tax.
-     *
      * @param DeleteTaxCommand $command
      */
     public function handle(DeleteTaxCommand $command);

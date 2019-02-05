@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkUpdateTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
@@ -178,6 +179,14 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
+     * Update taxes status in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param Request $request
      * @param $newStatus
      *
@@ -195,6 +204,39 @@ class TaxController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_taxes_index');
         }
+
+        return $this->redirectToRoute('admin_taxes_index');
+    }
+
+    /**
+     * Delete taxes in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $taxesIds = $request->request->get('tax_bulk');
+        try {
+            $this->getCommandBus()->handle(
+                new BulkDeleteTaxCommand($taxesIds)
+            );
+        } catch (TaxException $exception) {
+            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+        $this->addFlash(
+            'success',
+            $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+        );
 
         return $this->redirectToRoute('admin_taxes_index');
     }
