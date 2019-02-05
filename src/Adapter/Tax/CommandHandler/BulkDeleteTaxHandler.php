@@ -41,12 +41,12 @@ final class BulkDeleteTaxHandler extends AbstractTaxHandler implements BulkDelet
      */
     public function handle(BulkDeleteTaxCommand $command)
     {
-        foreach ($command->getTaxesIds() as $taxId) {
+        foreach ($command->getTaxIds() as $taxId) {
             $taxIdValue = $taxId->getValue();
-            $this->assertTaxWasFound($taxId, $entity = new Tax($taxIdValue));
+            $this->assertTaxWasFound($taxId, $tax = new Tax($taxIdValue));
 
             try {
-                if (!$entity->delete()) {
+                if (!$tax->delete()) {
                     sprintf(
                         'Cannot delete Tax object with id "%s"',
                         $taxIdValue

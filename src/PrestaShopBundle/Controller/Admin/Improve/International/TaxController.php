@@ -228,16 +228,20 @@ class TaxController extends FrameworkBundleAdminController
      */
     public function bulkStatusUpdateAction(Request $request, $newStatus)
     {
-        $taxesIds = $request->request->get('tax_bulk');
+        $taxIds = $request->request->get('tax_bulk');
         try {
             $this->getCommandBus()->handle(
-                new BulkUpdateTaxStatusCommand($taxesIds, new TaxStatus($newStatus))
+                new BulkUpdateTaxStatusCommand($taxIds, new TaxStatus($newStatus))
             );
         } catch (TaxException $exception) {
             $this->addFlash('error', $this->getErrorByExceptionType($exception));
 
             return $this->redirectToRoute('admin_taxes_index');
         }
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
 
         return $this->redirectToRoute('admin_taxes_index');
     }
@@ -257,10 +261,10 @@ class TaxController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $taxesIds = $request->request->get('tax_bulk');
+        $taxIds = $request->request->get('tax_bulk');
         try {
             $this->getCommandBus()->handle(
-                new BulkDeleteTaxCommand($taxesIds)
+                new BulkDeleteTaxCommand($taxIds)
             );
         } catch (TaxException $exception) {
             $this->addFlash('error', $this->getErrorByExceptionType($exception));

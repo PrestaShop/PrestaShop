@@ -43,12 +43,12 @@ final class BulkUpdateTaxStatusHandler extends AbstractTaxHandler implements Bul
      */
     public function handle(BulkUpdateTaxStatusCommand $command)
     {
-        foreach ($command->getTaxesIds() as $taxId) {
+        foreach ($command->getTaxIds() as $taxId) {
             $tax = new Tax($taxId->getValue());
             $this->assertTaxWasFound($taxId, $tax);
 
             try {
-                if (!$tax->save()) {
+                if (!$tax->toggleStatus()) {
                     throw new CannotToggleTaxStatusException(
                         sprintf(
                             'Unable to toggle Tax with id "%s"',
