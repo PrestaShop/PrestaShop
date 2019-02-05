@@ -232,13 +232,6 @@ class TaxController extends FrameworkBundleAdminController
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_taxes_index",
-     *     message="You do not have permission to edit this."
-     * )
-     * @DemoRestricted(redirectRoute="admin_taxes_index")
-     *
      * @return RedirectResponse
      */
     public function bulkDisableStatusAction(Request $request)
