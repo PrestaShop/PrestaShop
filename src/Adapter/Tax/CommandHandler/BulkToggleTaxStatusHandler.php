@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkUpdateTaxStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\BulkUpdateTaxStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
@@ -40,7 +40,7 @@ final class BulkUpdateTaxStatusHandler extends AbstractTaxHandler implements Bul
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkUpdateTaxStatusCommand $command)
+    public function handle(BulkToggleTaxStatusCommand $command)
     {
         foreach ($command->getTaxIds() as $taxId) {
             $tax = new Tax($taxId->getValue());

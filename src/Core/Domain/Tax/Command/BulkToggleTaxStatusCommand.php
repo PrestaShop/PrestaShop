@@ -73,13 +73,13 @@ class BulkUpdateTaxStatusCommand
     }
 
     /**
-     * @param array $taxesIds
+     * @param array $taxIds
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
      */
-    private function setTaxIds(array $taxesIds)
+    private function setTaxIds(array $taxIds)
     {
-        foreach ($taxesIds as $taxId) {
+        foreach ($taxIds as $taxId) {
             $this->taxIds[] = new TaxId($taxId);
         }
     }
