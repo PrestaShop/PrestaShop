@@ -47,7 +47,7 @@
                     {{ form_errors(paginationForm.default_order_way) }}
                     {{ form_widget(paginationForm.default_order_way) }}
                 </div>
-                <div class="form-group row">
+                <div class="form-group">
                     {{ ps.label_with_help(('Display out-of-stock products last'|trans), ('If enabled, products will be in this order: 1. in-stock, 2. available for order but quantity is 0, 3. out-of-stock. This does not apply when ordering by name & sales'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(paginationForm.display_out_of_stock_last) }}
                     {{ form_widget(paginationForm.display_out_of_stock_last) }}
