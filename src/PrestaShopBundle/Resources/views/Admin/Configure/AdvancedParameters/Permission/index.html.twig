@@ -26,6 +26,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {% set employeeProfileId = configurablePermissions.employeeProfileId %}
+  {% set profilePermissionsForModules = configurablePermissions.profilePermissionsForModules %}
+
   <div class="row">
     <div class="col-2">
       {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/profile_tabs.html.twig' %}
