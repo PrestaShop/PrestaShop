@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Language\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 
 /**
- * Stores IETF tag value
+ * Stores IETF tag value (e.g. en-US)
  */
 class TagIETF
 {

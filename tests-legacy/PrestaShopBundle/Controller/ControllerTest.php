@@ -130,7 +130,6 @@ class ControllerTest extends TestCase
             array('AdminImagesController'),
             array('AdminShopUrlController'),
             array('AdminStatesController'),
-            array('AdminLanguagesController'),
             array('AdminStatsController'),
             array('AdminContactsController'),
             array('AdminLegacyLayoutController'),
