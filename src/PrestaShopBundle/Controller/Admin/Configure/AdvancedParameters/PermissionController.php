@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermis
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,11 +44,9 @@ class PermissionController extends FrameworkBundleAdminController
     /**
      * Show permissions configuration page
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         /** @var ConfigurablePermissions $configurablePermissions */
         $configurablePermissions = $this->getQueryBus()->handle(new GetPermissionsForConfiguration(
@@ -59,8 +56,6 @@ class PermissionController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/index.html.twig',
             [
-                'hasEmployeeEditPermission' =>
-                    $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller')),
                 'configurablePermissions' => $configurablePermissions,
             ]
         );
