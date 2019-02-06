@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
+use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -49,6 +51,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildSearchParametersMock(),
             $this->buildTokenStorageMock(),
             $this->buildAdminFilterRepositoryMock(),
+            $this->buildEventDispatcherMock(),
             self::SHOP_ID
         );
         $this->assertNotNull($resolver);
@@ -66,6 +69,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildSearchParametersMock(),
             $this->buildTokenStorageMock(),
             $this->buildAdminFilterRepositoryMock(),
+            $this->buildEventDispatcherMock(),
             self::SHOP_ID
         );
         $this->assertNotNull($resolver);
@@ -77,6 +81,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildSearchParametersMock(),
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock(),
+            $this->buildEventDispatcherMock(),
             self::SHOP_ID
         );
         $this->assertNotNull($resolver);
@@ -92,6 +97,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildSearchParametersMock(),
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock(),
+            $this->buildEventDispatcherMock(SampleFilters::getDefaults()),
             self::SHOP_ID
         );
         $this->assertNotNull($resolver);
@@ -107,11 +113,18 @@ class SearchParametersResolverTest extends TestCase
 
     public function testSavedParameters()
     {
+        $savedParameters = [
+            'limit' => 5,
+            'offset' => 20,
+        ];
+        $expectedParameters = array_merge(SampleFilters::getDefaults(), $savedParameters);
+
         //With employee
         $resolver = new SearchParametersResolver(
             $this->buildSearchParametersMock(['limit' => 5, 'offset' => 20]),
             $this->buildTokenStorageMock(true),
-            $this->buildAdminFilterRepositoryMock(),
+            $this->buildAdminFilterRepositoryMock(), //No request parameters so no saving
+            $this->buildEventDispatcherMock($expectedParameters),
             self::SHOP_ID
         );
         $this->assertNotNull($resolver);
@@ -137,12 +150,14 @@ class SearchParametersResolverTest extends TestCase
             ],
             'unknownParameter' => 'plop',
         ];
+        $expectedParameters = array_merge(SampleFilters::getDefaults(), $requestParameters);
 
         //With employee
         $resolver = new SearchParametersResolver(
             $this->buildSearchParametersMock(null, $requestParameters),
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock($requestParameters),
+            $this->buildEventDispatcherMock($expectedParameters),
             self::SHOP_ID
         );
         $this->assertNotNull($resolver);
@@ -186,6 +201,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildSearchParametersMock($savedParameters, $requestParameters),
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock($expectedParameters),
+            $this->buildEventDispatcherMock($expectedParameters),
             self::SHOP_ID
         );
         $this->assertNotNull($resolver);
@@ -205,6 +221,44 @@ class SearchParametersResolverTest extends TestCase
         $this->assertEquals(33, $filters->getLimit());
     }
 
+    /**
+     * @param array|null $expectedFilters
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|EventDispatcherInterface
+     */
+    private function buildEventDispatcherMock(array $expectedFilters = null)
+    {
+        $dispatcherMock = $this->getMockBuilder(EventDispatcherInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        if (null !== $expectedFilters) {
+            $dispatcherMock
+                ->expects($this->once())
+                ->method('dispatch')
+                ->with(
+                    $this->equalTo(FilterSearchCriteriaEvent::NAME),
+                    $this->callback(function (FilterSearchCriteriaEvent $event) use ($expectedFilters) {
+                        $this->assertInstanceOf(FilterSearchCriteriaEvent::class, $event);
+                        /** @var SampleFilters $filters */
+                        $filters = $event->getSearchCriteria();
+                        $this->assertNotNull($filters);
+                        $this->assertInstanceOf(SampleFilters::class, $filters);
+                        $this->assertEquals($expectedFilters, $filters->all());
+
+                        return true;
+                    })
+                );
+        }
+
+        return $dispatcherMock;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|ArgumentMetadata
+     */
     private function buildArgumentMetaDataMock($type)
     {
         $argumentMetadataMock = $this->getMockBuilder(ArgumentMetadata::class)
@@ -221,6 +275,12 @@ class SearchParametersResolverTest extends TestCase
         return $argumentMetadataMock;
     }
 
+    /**
+     * @param array $parameters
+     * @param bool $postQuery
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|Request
+     */
     private function buildRequestMock(array $parameters = [], $postQuery = false)
     {
         $requestMock = $this->getMockBuilder(Request::class)
@@ -270,6 +330,11 @@ class SearchParametersResolverTest extends TestCase
         return $requestMock;
     }
 
+    /**
+     * @param bool $withEmployee
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
+     */
     private function buildTokenStorageMock($withEmployee = false)
     {
         $tokenStorageMock = $this->getMockBuilder(TokenStorageInterface::class)
@@ -308,6 +373,12 @@ class SearchParametersResolverTest extends TestCase
         return $tokenStorageMock;
     }
 
+    /**
+     * @param array|null $repoParameters
+     * @param array|null $requestParameters
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|SearchParametersInterface
+     */
     private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = null)
     {
         $searchParametersMock = $this->getMockBuilder(SearchParametersInterface::class)
