@@ -37,8 +37,10 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -90,6 +92,8 @@ final class EmployeeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $isRestrictedAccess = $options['is_restricted_access'];
+
         $builder
             ->add('firstname', TextType::class, [
                 'constraints' => [
@@ -132,10 +136,23 @@ final class EmployeeType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('change_password', ChangePasswordType::class)
-            ->add('prestashop_addons', AddonsConnectType::class, [
-                'label' => $this->trans('Sign in', [], 'Admin.Advparameters.Feature')
-            ])
+        ;
+
+        if ($isRestrictedAccess) {
+            $builder
+                ->add('password', PasswordType::class)
+                ->add(
+                'prestashop_addons',
+                AddonsConnectType::class,
+                [
+                    'label' => $this->trans('Sign in', [], 'Admin.Advparameters.Feature'),
+                ]
+            );
+        } else {
+            $builder->add('change_password', ChangePasswordType::class);
+        }
+
+        $builder
             ->add('optin', SwitchType::class, [
                 'required' => false,
             ])
@@ -145,23 +162,53 @@ final class EmployeeType extends AbstractType
             ->add('language', ChoiceType::class, [
                 'choices' => $this->languagesChoices,
             ])
-            ->add('active', SwitchType::class, [
-                'required' => false,
-            ])
-            ->add('profile', ChoiceType::class, [
-                'choices' => $this->profilesChoices,
-            ])
         ;
 
-        if ($this->isMultistoreFeatureActive) {
-            $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'required' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                    ]),
-                ],
-            ]);
+        if (!$isRestrictedAccess) {
+            $builder
+                ->add(
+                    'active',
+                    SwitchType::class,
+                    [
+                        'required' => false,
+                    ]
+                )
+                ->add(
+                    'profile',
+                    ChoiceType::class,
+                    [
+                        'choices' => $this->profilesChoices,
+                    ]
+                )
+            ;
+
+            if ($this->isMultistoreFeatureActive) {
+                $builder->add('shop_association', ShopChoiceTreeType::class, [
+                    'required' => false,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ]);
+            }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            // When is_restricted_access is set to true, the form will show fields differently:
+            // - "Change password" field (with regeneration option) shown instead of single password input,
+            // - Status switch not shown,
+            // - Profile selection not shown,
+            // - Addons connect field is shown,
+            // - Shop association field is not shown.
+            ->setDefault('is_restricted_access', true)
+            ->setAllowedTypes('is_restricted_access', 'bool')
+        ;
     }
 }
