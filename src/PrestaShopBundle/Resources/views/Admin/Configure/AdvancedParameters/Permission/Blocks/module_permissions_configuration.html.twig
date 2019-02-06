@@ -52,7 +52,7 @@
               <td>
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
-                    {% if hasEmployeeEditPermission and canEmployeeViewModule %}
+                    {% if configurablePermissions.hasEmployeeEditPermission and canEmployeeViewModule %}
                       {% set checkboxAttributes = ' data-rel=' ~ module.id_module ~ '||view||' ~ profile.id %}
                     {% else %}
                       {% set enableBulkView = false %}
@@ -72,7 +72,7 @@
               <td>
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
-                    {% if hasEmployeeEditPermission and canEmployeeConfigureModule %}
+                    {% if configurablePermissions.hasEmployeeEditPermission and canEmployeeConfigureModule %}
                       {% set checkboxAttributes = ' data-rel=' ~  module.id_module  ~ '||configure||' ~ profile.id %}
                     {% else %}
                       {% set enableBulkConfigure = false %}
@@ -92,7 +92,7 @@
               <td>
                 <div class="md-checkbox md-checkbox-inline">
                   <label>
-                    {% if hasEmployeeEditPermission and canEmployeeUninstallModule %}
+                    {% if configurablePermissions.hasEmployeeEditPermission and canEmployeeUninstallModule %}
                       {% set checkboxAttributes = ' data-rel=' ~ module.id_module ~ '||uninstall||' ~ profile.id %}
                     {% else %}
                       {% set enableBulkConfigure = false %}
@@ -124,7 +124,7 @@
                        data-rel="-1||view||{{ profile.id }}"
                        data-permission="view"
                        class="js-module-permission-checkbox"
-                       {% if not hasEmployeeEditPermission or not enableBulkView %}disabled{% endif %}
+                       {% if not configurablePermissions.hasEmployeeEditPermission or not enableBulkView %}disabled{% endif %}
                 >
                 <i class="md-checkbox-control"></i>
               </label>
@@ -139,7 +139,7 @@
                        data-rel="-1||configure||{{ profile.id }}"
                        data-permission="configure"
                        class="js-module-permission-checkbox"
-                       {% if not hasEmployeeEditPermission or not enableBulkConfigure %}disabled{% endif %}
+                       {% if not configurablePermissions.hasEmployeeEditPermission or not enableBulkConfigure %}disabled{% endif %}
                 >
                 <i class="md-checkbox-control"></i>
               </label>
@@ -154,7 +154,7 @@
                        data-rel="-1||uninstall||{{ profile.id }}"
                        data-permission="uninstall"
                        class="js-module-permission-checkbox"
-                       {% if not hasEmployeeEditPermission or not enableBulkUninstall %}disabled{% endif %}
+                       {% if not configurablePermissions.hasEmployeeEditPermission or not enableBulkUninstall %}disabled{% endif %}
                 >
                 <i class="md-checkbox-control"></i>
               </label>
