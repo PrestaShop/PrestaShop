@@ -44,10 +44,10 @@
           {{ tab.name }}
         {% endif %}
       </td>
-      {% for permission in permissions %}
-        {% set permissionId = permissionIds[permission] %}
+      {% for permission in configurablePermissions.permissions %}
+        {% set permissionId = configurablePermissions.permissionIds[permission] %}
         <td>
-          {% if hasEmployeeEditPermission and employeeTabPermissions[permission] %}
+          {% if configurablePermissions.hasEmployeeEditPermission and employeeTabPermissions[permission] %}
             <div class="md-checkbox md-checkbox-inline">
               <label>
                 <input type="checkbox"
@@ -83,7 +83,7 @@
           <label>
             <input type="checkbox"
                    class="js-tab-permissions-checkbox"
-                   {% if hasEmployeeEditPermission and hasAllPermissions %}
+                   {% if configurablePermissions.hasEmployeeEditPermission and hasAllPermissions %}
                      data-id="4"
                      data-parent="{{ tab.id_parent }}"
                      data-type="all"
