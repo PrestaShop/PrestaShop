@@ -406,7 +406,12 @@ class CartControllerCore extends FrontController
 
         $qty_to_check = $this->qty;
         $cart_products = $this->context->cart->getProducts();
-
+        
+        $qty_available = $product->quantity;
+        if ($product->hasAttributes()) {
+            $qty_available = StockAvailable::getQuantityAvailableByProduct(null, (int) $this->id_product_attribute, $this->context->shop->id);
+        }
+        
         if (is_array($cart_products)) {
             foreach ($cart_products as $cart_product) {
                 if ($this->productInCartMatchesCriteria($cart_product)) {
@@ -427,7 +432,7 @@ class CartControllerCore extends FrontController
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             $this->{$ErrorKey}[] = $this->trans(
                 'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted. Maximum quantity is %quantity%',
-                array('%product%' => $product->name, '%quantity%' => $product->quantity),
+                array('%product%' => $product->name, '%quantity%' => $qty_available),
                 'Shop.Notifications.Error'
             );
         }
@@ -499,7 +504,7 @@ class CartControllerCore extends FrontController
                     // check quantity after cart quantity update
                     $this->{$ErrorKey}[] = $this->trans(
                         'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted. Maximum quantity is %quantity%',
-                        array('%product%' => $product->name, '%quantity%' => $product->quantity),
+                        array('%product%' => $product->name, '%quantity%' => $qty_available),
                         'Shop.Notifications.Error'
                     );
                 }
