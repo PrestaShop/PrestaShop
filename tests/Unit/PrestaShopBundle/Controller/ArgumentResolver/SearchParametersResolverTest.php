@@ -30,7 +30,6 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver;
-use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -178,7 +177,7 @@ class SearchParametersResolverTest extends TestCase
         ];
         $savedParameters = [
             'limit' => 5,
-            'offset' => 20
+            'offset' => 20,
         ];
         $expectedParameters = array_merge($savedParameters, $requestParameters);
 
@@ -365,7 +364,8 @@ class SearchParametersResolverTest extends TestCase
     }
 }
 
-class SampleFilters extends Filters {
+class SampleFilters extends Filters
+{
     /**
      * {@inheritdoc}
      */
