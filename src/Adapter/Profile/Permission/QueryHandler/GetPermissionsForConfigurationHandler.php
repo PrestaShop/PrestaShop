@@ -27,10 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler;
 
 use Context;
+use Module;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Profile;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Tab;
 
 /**
@@ -41,6 +44,19 @@ use Tab;
 final class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigurationHandlerInterface
 {
     /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     */
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(GetPermissionsForConfiguration $query)
@@ -49,22 +65,33 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         $tabs = $this->getTabsForPermissionsConfiguration();
         $permissions = ['view', 'add', 'edit', 'delete'];
 
-        $tabPermissions = $this->getTabPermissionsForProfiles($profiles);
+        $tabPermissionsForProfiles = $this->getTabPermissionsForProfiles($profiles);
+        $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
 
-        $bulkConfiguration = $this->getBulkConfigurationForProfiles(
+        $permissionIds = ['view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4];
+        $employeeProfileId = (int) Context::getContext()->employee->id_profile;
+
+        $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(PageVoter::UPDATE, 'AdminAccess');
+
+        $bulkConfigurationPermissions = $this->getBulkConfigurationForProfiles(
             $query->getEmployeeProfileId()->getValue(),
-            true, //@todo: fix
-            $tabPermissions,
+            $canEmployeeEditPermissions,
+            $tabPermissionsForProfiles,
             $profiles,
             $tabs,
             $permissions
         );
 
         return new ConfigurablePermissions(
-            $tabPermissions,
+            $tabPermissionsForProfiles,
+            $modulePermissionsForProfiles,
             $profiles,
             $tabs,
-            $bulkConfiguration
+            $bulkConfigurationPermissions,
+            $permissions,
+            $permissionIds,
+            $employeeProfileId,
+            $canEmployeeEditPermissions
         );
     }
 
@@ -163,14 +190,10 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             $permissions[$profile['id']] = Profile::getProfileAccesses($profile['id']);
         }
 
-        dump($permissions);
-
         return $permissions;
     }
 
     /**
-     * @todo: check if this can be used or removed
-     *
      * @param int $employeeProfileId
      * @param bool $hasEmployeeEditPermission
      * @param array $profileTabPermissions
@@ -259,5 +282,24 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         }
 
         return $bulkConfiguration;
+    }
+
+    /**
+     * @param array $profiles
+     *
+     * @return array
+     */
+    private function getModulePermissionsForProfiles(array $profiles)
+    {
+        $profilePermissionsForModules = [];
+
+        foreach ($profiles as $profile) {
+            $profilePermissionsForModules[$profile['id']] = Module::getModulesAccessesByIdProfile($profile['id']);
+            uasort($profilePermissionsForModules[$profile['id']], function($a, $b) {
+                return strnatcmp($a['name'], $b['name']);
+            });
+        }
+
+        return $profilePermissionsForModules;
     }
 }

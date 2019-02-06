@@ -48,16 +48,62 @@ class ConfigurablePermissions
      */
     private $bulkConfiguration;
 
+    /**
+     * @var array
+     */
+    private $profilePermissionsForModules;
+
+    /**
+     * @var array
+     */
+    private $permissions;
+
+    /**
+     * @var array
+     */
+    private $permissionIds;
+
+    /**
+     * @var int
+     */
+    private $employeeProfileId;
+
+    /**
+     * @var boolean
+     */
+    private $hasEmployeeEditPermission;
+
+    /**
+     * @param array $profilePermissionsForTabs
+     * @param array $profilePermissionsForModules
+     * @param array $profiles
+     * @param array $tabs
+     * @param array $bulkConfiguration
+     * @param string[] $permissions
+     * @param int[] $permissionIds
+     * @param int $employeeProfileId
+     * @param bool $hasEmployeeEditPermission
+     */
     public function __construct(
         array $profilePermissionsForTabs,
+        array $profilePermissionsForModules,
         array $profiles,
         array $tabs,
-        array $bulkConfiguration
+        array $bulkConfiguration,
+        array $permissions,
+        array $permissionIds,
+        $employeeProfileId,
+        $hasEmployeeEditPermission
     ) {
         $this->profilePermissionsForTabs = $profilePermissionsForTabs;
         $this->profiles = $profiles;
         $this->tabs = $tabs;
         $this->bulkConfiguration = $bulkConfiguration;
+        $this->profilePermissionsForModules = $profilePermissionsForModules;
+        $this->permissions = $permissions;
+        $this->permissionIds = $permissionIds;
+        $this->employeeProfileId = $employeeProfileId;
+        $this->hasEmployeeEditPermission = $hasEmployeeEditPermission;
     }
 
     /**
@@ -132,5 +178,45 @@ class ConfigurablePermissions
     public function isBulkAllConfigurationEnabled($profileId)
     {
         return $this->bulkConfiguration[$profileId]['all'];
+    }
+
+    /**
+     * @return array
+     */
+    public function getProfilePermissionsForModules()
+    {
+        return $this->profilePermissionsForModules;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissionIds()
+    {
+        return $this->permissionIds;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEmployeeProfileId()
+    {
+        return $this->employeeProfileId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEmployeeEditPermission()
+    {
+        return $this->hasEmployeeEditPermission;
     }
 }
