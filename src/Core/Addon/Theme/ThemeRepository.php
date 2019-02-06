@@ -66,7 +66,7 @@ class ThemeRepository implements AddonRepositoryInterface
             $data = $this->getConfigFromFile($dir . '/config/theme.yml');
 
             // Write parsed yml data into json conf (faster parsing next time)
-            $this->filesystem->dumpFile($jsonConf, json_encode($data), PsFileSystem::DEFAULT_MODE);
+            $this->filesystem->dumpFile($jsonConf, json_encode($data), PsFileSystem::DEFAULT_MODE_FILE);
         }
 
         $data['directory'] = $dir;

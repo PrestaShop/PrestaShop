@@ -50,7 +50,7 @@ Upgrade::migrateSettingsFile();
 require_once _PS_CONFIG_DIR_.'bootstrap.php';
 
 $logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
-@mkdir($logDir, FileSystem::DEFAULT_MODE, true);
+@mkdir($logDir, FileSystem::DEFAULT_MODE_FOLDER, true);
 
 $upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');
 if (isset($_GET['autoupgrade']) && $_GET['autoupgrade'] == 1) {

@@ -73,7 +73,7 @@ class Repository
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
-                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', FileSystem::DEFAULT_MODE, true);
+                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', FileSystem::DEFAULT_MODE_FOLDER, true);
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }

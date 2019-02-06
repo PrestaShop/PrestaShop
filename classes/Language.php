@@ -1128,7 +1128,7 @@ class LanguageCore extends ObjectModel
             $zipArchive->close();
 
             $coreDestPath = _PS_ROOT_DIR_ . '/mails/' . $lang_pack['iso_code'];
-            $fileSystem->mkdir($coreDestPath, PsFileSystem::DEFAULT_MODE);
+            $fileSystem->mkdir($coreDestPath, PsFileSystem::DEFAULT_MODE_FOLDER);
 
             if ($fileSystem->exists($folder . '/core')) {
                 foreach ($finder->files()->in($folder . '/core') as $coreEmail) {
@@ -1143,7 +1143,7 @@ class LanguageCore extends ObjectModel
             if ($fileSystem->exists($folder . '/modules')) {
                 foreach ($finder->directories()->in($folder . '/modules') as $moduleDirectory) {
                     $moduleDestPath = _PS_ROOT_DIR_ . '/modules/' . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
-                    $fileSystem->mkdir($moduleDestPath, PsFileSystem::DEFAULT_MODE);
+                    $fileSystem->mkdir($moduleDestPath, PsFileSystem::DEFAULT_MODE_FOLDER);
 
                     $findEmails = new \Symfony\Component\Finder\Finder();
                     foreach ($findEmails->files()->in($moduleDirectory->getRealPath()) as $moduleEmail) {

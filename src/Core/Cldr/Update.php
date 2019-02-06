@@ -51,7 +51,7 @@ class Update extends Repository
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
-                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', FileSystem::DEFAULT_MODE, true);
+                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', FileSystem::DEFAULT_MODE_FOLDER, true);
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
@@ -87,7 +87,7 @@ class Update extends Repository
                 $filename = $archive->getNameIndex($i);
                 if (preg_match('%^supplemental\/(.*).json$%', $filename)) {
                     if (!is_dir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename))) {
-                        mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), FileSystem::DEFAULT_MODE, true);
+                        mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), FileSystem::DEFAULT_MODE_FOLDER, true);
                     }
 
                     if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename)) {
@@ -128,7 +128,7 @@ class Update extends Repository
 
             if (preg_match('%^main\/' . $locale . '\/(.*).json$%', $filename)) {
                 if (!is_dir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename))) {
-                    mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), FileSystem::DEFAULT_MODE, true);
+                    mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), FileSystem::DEFAULT_MODE_FOLDER, true);
                 }
 
                 if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename)) {

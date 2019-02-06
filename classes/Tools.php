@@ -3062,7 +3062,7 @@ exit;
     public static function ZipExtract($from_file, $to_dir)
     {
         if (!file_exists($to_dir)) {
-            mkdir($to_dir, PsFileSystem::DEFAULT_MODE);
+            mkdir($to_dir, PsFileSystem::DEFAULT_MODE_FOLDER);
         }
 
         $zip = new ZipArchive();

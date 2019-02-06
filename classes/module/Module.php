@@ -3063,7 +3063,7 @@ abstract class ModuleCore implements ModuleInterface
             $dir_name = dirname($override_dest);
 
             if (!$orig_path && !is_dir($dir_name)) {
-                @mkdir($dir_name, FileSystem::DEFAULT_MODE);
+                @mkdir($dir_name, FileSystem::DEFAULT_MODE_FOLDER);
             }
 
             if (!is_writable($dir_name)) {
