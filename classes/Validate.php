@@ -593,16 +593,17 @@ class ValidateCore
      * Check for birthDate validity.
      *
      * @param string $date birthdate to validate
+     * @param string $format optional format
      *
      * @return bool Validity is ok or not
      */
-    public static function isBirthDate($date)
+    public static function isBirthDate($date, $format = 'Y-m-d')
     {
         if (empty($date) || $date == '0000-00-00') {
             return true;
         }
 
-        $d = DateTime::createFromFormat('Y-m-d', $date);
+        $d = DateTime::createFromFormat($format, $date);
         if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
             return false;
         }
