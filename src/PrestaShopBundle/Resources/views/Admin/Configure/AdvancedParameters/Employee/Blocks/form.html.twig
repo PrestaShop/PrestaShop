@@ -70,15 +70,19 @@
           'label': 'Email address'|trans({}, 'Admin.Global')
         }) }}
 
-        {{ ps.form_group_row(employeeForm.change_password, { attr: { class: 'btn-outline-secondary' } }, {
+        {% set passwordField = isRestrictedAccess ? employeeForm.password : employeeForm.change_password %}
+
+        {{ ps.form_group_row(passwordField, { attr: { class: 'btn-outline-secondary' } }, {
           'label': 'Password'|trans({}, 'Admin.Global')
         }) }}
 
-        {{ ps.form_group_row(employeeForm.prestashop_addons, { attr: {
-          class: 'btn-outline-secondary',
-        }}, {
-          'label': 'PrestaShop Addons',
-        }) }}
+        {% if isRestrictedAccess %}
+          {{ ps.form_group_row(employeeForm.prestashop_addons, { attr: {
+            class: 'btn-outline-secondary',
+          }}, {
+            'label': 'PrestaShop Addons',
+          }) }}
+        {% endif %}
 
         {{ ps.form_group_row(employeeForm.optin, {}, {
           'label': 'Subscribe to PrestaShop newsletter'|trans,
@@ -94,20 +98,22 @@
           'label': 'Language'|trans({}, 'Admin.Global')
         }) }}
 
-        {{ ps.form_group_row(employeeForm.active, {}, {
-          'label': 'Active'|trans({}, 'Admin.Global'),
-          'help': 'Allow or disallow this employee to log in to the Admin panel.'|trans({}, 'Admin.Advparameters.Help')
-        }) }}
-
-        {{ ps.form_group_row(employeeForm.profile, {}, {
-          'label': 'Permission profile'|trans({}, 'Admin.Advparameters.Feature')
-        }) }}
-
-        {% if employeeForm.shop_association is defined %}
-          {{ ps.form_group_row(employeeForm.shop_association, {}, {
-            'label': 'Shop association'|trans({}, 'Admin.Global'),
-            'help': 'Select the shops the employee is allowed to access.'|trans({}, 'Admin.Advparameters.Help')
+        {% if not isRestrictedAccess %}
+          {{ ps.form_group_row(employeeForm.active, {}, {
+            'label': 'Active'|trans({}, 'Admin.Global'),
+            'help': 'Allow or disallow this employee to log in to the Admin panel.'|trans({}, 'Admin.Advparameters.Help')
           }) }}
+
+          {{ ps.form_group_row(employeeForm.profile, {}, {
+            'label': 'Permission profile'|trans({}, 'Admin.Advparameters.Feature')
+          }) }}
+
+          {% if employeeForm.shop_association is defined %}
+            {{ ps.form_group_row(employeeForm.shop_association, {}, {
+              'label': 'Shop association'|trans({}, 'Admin.Global'),
+              'help': 'Select the shops the employee is allowed to access.'|trans({}, 'Admin.Advparameters.Help')
+            }) }}
+          {% endif %}
         {% endif %}
 
         {% block employee_form_rest %}

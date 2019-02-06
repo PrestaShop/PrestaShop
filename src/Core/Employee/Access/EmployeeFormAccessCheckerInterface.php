@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,35 +22,21 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set enableSidebar = true %}
+namespace PrestaShop\PrestaShop\Core\Employee\Access;
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  {% if employeeForm.vars.errors is not empty %}
-    <div class="alert alert-danger">
-      {% for error in employeeForm.vars.errors %}
-        <div class="alert-text">{{ error.message }}</div>
-      {% endfor %}
-    </div>
-  {% endif %}
-
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig' with {
-        employeeForm: employeeForm,
-        level: level,
-        errorMessage: errorMessage,
-        isRestrictedAccess: isRestrictedAccess,
-      } %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/employee_form.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Interface EmployeeFormAccessCheckerInterface defines employee form access checker.
+ */
+interface EmployeeFormAccessCheckerInterface
+{
+    /**
+     * Checks if employee has restricted access to the employee form.
+     *
+     * @param int $employeeId
+     *
+     * @return bool
+     */
+    public function isRestrictedAccess($employeeId);
+}

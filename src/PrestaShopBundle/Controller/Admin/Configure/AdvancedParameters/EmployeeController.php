@@ -240,7 +240,12 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function editAction($employeeId, Request $request)
     {
-        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor($employeeId);
+        $formAccessChecker = $this->get('prestashop.core.employee.form_access_checker');
+        $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
+
+        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor($employeeId, [], [
+            'is_restricted_access' => $isRestrictedAccess,
+        ]);
         $employeeForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig', [
@@ -250,6 +255,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'employeeForm' => $employeeForm->createView(),
             'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
             'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
+            'isRestrictedAccess' => $isRestrictedAccess,
         ]);
     }
 
