@@ -23,8 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import EmployeeEditPage from "./EmployeeEditPage";
+import ChoiceTree from "../../components/form/choice-tree";
+import AddonsConnector from "../../components/addons-connector";
 
-$(() => {
-  new EmployeeEditPage();
-});
+export default class EmployeeEditPage {
+  constructor() {
+    new ChoiceTree('#employee_shop_association').enableAutoCheckChildren();
+    new AddonsConnector('#addons-connect-form', '#addons_login_btn');
+  }
+}
