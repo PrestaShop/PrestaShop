@@ -144,8 +144,8 @@ class SurvivalTest extends WebTestCase
             'admin_currencies_index' => ['Currencies', 'admin_currencies_index'],
             'admin_webservice_keys_index' => ['Webservice', 'admin_webservice_keys_index'],
             'admin_webservice_keys_create' => ['Webservice', 'admin_webservice_keys_create'],
-            'admin_languages_index' => ['Webservice', 'admin_languages_index'],
-            'admin_languages_create' => ['Webservice', 'admin_languages_create'],
+            'admin_languages_index' => ['Languages', 'admin_languages_index'],
+            'admin_languages_create' => ['Add new language', 'admin_languages_create'],
         ];
     }
 
