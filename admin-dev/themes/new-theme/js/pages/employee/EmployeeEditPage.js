@@ -26,6 +26,9 @@
 import ChoiceTree from "../../components/form/choice-tree";
 import AddonsConnector from "../../components/addons-connector";
 
+/**
+ * Class responsible for javascript actions in employee edit page.
+ */
 export default class EmployeeEditPage {
   constructor() {
     new ChoiceTree('#employee_shop_association').enableAutoCheckChildren();
