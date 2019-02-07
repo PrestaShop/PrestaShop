@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 
 /**
- * Class ToggleTaxStatusCommand changes Tax status
+ * Toggles tax status
  */
 class ToggleTaxStatusCommand
 {

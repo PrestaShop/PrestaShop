@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 
 /**
- * Class BulkDeleteTaxCommand deletes Taxes on bulk action
+ * Deletes taxes on bulk action
  */
 class BulkDeleteTaxCommand
 {

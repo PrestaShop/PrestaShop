@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class CurrencyException is base exception for Tax subdomain
+ * Is base exception for Tax sub-domain
  */
 class TaxException extends DomainException
 {

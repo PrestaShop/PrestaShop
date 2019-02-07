@@ -34,7 +34,7 @@ use PrestaShopException;
 use Tax;
 
 /**
- * Class BulkUpdateTaxStatusHandler handles command which updates Taxes status on bulk action using legacy object model
+ * Handles command which toggles taxes status on bulk action using legacy object model
  */
 final class BulkToggleTaxStatusHandler extends AbstractTaxHandler implements BulkToggleTaxStatusHandlerInterface
 {
@@ -51,18 +51,12 @@ final class BulkToggleTaxStatusHandler extends AbstractTaxHandler implements Bul
             try {
                 if (!$tax->save()) {
                     throw new CannotToggleTaxStatusException(
-                        sprintf(
-                            'Unable to toggle Tax with id "%s"',
-                            $taxId->getValue()
-                        )
+                        sprintf('Unable to toggle Tax with id "%s"', $taxId->getValue())
                     );
                 }
             } catch (PrestaShopException $e) {
                 throw new TaxException(
-                    sprintf(
-                        'An error occurred when updating Tax status with id "%s"',
-                        $taxId->getValue()
-                    )
+                    sprintf('An error occurred when updating Tax status with id "%s"', $taxId->getValue())
                 );
             }
         }

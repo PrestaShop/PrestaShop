@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\Exception;
 
 /**
- * Class TaxConstraintException is thrown when Tax is invalid
+ * Is thrown when tax is invalid
  */
 class TaxConstraintException extends TaxException
 {
