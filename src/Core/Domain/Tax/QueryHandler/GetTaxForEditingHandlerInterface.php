@@ -24,52 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 
 /**
- * Toggles tax status
+ * Defines contract for service that gets tax for editing
  */
-class ToggleTaxStatusCommand
+interface GetTaxForEditingHandlerInterface
 {
     /**
-     * @var TaxStatus
-     */
-    private $status;
-
-    /**
-     * @var TaxId
-     */
-    private $taxId;
-
-    /**
-     * @param string $status
-     * @param int $taxId
+     * @param GetTaxForEditing $query
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @return EditableTax
      */
-    public function __construct($taxId, $status)
-    {
-        $this->taxId = new TaxId($taxId);
-        $this->status = new TaxStatus($status);
-    }
-
-    /**
-     * @return TaxStatus
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return TaxId
-     */
-    public function getTaxId()
-    {
-        return $this->taxId;
-    }
+    public function handle(GetTaxForEditing $query);
 }

@@ -44,10 +44,11 @@ final class DeleteTaxHandler extends AbstractTaxHandler implements DeleteTaxHand
     public function handle(DeleteTaxCommand $command)
     {
         $taxIdValue = $command->getTaxId()->getValue();
-        $this->assertTaxWasFound($command->getTaxId(), $entity = new Tax($taxIdValue));
+        $tax = new Tax($taxIdValue);
+        $this->assertTaxWasFound($command->getTaxId(), $tax);
 
         try {
-            if (!$entity->delete()) {
+            if (!$tax->delete()) {
                 throw new CannotDeleteTaxException(
                     sprintf('Cannot delete Tax object with id "%s"', $taxIdValue)
                 );

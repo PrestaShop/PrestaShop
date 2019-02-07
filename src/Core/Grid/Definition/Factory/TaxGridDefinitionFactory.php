@@ -62,7 +62,7 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Taxes', array(), 'Admin.Global');
+        return $this->trans('Taxes', [], 'Admin.Global');
     }
 
     /**

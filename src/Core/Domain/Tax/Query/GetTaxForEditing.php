@@ -24,45 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Tax\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
 
 /**
- * Toggles tax status
+ * Gets tax for editing in Back Office
  */
-class ToggleTaxStatusCommand
+class GetTaxForEditing
 {
-    /**
-     * @var TaxStatus
-     */
-    private $status;
-
-    /**
-     * @var TaxId
-     */
     private $taxId;
 
     /**
-     * @param string $status
      * @param int $taxId
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
      */
-    public function __construct($taxId, $status)
+    public function __construct($taxId)
     {
         $this->taxId = new TaxId($taxId);
-        $this->status = new TaxStatus($status);
-    }
-
-    /**
-     * @return TaxStatus
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 
     /**
