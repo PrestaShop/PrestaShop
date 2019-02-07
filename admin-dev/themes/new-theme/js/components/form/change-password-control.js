@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import ChangePasswordHandler from "../change-password-handler";
+
 const $ = window.$;
 
 /**
@@ -30,15 +32,22 @@ const $ = window.$;
  */
 export default class ChangePasswordControl {
   constructor() {
-    this.inputsBlock = $('.js-change-password-block');
+    this.$inputsBlock = $('.js-change-password-block');
     this.showButtonSelector = '.js-change-password';
     this.hideButtonSelector = '.js-change-password-cancel';
-    this.submittableInputs = this.inputsBlock.find(
+    this.generatePasswordButtonSelector = '#employee_change_password_generate_password_button';
+    this.$newPasswordInputs = this.$inputsBlock.find(
+      '#employee_change_password_new_password_first,' +
+      '#employee_change_password_new_password_second,' +
+      '#employee_change_password_generated_password'
+    );
+    this.$submittableInputs = this.$inputsBlock.find(
       '#employee_change_password_old_password,' +
       '#employee_change_password_new_password_first,' +
       '#employee_change_password_new_password_second'
     );
 
+    this.passwordHandler = new ChangePasswordHandler();
     this.initEvents();
   }
 
@@ -46,33 +55,39 @@ export default class ChangePasswordControl {
    * Initialize events.
    */
   initEvents() {
-    const t = this;
-    $(document).on('click', this.showButtonSelector, function () {
-      t._hide($(this));
-      t._showInputsBlock();
+    $(document).on('click', this.showButtonSelector, (e) => {
+      this._hide($(e.currentTarget));
+      this._showInputsBlock();
     });
 
-    $(document).on('click', this.hideButtonSelector, function () {
-      t._hideInputsBlock();
-      t._show($(t.showButtonSelector));
+    $(document).on('click', this.hideButtonSelector, () => {
+      this._hideInputsBlock();
+      this._show($(this.showButtonSelector));
     });
+
+    $(document).on('click', this.generatePasswordButtonSelector, () => {
+      this.passwordHandler.generatePassword(this.$newPasswordInputs);
+    });
+
+    this.passwordHandler.watchPasswordStrength(this.$newPasswordInputs);
   }
 
   /**
    * Show the password inputs block.
    */
   _showInputsBlock() {
-    this._show(this.inputsBlock);
-    this.submittableInputs.removeAttr('disabled');
+    this._show(this.$inputsBlock);
+    this.$submittableInputs.removeAttr('disabled');
   }
 
   /**
    * Hide the password inputs block.
    */
   _hideInputsBlock() {
-    this._hide(this.inputsBlock);
-    this.submittableInputs.attr('disabled', 'disabled');
-    this.inputsBlock.find('input').val('');
+    this._hide(this.$inputsBlock);
+    this.$submittableInputs.attr('disabled', 'disabled');
+    this.$inputsBlock.find('input').val('');
+    this.$inputsBlock.find('.form-text').text('');
   }
 
   /**
