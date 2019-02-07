@@ -28,6 +28,11 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ChangePasswordType is responsible for defining "change password" form type.
@@ -37,8 +42,32 @@ class ChangePasswordType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        return ButtonType::class;
+        $builder
+            ->add('change_password_button', ButtonType::class, [
+                'label' => false,
+            ])
+            ->add('old_password', PasswordType::class)
+            ->add('new_password', RepeatedType::class, [
+                'type' => PasswordType::class,
+            ])
+            ->add('generated_password', TextType::class, [
+                'disabled' => true,
+                'label' => false,
+            ])
+            ->add('generate_password_button', ButtonType::class)
+            ->add('cancel_button', ButtonType::class)
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'required' => true,
+        ]);
     }
 }
