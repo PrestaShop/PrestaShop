@@ -72,6 +72,7 @@ export default class ChangePasswordControl {
   _hideInputsBlock() {
     this._hide(this.inputsBlock);
     this.submittableInputs.attr('disabled', 'disabled');
+    this.inputsBlock.find('input').val('');
   }
 
   /**
