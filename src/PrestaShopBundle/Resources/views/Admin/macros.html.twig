@@ -207,7 +207,7 @@
   Helper function to render most common structure for single input
   @param form - form view to render
   @param vars - custom vars that are passed to form_widget
-  @param form - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
+  @param extraVars - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
  #}
 {% macro form_group_row(form, vars, extraVars) %}
   {% import '@PrestaShop/Admin/macros.html.twig' as self %}
@@ -218,8 +218,14 @@
     {% set extraVars = extraVars|default({}) %}
 
     {% if extraVars.label is defined %}
+      {% set isRequired = form.vars.required|default(false) %}
+
+      {% if extraVars.required is defined %}
+        {% set isRequired = extraVars.required %}
+      {% endif %}
+
       <label for="{{ form.vars.id }}" class="form-control-label">
-        {% if form.vars.required is defined and form.vars.required %}
+        {% if isRequired %}
           <span class="text-danger">*</span>
         {% endif %}
         {{ extraVars.label }}

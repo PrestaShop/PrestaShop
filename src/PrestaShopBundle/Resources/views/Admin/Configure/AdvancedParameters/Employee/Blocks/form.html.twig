@@ -70,11 +70,42 @@
           'label': 'Email address'|trans({}, 'Admin.Global')
         }) }}
 
-        {% set passwordField = isRestrictedAccess ? employeeForm.password : employeeForm.change_password %}
+        {% if isRestrictedAccess %}
+          {% set buttonAttributes = { class: 'btn-outline-secondary' } %}
 
-        {{ ps.form_group_row(passwordField, { attr: { class: 'btn-outline-secondary' } }, {
-          'label': 'Password'|trans({}, 'Admin.Global')
-        }) }}
+          {{ ps.form_group_row(employeeForm.change_password, {
+            change_password_button: {
+              label: 'Change password'|trans,
+              attr: buttonAttributes,
+            },
+            generate_password_button: {
+              label: 'Generate password'|trans,
+              attr: buttonAttributes
+            },
+            old_password: {
+              label: 'Current password'|trans,
+            },
+            new_password: {
+              first_options: {
+                label: 'New password'|trans,
+              },
+              second_options: {
+                label: 'Confirm password'|trans,
+              }
+            },
+            cancel_button: {
+              label: 'Cancel'|trans,
+              attr: buttonAttributes,
+            }
+          }, {
+            'label': 'Password'|trans({}, 'Admin.Global'),
+            'required': false,
+          }) }}
+        {% else %}
+          {{ ps.form_group_row(employeeForm.password, {}, {
+            'label': 'Password'|trans({}, 'Admin.Global')
+          }) }}
+        {% endif %}
 
         {% if isRestrictedAccess %}
           {{ ps.form_group_row(employeeForm.prestashop_addons, { attr: {
