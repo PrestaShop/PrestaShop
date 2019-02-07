@@ -48,9 +48,12 @@ class ChangePasswordType extends AbstractType
             ->add('change_password_button', ButtonType::class, [
                 'label' => false,
             ])
-            ->add('old_password', PasswordType::class)
+            ->add('old_password', PasswordType::class, [
+                'disabled' => true,
+            ])
             ->add('new_password', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'disabled' => true,
             ])
             ->add('generated_password', TextType::class, [
                 'disabled' => true,

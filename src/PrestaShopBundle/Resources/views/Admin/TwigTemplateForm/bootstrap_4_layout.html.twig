@@ -729,19 +729,32 @@
   {% set newPasswordFirstVars = form.new_password.children.first.vars|merge(new_password.first_options|default({})) %}
   {% set newPasswordSecondVars = form.new_password.children.second.vars|merge(new_password.second_options|default({})) %}
 
+  {# Variables for "Cancel" button #}
+  {% set cancelButtonVars = form.cancel_button.vars|merge(cancel_button|default({})) %}
+  {% set cancelButtonAttr = cancelButtonVars.attr|merge({class: (cancelButtonVars.attr.class|default('') ~ ' js-change-password-cancel')|trim}) %}
+  {% set cancelButtonVars = cancelButtonVars|merge({attr: cancelButtonAttr}) %}
+
+  {# Variables for "Change password" button #}
+  {% set changePasswordButtonVars = form.change_password_button.vars|merge(change_password_button|default({})) %}
+  {% set changePasswordButtonAttr = changePasswordButtonVars.attr|merge({class: (changePasswordButtonVars.attr.class|default('') ~ ' js-change-password')|trim}) %}
+  {% set changePasswordButtonVars = changePasswordButtonVars|merge({attr: changePasswordButtonAttr}) %}
+
   <div class="form-group row">
     <div class="col-sm">
-      {{- form_widget(form.change_password_button, change_password_button|default({})) -}}
+      {{- form_widget(form.change_password_button, changePasswordButtonVars) -}}
     </div>
   </div>
-  <div class="card card-body">
+  <div class="card card-body js-change-password-block d-none">
     {{- ps.form_group_row(form.old_password, oldPasswordVars, {
       label: oldPasswordVars.label
     }) -}}
 
+    {# New password first input #}
     {{- ps.form_group_row(form.new_password.children.first, newPasswordFirstVars, {
       label: newPasswordFirstVars.label
     }) -}}
+
+    {# New password second input (confirmation) #}
     {{- ps.form_group_row(form.new_password.children.second, newPasswordSecondVars, {
       label: newPasswordSecondVars.label
     }) -}}
@@ -756,6 +769,6 @@
       </div>
     </div>
 
-    {{- ps.form_group_row(form.cancel_button, cancel_button|default({})) -}}
+    {{- ps.form_group_row(form.cancel_button, cancelButtonVars) -}}
   </div>
 {% endblock %}
