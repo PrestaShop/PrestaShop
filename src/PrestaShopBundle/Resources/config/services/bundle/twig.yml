@@ -58,3 +58,10 @@ services:
             - '@prestashop.static_cache.adapter'
         tags:
             - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.documentation_link_provider_extension:
+        class: 'PrestaShopBundle\Twig\Extension\DocumentationLinkExtension'
+        arguments:
+            - '@prestashop.core.util.helper_card.documentation_link_provider'
+        tags:
+            - { name: twig.extension }

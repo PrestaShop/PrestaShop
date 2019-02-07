@@ -23,3 +23,9 @@ services:
           'es': 'http://doc.prestashop.com/display/PS17/Tus+clientes'
           'it': 'http://doc.prestashop.com/display/PS17/I+Tuoi+Clienti'
           '_fallback': 'http://doc.prestashop.com/display/PS17/Your+customers'
+        'supplier':
+          'en': 'http://doc.prestashop.com/display/PS17/Managing+Suppliers'
+          'fr': 'http://doc.prestashop.com/display/PS17/Gerer+les+fournisseurs'
+          'es': 'http://doc.prestashop.com/display/PS17/Gestionar+Proveedores'
+          'it': 'http://doc.prestashop.com/display/PS17/Gestire+Fornitori'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+Suppliers'
