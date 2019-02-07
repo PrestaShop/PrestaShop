@@ -750,13 +750,16 @@
     }) -}}
 
     {# New password first input #}
+    {# Empty help text needed to render the text container for validation feedback messages #}
     {{- ps.form_group_row(form.new_password.children.first, newPasswordFirstVars, {
-      label: newPasswordFirstVars.label
+      label: newPasswordFirstVars.label,
+      help: ''
     }) -}}
 
     {# New password second input (confirmation) #}
     {{- ps.form_group_row(form.new_password.children.second, newPasswordSecondVars, {
-      label: newPasswordSecondVars.label
+      label: newPasswordSecondVars.label,
+      help: ''
     }) -}}
 
     <div class="form-group row">
@@ -770,5 +773,13 @@
     </div>
 
     {{- ps.form_group_row(form.cancel_button, cancelButtonVars) -}}
+
+    {# Password strength feedback messages - used in JS #}
+    <div class="js-password-strength-feedback d-none">
+      <span class="strength-low">{{ 'Invalid'|trans }}</span>
+      <span class="strength-medium">{{ 'Okay'|trans }}</span>
+      <span class="strength-high">{{ 'Good'|trans }}</span>
+      <span class="strength-extreme">{{ 'Fabulous'|trans }}</span>
+    </div>
   </div>
 {% endblock %}
