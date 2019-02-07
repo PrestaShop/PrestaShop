@@ -31,6 +31,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\Exception;
  */
 class TaxConstraintException extends TaxException
 {
+    /**
+     * Thrown when provided tax id value is not valid
+     */
     const INVALID_TAX_ID = 10;
+
+    /**
+     * Thrown when provided tax status value is not defined in available statuses
+     */
     const UNDEFINED_TAX_STATUS = 20;
 }
