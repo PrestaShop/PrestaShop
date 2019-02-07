@@ -130,16 +130,13 @@ class TaxController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteTaxCommand((int) $taxId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
         } catch (TaxException $exception) {
             $this->addFlash('error', $this->getErrorByExceptionType($exception));
-
-            return $this->redirectToRoute('admin_taxes_index');
         }
-
-        $this->addFlash(
-            'success',
-            $this->trans('Successful deletion.', 'Admin.Notifications.Success')
-        );
 
         return $this->redirectToRoute('admin_taxes_index');
     }
@@ -162,16 +159,13 @@ class TaxController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new ToggleTaxStatusCommand((int) $taxId));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (TaxException $exception) {
             $this->addFlash('error', $this->getErrorByExceptionType($exception));
-
-            return $this->redirectToRoute('admin_taxes_index');
         }
-
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-        );
 
         return $this->redirectToRoute('admin_taxes_index');
     }
@@ -179,14 +173,15 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Update taxes status on bulk action.
      *
+     * @param Request $request
+     * @param $newStatus
+     *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param Request $request
-     * @param $newStatus
+     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @return RedirectResponse
      */
@@ -194,18 +189,14 @@ class TaxController extends FrameworkBundleAdminController
     {
         $taxIds = $request->request->get('tax_bulk');
         try {
-            $this->getCommandBus()->handle(
-                new BulkToggleTaxStatusCommand($taxIds, new TaxStatus($newStatus))
+            $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, new TaxStatus($newStatus)));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (TaxException $exception) {
             $this->addFlash('error', $this->getErrorByExceptionType($exception));
-
-            return $this->redirectToRoute('admin_taxes_index');
         }
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-        );
 
         return $this->redirectToRoute('admin_taxes_index');
     }
@@ -213,13 +204,14 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Delete taxes on bulk action.
      *
+     * @param Request $request
+     *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      *     message="You do not have permission to delete this."
      * )
-     *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_taxes_index")
      *
      * @return RedirectResponse
      */
@@ -227,18 +219,14 @@ class TaxController extends FrameworkBundleAdminController
     {
         $taxIds = $request->request->get('tax_bulk');
         try {
-            $this->getCommandBus()->handle(
-                new BulkDeleteTaxCommand($taxIds)
+            $this->getCommandBus()->handle(new BulkDeleteTaxCommand($taxIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (TaxException $exception) {
             $this->addFlash('error', $this->getErrorByExceptionType($exception));
-
-            return $this->redirectToRoute('admin_taxes_index');
         }
-        $this->addFlash(
-            'success',
-            $this->trans('Successful deletion.', 'Admin.Notifications.Success')
-        );
 
         return $this->redirectToRoute('admin_taxes_index');
     }

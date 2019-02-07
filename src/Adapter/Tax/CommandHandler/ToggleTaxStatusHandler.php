@@ -30,10 +30,11 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\ToggleTaxStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
+use PrestaShopException;
 use Tax;
 
 /**
- * Class ToggleTaxStatusHandler handles command which toggles Tax status using legacy object model
+ * Handles command which toggles Tax status using legacy object model
  */
 final class ToggleTaxStatusHandler extends AbstractTaxHandler implements ToggleTaxStatusHandlerInterface
 {
@@ -48,18 +49,12 @@ final class ToggleTaxStatusHandler extends AbstractTaxHandler implements ToggleT
         try {
             if (false === $tax->toggleStatus()) {
                 throw new CannotToggleTaxStatusException(
-                    sprintf(
-                        'Unable to toggle Tax with id "%s"',
-                        $command->getTaxId()->getValue()
-                    )
+                    sprintf('Unable to toggle Tax with id "%s"', $command->getTaxId()->getValue())
                 );
             }
-        } catch (\PrestaShopException $e) {
+        } catch (PrestaShopException $e) {
             throw new TaxException(
-                sprintf(
-                    'An error occurred when enabling Tax with id "%s"',
-                    $taxIdValue
-                )
+                sprintf('An error occurred when enabling Tax with id "%s"', $taxIdValue)
             );
         }
     }

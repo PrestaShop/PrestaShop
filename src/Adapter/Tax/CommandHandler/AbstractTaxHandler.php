@@ -44,9 +44,8 @@ abstract class AbstractTaxHandler
     protected function assertTaxWasFound(TaxId $taxId, Tax $tax)
     {
         if ($tax->id !== $taxId->getValue()) {
-            throw new TaxNotFoundException(sprintf(
-                'Tax with id "%s" was not found.',
-                $taxId->getValue())
+            throw new TaxNotFoundException(
+                sprintf('Tax with id "%s" was not found.', $taxId->getValue())
             );
         }
     }
