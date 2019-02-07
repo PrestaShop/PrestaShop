@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use Tax;
 
 /**
- * Class AbstractTaxHandler provides reusable methods for Tax command handlers.
+ * Provides reusable methods for tax command handlers.
  */
 abstract class AbstractTaxHandler
 {
