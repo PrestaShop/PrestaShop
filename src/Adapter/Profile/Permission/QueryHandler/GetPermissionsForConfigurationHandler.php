@@ -295,7 +295,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
         foreach ($profiles as $profile) {
             $profilePermissionsForModules[$profile['id']] = Module::getModulesAccessesByIdProfile($profile['id']);
-            uasort($profilePermissionsForModules[$profile['id']], function($a, $b) {
+            uasort($profilePermissionsForModules[$profile['id']], function ($a, $b) {
                 return strnatcmp($a['name'], $b['name']);
             });
         }

@@ -69,7 +69,7 @@ class ConfigurablePermissions
     private $employeeProfileId;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $hasEmployeeEditPermission;
 
