@@ -25,9 +25,10 @@
 
 <tr>
   <td colspan="{{ grid.columns|length }}">
-    <div class="text-center">
-      <p class="mb-0 mt-2"><i class="material-icons">warning</i></p>
-      <p class="mb-2">{{ 'No records found'|trans }}</p>
-    </div>
+    {% include [
+      '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/'~grid.id~'.html.twig',
+      '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig'
+      ] with {'grid': grid}
+    %}
   </td>
 </tr>

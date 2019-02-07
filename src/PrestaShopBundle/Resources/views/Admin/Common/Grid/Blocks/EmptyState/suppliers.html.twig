@@ -1,0 +1,14 @@
+<div class="text-center">
+  <img class="img-responsive mt-4" src="{{ asset('themes/new-theme/img/empty_state/supplier.svg') }}">
+
+  <p class="mt-4" style="color: #363a41; opacity: 0.7; font-size: 20px; font-weight: 600;">{{ 'You haven\'t added any suppliers yet!' }}</p>
+
+  <p style="max-width: 460px; font-size: 14px; line-height: 1.43; color: #6c868e;" class="mx-auto">
+    {{ 'Having suppliers is optional if brands supply you directly. Make sure you don\'t confuse product suppliers and product brands to facilitate stock management.' }}
+  </p>
+
+  <div class="mt-4 mb-4">
+    <a href="#" class="btn btn-outline-secondary">{{ 'Learn more' }}</a>
+    <a href="{{ path('admin_suppliers_create') }}" class="btn btn-primary ml-3">{{ 'Add new supplier' }}</a>
+  </div>
+</div>
