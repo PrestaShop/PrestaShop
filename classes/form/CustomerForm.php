@@ -117,14 +117,14 @@ class CustomerFormCore extends AbstractForm
 
         // birthday is from input type text..., so we need to convert to a valid date
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField)) {
-            $birthdayValue = $birthdayField->getValue();
-            if (!empty($birthdayValue)) {
-                $dateBuilt = DateTime::createFromFormat(Context::getContext()->language->date_format_lite, $birthdayValue);
-                if (!empty($dateBuilt)) {
-                    $birthdayField->setValue($dateBuilt->format('Y-m-d'));
-                }
-            }
+        if (!empty($birthdayField->getValue()) &&
+            Validate::isBirthDate($birthdayField->getValue(), Context::getContext()->language->date_format_lite)
+        ) {
+            $dateBuilt = DateTime::createFromFormat(
+                Context::getContext()->language->date_format_lite,
+                $birthdayField->getValue()
+            );
+            $birthdayField->setValue($dateBuilt->format('Y-m-d'));
         }
 
         $this->validateFieldsLengths();
