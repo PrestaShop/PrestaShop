@@ -721,3 +721,42 @@
    </span>
   </div>
 {% endblock generatable_text_widget %}
+
+{% block change_password_widget %}
+  {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+  {% set oldPasswordVars = form.old_password.vars|merge(old_password|default({})) %}
+  {% set newPasswordFirstVars = form.new_password.children.first.vars|merge(new_password.first_options|default({})) %}
+  {% set newPasswordSecondVars = form.new_password.children.second.vars|merge(new_password.second_options|default({})) %}
+
+  <div class="card card-body">
+    <div class="form-group row">
+      <div class="col-sm">
+        {{- form_widget(form.change_password_button, change_password_button|default({})) -}}
+      </div>
+    </div>
+
+    {{- ps.form_group_row(form.old_password, oldPasswordVars, {
+      label: oldPasswordVars.label
+    }) -}}
+
+    {{- ps.form_group_row(form.new_password.children.first, newPasswordFirstVars, {
+      label: newPasswordFirstVars.label
+    }) -}}
+    {{- ps.form_group_row(form.new_password.children.second, newPasswordSecondVars, {
+      label: newPasswordSecondVars.label
+    }) -}}
+
+    <div class="form-group row">
+      <label class="form-control-label"></label>
+      <div class="col-sm">
+        {{- form_widget(form.generated_password) -}}
+      </div>
+      <div class="col-sm">
+        {{- form_widget(form.generate_password_button, generate_password_button|default({})) -}}
+      </div>
+    </div>
+
+    {{- ps.form_group_row(form.cancel_button, cancel_button|default({})) -}}
+  </div>
+{% endblock %}
