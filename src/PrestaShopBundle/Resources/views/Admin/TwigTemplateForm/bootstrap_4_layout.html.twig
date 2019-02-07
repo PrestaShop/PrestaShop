@@ -729,13 +729,12 @@
   {% set newPasswordFirstVars = form.new_password.children.first.vars|merge(new_password.first_options|default({})) %}
   {% set newPasswordSecondVars = form.new_password.children.second.vars|merge(new_password.second_options|default({})) %}
 
-  <div class="card card-body">
-    <div class="form-group row">
-      <div class="col-sm">
-        {{- form_widget(form.change_password_button, change_password_button|default({})) -}}
-      </div>
+  <div class="form-group row">
+    <div class="col-sm">
+      {{- form_widget(form.change_password_button, change_password_button|default({})) -}}
     </div>
-
+  </div>
+  <div class="card card-body">
     {{- ps.form_group_row(form.old_password, oldPasswordVars, {
       label: oldPasswordVars.label
     }) -}}
