@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 
 /**
- * Class TaxStatus provides Tax status data
+ * Provides tax status data
  */
 class TaxStatus
 {
