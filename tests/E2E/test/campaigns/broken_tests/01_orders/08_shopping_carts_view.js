@@ -13,6 +13,10 @@ const {ShoppingCart} = require('../../../selectors/BO/order');
 const {accountPage} = require('../../../selectors/FO/add_account_page');
 let promise = Promise.resolve();
 
+/**
+ * This script should be moved to the campaign full when this issue will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/9779
+ **/
 scenario('Shopping carts view', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
