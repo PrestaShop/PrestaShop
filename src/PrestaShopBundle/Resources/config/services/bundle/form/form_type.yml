@@ -673,6 +673,8 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
 
     form.type.currency:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType'
