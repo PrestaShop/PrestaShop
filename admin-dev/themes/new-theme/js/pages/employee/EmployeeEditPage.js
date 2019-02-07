@@ -25,6 +25,7 @@
 
 import ChoiceTree from "../../components/form/choice-tree";
 import AddonsConnector from "../../components/addons-connector";
+import ChangePasswordControl from "../../components/form/change-password-control";
 
 /**
  * Class responsible for javascript actions in employee edit page.
@@ -33,5 +34,6 @@ export default class EmployeeEditPage {
   constructor() {
     new ChoiceTree('#employee_shop_association').enableAutoCheckChildren();
     new AddonsConnector('#addons-connect-form', '#addons_login_btn');
+    new ChangePasswordControl();
   }
 }
