@@ -26,7 +26,7 @@
 const $ = window.$;
 
 /**
- * Handles configuration of tabs permissions
+ * Handles configuration of tabs permissions.
  */
 export default class TabPermissionsConfigurator {
   /**
@@ -182,7 +182,7 @@ export default class TabPermissionsConfigurator {
       profileId: profileId,
       permission: permission,
       isChecked: $checkbox.is(':checked'),
-      tabSize: tabSize,
+      tabSize: parseInt(tabSize),
       tabNumber: tabNumber,
       rel: $checkbox.data('rel'),
     };
