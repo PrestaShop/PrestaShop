@@ -52,6 +52,9 @@
               <label>
                 <input type="checkbox"
                        class="js-tab-permissions-checkbox js-tab-id-{{ tab.id }} js-permission-{{ permission }} js-parent-tab-id-{{ tab.id_parent }}"
+                       data-permission="{{ permission }}"
+                       data-tab-id="{{ tab.id }}"
+                       data-parent-tab-id="{{ tab.id_parent }}"
                        data-id="{{ permissionId }}"
                        data-parent="{{ tab.id_parent }}"
                        data-type="{{ permission }}"
@@ -84,6 +87,9 @@
             <input type="checkbox"
                    class="js-tab-permissions-checkbox"
                    {% if configurablePermissions.hasEmployeeEditPermission and hasAllPermissions %}
+                     data-permission="all"
+                     data-tab-id="{{ tab.id }}"
+                     data-parent-tab-id="{{ tab.id_parent }}"
                      data-id="4"
                      data-parent="{{ tab.id_parent }}"
                      data-type="all"
