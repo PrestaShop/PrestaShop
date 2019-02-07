@@ -195,7 +195,7 @@ class TaxController extends FrameworkBundleAdminController
     {
         $taxIds = $request->request->get('tax_bulk');
         try {
-            $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, new TaxStatus($newStatus)));
+            $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, $newStatus));
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
