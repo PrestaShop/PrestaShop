@@ -470,6 +470,7 @@ class AdminShopUrlControllerCore extends AdminController
         $return = parent::processSave();
         if (!$this->errors) {
             Tools::generateHtaccess();
+            Tools::generateRobotsFile();
             Tools::clearSmartyCache();
             Media::clearCache();
         }

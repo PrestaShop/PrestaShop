@@ -8,6 +8,8 @@ services:
             - '@prestashop.core.grid.definition.factory.logs'
             - '@prestashop.core.grid.data_factory.log'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -15,6 +17,8 @@ services:
             - '@prestashop.core.grid.definition.factory.email_logs'
             - '@prestashop.core.grid.data_factory.email_logs'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -22,6 +26,8 @@ services:
             - '@prestashop.core.grid.definition.factory.request_sql'
             - '@prestashop.core.grid.data_factory.request_sql'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.backup:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -29,6 +35,8 @@ services:
             - '@prestashop.core.grid.definition.factory.backup'
             - '@prestashop.core.backup.listing.grid_data_factory'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.webservice_key:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -36,6 +44,8 @@ services:
             - '@prestashop.core.grid.definition.factory.webservice_key'
             - '@prestashop.core.grid.data_factory.webservice_key'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.meta:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -43,6 +53,8 @@ services:
             - '@prestashop.core.grid.definition.factory.meta'
             - '@prestashop.core.grid.data_provider.meta'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.category:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -50,6 +62,8 @@ services:
             - '@prestashop.core.grid.definition.factory.category'
             - '@prestashop.core.grid.data.factory.category_decorator'
             - '@prestashop.core.grid.filter.category_form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.employee:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -57,6 +71,8 @@ services:
             - '@prestashop.core.grid.definition.factory.employee'
             - '@prestashop.core.grid.data_provider.employee'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.contacts:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -64,6 +80,8 @@ services:
             - '@prestashop.core.grid.definition.factory.contacts'
             - '@prestashop.core.grid.data_provider.contacts'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.customer:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -71,6 +89,8 @@ services:
             - '@prestashop.core.grid.definition.factory.customer'
             - '@prestashop.core.grid.data_provider.customer_decorator'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.language:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -78,6 +98,8 @@ services:
             - '@prestashop.core.grid.definition.factory.language'
             - '@prestashop.core.grid.factory.language_decorator'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.supplier:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -85,6 +107,8 @@ services:
             - '@prestashop.core.grid.definition.factory.supplier'
             - '@prestashop.core.grid.factory.supplier_decorator'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.currency:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -92,6 +116,8 @@ services:
             - '@prestashop.core.grid.definition.factory.currency'
             - '@prestashop.core.currency.grid_data_factory'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.profiles:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -99,3 +125,5 @@ services:
             - '@prestashop.core.grid.definition.factory.profiles'
             - '@prestashop.core.grid.data_factory.profiles'
             - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]

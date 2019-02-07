@@ -74,7 +74,23 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
   });
+
+  $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
 });
+
+/**
+ * Reset active tinyMce editor (triggered when switch language, or switching tabs)
+ */
+function resetEditor() {
+  const languageEditorsSelector = '.summary-description-container .panel.active div.translation-field.active textarea.autoload_rte';
+  $(languageEditorsSelector).each(function(index, textarea) {
+    const editor = tinyMCE.get(textarea.id);
+    if (editor) {
+      //Reset content to force refresh of editor
+      editor.setContent(editor.getContent());
+    }
+  });
+}
 
 /**
  * Manage show or hide fields
@@ -745,7 +761,10 @@ var form = (function() {
 
   function switchLanguage(iso_code) {
     $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
-    $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code).addClass('show active');
+
+    const langueTabSelector = 'div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code;
+    $(langueTabSelector).addClass('show active');
+    resetEditor();
   }
 
   function updateMissingTranslatedNames() {

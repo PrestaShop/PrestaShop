@@ -119,7 +119,8 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['public'], {
-      root: path.resolve(__dirname, '../')
+      root: path.resolve(__dirname, '../'),
+      exclude: ['theme.rtlfix']
     }),
     new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
