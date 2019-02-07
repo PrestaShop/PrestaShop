@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusExcepti
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -145,6 +147,7 @@ class TaxController extends FrameworkBundleAdminController
      * Toggles status.
      *
      * @param int $taxId
+     * @param string $newStatus
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
@@ -158,7 +161,10 @@ class TaxController extends FrameworkBundleAdminController
     public function toggleStatusAction($taxId)
     {
         try {
-            $this->getCommandBus()->handle(new ToggleTaxStatusCommand((int) $taxId));
+            /** @var EditableTax $editableTax */
+            $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing($taxId));
+            $newStatus = $editableTax->isActive() ? TaxStatus::DISABLED : TaxStatus::ENABLED;
+            $this->getCommandBus()->handle(new ToggleTaxStatusCommand((int) $taxId, $newStatus));
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')

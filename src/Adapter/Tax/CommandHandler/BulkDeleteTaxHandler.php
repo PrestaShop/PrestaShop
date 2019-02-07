@@ -45,7 +45,8 @@ final class BulkDeleteTaxHandler extends AbstractTaxHandler implements BulkDelet
     {
         foreach ($command->getTaxIds() as $taxId) {
             $taxIdValue = $taxId->getValue();
-            $this->assertTaxWasFound($taxId, $tax = new Tax($taxIdValue));
+            $tax = new Tax($taxIdValue);
+            $this->assertTaxWasFound($taxId, $tax);
 
             try {
                 if (!$tax->delete()) {

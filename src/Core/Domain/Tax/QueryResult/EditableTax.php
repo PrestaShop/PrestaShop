@@ -24,45 +24,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
 
 /**
- * Toggles tax status
+ * Transfers editable tax data
  */
-class ToggleTaxStatusCommand
+class EditableTax
 {
-    /**
-     * @var TaxStatus
-     */
-    private $status;
-
     /**
      * @var TaxId
      */
     private $taxId;
 
     /**
-     * @param string $status
-     * @param int $taxId
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @var string
      */
-    public function __construct($taxId, $status)
-    {
-        $this->taxId = new TaxId($taxId);
-        $this->status = new TaxStatus($status);
-    }
+    private $name;
 
     /**
-     * @return TaxStatus
+     * @var float
      */
-    public function getStatus()
+    private $rate;
+
+    /**
+     * @var bool
+     */
+    private $active;
+
+    /**
+     * @var int[]
+     */
+    private $shopAssociation;
+
+    /**
+     * EditableTax constructor.
+     *
+     * @param TaxId $taxId
+     * @param $name
+     * @param $rate
+     * @param $active
+     * @param $shopAssociation
+     */
+    public function __construct(TaxId $taxId, $name, $rate, $active, $shopAssociation)
     {
-        return $this->status;
+        $this->taxId = $taxId;
+        $this->name = $name;
+        $this->rate = $rate;
+        $this->active = $active;
+        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -71,5 +82,37 @@ class ToggleTaxStatusCommand
     public function getTaxId()
     {
         return $this->taxId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return float
+     */
+    public function getRate()
+    {
+        return $this->rate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopAssociation()
+    {
+        return $this->shopAssociation;
     }
 }

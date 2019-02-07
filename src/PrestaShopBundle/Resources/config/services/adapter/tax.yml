@@ -23,3 +23,9 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\BulkDeleteTaxHandler'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand' }
+
+    prestashop.adapter.language.query_handler.get_tax_for_editing:
+        class: 'PrestaShop\PrestaShop\Adapter\Tax\QueryHandler\GetTaxForEditingHandler'
+        tags:
+            - name: tactician.handler
+              command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing'

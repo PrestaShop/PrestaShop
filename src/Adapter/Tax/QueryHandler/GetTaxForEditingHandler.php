@@ -24,29 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Tax\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use Tax;
 
-/**
- * Provides reusable methods for tax command handlers.
- */
-abstract class AbstractTaxHandler
+final class GetTaxForEditingHandler implements GetTaxForEditingHandlerInterface
 {
     /**
-     * @param TaxId $taxId
-     * @param Tax $tax
-     *
-     * @throws TaxNotFoundException
+     * {@inheritdoc}
      */
-    protected function assertTaxWasFound(TaxId $taxId, Tax $tax)
+    public function handle(GetTaxForEditing $query)
     {
-        if ($tax->id !== $taxId->getValue()) {
-            throw new TaxNotFoundException(
-                sprintf('Tax with id "%s" was not found.', $taxId->getValue())
-            );
+        $tax = $this->getLegacyTaxObject($query->getTaxId());
+
+        return new EditableTax(
+            $query->getTaxId(),
+            $tax->name,
+            $tax->rate,
+            $tax->active,
+            $tax->getAssociatedShops()
+        );
+    }
+
+    /**
+     * Gets Legacy tax object
+     *
+     * @param TaxId $taxId
+     *
+     * @return Tax
+     */
+    private function getLegacyTaxObject(TaxId $taxId)
+    {
+        $tax = new Tax($taxId->getValue());
+
+        if ($taxId->getValue() !== (int) $tax->id) {
+            throw new TaxNotFoundException($taxId, sprintf('Tax with id "%s" was not found', $taxId->getValue()));
         }
+
+        return $tax;
     }
 }
