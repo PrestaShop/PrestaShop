@@ -162,7 +162,7 @@ class TaxController extends FrameworkBundleAdminController
     {
         try {
             /** @var EditableTax $editableTax */
-            $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing($taxId));
+            $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing((int) $taxId));
             $newStatus = $editableTax->isActive() ? TaxStatus::DISABLED : TaxStatus::ENABLED;
             $this->getCommandBus()->handle(new ToggleTaxStatusCommand((int) $taxId, $newStatus));
             $this->addFlash(
