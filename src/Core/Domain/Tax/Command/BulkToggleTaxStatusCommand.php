@@ -46,13 +46,13 @@ class BulkToggleTaxStatusCommand
 
     /**
      * @param int[] $taxIds
-     * @param TaxStatus $status
+     * @param string $status
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
      */
-    public function __construct(array $taxIds, TaxStatus $status)
+    public function __construct(array $taxIds, $status)
     {
-        $this->status = $status;
+        $this->status = new TaxStatus($status);
         $this->setTaxIds($taxIds);
     }
 
