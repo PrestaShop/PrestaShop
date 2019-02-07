@@ -25,7 +25,17 @@
 
 const $ = window.$;
 
+/**
+ * Handles configuration of tabs permissions
+ */
 export default class TabPermissionsConfigurator {
+  /**
+   * Adds event listener to permissions configuration table
+   *
+   * @param {String} tabPermissionsTableSelector
+   *
+   * @returns {{}}
+   */
   constructor(tabPermissionsTableSelector) {
     this.$table = $(tabPermissionsTableSelector);
 
@@ -36,6 +46,12 @@ export default class TabPermissionsConfigurator {
     return {};
   }
 
+  /**
+   * Handles permissions update when something changes in Permissions configuration table
+   *
+   * @param $checkbox
+   * @private
+   */
   _updatePermissions($checkbox) {
     const checkboxData = this._getData($checkbox);
 
@@ -51,8 +67,19 @@ export default class TabPermissionsConfigurator {
     });
   }
 
+  /**
+   * Checks if at least one child permission is checked
+   *
+   * @param {Integer} parentId
+   * @param {String} permission
+   * @param {String} rel
+   *
+   * @returns {boolean}
+   *
+   * @private
+   */
   _isChildrenChecked(parentId, permission, rel) {
-    const $children = this.$table.find(`[data-parent="${parentId}"][data-type="${permission}"]:not([data-rel="${rel}"])`);
+    const $children = this.$table.find(`[data-parent-tab-id="${parentId}"][data-permission="${permission}"]:not([data-rel="${rel}"])`);
     let isChecked = false;
 
     $children.each((i, element) => {
@@ -64,20 +91,34 @@ export default class TabPermissionsConfigurator {
     return isChecked;
   }
 
+  /**
+   * When child tab is selected,
+   * this preselects parent tab as well.
+   *
+   * @param {Object} checkboxData Data of selected checkbox
+   *
+   * @private
+   */
   _toggleParent(checkboxData) {
     if (0 !== checkboxData.parentTabId) {
-      const $parentCheckbox = this.$table.find(`.js-tab-id-${checkboxData.parentTabId}.js-permission-${checkboxData.permission}`);
-      console.log(`.js-parent-tab-id-${checkboxData.parentTabId}.js-permission-${checkboxData.permission}`);
-      console.log($parentCheckbox.length);
+      const $parentCheckbox = this.$table.find(`.js-tab-permissions-checkbox[data-tab-id="${checkboxData.parentTabId}"][data-permission="${checkboxData.permission}"]`);
 
       if (!$parentCheckbox.is(':checked')) {
         $parentCheckbox.prop('checked', true);
       } else if (!checkboxData.isChecked && !this._isChildrenChecked(checkboxData.parentTabId, checkboxData.permission, checkboxData.rel)) {
-        $parentCheckbox.prop('checked', false);
+        $parentCheckbox.prop('checked', false).change();
       }
     }
   }
 
+  /**
+   * Handles event that happen on "All" column of permissions configuration table
+   *
+   * @param {Object} checkboxData
+   * @param {jQuery} $checkbox
+   *
+   * @private
+   */
   _handleAllPermissionColumn(checkboxData, $checkbox) {
     const $row = $checkbox.closest('tr');
     if ('all' !== $checkbox.data('type') || !$row.hasClass('parent')) {
@@ -147,6 +188,13 @@ export default class TabPermissionsConfigurator {
     };
   }
 
+  /**
+   * Toggles checkboxes depending on provided data
+   *
+   * @param {Object} checkboxData
+   *
+   * @private
+   */
   _handleMultiplePermissions(checkboxData) {
     // toggle all table
     if ('-1' === checkboxData.tabId && 'all' === checkboxData.permission) {
