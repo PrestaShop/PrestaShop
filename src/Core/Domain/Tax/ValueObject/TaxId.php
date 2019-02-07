@@ -46,7 +46,7 @@ class TaxId
      */
     public function __construct($taxId)
     {
-        if (!is_numeric($taxId) || $taxId <= 0) {
+        if (!is_int($taxId) || $taxId <= 0) {
             throw new TaxConstraintException(
                 sprintf('Invalid Tax id: %s', var_export($taxId, true)),
                 TaxConstraintException::INVALID_TAX_ID
