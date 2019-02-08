@@ -147,7 +147,7 @@ final class Configurator implements ConfiguratorInterface
         $resolver = new OptionsResolver();
         $resolver
             ->setDefaults([
-                'laanguage_id' => false,
+                'language_id' => false,
                 'shop_id' => null,
                 'shop_group_id' => null,
             ])
