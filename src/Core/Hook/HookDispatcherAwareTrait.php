@@ -26,10 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook;
 
-use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
-
 /**
  * Trait EventDispatcherAwareTrait.
+ *
  * @deprecated
  */
 trait HookDispatcherAwareTrait
@@ -46,7 +45,7 @@ trait HookDispatcherAwareTrait
      */
     public function setHookDispatcher(HookDispatcherInterface $hookDispatcher)
     {
-        @trigger_error('HookDispatcherAwareTrait is deprecated as of 1.7.5 and will be removed in the next major version. If you need to inject HookDispatcherInterface use the constructor not setter injection.', E_USER_DEPRECATED);
+        @trigger_error('HookDispatcherAwareTrait is deprecated as of 1.7.5.1 and will be removed in the next major version. If you need to inject HookDispatcherInterface use the constructor not setter injection.', E_USER_DEPRECATED);
 
         $this->hookDispatcher = $hookDispatcher;
     }
