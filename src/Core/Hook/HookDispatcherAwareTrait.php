@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook;
 
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
+
 /**
  * Trait EventDispatcherAwareTrait.
  */
@@ -35,6 +37,18 @@ trait HookDispatcherAwareTrait
      * @var HookDispatcherInterface
      */
     protected $hookDispatcher;
+
+    /**
+     * @return HookDispatcherInterface|NullDispatcher
+     */
+    public function getHookDispatcher()
+    {
+        if (!$this->hookDispatcher) {
+            $this->hookDispatcher = new NullDispatcher();
+        }
+
+        return $this->hookDispatcher;
+    }
 
     /**
      * Set hook dispatcher.
