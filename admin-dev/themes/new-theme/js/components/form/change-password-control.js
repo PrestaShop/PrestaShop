@@ -33,19 +33,32 @@ const $ = window.$;
 export default class ChangePasswordControl {
   constructor() {
     this.$inputsBlock = $('.js-change-password-block');
+
+    // Action buttons selectors
     this.showButtonSelector = '.js-change-password';
     this.hideButtonSelector = '.js-change-password-cancel';
     this.generatePasswordButtonSelector = '#employee_change_password_generate_password_button';
-    this.$newPasswordInputs = this.$inputsBlock.find(
-      '#employee_change_password_new_password_first,' +
-      '#employee_change_password_new_password_second,' +
-      '#employee_change_password_generated_password'
-    );
-    this.$submittableInputs = this.$inputsBlock.find(
-      '#employee_change_password_old_password,' +
-      '#employee_change_password_new_password_first,' +
-      '#employee_change_password_new_password_second'
-    );
+
+    // Password inputs selectors
+    this.oldPasswordSelector = '#employee_change_password_old_password';
+    this.newPasswordFirstSelector = '#employee_change_password_new_password_first';
+    this.newPasswordSecondSelector = '#employee_change_password_new_password_second';
+    this.generatedPasswordDisplaySelector = '#employee_change_password_generated_password';
+
+    // Main input for password generation
+    this.$newPasswordInputs = this.$inputsBlock
+      .find(this.newPasswordFirstSelector);
+
+    // Generated password will be copied to these inputs
+    this.$copyPasswordInputs = this.$inputsBlock
+      .find(this.newPasswordSecondSelector)
+      .add(this.generatedPasswordDisplaySelector);
+
+    // All inputs in the change password block, that are submittable with the form.
+    this.$submittableInputs = this.$inputsBlock
+      .find(this.oldPasswordSelector)
+      .add(this.newPasswordFirstSelector)
+      .add(this.newPasswordSecondSelector);
 
     this.passwordHandler = new ChangePasswordHandler();
     this.initEvents();
@@ -65,11 +78,14 @@ export default class ChangePasswordControl {
       this._show($(this.showButtonSelector));
     });
 
-    $(document).on('click', this.generatePasswordButtonSelector, () => {
-      this.passwordHandler.generatePassword(this.$newPasswordInputs);
-    });
-
     this.passwordHandler.watchPasswordStrength(this.$newPasswordInputs);
+
+    $(document).on('click', this.generatePasswordButtonSelector, () => {
+      // Generate the password into main input.
+      this.passwordHandler.generatePassword(this.$newPasswordInputs);
+
+      // Copy the generated password from main input to additional inputs      this.$copyPasswordInputs.val(this.$newPasswordInputs.val());
+    });
   }
 
   /**
