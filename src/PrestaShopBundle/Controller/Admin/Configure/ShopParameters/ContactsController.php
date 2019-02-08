@@ -33,6 +33,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ContactsController is responsible for actions and rendering
@@ -45,34 +46,23 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/index.html.twig")
-     *
      * @param Request $request
      * @param ContactFilters $filters
      *
-     * @return array
+     * @return Response
      */
     public function indexAction(Request $request, ContactFilters $filters)
     {
-        $contactsGridFactory = $this->get('prestashop.core.grid.factory.contacts');
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $contactGridFactory = $this->get('prestashop.core.grid.factory.contacts');
+        $contactGrid = $contactGridFactory->getGrid($filters);
 
-        $contactsGrid = $contactsGridFactory->getGrid($filters);
-
-        return [
-            'layoutTitle' => $this->trans('Contacts', 'Admin.Navigation.Menu'),
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->generateUrl('admin_contacts_create'),
-                    'desc' => $this->trans('Add new contact', 'Admin.Shopparameters.Feature'),
-                    'icon' => 'add_circle_outline',
-                ],
-            ],
-            'requireAddonsSearch' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'grid' => $gridPresenter->present($contactsGrid),
-        ];
+        return $this->render(
+            '@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/index.html.twig',
+            [
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'contactGrid' => $this->presentGrid($contactGrid),
+            ]
+        );
     }
 
     /**
