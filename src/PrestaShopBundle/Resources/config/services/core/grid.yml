@@ -8,8 +8,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
         arguments:
             - '@form.factory'
-        calls:
-            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:
@@ -164,7 +163,7 @@ services:
 
     # Grid Query builder
     prestashop.core.grid.abstract_query_builder:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder'
         abstract: true
         arguments:
             - '@doctrine.dbal.default_connection'
