@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
@@ -70,12 +69,11 @@ class CurrencyController extends FrameworkBundleAdminController
     {
         $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency');
         $currencyGrid = $currencyGridFactory->getGrid($filters);
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/index.html.twig', [
-            'currencyGrid' => $gridPresenter->present($currencyGrid),
+            'currencyGrid' => $this->presentGrid($currencyGrid),
             'currencySettingsForm' => $settingsForm->createView(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -129,15 +127,12 @@ class CurrencyController extends FrameworkBundleAdminController
         try {
             $result = $this->getCurrencyFormHandler()->handle($currencyForm);
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash(
-                    'success',
-                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
-                );
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
-        } catch (CurrencyException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (CurrencyException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
@@ -176,8 +171,8 @@ class CurrencyController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
-        } catch (CurrencyException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (CurrencyException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/edit.html.twig', [
@@ -204,16 +199,13 @@ class CurrencyController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currencyId));
-        } catch (CurrencyException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (CurrencyException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_currencies_index');
         }
 
-        $this->addFlash(
-            'success',
-            $this->trans('Successful deletion.', 'Admin.Notifications.Success')
-        );
+        $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_currencies_index');
     }
@@ -236,8 +228,8 @@ class CurrencyController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currencyId));
-        } catch (CurrencyException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (CurrencyException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_currencies_index');
         }
@@ -329,8 +321,8 @@ class CurrencyController extends FrameworkBundleAdminController
                     ),
                 ];
                 $statusCode = Response::HTTP_OK;
-            } catch (CurrencyException $exception) {
-                $response['message'] = $this->handleException($exception);
+            } catch (CurrencyException $e) {
+                $response['message'] = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
             }
         }
 
@@ -364,31 +356,67 @@ class CurrencyController extends FrameworkBundleAdminController
     }
 
     /**
-     * Gets error message by comparing exception code or by just comparing exception class.
+     * Gets an error by exception class and its code.
      *
-     * @param CurrencyException $exception
+     * @param CurrencyException $e
      *
-     * @return string
+     * @return array
      */
-    private function handleException(CurrencyException $exception)
+    private function getErrorMessages(CurrencyException $e)
     {
-        if (0 !== $exception->getCode()) {
-            return $this->getErrorByExceptionCode($exception);
-        }
-
-        return $this->getErrorByExceptionType($exception);
-    }
-
-    /**
-     * Gets error by exception type.
-     *
-     * @param CurrencyException $exception
-     *
-     * @return string
-     */
-    private function getErrorByExceptionType(CurrencyException $exception)
-    {
-        $exceptionTypeDictionary = [
+        return [
+            CurrencyConstraintException::class => [
+                CurrencyConstraintException::INVALID_ISO_CODE => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Currency', 'Admin.Global')),
+                    ]
+                ),
+                CurrencyConstraintException::INVALID_EXCHANGE_RATE => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf('"%s"', $this->trans('Exchange rate', 'Admin.International.Feature')),
+                        ]
+                    ),
+                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS => $this->trans(
+                    'This currency already exists.',
+                    'Admin.International.Notification'
+                ),
+            ],
+            AutomateExchangeRatesUpdateException::class => [
+                AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
+                    'Please install the %module_name% module before using this feature.',
+                    'Admin.International.Notification',
+                    [
+                        '%module_name%' => 'cronjobs',
+                    ]
+                ),
+            ],
+            DefaultCurrencyInMultiShopException::class => [
+                DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY =>
+                    $this->trans(
+                        '%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association',
+                        'Admin.International.Notification',
+                        [
+                            '%currency%' =>
+                                $e instanceof DefaultCurrencyInMultiShopException ? $e->getCurrencyName() : '',
+                            '%shop_name%' =>
+                                $e instanceof DefaultCurrencyInMultiShopException ? $e->getShopName() : '',
+                        ]
+                    ),
+                DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY => $this->trans(
+                    '%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled',
+                    'Admin.International.Notification',
+                    [
+                        '%currency%' =>
+                            $e instanceof DefaultCurrencyInMultiShopException ? $e->getCurrencyName() : '',
+                        '%shop_name%' =>
+                            $e instanceof DefaultCurrencyInMultiShopException ? $e->getShopName() : '',
+                    ]
+                ),
+            ],
             CurrencyNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
@@ -406,91 +434,5 @@ class CurrencyController extends FrameworkBundleAdminController
                 'Admin.International.Notification'
             ),
         ];
-
-        $exceptionType = get_class($exception);
-
-        if (isset($exceptionTypeDictionary[$exceptionType])) {
-            return $exceptionTypeDictionary[$exceptionType];
-        }
-
-        return $this->getFallbackErrorMessage($exceptionType, $exception->getCode());
-    }
-
-    /**
-     * Gets an error by exception class and its code.
-     *
-     * @param CurrencyException $exception
-     *
-     * @return string
-     */
-    private function getErrorByExceptionCode(CurrencyException $exception)
-    {
-        $exceptionDictionary = [
-            CurrencyConstraintException::class => [
-                CurrencyConstraintException::INVALID_ISO_CODE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Currency', 'Admin.Global')),
-                        ]
-                    ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Exchange rate', 'Admin.International.Feature')),
-                        ]
-                    ),
-                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS => $this->trans(
-                        'This currency already exists.',
-                        'Admin.International.Notification'
-                    ),
-            ],
-            AutomateExchangeRatesUpdateException::class => [
-                AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
-                    'Please install the %module_name% module before using this feature.',
-                    'Admin.International.Notification',
-                    [
-                        '%module_name%' => 'cronjobs',
-                    ]
-                ),
-            ],
-        ];
-
-        if ($exception instanceof DefaultCurrencyInMultiShopException) {
-            switch ($exception->getCode()) {
-                case DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY:
-                    return $this->trans(
-                        '%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association',
-                        'Admin.International.Notification',
-                        [
-                            '%currency%' => $exception->getCurrencyName(),
-                            '%shop_name%' => $exception->getShopName(),
-                        ]
-                    );
-                case DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY:
-                    return $this->trans(
-                        '%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled',
-                        'Admin.International.Notification',
-                        [
-                            '%currency%' => $exception->getCurrencyName(),
-                            '%shop_name%' => $exception->getShopName(),
-                        ]
-                    );
-            }
-        }
-
-        $exceptionClass = get_class($exception);
-        $exceptionCode = $exception->getCode();
-
-        if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
-            return $exceptionDictionary[$exceptionClass][$exceptionCode];
-        }
-
-        return $this->getFallbackErrorMessage($exceptionClass, $exceptionCode);
     }
 }
