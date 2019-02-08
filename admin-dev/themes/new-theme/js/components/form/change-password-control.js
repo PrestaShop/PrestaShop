@@ -84,7 +84,8 @@ export default class ChangePasswordControl {
       // Generate the password into main input.
       this.passwordHandler.generatePassword(this.$newPasswordInputs);
 
-      // Copy the generated password from main input to additional inputs      this.$copyPasswordInputs.val(this.$newPasswordInputs.val());
+      // Copy the generated password from main input to additional inputs
+      this.$copyPasswordInputs.val(this.$newPasswordInputs.val());
     });
   }
 
