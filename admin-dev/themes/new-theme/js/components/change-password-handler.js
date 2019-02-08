@@ -38,9 +38,9 @@ export default class ChangePasswordHandler {
   }
 
   /**
+   * Watch password, which is entered in the input, strength and inform about it.
    *
    * @param $input
-   * @param $output this element will be used
    */
   watchPasswordStrength($input) {
     $.passy.requirements.length.min = this.minLength;
@@ -50,11 +50,7 @@ export default class ChangePasswordHandler {
       const $output = $(element).parent().find('.form-text');
 
       $(element).passy((strength, valid) => {
-        const feedback = this._getPasswordStrengthFeedback(strength);
-        $output.text(feedback.message);
-        $output.removeClass('text-danger text-warning text-success');
-        $output.addClass(feedback.elementClass);
-        $output.toggleClass('d-none', !valid);
+        this._displayFeedback($output, strength, valid);
       });
     });
   }
@@ -66,6 +62,21 @@ export default class ChangePasswordHandler {
    */
   generatePassword($input) {
     $input.passy('generate', this.minLength);
+  }
+
+  /**
+   * Display feedback about password's strength.
+   *
+   * @param $output
+   * @param {number} passwordStrength
+   * @param {boolean} isPasswordValid
+   */
+  _displayFeedback($output, passwordStrength, isPasswordValid) {
+    const feedback = this._getPasswordStrengthFeedback(passwordStrength);
+    $output.text(feedback.message);
+    $output.removeClass('text-danger text-warning text-success');
+    $output.addClass(feedback.elementClass);
+    $output.toggleClass('d-none', !isPasswordValid);
   }
 
   /**
