@@ -395,25 +395,20 @@ class CurrencyController extends FrameworkBundleAdminController
                 ),
             ],
             DefaultCurrencyInMultiShopException::class => [
-                DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY =>
-                    $this->trans(
+                DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY => $this->trans(
                         '%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association',
                         'Admin.International.Notification',
                         [
-                            '%currency%' =>
-                                $e instanceof DefaultCurrencyInMultiShopException ? $e->getCurrencyName() : '',
-                            '%shop_name%' =>
-                                $e instanceof DefaultCurrencyInMultiShopException ? $e->getShopName() : '',
+                            '%currency%' => $e instanceof DefaultCurrencyInMultiShopException ? $e->getCurrencyName() : '',
+                            '%shop_name%' => $e instanceof DefaultCurrencyInMultiShopException ? $e->getShopName() : '',
                         ]
                     ),
                 DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY => $this->trans(
                     '%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled',
                     'Admin.International.Notification',
                     [
-                        '%currency%' =>
-                            $e instanceof DefaultCurrencyInMultiShopException ? $e->getCurrencyName() : '',
-                        '%shop_name%' =>
-                            $e instanceof DefaultCurrencyInMultiShopException ? $e->getShopName() : '',
+                        '%currency%' => $e instanceof DefaultCurrencyInMultiShopException ? $e->getCurrencyName() : '',
+                        '%shop_name%' => $e instanceof DefaultCurrencyInMultiShopException ? $e->getShopName() : '',
                     ]
                 ),
             ],
