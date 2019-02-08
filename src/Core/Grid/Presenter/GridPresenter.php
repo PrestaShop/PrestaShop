@@ -83,7 +83,7 @@ final class GridPresenter implements GridPresenterInterface
             ],
             'filters' => $searchCriteria->getFilters(),
             'attributes' => [
-                'is_empty_state' => empty($filterForm->getData()) && empty($data->getRecords()->all()),
+                'is_empty_state' => empty($filterForm->getData()) && $data->getRecords()->count() === 0,
             ],
         ];
 
