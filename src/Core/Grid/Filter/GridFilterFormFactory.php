@@ -71,7 +71,7 @@ final class GridFilterFormFactory implements GridFilterFormFactoryInterface
             );
         }
 
-        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridFilterFormModifier', [
+        $this->getHookDispatcher()->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridFilterFormModifier', [
             'filter_form_builder' => $formBuilder,
         ]);
 

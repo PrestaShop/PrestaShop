@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -59,15 +61,18 @@ final class GridFactory implements GridFactoryInterface
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataFactoryInterface $dataFactory
      * @param GridFilterFormFactoryInterface $filterFormFactory
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
         GridDataFactoryInterface $dataFactory,
-        GridFilterFormFactoryInterface $filterFormFactory
+        GridFilterFormFactoryInterface $filterFormFactory,
+        HookDispatcherInterface $hookDispatcher = null
     ) {
         $this->definitionFactory = $definitionFactory;
         $this->dataFactory = $dataFactory;
         $this->filterFormFactory = $filterFormFactory;
+        $this->setHookDispatcher(null !== $hookDispatcher ? $hookDispatcher : new NullDispatcher());
     }
 
     /**
@@ -78,7 +83,7 @@ final class GridFactory implements GridFactoryInterface
         $definition = $this->definitionFactory->getDefinition();
         $data = $this->dataFactory->getData($searchCriteria);
 
-        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDataModifier', [
+        $this->getHookDispatcher()->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDataModifier', [
             'data' => &$data,
         ]);
 
