@@ -26,10 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook;
 
-use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
-
 /**
  * Trait EventDispatcherAwareTrait.
+ *
  * @deprecated
  */
 trait HookDispatcherAwareTrait

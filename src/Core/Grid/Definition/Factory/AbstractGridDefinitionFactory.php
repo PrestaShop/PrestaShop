@@ -66,11 +66,12 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      * Set hook dispatcher.
      *
      * @param HookDispatcherInterface $hookDispatcher
+     *
      * @deprecated
      */
     final public function setHookDispatcher(HookDispatcherInterface $hookDispatcher)
     {
-        @trigger_error('The AbstractGridDefinitionFactory::setHookDispatcher method is deprecated as of 1.7.6. Please use the constructor instead', E_USER_DEPRECATED);
+        @trigger_error('The AbstractGridDefinitionFactory::setHookDispatcher method is deprecated as of 1.7.5. Please use the constructor instead', E_USER_DEPRECATED);
 
         $this->hookDispatcher = $hookDispatcher;
     }
