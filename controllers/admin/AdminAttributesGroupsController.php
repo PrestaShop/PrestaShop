@@ -81,6 +81,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
             ),
         );
         $this->fieldImageSettings = array('name' => 'texture', 'dir' => 'co');
+
+        $this->image_dir = 'co';
     }
 
     /**
@@ -794,12 +796,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
                 $_POST['id_parent'] = 0;
                 $this->processSave($this->token);
-            }
-
-            if (Tools::getValue('id_attribute') && Tools::isSubmit('submitAddattribute') && Tools::getValue('color') && !Tools::getValue('filename')) {
-                if (file_exists(_PS_IMG_DIR_ . $this->fieldImageSettings['dir'] . '/' . (int) Tools::getValue('id_attribute') . '.jpg')) {
-                    unlink(_PS_IMG_DIR_ . $this->fieldImageSettings['dir'] . '/' . (int) Tools::getValue('id_attribute') . '.jpg');
-                }
             }
         } else {
             if (Tools::isSubmit('submitBulkdelete' . $this->table)) {
