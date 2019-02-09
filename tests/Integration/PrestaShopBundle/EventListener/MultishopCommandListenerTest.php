@@ -66,6 +66,21 @@ class MultishopCommandListenerTest extends KernelTestCase
         $this->assertFalse($this->multishopContext->isAllContext(), 'isAllContext');
     }
 
+    public function testNoShopID(): void
+    {
+        // Prepare ...
+        $command = new Command('Fake');
+        $input = new StringInput('');
+        $output = new NullOutput();
+        $event = new ConsoleCommandEvent($command, $input, $output);
+
+        // Call ...
+        $this->commandListener->onConsoleCommand($event);
+
+        // Check!
+        $this->assertFalse($this->multishopContext->isShopContext(), 'isShopContext');
+    }
+
     public function testSetShopID(): void
     {
         // Prepare ...

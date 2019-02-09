@@ -72,6 +72,10 @@ class MultishopCommandListener
         if ($id_shop_group) {
             $this->context->setShopGroupContext($id_shop_group);
         }
+        if (!$id_shop && !$id_shop_group) {
+            $this->fixUnloadedConfig();
+            $this->context->setAllContext();
+        }
     }
 
     /**
