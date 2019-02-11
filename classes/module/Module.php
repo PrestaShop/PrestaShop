@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
@@ -3062,9 +3063,7 @@ abstract class ModuleCore implements ModuleInterface
             $dir_name = dirname($override_dest);
 
             if (!$orig_path && !is_dir($dir_name)) {
-                $oldumask = umask(0000);
-                @mkdir($dir_name, 0777);
-                umask($oldumask);
+                @mkdir($dir_name, FileSystem::DEFAULT_MODE_FOLDER);
             }
 
             if (!is_writable($dir_name)) {

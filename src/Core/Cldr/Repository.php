@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use ICanBoogie\CLDR\Currency;
 use ICanBoogie\CLDR\FileProvider;
 use ICanBoogie\CLDR\NumberFormatter;
@@ -41,7 +42,6 @@ class Repository
     protected $region;
     protected $locale;
     protected $contextLanguage;
-    protected $oldUmask;
     protected $non_iso_relational_language = array(
         'an-es' => 'en-GB',
         'az-az' => 'az-Cyrl-AZ',
@@ -71,11 +71,9 @@ class Repository
         $this->contextLanguage = $contextLanguage;
         $this->cldrCacheFolder = _PS_TRANSLATIONS_DIR_ . 'cldr';
 
-        $this->oldUmask = umask(0000);
-
         if (!is_dir($this->cldrCacheFolder)) {
             try {
-                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', 0777, true);
+                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', FileSystem::DEFAULT_MODE_FOLDER, true);
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
@@ -116,11 +114,6 @@ class Repository
                 $this->region = strtoupper($this->locale);
             }
         }
-    }
-
-    public function __destruct()
-    {
-        umask($this->oldUmask);
     }
 
     /*

@@ -826,8 +826,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $this->errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Shop.Notifications.Error');
                 } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', $product_picture_width, $product_picture_height)) {
                     $this->errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Shop.Notifications.Error');
-                } elseif (!chmod(_PS_UPLOAD_DIR_ . $file_name, 0777) || !chmod(_PS_UPLOAD_DIR_ . $file_name . '_small', 0777)) {
-                    $this->errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Shop.Notifications.Error');
                 } else {
                     $this->context->cart->addPictureToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_FILE, $file_name);
                 }

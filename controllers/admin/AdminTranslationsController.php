@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 class AdminTranslationsControllerCore extends AdminController
 {
@@ -302,7 +303,7 @@ class AdminTranslationsControllerCore extends AdminController
         // If folder wasn't already added
         // Do not use Tools::file_exists_cache because it changes over time!
         if (!file_exists($path)) {
-            if (!mkdir($path, 0777, true)) {
+            if (!mkdir($path, FileSystem::DEFAULT_MODE_FOLDER, true)) {
                 $bool &= false;
                 $this->errors[] = $this->trans('Cannot create the folder "%folder%". Please check your directory writing permissions.', array('%folder%' => $path), 'Admin.International.Notification');
             }
@@ -336,7 +337,7 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         if ($file_path && !file_exists($file_path)) {
-            if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), 0777, true)) {
+            if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), FileSystem::DEFAULT_MODE_FOLDER, true)) {
                 throw new PrestaShopException($this->trans('Directory "%folder%" cannot be created', array('%folder%' => dirname($file_path)), 'Admin.Notifications.Error'));
             } elseif (!touch($file_path)) {
                 throw new PrestaShopException($this->trans('File "%file%" cannot be created', array('%file%' => $file_path), 'Admin.Notifications.Error'));
@@ -510,7 +511,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         // Check if tabs.php exists for the selected Iso Code
         if (!Tools::file_exists_cache($dir)) {
-            if (!mkdir($dir, 0777, true)) {
+            if (!mkdir($dir, FileSystem::DEFAULT_MODE_FOLDER, true)) {
                 throw new PrestaShopException('The file ' . $dir . ' cannot be created.');
             }
         }
@@ -962,7 +963,7 @@ class AdminTranslationsControllerCore extends AdminController
             $str_write = '';
             $cache_file[$theme_name . '-' . $file_name] = true;
             if (!Tools::file_exists_cache(dirname($file_name))) {
-                mkdir(dirname($file_name), 0777, true);
+                mkdir(dirname($file_name), FileSystem::DEFAULT_MODE_FOLDER, true);
             }
             if (!Tools::file_exists_cache($file_name)) {
                 file_put_contents($file_name, '');
@@ -1692,7 +1693,7 @@ class AdminTranslationsControllerCore extends AdminController
                         if ($module_name) {
                             $path = str_replace('{module}', $module_name, $path);
                         }
-                        if (!file_exists($path) && !mkdir($path, 0777, true)) {
+                        if (!file_exists($path) && !mkdir($path, FileSystem::DEFAULT_MODE_FOLDER, true)) {
                             throw new PrestaShopException($this->trans('Directory "%folder%" cannot be created', array('%folder%' => dirname($path)), 'Admin.International.Notification'));
                         }
 

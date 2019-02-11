@@ -260,7 +260,7 @@ class PrestaShopAutoload
             return false;
         }
         // Ignore for filesystems that do not support umask
-        @chmod($tmpFile, 0666);
+        @chmod($tmpFile, file_exists($filename) ? fileperms($filename) : 0666 & ~umask());
         rename($tmpFile, $filename);
 
         return true;
