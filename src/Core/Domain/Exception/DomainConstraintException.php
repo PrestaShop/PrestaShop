@@ -24,26 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
-
-use PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
 /**
- * Provides default filters for taxes grid.
+ * Is thrown when object status contains invalid values
  */
-final class TaxFilters extends Filters
+class DomainConstraintException extends DomainException
 {
     /**
-     * {@inheritdoc}
+     * When status type is not valid
      */
-    public static function getDefaults()
-    {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'id_tax',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
-    }
+    const INVALID_STATUS_TYPE = 10;
 }

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
 
 /**
  * Toggles tax status
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
 class ToggleTaxStatusCommand
 {
     /**
-     * @var TaxStatus
+     * @var Status
      */
     private $status;
 
@@ -48,17 +48,17 @@ class ToggleTaxStatusCommand
      * @param string $status
      * @param int $taxId
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException
      * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException
      */
     public function __construct($taxId, $status)
     {
         $this->taxId = new TaxId($taxId);
-        $this->status = new TaxStatus($status);
+        $this->status = new Status($status);
     }
 
     /**
-     * @return TaxStatus
+     * @return Status
      */
     public function getStatus()
     {

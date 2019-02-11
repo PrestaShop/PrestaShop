@@ -27,18 +27,17 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\DeleteTaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -174,7 +173,7 @@ class TaxController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (TaxException $e) {
-            $this->addFlash('error', $this->getErrorByExceptionType($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_taxes_index');
@@ -199,24 +198,22 @@ class TaxController extends FrameworkBundleAdminController
         try {
             /** @var EditableTax $editableTax */
             $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing((int) $taxId));
-            $newStatus = $editableTax->isActive() ? TaxStatus::DISABLED : TaxStatus::ENABLED;
-            $this->getCommandBus()->handle(new ToggleTaxStatusCommand((int) $taxId, $newStatus));
+            $this->getCommandBus()->handle(new ToggleTaxStatusCommand((int) $taxId, !$editableTax->isActive()));
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (TaxException $e) {
-            $this->addFlash('error', $this->getErrorByExceptionType($e));
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_taxes_index');
     }
 
     /**
-     * Update taxes status on bulk action.
+     * Enables taxes status on bulk action.
      *
      * @param Request $request
-     * @param $newStatus
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
@@ -227,17 +224,47 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkToggleStatusAction(Request $request, $newStatus)
+    public function bulkEnableStatusAction(Request $request)
     {
         $taxIds = $request->request->get('tax_bulk');
         try {
-            $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, $newStatus));
+            $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, true));
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (TaxException $e) {
-            $this->addFlash('error', $this->getErrorByExceptionType($e));
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_taxes_index');
+    }
+
+    /**
+     * Disables taxes status on bulk action.
+     *
+     * @param Request $request
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_taxes_index")
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDisableStatusAction(Request $request)
+    {
+        $taxIds = $request->request->get('tax_bulk');
+        try {
+            $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, false));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_taxes_index');
@@ -292,11 +319,6 @@ class TaxController extends FrameworkBundleAdminController
             TaxNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
-            ),
-            TaxConstraintException::INVALID_TAX_ID => $this->trans(
-                'The %s field is invalid.',
-                'Admin.Notifications.Error',
-                [sprintf('"%s"', $this->trans('Id', 'Admin.International.Feature'))]
             ),
             UpdateTaxException::class => [
                 UpdateTaxException::FAILED_BULK_UPDATE_STATUS => [

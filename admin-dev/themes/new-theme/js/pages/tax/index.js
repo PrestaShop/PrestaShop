@@ -32,6 +32,7 @@ import ColumnTogglingExtension from '../../components/grid/extension/column-togg
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
 
 const $ = window.$;
 
@@ -39,9 +40,10 @@ $(() => {
   const taxGrid = new Grid('tax');
 
   new DisplayInCartOptionHandler();
+  taxGrid.addExtension(new ExportToSqlManagerExtension());
+  taxGrid.addExtension(new ReloadListActionExtension());
   taxGrid.addExtension(new SortingExtension());
   taxGrid.addExtension(new FiltersResetExtension());
-  taxGrid.addExtension(new ReloadListActionExtension());
   taxGrid.addExtension(new ColumnTogglingExtension());
   taxGrid.addExtension(new SubmitRowActionExtension());
   taxGrid.addExtension(new SubmitBulkExtension());
