@@ -30,15 +30,8 @@
         <div class="card-block">
           <nav>
             <ol class="breadcrumb">
-              {% set previousCategory = false %}
               {% for category in cmsPageView.breadcrumb_tree %}
                 <li class="breadcrumb-item">
-                  {% if previousCategory %}
-                    <a href="{{ path('admin_cms_pages_edit_cms_category', {'cmsCategoryId' : category.cmsPageCategoryId.value}) }}">
-                      <i style="font-size: 16px;" class="material-icons">edit</i>
-                    </a>
-                  {% endif %}
-
                   {% set cmsPageRouteParameters = {} %}
 
                   {% if category.cmsPageCategoryId.value != cmsPageView.root_category_id %}
@@ -49,7 +42,6 @@
                     {{ category.name }}
                   </a>
                 </li>
-                {% set previousCategory = category %}
               {% endfor %}
             </ol>
           </nav>
