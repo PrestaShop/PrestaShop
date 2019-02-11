@@ -156,7 +156,6 @@ class TaxController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (TaxException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_taxes_index');
