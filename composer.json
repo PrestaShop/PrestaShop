@@ -68,7 +68,7 @@
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0",
-        "prestashop/composer-script-handler": "~0.3"
+        "prestashop/composer-script-handler": "~0.4"
     },
     "autoload-dev": {
         "psr-4": {
