@@ -114,16 +114,10 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'sortable' => false,
                 ])
             )
-            ->add((new PositionColumn('position'))
+            ->add((new DataColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
-                    'id_field' => 'id_cms_category',
-                    'position_field' => 'position',
-                    'update_method' => 'POST',
-                    'update_route' => 'admin_cms_pages_update_position_cms_category',
-                    'record_route_params' => [
-                        'id_parent' => 'id_cms_category',
-                    ],
+                    'field' => 'id_cms_category',
                 ])
             )
             ->add((new ToggleColumn('active'))
