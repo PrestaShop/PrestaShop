@@ -128,18 +128,20 @@ services:
         calls:
           - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
-    prestashop.core.grid.manufacturer_factory:
+    prestashop.core.grid.factory.manufacturer:
       class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
       arguments:
         - '@prestashop.core.grid.definition.factory.manufacturer_definition'
-        - '@prestashop.core.grid.data_provider.manufacturer'
-        - '@prestashop.hook.dispatcher'
-        - '@form.factory'
+        - '@prestashop.core.grid.data_factory.manufacturer'
+        - '@prestashop.core.grid.filter.form_factory'
+      calls:
+        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
-    prestashop.core.grid.manufacturer_address_factory:
+    prestashop.core.grid.factory.manufacturer_address:
       class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
       arguments:
         - '@prestashop.core.grid.definition.factory.manufacturer_address_definition'
-        - '@prestashop.core.grid.data_provider.manufacturer_address'
-        - '@prestashop.hook.dispatcher'
-        - '@form.factory'
+        - '@prestashop.core.grid.data_factory.manufacturer_address'
+        - '@prestashop.core.grid.filter.form_factory'
+      calls:
+        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]

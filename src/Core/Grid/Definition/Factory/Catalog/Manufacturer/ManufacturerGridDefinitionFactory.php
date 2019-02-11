@@ -76,7 +76,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
      */
     protected function getId()
     {
-        return 'Manufacturers';
+        return 'manufacturer';
     }
 
     /**

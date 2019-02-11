@@ -130,12 +130,18 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'profiles'
 
-    prestashop.core.grid.data_provider.manufacturer:
-      class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+    prestashop.core.grid.data_factory.manufacturer:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
       arguments:
-        - '@prestashop.core.api.manufacturer.repository'
+        - '@prestashop.core.grid.query_builder.manufacturer'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'manufacturer'
 
-    prestashop.core.grid.data_provider.manufacturer_address:
-      class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+    prestashop.core.grid.data_factory.manufacturer_address:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
       arguments:
-        - '@prestashop.core.grid.query.doctrine.manufacturer_address'
+        - '@prestashop.core.grid.query_builder.manufacturer_address'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'manufacturer_address'

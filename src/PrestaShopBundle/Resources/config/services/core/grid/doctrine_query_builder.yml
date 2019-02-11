@@ -101,8 +101,17 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
         public: true
 
-    prestashop.core.grid.query.doctrine.manufacturer_address:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Doctrine\ManufacturerAddressQueryBuilder'
+    prestashop.core.grid.query_builder.manufacturer:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\ManufacturerQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
       arguments:
-        - '@doctrine.dbal.default_connection'
-        - '%database_prefix%'
+        - '@=service("prestashop.adapter.shop.context").getContextListShopId()'
+      public: true
+
+    prestashop.core.grid.query_builder.manufacturer_address:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\ManufacturerAddressQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+      public: true
