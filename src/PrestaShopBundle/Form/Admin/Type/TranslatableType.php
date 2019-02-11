@@ -120,8 +120,44 @@ class TranslatableType extends AbstractType
 
         $formErrors = $form->getErrors(true);
 
-        if (empty($formErrors) || count($formErrors) <= 1) {
+        if (empty($formErrors)) {
             return;
+        }
+
+        if (1 === count($formErrors)) {
+            $formError = $formErrors[0];
+
+            $nonDefaultLanguageFormKey = null;
+            $iteration = 0;
+
+            foreach ($form as $formItem) {
+                if (0 === $iteration) {
+                    $iteration++;
+
+                    continue;
+                }
+
+                $doesFormMatches = $formError->getOrigin() === $formItem;
+
+                if ($doesFormMatches) {
+                    $nonDefaultLanguageFormKey = $iteration;
+
+                    break;
+                }
+
+                $iteration++;
+            }
+
+            if (isset($locales[$nonDefaultLanguageFormKey])) {
+                $errorByLocale = [
+                    'locale_name' => $locales[$nonDefaultLanguageFormKey]['name'],
+                    'error_message' => $formError->getMessage(),
+                ];
+
+                $view->vars['error_by_locale'] = $errorByLocale;
+
+                return;
+            }
         }
 
         $errorsByLocale = [];

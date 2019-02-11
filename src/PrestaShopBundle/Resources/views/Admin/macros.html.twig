@@ -176,6 +176,9 @@
         </span>
       {% endset %}
 
+      {% elseif form.vars.error_by_locale is defined %}
+        {% set errorByLocale = '%error_message% - Language: %language_name%'|trans({'%error_message%': form.vars.error_by_locale.error_message, '%language_name%': form.vars.error_by_locale.locale_name}, 'Admin.Notifications.Error') %}
+        {% set errors = [errorByLocale] %}
     {% endif %}
 
     <div class="invalid-feedback-container">
