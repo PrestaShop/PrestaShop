@@ -26,11 +26,32 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShopBundle\Translation\Extractor\LegacyFileExtractorInterface;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Finder\Finder;
 
+/**
+ * Be able to retrieve information from legacy translation files
+ */
 class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
+    /**
+     * @var LegacyFileExtractorInterface the extractor
+     */
+    private $extractor;
+
+    /**
+     * @var string the module name
+     */
     private $moduleName;
+
+    public function __construct(LoaderInterface $databaseLoader, $resourceDirectory, LegacyFileExtractorInterface $extractor)
+    {
+        $this->extractor = $extractor;
+
+        parent::__construct($databaseLoader, $resourceDirectory);
+    }
 
     /**
      * {@inheritdoc}
@@ -47,9 +68,7 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
      */
     public function getFilters()
     {
-        return array(
-            '#^Modules' . $this->getModuleDomain() . '*#i',
-        );
+        return [];
     }
 
     /**
@@ -95,7 +114,6 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
         return new MessageCatalogue($this->locale);
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -104,8 +122,45 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getResourceDirectory()
+    {
+        return $this->getDefaultResourceDirectory();
+    }
+
     private function getModuleDomain()
     {
         return ucfirst($this->moduleName);
+    }
+
+    /**
+     * @param array $paths a list of paths when we can look for translations
+     * @param string $locale the Symfony (not the PrestaShop one) locale
+     * @param string|null $pattern a regular expression
+     *
+     * @return MessageCatalogue
+     *
+     * @throws \Exception
+     */
+    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    {
+        $messageCatalogue = new MessageCatalogue($locale);
+        $finder = new Finder();
+
+        if (null !== $pattern) {
+            $finder->name($pattern);
+        }
+        $translationFiles = $finder->files()->notName('index.php')->in($paths);
+        if (count($translationFiles) === 0) {
+            throw new \Exception('There is no translation file available.');
+        }
+
+        foreach ($translationFiles as $file) {
+            $messageCatalogue->add($this->extractor->extract($file, $locale));
+        }
+
+        return $messageCatalogue;
     }
 }

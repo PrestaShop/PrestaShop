@@ -28,8 +28,15 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Translation provider for a specific native module (maintained by the core team)
+ * Used mainly for the display in the Translations Manager of the Back Office.
+ */
 class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
+    /**
+     * @var string the module name
+     */
     private $moduleName;
 
     /**
@@ -60,6 +67,11 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
         return 'module';
     }
 
+    /**
+     * @param string $moduleName the module name
+     *
+     * @return $this
+     */
     public function setModuleName($moduleName)
     {
         $this->moduleName = $moduleName;
@@ -98,6 +110,9 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 
+    /**
+     * @return string
+     */
     private function getModuleDomain()
     {
         return preg_replace('/^ps_(\w+)/', '$1', $this->moduleName);

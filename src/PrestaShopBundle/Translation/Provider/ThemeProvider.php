@@ -33,8 +33,14 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class ThemeProvider extends AbstractProvider
 {
+    /**
+     * @var string the theme name
+     */
     private $themeName;
 
+    /**
+     * @var string the theme resources directory
+     */
     public $themeResourcesDirectory;
 
     /**
@@ -52,6 +58,9 @@ class ThemeProvider extends AbstractProvider
      */
     public $themeExtractor;
 
+    /**
+     * @var string the translation domain label
+     */
     private $domain;
 
     /**

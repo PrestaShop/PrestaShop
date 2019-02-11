@@ -25,42 +25,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Extractor;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
-/**
- * Define contract to retrieve translations.
- */
-interface ProviderInterface
+interface LegacyFileExtractorInterface
 {
     /**
-     * @return string[] List of directories to parse
+     * @param string $path
+     * @param string $locale
+     *
+     * @return MessageCatalogueInterface
      */
-    public function getDirectories();
-
-    /**
-     * @return string[] List of patterns for Database filtering
-     */
-    public function getFilters();
-
-    /**
-     * @return string[] List of translation domains to get in database
-     */
-    public function getTranslationDomains();
-
-    /**
-     * @return string Locale used to build the MessageCatalogue
-     */
-    public function getLocale();
-
-    /**
-     * @return MessageCatalogue A provider must return a MessageCatalogue
-     */
-    public function getMessageCatalogue();
-
-    /**
-     * @return string Unique identifier
-     */
-    public function getIdentifier();
+    public function extract($path, $locale);
 }

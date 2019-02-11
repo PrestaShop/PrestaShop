@@ -28,6 +28,10 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Translation provider for native modules (maintained by the core team)
+ * Translations are provided by Crowdin.
+ */
 class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**
@@ -60,6 +64,8 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Exception
      */
     public function getDefaultCatalogue($empty = true)
     {
