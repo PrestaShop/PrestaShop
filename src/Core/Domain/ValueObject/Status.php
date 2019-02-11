@@ -70,7 +70,7 @@ class Status
     {
         if (!is_bool($value)) {
             throw new DomainConstraintException(
-                sprintf('Status must be of type bool, but given "%s"', $value),
+                sprintf('Status must be of type bool, but given %s', var_export($value, true)),
                 DomainConstraintException::INVALID_STATUS_TYPE
             );
         }
