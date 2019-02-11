@@ -6024,16 +6024,16 @@
         },
         {
             "name": "prestashop/composer-script-handler",
-            "version": "0.4",
+            "version": "0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/composer-script-handler.git",
-                "reference": "138740141f3db04f1b5c7161d71b1da0d0dc68a5"
+                "reference": "92b4de54397355131b2e9d8a87dec7f51507dc9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/composer-script-handler/zipball/138740141f3db04f1b5c7161d71b1da0d0dc68a5",
-                "reference": "138740141f3db04f1b5c7161d71b1da0d0dc68a5",
+                "url": "https://api.github.com/repos/PrestaShop/composer-script-handler/zipball/92b4de54397355131b2e9d8a87dec7f51507dc9a",
+                "reference": "92b4de54397355131b2e9d8a87dec7f51507dc9a",
                 "shasum": ""
             },
             "require": {
@@ -6067,7 +6067,7 @@
                 }
             ],
             "description": "Composer Script Handler for PrestaShop",
-            "time": "2019-02-11T13:02:22+00:00"
+            "time": "2019-02-11T16:34:37+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

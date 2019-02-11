@@ -77,7 +77,7 @@ script:
   - if [ $EXTRA_DEPS = "phpHigh" ]; then
         composer update --ignore-platform-reqs --no-suggest --ansi;
     else
-        composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress;
+        composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
     fi
 
   - bash travis-scripts/install-prestashop
