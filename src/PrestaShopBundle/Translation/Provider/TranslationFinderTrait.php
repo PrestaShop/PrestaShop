@@ -30,12 +30,15 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Helper used to retrieve a Symfony Catalogue object.
+ */
 trait TranslationFinderTrait
 {
     /**
-     * @param $paths
-     * @param $locale
-     * @param null $pattern
+     * @param array $paths a list of paths when we can look for translations
+     * @param string $locale the Symfony (not the PrestaShop one) locale
+     * @param string|null $pattern a regular expression
      *
      * @return MessageCatalogue
      *

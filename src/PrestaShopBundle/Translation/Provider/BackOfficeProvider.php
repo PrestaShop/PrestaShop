@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Main translation provider of the Back Office
+ */
 class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**

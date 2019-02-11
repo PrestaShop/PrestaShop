@@ -29,26 +29,21 @@ namespace PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use PrestaShopBundle\Translation\View\TreeBuilder;
-use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * This class returns a collection of translations, using locale and identifier.
+ * This class returns a collection of translations, using a locale and an identifier.
  *
  * Returns MessageCatalogue object or Translation tree array.
  */
 class TranslationsFactory implements TranslationsFactoryInterface
 {
+    /**
+     * @var array the list of translation providers
+     */
     private $providers = array();
 
     /**
-     * Generates extract of global Catalogue, using domain's identifiers.
-     *
-     * @param string $domainIdentifier Domain identifier
-     * @param string $locale Locale identifier
-     *
-     * @return MessageCatalogue A MessageCatalogue instance
-     *
-     * @throws ProviderNotFoundException
+     * {@inheritdoc}
      */
     public function createCatalogue($domainIdentifier, $locale = 'en_US')
     {
@@ -62,15 +57,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
     }
 
     /**
-     * Used to generate Translation tree in Back Office.
-     *
-     * @param string $domainIdentifier Domain identifier
-     * @param string $locale Locale identifier
-     * @param string $theme Theme name
-     *
-     * @return array Translation tree structure
-     *
-     * @throws ProviderNotFoundException
+     * {@inheritdoc}
      */
     public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null)
     {
