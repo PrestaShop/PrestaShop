@@ -17,8 +17,8 @@
       <tr>
         <td width="10">&nbsp;</td>
         <td>
-          <div itemscope itemtype="http://schema.org/ParcelDelivery">
-            <div itemprop="deliveryAddress" itemscope itemtype="http://schema.org/PostalAddress">
+          <div itemscope itemtype="https://schema.org/ParcelDelivery">
+            <div itemprop="deliveryAddress" itemscope itemtype="https://schema.org/PostalAddress">
               <meta itemprop="streetAddress" content="{address1}"/>
               <meta itemprop="addressLocality" content="{city}"/>
               <meta itemprop="addressRegion" content="{city}"/>
@@ -27,18 +27,18 @@
             </div>
 
             <link itemprop="trackingUrl" href="{followup}"/>
-            <div itemprop="carrier" itemscope itemtype="http://schema.org/Organization">
+            <div itemprop="carrier" itemscope itemtype="https://schema.org/Organization">
               <meta itemprop="name" content="{carrier}"/>
             </div>
 
             {meta_products}
 
-            <div itemprop="partOfOrder" itemscope itemtype="http://schema.org/Order">
+            <div itemprop="partOfOrder" itemscope itemtype="https://schema.org/Order">
               <meta itemprop="orderNumber" content="{order_name}"/>
-              <div itemprop="merchant" itemscope itemtype="http://schema.org/Organization">
+              <div itemprop="merchant" itemscope itemtype="https://schema.org/Organization">
                 <meta itemprop="name" content="{shop_name}"/>
               </div>
-              <link itemprop="orderStatus" href="http://schema.org/OrderInTransit"/>
+              <link itemprop="orderStatus" href="https://schema.org/OrderInTransit"/>
             </div>
           </div>
 
