@@ -24,64 +24,57 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 
 /**
- * Toggles taxes status on bulk action
+ * Holds data of object status
  */
-class BulkToggleTaxStatusCommand
+class Status
 {
     /**
-     * @var Status
+     * @var bool
      */
-    private $status;
+    private $enabled;
 
     /**
-     * @var TaxId[]
-     */
-    private $taxIds;
-
-    /**
-     * @param int[] $taxIds
-     * @param bool $status
+     * @param bool $enabled
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @throws DomainConstraintException
      */
-    public function __construct(array $taxIds, $status)
+    public function __construct($enabled)
     {
-        $this->status = new Status($status);
-        $this->setTaxIds($taxIds);
+        $this->assertIsBool($enabled);
+        $this->enabled = $enabled;
     }
 
     /**
-     * @return Status
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return TaxId[]
-     */
-    public function getTaxIds()
-    {
-        return $this->taxIds;
-    }
-
-    /**
-     * @param array $taxIds
+     * Checks whether the object is enabled or not
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @return bool
      */
-    private function setTaxIds(array $taxIds)
+    public function isEnabled()
     {
-        foreach ($taxIds as $taxId) {
-            $this->taxIds[] = new TaxId((int) $taxId);
+        return $this->enabled;
+    }
+
+    /**
+     * Validates that value is of type boolean
+     *
+     * @param $value
+     *
+     * @return void
+     *
+     * @throws DomainConstraintException
+     */
+    private function assertIsBool($value)
+    {
+        if (!is_bool($value)) {
+            throw new DomainConstraintException(
+                sprintf('Status must be of type bool, but given "%s"', $value),
+                DomainConstraintException::INVALID_STATUS_TYPE
+            );
         }
     }
 }

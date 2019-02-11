@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -231,20 +231,14 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                     ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_taxes_bulk_toggle_status',
-                        'route_params' => [
-                            'newStatus' => 'enabled',
-                        ],
+                        'submit_route' => 'admin_taxes_bulk_enable_status',
                     ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                     ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_taxes_bulk_toggle_status',
-                        'route_params' => [
-                            'newStatus' => 'disabled',
-                        ],
+                        'submit_route' => 'admin_taxes_bulk_disable_status',
                     ])
             )
             ->add(

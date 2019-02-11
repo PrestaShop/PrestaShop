@@ -48,14 +48,19 @@ admin_taxes_toggle_status:
     requirements:
         taxId: \d+
 
-admin_taxes_bulk_toggle_status:
-    path: /bulk-update-status/{newStatus}
+admin_taxes_bulk_enable_status:
+    path: /bulk-enable-status
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkToggleStatus'
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkEnableStatus'
         _legacy_controller: AdminTaxes
-    requirements:
-        newStatus: enabled|disabled
+
+admin_taxes_bulk_disable_status:
+  path: /bulk-disable-status
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkDisableStatus'
+    _legacy_controller: AdminTaxes
 
 admin_taxes_bulk_delete:
     path: /bulk-delete
