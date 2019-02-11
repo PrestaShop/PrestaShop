@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Translation provider specific to email subjects.
+ */
 class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**

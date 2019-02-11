@@ -38,20 +38,44 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class ThemeExporter
 {
+    /**
+     * @var ThemeExtractor the theme extractor
+     */
     private $themeExtractor;
 
+    /**
+     * @var ThemeProvider the theme provider
+     */
     private $themeProvider;
 
+    /**
+     * @var ZipManager the zip manager
+     */
     private $zipManager;
 
+    /**
+     * @var ThemeRepository the theme repository
+     */
     private $themeRepository;
 
+    /**
+     * @var XliffFileDumper the Xliff dumper
+     */
     private $dumper;
 
+    /**
+     * @var Filesystem the Filesystem
+     */
     private $filesystem;
 
+    /**
+     * @var string the cache directory path
+     */
     public $cacheDir;
 
+    /**
+     * @var string the export directory path
+     */
     public $exportDir;
 
     public function __construct(
@@ -74,9 +98,9 @@ class ThemeExporter
     }
 
     /**
-     * @param $themeName
-     * @param $locale
-     * @param $rootDir
+     * @param string $themeName
+     * @param string $locale
+     * @param bool $rootDir
      *
      * @return string
      */
@@ -90,9 +114,9 @@ class ThemeExporter
     }
 
     /**
-     * @param $themeName
-     * @param $locale
-     * @param $rootDir
+     * @param string $themeName
+     * @param string $locale
+     * @param bool $rootDir
      *
      * @return string
      */
@@ -140,7 +164,7 @@ class ThemeExporter
     }
 
     /**
-     * @param mixed $exportDir
+     * @param string $exportDir
      */
     public function setExportDir($exportDir)
     {
@@ -148,7 +172,7 @@ class ThemeExporter
     }
 
     /**
-     * @param $filePath
+     * @param string $filePath
      *
      * @return bool
      *
@@ -166,9 +190,9 @@ class ThemeExporter
     }
 
     /**
-     * @param $themeName
-     * @param $locale
-     * @param $rootDir
+     * @param string $themeName
+     * @param string $locale
+     * @param bool $rootDir
      *
      * @return \Symfony\Component\Translation\MessageCatalogue
      */
@@ -194,8 +218,8 @@ class ThemeExporter
     }
 
     /**
-     * @param $locale
-     * @param $archiveParentDirectory
+     * @param string $locale
+     * @param string $archiveParentDirectory
      */
     protected function renameCatalogues($locale, $archiveParentDirectory)
     {
@@ -217,6 +241,9 @@ class ThemeExporter
         $this->filesystem->remove($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale);
     }
 
+    /**
+     * @param string $themeName
+     */
     public function cleanArtifacts($themeName)
     {
         $this->filesystem->remove($this->getFlattenizationFolder($themeName));
@@ -224,7 +251,7 @@ class ThemeExporter
     }
 
     /**
-     * @param $themeName
+     * @param string $themeName
      *
      * @return string
      */
@@ -234,7 +261,7 @@ class ThemeExporter
     }
 
     /**
-     * @param $themeName
+     * @param string $themeName
      *
      * @return string
      */
@@ -244,7 +271,7 @@ class ThemeExporter
     }
 
     /**
-     * @param $themeName
+     * @param string $themeName
      *
      * @return string
      */
@@ -254,8 +281,8 @@ class ThemeExporter
     }
 
     /**
-     * @param $themeName
-     * @param $locale
+     * @param string $themeName
+     * @param string $locale
      *
      * @return string
      */
@@ -276,8 +303,8 @@ class ThemeExporter
     }
 
     /**
-     * @param $themeName
-     * @param $locale
+     * @param string $themeName
+     * @param string $locale
      *
      * @return string
      *
@@ -302,12 +329,12 @@ class ThemeExporter
 
     /**
      * @param MessageCatalogue $catalogue
-     * @param $messages
-     * @param $domain
+     * @param array $messages
+     * @param string $domain
      */
     protected function ensureCatalogueHasRequiredMetadata(
         MessageCatalogue $catalogue,
-        $messages,
+        array $messages,
         $domain
     ) {
         foreach ($messages as $id => $translation) {
@@ -319,7 +346,7 @@ class ThemeExporter
     }
 
     /**
-     * @param array $metadata
+     * @param array|null $metadata
      *
      * @return bool
      */
@@ -331,17 +358,17 @@ class ThemeExporter
     }
 
     /**
-     * @param $metadata
+     * @param array|null $metadata
      *
      * @return bool
      */
-    protected function shouldAddFileMetadata($metadata)
+    protected function shouldAddFileMetadata(array $metadata = null)
     {
         return null === $metadata || !array_key_exists('file', $metadata);
     }
 
     /**
-     * @param $locale
+     * @param string $locale
      * @param MessageCatalogue $sourceCatalogue
      *
      * @return MessageCatalogue

@@ -30,8 +30,14 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
+    /**
+     * @var string the translation domain label
+     */
     private $domain;
 
+    /**
+     * @var string the "modules" directory path
+     */
     private $modulesDirectory;
 
     /**

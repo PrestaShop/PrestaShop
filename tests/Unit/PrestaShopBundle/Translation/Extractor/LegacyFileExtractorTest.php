@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -25,42 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace Tests\Unit\PrestaShopBundle\Translation\Extractor;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Extractor\LegacyFileExtractor;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
- * Define contract to retrieve translations.
+ * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="LegacyFileExtractorTest"
  */
-interface ProviderInterface
+class LegacyFileExtractorTest extends TestCase
 {
-    /**
-     * @return string[] List of directories to parse
-     */
-    public function getDirectories();
+    public function testExtract()
+    {
+        $extractor = new LegacyFileExtractor();
+        $catalogue = $extractor->extract($this->getTranslationsFolder(), 'fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
+        $this->assertCount(5, $catalogue->all('SomeModule'));
+    }
 
     /**
-     * @return string[] List of patterns for Database filtering
+     * @return string
      */
-    public function getFilters();
-
-    /**
-     * @return string[] List of translation domains to get in database
-     */
-    public function getTranslationDomains();
-
-    /**
-     * @return string Locale used to build the MessageCatalogue
-     */
-    public function getLocale();
-
-    /**
-     * @return MessageCatalogue A provider must return a MessageCatalogue
-     */
-    public function getMessageCatalogue();
-
-    /**
-     * @return string Unique identifier
-     */
-    public function getIdentifier();
+    private function getTranslationsFolder()
+    {
+        return __DIR__ . '/../../../../resources/some-module/translations/';
+    }
 }

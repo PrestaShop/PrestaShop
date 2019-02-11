@@ -28,6 +28,10 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Translations provider for keys not yet put in the right domain.
+ * Equivalent to so-called main "messages" domain in Symfony ecosystem.
+ */
 class OthersProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**

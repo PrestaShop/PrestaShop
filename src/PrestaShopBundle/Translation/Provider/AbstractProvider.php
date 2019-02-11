@@ -35,10 +35,19 @@ abstract class AbstractProvider implements ProviderInterface
 
     const DEFAULT_LOCALE = 'en-US';
 
+    /**
+     * @var LoaderInterface the loader interface
+     */
     private $databaseLoader;
 
+    /**
+     * @var string the resource directory
+     */
     protected $resourceDirectory;
 
+    /**
+     * @var string the Catalogue locale
+     */
     protected $locale;
 
     public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
@@ -80,6 +89,11 @@ abstract class AbstractProvider implements ProviderInterface
         return $this->locale;
     }
 
+    /**
+     * @param string $locale the Catalogue locale
+     *
+     * @return $this
+     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
