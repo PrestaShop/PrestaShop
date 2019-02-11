@@ -145,7 +145,7 @@ class TranslatableType extends AbstractType
             $form,
             $locales
         );
-        
+
         if (null !== $errorsByLocale) {
             $view->vars['errors_by_locale'] = $errorsByLocale;
         }
@@ -173,7 +173,7 @@ class TranslatableType extends AbstractType
 
         foreach ($form as $formItem) {
             if (0 === $iteration) {
-                $iteration++;
+                ++$iteration;
 
                 continue;
             }
@@ -184,7 +184,7 @@ class TranslatableType extends AbstractType
                 break;
             }
 
-            $iteration++;
+            ++$iteration;
         }
 
         if (isset($locales[$nonDefaultLanguageFormKey])) {
@@ -227,7 +227,7 @@ class TranslatableType extends AbstractType
                 }
             }
 
-            $iteration++;
+            ++$iteration;
         }
 
         return $errorsByLocale;
