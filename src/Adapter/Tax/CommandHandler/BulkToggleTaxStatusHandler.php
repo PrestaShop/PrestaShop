@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\BulkToggleTaxStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShopException;
 use Tax;
 
@@ -50,8 +50,9 @@ final class BulkToggleTaxStatusHandler extends AbstractTaxHandler implements Bul
 
             try {
                 if (!$tax->save()) {
-                    throw new CannotToggleTaxStatusException(
-                        sprintf('Unable to toggle Tax with id "%s"', $taxId->getValue())
+                    throw new UpdateTaxException(
+                        sprintf('Unable to toggle Tax with id "%s"', $taxId->getValue()),
+                        UpdateTaxException::FAILED_BULK_UPDATE_STATUS
                     );
                 }
             } catch (PrestaShopException $e) {

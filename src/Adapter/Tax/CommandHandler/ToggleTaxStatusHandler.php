@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\ToggleTaxStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShopException;
 use Tax;
 
@@ -50,8 +50,9 @@ final class ToggleTaxStatusHandler extends AbstractTaxHandler implements ToggleT
 
         try {
             if (!$tax->save()) {
-                throw new CannotToggleTaxStatusException(
-                    sprintf('Unable to toggle Tax with id "%s"', $command->getTaxId()->getValue())
+                throw new UpdateTaxException(
+                    sprintf('Unable to toggle Tax with id "%s"', $command->getTaxId()->getValue()),
+                    UpdateTaxException::FAILED_UPDATE_STATUS
                 );
             }
         } catch (PrestaShopException $e) {

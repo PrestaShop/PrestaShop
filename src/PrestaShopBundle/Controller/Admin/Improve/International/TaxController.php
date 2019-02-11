@@ -30,10 +30,11 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\CannotToggleTaxStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\DeleteTaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxStatus;
@@ -136,8 +137,8 @@ class TaxController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (TaxException $exception) {
-            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+        } catch (TaxException $e) {
+            $this->addFlash('error', $this->getErrorByExceptionType($e));
         }
 
         return $this->redirectToRoute('admin_taxes_index');
@@ -147,7 +148,6 @@ class TaxController extends FrameworkBundleAdminController
      * Toggles status.
      *
      * @param int $taxId
-     * @param string $newStatus
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
@@ -169,8 +169,8 @@ class TaxController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (TaxException $exception) {
-            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+        } catch (TaxException $e) {
+            $this->addFlash('error', $this->getErrorByExceptionType($e));
         }
 
         return $this->redirectToRoute('admin_taxes_index');
@@ -200,8 +200,8 @@ class TaxController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (TaxException $exception) {
-            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+        } catch (TaxException $e) {
+            $this->addFlash('error', $this->getErrorByExceptionType($e));
         }
 
         return $this->redirectToRoute('admin_taxes_index');
@@ -230,8 +230,8 @@ class TaxController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (TaxException $exception) {
-            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+        } catch (TaxException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_taxes_index');
@@ -240,13 +240,11 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Gets error by exception type.
      *
-     * @param TaxException $exception
-     *
-     * @return string
+     * @return array
      */
-    private function getErrorByExceptionType(TaxException $exception)
+    private function getErrorMessages()
     {
-        $exceptionTypeDictionary = [
+        return [
             TaxNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
@@ -256,18 +254,30 @@ class TaxController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error',
                 [sprintf('"%s"', $this->trans('Id', 'Admin.International.Feature'))]
             ),
-            CannotToggleTaxStatusException::class => $this->trans(
-                'An error occurred while updating the status.',
-                'Admin.Notifications.Error'
-            ),
+            UpdateTaxException::class => [
+                UpdateTaxException::FAILED_BULK_UPDATE_STATUS => [
+                    $this->trans(
+                        'An error occurred while updating the status.',
+                        'Admin.Notifications.Error'
+                    ),
+                ],
+                UpdateTaxException::FAILED_UPDATE_STATUS => [
+                    $this->trans(
+                        'An error occurred while updating the status for an object.',
+                        'Admin.Notifications.Error'
+                    ),
+                ],
+            ],
+            DeleteTaxException::class => [
+                DeleteTaxException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteTaxException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
-
-        $exceptionType = get_class($exception);
-
-        if (isset($exceptionTypeDictionary[$exceptionType])) {
-            return $exceptionTypeDictionary[$exceptionType];
-        }
-
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 }

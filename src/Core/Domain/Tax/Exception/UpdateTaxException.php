@@ -27,8 +27,17 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\Exception;
 
 /**
- * Is thrown when tax cannot be deleted
+ * Is thrown when tax or taxes cannot be updated
  */
-class CannotDeleteTaxException extends TaxException
+class UpdateTaxException extends TaxException
 {
+    /**
+     * When fails to update single tax status
+     */
+    const FAILED_UPDATE_STATUS = 10;
+
+    /**
+     * When fails to update taxes status on bulk action
+     */
+    const FAILED_BULK_UPDATE_STATUS = 20;
 }
