@@ -64,8 +64,6 @@ class Status
      *
      * @param $value
      *
-     * @return void
-     *
      * @throws DomainConstraintException
      */
     private function assertIsBool($value)
