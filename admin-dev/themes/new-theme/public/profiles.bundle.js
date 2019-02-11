@@ -1,5 +1,5 @@
 /******/!function(t){// webpackBootstrap
-/******/var r={};function o(n){if(r[n])return r[n].exports;var e=r[n]={i:n,l:!1,exports:{}};return t[n].call(e.exports,e,e.exports,o),e.l=!0,e.exports}o.m=t,o.c=r,o.d=function(n,e,t){o.o(n,e)||Object.defineProperty(n,e,{enumerable:!0,get:t})},o.r=function(n){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(n,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(n,"__esModule",{value:!0})},o.t=function(e,n){if(1&n&&(e=o(e)),8&n)return e;if(4&n&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(o.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&n&&"string"!=typeof e)for(var r in e)o.d(t,r,function(n){return e[n]}.bind(null,r));return t},o.n=function(n){var e=n&&n.__esModule?function(){return n.default}:function(){return n};return o.d(e,"a",e),e},o.o=function(n,e){return Object.prototype.hasOwnProperty.call(n,e)},o.p="",o(o.s=273)}({12:function(n,e,t){"use strict";function o(n,e){for(var t=0;t<e.length;t++){var r=e[t];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(n,r.key,r)}}t.d(e,"a",function(){return r});
+/******/var r={};function o(n){if(r[n])return r[n].exports;var e=r[n]={i:n,l:!1,exports:{}};return t[n].call(e.exports,e,e.exports,o),e.l=!0,e.exports}o.m=t,o.c=r,o.d=function(n,e,t){o.o(n,e)||Object.defineProperty(n,e,{enumerable:!0,get:t})},o.r=function(n){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(n,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(n,"__esModule",{value:!0})},o.t=function(e,n){if(1&n&&(e=o(e)),8&n)return e;if(4&n&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(o.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&n&&"string"!=typeof e)for(var r in e)o.d(t,r,function(n){return e[n]}.bind(null,r));return t},o.n=function(n){var e=n&&n.__esModule?function(){return n.default}:function(){return n};return o.d(e,"a",e),e},o.o=function(n,e){return Object.prototype.hasOwnProperty.call(n,e)},o.p="",o(o.s=278)}({12:function(n,e,t){"use strict";function o(n,e){for(var t=0;t<e.length;t++){var r=e[t];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(n,r.key,r)}}t.d(e,"a",function(){return r});
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -149,9 +149,9 @@ var a=window.$,r=function(){function n(){!function(n,e){if(!(n instanceof e))thr
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var a=window.$,r=function(){function n(){var e=this;return function(n,e){if(!(n instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),{extend:function(n){return e.extend(n)}}}var e,t,r;return e=n,(t=[{key:"extend",value:function(e){var t=this;e.getContainer().on("click",".js-grid-action-submit-btn",function(n){t.handleSubmit(n,e)})}},{key:"handleSubmit",value:function(n,e){var t=a(n.currentTarget),r=t.data("confirm-message");if(!(void 0!==r&&0<r.length)||confirm(r)){var o=a("#"+e.getId()+"_filter_form");o.attr("action",t.data("url")),o.attr("method",t.data("method")),o.find('input[name="'+e.getId()+'[_token]"]').val(t.data("csrf")),o.submit()}}}])&&o(e.prototype,t),r&&o(e,r),n}()},2:function(n,e){var t;t=function(){return this}();try{t=t||new Function("return this")()}catch(n){"object"==typeof window&&(t=window)}n.exports=t},273:function(n,e,t){"use strict";t.r(e);var r=t(4),o=t(6),a=t(12),i=t(7),c=t(9),u=t(16),l=t(17),f=t(14),s=t(13),d=t(15);function v(n,e){for(var t=0;t<e.length;t++){var r=e[t];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(n,r.key,r)}}
+var a=window.$,r=function(){function n(){var e=this;return function(n,e){if(!(n instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),{extend:function(n){return e.extend(n)}}}var e,t,r;return e=n,(t=[{key:"extend",value:function(e){var t=this;e.getContainer().on("click",".js-grid-action-submit-btn",function(n){t.handleSubmit(n,e)})}},{key:"handleSubmit",value:function(n,e){var t=a(n.currentTarget),r=t.data("confirm-message");if(!(void 0!==r&&0<r.length)||confirm(r)){var o=a("#"+e.getId()+"_filter_form");o.attr("action",t.data("url")),o.attr("method",t.data("method")),o.find('input[name="'+e.getId()+'[_token]"]').val(t.data("csrf")),o.submit()}}}])&&o(e.prototype,t),r&&o(e,r),n}()},2:function(n,e){var t;t=function(){return this}();try{t=t||new Function("return this")()}catch(n){"object"==typeof window&&(t=window)}n.exports=t},278:function(n,e,t){"use strict";t.r(e);var r=t(4),o=t(6),a=t(12),i=t(7),c=t(9),u=t(16),l=t(17),f=t(14),s=t(13),d=t(15);
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -167,16 +167,16 @@ var a=window.$,r=function(){function n(){var e=this;return function(n,e){if(!(n 
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var b=window.$,h=function(){function e(n){!function(n,e){if(!(n instanceof e))throw new TypeError("Cannot call a class as a function")}(this,e),this.id=n,this.$container=b("#"+this.id)}var n,t,r;return n=e,(t=[{key:"getContainer",value:function(){return this.$container}},{key:"addExtension",value:function(n){n.extend(this)}}])&&v(n.prototype,t),r&&v(n,r),e}();function m(n,e){for(var t=0;t<e.length;t++){var r=e[t];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(n,r.key,r)}}
+var v=function n(){!function(n,e){if(!(n instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n);var e=new r.a("profiles");e.addExtension(new o.a),e.addExtension(new a.a),e.addExtension(new i.a),e.addExtension(new c.a),e.addExtension(new u.a),e.addExtension(new l.a),e.addExtension(new f.a),e.addExtension(new s.a),e.addExtension(new d.a)};
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -192,14 +192,13 @@ var b=window.$,h=function(){function e(n){!function(n,e){if(!(n instanceof e))th
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-var y=window.$,g=function(){function n(){!function(n,e){if(!(n instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n)}var e,t,r;return e=n,(t=[{key:"extend",value:function(n){var o=n.getContainer();o.on("click",".js-remove-helper-block",function(n){o.remove();var e=y(n.target),t=e.data("closeUrl"),r=e.data("cardName");t&&y.post(t,{close:1,name:r})})}}])&&m(e.prototype,t),r&&m(e,r),n}();(0,window.$)(function(){var n=new r.a("meta");n.addExtension(new o.a),n.addExtension(new a.a),n.addExtension(new i.a),n.addExtension(new c.a),n.addExtension(new u.a),n.addExtension(new l.a),n.addExtension(new f.a),n.addExtension(new d.a),n.addExtension(new s.a),new h("seo-urls-showcase-card").addExtension(new g)})},3:function(n,t,e){"use strict";(function(n){function o(n,e){for(var t=0;t<e.length;t++){var r=e[t];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(n,r.key,r)}}
+ */(0,window.$)(function(){new v})},3:function(n,t,e){"use strict";(function(n){function o(n,e){for(var t=0;t<e.length;t++){var r=e[t];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(n,r.key,r)}}
 /**
  * 2007-2019 PrestaShop and Contributors
  *

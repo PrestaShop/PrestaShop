@@ -1,7 +1,7 @@
 /******/!function(o){// webpackBootstrap
-/******/var i={};function n(e){if(i[e])return i[e].exports;var t=i[e]={i:e,l:!1,exports:{}};return o[e].call(t.exports,t,t.exports,n),t.l=!0,t.exports}n.m=o,n.c=i,n.d=function(e,t,o){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:o})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var i in t)n.d(o,i,function(e){return t[e]}.bind(null,i));return o},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=268)}({268:function(e,t,o){"use strict";function n(e,t){for(var o=0;o<t.length;o++){var i=t[o];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}o.r(t);
+/******/var i={};function n(e){if(i[e])return i[e].exports;var t=i[e]={i:e,l:!1,exports:{}};return o[e].call(t.exports,t,t.exports,n),t.l=!0,t.exports}n.m=o,n.c=i,n.d=function(e,t,o){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:o})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var i in t)n.d(o,i,function(e){return t[e]}.bind(null,i));return o},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=269)}({269:function(e,t,o){"use strict";function n(e,t){for(var o=0;o<t.length;o++){var i=t[o];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}o.r(t);
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,16 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 var a=window.$,s=0,u=1,d=2,f=3,c=4,p=5,v=6,h=7,m=8,l=function(){function t(){var e=this;!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,t),a(".js-entity-select").on("change",function(){return e.toggleForm()}),this.toggleForm()}var e,o,i;return e=t,(o=[{key:"toggleForm",value:function(){var e=a("#entity").find("option:selected"),t=parseInt(e.val()),o=e.text().toLowerCase();this.toggleEntityAlert(t),this.toggleFields(t,o),this.loadAvailableFields(t)}},{key:"toggleEntityAlert",value:function(e){var t=a(".js-entity-alert");[s,u].includes(e)?t.show():t.hide()}},{key:"toggleFields",value:function(e,t){var o=a(".js-truncate-form-group"),i=a(".js-match-ref-form-group"),n=a(".js-regenerate-form-group"),l=a(".js-force-ids-form-group"),r=a(".js-entity-name");m===e?o.hide():o.show(),[u,d].includes(e)?i.show():i.hide(),[s,u,p,v,m].includes(e)?n.show():n.hide(),[s,u,f,c,p,v,m,h].includes(e)?l.show():l.hide(),r.html(t)}},{key:"loadAvailableFields",value:function(e){var o=this,i=a(".js-available-fields");a.ajax({url:i.data("url"),data:{entity:e},dataType:"json"}).then(function(e){o._removeAvailableFields(i);for(var t=0;t<e.length;t++)o._appendAvailableField(i,e[t].label+(e[t].required?"*":""),e[t].description);i.find('[data-toggle="popover"]').popover()})}},{key:"_removeAvailableFields",value:function(e){e.find('[data-toggle="popover"]').popover("hide"),e.empty()}},{key:"_appendHelpBox",value:function(e,t){var o=a(".js-available-field-popover-template").clone();o.attr("data-content",t),o.removeClass("js-available-field-popover-template d-none"),e.append(o)}},{key:"_appendAvailableField",value:function(e,t,o){var i=a(".js-available-field-template").clone();i.text(t),o&&this._appendHelpBox(i,o),i.removeClass("js-available-field-template d-none"),i.appendTo(e)}}])&&n(e.prototype,o),i&&n(e,i),t}();function r(e,t){for(var o=0;o<t.length;o++){var i=t[o];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -42,10 +42,10 @@ var a=window.$,s=0,u=1,d=2,f=3,c=4,p=5,v=6,h=7,m=8,l=function(){function t(){var
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
