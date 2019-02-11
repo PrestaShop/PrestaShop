@@ -31,14 +31,6 @@
   }
 } %}
 
-{% set layoutHeaderToolbarBtn = {
-    'add' : {
-    'href': path('admin_taxes_create'),
-    'desc': 'Add new tax'|trans({}, 'Admin.International.Feature'),
-    'icon': 'add_circle_outline'
-  }
-} %}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% trans_default_domain 'Admin.International.Feature' %}
