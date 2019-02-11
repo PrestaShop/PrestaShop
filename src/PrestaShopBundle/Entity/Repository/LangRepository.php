@@ -43,20 +43,10 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
      *
      * @var array
      */
-    private $matches;
-
-    /**
-     * @param EntityManager $em
-     * @param Mapping\ClassMetadata $class
-     */
-    public function __construct(EntityManager $em, Mapping\ClassMetadata $class)
-    {
-        parent::__construct($em, $class);
-        $this->matches = [
-            static::ISO_CODE => [],
-            static::LOCALE => [],
-        ];
-    }
+    private $matches = [
+        self::ISO_CODE => [],
+        self::LOCALE => [],
+    ];
 
     /**
      * @param string $isoCode
@@ -65,7 +55,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
      */
     public function getLocaleByIsoCode($isoCode)
     {
-        $language = $this->searchLanguage(static::ISO_CODE, $isoCode);
+        $language = $this->searchLanguage(self::ISO_CODE, $isoCode);
 
         return $language->getLocale();
     }
@@ -75,7 +65,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
      */
     public function getByLocale($locale)
     {
-        return $this->searchLanguage(static::LOCALE, $locale);
+        return $this->searchLanguage(self::LOCALE, $locale);
     }
 
     /**
@@ -83,7 +73,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
      */
     public function getByIsoCode($isoCode)
     {
-        return $this->searchLanguage(static::ISO_CODE, $isoCode);
+        return $this->searchLanguage(self::ISO_CODE, $isoCode);
     }
 
     /**
@@ -101,8 +91,8 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
         /** @var Lang $language */
         $language = $this->findOneBy([$key => $value]);
         if ($language) {
-            $this->matches[static::ISO_CODE][$language->getIsoCode()] = $language;
-            $this->matches[static::LOCALE][$language->getLocale()] = $language;
+            $this->matches[self::ISO_CODE][$language->getIsoCode()] = $language;
+            $this->matches[self::LOCALE][$language->getLocale()] = $language;
         }
 
         return $language;
