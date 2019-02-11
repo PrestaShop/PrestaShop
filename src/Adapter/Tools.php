@@ -190,7 +190,7 @@ class Tools
      *
      * @return string domain
      */
-    public static function getShopDomain($http = false, $entities = false)
+    public function getShopDomain($http = false, $entities = false)
     {
         return LegacyTools::getShopDomain($http, $entities);
     }
