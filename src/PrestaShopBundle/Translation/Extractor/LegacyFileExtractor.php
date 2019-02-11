@@ -68,7 +68,7 @@ final class LegacyFileExtractor implements LegacyFileExtractorInterface
 
     private function getId($key)
     {
-        $regexp = "#\<\{([\w]+)\}prestashop\>([\w]+)_([\w]+)#";
+        $regexp = "#\<\{([\w-]+)\}prestashop\>([\w-]+)_([\w-]+)#";
         preg_match_all($regexp, $key, $params);
 
         return Container::camelize($params[3][0]);
@@ -76,7 +76,7 @@ final class LegacyFileExtractor implements LegacyFileExtractorInterface
 
     private function getDomain($key)
     {
-        $regexp = "#\<\{([\w]+)\}prestashop\>([\w]+)_([\w]+)#";
+        $regexp = "#\<\{([\w-]+)\}prestashop\>([\w-]+)_([\w-]+)#";
         preg_match_all($regexp, $key, $params);
 
         return Container::camelize($params[1][0]);
