@@ -19,7 +19,7 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ '{product} is almost out of stock.'|trans({}, 'EmailsBody', locale)|raw }}
+              {{ '{product} is almost out of stock.'|trans({}, 'EmailsBody', locale) }}
             </p>
             <span>
               {{ 'The stock cover is now less than the specified minimum of:'|trans({}, 'EmailsBody', locale)|raw }} <strong><span>{warning_coverage}.</span></strong><br /><br /> 

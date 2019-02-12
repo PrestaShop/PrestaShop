@@ -4,8 +4,8 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale)|raw }}</span><br/>
-      <span class="subtitle">{{ 'Thanks for your order with the reference {order_name} from {shop_name}.'|trans({}, 'EmailsBody', locale)|raw }}</span>
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}</span><br/>
+      <span class="subtitle">{{ 'Thanks for your order with the reference {order_name} from {shop_name}.'|trans({}, 'EmailsBody', locale) }}</span>
     </font>
   </td>
 </tr>
@@ -20,7 +20,7 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale)|raw }}&nbsp;-&nbsp;{{ 'Item(s) out of stock'|trans({}, 'EmailsBody', locale)|raw }}
+              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale) }}&nbsp;-&nbsp;{{ 'Item(s) out of stock'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
               {{ 'Unfortunately, one or more items are currently out of stock. This may cause a slight delay in your delivery. Please accept our apologies and rest assured that we are working hard to rectify this.'|trans({}, 'EmailsBody', locale)|raw }}

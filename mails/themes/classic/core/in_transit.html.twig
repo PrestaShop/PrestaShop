@@ -4,7 +4,7 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale)|raw }}</span>
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}</span>
     </font>
   </td>
 </tr>
@@ -44,11 +44,11 @@
 
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale)|raw }}&nbsp;-&nbsp;{{ 'In transit'|trans({}, 'EmailsBody', locale)|raw }}
+              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale) }}&nbsp;-&nbsp;{{ 'In transit'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
               {{ 'Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.'|trans({}, 'EmailsBody', locale)|raw }} <br /><br />
-              {{ 'You can track your package using the following link:'|trans({}, 'EmailsBody', locale)|raw }} <a href="{followup}">{{ '{followup}'|trans({}, 'EmailsBody', locale)|raw }}</a>
+              {{ 'You can track your package using the following link:'|trans({}, 'EmailsBody', locale)|raw }} <a href="{followup}">{{ '{followup}'|trans({}, 'EmailsBody', locale) }}</a>
             </span>
           </font>
         </td>
