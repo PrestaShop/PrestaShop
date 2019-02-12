@@ -27,30 +27,42 @@
 
 namespace PrestaShopBundle\Translation\Extractor;
 
+use PrestaShopBundle\Translation\Locale\Converter;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Able to convert old translation files (in translations/es.php) into
+ * Symfony MessageCatalogue objects.
+ */
 final class LegacyFileExtractor implements LegacyFileExtractorInterface
 {
     /**
+     * @var string the expected format of a legacy translation key
+     */
+    const LEGACY_TRANSLATION_FORMAT = '#\<\{([\w-]+)\}prestashop\>([\w-]+)_([\w-]+)#';
+
+    /**
      * @param string $path
      * @param string $locale
+     *
+     * @throws \Exception
      *
      * @return MessageCatalogueInterface
      */
     public function extract($path, $locale)
     {
         $_MODULE = [];
-        $locale = $this->convertToCatalogueLocale($locale);
-        $filepath = $path . "$locale.php";
+        $catalogue = new MessageCatalogue($locale);
+        $shopLocale = Converter::toPrestaShopLocale($locale);
+        $filepath = $path . "$shopLocale.php";
 
         if (!file_exists($filepath)) {
             throw new \Exception('There is no translation file available.');
         }
 
         include_once $filepath;
-        $catalogue = new MessageCatalogue($locale);
 
         foreach ($_MODULE as $translationKey => $translationValue) {
             $domain = $this->getDomain($translationKey);
@@ -61,23 +73,26 @@ final class LegacyFileExtractor implements LegacyFileExtractorInterface
         return $catalogue;
     }
 
-    private function convertToCatalogueLocale($locale)
-    {
-        return substr($locale, 0, 2);
-    }
-
+    /**
+     * @param string $key the translation key
+     *
+     * @return string the translation id
+     */
     private function getId($key)
     {
-        $regexp = "#\<\{([\w-]+)\}prestashop\>([\w-]+)_([\w-]+)#";
-        preg_match_all($regexp, $key, $params);
+        preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $params);
 
         return Container::camelize($params[3][0]);
     }
 
+    /**
+     * @param string $key the translation key
+     *
+     * @return string the translation domain
+     */
     private function getDomain($key)
     {
-        $regexp = "#\<\{([\w-]+)\}prestashop\>([\w-]+)_([\w-]+)#";
-        preg_match_all($regexp, $key, $params);
+        preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $params);
 
         return Container::camelize($params[1][0]);
     }

@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Translation\Provider;
 use PrestaShopBundle\Translation\Extractor\LegacyFileExtractorInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Be able to retrieve information from legacy translation files
@@ -93,14 +92,12 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
     {
         $defaultCatalogue = new MessageCatalogue($this->getLocale());
 
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
+        $filteredCatalogue = $this->getCatalogue(
+            $this->getDefaultResourceDirectory(),
+            $this->getLocale()
+        );
+
+        $defaultCatalogue->addCatalogue($filteredCatalogue);
 
         if ($empty) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
@@ -119,7 +116,7 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations';
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -136,31 +133,15 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
     }
 
     /**
-     * @param array $paths a list of paths when we can look for translations
+     * @param string $path a list of paths when we can look for translations
      * @param string $locale the Symfony (not the PrestaShop one) locale
-     * @param string|null $pattern a regular expression
      *
      * @return MessageCatalogue
      *
      * @throws \Exception
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    public function getCatalogue($path, $locale)
     {
-        $messageCatalogue = new MessageCatalogue($locale);
-        $finder = new Finder();
-
-        if (null !== $pattern) {
-            $finder->name($pattern);
-        }
-        $translationFiles = $finder->files()->notName('index.php')->in($paths);
-        if (count($translationFiles) === 0) {
-            throw new \Exception('There is no translation file available.');
-        }
-
-        foreach ($translationFiles as $file) {
-            $messageCatalogue->add($this->extractor->extract($file, $locale));
-        }
-
-        return $messageCatalogue;
+        return $this->extractor->extract($path, $locale);
     }
 }
