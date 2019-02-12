@@ -34,17 +34,23 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 
 class AbstractGridDefinitionFactoryTest extends TestCase
 {
-    /**
-     * @var AbstractGridDefinitionFactory
-     */
-    private $definitionFactory;
-
-    public function setUp()
+    public function testItCreatesDefinitionAndDispatchesHookToAllowDefinitionModification()
     {
-        $definitionFactory = $this->getMockForAbstractClass(AbstractGridDefinitionFactory::class);
+        $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
+        $hookDispatcherMock
+            ->expects($this->once())
+            ->method('dispatchWithParameters')
+            ->withConsecutive(
+                [$this->equalTo('actionTestIdGridDefinitionModifier')],
+                [$this->isType('array'), $this->arrayHasKey('definition')]
+            )
+        ;
+
+        $definitionFactory = $this->getMockForAbstractClass(AbstractGridDefinitionFactory::class, [$hookDispatcherMock]);
 
         $definitionFactory
             ->expects($this->once())
@@ -62,24 +68,7 @@ class AbstractGridDefinitionFactoryTest extends TestCase
             ->willReturn($this->getColumns())
         ;
 
-        $this->definitionFactory = $definitionFactory;
-    }
-
-    public function testItCreatesDefinitionAndDispatchesHookToAllowDefinitionModification()
-    {
-        $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
-        $hookDispatcherMock
-            ->expects($this->once())
-            ->method('dispatchWithParameters')
-            ->withConsecutive(
-                [$this->equalTo('actionTestIdGridDefinitionModifier')],
-                [$this->isType('array'), $this->arrayHasKey('definition')]
-            )
-        ;
-
-        $this->definitionFactory->setHookDispatcher($hookDispatcherMock);
-
-        $definition = $this->definitionFactory->getDefinition();
+        $definition = $definitionFactory->getDefinition();
 
         $this->assertInstanceOf(GridDefinitionInterface::class, $definition);
         $this->assertInstanceOf(BulkActionCollectionInterface::class, $definition->getBulkActions());

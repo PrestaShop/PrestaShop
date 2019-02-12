@@ -30,7 +30,8 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInte
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -38,8 +39,6 @@ use Symfony\Component\DependencyInjection\Container;
  */
 final class GridFactory implements GridFactoryInterface
 {
-    use HookDispatcherAwareTrait;
-
     /**
      * @var GridDefinitionFactoryInterface
      */
@@ -56,18 +55,30 @@ final class GridFactory implements GridFactoryInterface
     private $filterFormFactory;
 
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataFactoryInterface $dataFactory
      * @param GridFilterFormFactoryInterface $filterFormFactory
+     * @param HookDispatcherInterface|null $hookDispatcher
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
         GridDataFactoryInterface $dataFactory,
-        GridFilterFormFactoryInterface $filterFormFactory
+        GridFilterFormFactoryInterface $filterFormFactory,
+        HookDispatcherInterface $hookDispatcher = null
     ) {
         $this->definitionFactory = $definitionFactory;
         $this->dataFactory = $dataFactory;
         $this->filterFormFactory = $filterFormFactory;
+
+        if (null === $hookDispatcher) {
+            @trigger_error('The $hookDispatcher parameter should not be null, inject your main HookDispatcherInterface service, or NullDispatcher if you don\'t need hooks.', E_USER_DEPRECATED);
+        }
+        $this->hookDispatcher = $hookDispatcher ? $hookDispatcher : new NullDispatcher();
     }
 
     /**

@@ -8,8 +8,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
         arguments:
             - '@form.factory'
-        calls:
-            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:
@@ -114,8 +113,7 @@ services:
             - '@prestashop.core.grid.definition.factory.logs'
             - '@prestashop.core.grid.data_provider.log'
             - '@prestashop.core.grid.filter.form_factory'
-        calls:
-        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -123,8 +121,7 @@ services:
             - '@prestashop.core.grid.definition.factory.email_logs'
             - '@prestashop.core.grid.data_provider.email_logs'
             - '@prestashop.core.grid.filter.form_factory'
-        calls:
-        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -132,8 +129,7 @@ services:
             - '@prestashop.core.grid.definition.factory.request_sql'
             - '@prestashop.core.grid.data_provider.request_sql'
             - '@prestashop.core.grid.filter.form_factory'
-        calls:
-        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.backup:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -141,8 +137,7 @@ services:
             - '@prestashop.core.grid.definition.factory.backup'
             - '@prestashop.core.backup.listing.grid_data_factory'
             - '@prestashop.core.grid.filter.form_factory'
-        calls:
-        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.webservice_key:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -150,8 +145,7 @@ services:
             - '@prestashop.core.grid.definition.factory.webservice_key'
             - '@prestashop.core.grid.data_provider.webservice_key'
             - '@prestashop.core.grid.filter.form_factory'
-        calls:
-        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.meta:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -159,8 +153,7 @@ services:
             - '@prestashop.core.grid.definition.factory.meta'
             - '@prestashop.core.grid.data_provider.meta'
             - '@prestashop.core.grid.filter.form_factory'
-        calls:
-        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
@@ -170,7 +163,7 @@ services:
 
     # Grid Query builder
     prestashop.core.grid.abstract_query_builder:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder'
         abstract: true
         arguments:
             - '@doctrine.dbal.default_connection'
