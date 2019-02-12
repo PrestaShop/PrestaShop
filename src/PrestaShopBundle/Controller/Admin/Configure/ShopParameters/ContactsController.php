@@ -128,11 +128,16 @@ class ContactsController extends FrameworkBundleAdminController
 
         try {
             $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
-            $contactFormHandler->handle($contactForm);
+            $result = $contactFormHandler->handle($contactForm);
 
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
 
-            return $this->redirectToRoute('admin_contacts_index');
+                return $this->redirectToRoute('admin_contacts_index');
+            }
         } catch (DomainException $exception) {
             $this->addFlash('error', $this->handleException($exception));
         }

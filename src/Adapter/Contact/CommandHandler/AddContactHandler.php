@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
 
 use Contact;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\AddContactHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotAddContactException;
@@ -36,7 +37,7 @@ use PrestaShopException;
 /**
  * Class AddContactHandler is used for adding contact data.
  */
-final class AddContactHandler implements AddContactHandlerInterface
+final class AddContactHandler extends AbstractObjectModelHandler implements AddContactHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -60,15 +61,16 @@ final class AddContactHandler implements AddContactHandlerInterface
                 $entity->description = $command->getLocalisedDescription();
             }
 
-            if (null !== $command->getShopAssociation()) {
-                //todo: legacy object model use for entity shop association
-            }
-
             if (false === $entity->add()) {
                 throw new CannotAddContactException(
                     'Unable to add contact'
                 );
             }
+
+            if (null !== $command->getShopAssociation()) {
+                $this->associateWithShops($entity, $command->getShopAssociation());
+            }
+
         } catch (PrestaShopException $exception) {
             throw new ContactException(
                 'An unexpected error occurred when adding contact',
