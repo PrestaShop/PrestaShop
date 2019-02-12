@@ -41,7 +41,7 @@ class LegacyFileExtractorTest extends TestCase
         $catalogue = $extractor->extract($this->getTranslationsFolder(), 'fr-FR');
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
-        $this->assertCount(5, $catalogue->all('SomeModule'));
+        $this->assertCount(5, $catalogue->all('ModulesSomeModule'));
     }
 
     /**

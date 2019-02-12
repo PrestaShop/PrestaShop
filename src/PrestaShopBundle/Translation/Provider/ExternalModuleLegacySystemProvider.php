@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Extractor\LegacyFileExtractorInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -137,7 +138,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
 
     private function getModuleDomain()
     {
-        return ucfirst($this->moduleName);
+        return Container::camelize($this->moduleName);
     }
 
     /**
