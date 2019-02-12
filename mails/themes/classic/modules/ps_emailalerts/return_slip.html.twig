@@ -13,7 +13,7 @@
 </tr>
 <tr>
   <td class="linkbelow" style="border:none;padding:7px 0">
-    <span>{{ 'You have received a new return request for {shop_name}.'|trans({}, 'EmailsBody', locale)|raw }}</span>
+    <span>{{ 'You have received a new return request for {shop_name}.'|trans({}, 'EmailsBody', locale) }}</span>
   </td>
 </tr>
 <tr>
@@ -25,7 +25,7 @@
       {{ 'Return details'|trans({}, 'EmailsBody', locale)|raw }}
     </p>
     <span style="color:#777">
-      <span style="color:#333"><strong>{{ 'Order:'|trans({}, 'EmailsBody', locale)|raw }}</strong></span> {{ '{order_name} Placed on {date}'|trans({}, 'EmailsBody', locale)|raw }}<br />
+      <span style="color:#333"><strong>{{ 'Order:'|trans({}, 'EmailsBody', locale)|raw }}</strong></span> {{ '{order_name} Placed on {date}'|trans({}, 'EmailsBody', locale) }}<br />
       <span style="color:#333"><strong>{{ 'Customer:'|trans({}, 'EmailsBody', locale)|raw }}</strong></span> {firstname} {lastname}, ({email})
     </span>
   </td>

@@ -4,7 +4,7 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale)|raw }}</span>
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}</span>
     </font>
   </td>
 </tr>
@@ -19,7 +19,7 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale)|raw }}&nbsp;-&nbsp;{{ 'Credit slip created'|trans({}, 'EmailsBody', locale)|raw }}
+              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale) }}&nbsp;-&nbsp;{{ 'Credit slip created'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
               {{ 'We have generated a credit slip in your name for order with the reference <span><strong>{order_name}</strong></span>.'|trans({}, 'EmailsBody', locale)|raw }}
