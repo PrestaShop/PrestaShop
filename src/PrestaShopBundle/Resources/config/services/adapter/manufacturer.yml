@@ -8,3 +8,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\DeleteManufacturerHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand' }
+
+  prestashop.adapter.manufacturer.command_handler.bulk_delete_manufacturer:
+    class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\BulkDeleteManufacturerHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand' }

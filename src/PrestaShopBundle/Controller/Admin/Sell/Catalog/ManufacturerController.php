@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
@@ -92,6 +93,8 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
+     * Deletes manufacturer
+     *
      * @param $manufacturerId
      *
      * @return RedirectResponse
@@ -111,9 +114,27 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function bulkDeleteManufacturerAction()
+    /**
+     * Deletes manufacturers on bulk action
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
     {
-        //todo: implement
+        $manufacturerIds = $request->request->get('manufacturer_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteManufacturerCommand($manufacturerIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (ManufacturerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
@@ -192,6 +213,10 @@ class ManufacturerController extends FrameworkBundleAdminController
             DeleteManufacturerException::class => [
                 DeleteManufacturerException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteManufacturerException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
             ],
