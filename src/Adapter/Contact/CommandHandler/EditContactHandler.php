@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
 
 use Contact;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\EditContactHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotUpdateContactException;
@@ -38,7 +39,7 @@ use PrestaShopException;
 /**
  * Class EditContactHandler is responsible for editing contact data.
  */
-final class EditContactHandler implements EditContactHandlerInterface
+final class EditContactHandler extends AbstractObjectModelHandler implements EditContactHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -58,8 +59,6 @@ final class EditContactHandler implements EditContactHandlerInterface
                     )
                 );
             }
-
-//            todo: shop association using legacy ObjectModelHandler
 
             if (null !== $command->getLocalisedTitles()) {
                 $entity->name = $command->getLocalisedTitles();
@@ -84,6 +83,10 @@ final class EditContactHandler implements EditContactHandlerInterface
                         $command->getContactId()->getValue()
                     )
                 );
+            }
+
+            if (null !== $command->getShopAssociation()) {
+                $this->associateWithShops($entity, $command->getShopAssociation());
             }
 
         } catch (PrestaShopException $e) {
