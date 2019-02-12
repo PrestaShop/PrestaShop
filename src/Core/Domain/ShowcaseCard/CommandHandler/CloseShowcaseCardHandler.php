@@ -64,6 +64,6 @@ final class CloseShowcaseCardHandler implements CloseShowcaseCardHandlerInterfac
     public function handle(CloseShowcaseCardCommand $command)
     {
         $configurationName = $this->configurationMap->getConfigurationNameForClosedStatus($command->getShowcaseCard());
-        $this->configuration->set($configurationName, '1');
+        $this->configuration->setGlobalValue($configurationName, '1');
     }
 }

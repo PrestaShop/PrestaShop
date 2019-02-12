@@ -67,6 +67,6 @@ final class GetShowcaseCardIsClosedHandler implements GetShowcaseCardIsClosedHan
     {
         $configurationName = $this->configurationMap->getConfigurationNameForClosedStatus($query->getShowcaseCard());
 
-        return (bool) $this->configuration->get($configurationName);
+        return (bool) $this->configuration->getGlobalValue($configurationName);
     }
 }

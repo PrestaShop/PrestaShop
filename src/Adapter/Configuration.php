@@ -31,6 +31,7 @@ use Configuration as ConfigurationLegacy;
 use Feature;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
 use Shop;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -95,23 +96,46 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      *
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get($key, $default = null, $idShopGroup = null, $idShop = null)
     {
         if (defined($key)) {
             return constant($key);
         }
 
+        $shopAdapter = new ShopAdapter();
+
+        if ($idShopGroup === null) {
+            $idShopGroup = $shopAdapter->getContextShopGroup()->id;
+        }
+
+        if ($idShop === null) {
+            $idShop = $shopAdapter->getContextShopID();
+        }
+                
         // if the key is multi lang related, we return an array with the value per language.
         // getInt() meaning probably getInternational()
         if (ConfigurationLegacy::isLangKey($key)) {
-            return ConfigurationLegacy::getInt($key);
+            return ConfigurationLegacy::getInt($key, $idShopGroup, $idShop);
         }
 
-        if (ConfigurationLegacy::hasKey($key)) {
-            return ConfigurationLegacy::get($key);
+        if (ConfigurationLegacy::hasKey($key, null, $idShopGroup, $idShop)) {
+            return ConfigurationLegacy::get($key, null, $idShopGroup, $idShop);
         }
 
         return $default;
+    }
+
+    /**
+     * Returns global value of the given key in Configuration table
+     * \Configuration.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getGlobalValue($key)
+    {
+        return $this->get($key, null, 0, 0);
     }
 
     /**
@@ -125,7 +149,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      *
      * @throws \Exception
      */
-    public function set($key, $value, array $options = [])
+    public function set($key, $value, array $options = [], $globalContext = false)
     {
         // By default, set a piece of configuration for all available shops and shop groups
         $shopGroupId = null;
@@ -134,6 +158,11 @@ class Configuration extends ParameterBag implements ConfigurationInterface
         if ($this->shop instanceof Shop) {
             $shopGroupId = $this->shop->id_shop_group;
             $shopId = $this->shop->id;
+        }
+
+        if ($globalContext) {
+            $shopGroupId = 0;
+            $shopId = 0;
         }
 
         $html = isset($options['html']) ? (bool) $options['html'] : false;
@@ -151,6 +180,22 @@ class Configuration extends ParameterBag implements ConfigurationInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Set configuration value in context of all Shops.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param array $options Options
+     *
+     * @return $this
+     *
+     * @throws \Exception
+     */
+    public function setGlobalValue($key, $value, array $options = [])
+    {
+        return $this->set($key, $value, $options, true);
     }
 
     /**
