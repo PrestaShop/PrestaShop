@@ -72,7 +72,7 @@ services:
             - { name: "ps.translation_provider" }
 
     prestashop.translation.external_module_provider:
-        class: PrestaShopBundle\Translation\Provider\ExternalModuleProvider
+        class: PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider
         arguments:
             - "@prestashop.translation.database_loader"
             - "%modules_dir%"
@@ -99,13 +99,6 @@ services:
                 - '%modules_dir%'
         tags:
             - { name: "ps.translation_provider" }
-
-    prestashop.translation.multiple_sources_search_provider:
-        class: PrestaShopBundle\Translation\Provider\MultipleSourcesProvider
-        arguments:
-            -
-              - "@prestashop.translation.external_module_provider"
-              - "@prestashop.translation.search_provider"
 
     # TRANSLATIONS
     prestashop.translation.database_loader:

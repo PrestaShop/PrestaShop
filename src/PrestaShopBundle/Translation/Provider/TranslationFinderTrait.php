@@ -53,21 +53,23 @@ trait TranslationFinderTrait
         if (null !== $pattern) {
             $finder->name($pattern);
         }
-        $translationFiles = $finder->files()->notName('index.php')->in($paths);
+        $translationFiles = $finder->files()->name('*.xlf')->in($paths);
 
         if (count($translationFiles) === 0) {
             throw new \Exception('There is no translation file available.');
         }
 
         foreach ($translationFiles as $file) {
-            if (strpos($file->getBasename('.xlf'), $locale) !== false) {
-                $domain = $file->getBasename('.xlf');
-            } else {
-                $domain = $file->getBasename('.xlf') . '.' . $locale;
-            }
+            if ('xlf' === $file->getExtension()) {
+                if (strpos($file->getBasename('.xlf'), $locale) !== false) {
+                    $domain = $file->getBasename('.xlf');
+                } else {
+                    $domain = $file->getBasename('.xlf') . '.' . $locale;
+                }
 
-            $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
-            $messageCatalogue->addCatalogue($fileCatalogue);
+                $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
+                $messageCatalogue->addCatalogue($fileCatalogue);
+            }
         }
 
         return $messageCatalogue;
