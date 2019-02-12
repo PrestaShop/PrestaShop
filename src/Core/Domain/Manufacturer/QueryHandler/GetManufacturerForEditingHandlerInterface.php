@@ -24,32 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler;
 
-use Manufacturer;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 
 /**
- * @todo: move to ns ../ to be reusible for query handlers too
- * Provides reusable methods for manufacturer command/query handlers
+ * Defines contract for service that gets manufacturer for editing
  */
-abstract class AbstractManufacturerHandler
+interface GetManufacturerForEditingHandlerInterface
 {
     /**
-     * Validates that requested manufacturer was found
-     *
-     * @param ManufacturerId $manufacturerId
-     * @param Manufacturer $manufacturer
-     *
-     * @throws ManufacturerNotFoundException
+     * @param GetManufacturerForEditing $query
      */
-    protected function assertManufacturerWasFound(ManufacturerId $manufacturerId, Manufacturer $manufacturer)
-    {
-        if ($manufacturer->id !== $manufacturerId->getValue()) {
-            throw new ManufacturerNotFoundException(
-                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
-            );
-        }
-    }
+    public function handle(GetManufacturerForEditing $query);
 }

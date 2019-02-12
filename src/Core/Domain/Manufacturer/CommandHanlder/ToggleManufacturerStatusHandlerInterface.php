@@ -24,32 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder;
 
-use Manufacturer;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 
 /**
- * @todo: move to ns ../ to be reusible for query handlers too
- * Provides reusable methods for manufacturer command/query handlers
+ * Defines contract for ToggleManufacturerStatusHandler
  */
-abstract class AbstractManufacturerHandler
+interface ToggleManufacturerStatusHandlerInterface
 {
     /**
-     * Validates that requested manufacturer was found
-     *
-     * @param ManufacturerId $manufacturerId
-     * @param Manufacturer $manufacturer
-     *
-     * @throws ManufacturerNotFoundException
+     * @param ToggleManufacturerStatusCommand $command
      */
-    protected function assertManufacturerWasFound(ManufacturerId $manufacturerId, Manufacturer $manufacturer)
-    {
-        if ($manufacturer->id !== $manufacturerId->getValue()) {
-            throw new ManufacturerNotFoundException(
-                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
-            );
-        }
-    }
+    public function handle(ToggleManufacturerStatusCommand $command);
 }
