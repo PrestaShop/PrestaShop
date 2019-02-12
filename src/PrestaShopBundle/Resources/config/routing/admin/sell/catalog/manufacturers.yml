@@ -46,7 +46,7 @@ admin_manufacturers_bulk_delete:
   path: manufacturers/bulk-delete
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDeleteManufacturer'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDelete'
 
 admin_manufacturers_bulk_enable:
   path: manufacturers/bulk-enable
