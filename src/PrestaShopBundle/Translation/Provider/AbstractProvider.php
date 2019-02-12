@@ -28,8 +28,9 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
+use PrestaShopBundle\Translation\Locale\Converter;
 
-abstract class AbstractProvider implements ProviderInterface
+abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInterface, DatabaseCatalogueInterface
 {
     use TranslationFinderTrait;
 
@@ -90,12 +91,19 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
+     * @deprecated since 1.7.6, implement SearchProviderInterface instead
+     *
      * @param string $locale the Catalogue locale
      *
      * @return $this
      */
     public function setLocale($locale)
     {
+        @trigger_error(
+            '`setLocale` method of AbstractProvider is deprecated',
+            E_USER_DEPRECATED
+        );
+
         $this->locale = $locale;
 
         return $this;
@@ -108,7 +116,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getPrestaShopLocale()
     {
-        return str_replace('-', '_', $this->locale);
+        return Converter::toPrestaShopLocale($this->locale);
     }
 
     /**
@@ -137,9 +145,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Get the Catalogue from xliff files only.
-     *
-     * @return MessageCatalogue A MessageCatalogue instance
+     * {@inheritdoc}
      */
     public function getXliffCatalogue()
     {

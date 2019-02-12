@@ -55,11 +55,11 @@ final class LegacyFileExtractor implements LegacyFileExtractorInterface
     {
         $_MODULE = [];
         $catalogue = new MessageCatalogue($locale);
-        $shopLocale = Converter::toPrestaShopLocale($locale);
+        $shopLocale = Converter::toLegacyLocale($locale);
         $filepath = $path . "$shopLocale.php";
 
         if (!file_exists($filepath)) {
-            throw new \Exception('There is no translation file available.');
+            throw new \Exception('There is no translation file available in path: ' . $filepath);
         }
 
         include_once $filepath;

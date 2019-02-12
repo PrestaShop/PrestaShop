@@ -25,30 +25,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Locale;
+namespace PrestaShopBundle\Translation\Provider;
 
-/**
- * Helper to manipulate locales specific to PrestaShop
- */
-final class Converter
+interface SearchProviderInterface extends ProviderInterface, UseDefaultCatalogueInterface, XliffCatalogueInterface, DatabaseCatalogueInterface
 {
     /**
-     * @var string the locale (like "fr-FR")
+     * @param string $domain
      *
-     * @return string|bool the legacy PrestaShop locale (like "fr")
+     * @return self
      */
-    public static function toLegacyLocale($locale)
-    {
-        return substr($locale, 0, 2);
-    }
+    public function setDomain($domain);
 
     /**
-     * Get the PrestaShop locale from real locale (like "fr-FR")
+     * @param string $locale
      *
-     * @return string The PrestaShop locale (like "fr_FR")
+     * @return self
      */
-    public static function toPrestaShopLocale($locale)
-    {
-        return str_replace('-', '_', $locale);
-    }
+    public function setLocale($locale);
 }
