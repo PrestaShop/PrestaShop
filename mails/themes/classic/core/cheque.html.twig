@@ -4,8 +4,8 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale)|raw }}</span><br/>
-      <span class="subtitle">{{ 'Thank you for shopping with {shop_name}!'|trans({}, 'EmailsBody', locale)|raw }}</span>
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}</span><br/>
+      <span class="subtitle">{{ 'Thank you for shopping with {shop_name}!'|trans({}, 'EmailsBody', locale) }}</span>
     </font>
   </td>
 </tr>
@@ -20,7 +20,7 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale)|raw }}&nbsp;-&nbsp;{{ 'Awaiting check payment'|trans({}, 'EmailsBody', locale)|raw }}
+              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale) }}&nbsp;-&nbsp;{{ 'Awaiting check payment'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
               {{ 'Your order with the reference <span><strong>{order_name}</strong></span> has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.'|trans({}, 'EmailsBody', locale)|raw }}
