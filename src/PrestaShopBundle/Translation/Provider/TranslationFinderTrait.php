@@ -54,6 +54,7 @@ trait TranslationFinderTrait
             $finder->name($pattern);
         }
         $translationFiles = $finder->files()->notName('index.php')->in($paths);
+
         if (count($translationFiles) === 0) {
             throw new \Exception('There is no translation file available.');
         }
