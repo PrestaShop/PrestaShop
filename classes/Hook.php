@@ -861,7 +861,7 @@ class HookCore extends ObjectModel
                     $controller = 'module-' . $controller_obj->module->name . '-' . $controller;
                 }
 
-                if (in_array($controller, $exceptions)) {
+                if (in_array($controller, $exceptions) || in_array(str_replace('-', '', $controller), $exceptions)) {
                     continue;
                 }
 
