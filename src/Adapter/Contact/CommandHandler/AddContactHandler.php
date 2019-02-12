@@ -39,6 +39,7 @@ use PrestaShopException;
  */
 final class AddContactHandler extends AbstractObjectModelHandler implements AddContactHandlerInterface
 {
+
     /**
      * {@inheritdoc}
      *
@@ -50,7 +51,6 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
         try {
             $entity = new Contact();
             $entity->name = $command->getLocalisedTitles();
-            //todo: fill title with data
             $entity->customer_service = $command->isMessageSavingEnabled();
 
             if (null !== $command->getEmail()) {
