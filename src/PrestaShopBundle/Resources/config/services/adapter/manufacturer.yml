@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: true
+
+  # Command handlers
+
+  prestashop.adapter.manufacturer.command_handler.delete_manufacturer:
+    class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\DeleteManufacturerHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand' }
