@@ -268,4 +268,16 @@ class ThemeProvider extends AbstractProvider
     {
         return $this->defaultTranslationDir . DIRECTORY_SEPARATOR . $this->locale;
     }
+
+    /**
+     * @param string $locale the Catalogue locale
+     *
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
 }

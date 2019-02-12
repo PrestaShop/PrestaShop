@@ -59,6 +59,7 @@ class TranslationController extends ApiController
             $queryParamsCollection = $this->queryParams->fromRequest($request);
             $queryParams = $queryParamsCollection->getQueryParams();
 
+            /** @var @var TranslationService $translationService */
             $translationService = $this->container->get('prestashop.service.translation');
 
             $locale = $request->attributes->get('locale');
@@ -97,6 +98,8 @@ class TranslationController extends ApiController
 
             return $this->jsonResponse($catalog, $request, $queryParamsCollection, 200, $info);
         } catch (Exception $exception) {
+            dump($exception);
+
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
     }

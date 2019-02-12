@@ -155,7 +155,7 @@ class TranslationService
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
         } else {
-            $translationProvider = $this->container->get('prestashop.translation.search_provider');
+            $translationProvider = $this->container->get('prestashop.translation.multiple_sources_search_provider');
         }
 
         if ('Messages' === $domain) {

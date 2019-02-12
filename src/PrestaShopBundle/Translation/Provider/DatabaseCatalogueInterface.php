@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -25,30 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Locale;
+namespace PrestaShopBundle\Translation\Provider;
+
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Helper to manipulate locales specific to PrestaShop
+ * Provide an Message Catalogue from the Database
  */
-final class Converter
+interface DatabaseCatalogueInterface
 {
     /**
-     * @var string the locale (like "fr-FR")
+     * @var string|null the PrestaShop theme
      *
-     * @return string|bool the legacy PrestaShop locale (like "fr")
+     * @return MessageCatalogue
      */
-    public static function toLegacyLocale($locale)
-    {
-        return substr($locale, 0, 2);
-    }
-
-    /**
-     * Get the PrestaShop locale from real locale (like "fr-FR")
-     *
-     * @return string The PrestaShop locale (like "fr_FR")
-     */
-    public static function toPrestaShopLocale($locale)
-    {
-        return str_replace('-', '_', $locale);
-    }
+    public function getDatabaseCatalogue($themeName = null);
 }

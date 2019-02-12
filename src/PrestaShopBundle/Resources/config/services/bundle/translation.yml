@@ -100,6 +100,13 @@ services:
         tags:
             - { name: "ps.translation_provider" }
 
+    prestashop.translation.multiple_sources_search_provider:
+        class: PrestaShopBundle\Translation\Provider\MultipleSourcesProvider
+        arguments:
+            -
+              - "@prestashop.translation.external_module_provider"
+              - "@prestashop.translation.search_provider"
+
     # TRANSLATIONS
     prestashop.translation.database_loader:
         class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader

@@ -28,6 +28,10 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Able to search translations for a specific translation domains accross
+ * multiple sources
+ */
 class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**
@@ -134,5 +138,17 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function setModulesDirectory($modulesDirectory)
     {
         $this->modulesDirectory = $modulesDirectory;
+    }
+
+    /**
+     * @param string $locale the Catalogue locale
+     *
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
     }
 }
