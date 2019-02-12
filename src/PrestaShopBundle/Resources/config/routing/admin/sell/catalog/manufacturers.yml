@@ -66,7 +66,7 @@ admin_manufacturers_toggle_status:
   path: manufacturers/{manufacturerId}/toggle-status
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:toggleManufacturerStatus'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:toggleStatus'
     _legacy_controller: AdminManufacturers
   requirements:
     manufacturerId: \d+

@@ -24,32 +24,54 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command;
 
-use Manufacturer;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
 
 /**
- * @todo: move to ns ../ to be reusible for query handlers too
- * Provides reusable methods for manufacturer command/query handlers
+ * Toggles manufacturer status
  */
-abstract class AbstractManufacturerHandler
+class ToggleManufacturerStatusCommand
 {
     /**
-     * Validates that requested manufacturer was found
-     *
-     * @param ManufacturerId $manufacturerId
-     * @param Manufacturer $manufacturer
-     *
-     * @throws ManufacturerNotFoundException
+     * @var ManufacturerId
      */
-    protected function assertManufacturerWasFound(ManufacturerId $manufacturerId, Manufacturer $manufacturer)
+    private $manufacturerId;
+
+    /**
+     * @var Status
+     */
+    private $status;
+
+    /**
+     * @param $manufacturerId
+     * @param $status
+     *
+     * @throws DomainConstraintException
+     * @throws ManufacturerConstraintException
+     */
+    public function __construct($manufacturerId, $status)
     {
-        if ($manufacturer->id !== $manufacturerId->getValue()) {
-            throw new ManufacturerNotFoundException(
-                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
-            );
-        }
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
+        $this->status = new Status($status);
+    }
+
+    /**
+     * @return ManufacturerId
+     */
+    public function getManufacturerId()
+    {
+        return $this->manufacturerId;
+    }
+
+    /**
+     * @return Status
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

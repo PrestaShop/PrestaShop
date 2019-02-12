@@ -24,32 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query;
 
-use Manufacturer;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
- * @todo: move to ns ../ to be reusible for query handlers too
- * Provides reusable methods for manufacturer command/query handlers
+ * Gets manufacturer for editing in Back Office
  */
-abstract class AbstractManufacturerHandler
+class GetManufacturerForEditing
 {
     /**
-     * Validates that requested manufacturer was found
-     *
-     * @param ManufacturerId $manufacturerId
-     * @param Manufacturer $manufacturer
-     *
-     * @throws ManufacturerNotFoundException
+     * @var ManufacturerId
      */
-    protected function assertManufacturerWasFound(ManufacturerId $manufacturerId, Manufacturer $manufacturer)
+    private $manufacturerId;
+
+    /**
+     * @param int
+     *
+     * @throws ManufacturerConstraintException
+     */
+    public function __construct($manufacturerId)
     {
-        if ($manufacturer->id !== $manufacturerId->getValue()) {
-            throw new ManufacturerNotFoundException(
-                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
-            );
-        }
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
+    }
+
+    /**
+     * @return ManufacturerId
+     */
+    public function getManufacturerId()
+    {
+        return $this->manufacturerId;
     }
 }

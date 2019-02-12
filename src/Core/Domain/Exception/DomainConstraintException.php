@@ -24,32 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
-
-use Manufacturer;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
 /**
- * @todo: move to ns ../ to be reusible for query handlers too
- * Provides reusable methods for manufacturer command/query handlers
+ * Is thrown when object status contains invalid values
  */
-abstract class AbstractManufacturerHandler
+class DomainConstraintException extends DomainException
 {
     /**
-     * Validates that requested manufacturer was found
-     *
-     * @param ManufacturerId $manufacturerId
-     * @param Manufacturer $manufacturer
-     *
-     * @throws ManufacturerNotFoundException
+     * When status type is not valid
      */
-    protected function assertManufacturerWasFound(ManufacturerId $manufacturerId, Manufacturer $manufacturer)
-    {
-        if ($manufacturer->id !== $manufacturerId->getValue()) {
-            throw new ManufacturerNotFoundException(
-                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
-            );
-        }
-    }
+    const INVALID_STATUS_TYPE = 10;
 }

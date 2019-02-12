@@ -24,31 +24,54 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
-use Manufacturer;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 
 /**
- * @todo: move to ns ../ to be reusible for query handlers too
- * Provides reusable methods for manufacturer command/query handlers
+ * Holds data of object status
  */
-abstract class AbstractManufacturerHandler
+class Status
 {
     /**
-     * Validates that requested manufacturer was found
-     *
-     * @param ManufacturerId $manufacturerId
-     * @param Manufacturer $manufacturer
-     *
-     * @throws ManufacturerNotFoundException
+     * @var bool
      */
-    protected function assertManufacturerWasFound(ManufacturerId $manufacturerId, Manufacturer $manufacturer)
+    private $enabled;
+
+    /**
+     * @param bool $enabled
+     *
+     * @throws DomainConstraintException
+     */
+    public function __construct($enabled)
     {
-        if ($manufacturer->id !== $manufacturerId->getValue()) {
-            throw new ManufacturerNotFoundException(
-                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
+        $this->assertIsBool($enabled);
+        $this->enabled = $enabled;
+    }
+
+    /**
+     * Checks whether the object is enabled or not
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Validates that value is of type boolean
+     *
+     * @param $value
+     *
+     * @throws DomainConstraintException
+     */
+    private function assertIsBool($value)
+    {
+        if (!is_bool($value)) {
+            throw new DomainConstraintException(
+                sprintf('Status must be of type bool, but given %s', var_export($value, true)),
+                DomainConstraintException::INVALID_STATUS_TYPE
             );
         }
     }

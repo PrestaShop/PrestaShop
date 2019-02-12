@@ -26,10 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
 use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
@@ -69,8 +73,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'manufacturer_grid' => $this->getGridPresenter()->present($manufacturerGrid),
-            'manufacturer_address_grid' => $this->getGridPresenter()->present($manufacturerAddressGrid),
+            'manufacturer_grid' => $this->presentGrid($manufacturerGrid),
+            'manufacturer_address_grid' => $this->presentGrid($manufacturerAddressGrid),
         ]);
     }
 
@@ -107,7 +111,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (ManufacturerException $e) {
+        } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -131,7 +135,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (ManufacturerException $e) {
+        } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -144,9 +148,29 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function toggleManufacturerStatusAction()
+    /**
+     * Toggles manufacturer status
+     *
+     * @param int $manufacturerId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction($manufacturerId)
     {
-        //todo: implement
+        try {
+            /** @var EditableManufacturer $editableManufacturer */
+            $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
+            $this->getCommandBus()->handle(
+                new ToggleManufacturerStatusCommand((int) $manufacturerId, !$editableManufacturer->isActive())
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
@@ -219,6 +243,20 @@ class ManufacturerController extends FrameworkBundleAdminController
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
+            ],
+            UpdateManufacturerException::class => [
+                UpdateManufacturerException::FAILED_BULK_UPDATE_STATUS => [
+                    $this->trans(
+                        'An error occurred while updating the status.',
+                        'Admin.Notifications.Error'
+                    ),
+                ],
+                UpdateManufacturerException::FAILED_UPDATE_STATUS => [
+                    $this->trans(
+                        'An error occurred while updating the status for an object.',
+                        'Admin.Notifications.Error'
+                    ),
+                ],
             ],
         ];
     }
