@@ -94,6 +94,6 @@ final class LegacyFileExtractor implements LegacyFileExtractorInterface
     {
         preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $params);
 
-        return Container::camelize($params[1][0]);
+        return 'Modules' . Container::camelize($params[1][0]);
     }
 }
