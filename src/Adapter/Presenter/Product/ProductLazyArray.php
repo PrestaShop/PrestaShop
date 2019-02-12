@@ -172,6 +172,16 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
+     * @return bool
+     */
+    public function getCatalogMode()
+    {
+        return Configuration::get('PS_CATALOG_MODE');
+    }
+
+    /**
+     * @arrayAccess
+     *
      * @return string
      */
     public function getUrl()
@@ -556,7 +566,7 @@ class ProductLazyArray extends AbstractLazyArray
         ProductPresentationSettings $settings,
         array $product
     ) {
-        return $settings->showPrices && (bool) $product['show_price'];
+        return $settings->showPrices && (bool) $product['show_price'] && !$this->getCatalogMode();
     }
 
     /**
