@@ -35,7 +35,7 @@
         "mrclay/minify": "~2.3.0",
         "nikic/php-parser": "^2.1",
         "paragonie/random_compat": "^1.4|^2.0",
-        "pear/archive_tar": "~1.4.2",
+        "pear/archive_tar": "^1.4",
         "phpoffice/phpexcel": "~1.8.2",
         "prestashop/blockreassurance": "^3",
         "prestashop/contactform": "^4",
