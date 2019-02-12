@@ -142,6 +142,9 @@ class TranslationService
     /**
      * List translation for domain.
      *
+     * @todo: we need module information here
+     * @todo: we need to improve the Vuejs application to send the information
+     *
      * @param $locale
      * @param $domain
      * @param null $theme
@@ -151,11 +154,15 @@ class TranslationService
      */
     public function listDomainTranslation($locale, $domain, $theme = null, $search = null)
     {
+        /*
+         * @todo: needs refacto to call the right provider according to the parameters
+         */
         if (!empty($theme) && 'classic' !== $theme) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
         } else {
-            $translationProvider = $this->container->get('prestashop.translation.multiple_sources_search_provider');
+            $translationProvider = $this->container->get('prestashop.translation.external_module_provider');
+            $translationProvider->setModuleName('ps_themecusto');
         }
 
         if ('Messages' === $domain) {

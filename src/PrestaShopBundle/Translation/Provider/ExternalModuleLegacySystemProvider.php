@@ -33,7 +33,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * Be able to retrieve information from legacy translation files
  */
-class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface
 {
     /**
      * @var LegacyFileExtractorInterface the extractor
@@ -44,6 +44,11 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
      * @var string the module name
      */
     private $moduleName;
+
+    /**
+     * @var string the domain name
+     */
+    private $domain;
 
     public function __construct(LoaderInterface $databaseLoader, $resourceDirectory, LegacyFileExtractorInterface $extractor)
     {
@@ -75,9 +80,12 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
      */
     public function getIdentifier()
     {
-        return 'external_module';
+        return 'external_legacy_module';
     }
 
+    /**
+     * is/should module name be part of the API?
+     */
     public function setModuleName($moduleName)
     {
         $this->moduleName = $moduleName;
@@ -143,5 +151,13 @@ class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatal
     public function getCatalogue($path, $locale)
     {
         return $this->extractor->extract($path, $locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
     }
 }
