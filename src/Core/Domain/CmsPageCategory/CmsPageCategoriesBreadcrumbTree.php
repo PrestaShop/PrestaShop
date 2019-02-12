@@ -1,6 +1,6 @@
-/* eslint-disable indent,comma-dangle */
+<?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +19,40 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory;
+
+use ArrayIterator;
+use IteratorAggregate;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategory;
+
 /**
- * Three mode available:
- *  build = production mode
- *  build:analyze = production mode with bundler analyzer
- *  dev = development mode
+ * Class CmsPageCategoriesForBreadcrumb is a DTO which is used in building cms page categories breadcrumb.
  */
-module.exports = (env, argvs) => (
-  argvs.mode === 'production' ?
-    require('./.webpack/prod.js')(argvs.analyze) :
-    require('./.webpack/dev.js')()
-);
+class CmsPageCategoriesBreadcrumbTree implements IteratorAggregate
+{
+    /**
+     * @var CmsPageCategory[]
+     */
+    private $cmsPageCategories;
+
+    /**
+     * @param CmsPageCategory[] $cmsPageCategories
+     */
+    public function __construct(array $cmsPageCategories)
+    {
+        $this->cmsPageCategories = $cmsPageCategories;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->cmsPageCategories);
+    }
+}

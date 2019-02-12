@@ -100,3 +100,12 @@ services:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
         public: true
+
+    prestashop.core.grid.query_builder.cms_page_category:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\CmsPageCategoryQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      public: true

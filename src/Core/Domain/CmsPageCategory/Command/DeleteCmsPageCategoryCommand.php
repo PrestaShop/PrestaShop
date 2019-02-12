@@ -1,6 +1,6 @@
-/* eslint-disable indent,comma-dangle */
+<?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +19,41 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
+
 /**
- * Three mode available:
- *  build = production mode
- *  build:analyze = production mode with bundler analyzer
- *  dev = development mode
+ * Class DeleteCmsPageCategoryCommand is responsible for deleting cms page category.
  */
-module.exports = (env, argvs) => (
-  argvs.mode === 'production' ?
-    require('./.webpack/prod.js')(argvs.analyze) :
-    require('./.webpack/dev.js')()
-);
+class DeleteCmsPageCategoryCommand
+{
+    /**
+     * @var CmsPageCategoryId
+     */
+    private $cmsPageCategoryId;
+
+    /**
+     * @param int $cmsPageCategoryId
+     *
+     * @throws CmsPageCategoryException
+     */
+    public function __construct($cmsPageCategoryId)
+    {
+        $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
+    }
+
+    /**
+     * @return CmsPageCategoryId
+     */
+    public function getCmsPageCategoryId()
+    {
+        return $this->cmsPageCategoryId;
+    }
+}

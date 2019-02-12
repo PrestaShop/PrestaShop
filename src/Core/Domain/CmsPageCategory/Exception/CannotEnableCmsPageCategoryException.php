@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop and Contributors
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -15,28 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% set id_property_name = column.options.primary_field %}
-{% set id_primary_key = record[id_property_name] %}
-{% set record_id = record[id_property_name] %}
+ */
 
-{% set isValid = record[column.id] is same as('1') %}
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
-<div class="text-center">
-  <i
-    class="material-icons ps-togglable-row grid-toggler-icon-{% if isValid == true %}valid{% else %}not-valid{% endif %}"
-    data-toggle-url="{{ path(column.options.route, {(column.options.route_param_name) : id_primary_key})}}"
-  >
-    {% if isValid %}
-      check
-    {% else %}
-      clear
-    {% endif %}
-  </i>
-</div>
+/**
+ * Class CannotEnableCmsPageCategoryException
+ */
+class CannotEnableCmsPageCategoryException extends CmsPageCategoryException
+{
+}

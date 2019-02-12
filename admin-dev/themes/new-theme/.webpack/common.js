@@ -41,6 +41,7 @@ module.exports = {
     supplier: './js/pages/supplier',
     themes: './js/pages/themes',
     profiles: './js/pages/profiles',
+    cms_page: './js/pages/cms-page',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
