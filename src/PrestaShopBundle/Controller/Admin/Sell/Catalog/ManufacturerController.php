@@ -87,9 +87,9 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function deleteManufacturerAction()
+    public function deleteManufacturerAction($manufacturerId)
     {
-        //todo: implement
+        dump($manufacturerId);die;
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
