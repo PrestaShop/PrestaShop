@@ -217,16 +217,6 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get grid presenter.
-     *
-     * @return GridPresenter
-     */
-    private function getGridPresenter()
-    {
-        return $this->get('prestashop.core.grid.presenter.grid_presenter');
-    }
-
-    /**
      * Provides error messages for exceptions
      *
      * @return array
