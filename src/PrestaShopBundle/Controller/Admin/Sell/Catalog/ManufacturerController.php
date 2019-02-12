@@ -26,11 +26,15 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -87,9 +91,23 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function deleteManufacturerAction($manufacturerId)
+    /**
+     * @param $manufacturerId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($manufacturerId)
     {
-        dump($manufacturerId);die;
+        try {
+            $this->getCommandBus()->handle(new DeleteManufacturerCommand((int) $manufacturerId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (ManufacturerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
@@ -161,5 +179,22 @@ class ManufacturerController extends FrameworkBundleAdminController
     private function getGridPresenter()
     {
         return $this->get('prestashop.core.grid.presenter.grid_presenter');
+    }
+
+    /**
+     * Provides error messages for exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            DeleteManufacturerException::class => [
+                DeleteManufacturerException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
     }
 }
