@@ -39,7 +39,7 @@ class EditableTax
     private $taxId;
 
     /**
-     * @var string
+     * @var string[]
      */
     private $name;
 
@@ -54,7 +54,7 @@ class EditableTax
     private $active;
 
     /**
-     * @var int[]
+     * @var array
      */
     private $shopAssociation;
 
@@ -62,12 +62,12 @@ class EditableTax
      * EditableTax constructor.
      *
      * @param TaxId $taxId
-     * @param $name
-     * @param $rate
-     * @param $active
-     * @param $shopAssociation
+     * @param string[] $name
+     * @param float $rate
+     * @param bool $active
+     * @param array $shopAssociation
      */
-    public function __construct(TaxId $taxId, $name, $rate, $active, $shopAssociation)
+    public function __construct(TaxId $taxId, array $name, $rate, $active, array $shopAssociation)
     {
         $this->taxId = $taxId;
         $this->name = $name;
@@ -85,7 +85,7 @@ class EditableTax
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getName()
     {
@@ -109,7 +109,7 @@ class EditableTax
     }
 
     /**
-     * @return int[]
+     * @return array
      */
     public function getShopAssociation()
     {

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\BulkDeleteTaxHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\DeleteTaxException;

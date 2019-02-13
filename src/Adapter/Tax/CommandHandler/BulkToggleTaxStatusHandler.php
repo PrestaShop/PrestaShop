@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\BulkToggleTaxStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
