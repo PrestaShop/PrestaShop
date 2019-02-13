@@ -135,7 +135,11 @@
             'help': 'Allow or disallow this employee to log in to the Admin panel.'|trans({}, 'Admin.Advparameters.Help')
           }) }}
 
-          {{ ps.form_group_row(employeeForm.profile, {}, {
+          {{ ps.form_group_row(employeeForm.profile, {
+            'attr': {
+              'data-admin-profile': superAdminProfileId,
+            }
+          }, {
             'label': 'Permission profile'|trans({}, 'Admin.Advparameters.Feature')
           }) }}
 

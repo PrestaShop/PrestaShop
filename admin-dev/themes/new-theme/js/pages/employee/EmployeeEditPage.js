@@ -32,8 +32,28 @@ import ChangePasswordControl from "../../components/form/change-password-control
  */
 export default class EmployeeEditPage {
   constructor() {
-    new ChoiceTree('#employee_shop_association').enableAutoCheckChildren();
+    this.shopChoiceTree = new ChoiceTree('#employee_shop_association');
+    this.employeeProfileSelector = '#employee_profile';
+
+    this.shopChoiceTree.enableAutoCheckChildren();
     new AddonsConnector('#addons-connect-form', '#addons_login_btn');
     new ChangePasswordControl();
+
+    this.initEvents();
+  }
+
+  /**
+   * Initialize page's events.
+   */
+  initEvents() {
+    const superAdminProfileId = $(this.employeeProfileSelector).data('admin-profile');
+    const t = this;
+
+    $(document).on('change', this.employeeProfileSelector, function () {
+      // Disable shop choice tree if superadmin profile is selected.
+      $(this).val() == superAdminProfileId ?
+        t.shopChoiceTree.disableAllInputs() :
+        t.shopChoiceTree.enableAllInputs();
+    });
   }
 }
