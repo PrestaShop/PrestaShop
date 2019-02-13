@@ -24,14 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
 use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
- * @todo: move to ns ../ to be reusible for query handlers too
  * Provides reusable methods for manufacturer command/query handlers
  */
 abstract class AbstractManufacturerHandler
