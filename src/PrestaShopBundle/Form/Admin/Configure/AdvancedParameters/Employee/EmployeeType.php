@@ -96,6 +96,7 @@ final class EmployeeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $isRestrictedAccess = $options['is_restricted_access'];
+        $isSuperAdmin = $options['is_super_admin'];
 
         $builder
             ->add('firstname', TextType::class, [
@@ -185,6 +186,7 @@ final class EmployeeType extends AbstractType
             if ($this->isMultistoreFeatureActive) {
                 $builder->add('shop_association', ShopChoiceTreeType::class, [
                     'required' => false,
+                    'disabled' => $isSuperAdmin,
                     'constraints' => [
                         new NotBlank([
                             'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
@@ -209,9 +211,12 @@ final class EmployeeType extends AbstractType
                 // - Addons connect field is shown,
                 // - Shop association field is not shown.
                 'is_restricted_access' => true,
+                // Is this form for showing data for a super admin.
+                'is_super_admin' => false,
                 'compound' => true,
             ])
             ->setAllowedTypes('is_restricted_access', 'bool')
+            ->setAllowedTypes('is_super_admin', 'bool')
         ;
     }
 }

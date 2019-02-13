@@ -240,11 +240,12 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function editAction($employeeId, Request $request)
     {
-        $formAccessChecker = $this->get('prestashop.core.employee.form_access_checker');
+        $formAccessChecker = $this->get('prestashop.adapter.employee.form_access_checker');
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
 
         $employeeForm = $this->getEmployeeFormBuilder()->getFormFor($employeeId, [], [
             'is_restricted_access' => $isRestrictedAccess,
+            'is_super_admin' => $formAccessChecker->isSuperAdmin($employeeId),
         ]);
         $employeeForm->handleRequest($request);
 

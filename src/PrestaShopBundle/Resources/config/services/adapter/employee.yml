@@ -26,3 +26,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForEditingHandler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing }
+
+  prestashop.adapter.employee.form_access_checker:
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\EmployeeFormAccessChecker'
+    arguments:
+      - '@prestashop.adapter.data_provider.employee'

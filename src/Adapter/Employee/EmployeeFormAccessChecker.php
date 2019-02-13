@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,8 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Employee\Access;
+namespace PrestaShop\PrestaShop\Adapter\Employee;
 
+use Employee;
+use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 
 /**
@@ -59,5 +61,15 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
         }
 
         return $employeeId === $this->contextEmployeeProvider->getId();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSuperAdmin($employeeId)
+    {
+        $employee = new Employee($employeeId);
+
+        return $employee->isSuperAdmin();
     }
 }
