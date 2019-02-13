@@ -26,21 +26,21 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tax\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
+use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use Tax;
 
-final class GetTaxForEditingHandler implements GetTaxForEditingHandlerInterface
+final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTaxForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(GetTaxForEditing $query)
     {
-        $tax = $this->getLegacyTaxObject($query->getTaxId());
+        $tax = new Tax($query->getTaxId()->getValue());
+        $this->assertTaxWasFound($query->getTaxId(), $tax);
 
         return new EditableTax(
             $query->getTaxId(),
@@ -49,23 +49,5 @@ final class GetTaxForEditingHandler implements GetTaxForEditingHandlerInterface
             $tax->active,
             $tax->getAssociatedShops()
         );
-    }
-
-    /**
-     * Gets Legacy tax object
-     *
-     * @param TaxId $taxId
-     *
-     * @return Tax
-     */
-    private function getLegacyTaxObject(TaxId $taxId)
-    {
-        $tax = new Tax($taxId->getValue());
-
-        if ($taxId->getValue() !== (int) $tax->id) {
-            throw new TaxNotFoundException($taxId, sprintf('Tax with id "%s" was not found', $taxId->getValue()));
-        }
-
-        return $tax;
     }
 }
