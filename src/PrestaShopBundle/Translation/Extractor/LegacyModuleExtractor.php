@@ -35,7 +35,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  * Able to convert old translation files (in translations/es.php) into
  * Symfony MessageCatalogue objects.
  */
-final class LegacyModuleExtractor implements LegacyFileExtractorInterface
+final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
 {
     /**
      * @var ExtractorInterface the PHP Code extractor
@@ -63,7 +63,7 @@ final class LegacyModuleExtractor implements LegacyFileExtractorInterface
     public function extract($moduleName, $locale)
     {
         $catalogueForExtraction = new MessageCatalogue($locale);
-        $this->extractor->extract($this->modulesDirectory . $moduleName, $catalogueForExtraction);
+        $this->extractor->extract($this->modulesDirectory . '/' . $moduleName, $catalogueForExtraction);
 
         $catalogue = new MessageCatalogue($locale);
 

@@ -52,6 +52,6 @@ class LegacyModuleExtractorTest extends TestCase
      */
     private function getModuleFolder()
     {
-        return __DIR__ . '/../../../../resources/';
+        return __DIR__ . '/../../../../resources';
     }
 }
