@@ -4,6 +4,16 @@ services:
 
   # Command handlers
 
+  prestashop.adapter.manufacturer.command_handler.toggle_manufacturer_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\ToggleManufacturerStatusHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand' }
+
+  prestashop.adapter.manufacturer.command_handler.bulk_toggle_manufacturer_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\BulkToggleManufacturerStatusHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand' }
+
   prestashop.adapter.manufacturer.command_handler.delete_manufacturer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\DeleteManufacturerHandler'
     tags:
@@ -13,11 +23,6 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\BulkDeleteManufacturerHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand' }
-
-  prestashop.adapter.manufacturer.command_handler.toggle_manufacturer_status_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\ToggleManufacturerStatusHandler'
-    tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand' }
 
   prestashop.adapter.language.query_handler.get_tax_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler\GetManufacturerForEditingHandler'

@@ -250,19 +250,19 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('manufacturers_enable'))
+            ->add((new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_manufacturers_bulk_enable',
+                    'submit_route' => 'admin_manufacturers_bulk_enable_status',
                 ])
             )
-            ->add((new SubmitBulkAction('manufacturers_disable'))
+            ->add((new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_manufacturers_bulk_disable',
+                    'submit_route' => 'admin_manufacturers_bulk_disable_status',
                 ])
             )
-            ->add((new SubmitBulkAction('manufacturers_delete'))
+            ->add((new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_manufacturers_bulk_delete',

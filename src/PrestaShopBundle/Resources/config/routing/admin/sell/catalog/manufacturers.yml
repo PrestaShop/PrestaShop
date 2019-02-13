@@ -48,18 +48,18 @@ admin_manufacturers_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDelete'
 
-admin_manufacturers_bulk_enable:
+admin_manufacturers_bulk_enable_status:
   path: manufacturers/bulk-enable
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkEnableManufacturer'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkEnable'
     _legacy_controller: AdminManufacturers
 
-admin_manufacturers_bulk_disable:
+admin_manufacturers_bulk_disable_status:
   path: manufacturers/bulk-disable
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDisableManufacturer'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDisable'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_toggle_status:

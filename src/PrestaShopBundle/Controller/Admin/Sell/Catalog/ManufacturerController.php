@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
@@ -141,9 +142,53 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function bulkEnableManufacturerAction()
+    /**
+     * Enables manufacturers on bulk action
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkEnableAction(Request $request)
     {
-        //todo: implement
+        $manufacturersIds = $request->request->get('manufacturer_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleManufacturerStatusCommand($manufacturersIds, true));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_manufacturers_index');
+    }
+
+    /**
+     * Disables manufacturers on bulk action
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDisableAction(Request $request)
+    {
+        $manufacturersIds = $request->request->get('manufacturer_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleManufacturerStatusCommand($manufacturersIds, false));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
@@ -170,12 +215,6 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_manufacturers_index');
-    }
-
-    public function bulkDisableManufacturerAction()
-    {
-        //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
