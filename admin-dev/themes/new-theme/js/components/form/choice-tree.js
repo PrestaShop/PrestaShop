@@ -49,6 +49,8 @@ export default class ChoiceTree {
 
     return {
       enableAutoCheckChildren: () => this.enableAutoCheckChildren(),
+      enableAllInputs: () => this.enableAllInputs(),
+      disableAllInputs: () => this.disableAllInputs(),
     };
   }
 
@@ -64,6 +66,20 @@ export default class ChoiceTree {
         .find('ul input[type="checkbox"]')
         .prop('checked', $clickedCheckbox.is(':checked'));
     });
+  }
+
+  /**
+   * Enable all inputs in the choice tree.
+   */
+  enableAllInputs() {
+    this.$container.find('input').removeAttr('disabled');
+  }
+
+  /**
+   * Disable all inputs in the choice tree.
+   */
+  disableAllInputs() {
+    this.$container.find('input').attr('disabled', 'disabled');
   }
 
   /**
