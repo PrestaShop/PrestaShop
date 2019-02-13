@@ -240,6 +240,7 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function editAction($employeeId, Request $request)
     {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $formAccessChecker = $this->get('prestashop.adapter.employee.form_access_checker');
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
 
@@ -257,6 +258,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
             'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
             'isRestrictedAccess' => $isRestrictedAccess,
+            'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
         ]);
     }
 
