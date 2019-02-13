@@ -3297,12 +3297,17 @@ class ProductCore extends ObjectModel
         static $address = null;
         static $context = null;
 
-        if ($address === null) {
-            $address = new Address();
-        }
-
         if ($context == null) {
             $context = Context::getContext()->cloneContext();
+        }
+
+        if ($address === null) {
+            if (is_object($context->cart) && $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != null) {
+                $id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+                $address = new Address($id_address);
+            } else {
+                $address = new Address();
+            }
         }
 
         if ($id_shop !== null && $context->shop->id != (int) $id_shop) {
