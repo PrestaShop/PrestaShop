@@ -640,7 +640,7 @@ class MediaCore
         foreach ($compiled_css as $css => $media) {
             $file_info = parse_url($css);
             $file_basename = basename($file_info['path']);
-            $css_content = file_get_contents(_PS_ROOT_DIR_.$file_info['path']);
+            $css_content = file_get_contents(_PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $file_info['path']));
             $count = $splitter->countSelectors($css_content) - $css_rule_limit;
             if (($count / $css_rule_limit) > 0) {
                 $part = 2;
