@@ -36,3 +36,10 @@ admin_profiles_bulk_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:bulkDelete'
         _legacy_controller: AdminProfiles
+
+admin_profiles_get_tabs:
+  path: /tabs
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:getAccessibleTabs'
+    _legacy_controller: AdminProfiles

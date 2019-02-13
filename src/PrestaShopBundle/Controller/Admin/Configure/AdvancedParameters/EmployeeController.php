@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeStatu
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -259,6 +260,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
             'isRestrictedAccess' => $isRestrictedAccess,
             'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
+            'getTabsUrl' => $this->generateUrl('admin_profiles_get_tabs'),
         ]);
     }
 
