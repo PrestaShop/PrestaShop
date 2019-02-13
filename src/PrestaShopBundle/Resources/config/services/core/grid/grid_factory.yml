@@ -151,39 +151,21 @@ services:
         calls:
           - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
-    prestashop.core.grid.manufacturer_factory:
-        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-        arguments:
-            - '@prestashop.core.grid.definition.factory.manufacturer_definition'
-            - '@prestashop.core.grid.data_provider.manufacturer'
-            - '@prestashop.core.grid.filter.form_factory'
-        calls:
-            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
-
-    prestashop.core.grid.manufacturer_address_factory:
-        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-        arguments:
-            - '@prestashop.core.grid.definition.factory.manufacturer_address_definition'
-            - '@prestashop.core.grid.data_provider.manufacturer_address'
-            - '@prestashop.core.grid.filter.form_factory'
-        calls:
-            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
-
     prestashop.core.grid.factory.manufacturer:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.manufacturer_definition'
-            - '@prestashop.core.grid.data_factory.manufacturer'
+            - '@prestashop.core.grid.data.factory.manufacturer_decorator'
             - '@prestashop.core.grid.filter.form_factory'
         calls:
             - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.factory.manufacturer_address:
-      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-      arguments:
-          - '@prestashop.core.grid.definition.factory.manufacturer_address_definition'
-          - '@prestashop.core.grid.data_factory.manufacturer_address'
-          - '@prestashop.core.grid.filter.form_factory'
-      calls:
-          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.manufacturer_address_definition'
+            - '@prestashop.core.grid.data.factory.manufacturer_address'
+            - '@prestashop.core.grid.filter.form_factory'
+        calls:
+            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
