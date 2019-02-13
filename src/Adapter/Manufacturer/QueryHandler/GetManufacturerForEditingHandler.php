@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler;
 
 use Manufacturer;
-use PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\AbstractManufacturerHandler;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler\GetManufacturerForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
