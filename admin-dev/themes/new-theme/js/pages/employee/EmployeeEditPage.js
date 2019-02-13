@@ -46,7 +46,9 @@ export default class EmployeeEditPage {
    * Initialize page's events.
    */
   initEvents() {
-    const superAdminProfileId = $(this.employeeProfileSelector).data('admin-profile');
+    const $employeeProfilesDropdown = $(this.employeeProfileSelector);
+    const superAdminProfileId = $employeeProfilesDropdown.data('admin-profile');
+    const getTabsUrl = $employeeProfilesDropdown.data('get-tabs-url');
     const t = this;
 
     $(document).on('change', this.employeeProfileSelector, function () {
@@ -54,6 +56,16 @@ export default class EmployeeEditPage {
       $(this).val() == superAdminProfileId ?
         t.shopChoiceTree.disableAllInputs() :
         t.shopChoiceTree.enableAllInputs();
+    });
+
+    // Reload tabs dropdown when employee profile is changed.
+    $(document).on('change', this.employeeProfileSelector, function () {
+      $.get(getTabsUrl, {
+        profileId: $(this).val(),
+      }, (result) => {
+        //@todo WIP
+        console.log(result);
+      });
     });
   }
 }
