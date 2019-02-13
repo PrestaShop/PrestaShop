@@ -7,8 +7,3 @@ services:
     arguments:
       - '@prestashop.adapter.multistore_feature'
       - '@prestashop.adapter.shop.context'
-
-  prestashop.core.employee.form_access_checker:
-    class: 'PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessChecker'
-    arguments:
-      - '@prestashop.adapter.data_provider.employee'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -39,4 +39,13 @@ interface EmployeeFormAccessCheckerInterface
      * @return bool
      */
     public function isRestrictedAccess($employeeId);
+
+    /**
+     * Checks if employee is a super admin.
+     *
+     * @param int $employeeId
+     *
+     * @return bool
+     */
+    public function isSuperAdmin($employeeId);
 }
