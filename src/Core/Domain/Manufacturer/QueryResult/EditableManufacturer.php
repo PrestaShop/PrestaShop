@@ -44,27 +44,27 @@ class EditableManufacturer
     private $name;
 
     /**
-     * @var string
+     * @var string[]
      */
     private $shortDescription;
 
     /**
-     * @var string
+     * @var string[]
      */
     private $description;
 
     /**
-     * @var string
+     * @var string[]
      */
     private $metaTitle;
 
     /**
-     * @var string
+     * @var string[]
      */
     private $metaDescription;
 
     /**
-     * @var string
+     * @var string[]
      */
     private $metaKeywords;
 
@@ -81,23 +81,23 @@ class EditableManufacturer
     /**
      * @param ManufacturerId $manufacturerId
      * @param string $name
-     * @param string $shortDescription
-     * @param string $description
-     * @param string $metaTitle
-     * @param string $metaDescription
-     * @param string $metaKeywords
+     * @param string[] $shortDescription
+     * @param string[] $description
+     * @param string[] $metaTitle
+     * @param string[] $metaDescription
+     * @param string[] $metaKeywords
      * @param array $shopAssociation
      * @param bool $active
      */
     public function __construct(
         $manufacturerId,
         $name,
-        $shortDescription,
-        $description,
-        $metaTitle,
-        $metaDescription,
-        $metaKeywords,
-        $shopAssociation,
+        array $shortDescription,
+        array $description,
+        array $metaTitle,
+        array $metaDescription,
+        array $metaKeywords,
+        array $shopAssociation,
         $active
     ) {
         $this->manufacturerId = $manufacturerId;
@@ -128,7 +128,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getShortDescription()
     {
@@ -136,7 +136,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getDescription()
     {
@@ -144,7 +144,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getMetaTitle()
     {
@@ -152,7 +152,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getMetaDescription()
     {
@@ -160,7 +160,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getMetaKeywords()
     {
