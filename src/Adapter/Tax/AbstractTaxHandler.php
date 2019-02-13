@@ -26,38 +26,27 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tax;
 
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShopException;
 use Tax;
 
 /**
- * Provides reusable methods for tax command/query handlers.
+ * Provides reusable methods for tax command handlers.
  */
 abstract class AbstractTaxHandler
 {
     /**
-     * Gets legacy Tax
-     *
      * @param TaxId $taxId
+     * @param Tax $tax
      *
-     * @return Tax
+     * @throws TaxNotFoundException
      */
-    protected function getTax(TaxId $taxId)
+    protected function assertTaxWasFound(TaxId $taxId, Tax $tax)
     {
-        try {
-            $tax = new Tax($taxId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new TaxException('Failed to create new tax', 0, $e);
-        }
-
         if ($tax->id !== $taxId->getValue()) {
             throw new TaxNotFoundException(
                 sprintf('Tax with id "%s" was not found.', $taxId->getValue())
             );
         }
-
-        return $tax;
     }
 }
