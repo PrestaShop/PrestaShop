@@ -77,6 +77,7 @@ services:
             - "@prestashop.translation.database_loader"
             - "%modules_dir%"
             - "@prestashop.translation.legacy_file.extractor"
+            - "@prestashop.translation.legacy_module.extractor"
         tags:
         - { name: "ps.translation_provider" }
 
@@ -115,6 +116,12 @@ services:
 
     prestashop.translation.legacy_file.extractor:
         class: PrestaShopBundle\Translation\Extractor\LegacyFileExtractor
+
+    prestashop.translation.legacy_module.extractor:
+        class: PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor
+        arguments:
+            - "@prestashop.translation.extractor.php"
+            - "%modules_dir%"
 
     prestashop.translation.dumper.xliff:
         class: PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper

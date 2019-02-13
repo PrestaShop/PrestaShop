@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Extractor\LegacyFileExtractorInterface;
+use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -39,7 +40,12 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     /**
      * @var LegacyFileExtractorInterface the extractor
      */
-    private $extractor;
+    private $fileExtractor;
+
+    /**
+     * @var LegacyModuleExtractorInterface the extractor
+     */
+    private $legacyModuleExtractor;
 
     /**
      * @var string the module name
@@ -51,9 +57,14 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     private $domain;
 
-    public function __construct(LoaderInterface $databaseLoader, $resourceDirectory, LegacyFileExtractorInterface $extractor)
-    {
-        $this->extractor = $extractor;
+    public function __construct(
+        LoaderInterface $databaseLoader,
+        $resourceDirectory,
+        LegacyFileExtractorInterface $fileExtractor,
+        LegacyModuleExtractorInterface $legacyModuleExtractor
+    ) {
+        $this->fileExtractor = $fileExtractor;
+        $this->legacyModuleExtractor = $legacyModuleExtractor;
 
         parent::__construct($databaseLoader, $resourceDirectory);
     }
@@ -99,7 +110,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getDefaultCatalogue($empty = true)
     {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
+        $defaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->getLocale());
 
         $filteredCatalogue = $this->getCatalogue(
             $this->getDefaultResourceDirectory(),
@@ -151,7 +162,14 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getCatalogue($path, $locale)
     {
-        return $this->extractor->extract($path, $locale);
+        $catalogue = $this->fileExtractor->extract($path, $locale);
+        $cleanedCatalogue = new MessageCatalogue($locale);
+
+        foreach ($catalogue->all($this->getModuleDomain()) as $translationKey => $translation) {
+            $cleanedCatalogue->set($translationKey, $translation, $this->getModuleDomain());
+        }
+
+        return $cleanedCatalogue;
     }
 
     /**
