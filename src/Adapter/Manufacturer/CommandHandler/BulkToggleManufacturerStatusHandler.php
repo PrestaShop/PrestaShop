@@ -27,17 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use Manufacturer;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
-use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\BulkToggleManufacturerStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 
 /**
- * Handles command which toggles manufacturer status on bulk action
+ * Handles command which toggles manufacturer status in bulk action
  */
-final class BulkToggleManufacturerStatusHandler extends AbstractManufacturerHandler implements BulkToggleManufacturerStatusHandlerInterface
+final class BulkToggleManufacturerStatusHandler extends AbstractManufacturerCommandHandler implements BulkToggleManufacturerStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -45,24 +41,7 @@ final class BulkToggleManufacturerStatusHandler extends AbstractManufacturerHand
     public function handle(BulkToggleManufacturerStatusCommand $command)
     {
         foreach ($command->getManufacturerIds() as $manufacturerId) {
-            $manufacturerIdValue = $manufacturerId->getValue();
-            $manufacturer = new Manufacturer($manufacturerIdValue);
-            $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
-            $manufacturer->active = $command->getStatus()->isEnabled();
-
-            try {
-                if (!$manufacturer->save()) {
-                    throw new UpdateManufacturerException(
-                        sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturerIdValue),
-                        UpdateManufacturerException::FAILED_BULK_UPDATE_STATUS
-                    );
-                }
-            } catch (PrestaShopException $e) {
-                throw new ManufacturerException(sprintf(
-                    'An error occurred when updating manufacturer status with id "%s"',
-                    $manufacturerIdValue
-                ));
-            }
+            $this->toggleLegacyManufacturerStatus($manufacturerId, $command->getStatus()->isEnabled());
         }
     }
 }
