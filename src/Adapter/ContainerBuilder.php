@@ -52,9 +52,9 @@ class ContainerBuilder
      */
     public static function getContainer($name, $isDebug)
     {
-        if ( isset($_SERVER['APP_ENV'])) {
+        if (!empty($_SERVER['APP_ENV'])) {
             $environment = $_SERVER['APP_ENV'];
-        } elseif (defined('_PS_IN_TEST_')) {
+        } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
             $environment = 'test';
         } else {
             $environment = $isDebug ? 'dev' : 'prod';
@@ -92,7 +92,7 @@ class ContainerBuilder
         }
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-        $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${$environment}.yml";
+        $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${environment}.yml";
         $loader->load($servicesPath);
 
         $container->compile();

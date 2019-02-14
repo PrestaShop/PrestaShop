@@ -78,9 +78,9 @@ class ModuleRepositoryFactory
     {
         $this->parameters = $parameters;
         if (null === $environment) {
-            if ( isset($_SERVER['APP_ENV'])) {
+            if (!empty($_SERVER['APP_ENV'])) {
                 $environment = $_SERVER['APP_ENV'];
-            } elseif (defined('_PS_IN_TEST_')) {
+            } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
                 $environment = 'test';
             } else {
                 $environment = defined(_PS_MODE_DEV_) && _PS_MODE_DEV_ ? 'dev' : 'prod';
