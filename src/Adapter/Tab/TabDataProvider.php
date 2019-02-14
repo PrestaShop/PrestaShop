@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tab;
 
+use Profile;
 use Tab;
 
 /**
@@ -34,24 +35,66 @@ use Tab;
 class TabDataProvider
 {
     /**
-     * Gets accessible tabs.
+     * @var int
+     */
+    private $superAdminProfileId;
+
+    /**
+     * @var int
+     */
+    private $contextEmployeeProfileId;
+
+    /**
+     * @param int $contextEmployeeProfileId
+     * @param int $superAdminProfileId
+     */
+    public function __construct($contextEmployeeProfileId, $superAdminProfileId)
+    {
+        $this->superAdminProfileId = $superAdminProfileId;
+        $this->contextEmployeeProfileId = $contextEmployeeProfileId;
+    }
+
+    /**
+     * Gets viewable tabs for current context employee.
      *
      * @param int $languageId
      *
      * @return array
      */
-    public function getAccessibleTabs($languageId)
+    public function getViewableTabsForContextEmployee($languageId)
     {
-        $accessibleTabs = [];
+        return $this->getViewableTabs($this->contextEmployeeProfileId, $languageId);
+    }
+
+    /**
+     * Gets tabs that given employee profile can view.
+     *
+     * @param int $profileId
+     * @param int $languageId
+     *
+     * @return array
+     */
+    public function getViewableTabs($profileId, $languageId)
+    {
+        $viewableTabs = [];
 
         foreach (Tab::getTabs($languageId, 0) as $tab) {
-            if (Tab::checkTabRights($tab['id_tab'])) {
-                $accessibleTabs[$tab['id_tab']] = $tab;
+            if ($this->canAccessTab($profileId, $tab['id_tab'])) {
+                $viewableTabs[$tab['id_tab']] = [
+                    'id_tab' => $tab['id_tab'],
+                    'name' => $tab['name'],
+                    'children' => [],
+                ];
+
                 foreach (Tab::getTabs($languageId, $tab['id_tab']) as $children) {
-                    if (Tab::checkTabRights($children['id_tab'])) {
+                    if ($this->canAccessTab($profileId, $tab['id_tab'])) {
                         foreach (Tab::getTabs($languageId, $children['id_tab']) as $subchild) {
-                            if (Tab::checkTabRights($subchild['id_tab'])) {
-                                $accessibleTabs[$tab['id_tab']]['children'][] = $subchild;
+                            if ($this->canAccessTab($profileId, $tab['id_tab'])) {
+                                $viewableTabs[$tab['id_tab']]['children'][] = [
+                                    'id_tab' => $subchild['id_tab'],
+                                    'name' => $subchild['name'],
+                                    'children' => [],
+                                ];
                             }
                         }
                     }
@@ -59,6 +102,34 @@ class TabDataProvider
             }
         }
 
-        return $accessibleTabs;
+        return $viewableTabs;
+    }
+
+    /**
+     * Check if given profile can access a tab.
+     *
+     * @param int $profileId
+     * @param int $tabId
+     * @param string $accessLevel view, add, edit or delete
+     *
+     * @return bool
+     */
+    private function canAccessTab($profileId, $tabId, $accessLevel = 'view')
+    {
+        if (!in_array($accessLevel, ['view', 'add', 'edit', 'delete'])) {
+            return false;
+        }
+
+        if ($profileId == $this->superAdminProfileId) {
+            return true;
+        }
+
+        $tabAccess = Profile::getProfileAccesses($profileId);
+
+        if (isset($tabAccess[$tabId][$accessLevel])) {
+            return $tabAccess[$tabId][$accessLevel] === '1';
+        }
+
+        return false;
     }
 }

@@ -83,7 +83,10 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
 
     prestashop.adapter.data_provider.tab:
-      class: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
+        class: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
+        arguments:
+          - '@=service("prestashop.adapter.legacy.context").getContext().employee.id_profile'
+          - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
 
     prestashop.adapter.data_provider.profile:
       class: PrestaShop\PrestaShop\Adapter\Profile\ProfileDataProvider

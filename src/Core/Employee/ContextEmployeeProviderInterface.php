@@ -44,4 +44,11 @@ interface ContextEmployeeProviderInterface
      * @return int
      */
     public function getId();
+
+    /**
+     * Get context employee's selected language ID.
+     *
+     * @return int
+     */
+    public function getLanguageId();
 }
