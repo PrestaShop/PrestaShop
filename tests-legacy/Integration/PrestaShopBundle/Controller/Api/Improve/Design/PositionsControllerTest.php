@@ -148,9 +148,14 @@ class PositionsControllerTest extends WebTestCase
         $this->assertEquals([], $json['data']);
     }
 
-    /*
+
     public function testMoveHookPositionToTop()
     {
+        $skipMessage = 'Test skipped because the reason it fails seems illogical. ';
+        $skipMessage .= 'Until it has been sorted out, it is skipped in order not to block valid Pull Requests'.
+
+        $this->markTestSkipped($skipMessage);
+
         $this->client->request(
             'POST',
             $this->router->generate(
@@ -176,5 +181,5 @@ class PositionsControllerTest extends WebTestCase
         $json = json_decode($response->getContent(), true);
         $this->assertArrayNotHasKey('hasError', $json['data']);
         $this->assertEquals([], $json['data']);
-    }*/
+    }
 }
