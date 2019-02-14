@@ -45,3 +45,10 @@ services:
             - method: queue
               arguments:
                 - ['@prestashop.core.filter.front_end_object.search_result_product']
+
+    prestashop.database.naming_strategy:
+        class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
+        arguments: ["%database_prefix%"]
+
+    annotation_reader:
+        class: Doctrine\Common\Annotations\AnnotationReader
