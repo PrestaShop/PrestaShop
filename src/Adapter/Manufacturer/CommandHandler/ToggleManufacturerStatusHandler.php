@@ -27,38 +27,19 @@
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use Manufacturer;
-use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\ToggleManufacturerStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
-use PrestaShopException;
 
 /**
  * Handles command which toggles manufacturer status
  */
-final class ToggleManufacturerStatusHandler extends AbstractManufacturerHandler implements ToggleManufacturerStatusHandlerInterface
+final class ToggleManufacturerStatusHandler extends AbstractManufacturerCommandHandler implements ToggleManufacturerStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(ToggleManufacturerStatusCommand $command)
     {
-        $manufacturerIdValue = $command->getManufacturerId()->getValue();
-        $manufacturer = new Manufacturer($manufacturerIdValue);
-        $this->assertManufacturerWasFound($command->getManufacturerId(), $manufacturer);
-        $manufacturer->active = $command->getStatus()->isEnabled();
-
-        try {
-            if (!$manufacturer->save()) {
-                throw new UpdateManufacturerException(
-                    sprintf('Unable to toggle Manufacturer with id "%s"', $manufacturerIdValue)
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ManufacturerException(
-                sprintf('An error occurred when enabling Manufacturer with id "%s"', $manufacturerIdValue)
-            );
-        }
+        $this->toggleLegacyManufacturerStatus($command->getManufacturerId(), $command->getStatus()->isEnabled());
     }
 }

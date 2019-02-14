@@ -26,18 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
-use Manufacturer;
-use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\BulkDeleteManufacturerHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
-use PrestaShopException;
 
 /**
- * Handles command which deletes manufacturers on bulk action
+ * Handles command which deletes manufacturers in bulk action
  */
-final class BulkDeleteManufacturerHandler extends AbstractManufacturerHandler implements BulkDeleteManufacturerHandlerInterface
+final class BulkDeleteManufacturerHandler extends AbstractManufacturerCommandHandler implements BulkDeleteManufacturerHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -45,22 +40,7 @@ final class BulkDeleteManufacturerHandler extends AbstractManufacturerHandler im
     public function handle(BulkDeleteManufacturerCommand $command)
     {
         foreach ($command->getManufacturerIds() as $manufacturerId) {
-            $manufacturerIdValue = $manufacturerId->getValue();
-            $manufacturer = new Manufacturer($manufacturerIdValue);
-            $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
-
-            try {
-                if (!$manufacturer->delete()) {
-                    throw new DeleteManufacturerException(
-                        sprintf('Cannot delete Manufacturer object with id "%s".', $manufacturerIdValue)
-                    );
-                }
-            } catch (PrestaShopException $e) {
-                throw new ManufacturerException(sprintf(
-                    'An error occurred when deleting Manufacturer object with id "%s".',
-                    $manufacturerIdValue
-                ));
-            }
+            $this->deleteLegacyManufacturer($manufacturerId);
         }
     }
 }
