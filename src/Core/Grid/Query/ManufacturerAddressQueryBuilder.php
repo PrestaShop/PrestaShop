@@ -73,7 +73,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb) //todo: test sorting
+//            ->applySorting($searchCriteria, $qb) //todo: test sorting
         ;
 
         return $qb;

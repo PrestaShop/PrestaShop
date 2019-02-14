@@ -184,7 +184,7 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                 ])
                 ->setAssociatedColumn('id_address')
             )
-            ->add((new Filter('brand', TextType::class))
+            ->add((new Filter('name', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
