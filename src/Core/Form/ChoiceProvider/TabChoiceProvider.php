@@ -54,7 +54,7 @@ final class TabChoiceProvider implements FormChoiceProviderInterface
         $choices = [];
 
         foreach ($this->tabs as $tab) {
-            if (isset($tab['children'])) {
+            if (!empty($tab['children'])) {
                 $choices[$tab['name']] = [];
 
                 foreach ($tab['children'] as $childTab) {

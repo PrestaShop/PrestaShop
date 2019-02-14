@@ -62,4 +62,12 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
     {
         return $this->contextEmployee->id;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLanguageId()
+    {
+        return $this->contextEmployee->id_lang;
+    }
 }
