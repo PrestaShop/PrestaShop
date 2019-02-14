@@ -87,13 +87,12 @@ class TabDataProvider
                 ];
 
                 foreach (Tab::getTabs($languageId, $tab['id_tab']) as $children) {
-                    if ($this->canAccessTab($profileId, $tab['id_tab'])) {
+                    if ($this->canAccessTab($profileId, $children['id_tab'])) {
                         foreach (Tab::getTabs($languageId, $children['id_tab']) as $subchild) {
-                            if ($this->canAccessTab($profileId, $tab['id_tab'])) {
+                            if ($this->canAccessTab($profileId, $subchild['id_tab'])) {
                                 $viewableTabs[$tab['id_tab']]['children'][] = [
                                     'id_tab' => $subchild['id_tab'],
                                     'name' => $subchild['name'],
-                                    'children' => [],
                                 ];
                             }
                         }
