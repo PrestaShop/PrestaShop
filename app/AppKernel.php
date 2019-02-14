@@ -146,7 +146,8 @@ class AppKernel extends Kernel
                 $activeModules = $modulesRepository->getActiveModules();
             }
         } catch (\Exception $e) {
-            //Do nothing because the modules retrieval must not block the kernel
+            //Do nothing because the modules retrieval must not block the kernel, and it won't work
+            //during the installation process
         }
 
 
