@@ -76,7 +76,13 @@ class ContainerBuilder
         $container->setParameter('kernel.cache_dir', _PS_CACHE_DIR_);
 
         $container->addCompilerPass(new LegacyCompilerPass());
-        self::addDoctrine($container);
+
+        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
+        if (null !== $moduleRepository) {
+            $activeModules = $moduleRepository->getActiveModules();
+            self::addDoctrine($container, $activeModules);
+            self::enableComposerAutoloaderOnModules($activeModules);
+        }
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${env}.yml";
@@ -90,14 +96,31 @@ class ContainerBuilder
         return $container;
     }
 
-    private static function addDoctrine(SfContainerBuilder $container)
+    /**
+     * Enable auto loading of module Composer autoloader if needed.
+     * Need to be done as earlier as possible in application lifecycle.
+     *
+     * @param array $modules the list of modules
+     */
+    private static function enableComposerAutoloaderOnModules($modules)
+    {
+        foreach ($modules as $module) {
+            $autoloader = _PS_ROOT_DIR_.'/modules/'.$module.'/vendor/autoload.php';
+
+            if (file_exists($autoloader)) {
+                try {
+                    include_once $autoloader;
+                } catch (\Exception $e) {
+
+                }
+            }
+        }
+    }
+
+    private static function addDoctrine(SfContainerBuilder $container, array $activeModules)
     {
         $configFile = _PS_ROOT_DIR_ . '/app/config/config.php';
         if (!file_exists($configFile)) {
-            return;
-        }
-        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
-        if (null === $moduleRepository) {
             return;
         }
         $config = require $configFile;
@@ -109,7 +132,7 @@ class ContainerBuilder
         $container->loadFromExtension('doctrine', $config['doctrine']);
 
         $doctrinePassFactory = new LoadDoctrineFromModulesPassFactory();
-        $compilerPassList = $doctrinePassFactory->buildCompilerPassList($moduleRepository->getActiveModules());
+        $compilerPassList = $doctrinePassFactory->buildCompilerPassList($activeModules);
         /** @var CompilerPassInterface $compilerPass */
         foreach ($compilerPassList as $compilerPass) {
             $container->addCompilerPass($compilerPass);
