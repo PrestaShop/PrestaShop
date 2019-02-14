@@ -24,48 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Deletes manufacturers on bulk action
+ * Deletes addresses in bulk action
  */
-class BulkDeleteManufacturerCommand
+class BulkDeleteAddressCommand
 {
     /**
-     * @var ManufacturerId[]
+     * @var AddressId[]
      */
-    private $manufacturerIds;
+    private $addressIds;
 
     /**
-     * @param int[] $manufacturerIds
+     * @param int[] $addressIds
      *
-     * @throws ManufacturerConstraintException
+     * @throws AddressConstraintException
      */
-    public function __construct(array $manufacturerIds)
+    public function __construct($addressIds)
     {
-        $this->setManufacturerIds($manufacturerIds);
+        $this->setAddressIds($addressIds);
     }
 
     /**
-     * @return ManufacturerId[]
+     * @return AddressId[]
      */
-    public function getManufacturerIds()
+    public function getAdressIds()
     {
-        return $this->manufacturerIds;
+        return $this->addressIds;
     }
 
     /**
-     * @param array $manufacturerIds
+     * @param int[] $addressIds
      *
-     * @throws ManufacturerConstraintException
+     * @throws AddressConstraintException
      */
-    private function setManufacturerIds(array $manufacturerIds)
+    private function setAddressIds(array $addressIds)
     {
-        foreach ($manufacturerIds as $manufacturerId) {
-            $this->manufacturerIds[] = new ManufacturerId((int) $manufacturerId);
+        foreach ($addressIds as $addressId) {
+            $this->addressIds[] = new AddressId((int) $addressId);
         }
     }
 }

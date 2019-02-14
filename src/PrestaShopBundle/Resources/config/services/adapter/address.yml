@@ -8,3 +8,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\DeleteAddressHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand' }
+
+  prestashop.adapter.address.command_handler.bulk_delete_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\BulkDeleteAddressHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand' }

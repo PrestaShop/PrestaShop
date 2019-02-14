@@ -24,29 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\DeleteAddressHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 
 /**
- * Handles command which deletes address
+ * Defines contract for BulkDeleteAddressHandler
  */
-final class DeleteAddressHandler extends AbstractAddressCommandHandler implements DeleteAddressHandlerInterface
+interface BulkDeleteAddressHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param BulkDeleteAddressCommand $command
      */
-    public function handle(DeleteAddressCommand $command)
-    {
-        $addressIdValue = $command->getAddressId()->getValue();
-
-        if (!$this->deleteLegacyAddress($command->getAddressId())) {
-            throw new DeleteAddressException(
-                sprintf('Cannot delete Address object with id "%s".', $addressIdValue),
-                DeleteAddressException::FAILED_DELETE
-            );
-        }
-    }
+    public function handle(BulkDeleteAddressCommand $command);
 }
