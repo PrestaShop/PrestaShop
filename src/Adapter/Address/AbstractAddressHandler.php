@@ -24,20 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Address;
+
+use Address;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Is thrown manufacturer or manufacturers cannot be deleted
+ * Provides reusable methods for address command/query handlers
  */
-class DeleteManufacturerException extends ManufacturerException
+abstract class AbstractAddressHandler
 {
     /**
-     * When fails to delete single manufacturer
+     * Validates that requested address was found
+     *
+     * @param AddressId $addressId
+     * @param Address $address
+     *
+     * @throws AddressNotFoundException
      */
-    const FAILED_DELETE = 10;
-
-    /**
-     * When fails to delete manufacturers in bulk action
-     */
-    const FAILED_BULK_DELETE = 20;
+    protected function assertAddressWasFound(AddressId $addressId, Address $address)
+    {
+        if ($address->id !== $addressId->getValue()) {
+            throw new AddressNotFoundException(
+                sprintf('Address with id "%s" was not found.', $addressId->getValue())
+            );
+        }
+    }
 }

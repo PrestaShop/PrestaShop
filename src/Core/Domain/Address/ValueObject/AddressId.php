@@ -24,20 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 
 /**
- * Is thrown manufacturer or manufacturers cannot be deleted
+ * Provides address id
  */
-class DeleteManufacturerException extends ManufacturerException
+class AddressId
 {
     /**
-     * When fails to delete single manufacturer
+     * @var int
      */
-    const FAILED_DELETE = 10;
+    private $addressId;
 
     /**
-     * When fails to delete manufacturers in bulk action
+     * @param int $addressId
+     *
+     * @throws AddressConstraintException
      */
-    const FAILED_BULK_DELETE = 20;
+    public function __construct($addressId)
+    {
+        $this->assertIsIntegerGreaterThanZero($addressId);
+        $this->addressId = $addressId;
+    }
+
+    /**
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param $value
+     *
+     * @throws AddressConstraintException
+     */
+    private function assertIsIntegerGreaterThanZero($value)
+    {
+        if (!is_int($value) || 0 >= $value) {
+            throw new AddressConstraintException(
+                sprintf('Invalid address id "%s".', var_export($value, true))
+            );
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->addressId;
+    }
 }

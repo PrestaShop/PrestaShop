@@ -155,9 +155,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'method' => 'DELETE',
                                 'route' => 'admin_manufacturers_addresses_delete',
-                                'route_param_name' => 'manufacturerAddressId',
+                                'route_param_name' => 'addressId',
                                 'route_param_field' => 'id_address',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',

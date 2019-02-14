@@ -37,7 +37,7 @@ class UpdateManufacturerException extends ManufacturerException
     const FAILED_UPDATE_STATUS = 10;
 
     /**
-     * When fails to update manufacturers status on bulk action
+     * When fails to update manufacturers status in bulk action
      */
     const FAILED_BULK_UPDATE_STATUS = 20;
 }

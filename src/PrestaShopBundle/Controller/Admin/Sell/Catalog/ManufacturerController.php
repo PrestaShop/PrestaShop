@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
@@ -64,10 +66,10 @@ class ManufacturerController extends FrameworkBundleAdminController
         ManufacturerFilters $manufacturerFilters,
         ManufacturerAddressFilters $manufacturerAddressFilters
     ) {
-        $manufacturerGridFactory = $this->get('prestashop.core.grid.factory.manufacturer');
+        $manufacturerGridFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer');
         $manufacturerGrid = $manufacturerGridFactory->getGrid($manufacturerFilters);
 
-        $manufacturerAddressFactory = $this->get('prestashop.core.grid.factory.manufacturer_address');
+        $manufacturerAddressFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer_address');
         $manufacturerAddressGrid = $manufacturerAddressFactory->getGrid($manufacturerAddressFilters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/index.html.twig', [
@@ -260,9 +262,25 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function deleteManufacturerAddressAction()
+    /**
+     * Deletes address
+     *
+     * @param int $addressId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAddressAction($addressId)
     {
-        //todo: implement
+        try {
+            $this->getCommandBus()->handle(new DeleteAddressCommand((int) $addressId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
@@ -309,6 +327,16 @@ class ManufacturerController extends FrameworkBundleAdminController
                         'Admin.Notifications.Error'
                     ),
                 ],
+            ],
+            DeleteAddressException::class => [
+                DeleteAddressException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteAddressException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
             ],
         ];
     }
