@@ -45,6 +45,16 @@ final class ModuleRepository
      */
     private $tableName;
 
+    /**
+     * @var array
+     */
+    private $activeModules;
+
+    /**
+     * @var array
+     */
+    private $activeModulesPaths;
+
     public function __construct(Connection $connection, $databasePrefix)
     {
         $this->connection = $connection;
@@ -56,9 +66,13 @@ final class ModuleRepository
      */
     public function getActiveModules()
     {
-        $sth = $this->connection->query('SELECT name FROM ' . $this->tableName . ' WHERE active = 1');
+        if (null === $this->activeModules) {
+            $sth = $this->connection->query('SELECT name FROM ' . $this->tableName . ' WHERE active = 1');
 
-        return $sth->fetchAll(\PDO::FETCH_COLUMN);
+            $this->activeModules = $sth->fetchAll(\PDO::FETCH_COLUMN);
+        }
+
+        return $this->activeModules;
     }
 
     /**
@@ -68,16 +82,18 @@ final class ModuleRepository
      */
     public function getActiveModulesPaths()
     {
-        $paths = array();
-        $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../modules')->depth(0);
-        $activeModules = $this->getActiveModules();
+        if (null === $this->activeModulesPaths) {
+            $this->activeModulesPaths = array();
+            $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../modules')->depth(0);
+            $activeModules = $this->getActiveModules();
 
-        foreach ($modulesFiles as $moduleFile) {
-            if (in_array($moduleFile->getFilename(), $activeModules)) {
-                $paths[] = $moduleFile->getPathname();
+            foreach ($modulesFiles as $moduleFile) {
+                if (in_array($moduleFile->getFilename(), $activeModules)) {
+                    $this->activeModulesPaths[] = $moduleFile->getPathname();
+                }
             }
         }
 
-        return $paths;
+        return $this->activeModulesPaths;
     }
 }

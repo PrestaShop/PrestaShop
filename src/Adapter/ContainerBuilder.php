@@ -26,8 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
+use Doctrine\ORM\Tools\Setup;
 use LegacyCompilerPass;
+use PrestaShopBundle\DependencyInjection\Compiler\LoadDoctrineFromModulesPassFactory;
+use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -57,16 +62,57 @@ class ContainerBuilder
         }
 
         $container = new SfContainerBuilder();
-        $container->addCompilerPass(new LegacyCompilerPass());
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
+
+        $parameters = require _PS_ROOT_DIR_ . '/app/config/parameters.php';
+        foreach ($parameters['parameters'] as $parameter => $value) {
+            $container->setParameter($parameter, $value);
+        }
         $env = $isDebug ? 'dev' : 'prod';
+        $container->setParameter('kernel.bundles', []);
+        $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app/');
+        $container->setParameter('kernel.name', 'app');
+        $container->setParameter('kernel.debug', $isDebug);
+        $container->setParameter('kernel.environment', $env);
+        $container->setParameter('kernel.cache_dir', _PS_CACHE_DIR_);
+
+        $container->addCompilerPass(new LegacyCompilerPass());
+        self::addDoctrine($container);
+
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${env}.yml";
         $loader->load($servicesPath);
+
         $container->compile();
 
         $dumper = new PhpDumper($container);
         file_put_contents($file, $dumper->dump(array('class' => $containerName)));
 
         return $container;
+    }
+
+    private static function addDoctrine(SfContainerBuilder $container)
+    {
+        $configFile = _PS_ROOT_DIR_ . '/app/config/config.php';
+        if (!file_exists($configFile)) {
+            return;
+        }
+        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
+        if (null === $moduleRepository) {
+            return;
+        }
+        $config = require $configFile;
+
+        //Necessary to require all annotation classes from Doctrine
+        Setup::createAnnotationMetadataConfiguration([]);
+
+        $container->registerExtension(new DoctrineExtension());
+        $container->loadFromExtension('doctrine', $config['doctrine']);
+
+        $doctrinePassFactory = new LoadDoctrineFromModulesPassFactory();
+        $compilerPassList = $doctrinePassFactory->buildCompilerPassList($moduleRepository->getActiveModules());
+        /** @var CompilerPassInterface $compilerPass */
+        foreach ($compilerPassList as $compilerPass) {
+            $container->addCompilerPass($compilerPass);
+        }
     }
 }

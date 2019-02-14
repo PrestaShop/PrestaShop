@@ -24,8 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Doctrine\DBAL\DriverManager;
-use PrestaShopBundle\Kernel\ModuleRepository;
+use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -71,9 +70,10 @@ class AppKernel extends Kernel
         }
 
         /* Will not work until PrestaShop is installed */
-        if ($this->parametersFileExists()) {
+        $activeModules = $this->getActiveModules();
+        if (!empty($activeModules)) {
             try {
-                $this->enableComposerAutoloaderOnModules($this->getActiveModules());
+                $this->enableComposerAutoloaderOnModules($activeModules);
             } catch (\Exception $e) {
             }
         }
@@ -88,20 +88,9 @@ class AppKernel extends Kernel
     {
         $kernelParameters = parent::getKernelParameters();
 
-        $activeModules = array();
-
-        /* Will not work until PrestaShop is installed */
-        if ($this->parametersFileExists()) {
-            try {
-                $this->getConnection()->connect();
-                $activeModules = $this->getActiveModules();
-            } catch (\Exception $e) {
-            }
-        }
-
         return array_merge(
             $kernelParameters,
-            array('kernel.active_modules' => $activeModules)
+            array('kernel.active_modules' => $this->getActiveModules())
         );
     }
 
@@ -148,68 +137,20 @@ class AppKernel extends Kernel
      * Return all active modules.
      *
      * @return array list of modules names.
-     * @throws \Doctrine\DBAL\DBALException
      */
     private function getActiveModules()
     {
-        $databasePrefix = $this->getParameters()['database_prefix'];
-
-        $modulesRepository = new ModuleRepository(
-            $this->getConnection(),
-            $databasePrefix
-        );
-
-        return $modulesRepository->getActiveModules();
-    }
-
-    /**
-     * @return array The root parameters of PrestaShop.
-     */
-    private function getParameters()
-    {
-        if ($this->parametersFileExists()) {
-            $config = require $this->getParametersFile();
-
-            return $config['parameters'];
+        $activeModules = [];
+        try {
+            if ($modulesRepository = ModuleRepositoryFactory::getInstance()->getRepository()) {
+                $activeModules = $modulesRepository->getActiveModules();
+            }
+        } catch (\Exception $e) {
+            //Do nothing because the modules retrieval must not block the kernel
         }
 
-        return array();
-    }
 
-    /**
-     * @var bool
-     * @return bool
-     */
-    private function parametersFileExists()
-    {
-        return file_exists($this->getParametersFile());
-    }
-
-    /**
-     * @return string file path to PrestaShop configuration parameters.
-     */
-    private function getParametersFile()
-    {
-        return $this->getRootDir().'/config/parameters.php';
-    }
-
-    /**
-     * @return \Doctrine\DBAL\Connection
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    private function getConnection()
-    {
-        $parameters = $this->getParameters();
-
-        return DriverManager::getConnection(array(
-            'dbname' => $parameters['database_name'],
-            'user' => $parameters['database_user'],
-            'password' => $parameters['database_password'],
-            'host' => $parameters['database_host'],
-            'port' => $parameters['database_port'],
-            'charset' => 'utf8',
-            'driver' => 'pdo_mysql',
-        ));
+        return $activeModules;
     }
 
     /**
