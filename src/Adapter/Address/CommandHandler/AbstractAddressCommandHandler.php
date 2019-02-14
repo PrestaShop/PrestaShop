@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
@@ -44,9 +43,10 @@ abstract class AbstractAddressCommandHandler extends AbstractAddressHandler
      *
      * @param AddressId $addressId
      *
-     * @throws AddressException
+     * @return bool
+     *
      * @throws AddressNotFoundException
-     * @throws DeleteAddressException
+     * @throws AddressException
      */
     protected function deleteLegacyAddress(AddressId $addressId)
     {
@@ -55,11 +55,7 @@ abstract class AbstractAddressCommandHandler extends AbstractAddressHandler
         $this->assertAddressWasFound($addressId, $address);
 
         try {
-            if (!$address->delete()) {
-                throw new DeleteAddressException(
-                    sprintf('Cannot delete Address object with id "%s".', $addressIdValue)
-                );
-            }
+            return $address->delete();
         } catch (PrestaShopException $e) {
             throw new AddressException(sprintf(
                 'An error occurred when deleting Address object with id "%s".',

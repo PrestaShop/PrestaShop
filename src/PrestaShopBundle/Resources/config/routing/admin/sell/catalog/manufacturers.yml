@@ -117,7 +117,7 @@ admin_manufacturers_addresses_bulk_delete:
   path: addresses/bulk-delete
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDeleteManufacturerAddress'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDeleteAddress'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_addresses_export:

@@ -24,48 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command;
+namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\BulkDeleteAddressHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 
 /**
- * Deletes manufacturers on bulk action
+ * Handles command which deletes addresses in bulk action
  */
-class BulkDeleteManufacturerCommand
+final class BulkDeleteAddressHandler extends AbstractAddressCommandHandler implements BulkDeleteAddressHandlerInterface
 {
     /**
-     * @var ManufacturerId[]
+     * {@inheritdoc}
      */
-    private $manufacturerIds;
-
-    /**
-     * @param int[] $manufacturerIds
-     *
-     * @throws ManufacturerConstraintException
-     */
-    public function __construct(array $manufacturerIds)
+    public function handle(BulkDeleteAddressCommand $command)
     {
-        $this->setManufacturerIds($manufacturerIds);
-    }
+        foreach ($command->getAdressIds() as $addressId) {
+            $addressIdValue = $addressId->getValue();
 
-    /**
-     * @return ManufacturerId[]
-     */
-    public function getManufacturerIds()
-    {
-        return $this->manufacturerIds;
-    }
-
-    /**
-     * @param array $manufacturerIds
-     *
-     * @throws ManufacturerConstraintException
-     */
-    private function setManufacturerIds(array $manufacturerIds)
-    {
-        foreach ($manufacturerIds as $manufacturerId) {
-            $this->manufacturerIds[] = new ManufacturerId((int) $manufacturerId);
+            if (!$this->deleteLegacyAddress($addressId)) {
+                throw new DeleteAddressException(
+                    sprintf('Cannot delete Address object with id "%s".', $addressIdValue),
+                    DeleteAddressException::FAILED_BULK_DELETE
+                );
+            }
         }
     }
 }
