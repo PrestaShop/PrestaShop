@@ -96,7 +96,11 @@ class PrestaShopExceptionCore extends Exception
         }
         // Log the error in the disk
         $this->logError();
-        exit;
+        if (ToolsCore::isPHPCLI()) {
+            exit(1);
+        } else {
+            exit;
+        }
     }
 
     /**

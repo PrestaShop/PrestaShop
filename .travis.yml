@@ -73,14 +73,18 @@ before_install:
 notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
-script:
+before_script:
   - if [ $EXTRA_DEPS = "phpHigh" ]; then
-        composer update --ignore-platform-reqs --no-suggest --ansi;
-    else
-        composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+      composer update --ignore-platform-reqs --no-suggest --ansi;
+    else [ $PRESTASHOP_TEST_TYPE != "lint" ]; then
+      composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
     fi
 
-  - bash travis-scripts/install-prestashop
+  - if [ $PRESTASHOP_TEST_TYPE != "lint" ]; then
+      bash travis-scripts/install-prestashop
+    fi
+
+script:
   - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
         bash tests-legacy/check_file_syntax.sh;
     fi
