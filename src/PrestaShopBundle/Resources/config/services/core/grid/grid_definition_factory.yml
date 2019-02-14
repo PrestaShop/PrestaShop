@@ -128,14 +128,11 @@ services:
         public: true
 
     prestashop.core.grid.definition.factory.manufacturer_grid_definition_factory:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer\ManufacturerGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
-
-    prestashop.core.grid.definition.factory.manufacturer_address_definition:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer\AddressGridDefinitionFactory'
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'manufacturer', 'action': 'index'})"
-            - "@=service('router').generate('admin_manufacturers')"
+        public: true
+
+    prestashop.core.grid.definition.factory.manufacturer_address_grid_definition_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
