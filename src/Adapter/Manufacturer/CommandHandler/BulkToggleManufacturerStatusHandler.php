@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
-use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\BulkToggleManufacturerStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 
 /**
  * Handles command which toggles manufacturer status in bulk action
@@ -41,7 +41,12 @@ final class BulkToggleManufacturerStatusHandler extends AbstractManufacturerComm
     public function handle(BulkToggleManufacturerStatusCommand $command)
     {
         foreach ($command->getManufacturerIds() as $manufacturerId) {
-            $this->toggleLegacyManufacturerStatus($manufacturerId, $command->getStatus()->isEnabled());
+            if (!$this->toggleLegacyManufacturerStatus($manufacturerId, $command->getStatus()->isEnabled())) {
+                throw new UpdateManufacturerException(
+                    sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturerId->getValue()),
+                    UpdateManufacturerException::FAILED_BULK_UPDATE_STATUS
+                );
+            }
         }
     }
 }

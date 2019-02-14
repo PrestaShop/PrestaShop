@@ -28,10 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShopException;
 
@@ -45,7 +43,8 @@ abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHa
      *
      * @param ManufacturerId $manufacturerId
      *
-     * @throws DeleteManufacturerException
+     * @return bool
+     *
      * @throws ManufacturerException
      * @throws ManufacturerNotFoundException
      */
@@ -56,11 +55,7 @@ abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHa
         $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
 
         try {
-            if (!$manufacturer->delete()) {
-                throw new DeleteManufacturerException(
-                    sprintf('Cannot delete Manufacturer object with id "%s".', $manufacturerIdValue)
-                );
-            }
+            return $manufacturer->delete();
         } catch (PrestaShopException $e) {
             throw new ManufacturerException(sprintf(
                 'An error occurred when deleting Manufacturer object with id "%s".',
@@ -75,9 +70,10 @@ abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHa
      * @param ManufacturerId $manufacturerId
      * @param bool $newStatus
      *
+     * @return bool
+     *
      * @throws ManufacturerException
      * @throws ManufacturerNotFoundException
-     * @throws UpdateManufacturerException
      */
     protected function toggleLegacyManufacturerStatus(ManufacturerId $manufacturerId, $newStatus)
     {
@@ -87,12 +83,7 @@ abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHa
         $manufacturer->active = $newStatus;
 
         try {
-            if (!$manufacturer->save()) {
-                throw new UpdateManufacturerException(
-                    sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturerIdValue),
-                    UpdateManufacturerException::FAILED_BULK_UPDATE_STATUS
-                );
-            }
+            return $manufacturer->save();
         } catch (PrestaShopException $e) {
             throw new ManufacturerException(sprintf(
                 'An error occurred when updating manufacturer status with id "%s"',
