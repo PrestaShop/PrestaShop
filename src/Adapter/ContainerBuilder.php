@@ -52,6 +52,14 @@ class ContainerBuilder
      */
     public static function getContainer($name, $isDebug)
     {
+        if ( isset($_SERVER['APP_ENV'])) {
+            $environment = $_SERVER['APP_ENV'];
+        } elseif (defined('_PS_IN_TEST_')) {
+            $environment = 'test';
+        } else {
+            $environment = $isDebug ? 'dev' : 'prod';
+        }
+
         $containerName = ucfirst($name) . 'Container';
         $file = _PS_CACHE_DIR_ . "${containerName}.php";
 
@@ -67,12 +75,11 @@ class ContainerBuilder
         foreach ($parameters['parameters'] as $parameter => $value) {
             $container->setParameter($parameter, $value);
         }
-        $env = isset($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : ($isDebug ? 'dev' : 'prod');
         $container->setParameter('kernel.bundles', []);
         $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app/');
         $container->setParameter('kernel.name', 'app');
         $container->setParameter('kernel.debug', $isDebug);
-        $container->setParameter('kernel.environment', $env);
+        $container->setParameter('kernel.environment', $environment);
         $container->setParameter('kernel.cache_dir', _PS_CACHE_DIR_);
 
         $container->addCompilerPass(new LegacyCompilerPass());
@@ -85,7 +92,7 @@ class ContainerBuilder
         }
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-        $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${env}.yml";
+        $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${$environment}.yml";
         $loader->load($servicesPath);
 
         $container->compile();

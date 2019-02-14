@@ -47,6 +47,11 @@ class ModuleRepositoryFactory
     private $parameters;
 
     /**
+     * @var string
+     */
+    private $environment;
+
+    /**
      * @var ModuleRepository
      */
     private $moduleRepository;
@@ -67,10 +72,21 @@ class ModuleRepositoryFactory
 
     /**
      * @param array|null $parameters
+     * @param string|null $environment
      */
-    public function __construct(array $parameters = null)
+    public function __construct(array $parameters = null, $environment = null)
     {
         $this->parameters = $parameters;
+        if (null === $environment) {
+            if ( isset($_SERVER['APP_ENV'])) {
+                $environment = $_SERVER['APP_ENV'];
+            } elseif (defined('_PS_IN_TEST_')) {
+                $environment = 'test';
+            } else {
+                $environment = defined(_PS_MODE_DEV_) && _PS_MODE_DEV_ ? 'dev' : 'prod';
+            }
+        }
+        $this->environment = $environment;
     }
 
     /**
