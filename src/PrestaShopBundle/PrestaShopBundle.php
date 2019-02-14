@@ -27,6 +27,7 @@
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
+use PrestaShopBundle\DependencyInjection\Compiler\LoadDoctrineFromModulesPassFactory;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTwigServiceCompilerPass;
@@ -34,6 +35,7 @@ use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPa
 use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
 use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -60,5 +62,12 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
         $container->addCompilerPass(new OverrideTwigServiceCompilerPass());
+
+        $doctrinePassFactory = new LoadDoctrineFromModulesPassFactory();
+        $compilerPassList = $doctrinePassFactory->buildCompilerPassList($container->getParameter('kernel.active_modules'));
+        /** @var CompilerPassInterface $compilerPass */
+        foreach ($compilerPassList as $compilerPass) {
+            $container->addCompilerPass($compilerPass);
+        }
     }
 }
