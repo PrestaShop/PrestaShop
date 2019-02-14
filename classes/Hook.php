@@ -121,12 +121,15 @@ class HookCore extends ObjectModel
      */
     public static function normalizeHookName($hookName)
     {
-        if (strtolower($hookName) == 'displayheader') {
+        $loweredName = strtolower($hookName);
+
+        if ($loweredName == 'displayheader') {
             return 'displayHeader';
         }
-        $hookAliasList = Hook::getHookAliasList();
-        if (isset($hookAliasList[strtolower($hookName)])) {
-            return $hookAliasList[strtolower($hookName)];
+
+        $hookNamesByAlias = Hook::getHookAliasDictionary();
+        if (isset($hookNamesByAlias[$loweredName])) {
+            return $hookNamesByAlias[$loweredName];
         }
 
         return $hookName;
@@ -237,21 +240,12 @@ class HookCore extends ObjectModel
      */
     public static function getHookAliasList()
     {
-        $cache_id = 'hook_alias';
-        if (!Cache::isStored($cache_id)) {
-            $hook_alias_list = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'hook_alias`');
-            $hook_alias = array();
-            if ($hook_alias_list) {
-                foreach ($hook_alias_list as $ha) {
-                    $hook_alias[strtolower($ha['alias'])] = $ha['name'];
-                }
-            }
-            Cache::store($cache_id, $hook_alias);
+        @trigger_error(
+            __FUNCTION__ . ' is deprecated since version 1.7.1.0.',
+            E_USER_DEPRECATED
+        );
 
-            return $hook_alias;
-        }
-
-        return Cache::retrieve($cache_id);
+        return self::getHookAliasDictionary();
     }
 
     /**
@@ -315,6 +309,33 @@ class HookCore extends ObjectModel
             Cache::store($cacheId, $retroName);
 
             return $retroName;
+        }
+
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
+     * Returns a list of hook names, indexed by alias.
+     *
+     * @return array Array of hook names, indexed by lower case alias
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private static function getHookAliasDictionary()
+    {
+        $cacheId = 'hook_alias';
+
+        if (!Cache::isStored($cacheId)) {
+            $databaseResults = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'hook_alias`');
+            $hooksByAlias = array();
+            if ($databaseResults) {
+                foreach ($databaseResults as $record) {
+                    $hooksByAlias[strtolower($record['alias'])] = $record['name'];
+                }
+            }
+            Cache::store($cacheId, $hooksByAlias);
+
+            return $hooksByAlias;
         }
 
         return Cache::retrieve($cacheId);
