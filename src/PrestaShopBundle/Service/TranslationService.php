@@ -161,9 +161,11 @@ class TranslationService
         if (!empty($theme) && 'classic' !== $theme) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
-        } else {
+        } elseif ($module !== null) {
             $translationProvider = $this->container->get('prestashop.translation.external_module_provider');
             $translationProvider->setModuleName($module);
+        } else {
+            $translationProvider = $this->container->get('prestashop.translation.search_provider');
         }
 
         if ('Messages' === $domain) {

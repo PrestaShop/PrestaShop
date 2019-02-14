@@ -99,8 +99,6 @@ class TranslationController extends ApiController
 
             return $this->jsonResponse($catalog, $request, $queryParamsCollection, 200, $info);
         } catch (Exception $exception) {
-            dump($exception);
-
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
     }
@@ -138,8 +136,6 @@ class TranslationController extends ApiController
 
             return $this->jsonResponse($tree, $request);
         } catch (Exception $exception) {
-            dump($exception);
-
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
     }
@@ -322,7 +318,12 @@ class TranslationController extends ApiController
      */
     private function getModulesTree($lang, $type, $selected, $search = null)
     {
-        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
+        if (!$this->container->get('prestashop.core.module.native_module_provider')->isNativeModule($selected)) {
+            $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
+        } else {
+            $moduleProvider = $this->container->get('prestashop.translation.module_provider');
+        }
+
         $moduleProvider->setModuleName($selected);
 
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
