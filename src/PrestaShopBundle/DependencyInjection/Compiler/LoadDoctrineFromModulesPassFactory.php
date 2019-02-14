@@ -80,7 +80,7 @@ class LoadDoctrineFromModulesPassFactory
         $finder->files()->in($modulePath->getRealPath() . DIRECTORY_SEPARATOR . 'src/Entity')->name('*.php');
         foreach ($finder as $phpFile) {
             $phpContent = file_get_contents($phpFile->getRealPath());
-            if (false !== preg_match('_namespace\s+([^\s]+)\s*;_', $phpContent, $matches)) {
+            if (false !== preg_match('~namespace[ \t]+(.+)[ \t]*;~Um', $phpContent, $matches)) {
                 return $matches[1];
             }
         }
