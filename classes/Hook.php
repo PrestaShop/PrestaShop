@@ -511,11 +511,7 @@ class HookCore extends ObjectModel
     public static function registerHook($module_instance, $hook_name, $shop_list = null)
     {
         $return = true;
-        if (is_array($hook_name)) {
-            $hook_names = $hook_name;
-        } else {
-            $hook_names = array($hook_name);
-        }
+        $hook_names = (is_array($hook_name)) ? $hook_name : [$hook_name];
 
         foreach ($hook_names as $hook_name) {
             // Check hook name validation and if module is installed
@@ -526,13 +522,16 @@ class HookCore extends ObjectModel
                 return false;
             }
 
-            // Retrocompatibility
-            $hook_name_bak = $hook_name;
-            if ($alias = Hook::getRetroHookName($hook_name)) {
-                $hook_name = $alias;
-            }
+            $hook_name = static::normalizeHookName($hook_name);
 
-            Hook::exec('actionModuleRegisterHookBefore', array('object' => $module_instance, 'hook_name' => $hook_name));
+            Hook::exec(
+                'actionModuleRegisterHookBefore',
+                array(
+                    'object' => $module_instance,
+                    'hook_name' => $hook_name,
+                )
+            );
+
             // Get hook id
             $id_hook = Hook::getIdByName($hook_name);
 
