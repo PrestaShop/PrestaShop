@@ -92,15 +92,10 @@ table .column-filters td:last-child .grid-reset-button {
 
     // styling for every row in grid table
     tr {
+      $tr: &;
+
       &:hover {
         background: #fafbfc;
-
-        td {
-          .draggable-column {
-            color: white;
-            color: transparent;
-          }
-        }
       }
 
       // when row is being dragged this class is applied
@@ -149,8 +144,10 @@ table .column-filters td:last-child .grid-reset-button {
           color: transparent;
           cursor: move;
 
-          &:hover {
-            color: #b9ccd1;
+          @at-root {
+            #{$tr}:hover .draggable-column {
+              color: #b9ccd1;
+            }
           }
         }
       }
