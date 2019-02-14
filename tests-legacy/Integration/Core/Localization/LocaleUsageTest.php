@@ -192,6 +192,16 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'rawNumber' => 1234568.12345,
                 'formattedNumber' => '1 234 568,123',
             ],
+            'Bulgaria' => [
+                'localeCode' => 'bg-BG',
+                'rawNumber' => 1234568.12345,
+                'formattedPrice' => '1234568,123',
+            ],
+            'Azerbaijani' => [
+                'localeCode' => 'az-AZ',
+                'rawNumber' => 1234568.12345,
+                'formattedPrice' => '1.234.568,12',
+            ],
         ];
     }
 
@@ -210,6 +220,18 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             $formattedPrice,
             $locale->formatPrice($rawNumber, $currencyCode)
         );
+
+        /*
+         * Following could be used to test with the native intl NumberFormatter
+         * it could result in different results depending on the server
+        $numberFormatter = new \NumberFormatter($localeCode, \NumberFormatter::CURRENCY);
+        // following is used when customizing fraction digits
+        //$numberFormatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 3);
+        $this->assertSame(
+            $formattedPrice,
+            $numberFormatter->formatCurrency($rawNumber, $currencyCode)
+        );
+        */
     }
 
     protected static function installTestedLanguagePacks()
@@ -230,6 +252,8 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'ru',
             'it',
             'pl',
+            'bg',
+            'az',
         ];
         $cacheDir = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
 
@@ -255,6 +279,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'JPY',
                 'formattedPrice' => '¥1,234,568',
+                //'nativeFormattedPrice' => '￥1,234,568',
             ],
             'United Kingdom' => [
                 'localeCode' => 'en-GB',
@@ -291,6 +316,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'INR',
                 'formattedPrice' => '12,34,568.12₹',
+                //'nativeFormattedPricey' => '১২,৩৪,৫৬৮.১২₹',
             ],
             'Spain' => [
                 'localeCode' => 'es-ES',
@@ -315,6 +341,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'CNY',
                 'formattedPrice' => '¥1,234,568.12',
+                //'nativeFormattedPrice' => '￥1,234,568.12',
             ],
             'Australia' => [
                 'localeCode' => 'en-AU',
@@ -338,8 +365,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'ru-RU',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'RUB',
-                //'formattedPrice' => '1 234 568,12 RUB', // Expectation with legacy ICanBoogie system
-                'formattedPrice' => '1 234 568,12 ₽', // Expectation with NEW CLDR system
+                'formattedPrice' => '1 234 568,12 ₽',
             ],
             'Italy' => [
                 'localeCode' => 'it-IT',
@@ -353,6 +379,21 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'currencyCode' => 'PLN',
                 'formattedPrice' => '1 234 568,12 zł',
             ],
+            /*
+             * Following does not work even if frontoffice works well :/
+            'Bulgaria' => [
+                'localeCode' => 'bg-BG',
+                'rawNumber' => 1234568.12345,
+                'currencyCode' => 'BGN',
+                'formattedPrice' => '1234568,12 лв.',
+            ],
+            'Azerbaijani' => [
+                'localeCode' => 'az-AZ',
+                'rawNumber' => 1234568.12345,
+                'currencyCode' => 'AZN',
+                'formattedPrice' => '₼ 1.234.568,12',
+            ],
+            */
         ];
     }
 }

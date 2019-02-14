@@ -345,6 +345,7 @@ class LocalizationPackCore
                 $currency->iso_code = (string) $attributes['iso_code'];
                 $currency->iso_code_num = (int) $attributes['iso_code_num'];
                 $currency->numeric_iso_code = (string) $attributes['iso_code_num'];
+                // @todo retrieve sign/symbol from CLDR reference
                 $currency->sign = (string) $attributes['sign'];
                 $currency->symbol = (string) $attributes['sign'];
                 $currency->blank = (int) $attributes['blank'];

@@ -354,7 +354,7 @@ class Formatter
          * 0          : literal "0" character. Once.
          * (\.[0#]+)* : any combination of "0" and "#" characters groups, separated by '.'. Zero to infinity times.
          */
-        $formattedNumber = preg_replace('/#(,#+)*0(\.[0#]+)*/', $formattedNumber, $pattern);
+        $formattedNumber = preg_replace('/#?(,#+)*0(\.[0#]+)*/', $formattedNumber, $pattern);
 
         return $formattedNumber;
     }
