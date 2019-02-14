@@ -195,12 +195,12 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'Bulgaria' => [
                 'localeCode' => 'bg-BG',
                 'rawNumber' => 1234568.12345,
-                'formattedPrice' => '1234568,123',
+                'formattedPrice' => '1 234 568,123',
             ],
             'Azerbaijani' => [
                 'localeCode' => 'az-AZ',
                 'rawNumber' => 1234568.12345,
-                'formattedPrice' => '1.234.568,12',
+                'formattedPrice' => '1.234.568,123',
             ],
         ];
     }
