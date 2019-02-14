@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
 /**
- * Is thrown manufacturer or manufacturers cannot be deleted
+ * Is thrown when address or addresses cannot be deleted
  */
-class DeleteManufacturerException extends ManufacturerException
+class DeleteAddressException extends AddressException
 {
     /**
-     * When fails to delete single manufacturer
+     * When fails to delete single address
      */
     const FAILED_DELETE = 10;
 
     /**
-     * When fails to delete manufacturers in bulk action
+     * When fails to delete address in bulk action
      */
     const FAILED_BULK_DELETE = 20;
 }

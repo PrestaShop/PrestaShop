@@ -24,20 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\DeleteAddressHandlerInterface;
 
 /**
- * Is thrown manufacturer or manufacturers cannot be deleted
+ * Handles command which deletes address
  */
-class DeleteManufacturerException extends ManufacturerException
+final class DeleteAddressHandler extends AbstractAddressCommandHandler implements DeleteAddressHandlerInterface
 {
     /**
-     * When fails to delete single manufacturer
+     * {@inheritdoc}
      */
-    const FAILED_DELETE = 10;
-
-    /**
-     * When fails to delete manufacturers in bulk action
-     */
-    const FAILED_BULK_DELETE = 20;
+    public function handle(DeleteAddressCommand $command)
+    {
+        $this->deleteLegacyAddress($command->getAddressId());
+    }
 }
