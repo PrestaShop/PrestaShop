@@ -82,3 +82,69 @@ table .column-filters td:last-child .grid-search-button,
 table .column-filters td:last-child .grid-reset-button {
   float: right;
 }
+
+.grid {
+  .grid-table {
+    .position {
+      border: 1px solid rgb(187, 205, 210);
+      padding: 5px 20px;
+    }
+
+    // styling for every row in grid table
+    tr {
+      &:hover {
+        background: #fafbfc;
+      }
+
+      // when row is being dragged this class is applied
+      &.dragging-row {
+        background: #fafbfc;
+        cursor: move;
+
+        td {
+          background: #67868e;
+          color: white;
+          -webkit-transform: translate(5px, 10px);
+          transform: translate(5px, 10px);
+
+          // make all icons and links white
+          i.grid-toggler-icon-valid,
+          i.grid-toggler-icon-not-valid,
+          i.material-icons,
+          a,
+          a:after {
+            color: white;
+          }
+
+          .position {
+            color: black;
+            background: white;
+            border: 1px solid rgb(187, 205, 210);
+            padding: 5px 20px;
+          }
+        }
+      }
+
+      // ---------------------------------------------
+      // Column styling (content inside each <td> tag.
+      // ---------------------------------------------
+
+      // specific styles for Category Position column (category_position.html.twig) type
+      .category-position-column {
+        .position {
+          background: white;
+        }
+      }
+
+      // specific styles for Draggable column (draggable.html.twig) type
+      .draggable-column {
+        color: #fafbfc;
+        cursor: move;
+
+        &:hover {
+          color: #b9ccd1;
+        }
+      }
+    }
+  }
+}
