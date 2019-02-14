@@ -73,7 +73,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb) //todo: test sorting
+//            ->applySorting($searchCriteria, $qb) //todo: test sorting
         ;
 
         return $qb;
@@ -136,7 +136,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
-            if ('brand' === $name) {
+            if ('name' === $name) {
                 $qb->andHaving("m.$name LIKE :$name");
                 $qb->setParameter($name, '%' . $value . '%');
             }

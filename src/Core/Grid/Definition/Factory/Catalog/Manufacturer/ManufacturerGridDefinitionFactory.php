@@ -97,13 +97,13 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'name',
                 ])
             )
-            ->add((new DataColumn('addresses'))
+            ->add((new DataColumn('addresses_count'))
                 ->setName($this->trans('Addresses', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'field' => 'addresses_count',
                 ])
             )
-            ->add((new DataColumn('products'))
+            ->add((new DataColumn('products_count'))
                 ->setName($this->trans('Products', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'field' => 'products_count',

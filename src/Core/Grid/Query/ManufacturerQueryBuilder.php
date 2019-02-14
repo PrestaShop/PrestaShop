@@ -64,6 +64,8 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        $sortableFields = ['id_manufacturer', 'name', 'adresses_count', 'products_count', 'active'];
+
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('m.`id_manufacturer`, m.`name`, m.`active`')
@@ -72,10 +74,12 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
             ->groupBy('m.`id_manufacturer`')
         ;
 
-        $this->searchCriteriaApplicator
-            ->applySorting($searchCriteria, $qb)
-            ->applyPagination($searchCriteria, $qb)
-        ;
+        $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
+        $orderBy = $searchCriteria->getOrderBy();
+
+        if ($orderBy && in_array($orderBy, $sortableFields, true)) {
+            $qb->addOrderBy('products_count', $searchCriteria->getOrderWay());
+        }
 
         return $qb;
     }
