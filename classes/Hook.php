@@ -112,6 +112,13 @@ class HookCore extends ObjectModel
         return parent::add($autodate, $null_values);
     }
 
+    /**
+     * Returns the canonical name for a given hook.
+     *
+     * @param string $hookName
+     *
+     * @return string
+     */
     public static function normalizeHookName($hookName)
     {
         if (strtolower($hookName) == 'displayheader') {
@@ -220,13 +227,13 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Get list of hook alias.
+     * Returns a list of hook names, indexed by alias.
      *
      * @since 1.5.0
      *
-     * @return array
+     * @return array Array of hookAlias => hookName
      *
-     * @deprecated 1.7.1.0
+     * @deprecated Since 1.7.1.0
      */
     public static function getHookAliasList()
     {
@@ -248,11 +255,11 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Get the list of hook aliases.
+     * Get the list of hook aliases, indexed by hook name
      *
      * @since 1.7.1.0
      *
-     * @return array
+     * @return array Array of hookName => hookAliases[]
      */
     private static function getHookAliasesList()
     {
@@ -262,9 +269,6 @@ class HookCore extends ObjectModel
             $hookAliases = array();
             if ($hookAliasList) {
                 foreach ($hookAliasList as $ha) {
-                    if (!isset($hookAliases[$ha['name']])) {
-                        $hookAliases[$ha['name']] = array();
-                    }
                     $hookAliases[$ha['name']][] = $ha['alias'];
                 }
             }
@@ -297,6 +301,7 @@ class HookCore extends ObjectModel
                 return $aliasesList[$hookName];
             }
 
+            // look up if this hook is an alias of another one
             $retroName = array_keys(array_filter($aliasesList, function ($elem) use ($hookName) {
                 return in_array($hookName, $elem);
             }));
@@ -320,8 +325,8 @@ class HookCore extends ObjectModel
      *
      * @since 1.7.1.0
      *
-     * @param $module
-     * @param $hookName
+     * @param static $module
+     * @param string $hookName
      *
      * @return bool
      */
@@ -340,9 +345,9 @@ class HookCore extends ObjectModel
      *
      * @since 1.7.1.0
      *
-     * @param $module
-     * @param $hookName
-     * @param $hookArgs
+     * @param static $module
+     * @param string $hookName
+     * @param array $hookArgs
      *
      * @return string
      */
@@ -361,29 +366,35 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Return backward compatibility hook name.
+     * This function exists for retro compatibility only. Do not use!
+     *
+     * - If the provided hook name is an alias, it returns the canonical name of the aliased hook.
+     * - If the hook name is not an alias, but it has a know alias, then it will return that.
+     * - If the hook does not have an alias, it will return an empty string.
      *
      * @since 1.5.0
      *
-     * @param string $hook_name Hook name
+     * @param string $hookName Hook name
      *
      * @return int Hook ID
      *
      * @deprecated 1.7.1.0
      */
-    public static function getRetroHookName($hook_name)
+    public static function getRetroHookName($hookName)
     {
-        $alias_list = Hook::getHookAliasList();
-        if (isset($alias_list[strtolower($hook_name)])) {
-            return $alias_list[strtolower($hook_name)];
+        $hookNamesByAlias = static::getHookAliasDictionary();
+        if (isset($hookNamesByAlias[strtolower($hookName)])) {
+            // return the canonical name (?)
+            return $hookNamesByAlias[strtolower($hookName)];
         }
 
-        $retro_hook_name = array_search($hook_name, $alias_list);
-        if ($retro_hook_name === false) {
+        $alias = array_search($hookName, $hookNamesByAlias);
+        if ($alias === false) {
             return '';
         }
 
-        return $retro_hook_name;
+        // return the alias
+        return $alias;
     }
 
     /**
@@ -519,7 +530,7 @@ class HookCore extends ObjectModel
             $shop_list_employee = Shop::getShops(true, null, true);
 
             foreach ($shop_list as $shop_id) {
-                // Check if already register
+                // Check if already registered
                 $sql = 'SELECT hm.`id_module`
                     FROM `' . _DB_PREFIX_ . 'hook_module` hm, `' . _DB_PREFIX_ . 'hook` h
                     WHERE hm.`id_module` = ' . (int) $module_instance->id . ' AND h.`id_hook` = ' . $id_hook . '
