@@ -75,13 +75,13 @@ class TranslationController extends ApiController
 
             $catalog['info'] = array_merge(
                 $catalog['info'],
-                array(
+                [
                     'locale' => $locale,
                     'domain' => $domain,
                     'theme' => $theme,
                     'total_translations' => count($catalog['data']),
                     'total_missing_translations' => 0,
-                )
+                ]
             );
 
             foreach ($catalog['data'] as $message) {
@@ -137,6 +137,8 @@ class TranslationController extends ApiController
 
             return $this->jsonResponse($tree, $request);
         } catch (Exception $exception) {
+            dump($exception);
+
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
     }
