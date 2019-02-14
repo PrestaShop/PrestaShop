@@ -292,9 +292,10 @@ class CustomerController extends AbstractAdminController
     public function searchAction(Request $request)
     {
         $query = $request->query->get('customer_search');
+        $phrases = explode(' ', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
-        $customers = $this->getQueryBus()->handle(new SearchCustomers($query));
+        $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
 
         // if call is made from legacy page
         // it will return response so legacy can understand it

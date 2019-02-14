@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandlerInterface;
 
 /**
- * Handles command that searches for customers
+ * Handles query that searches for customers by given phrases
  *
  * @internal
  */
@@ -42,18 +42,17 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
      */
     public function handle(SearchCustomers $query)
     {
-        $queries = explode(' ', $query->getQuery());
-        $queries = array_unique($queries);
+        $limit = 50;
+        $phrases = array_unique($query->getPhrases());
 
         $customers = [];
 
-        foreach ($queries as $searchQuery) {
-            if (empty($searchQuery)) {
+        foreach ($phrases as $searchPhrase) {
+            if (empty($searchPhrase)) {
                 continue;
             }
 
-            $limit = 50;
-            $customersResult = Customer::searchByName($searchQuery, $limit);
+            $customersResult = Customer::searchByName($searchPhrase, $limit);
             if (!is_array($customersResult)) {
                 continue;
             }
