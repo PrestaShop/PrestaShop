@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
-use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\ToggleManufacturerStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 
 /**
  * Handles command which toggles manufacturer status
@@ -40,6 +40,13 @@ final class ToggleManufacturerStatusHandler extends AbstractManufacturerCommandH
      */
     public function handle(ToggleManufacturerStatusCommand $command)
     {
-        $this->toggleLegacyManufacturerStatus($command->getManufacturerId(), $command->getStatus()->isEnabled());
+        $manufacturerId = $command->getManufacturerId();
+
+        if (!$this->toggleLegacyManufacturerStatus($manufacturerId, $command->getStatus()->isEnabled())) {
+            throw new UpdateManufacturerException(
+                sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturerId->getValue()),
+                UpdateManufacturerException::FAILED_UPDATE_STATUS
+            );
+        }
     }
 }

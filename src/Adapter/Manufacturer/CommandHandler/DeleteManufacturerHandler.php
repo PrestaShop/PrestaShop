@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
-use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\DeleteManufacturerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 
 /**
  * Handles command which deletes manufacturer using legacy object model
@@ -40,6 +40,11 @@ final class DeleteManufacturerHandler extends AbstractManufacturerCommandHandler
      */
     public function handle(DeleteManufacturerCommand $command)
     {
-        $this->deleteLegacyManufacturer($command->getManufacturerId());
+        if (!$this->deleteLegacyManufacturer($command->getManufacturerId())) {
+            throw new DeleteManufacturerException(sprintf(
+                'Cannot delete Manufacturer object with id "%s".', $command->getManufacturerId()->getValue()),
+                DeleteManufacturerException::FAILED_DELETE
+            );
+        }
     }
 }

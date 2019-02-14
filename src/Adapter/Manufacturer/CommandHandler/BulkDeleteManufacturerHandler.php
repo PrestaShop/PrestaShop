@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\BulkDeleteManufacturerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 
 /**
  * Handles command which deletes manufacturers in bulk action
@@ -40,7 +41,12 @@ final class BulkDeleteManufacturerHandler extends AbstractManufacturerCommandHan
     public function handle(BulkDeleteManufacturerCommand $command)
     {
         foreach ($command->getManufacturerIds() as $manufacturerId) {
-            $this->deleteLegacyManufacturer($manufacturerId);
+            if (!$this->deleteLegacyManufacturer($manufacturerId)) {
+                throw new DeleteManufacturerException(sprintf(
+                    'Cannot delete Manufacturer object with id "%s".', $manufacturerId->getValue()),
+                    DeleteManufacturerException::FAILED_BULK_DELETE
+                );
+            }
         }
     }
 }
