@@ -29,6 +29,11 @@ namespace PrestaShopBundle\Kernel;
 
 use Doctrine\DBAL\DriverManager;
 
+/**
+ * Class ModuleRepositoryFactory is used to build the ModuleRepository in context where symfony
+ * container is not available or not yet initialised (ex: AppKernel, PrestaShop\PrestaShop\Adapter\ContainerBuilder).
+ * This factory is able to fetch the necessary parameters itself and builds the database connection for ModuleRepository
+ */
 class ModuleRepositoryFactory
 {
     /**
@@ -45,6 +50,11 @@ class ModuleRepositoryFactory
      * @var ModuleRepository
      */
     private $moduleRepository;
+
+    /**
+     * @var string
+     */
+    private $parametersFile = '';
 
     public static function getInstance()
     {
@@ -104,16 +114,11 @@ class ModuleRepositoryFactory
      */
     private function getParametersFile()
     {
-        return __DIR__ . '/../../../app/config/parameters.php';
-    }
+        if (file_exists(__DIR__ . '/../../../app/config/parameters.php')) {
+            $this->parametersFile = realpath(__DIR__ . '/../../../app/config/parameters.php');
+        }
 
-    /**
-     * @var bool
-     * @return bool
-     */
-    private function parametersFileExists()
-    {
-        return file_exists($this->getParametersFile());
+        return $this->parametersFile;
     }
 
     /**
@@ -121,7 +126,7 @@ class ModuleRepositoryFactory
      */
     private function getParameters()
     {
-        if (null === $this->parameters && $this->parametersFileExists()) {
+        if (null === $this->parameters && !empty($this->getParametersFile())) {
             $config = require $this->getParametersFile();
 
             $this->parameters = $config['parameters'];
