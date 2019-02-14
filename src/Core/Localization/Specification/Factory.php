@@ -115,7 +115,7 @@ class Factory
             $this->computeNumberSymbolLists($numbersSymbols),
             $precision,
             $this->getMinFractionDigits($currencyPattern),
-            $numberGroupingUsed,
+            $numberGroupingUsed && $this->getPrimaryGroupSize($currencyPattern) > 1,
             $this->getPrimaryGroupSize($currencyPattern),
             $this->getSecondaryGroupSize($currencyPattern),
             $currencyDisplayType,
