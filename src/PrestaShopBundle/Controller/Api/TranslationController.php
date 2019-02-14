@@ -65,10 +65,11 @@ class TranslationController extends ApiController
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
             $theme = $request->attributes->get('theme');
+            $module = $request->query->get('module');
 
             $search = $request->query->get('search');
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search);
+            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
             $info = array(
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             );
@@ -323,10 +324,11 @@ class TranslationController extends ApiController
     {
         $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
         $moduleProvider->setModuleName($selected);
+
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
         $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $type, null, $search);
+        return $this->getCleanTree($treeBuilder, $catalogue, $type, null, $search, $selected);
     }
 
     /**
@@ -340,12 +342,12 @@ class TranslationController extends ApiController
      *
      * @return array
      */
-    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null)
+    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null, $module = null)
     {
         $selected = ('mails' === $type && 'subject' === $selected ? false : $selected);
 
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $selected, $search);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $selected, $search, $module);
 
         return $translationsTree;
     }
