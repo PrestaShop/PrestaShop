@@ -26,29 +26,43 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+
 /**
- * Searchers for customers by query matching on first name, last name, email and id
+ * Searchers for customers by phrases matching customer's first name, last name, email and id
  */
 class SearchCustomers
 {
     /**
-     * @var string
+     * @var string[]
      */
-    private $query;
+    private $phrases;
 
     /**
-     * @param string $query
+     * @param string[] $phrases
      */
-    public function __construct($query)
+    public function __construct(array $phrases)
     {
-        $this->query = $query;
+        $this->assertPhrasesAreNotEmpty($phrases);
+
+        $this->phrases = $phrases;
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getQuery()
+    public function getPhrases()
     {
-        return $this->query;
+        return $this->phrases;
+    }
+
+    /**
+     * @param string[] $phrases
+     */
+    private function assertPhrasesAreNotEmpty(array $phrases)
+    {
+        if (empty($phrases)) {
+            throw new CustomerException('Phrases cannot be empty when searching customers.');
+        }
     }
 }
