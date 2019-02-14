@@ -24,7 +24,7 @@
  *#}
 
 {{ form_start(grid.filter_form, {'attr': {'id': grid.id ~ '_filter_form'}}) }}
-<table class="js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
+<table class="grid-table js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
        id="{{ grid.id }}_grid_table"
        data-query="{{ grid.data.query }}"
 >

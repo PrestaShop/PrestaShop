@@ -50,6 +50,7 @@ export default class CategoryPositionExtension {
 
     grid.getContainer().find('.js-grid-table').tableDnD({
       dragHandle: '.js-drag-handle',
+      onDragClass: 'dragging-row',
       onDragStart: () => {
         this.originalPositions = decodeURIComponent($.tableDnD.serialize());
       },
