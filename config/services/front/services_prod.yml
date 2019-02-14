@@ -48,7 +48,7 @@ services:
 
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
-        arguments: ["%database_prefix%"]
+        arguments: ['%database_prefix%']
 
     annotation_reader:
         class: Doctrine\Common\Annotations\AnnotationReader
