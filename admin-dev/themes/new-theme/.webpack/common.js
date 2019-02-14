@@ -42,6 +42,7 @@ module.exports = {
     themes: './js/pages/themes',
     profiles: './js/pages/profiles',
     manufacturer: './js/pages/catalog/manufacturer',
+    address: './js/pages/catalog/address',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
