@@ -36,14 +36,14 @@ import ExportToSqlManagerExtension from '../../../components/grid/extension/expo
 const $ = window.$;
 
 $(() => {
-  const manufacturerGrid = new Grid('manufacturer');
+  const addressGrid = new Grid('manufacturer_address');
 
-  manufacturerGrid.addExtension(new ExportToSqlManagerExtension());
-  manufacturerGrid.addExtension(new ReloadListActionExtension());
-  manufacturerGrid.addExtension(new SortingExtension());
-  manufacturerGrid.addExtension(new FiltersResetExtension());
-  manufacturerGrid.addExtension(new ColumnTogglingExtension());
-  manufacturerGrid.addExtension(new SubmitRowActionExtension());
-  manufacturerGrid.addExtension(new SubmitBulkExtension());
-  manufacturerGrid.addExtension(new BulkActionCheckboxExtension());
+  addressGrid.addExtension(new ExportToSqlManagerExtension());
+  addressGrid.addExtension(new ReloadListActionExtension());
+  addressGrid.addExtension(new SortingExtension());
+  addressGrid.addExtension(new FiltersResetExtension());
+  addressGrid.addExtension(new ColumnTogglingExtension());
+  addressGrid.addExtension(new SubmitRowActionExtension());
+  addressGrid.addExtension(new SubmitBulkExtension());
+  addressGrid.addExtension(new BulkActionCheckboxExtension());
 });
