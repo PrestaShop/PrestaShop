@@ -179,36 +179,54 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ->add((new Filter('id_address', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('id_address')
             )
             ->add((new Filter('name', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('name')
             )
             ->add((new Filter('firstname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('firstname')
             )
             ->add((new Filter('lastname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search last name', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('lastname')
             )
             ->add((new Filter('postcode', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search post code', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('postcode')
             )
             ->add((new Filter('city', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search city', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('city')
             )
