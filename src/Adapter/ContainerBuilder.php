@@ -67,7 +67,7 @@ class ContainerBuilder
         foreach ($parameters['parameters'] as $parameter => $value) {
             $container->setParameter($parameter, $value);
         }
-        $env = $isDebug ? 'dev' : 'prod';
+        $env = isset($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : ($isDebug ? 'dev' : 'prod');
         $container->setParameter('kernel.bundles', []);
         $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app/');
         $container->setParameter('kernel.name', 'app');
@@ -108,11 +108,7 @@ class ContainerBuilder
             $autoloader = _PS_ROOT_DIR_.'/modules/'.$module.'/vendor/autoload.php';
 
             if (file_exists($autoloader)) {
-                try {
-                    include_once $autoloader;
-                } catch (\Exception $e) {
-
-                }
+                include_once $autoloader;
             }
         }
     }
