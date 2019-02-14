@@ -89,17 +89,17 @@
     "scripts": {
         "post-install-cmd": [
             "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
+            "PrestaShop\\Composer\\ScriptHandler::install",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
-            "PrestaShop\\Composer\\ScriptHandler::install"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-update-cmd": [
             "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
+            "PrestaShop\\Composer\\ScriptHandler::install",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
-            "PrestaShop\\Composer\\ScriptHandler::install"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
             "@php ./tests-legacy/create-test-db.php",
