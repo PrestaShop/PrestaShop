@@ -24,21 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Translation\Extractor;
+namespace Tests\Unit\PrestaShopBundle\Translation\Loader;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Translation\Extractor\LegacyFileExtractor;
+use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
- * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="LegacyFileExtractorTest"
+ * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="LegacyFileLoaderTest"
  */
 class LegacyFileExtractorTest extends TestCase
 {
     public function testExtract()
     {
-        $extractor = new LegacyFileExtractor();
-        $catalogue = $extractor->extract($this->getTranslationsFolder(), 'fr-FR');
+        $extractor = new LegacyFileLoader();
+        $catalogue = $extractor->load($this->getTranslationsFolder(), 'fr-FR');
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
         $this->assertCount(5, $catalogue->all('ModulesSomeModule'));

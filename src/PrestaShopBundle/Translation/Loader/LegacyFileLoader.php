@@ -25,18 +25,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Extractor;
+namespace PrestaShopBundle\Translation\Loader;
 
 use PrestaShopBundle\Translation\Locale\Converter;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 
 /**
  * Able to convert old translation files (in translations/es.php) into
  * Symfony MessageCatalogue objects.
  */
-final class LegacyFileExtractor implements LegacyFileExtractorInterface
+final class LegacyFileLoader implements LoaderInterface
 {
     /**
      * @var string the expected format of a legacy translation key
@@ -44,14 +44,9 @@ final class LegacyFileExtractor implements LegacyFileExtractorInterface
     const LEGACY_TRANSLATION_FORMAT = '#\<\{([\w-]+)\}prestashop\>([\w-]+)_([\w-]+)#';
 
     /**
-     * @param string $path
-     * @param string $locale
-     *
-     * @throws \Exception
-     *
-     * @return MessageCatalogueInterface
+     * {@inheritdoc}
      */
-    public function extract($path, $locale)
+    public function load($path, $locale, $domain = 'messages')
     {
         $_MODULE = [];
         $catalogue = new MessageCatalogue($locale);
@@ -65,7 +60,6 @@ final class LegacyFileExtractor implements LegacyFileExtractorInterface
         include_once $filepath;
 
         foreach ($_MODULE as $translationKey => $translationValue) {
-            $domain = $this->getDomain($translationKey);
             $id = $this->getId($translationKey);
             $catalogue->set($id, $translationValue, $domain);
         }
@@ -83,17 +77,5 @@ final class LegacyFileExtractor implements LegacyFileExtractorInterface
         preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $params);
 
         return Container::camelize($params[3][0]);
-    }
-
-    /**
-     * @param string $key the translation key
-     *
-     * @return string the translation domain
-     */
-    private function getDomain($key)
-    {
-        preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $params);
-
-        return 'Modules' . Container::camelize($params[1][0]);
     }
 }

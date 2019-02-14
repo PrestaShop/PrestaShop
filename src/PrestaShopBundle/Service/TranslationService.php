@@ -173,13 +173,13 @@ class TranslationService
         $translationProvider->setLocale($locale);
 
         $router = $this->container->get('router');
-        $domains = array(
-            'info' => array(
+        $domains = [
+            'info' => [
                 'edit_url' => $router->generate('api_translation_value_edit'),
                 'reset_url' => $router->generate('api_translation_value_reset'),
-            ),
-            'data' => array(),
-        );
+            ],
+            'data' => [],
+        ];
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
         if (!empty($theme) && 'classic' !== $theme) {
@@ -187,7 +187,8 @@ class TranslationService
         } else {
             $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
         }
-        $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
+
+        $xliffCatalog = method_exists($translationProvider, 'getLegacyCatalogue') ? $translationProvider->getLegacyCatalogue()->all($domain) : $translationProvider->getXliffCatalogue()->all();
 
         if ('EmailsSubject' === $domain) {
             $theme = 'subject';
@@ -211,6 +212,8 @@ class TranslationService
                 }
             }
         }
+
+        dump($domains);
 
         return $domains;
     }

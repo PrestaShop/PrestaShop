@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Extractor\LegacyFileExtractorInterface;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -38,9 +37,9 @@ use Symfony\Component\Translation\MessageCatalogue;
 class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface
 {
     /**
-     * @var LegacyFileExtractorInterface the extractor
+     * @var LoaderInterface the translation loader from legacy files
      */
-    private $fileExtractor;
+    private $legacyFileLoader;
 
     /**
      * @var LegacyModuleExtractorInterface the extractor
@@ -60,10 +59,10 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     public function __construct(
         LoaderInterface $databaseLoader,
         $resourceDirectory,
-        LegacyFileExtractorInterface $fileExtractor,
+        LoaderInterface $legacyFileLoader,
         LegacyModuleExtractorInterface $legacyModuleExtractor
     ) {
-        $this->fileExtractor = $fileExtractor;
+        $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
 
         parent::__construct($databaseLoader, $resourceDirectory);
@@ -74,7 +73,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getTranslationDomains()
     {
-        return ['^Modules' . $this->getModuleDomain() . '*',];
+        return ['^' . $this->getModuleDomain() . '*'];
     }
 
     /**
@@ -110,13 +109,6 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     {
         $defaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->getLocale());
 
-        $filteredCatalogue = $this->getCatalogue(
-            $this->getDefaultResourceDirectory(),
-            $this->getLocale()
-        );
-
-        $defaultCatalogue->addCatalogue($filteredCatalogue);
-
         if ($empty) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
         }
@@ -147,27 +139,54 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
 
     private function getModuleDomain()
     {
-        return Container::camelize($this->moduleName);
+        return 'Modules' . Container::camelize($this->moduleName);
     }
 
     /**
-     * @param string $path a list of paths when we can look for translations
-     * @param string $locale the Symfony (not the PrestaShop one) locale
-     *
      * @return MessageCatalogue
      *
      * @throws \Exception
      */
-    public function getCatalogue($path, $locale)
+    public function getLegacyCatalogue()
     {
-        $catalogue = $this->fileExtractor->extract($path, $locale);
-        $cleanedCatalogue = new MessageCatalogue($locale);
+        $defaultCatalogue = $this->getDefaultCatalogue();
+        $extractedCatalogue = $this->legacyFileLoader->load(
+            $this->getDefaultResourceDirectory(),
+            $this->locale,
+            $this->getModuleDomain()
+        );
 
-        foreach ($catalogue->all($this->getModuleDomain()) as $translationKey => $translation) {
-            $cleanedCatalogue->set($translationKey, $translation, $this->getModuleDomain());
+        $legacyFileCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($defaultCatalogue->all($this->getModuleDomain()) as $translationKey => $translation) {
+            $legacyKey = md5($translationKey);
+
+            if ($extractedCatalogue->has($legacyKey, $this->getModuleDomain())) {
+                $legacyFileCatalogue->set(
+                    $translationKey,
+                    $extractedCatalogue->get($legacyKey, $this->getModuleDomain()),
+                    $this->getModuleDomain()
+                );
+            }
         }
 
-        return $cleanedCatalogue;
+        return $legacyFileCatalogue;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMessageCatalogue()
+    {
+        $messageCatalogue = $this->getDefaultCatalogue();
+
+        $legacyFileCatalogue = $this->getLegacyCatalogue($this->getDefaultResourceDirectory(), $this->locale);
+        $messageCatalogue->add($legacyFileCatalogue);
+
+        $databaseCatalogue = $this->getDatabaseCatalogue();
+        $messageCatalogue->addCatalogue($databaseCatalogue);
+
+        return $messageCatalogue;
     }
 
     /**

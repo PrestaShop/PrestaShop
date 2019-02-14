@@ -57,7 +57,10 @@ class TreeBuilder
             $translations = $provider->getDefaultCatalogue()->all();
         }
 
-        $xliffCatalog = $provider->getXliffCatalogue()->all();
+        /**
+         * @todo: refactor this part to use a Factory and hide provider specifics
+         */
+        $xliffCatalog = method_exists($provider, 'getLegacyCatalogue') ? $provider->getLegacyCatalogue()->all() : $provider->getXliffCatalogue()->all();
         $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme)->all();
 
         foreach ($translations as $domain => $messages) {
@@ -65,6 +68,9 @@ class TreeBuilder
             $domainDatabase = str_replace('.' . $provider->getLocale(), '', $domain);
 
             foreach ($messages as $translationKey => $translationValue) {
+                if (array_key_exists($translationKey, $xliffCatalog[$domain])) {
+                }
+
                 $data = array(
                     'xlf' => (array_key_exists($domain, $xliffCatalog) &&
                     array_key_exists($translationKey, $xliffCatalog[$domain]) ?
@@ -75,7 +81,7 @@ class TreeBuilder
                 );
 
                 // if search is empty or is in catalog default|xlf|database
-                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(array('default' => $translationKey), $data))) {
+                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(['default' => $translationKey], $data))) {
                     $translations[$domain][$translationKey] = $data;
 
                     if (
@@ -89,7 +95,7 @@ class TreeBuilder
                 }
             }
 
-            $translations[$domain]['__metadata'] = array('missing_translations' => $missingTranslations);
+            $translations[$domain]['__metadata'] = ['missing_translations' => $missingTranslations];
         }
 
         ksort($translations);
@@ -135,7 +141,7 @@ class TreeBuilder
      */
     public function makeTranslationsTree($catalogue)
     {
-        $translationsTree = array();
+        $translationsTree = [];
 
         foreach ($catalogue as $domain => $messages) {
             $tableisedDomain = Inflector::tableize($domain);
@@ -178,13 +184,13 @@ class TreeBuilder
      */
     public function cleanTreeToApi($tree, Router $router, $theme = null, $search = null)
     {
-        $rootTree = array(
-            'tree' => array(
+        $rootTree = [
+            'tree' => [
                 'total_translations' => 0,
                 'total_missing_translations' => 0,
-                'children' => array(),
-            ),
-        );
+                'children' => [],
+            ],
+        ];
 
         $cleanTree = &$rootTree['tree']['children'];
 
