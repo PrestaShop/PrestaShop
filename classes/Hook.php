@@ -353,12 +353,18 @@ class HookCore extends ObjectModel
      */
     private static function isHookCallableOn($module, $hookName)
     {
-        $aliases = Hook::getHookAliasesFor($hookName);
-        $aliases[] = $hookName;
+        $aliases = array_merge(
+            [$hookName],
+            Hook::getHookAliasesFor($hookName)
+        );
 
-        return array_reduce($aliases, function ($prev, $curr) use ($module) {
-            return $prev || is_callable(array($module, 'hook' . $curr));
-        }, false);
+        foreach ($aliases as $currentHookName) {
+            if (is_callable(array($module, 'hook' . $currentHookName))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
