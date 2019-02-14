@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Category\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DraggableColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -164,17 +165,20 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $columns->addAfter(
-                'description',
-                (new CategoryPositionColumn('position'))
-                ->setName($this->trans('Position', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'position',
-                    'id_field' => 'id_category',
-                    'id_parent_field' => 'id_parent',
-                    'update_route' => 'AdminCategories',
-                ])
-            );
+            $columns
+                ->addAfter(
+                    'description',
+                    (new CategoryPositionColumn('position'))
+                        ->setName($this->trans('Position', [], 'Admin.Global'))
+                        ->setOptions([
+                            'field' => 'position',
+                            'id_field' => 'id_category',
+                            'id_parent_field' => 'id_parent',
+                            'update_route' => 'AdminCategories',
+                        ])
+                )
+                ->addBefore('bulk', new DraggableColumn('position_drag'))
+            ;
         }
 
         return $columns;
