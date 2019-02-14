@@ -99,6 +99,15 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilderByFilters(array $filters)
     {
+        $allowedFilters = [
+            'id_address',
+            'brand',
+            'firstname',
+            'lastname',
+            'postcode',
+            'city',
+            'country',
+        ];
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'address', 'a')
@@ -117,15 +126,20 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         foreach ($filters as $name => $value) {
+            if (!in_array($name, $allowedFilters, true)) {
+                continue;
+            }
+
             if ('id_address' === $name) {
                 $qb->andWhere("$name = :$name");
                 $qb->setParameter($name, $value);
 
                 continue;
             }
-
-            $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%' . $value . '%');
+            if ('brand' === $name) {
+                $qb->andHaving("m.$name LIKE :$name");
+                $qb->setParameter($name, '%' . $value . '%');
+            }
         }
 
         $qb->andWhere('a.id_customer = 0')

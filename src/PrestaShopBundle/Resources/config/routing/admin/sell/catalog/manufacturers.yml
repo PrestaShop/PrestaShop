@@ -1,6 +1,6 @@
 admin_manufacturers_index:
   path: /
-  methods: [GET, POST]
+  methods: GET
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index'
     _legacy_controller: AdminManufacturers
@@ -8,6 +8,13 @@ admin_manufacturers_index:
 #
 # Manufacturer routes
 #
+admin_manufacturers_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Manufacturer:search'
+    _legacy_controller: AdminManufacturers
+
 admin_manufacturers_create:
   path: manufacturers/add
   methods: [GET, POST]

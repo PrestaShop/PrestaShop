@@ -53,26 +53,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var string
-     */
-    private $redirectActionUrl;
-
-    /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @param string $resetActionUrl
-     * @param string $redirectActionUrl
-     */
-    public function __construct($resetActionUrl, $redirectActionUrl)
-    {
-        $this->redirectActionUrl = $redirectActionUrl;
-        $this->resetActionUrl = $resetActionUrl;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getId()
@@ -226,12 +206,18 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ->add((new Filter('id_manufacturer', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('id_manufacturer')
             )
             ->add((new Filter('name', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('name')
             )
@@ -241,11 +227,14 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectActionUrl,
+                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route_params' => [
+                        'controller' => 'manufacturer',
+                        'action' => 'index',
                     ],
+                    'redirect_route' => 'admin_manufacturers_index',
                 ])
+                ->setAssociatedColumn('actions')
             )
         ;
     }
