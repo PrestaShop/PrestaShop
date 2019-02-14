@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
 {
+    private $searchCriteriaApplicator;
     /**
      * @var int[]
      */
@@ -43,16 +44,19 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param int[] $contextShopIds
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     * @param array $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         array $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->contextShopIds = $contextShopIds;
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
@@ -66,6 +70,11 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('COUNT(DISTINCT p.`id_product`) AS `products_count`')
             ->addSelect('COUNT(DISTINCT a.`id_manufacturer`) AS `addresses_count`')
             ->groupBy('m.`id_manufacturer`')
+        ;
+
+        $this->searchCriteriaApplicator
+            ->applySorting($searchCriteria, $qb)
+            ->applyPagination($searchCriteria, $qb)
         ;
 
         return $qb;
@@ -91,6 +100,8 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
+        $allowedFilters = ['id_manufacturer', 'name', 'active'];
+
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'manufacturer', 'm')
@@ -114,7 +125,25 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
-        $qb->where('ms.`id_shop` IN (:contextShopIds)');
+        foreach ($filters as $filterName => $value) {
+            if (!in_array($filterName, $allowedFilters, true)) {
+                continue;
+            }
+            if ('active' === $filterName) {
+                $qb->andWhere('m.`active` = :active');
+                $qb->setParameter('active', $value);
+                continue;
+            }
+            if ('name' === $filterName) {
+                $qb->andWhere('m.`name` LIKE :' . $filterName)
+                    ->setParameter($filterName, '%' . $value . '%');
+                continue;
+            }
+            $qb->andWhere('m.`' . $filterName . '` LIKE :' . $filterName)
+                ->setParameter($filterName, '%' . $value . '%');
+        }
+
+        $qb->andWhere('ms.`id_shop` IN (:contextShopIds)');
 
         $qb->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
