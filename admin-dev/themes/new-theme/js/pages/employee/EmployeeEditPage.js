@@ -34,6 +34,7 @@ export default class EmployeeEditPage {
   constructor() {
     this.shopChoiceTree = new ChoiceTree('#employee_shop_association');
     this.employeeProfileSelector = '#employee_profile';
+    this.tabsDropdownSelector = '#employee_default_page';
 
     this.shopChoiceTree.enableAutoCheckChildren();
     new AddonsConnector('#addons-connect-form', '#addons_login_btn');
@@ -60,12 +61,77 @@ export default class EmployeeEditPage {
 
     // Reload tabs dropdown when employee profile is changed.
     $(document).on('change', this.employeeProfileSelector, function () {
-      $.get(getTabsUrl, {
-        profileId: $(this).val(),
-      }, (result) => {
-        //@todo WIP
-        console.log(result);
-      });
+      $.get(
+        getTabsUrl,
+        {
+          profileId: $(this).val()
+        },
+        (tabs) => {
+          t.reloadTabsDropdown(tabs);
+        },
+        'json'
+      );
     });
+  }
+
+  /**
+   * Reload tabs dropdown with new content.
+   *
+   * @param {Object} accessibleTabs
+   */
+  reloadTabsDropdown(accessibleTabs) {
+    const $tabsDropdown = $(this.tabsDropdownSelector);
+
+    $tabsDropdown.empty();
+
+    for (let key in accessibleTabs) {
+      if (accessibleTabs[key]['children'].length > 0 && accessibleTabs[key]['name']) {
+        // If tab has children - create an option group and put children inside.
+        const $optgroup = this._createOptionGroup(accessibleTabs[key]['name']);
+
+        for (let childKey in accessibleTabs[key]['children']) {
+          if (accessibleTabs[key]['children'][childKey]['name']) {
+            $optgroup.append(
+              this._createOption(
+                accessibleTabs[key]['children'][childKey]['name'],
+                accessibleTabs[key]['children'][childKey]['id_tab'])
+            );
+          }
+        }
+
+        $tabsDropdown.append($optgroup);
+      } else if (accessibleTabs[key]['name']) {
+        // If tab doesn't have children - create an option.
+        $tabsDropdown.append(
+          this._createOption(
+            accessibleTabs[key]['name'],
+            accessibleTabs[key]['id_tab']
+          )
+        );
+      }
+    }
+  }
+
+  /**
+   * Creates an <optgroup> element
+   *
+   * @param {String} name
+   *
+   * @returns {jQuery}
+   */
+  _createOptionGroup(name) {
+    return $(`<optgroup label="${name}">`);
+  }
+
+  /**
+   * Creates an <option> element.
+   *
+   * @param {String} name
+   * @param {String} value
+   *
+   * @returns {jQuery}
+   */
+  _createOption(name, value) {
+    return $(`<option value="${value}">${name}</option>`);
   }
 }
