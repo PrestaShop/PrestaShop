@@ -94,6 +94,13 @@ table .column-filters td:last-child .grid-reset-button {
     tr {
       &:hover {
         background: #fafbfc;
+
+        td {
+          .draggable-column {
+            color: white;
+            color: transparent;
+          }
+        }
       }
 
       // when row is being dragged this class is applied
@@ -126,23 +133,25 @@ table .column-filters td:last-child .grid-reset-button {
       }
 
       // ---------------------------------------------
-      // Column styling (content inside each <td> tag.
+      // Column styling (content inside each <td> tag)
       // ---------------------------------------------
 
-      // specific styles for Category Position column (category_position.html.twig) type
-      .category-position-column {
-        .position {
-          background: white;
+      td {
+        // specific styles for Category Position column (category_position.html.twig) type
+        .category-position-column {
+          .position {
+            background: white;
+          }
         }
-      }
 
-      // specific styles for Draggable column (draggable.html.twig) type
-      .draggable-column {
-        color: #fafbfc;
-        cursor: move;
+        // specific styles for Draggable column (draggable.html.twig) type
+        .draggable-column {
+          color: transparent;
+          cursor: move;
 
-        &:hover {
-          color: #b9ccd1;
+          &:hover {
+            color: #b9ccd1;
+          }
         }
       }
     }
