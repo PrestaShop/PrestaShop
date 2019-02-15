@@ -47,7 +47,7 @@ final class BulkToggleTaxStatusHandler extends AbstractTaxHandler implements Bul
         foreach ($command->getTaxIds() as $taxId) {
             $tax = new Tax($taxId->getValue());
             $this->assertTaxWasFound($taxId, $tax);
-            $tax->active = $command->getStatus();
+            $tax->active = $command->getExpectedStatus();
 
             try {
                 if (!$tax->save()) {
