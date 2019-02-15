@@ -29,8 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
 
+/**
+ * Toggles manufacturer status in bulk action
+ */
 class BulkToggleManufacturerStatusCommand
 {
     /**
