@@ -75,7 +75,7 @@ notifications:
 
 before_script:
   - if [ "$EXTRA_DEPS" = "phpHigh" ]; then
-        composer update --ignore-platform-reqs --no-suggest --ansi;
+        composer update --ignore-platform-reqs --no-suggest --ansi --no-interaction --no-progress --quiet;
     else
         composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
     fi
