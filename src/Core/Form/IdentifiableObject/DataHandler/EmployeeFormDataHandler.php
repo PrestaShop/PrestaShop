@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,41 +16,46 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 
-/**
- * Gets employee information for editing.
- */
-class GetEmployeeForEditing
+final class EmployeeFormDataHandler implements FormDataHandlerInterface
 {
     /**
-     * @var EmployeeId
+     * @var CommandBusInterface
      */
-    private $employeeId;
+    private $bus;
 
     /**
-     * @param int $employeeId
+     * @param CommandBusInterface $bus
      */
-    public function __construct($employeeId)
+    public function __construct(
+        CommandBusInterface $bus
+    ) {
+        $this->bus = $bus;
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function create(array $data)
     {
-        $this->employeeId = new EmployeeId($employeeId);
+        // TODO: Implement create() method.
     }
 
     /**
-     * @return EmployeeId
+     * {@inheritdoc}
      */
-    public function getEmployeeId()
+    public function update($id, array $data)
     {
-        return $this->employeeId;
+        // TODO: Implement update() method.
     }
 }

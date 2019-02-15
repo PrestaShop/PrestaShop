@@ -210,10 +210,9 @@ final class EmployeeType extends AbstractType
                 // - Profile selection not shown,
                 // - Addons connect field is shown,
                 // - Shop association field is not shown.
-                'is_restricted_access' => true,
+                'is_restricted_access' => false,
                 // Is this form for showing data for a super admin.
                 'is_super_admin' => false,
-                'compound' => true,
             ])
             ->setAllowedTypes('is_restricted_access', 'bool')
             ->setAllowedTypes('is_super_admin', 'bool')

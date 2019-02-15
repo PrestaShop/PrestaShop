@@ -23,42 +23,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set enableSidebar = true %}
-{% set layoutHeaderToolbarBtn = {
-  'add': {
-    'href': path('admin_employees_create'),
-    'desc': 'Add new employee'|trans({}, 'Admin.Advparameters.Feature'),
-    'icon': 'add_circle_outline'
-  }
-} %}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
+
 {% block content %}
-  {% block employee_helper_card %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/helper_card.html.twig' %}
-      </div>
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig' with {
+        employeeForm: employeeForm,
+        level: level,
+        errorMessage: errorMessage,
+        isRestrictedAccess: false,
+        superAdminProfileId: superAdminProfileId,
+        getTabsUrl: getTabsUrl
+      } %}
     </div>
-  {% endblock %}
-
-  {% block employee_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
-      </div>
-    </div>
-  {% endblock %}
-
-  {% block employee_options %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
-  {% endblock %}
+  </div>
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/employee.bundle.js') }}"></script>
+  {# Password generation plugin #}
+  <script src="{{ asset('themes/default/js/vendor/jquery-passy.js') }}"></script>
+
+  <script src="{{ asset('themes/new-theme/public/employee_form.bundle.js') }}"></script>
 {% endblock %}

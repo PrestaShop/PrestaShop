@@ -231,4 +231,17 @@ class Tools
     {
         return LegacyTools::safeOutput($value, $allowHtml);
     }
+
+    /**
+     * Get a valid image URL to use from BackOffice.
+     *
+     * @param string $fileName image file name
+     * @param bool $escapeHtmlEntities if true - escape html entities on file name argument.
+     *
+     * @return string image URL.
+     */
+    public function getAdminImageUrl($fileName, $escapeHtmlEntities = false)
+    {
+        return LegacyTools::getAdminImageUrl($fileName, $escapeHtmlEntities);
+    }
 }

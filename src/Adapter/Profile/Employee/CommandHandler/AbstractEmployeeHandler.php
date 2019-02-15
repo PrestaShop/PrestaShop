@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Context;
 use Employee;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\CannotDeleteWarehouseManagerException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
@@ -38,7 +39,7 @@ use Warehouse;
 /**
  * Class AbstractEmployeeStatusHandler.
  */
-abstract class AbstractEmployeeHandler
+abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
 {
     /**
      * @param EmployeeId $employeeId

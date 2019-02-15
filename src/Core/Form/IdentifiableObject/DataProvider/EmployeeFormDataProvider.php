@@ -29,10 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\QueryResult\EditableEmployee;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 
 /**
- * Provides data for employee forms
+ * Provides data for employee forms.
  */
 final class EmployeeFormDataProvider implements FormDataProviderInterface
 {
@@ -41,10 +40,37 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
      */
     private $queryBus;
 
+    /**
+     * @var bool
+     */
+    private $isMultistoreFeatureActive;
+
+    /**
+     * @var array
+     */
+    private $defaultShopAssociation;
+
+    /**
+     * @var string
+     */
+    private $defaultAvatarUrl;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     * @param bool $isMultistoreFeatureActive
+     * @param array $defaultShopAssociation
+     * @param string $defaultAvatarUrl
+     */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        $isMultistoreFeatureActive,
+        array $defaultShopAssociation,
+        $defaultAvatarUrl
     ) {
         $this->queryBus = $queryBus;
+        $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
+        $this->defaultShopAssociation = $defaultShopAssociation;
+        $this->defaultAvatarUrl = $defaultAvatarUrl;
     }
 
     /**
@@ -53,7 +79,7 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
     public function getData($employeeId)
     {
         /** @var EditableEmployee $editableEmployee */
-        $editableEmployee = $this->queryBus->handle(new GetEmployeeForEditing(new EmployeeId((int) $employeeId)));
+        $editableEmployee = $this->queryBus->handle(new GetEmployeeForEditing((int) $employeeId));
 
         return [
             'firstname' => $editableEmployee->getFirstName()->getValue(),
@@ -74,6 +100,16 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [];
+        $data = [
+            'avatar' => $this->defaultAvatarUrl,
+            'optin' => true,
+            'active' => true,
+        ];
+
+        if ($this->isMultistoreFeatureActive) {
+            $data['shop_association'] = $this->defaultShopAssociation;
+        }
+
+        return $data;
     }
 }
