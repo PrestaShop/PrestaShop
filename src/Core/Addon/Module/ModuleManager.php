@@ -294,12 +294,15 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($this->moduleProvider->isInstalled($name)) {
+            echo "Attempts to install module $name" . PHP_EOL;
             return $this->upgrade($name, 'latest', $source);
         }
 
         if (!empty($source)) {
+            echo "Attempts to move module $name" . PHP_EOL;
             $this->moduleZipManager->storeInModulesFolder($source);
         } elseif (!$this->moduleProvider->isOnDisk($name)) {
+            echo "Attempts to set module $name on disk from Addons" . PHP_EOL;
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 

@@ -63,6 +63,7 @@ class ModuleDataUpdater
         // Check if the module can be downloaded from addons
         foreach ($this->adminModuleDataProvider->getCatalogModules(['name' => $name]) as $catalog_module) {
             if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'must-have', 'customer'])) {
+                echo "Attempts to download module $name" . PHP_EOL;
                 return $this->addonsDataProvider->downloadModule($catalog_module->id);
             }
         }
