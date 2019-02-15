@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
 
 /**
  * Toggles tax status
@@ -37,9 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
 class ToggleTaxStatusCommand
 {
     /**
-     * @var Status
+     * @var bool
      */
-    private $status;
+    private $expectedStatus;
 
     /**
      * @var TaxId
@@ -47,25 +46,25 @@ class ToggleTaxStatusCommand
     private $taxId;
 
     /**
-     * @param string $status
+     * @param string $expectedStatus
      * @param int $taxId
      *
      * @throws TaxException
      * @throws DomainConstraintException
      */
-    public function __construct($taxId, $status)
+    public function __construct($taxId, $expectedStatus)
     {
-        $this->assertIsBool($status);
+        $this->assertIsBool($expectedStatus);
         $this->taxId = new TaxId($taxId);
-        $this->status = $status;
+        $this->expectedStatus = $expectedStatus;
     }
 
     /**
-     * @return Status
+     * @return bool
      */
-    public function getStatus()
+    public function getExpectedStatus()
     {
-        return $this->status;
+        return $this->expectedStatus;
     }
 
     /**

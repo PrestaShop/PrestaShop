@@ -38,7 +38,7 @@ class BulkToggleTaxStatusCommand
     /**
      * @var bool
      */
-    private $status;
+    private $expectedStatus;
 
     /**
      * @var TaxId[]
@@ -47,24 +47,24 @@ class BulkToggleTaxStatusCommand
 
     /**
      * @param int[] $taxIds
-     * @param bool $status
+     * @param bool $expectedStatus
      *
      * @throws DomainConstraintException
      * @throws TaxException
      */
-    public function __construct(array $taxIds, $status)
+    public function __construct(array $taxIds, $expectedStatus)
     {
-        $this->assertIsBool($status);
+        $this->assertIsBool($expectedStatus);
         $this->setTaxIds($taxIds);
-        $this->status = $status;
+        $this->expectedStatus = $expectedStatus;
     }
 
     /**
      * @return bool
      */
-    public function getStatus()
+    public function getExpectedStatus()
     {
-        return $this->status;
+        return $this->expectedStatus;
     }
 
     /**

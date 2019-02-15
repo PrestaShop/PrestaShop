@@ -47,7 +47,7 @@ final class ToggleTaxStatusHandler extends AbstractTaxHandler implements ToggleT
         $taxIdValue = $command->getTaxId()->getValue();
         $tax = new Tax($taxIdValue);
         $this->assertTaxWasFound($command->getTaxId(), $tax);
-        $tax->active = $command->getStatus();
+        $tax->active = $command->getExpectedStatus();
 
         try {
             if (!$tax->save()) {
