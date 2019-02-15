@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,41 +16,42 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query;
+namespace PrestaShop\PrestaShop\Adapter\Employee;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Employee\DefaultAvatarProviderInterface;
 
 /**
- * Gets employee information for editing.
+ * Class DefaultAvatarProvider provides default employee avatar.
  */
-class GetEmployeeForEditing
+final class DefaultAvatarProvider implements DefaultAvatarProviderInterface
 {
     /**
-     * @var EmployeeId
+     * @var Tools
      */
-    private $employeeId;
+    private $tools;
 
     /**
-     * @param int $employeeId
+     * @param Tools $tools
      */
-    public function __construct($employeeId)
+    public function __construct(Tools $tools)
     {
-        $this->employeeId = new EmployeeId($employeeId);
+        $this->tools = $tools;
     }
 
     /**
-     * @return EmployeeId
+     * {@inheritdoc}
      */
-    public function getEmployeeId()
+    public function getDefaultAvatarUrl()
     {
-        return $this->employeeId;
+        return $this->tools->getAdminImageUrl('prestashop-avatar.png');
     }
 }

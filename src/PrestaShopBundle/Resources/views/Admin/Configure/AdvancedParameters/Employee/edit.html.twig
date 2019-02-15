@@ -23,9 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set enableSidebar = true %}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% set enableSidebar = true %}
+{% set layoutTitle = 'Edit'|trans({}, 'Admin.Actions') %}
 
 {% block content %}
   {% if employeeForm.vars.errors is not empty %}
