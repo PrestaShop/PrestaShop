@@ -742,7 +742,11 @@ class ModuleManager implements AddonManagerInterface
             $errors = $module->getInstance()->getErrors();
             $message = array_pop($errors);
         } else {
-            throw new \RuntimeException('I want to know what happens here.');
+            try {
+                throw new \RuntimeException('I want to know what happens here.');
+            } catch (\Exception $exception) {
+                echo $exception;
+            }
 
             // Invalid instance: Missing or with syntax error
             $message = $this->translator->trans(
