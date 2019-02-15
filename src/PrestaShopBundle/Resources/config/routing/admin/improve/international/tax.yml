@@ -4,3 +4,10 @@ admin_taxes_index:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:index'
     _legacy_controller: AdminTaxes
+
+admin_taxes_save_options:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:saveOptions'
+    _legacy_controller: AdminTaxes

@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,22 +49,54 @@ class TaxController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $taxOptionsForm = $this->get('prestashop.admin.tax_options.form_handler')->getForm();
+        $taxOptionsForm = $this->getTaxOptionsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/index.html.twig', [
             'taxOptionsForm' => $taxOptionsForm->createView(),
         ]);
     }
 
-    public function createAction()
+    /**
+     * Process tax options configuration form.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_taxes_index"
+     * )
+     * @DemoRestricted(redirectRoute="admin_taxes_index")
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function saveOptionsAction(Request $request)
     {
-        //@todo: implement create action
+        $taxOptionsFormHandler = $this->getTaxOptionsFormHandler();
+
+        $taxOptionsForm = $taxOptionsFormHandler->getForm();
+        $taxOptionsForm->handleRequest($request);
+
+        if ($taxOptionsForm->isSubmitted()) {
+            $errors = $taxOptionsFormHandler->save($taxOptionsForm->getData());
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_taxes_index');
+            }
+
+            $this->flashErrors($errors);
+        }
+
         return $this->redirectToRoute('admin_taxes_index');
     }
 
-    public function editAction($taxId)
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getTaxOptionsFormHandler()
     {
-        //@todo: implement edit
-        return $this->redirectToRoute('admin_taxes_index');
+        return $this->get('prestashop.admin.tax_options.form_handler');
     }
 }
