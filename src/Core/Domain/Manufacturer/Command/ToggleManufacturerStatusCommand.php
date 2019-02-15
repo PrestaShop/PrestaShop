@@ -42,21 +42,22 @@ class ToggleManufacturerStatusCommand
     private $manufacturerId;
 
     /**
-     * @var Status
+     * @var bool
      */
     private $status;
 
     /**
-     * @param $manufacturerId
-     * @param $status
+     * @param int $manufacturerId
+     * @param bool $status
      *
      * @throws DomainConstraintException
      * @throws ManufacturerConstraintException
      */
     public function __construct($manufacturerId, $status)
     {
+        $this->assertIsBool($status);
+        $this->status = $status;
         $this->manufacturerId = new ManufacturerId($manufacturerId);
-        $this->status = new Status($status);
     }
 
     /**
@@ -68,10 +69,27 @@ class ToggleManufacturerStatusCommand
     }
 
     /**
-     * @return Status
+     * @return bool
      */
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Validates that value is of type boolean
+     *
+     * @param $value
+     *
+     * @throws DomainConstraintException
+     */
+    private function assertIsBool($value)
+    {
+        if (!is_bool($value)) {
+            throw new DomainConstraintException(
+                sprintf('Status must be of type bool, but given %s', var_export($value, true)),
+                DomainConstraintException::INVALID_STATUS_TYPE
+            );
+        }
     }
 }
