@@ -38,7 +38,7 @@ class BulkToggleManufacturerStatusCommand
     /**
      * @var bool
      */
-    private $status;
+    private $expectedStatus;
 
     /**
      * @var ManufacturerId[]
@@ -47,24 +47,24 @@ class BulkToggleManufacturerStatusCommand
 
     /**
      * @param array $manufacturerIds
-     * @param bool $status
+     * @param bool $expectedStatus
      *
      * @throws ManufacturerConstraintException
      * @throws DomainConstraintException
      */
-    public function __construct(array $manufacturerIds, $status)
+    public function __construct(array $manufacturerIds, $expectedStatus)
     {
-        $this->assertIsBool($status);
-        $this->status = $status;
+        $this->assertIsBool($expectedStatus);
+        $this->expectedStatus = $expectedStatus;
         $this->setManufacturerIds($manufacturerIds);
     }
 
     /**
      * @return bool
      */
-    public function getStatus()
+    public function getExpectedStatus()
     {
-        return $this->status;
+        return $this->expectedStatus;
     }
 
     /**
