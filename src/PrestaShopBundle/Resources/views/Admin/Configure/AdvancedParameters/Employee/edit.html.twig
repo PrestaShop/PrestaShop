@@ -26,7 +26,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% set enableSidebar = true %}
-{% set layoutTitle = 'Edit'|trans({}, 'Admin.Actions') %}
+{% set layoutTitle = 'Edit %lastname% %firstname%'|trans({}, 'Admin.Advparameters.Feature') %}
 
 {% block content %}
   {% if employeeForm.vars.errors is not empty %}
