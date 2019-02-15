@@ -97,7 +97,7 @@ abstract class InstallControllerConsole
                     echo $error.PHP_EOL;
                 }
             }
-            exit;
+            exit(1);
         }
 
         if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/process.php')) {
