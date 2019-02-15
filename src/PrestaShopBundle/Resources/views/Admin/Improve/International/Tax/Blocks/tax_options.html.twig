@@ -1,0 +1,49 @@
+{{ form_start(taxOptionsForm) }}
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Tax options'|trans({}, 'Admin.International.Feature') }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+      <div class="form-group row">
+        <label class="form-control-label" for="{{ taxOptionsForm.options.enable_tax.vars.id }}">
+          {{ 'Enable tax'|trans({}, 'Admin.International.Feature') }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(taxOptionsForm.options.enable_tax) }}
+            <small class="form-text">
+              {{ 'Select whether or not to include tax on purchases.'|trans({}, 'Admin.International.Feature') }}
+            </small>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="form-control-label" for="{{ taxOptionsForm.options.display_tax_in_cart.vars.id }}">
+          {{ 'Display tax in the shopping cart'|trans({}, 'Admin.International.Feature') }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(taxOptionsForm.options.display_tax_in_cart) }}
+          <small class="form-text">
+            {{ 'Select whether or not to display tax on a distinct line in the cart.'|trans({}, 'Admin.International.Feature') }}
+          </small>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="{{ taxOptionsForm.options.address_type.vars.id }}" class="form-control-label">
+          {{ 'Based on'|trans({}, 'Admin.International.Feature') }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(taxOptionsForm.options.address_type) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="form-control-label" for="{{ taxOptionsForm.options.use_eco_tax.vars.id }}">
+          {{ 'Use ecotax'|trans({}, 'Admin.International.Feature') }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(taxOptionsForm.options.use_eco_tax) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ form_end(taxOptionsForm) }}
