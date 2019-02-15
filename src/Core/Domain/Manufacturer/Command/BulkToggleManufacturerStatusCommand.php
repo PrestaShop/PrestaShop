@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
 class BulkToggleManufacturerStatusCommand
 {
     /**
-     * @var Status
+     * @var bool
      */
     private $status;
 
@@ -52,12 +52,13 @@ class BulkToggleManufacturerStatusCommand
      */
     public function __construct(array $manufacturerIds, $status)
     {
+        $this->assertIsBool($status);
+        $this->status = $status;
         $this->setManufacturerIds($manufacturerIds);
-        $this->status = new Status($status);
     }
 
     /**
-     * @return Status
+     * @return bool
      */
     public function getStatus()
     {
@@ -81,6 +82,23 @@ class BulkToggleManufacturerStatusCommand
     {
         foreach ($manufacturerIds as $manufacturerId) {
             $this->manufacturerIds[] = new ManufacturerId((int) $manufacturerId);
+        }
+    }
+
+    /**
+     * Validates that value is of type boolean
+     *
+     * @param $value
+     *
+     * @throws DomainConstraintException
+     */
+    private function assertIsBool($value)
+    {
+        if (!is_bool($value)) {
+            throw new DomainConstraintException(
+                sprintf('Status must be of type bool, but given %s', var_export($value, true)),
+                DomainConstraintException::INVALID_STATUS_TYPE
+            );
         }
     }
 }
