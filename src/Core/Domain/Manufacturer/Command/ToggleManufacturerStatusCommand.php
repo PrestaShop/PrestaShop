@@ -43,19 +43,19 @@ class ToggleManufacturerStatusCommand
     /**
      * @var bool
      */
-    private $status;
+    private $expectedStatus;
 
     /**
      * @param int $manufacturerId
-     * @param bool $status
+     * @param bool $expectedStatus
      *
      * @throws DomainConstraintException
      * @throws ManufacturerConstraintException
      */
-    public function __construct($manufacturerId, $status)
+    public function __construct($manufacturerId, $expectedStatus)
     {
-        $this->assertIsBool($status);
-        $this->status = $status;
+        $this->assertIsBool($expectedStatus);
+        $this->expectedStatus = $expectedStatus;
         $this->manufacturerId = new ManufacturerId($manufacturerId);
     }
 
@@ -70,9 +70,9 @@ class ToggleManufacturerStatusCommand
     /**
      * @return bool
      */
-    public function getStatus()
+    public function getExpectedStatus()
     {
-        return $this->status;
+        return $this->expectedStatus;
     }
 
     /**
