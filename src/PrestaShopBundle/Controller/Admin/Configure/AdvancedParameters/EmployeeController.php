@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkDeleteEmployeeCommand;
@@ -43,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeStatu
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -136,7 +136,7 @@ class EmployeeController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (EmployeeException $e) {
-            $this->addFlash('error', $this->getErrorForEmployeeException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_employees_index');
@@ -167,7 +167,7 @@ class EmployeeController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (EmployeeException $e) {
-            $this->addFlash('error', $this->getErrorForEmployeeException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_employees_index');
@@ -190,7 +190,7 @@ class EmployeeController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         } catch (EmployeeException $e) {
-            $this->addFlash('error', $this->getErrorForEmployeeException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_employees_index');
@@ -218,10 +218,50 @@ class EmployeeController extends FrameworkBundleAdminController
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (EmployeeException $e) {
-            $this->addFlash('error', $this->getErrorForEmployeeException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_employees_index');
+    }
+
+    /**
+     * Show employee creation form page and handle it's submit.
+     *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        $employeeFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.employee_form_handler');
+        $employeeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.employee_form_builder');
+
+        $employeeForm = $employeeFormBuilder->getForm();
+        $employeeForm->handleRequest($request);
+
+        try {
+            $result = $employeeFormHandler->handle($employeeForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_employees_index');
+            }
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        $templateVars = [
+            'employeeForm' => $employeeForm->createView(),
+        ];
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/create.html.twig',
+            $templateVars + $this->getFormTemplateVariables($request)
+        );
     }
 
     /**
@@ -241,7 +281,6 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function editAction($employeeId, Request $request)
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $formAccessChecker = $this->get('prestashop.adapter.employee.form_access_checker');
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
 
@@ -251,17 +290,18 @@ class EmployeeController extends FrameworkBundleAdminController
         ]);
         $employeeForm->handleRequest($request);
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig', [
-            'layoutTitle' => $this->trans('Employees', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        $editableEmployee = $this->getQueryBus()->handle(new GetEmployeeForEditing((int) $employeeId));
+
+        $templateVars = [
             'employeeForm' => $employeeForm->createView(),
-            'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
-            'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
             'isRestrictedAccess' => $isRestrictedAccess,
-            'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
-            'getTabsUrl' => $this->generateUrl('admin_profiles_get_tabs'),
-        ]);
+            'editableEmployee' => $editableEmployee,
+        ];
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig',
+            $templateVars + $this->getFormTemplateVariables($request)
+        );
     }
 
     /**
@@ -273,18 +313,15 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get human readable error message for thrown employee exception.
+     * Get human readable error messages.
      *
      * @param EmployeeException $e
      *
-     * @return string
+     * @return array
      */
-    protected function getErrorForEmployeeException(EmployeeException $e)
+    protected function getErrorMessages($e)
     {
-        $type = get_class($e);
-        $code = $e->getCode();
-
-        $errorMessages = [
+        return [
             InvalidEmployeeIdException::class => $this->trans(
                 'The object cannot be loaded (the identifier is missing or invalid)',
                 'Admin.Notifications.Error'
@@ -313,19 +350,26 @@ class EmployeeController extends FrameworkBundleAdminController
                 ]
             ),
         ];
+    }
 
-        if (!isset($errorMessages[$type])) {
-            return $this->getFallbackErrorMessage($type, $e->getCode());
-        }
+    /**
+     * Get template variables that are same between create and edit forms.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getFormTemplateVariables(Request $request)
+    {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
-        if (!is_array($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        if (isset($errorMessages[$type][$code])) {
-            return $errorMessages[$type][$code];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
+        return [
+            'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
+            'requireAddonsSearch' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
+            'getTabsUrl' => $this->generateUrl('admin_profiles_get_tabs'),
+            'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
+        ];
     }
 }
