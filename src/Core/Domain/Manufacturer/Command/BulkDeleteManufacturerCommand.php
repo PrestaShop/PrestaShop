@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
- * Deletes manufacturers on bulk action
+ * Deletes manufacturers in bulk action
  */
 class BulkDeleteManufacturerCommand
 {
