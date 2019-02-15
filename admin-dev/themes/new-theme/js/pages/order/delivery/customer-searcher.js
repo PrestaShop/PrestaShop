@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,20 +21,43 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+/**
+ * Searches customers for which order is being created
+ */
+export default class CustomerSearcher {
+  constructor() {
+    this.$searchInput = $('#customerSearchInput');
 
-{% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/customer_search.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+    this.$searchInput.on('input', (event) => {
+      this._doSearch();
+    });
 
-{% block javascripts %}
-  {{ parent() }}
+    return {};
+  }
 
-  <script src="{{ asset('themes/new-theme/public/order_create.bundle.js') }}"></script>
-{% endblock %}
+  /**
+   * Searches for customers
+   *
+   * @private
+   */
+  _doSearch() {
+    const name = this.$searchInput.val();
+
+    if (4 > name.length) {
+      return;
+    }
+
+    $.ajax(this.$searchInput.data('url'), {
+      method: 'GET',
+      data: {
+        'action': 'searchCustomers',
+        'ajax': 1,
+        'customer_search': name
+      }
+    }).then((response) => {
+
+    });
+  }
+}

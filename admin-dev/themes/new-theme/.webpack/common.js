@@ -43,6 +43,7 @@ module.exports = {
     profiles: './js/pages/profiles',
     cms_page: './js/pages/cms-page',
     form_popover_error: './js/components/form/form-popover-error.js',
+    order_create: './js/pages/order/create',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
