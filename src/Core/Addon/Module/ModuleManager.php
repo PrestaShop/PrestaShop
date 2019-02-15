@@ -298,11 +298,16 @@ class ModuleManager implements AddonManagerInterface
             return $this->upgrade($name, 'latest', $source);
         }
 
+        echo "Trololo ?" . PHP_EOL;
+
         if (!empty($source)) {
             echo "Attempts to move module $name" . PHP_EOL;
             $this->moduleZipManager->storeInModulesFolder($source);
         } elseif (!$this->moduleProvider->isOnDisk($name)) {
             echo "Attempts to set module $name on disk from Addons" . PHP_EOL;
+            if ($this->moduleProvider->isOnDisk($name) === false) {
+                echo 'Because $this->moduleProvider->isOnDisk($name) returns false' . PHP_EOL;
+            }
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 

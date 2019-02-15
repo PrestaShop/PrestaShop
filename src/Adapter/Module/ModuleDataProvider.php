@@ -274,7 +274,14 @@ class ModuleDataProvider
     {
         $path = _PS_MODULE_DIR_ . $name . '/' . $name . '.php';
 
-        return file_exists($path);
+        echo "Call ModuleDataProvider::isOnDisk($name)" . PHP_EOL;
+        echo "Path: $path" . PHP_EOL;
+
+        $result = file_exists($path);
+
+        echo "Result:" . var_export($result) . PHP_EOL;
+
+        return $result;
     }
 
     /**
