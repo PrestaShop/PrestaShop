@@ -64,6 +64,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee->default_tab = $command->getDefaultPageId();
         $employee->optin = $command->isSubscribedToNewsletter();
         $employee->active = $command->isActive();
+        $employee->passwd = $command->getPlainPassword();
 
         if (false === $employee->add()) {
             throw new EmployeeException(
