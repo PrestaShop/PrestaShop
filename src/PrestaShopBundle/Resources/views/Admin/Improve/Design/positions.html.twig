@@ -109,7 +109,26 @@
                         class="module-position-{{ moduleInstance.id }} module-item{% if canMove and hook['modules_count'] >= 2 %} draggable{% endif %}">
 
                         <div class="module-column-select">
-                          <input type="checkbox" data-hook-id="{{ hook['id_hook'] }}" class="modules-position-checkbox hook{{ hook['id_hook'] }}" name="unhooks[]" value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"/>
+                          <i class="material-icons drag_indicator">drag_indicator</i>
+                          <input type="checkbox" id="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}" data-hook-id="{{ hook['id_hook'] }}" class="modules-position-checkbox hook{{ hook['id_hook'] }}" name="unhooks[]" value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"/>
+                          <label class="selectbox" for="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"><i class="material-icons done">done</i></label>
+                        </div>
+
+                        <div class="module-column-icon">
+                          <img src="{{ asset('../modules/' ~ moduleInstance.name ~ '/logo.png') }}" alt="{{ moduleInstance.displayName| escape }}" />
+                        </div>
+
+                        <div class="module-column-infos">
+                          <span class="module-name">
+                            {{ moduleInstance.displayName| escape }}
+                            {% if moduleInstance.version %}
+                              <small class="text-muted">&nbsp;-&nbsp;{{ 'v%s' | format(moduleInstance.version) }}</small>
+                            {% endif %}
+                          </span>
+                        </div>
+                        
+                        <div class="module-column-description">
+                          <span class="module-description">{{ moduleInstance.description | escape }}</span>
                         </div>
 
                         {% if not selectedModule and hook['modules_count'] > 1 %}
@@ -118,7 +137,7 @@
                               <span class="index-position">{{ loop.index }}</span>
                             </div>
 
-                            {% if canMove %}
+                            <!-- {% if canMove %}
                               <div class="btn-group-vertical module-buttons-update">
                                 <button class="btn btn-outline-primary btn-sm"
                                   data-hook-id="{{ hook['id_hook'] }}"
@@ -134,23 +153,9 @@
                                   <i class="material-icons">expand_more</i>
                                 </button>
                               </div>
-                            {% endif %}
+                            {% endif %} -->
                           </div>
                         {% endif %}
-
-                        <div class="module-column-icon">
-                          <img src="{{ asset('../modules/' ~ moduleInstance.name ~ '/logo.png') }}" alt="{{ moduleInstance.displayName| escape }}" />
-                        </div>
-
-                        <div class="module-column-infos">
-                          <span class="module-name">
-                            {{ moduleInstance.displayName| escape }}
-                            {% if moduleInstance.version %}
-                              <small class="text-muted">&nbsp;-&nbsp;{{ 'v%s' | format(moduleInstance.version) }}</small>
-                            {% endif %}
-                          </span>
-                          <div class="module-description">{{ moduleInstance.description | escape }}</div>
-                        </div>
 
                         <div class="module-column-actions">
                           <div class="btn-group">
@@ -165,11 +170,11 @@
 
                             <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}">
                               <i class="material-icons">edit</i>
-                              {{ 'Edit' | trans({}, 'Admin.Actions') }}
+                              <!-- {{ 'Edit' | trans({}, 'Admin.Actions') }} -->
                             </a>
 
                             <button class="btn btn-outline-primary btn-sm dropdown-toggle-split" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                              <i class="material-icons">expand_more</i>
+                              <i class="material-icons">more_vert</i>
                             </button>
 
                             <div class="dropdown-menu">
