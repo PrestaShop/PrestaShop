@@ -640,7 +640,7 @@ class ToolsCore
         ) {
             $context->cookie->id_lang = $newLanguageId;
             $language = new Language($newLanguageId);
-            if (Validate::isLoadedObject($language) && $language->active) {
+            if (Validate::isLoadedObject($language) && $language->active && $language->isAssociatedToShop()) {
                 $context->language = $language;
             }
         }
