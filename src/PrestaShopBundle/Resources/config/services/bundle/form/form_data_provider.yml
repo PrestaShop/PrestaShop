@@ -166,3 +166,9 @@ services:
         arguments:
           - '@prestashop.core.command_bus'
           - '@=service("prestashop.adapter.legacy.configuration").get("PS_ACTIVE_CRONJOB_EXCHANGE_RATE")'
+
+    prestashop.admin.tax_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsFormDataProvider'
+#        arguments:
+#            - '@prestashop.core.command_bus'
+#            - '@=service("prestashop.adapter.legacy.configuration").get("PS_ACTIVE_CRONJOB_EXCHANGE_RATE")'
