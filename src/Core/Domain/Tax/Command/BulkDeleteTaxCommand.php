@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 
 /**
@@ -41,7 +42,7 @@ class BulkDeleteTaxCommand
     /**
      * @param TaxId[] $taxIds
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @throws TaxException
      */
     public function __construct(array $taxIds)
     {
@@ -59,7 +60,7 @@ class BulkDeleteTaxCommand
     /**
      * @param int[] $taxIds
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @throws TaxException
      */
     private function setTaxIds(array $taxIds)
     {

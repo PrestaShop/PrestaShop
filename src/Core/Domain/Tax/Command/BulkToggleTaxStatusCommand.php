@@ -26,8 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
 
 /**
  * Toggles taxes status on bulk action
@@ -35,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Status;
 class BulkToggleTaxStatusCommand
 {
     /**
-     * @var Status
+     * @var bool
      */
     private $status;
 
@@ -48,17 +49,18 @@ class BulkToggleTaxStatusCommand
      * @param int[] $taxIds
      * @param bool $status
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @throws DomainConstraintException
+     * @throws TaxException
      */
     public function __construct(array $taxIds, $status)
     {
-        $this->status = new Status($status);
+        $this->assertIsBool($status);
         $this->setTaxIds($taxIds);
+        $this->status = $status;
     }
 
     /**
-     * @return Status
+     * @return bool
      */
     public function getStatus()
     {
@@ -76,12 +78,29 @@ class BulkToggleTaxStatusCommand
     /**
      * @param array $taxIds
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException
+     * @throws TaxException
      */
     private function setTaxIds(array $taxIds)
     {
         foreach ($taxIds as $taxId) {
             $this->taxIds[] = new TaxId((int) $taxId);
+        }
+    }
+
+    /**
+     * Validates that value is of type boolean
+     *
+     * @param $value
+     *
+     * @throws DomainConstraintException
+     */
+    private function assertIsBool($value)
+    {
+        if (!is_bool($value)) {
+            throw new DomainConstraintException(
+                sprintf('Status must be of type bool, but given %s', var_export($value, true)),
+                DomainConstraintException::INVALID_STATUS_TYPE
+            );
         }
     }
 }
