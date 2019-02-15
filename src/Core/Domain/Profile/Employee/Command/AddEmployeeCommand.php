@@ -81,9 +81,15 @@ class AddEmployeeCommand
     private $shopAssociation;
 
     /**
+     * @var string
+     */
+    private $plainPassword;
+
+    /**
      * @param string $firstName
      * @param string $lastName
      * @param string $email
+     * @param string $plainPassword
      * @param bool $isSubscribedToNewsletter
      * @param int $defaultPageId
      * @param int $languageId
@@ -95,6 +101,7 @@ class AddEmployeeCommand
         $firstName,
         $lastName,
         $email,
+        $plainPassword,
         $isSubscribedToNewsletter,
         $defaultPageId,
         $languageId,
@@ -111,6 +118,7 @@ class AddEmployeeCommand
         $this->active = $active;
         $this->profileId = $profileId;
         $this->shopAssociation = $shopAssociation;
+        $this->plainPassword = $plainPassword;
     }
 
     /**
@@ -183,5 +191,13 @@ class AddEmployeeCommand
     public function getShopAssociation()
     {
         return $this->shopAssociation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 }
