@@ -11,8 +11,10 @@ addons:
       - fonts-liberation
 
 cache:
+  timeout: 1000
   directories:
     - $HOME/.composer/cache
+    - modules
 
 sudo: required
 dist: trusty
@@ -24,6 +26,7 @@ php:
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
+    - NO_OVERWRITE=0
   matrix:
     - PRESTASHOP_TEST_TYPE=lint
     - PRESTASHOP_TEST_TYPE=unit

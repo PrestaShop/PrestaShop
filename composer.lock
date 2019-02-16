@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac856c01ea05a32444aacf8274403a4e",
+    "content-hash": "8e53ebf0c6d8cb3098d35537b5af2bc2",
     "packages": [
         {
             "name": "analog/analog",
@@ -6024,16 +6024,16 @@
         },
         {
             "name": "prestashop/composer-script-handler",
-            "version": "0.5",
+            "version": "0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/composer-script-handler.git",
-                "reference": "92b4de54397355131b2e9d8a87dec7f51507dc9a"
+                "reference": "18476ded793a99b32589be5a7c884076a1aa2c69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/composer-script-handler/zipball/92b4de54397355131b2e9d8a87dec7f51507dc9a",
-                "reference": "92b4de54397355131b2e9d8a87dec7f51507dc9a",
+                "url": "https://api.github.com/repos/PrestaShop/composer-script-handler/zipball/18476ded793a99b32589be5a7c884076a1aa2c69",
+                "reference": "18476ded793a99b32589be5a7c884076a1aa2c69",
                 "shasum": ""
             },
             "require": {
@@ -6067,7 +6067,7 @@
                 }
             ],
             "description": "Composer Script Handler for PrestaShop",
-            "time": "2019-02-11T16:34:37+00:00"
+            "time": "2019-02-16T01:12:20+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
