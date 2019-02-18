@@ -47,10 +47,10 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 
     protected function setUp()
     {
+        self::bootKernel();
         $loaderMock = $this->createMock(LoaderInterface::class);
         $legacyFileLoader = new LegacyFileLoader();
         $phpExtractor = new PhpExtractor();
-        self::bootKernel();
         $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
         $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleDirectory());
 
