@@ -22,10 +22,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import OrderCreator from "./order-creator";
+
+import CustomerSearcher from "./customer-searcher";
 
 const $ = window.$;
 
-$(document).ready(() => {
-  new OrderCreator();
-});
+/**
+ *
+ */
+export default class OrderCreator {
+  constructor() {
+    this.$container = $('#orderCreationContainer');
+
+    this.customerSearcher = new CustomerSearcher();
+
+    this.$container.on('click', '.js-choose-customer-btn', (event) => {
+      this._onCustomerChooseForOrderCreation(event);
+    });
+  }
+
+  /**
+   * Chooses customer for which order is being created
+   *
+   * @param {Event} event
+   *
+   * @private
+   */
+  _onCustomerChooseForOrderCreation(event) {
+    const $chooseBtn = $(event.currentTarget);
+
+    console.log($chooseBtn.data('customer-id'));
+  }
+}

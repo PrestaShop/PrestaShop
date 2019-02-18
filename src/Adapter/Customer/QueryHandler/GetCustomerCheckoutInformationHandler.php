@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -22,10 +23,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import OrderCreator from "./order-creator";
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
-$(document).ready(() => {
-  new OrderCreator();
-});
+use Cart;
+use Order;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCheckoutInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerCheckoutInformationHandlerInterface;
+
+/**
+ * Handle command that gets customer data that is needed for order creation in Back Office
+ */
+final class GetCustomerCheckoutInformationHandler implements GetCustomerCheckoutInformationHandlerInterface
+{
+    /**
+     * @param GetCustomerCheckoutInformation $query
+     *
+     * @return mixed
+     */
+    public function handle(GetCustomerCheckoutInformation $query)
+    {
+        $carts = Cart::getCustomerCarts($query->getCustomerId()->getValue(), false);
+        $orders = Order::getCustomerOrders($query->getCustomerId()->getValue());
+
+
+
+        return [
+            'carts' => $carts,
+            'orders'
+        ];
+    }
+}
