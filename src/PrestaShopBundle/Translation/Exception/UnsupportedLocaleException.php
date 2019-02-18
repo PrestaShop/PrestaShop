@@ -24,37 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Translation\Loader;
+namespace PrestaShopBundle\Translation\Exception;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
-use Symfony\Component\Translation\MessageCatalogueInterface;
+use Exception;
 
 /**
- * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="LegacyFileLoaderTest"
+ * Will be thrown if a locale is not supported in Legacy format
  */
-class LegacyFileLoaderTest extends TestCase
+final class UnsupportedLocaleException extends Exception
 {
-    public function testExtract()
-    {
-        $extractor = new LegacyFileLoader();
-        $catalogue = $extractor->load($this->getTranslationsFolder(), 'fr-FR');
-
-        $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
-        $this->assertCount(88, $catalogue->all('messages'));
-        $someId = 'c7e728f436eee2692d6c6f756621a70e';
-        $this->assertTrue($catalogue->has($someId));
-        $this->assertSame(
-            'Une erreur est survenue, veuillez vérifier votre fichier zip',
-            $catalogue->get($someId)
-        );
-    }
-
     /**
-     * @return string
+     * @param string $filepath the expected filepath of the translations
+     * @param string $locale the translation locale
+     *
+     * @return self
      */
-    private function getTranslationsFolder()
+    public static function fileNotFound($filepath, $locale)
     {
-        return __DIR__ . '/../../../../resources/some_module/translations/';
+        $exceptionMessage = sprintf(
+            'The locale "%s" is not supported, because we can\'t find the related file in the module:
+            did you have create the file "%s"?',
+            $locale,
+            $filepath
+        );
+
+        return new self($exceptionMessage);
     }
 }

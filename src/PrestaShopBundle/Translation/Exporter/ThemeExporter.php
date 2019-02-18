@@ -142,10 +142,7 @@ class ThemeExporter
 
         $archiveParentDirectory = $this->makeArchiveParentDirectory($themeName, $locale);
 
-        if (
-            $this->filesystem->exists($archiveParentDirectory) &&
-            $this->ensureFileBelongsToExportDirectory($archiveParentDirectory)
-        ) {
+        if ($this->ensureFileBelongsToExportDirectory($archiveParentDirectory)) {
             // Clean up previously exported archives
             $this->filesystem->remove($archiveParentDirectory);
         }
@@ -180,6 +177,10 @@ class ThemeExporter
      */
     protected function ensureFileBelongsToExportDirectory($filePath)
     {
+        if (!$this->filesystem->exists($filePath)) {
+            return false;
+        }
+
         $validFileLocation = substr(realpath($filePath), 0, strlen(realpath($this->exportDir))) === realpath($this->exportDir);
 
         if (!$validFileLocation) {
