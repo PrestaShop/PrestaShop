@@ -26,28 +26,54 @@
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Extractor;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
-use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
-use PrestaShop\TranslationToolsBundle\Translation\Compiler\Smarty\TranslationTemplateCompiler;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="LegacyModuleExtractorTest"
  */
-class LegacyModuleExtractorTest extends TestCase
+class LegacyModuleExtractorTest extends KernelTestCase
 {
+    /**
+     * @var string Domain name of the modules translations
+     */
+    const DOMAIN_NAME = 'ModulesSomeModule';
+
     public function testExtract()
     {
+        self::bootKernel();
         $phpExtractor = new PhpExtractor();
-        $smartyExtractor = new SmartyExtractor(new TranslationTemplateCompiler());
+        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
         $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleFolder());
 
-        $catalogue = $extractor->extract('some-module', 'fr-FR');
+        $catalogue = $extractor->extract('some_module', 'fr-FR');
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
-        $this->assertCount(1, $catalogue->all('ModulesSome-module'));
+        $this->assertCount(5, $catalogue->all(self::DOMAIN_NAME));
+    }
+
+    /**
+     * @depends testExtract
+     */
+    public function testExtractionTranslations()
+    {
+        self::bootKernel();
+        $phpExtractor = new PhpExtractor();
+        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
+        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleFolder());
+
+        $catalogue = $extractor->extract('some_module', 'fr-FR');
+        $this->assertTrue($catalogue->has(
+            'An error occured, please check your zip file',
+            self::DOMAIN_NAME
+        ));
+
+        $this->assertSame(
+            'The module %s has been disabled',
+            $catalogue->get('The module %s has been disabled', self::DOMAIN_NAME)
+        );
     }
 
     /**
