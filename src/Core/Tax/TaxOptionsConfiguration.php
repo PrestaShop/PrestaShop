@@ -45,7 +45,7 @@ final class TaxOptionsConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
@@ -54,34 +54,40 @@ final class TaxOptionsConfiguration implements DataConfigurationInterface
             'display_tax_in_cart' => $this->configuration->get('PS_TAX_DISPLAY'),
             'address_type' => $this->configuration->get('PS_TAX_ADDRESS_TYPE'),
             'use_eco_tax' => $this->configuration->get('PS_USE_ECOTAX'),
+            'eco_tax_rule_group' => $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID'),
         ];
     }
 
     /**
-     * @param array $configuration
-     *
-     * @return array if not empty, populated by validation errors
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
-        $this->configuration->set('PS_TAX', (int) $configuration['enable_tax']);
-        $this->configuration->set('PS_TAX_DISPLAY', (int) $configuration['display_tax_in_cart']);
-        $this->configuration->set('PS_TAX_ADDRESS_TYPE', $configuration['address_type']);
-        $this->configuration->set('PS_USE_ECOTAX', (int) $configuration['use_eco_tax']);
+        if ($this->validateConfiguration($configuration)) {
+            $this->configuration->set('PS_TAX', (int) $configuration['enable_tax']);
+            $this->configuration->set('PS_TAX_DISPLAY', (int) $configuration['display_tax_in_cart']);
+            $this->configuration->set('PS_TAX_ADDRESS_TYPE', $configuration['address_type']);
+            $this->configuration->set('PS_USE_ECOTAX', (int) $configuration['use_eco_tax']);
 
-        return $errors;
+            if ($this->configuration->get('PS_USE_ECOTAX')) {
+                $this->configuration->set('PS_ECOTAX_TAX_RULES_GROUP_ID', $configuration['eco_tax_rule_group']);
+            }
+        }
+
+        return [];
     }
 
     /**
-     * Ensure the parameters passed are valid.
-     *
-     * @param array $configuration
-     *
-     * @return bool Returns true if no exception are thrown
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {
-        // TODO: Implement validateConfiguration() method.
+        return isset(
+            $configuration['enable_tax'],
+            $configuration['display_tax_in_cart'],
+            $configuration['address_type'],
+            $configuration['use_eco_tax'],
+            $configuration['eco_tax_rule_group']
+        );
     }
 }
