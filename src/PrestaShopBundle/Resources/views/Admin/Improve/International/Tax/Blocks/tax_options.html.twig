@@ -37,13 +37,13 @@
         <div class="col-sm">
           {{ form_widget(taxOptionsForm.options.enable_tax) }}
             <small class="form-text">
-              {{ 'Select whether or not to include tax on purchases.'|trans({}, 'Admin.International.Feature') }}
+              {{ 'Select whether or not to include tax on purchases.'|trans({}, 'Admin.International.Help') }}
             </small>
         </div>
       </div>
       <div class="form-group row">
         <label class="form-control-label" for="{{ taxOptionsForm.options.display_tax_in_cart.vars.id }}">
-          {{ 'Display tax in the shopping cart'|trans({}, 'Admin.International.Help') }}
+          {{ 'Display tax in the shopping cart'|trans({}, 'Admin.International.Feature') }}
         </label>
         <div class="col-sm">
           {{ form_widget(taxOptionsForm.options.display_tax_in_cart) }}
