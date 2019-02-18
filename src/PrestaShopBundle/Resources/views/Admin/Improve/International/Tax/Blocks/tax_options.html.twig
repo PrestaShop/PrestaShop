@@ -68,6 +68,16 @@
           {{ form_widget(taxOptionsForm.options.use_eco_tax) }}
         </div>
       </div>
+      {% if taxOptionsForm.options.eco_tax_rule_group is defined %}
+        <div class="form-group row">
+          <label class="form-control-label" for="{{ taxOptionsForm.options.eco_tax_rule_group.vars.id }}">
+            {{ 'Ecotax'|trans({}, 'Admin.International.Feature') }}
+          </label>
+          <div class="col-sm">
+            {{ form_widget(taxOptionsForm.options.eco_tax_rule_group) }}
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
   <div class="card-footer">
