@@ -159,6 +159,7 @@ class AdminFilterRepository extends EntityRepository
         } else {
             $adminFilter = $this->findOneBy([
                 'employee' => $employeeId,
+                'shop' => $shopId,
                 'controller' => $controller,
                 'action' => $action,
             ]);
