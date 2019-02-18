@@ -25,6 +25,46 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.5.1 - (2010-02-18)
+####################################
+- Back Office:
+  - Bug fix:
+    - #12507: Add hookDispatcher in GridFactory constructor, HookDispatcherAwareTrait has a safer getter
+    - #12234: Force refresh of tinymce editors in product page step 1
+    - #12402: Fix first attribute generation when not choosing first attribute
+    - #12372: Fix provider warehouse routes
+    - #12370: RTL fixes: profile, select and notification dropdown, popover tooltips, stock quantity arrows
+    - #12395: Change stock alert z index to be on top of header
+    - #12354: Fix cancel button on Safari browser
+    - #12361: Refacto SearchParameters and SearchParametersResolver for pagination
+    - #12205: Fix bulk module actions
+    - #12277: Prevent usage of enter key in search hook input
+    - #12236: SERP: Textarea from tinymce requires jquery to return the text value
+    - #12016: Update module & service link in upgrade
+    - #12196: Fix RTL glitches
+    - #12111: Keep showcase cards closed
+    - #11923: Fix error in SERP component when using non-alphanumeric characters
+
+- Front Office:
+  - Improvement:
+    - #12327: Make it possible to enable/disable attribute name on page title
+  - Bug fix:
+    - #12337: Slow combination update due to delay before request
+
+- Core:
+  - Bug fix:
+    - #12543: Update vulnerable dependencies
+    - #12389: Fixed grid hook calls
+    - #12292: Allow arabic numbers in link rewrite
+    - #12106: Robots.txt with multilang/multishop
+    - #11995: Fix undefined INTL_IDNA_VARIANT_UTS46 if intl ICU < 4.6
+    - #11814: Fix typos and duplicate code in upgrade SQL
+
+- Installer:
+  - Bug fix:
+    - #11937: Check if intl is installed in installer
+
+####################################
 #   v1.7.5.0 - (2018-12-17)
 ####################################
 - Front Office:
