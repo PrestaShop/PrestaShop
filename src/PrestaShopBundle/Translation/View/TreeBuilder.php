@@ -71,16 +71,13 @@ class TreeBuilder
             $domainDatabase = str_replace('.' . $provider->getLocale(), '', $domain);
 
             foreach (array_keys($messages) as $translationKey) {
-                if (array_key_exists($translationKey, $xliffCatalog[$domain])) {
-                }
-
                 $data = array(
-                    'xlf' => (array_key_exists($domain, $xliffCatalog) &&
+                    'xlf' => array_key_exists($domain, $xliffCatalog) &&
                     array_key_exists($translationKey, $xliffCatalog[$domain]) ?
-                        $xliffCatalog[$domain][$translationKey] : null),
-                    'db' => (array_key_exists($domainDatabase, $databaseCatalogue) &&
+                        $xliffCatalog[$domain][$translationKey] : null,
+                    'db' => array_key_exists($domainDatabase, $databaseCatalogue) &&
                     array_key_exists($translationKey, $databaseCatalogue[$domainDatabase]) ?
-                        $databaseCatalogue[$domainDatabase][$translationKey] : null),
+                        $databaseCatalogue[$domainDatabase][$translationKey] : null,
                 );
 
                 // if search is empty or is in catalog default|xlf|database
