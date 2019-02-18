@@ -26,17 +26,19 @@
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
-use PrestaShopBundle\Translation\Extractor\LegacyFileExtractor;
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
+use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="ExternalModuleLegacySystemProviderTest"
  */
-class ExternalModuleLegacySystemProviderTest extends TestCase
+class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 {
     /**
      * @var ExternalModuleLegacySystemProvider
@@ -46,30 +48,54 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
     protected function setUp()
     {
         $loaderMock = $this->createMock(LoaderInterface::class);
-        $legacyFileExtractor = new LegacyFileExtractor();
+        $legacyFileLoader = new LegacyFileLoader();
         $phpExtractor = new PhpExtractor();
-        $legacyModuleExtractor = new LegacyModuleExtractor($phpExtractor, $this->getModuleDirectory());
+        self::bootKernel();
+        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
+        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleDirectory());
 
         $this->provider = new ExternalModuleLegacySystemProvider(
             $loaderMock,
             $this->getModuleDirectory(),
-            $legacyFileExtractor,
-            $legacyModuleExtractor
+            $legacyFileLoader,
+            $extractor
         );
 
-        $this->provider->setModuleName('yo_lo_lo');
+        $this->provider->setModuleName('some_module');
 
         parent::setUp();
     }
 
     public function testGetTranslationDomains()
     {
-        $this->assertSame(['^ModulesYoLoLo*'], $this->provider->getTranslationDomains());
+        $this->assertSame(['^ModulesSomeModule*'], $this->provider->getTranslationDomains());
     }
 
     public function testGetFilters()
     {
         $this->assertSame([], $this->provider->getFilters());
+    }
+
+    public function testGetIdentifier()
+    {
+        $this->assertSame('external_legacy_module', $this->provider->getIdentifier());
+    }
+
+    public function testGetLegacyCatalogueWithUndefinedLocaleThrowsAnException()
+    {
+        $this->expectException(UnsupportedLocaleException::class);
+        $this->expectExceptionMessageRegExp('/The locale "en-US" is not supported, because we can\'t find the related file in the module/');
+        $this->provider->getLegacyCatalogue();
+    }
+
+    public function testGetLegacyCatalogueWithDefinedLocale()
+    {
+        $this->provider->setLocale('fr-FR');
+        $this->assertInstanceOf(MessageCatalogueInterface::class, $this->provider->getLegacyCatalogue());
+        $legacyCatalogue = $this->provider->getLegacyCatalogue();
+
+        dump($legacyCatalogue->all());
+        $this->assertCount(5, $legacyCatalogue->all());
     }
 
     /**

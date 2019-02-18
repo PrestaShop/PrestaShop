@@ -28,6 +28,8 @@ namespace Tests\Unit\PrestaShopBundle\Translation\Extractor;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
+use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
+use PrestaShop\TranslationToolsBundle\Translation\Compiler\Smarty\TranslationTemplateCompiler;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
@@ -39,7 +41,8 @@ class LegacyModuleExtractorTest extends TestCase
     public function testExtract()
     {
         $phpExtractor = new PhpExtractor();
-        $extractor = new LegacyModuleExtractor($phpExtractor, $this->getModuleFolder());
+        $smartyExtractor = new SmartyExtractor(new TranslationTemplateCompiler());
+        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleFolder());
 
         $catalogue = $extractor->extract('some-module', 'fr-FR');
 

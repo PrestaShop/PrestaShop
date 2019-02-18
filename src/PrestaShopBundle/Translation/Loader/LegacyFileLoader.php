@@ -28,9 +28,9 @@
 namespace PrestaShopBundle\Translation\Loader;
 
 use PrestaShopBundle\Translation\Locale\Converter;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 
 /**
  * Able to convert old translation files (in translations/es.php) into
@@ -54,7 +54,7 @@ final class LegacyFileLoader implements LoaderInterface
         $filepath = $path . "$shopLocale.php";
 
         if (!file_exists($filepath)) {
-            throw new \Exception('There is no translation file available in path: ' . $filepath);
+            throw UnsupportedLocaleException::fileNotFound($filepath, $locale);
         }
 
         // Load a global array $_MODULE
@@ -77,6 +77,6 @@ final class LegacyFileLoader implements LoaderInterface
     {
         preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $params);
 
-        return Container::camelize($params[3][0]);
+        return $params[3][0];
     }
 }

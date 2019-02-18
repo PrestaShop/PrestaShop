@@ -143,6 +143,9 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     }
 
     /**
+     * The extracted catalogue come from translations folder.
+     * The default catalogue come from module code parsing.
+     *
      * @return MessageCatalogue
      *
      * @throws \Exception
@@ -150,6 +153,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     public function getLegacyCatalogue()
     {
         $defaultCatalogue = $this->getDefaultCatalogue();
+
         $extractedCatalogue = $this->legacyFileLoader->load(
             $this->getDefaultResourceDirectory(),
             $this->locale,
@@ -159,6 +163,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         $legacyFileCatalogue = new MessageCatalogue($this->locale);
 
         $translations = $defaultCatalogue->all($this->getModuleDomain());
+
         foreach (array_keys($translations) as $translationKey) {
             $legacyKey = md5($translationKey);
 
@@ -196,5 +201,15 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     public function setDomain($domain)
     {
         $this->domain = $domain;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
     }
 }
