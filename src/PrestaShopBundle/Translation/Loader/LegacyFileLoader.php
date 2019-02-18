@@ -48,7 +48,7 @@ final class LegacyFileLoader implements LoaderInterface
      */
     public function load($path, $locale, $domain = 'messages')
     {
-        $_MODULE = [];
+        global $_MODULE;
         $catalogue = new MessageCatalogue($locale);
         $shopLocale = Converter::toLegacyLocale($locale);
         $filepath = $path . "$shopLocale.php";
@@ -57,6 +57,7 @@ final class LegacyFileLoader implements LoaderInterface
             throw new \Exception('There is no translation file available in path: ' . $filepath);
         }
 
+        // Load a global array $_MODULE
         include_once $filepath;
 
         foreach ($_MODULE as $translationKey => $translationValue) {

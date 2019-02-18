@@ -158,7 +158,8 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
 
         $legacyFileCatalogue = new MessageCatalogue($this->locale);
 
-        foreach ($defaultCatalogue->all($this->getModuleDomain()) as $translationKey => $translation) {
+        $translations = $defaultCatalogue->all($this->getModuleDomain());
+        foreach (array_keys($translations) as $translationKey) {
             $legacyKey = md5($translationKey);
 
             if ($extractedCatalogue->has($legacyKey, $this->getModuleDomain())) {
