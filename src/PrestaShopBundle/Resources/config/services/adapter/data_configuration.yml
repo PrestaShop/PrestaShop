@@ -234,3 +234,8 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.core.tax.tax_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
