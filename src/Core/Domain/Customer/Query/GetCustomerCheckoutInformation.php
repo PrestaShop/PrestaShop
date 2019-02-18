@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -22,10 +23,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import OrderCreator from "./order-creator";
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 
-$(document).ready(() => {
-  new OrderCreator();
-});
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+
+/**
+ * Gets customer checkout information for order creation from Back Office
+ */
+class GetCustomerCheckoutInformation
+{
+    /**
+     * @var CustomerId
+     */
+    private $customerId;
+
+    /**
+     * @var
+     */
+    private $cartId;
+
+    /**
+     * @param int $customerId
+     */
+    public function __construct($customerId, $cartId)
+    {
+        $this->customerId = new CustomerId($customerId);
+        $this->cartId = $cartId;
+    }
+
+    /**
+     * @return CustomerId
+     */
+    public function getCustomerId()
+    {
+        return $this->customerId;
+    }
+}

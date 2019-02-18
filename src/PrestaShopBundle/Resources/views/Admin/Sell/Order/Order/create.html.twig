@@ -26,9 +26,11 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/customer_search.html.twig' %}
+  <div id="orderCreationContainer">
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/customer_search.html.twig' %}
+      </div>
     </div>
   </div>
 {% endblock %}

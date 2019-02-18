@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = window.$;
+
 /**
  * Searches customers for which order is being created
  */
@@ -100,6 +102,9 @@ export default class CustomerSearcher {
     $template.find('.js-customer-email').text(customer.email);
     $template.find('.js-customer-id').text(customer.id);
     $template.find('.js-customer-birthday').text(customer.birthday);
+
+    $template.find('.js-details-customer-btn').data('customer-id', customer.id);
+    $template.find('.js-choose-customer-btn').data('customer-id', customer.id);
 
     return this.$customerSearchResultBlock.append($template);
   }

@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -22,10 +23,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import OrderCreator from "./order-creator";
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject;
 
-$(document).ready(() => {
-  new OrderCreator();
-});
+/**
+ * Stores cart ID
+ */
+class CartId
+{
+    /**
+     * @var int
+     */
+    private $value;
+
+    /**
+     * @param int $cartId
+     */
+    public function __construct($cartId)
+    {
+        $this->assertIsGreaterThanZero($cartId);
+
+        $this->value = $cartId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    private function assertIsGreaterThanZero($cartId)
+    {
+        if (!is_int($cartId) || 0 > $cartId) {
+
+        }
+    }
+}

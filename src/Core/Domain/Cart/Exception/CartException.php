@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -22,10 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import OrderCreator from "./order-creator";
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
 
-$(document).ready(() => {
-  new OrderCreator();
-});
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+
+/**
+ * Base exception for Cart subdomain
+ */
+class CartException extends DomainException
+{
+}

@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -22,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import OrderCreator from "./order-creator";
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
 
-$(document).ready(() => {
-  new OrderCreator();
-});
+class CartConstraintException extends CartException
+{
+}
