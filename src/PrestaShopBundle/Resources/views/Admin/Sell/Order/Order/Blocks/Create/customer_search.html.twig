@@ -30,7 +30,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col-3">
-            <span class="float-right">{{ 'Search for a customer'|trans }}</span>
+            <span class="float-right">{{ 'Search for a customer'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
           </div>
           <div class="col">
             <input type="text"
@@ -50,7 +50,37 @@
             </button>
           </div>
         </div>
+        <div class="row mt-3 js-customer-search-results"></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div id="customerSearchResultTemplate" class="d-none">
+  <div class="col-4">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-header-title d-inline-block js-customer-name"></h3>
+        <div class="d-inline-block float-right">
+          #<span class="js-customer-id"></span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="mb-0 js-customer-email"></p>
+        <p class="mb-0 js-customer-birthday"></p>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-outline-secondary">{{ 'Details'|trans({}, 'Admin.Global') }}</button>
+        <button type="button" class="btn btn-primary float-right">{{ 'Choose'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="customerSearchEmptyResultTemplate" class="d-none">
+  <div class="col">
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
     </div>
   </div>
 </div>

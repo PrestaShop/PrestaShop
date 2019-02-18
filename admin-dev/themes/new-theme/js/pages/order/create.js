@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CustomerSearcher from "./delivery/customer-searcher";
+import CustomerSearcher from "./customer-searcher";
 
 const $ = window.$;
 
