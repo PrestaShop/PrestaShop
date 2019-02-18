@@ -316,7 +316,9 @@ class CommonController extends FrameworkBundleAdminController
         $redirectParams = [];
 
         if ($filtersForm->isSubmitted()) {
-            $redirectParams['filters'] = $filtersForm->getData();
+            $redirectParams['filters'] = [
+                $filtersForm->getName() => $filtersForm->getData(),
+            ];
         }
 
         foreach ($redirectQueryParamsToKeep as $paramName) {
