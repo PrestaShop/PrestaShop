@@ -63,7 +63,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      */
     public function getDirectories()
     {
-        return array($this->getResourceDirectory());
+        return [$this->getResourceDirectory()];
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      */
     public function getFilters()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -79,7 +79,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return array('');
+        return [''];
     }
 
     /**
@@ -142,6 +142,22 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      */
     public function getDefaultCatalogue($empty = true)
     {
+        $defaultCatalogue = new MessageCatalogue($this->getLocale());
+
+        foreach ($this->getFilters() as $filter) {
+            $filteredCatalogue = $this->getCatalogueFromPaths(
+                [$this->getDefaultResourceDirectory()],
+                $this->getLocale(),
+                $filter
+            );
+            $defaultCatalogue->addCatalogue($filteredCatalogue);
+        }
+
+        if ($empty) {
+            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
+        }
+
+        return $defaultCatalogue;
     }
 
     /**

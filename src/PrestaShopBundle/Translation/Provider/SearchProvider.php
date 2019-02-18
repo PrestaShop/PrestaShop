@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
 /**
  * Able to search translations for a specific translation domains accross
  * multiple sources
@@ -73,9 +71,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return array(
-            '^' . $this->getDomain(),
-        );
+        return ['^' . $this->getDomain()];
     }
 
     /**
@@ -83,9 +79,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getFilters()
     {
-        return array(
-            '#^' . $this->getDomain() . '#',
-        );
+        return ['#^' . $this->getDomain() . '#'];
     }
 
     /**
@@ -94,32 +88,6 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getIdentifier()
     {
         return 'search';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array(
-                    $this->getDefaultResourceDirectory(),
-                    $this->getModulesDirectory(),
-                ),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
     }
 
     /**

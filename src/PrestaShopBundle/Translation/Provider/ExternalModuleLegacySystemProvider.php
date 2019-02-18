@@ -137,6 +137,9 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         return $this->getDefaultResourceDirectory();
     }
 
+    /**
+     * @return string returns the module domain
+     */
     private function getModuleDomain()
     {
         return 'Modules' . Container::camelize($this->moduleName);
