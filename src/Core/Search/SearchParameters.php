@@ -59,10 +59,20 @@ final class SearchParameters implements SearchParametersInterface
             }
         }
 
-        $doesFilterCreatedUsingUniqueKey = isset($filters['filters'][$filterClass::getKey()]);
+        $doesFilterExistByUniqueKey = isset($filters['filters'][$filterClass::getKey()]);
 
-        if ($doesFilterCreatedUsingUniqueKey) {
+        if ($doesFilterExistByUniqueKey) {
             $filters['filters'] = $filters['filters'][$filterClass::getKey()];
+        } else {
+            foreach ($filters['filters'] as $filterKey => $filterValue) {
+                if (is_array($filterValue)) {
+                    $filters['filters'] = $filterValue;
+
+                    break;
+                }
+
+                $filters['filters'][$filterKey] = $filterValue;
+            }
         }
 
         return new $filterClass($filters);
