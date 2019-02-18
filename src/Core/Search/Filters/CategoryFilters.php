@@ -33,6 +33,11 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class CategoryFilters extends Filters
 {
+    public static function getKey()
+    {
+        return 'Categories';
+    }
+
     /**
      * {@inheritdoc}
      */

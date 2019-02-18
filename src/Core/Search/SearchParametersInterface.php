@@ -59,9 +59,11 @@ interface SearchParametersInterface
      *
      * @param int $employeeId
      * @param int $shopId
+     * @param string $controller
+     * @param string $action
      * @param string $filtersClassName
      *
      * @return Filters
      */
-    public function getFiltersFromPersistence($employeeId, $shopId, $filtersClassName);
+    public function getFiltersFromPersistence($employeeId, $shopId, $controller, $action, $filtersClassName);
 }

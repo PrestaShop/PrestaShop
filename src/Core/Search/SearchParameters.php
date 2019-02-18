@@ -73,13 +73,21 @@ final class SearchParameters implements SearchParametersInterface
     /**
      * {@inheritdoc}
      */
-    public function getFiltersFromPersistence($employeeId, $shopId, $filtersClassName)
+    public function getFiltersFromPersistence($employeeId, $shopId, $controller, $action, $filtersClassName)
     {
         $adminFilter = $this->adminFilterRepository->findOneBy([
             'employee' => $employeeId,
-            'shop' => $shopId,
-            'uniqueKey' => $filtersClassName::getKey(),
+            'controller' => $controller,
+            'action' => $action,
         ]);
+
+        if (null === $adminFilter) {
+            $adminFilter = $this->adminFilterRepository->findOneBy([
+                'employee' => $employeeId,
+                'shop' => $shopId,
+                'uniqueKey' => $filtersClassName::getKey(),
+            ]);
+        }
 
         $savedFilters = [];
 
