@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -34,15 +35,22 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class TaxOptionsFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * @var DataConfigurationInterface
+     */
+    private $taxOptionsDataConfiguration;
+
+    public function __construct(DataConfigurationInterface $taxOptionsDataConfiguration)
+    {
+        $this->taxOptionsDataConfiguration = $taxOptionsDataConfiguration;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getData()
     {
-        //@todo: implement real data
         return [
-            'enable_tax' => 1,
-            'display_tax_in_cart' => 1,
-            'use_eco_tax' => 0,
+            'options' => $this->taxOptionsDataConfiguration->getConfiguration(),
         ];
     }
 
@@ -51,8 +59,6 @@ final class TaxOptionsFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        //@todo: implement
-        dump('not implemented');
-        die;
+        return $this->taxOptionsDataConfiguration->updateConfiguration($data['options']);
     }
 }
