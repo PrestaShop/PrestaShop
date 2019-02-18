@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -36,6 +37,11 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface
 {
+    /**
+     * @var SearchProviderInterface the module provider
+     */
+    private $moduleProvider;
+
     /**
      * @var LoaderInterface the translation loader from legacy files
      */
@@ -54,14 +60,16 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     /**
      * @var string the domain name
      */
-    private $domain;
+    protected $domain;
 
     public function __construct(
+        SearchProviderInterface $moduleProvider,
         LoaderInterface $databaseLoader,
         $resourceDirectory,
         LoaderInterface $legacyFileLoader,
         LegacyModuleExtractorInterface $legacyModuleExtractor
     ) {
+        $this->moduleProvider = $moduleProvider;
         $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
 
@@ -73,7 +81,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getTranslationDomains()
     {
-        return ['^' . $this->getModuleDomain() . '*'];
+        return ['#^' . $this->getModuleDomain() . '*#i'];
     }
 
     /**
@@ -107,7 +115,17 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getDefaultCatalogue($empty = true)
     {
-        $defaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->getLocale());
+        $defaultCatalogue = $this->moduleProvider
+            ->setLocale($this->locale)
+            ->getDefaultCatalogue()
+        ;
+
+        try {
+            $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->getLocale());
+            $defaultCatalogue->addCatalogue($additionalDefaultCatalogue);
+        } catch (UnsupportedLocaleException $exception) {
+            // Do nothing as support of legacy file is deprecated
+        }
 
         if ($empty) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
@@ -155,31 +173,39 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getLegacyCatalogue()
     {
-        $defaultCatalogue = $this->getDefaultCatalogue();
+        $catalogueFromFiles = $this->moduleProvider->getXliffCatalogue();
 
-        $extractedCatalogue = $this->legacyFileLoader->load(
-            $this->getDefaultResourceDirectory(),
-            $this->locale,
-            $this->getModuleDomain()
-        );
+        try {
+            $defaultCatalogue = $this->getDefaultCatalogue();
 
-        $legacyFileCatalogue = new MessageCatalogue($this->locale);
+            $extractedCatalogue = $this->legacyFileLoader->load(
+                $this->getDefaultResourceDirectory(),
+                $this->locale,
+                $this->getModuleDomain()
+            );
 
-        $translations = $defaultCatalogue->all($this->getModuleDomain());
+            $legacyFilesCatalogue = new MessageCatalogue($this->locale);
 
-        foreach (array_keys($translations) as $translationKey) {
-            $legacyKey = md5($translationKey);
+            $translations = $defaultCatalogue->all($this->getModuleDomain());
 
-            if ($extractedCatalogue->has($legacyKey, $this->getModuleDomain())) {
-                $legacyFileCatalogue->set(
-                    $translationKey,
-                    $extractedCatalogue->get($legacyKey, $this->getModuleDomain()),
-                    $this->getModuleDomain()
-                );
+            foreach (array_keys($translations) as $translationKey) {
+                $legacyKey = md5($translationKey);
+
+                if ($extractedCatalogue->has($legacyKey, $this->getModuleDomain())) {
+                    $legacyFilesCatalogue->set(
+                        $translationKey,
+                        $extractedCatalogue->get($legacyKey, $this->getModuleDomain()),
+                        $this->getModuleDomain()
+                    );
+                }
             }
+
+            $catalogueFromFiles->addCatalogue($legacyFilesCatalogue);
+        } catch (UnsupportedLocaleException $exception) {
+            // Do nothing as support of legacy file is deprecated
         }
 
-        return $legacyFileCatalogue;
+        return $catalogueFromFiles;
     }
 
     /**

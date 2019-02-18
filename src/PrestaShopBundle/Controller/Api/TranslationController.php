@@ -318,12 +318,7 @@ class TranslationController extends ApiController
      */
     private function getModulesTree($lang, $type, $selected, $search = null)
     {
-        if (!$this->container->get('prestashop.core.module.native_module_provider')->isNativeModule($selected)) {
-            $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
-        } else {
-            $moduleProvider = $this->container->get('prestashop.translation.module_provider');
-        }
-
+        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
         $moduleProvider->setModuleName($selected);
 
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);

@@ -27,7 +27,6 @@
 namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
-use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
@@ -51,10 +50,12 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $loaderMock = $this->createMock(LoaderInterface::class);
         $legacyFileLoader = new LegacyFileLoader();
         $phpExtractor = new PhpExtractor();
+        $moduleProvider = self::$kernel->getContainer()->get('prestashop.translation.module_provider');
         $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
         $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleDirectory());
 
         $this->provider = new ExternalModuleLegacySystemProvider(
+            $moduleProvider,
             $loaderMock,
             $this->getModuleDirectory(),
             $legacyFileLoader,
@@ -68,7 +69,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 
     public function testGetTranslationDomains()
     {
-        $this->assertSame(['^ModulesSomeModule*'], $this->provider->getTranslationDomains());
+        $this->assertSame(['#^ModulesSomeModule*#i'], $this->provider->getTranslationDomains());
     }
 
     public function testGetFilters()
@@ -79,13 +80,6 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
     public function testGetIdentifier()
     {
         $this->assertSame('external_legacy_module', $this->provider->getIdentifier());
-    }
-
-    public function testGetLegacyCatalogueWithUndefinedLocaleThrowsAnException()
-    {
-        $this->expectException(UnsupportedLocaleException::class);
-        $this->expectExceptionMessageRegExp('/The locale "en-US" is not supported, because we can\'t find the related file in the module/');
-        $this->provider->getLegacyCatalogue();
     }
 
     public function testGetLegacyCatalogueWithDefinedLocale()

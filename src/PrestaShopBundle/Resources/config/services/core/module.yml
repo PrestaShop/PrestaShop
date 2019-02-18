@@ -9,6 +9,3 @@ services:
             - '%database_prefix%'
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
             - '@prestashop.adapter.module.payment_module_provider'
-
-    prestashop.core.module.native_module_provider:
-      class: PrestaShop\PrestaShop\Core\Module\NativeModulesProvider
