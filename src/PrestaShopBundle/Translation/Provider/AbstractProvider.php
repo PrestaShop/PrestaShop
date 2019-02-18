@@ -51,6 +51,11 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      */
     protected $locale;
 
+    /**
+     * @var string the Catalogue domain
+     */
+    protected $domain;
+
     public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
     {
         $this->databaseLoader = $databaseLoader;
@@ -91,20 +96,21 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * @deprecated since 1.7.6, implement SearchProviderInterface instead
-     *
-     * @param string $locale the Catalogue locale
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
-        @trigger_error(
-            '`setLocale` method of AbstractProvider is deprecated',
-            E_USER_DEPRECATED
-        );
-
         $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
 
         return $this;
     }
