@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.tax.ecotax.ecotax_resetter:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\Ecotax\EcotaxResetter'

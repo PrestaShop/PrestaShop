@@ -24,36 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Adapter\Tax\Ecotax;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Tax\Ecotax\ProductEcotaxResetterInterface;
+use Product;
 
 /**
- * Provides address type choices
+ * Resets ecotax for products using legacy object model
  */
-final class TaxAddressTypeChoiceProvider implements FormChoiceProviderInterface
+final class ProductEcotaxResetter implements ProductEcotaxResetterInterface
 {
     /**
-     * @var TranslatorInterface
+     * {@inheritdoc}
      */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function reset()
     {
-        $this->translator = $translator;
-    }
-
-    /**
-     * Get choices.
-     *
-     * @return array
-     */
-    public function getChoices()
-    {
-        return [
-            $this->translator->trans('Invoice address', [], 'Admin.International.Feature') => 'id_address_invoice',
-            $this->translator->trans('Delivery address', [], 'Admin.International.Feature') => 'id_address_delivery',
-        ];
+        Product::resetEcoTax();
     }
 }
