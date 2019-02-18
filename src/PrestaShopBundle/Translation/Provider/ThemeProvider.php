@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Translation\Provider;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Translation\MessageCatalogue;
 
 class ThemeProvider extends AbstractProvider
 {
@@ -98,12 +97,10 @@ class ThemeProvider extends AbstractProvider
     public function getTranslationDomains()
     {
         if (empty($this->domain)) {
-            return array('*');
-        } else {
-            return array(
-                '^' . $this->getDomain(),
-            );
+            return ['*'];
         }
+
+        return ['^' . $this->getDomain()];
     }
 
     /**
@@ -112,12 +109,10 @@ class ThemeProvider extends AbstractProvider
     public function getFilters()
     {
         if (empty($this->domain)) {
-            return array('*');
-        } else {
-            return array(
-                '#^' . $this->getDomain() . '#',
-            );
+            return ['*'];
         }
+
+        return ['#^' . $this->getDomain() . '#'];
     }
 
     /**
@@ -164,10 +159,10 @@ class ThemeProvider extends AbstractProvider
      */
     public function getDirectories()
     {
-        return array(
+        return [
             $this->getResourceDirectory(),
             $this->getThemeResourcesDirectory(),
-        );
+        ];
     }
 
     /**
@@ -229,35 +224,14 @@ class ThemeProvider extends AbstractProvider
 
     /**
      * @return \Symfony\Component\Translation\MessageCatalogue
+     *
+     * @throws \Exception
      */
     public function getThemeCatalogue()
     {
         $path = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->themeName . DIRECTORY_SEPARATOR . 'translations';
 
         return $this->getCatalogueFromPaths($path, $this->locale, current($this->getFilters()));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
     }
 
     /**

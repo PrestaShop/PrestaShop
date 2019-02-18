@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
 /**
  * Translation provider specific to email subjects.
  */
@@ -38,9 +36,7 @@ class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInter
      */
     public function getTranslationDomains()
     {
-        return array(
-            'EmailsSubject*',
-        );
+        return ['EmailsSubject*'];
     }
 
     /**
@@ -48,9 +44,7 @@ class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInter
      */
     public function getFilters()
     {
-        return array(
-            '#EmailsSubject*#',
-        );
+        return ['#EmailsSubject*#'];
     }
 
     /**
@@ -59,29 +53,6 @@ class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInter
     public function getIdentifier()
     {
         return 'mails';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
     }
 
     /**

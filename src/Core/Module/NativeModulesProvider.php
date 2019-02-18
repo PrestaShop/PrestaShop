@@ -27,7 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Module;
 
 /**
- * @todo: needs an interface and needs to make this list dynamic!
+ * As for now, PrestaShop stores a static list of its native modules.
+ * @todo: Rely on the interface once you implement a dynamic provider.
  */
 final class NativeModulesProvider implements NativeModulesProviderInterface
 {
