@@ -43,12 +43,4 @@ class RequestSqlFilters extends Filters
             'filters' => [],
         ];
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getKey()
-    {
-        return 'request_sql';
-    }
 }

@@ -46,12 +46,4 @@ final class MetaFilters extends Filters
             'filters' => [],
         ];
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getKey()
-    {
-        return 'meta';
-    }
 }
