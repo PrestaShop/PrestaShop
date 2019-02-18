@@ -60,14 +60,17 @@ class TreeBuilder
         /**
          * @todo: refactor this part to use a Factory and hide provider specifics
          */
-        $xliffCatalog = method_exists($provider, 'getLegacyCatalogue') ? $provider->getLegacyCatalogue()->all() : $provider->getXliffCatalogue()->all();
+        $xliffCatalog = method_exists($provider, 'getLegacyCatalogue') ?
+            $provider->getLegacyCatalogue()->all() :
+            $provider->getXliffCatalogue()->all()
+        ;
         $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme)->all();
 
         foreach ($translations as $domain => $messages) {
             $missingTranslations = 0;
             $domainDatabase = str_replace('.' . $provider->getLocale(), '', $domain);
 
-            foreach ($messages as $translationKey => $translationValue) {
+            foreach (array_keys($messages) as $translationKey) {
                 if (array_key_exists($translationKey, $xliffCatalog[$domain])) {
                 }
 
@@ -81,7 +84,12 @@ class TreeBuilder
                 );
 
                 // if search is empty or is in catalog default|xlf|database
-                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(['default' => $translationKey], $data))) {
+                if (
+                    empty($search) ||
+                    $this->dataContainsSearchWord(
+                        $search,
+                        array_merge(['default' => $translationKey], $data)
+                    )) {
                     $translations[$domain][$translationKey] = $data;
 
                     if (

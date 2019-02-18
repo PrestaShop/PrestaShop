@@ -337,7 +337,7 @@ class ThemeExporter
         array $messages,
         $domain
     ) {
-        foreach ($messages as $id => $translation) {
+        foreach (array_keys($messages) as $id) {
             $metadata = $catalogue->getMetadata($id, $domain);
             if ($this->shouldAddFileMetadata($metadata)) {
                 $catalogue->setMetadata($id, $this->parseMetadataNotes($metadata), $domain);

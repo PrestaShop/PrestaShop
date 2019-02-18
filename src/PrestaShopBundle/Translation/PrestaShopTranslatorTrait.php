@@ -33,7 +33,7 @@ trait PrestaShopTranslatorTrait
     public static $regexClassicParams = '/%\w+%/';
 
     /**
-     * {@inheritdoc}
+     * @todo: add the right PHPDoc
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
@@ -62,6 +62,11 @@ trait PrestaShopTranslatorTrait
         return $translated;
     }
 
+    /**
+     * @todo: remove this function at it relies on a function not
+     * available in the trait.
+     * Also $locale is unused.
+     */
     public function getSourceString($translated, $domain, $locale = null)
     {
         if (empty($domain)) {
@@ -79,7 +84,7 @@ trait PrestaShopTranslatorTrait
     }
 
     /**
-     * {@inheritdoc}
+     * @todo: add the right PHPDoc
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
