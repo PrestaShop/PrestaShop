@@ -139,21 +139,37 @@ class AdminFilterRepository extends EntityRepository
      * @param string $uniqueKey
      * @param int $employeeId
      * @param int $shopId
+     * @param $controller
+     * @param string $action
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function persist(array $filters, $uniqueKey, $employeeId, $shopId)
+    public function persist(array $filters, $uniqueKey, $employeeId, $shopId, $controller, $action)
     {
-        $adminFilter = $this->findOneBy([
-            'employee' => $employeeId,
-            'shop' => $shopId,
-            'uniqueKey' => $uniqueKey,
-        ]);
+        $doesFilterCreatedUsingUniqueKey = isset($filters['filters'][$uniqueKey]);
+
+        if ($doesFilterCreatedUsingUniqueKey) {
+            $adminFilter = $this->findOneBy([
+                'employee' => $employeeId,
+                'shop' => $shopId,
+                'uniqueKey' => $uniqueKey,
+            ]);
+
+            $filters['filters'] = $filters['filters'][$uniqueKey];
+        } else {
+            $adminFilter = $this->findOneBy([
+                'employee' => $employeeId,
+                'controller' => $controller,
+                'action' => $action,
+            ]);
+        }
 
         $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
 
         $adminFilter
-            ->setController('')
-            ->setAction('')
-            ->setUniqueKey($uniqueKey)
+            ->setController($doesFilterCreatedUsingUniqueKey ? '' : $controller)
+            ->setAction($doesFilterCreatedUsingUniqueKey ? '' : $action)
+            ->setUniqueKey($doesFilterCreatedUsingUniqueKey ? $uniqueKey : '')
             ->setEmployee($employeeId)
             ->setShop($shopId)
             ->setFilter(json_encode($filters))
