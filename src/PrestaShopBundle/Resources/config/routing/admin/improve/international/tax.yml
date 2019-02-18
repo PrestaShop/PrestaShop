@@ -6,7 +6,7 @@ admin_taxes_index:
     _legacy_controller: AdminTaxes
 
 admin_taxes_save_options:
-  path: /
+  path: /save-options
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:saveOptions'

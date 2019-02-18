@@ -174,8 +174,8 @@ services:
 
   prestashop.core.form.choice_provider.tax_address_type_choice_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxAddressTypeChoiceProvider'
-    calls:
-      - { method: setTranslator, arguments: ['@translator'] }
+    arguments:
+      - '@translator'
 
   prestashop.core.form.choice_provider.tax_rule_group_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'

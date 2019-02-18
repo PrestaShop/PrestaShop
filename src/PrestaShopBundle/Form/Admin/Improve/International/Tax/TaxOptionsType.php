@@ -62,15 +62,19 @@ class TaxOptionsType extends AbstractType
         $this->taxRuleGroupChoiceProvider = $taxRuleGroupChoiceProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('enable_tax', SwitchType::class)
             ->add('display_tax_in_cart', SwitchType::class)
-            ->add('address_type', ChoiceType::class, [
+            ->add('tax_address_type', ChoiceType::class, [
                 'choices' => $this->taxAddressTypeChoiceProvider->getChoices(),
             ])
             ->add('use_eco_tax', SwitchType::class)
         ;
+
         if ($this->taxOptionsConfiguration['use_eco_tax']) {
             $builder->add('eco_tax_rule_group', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
