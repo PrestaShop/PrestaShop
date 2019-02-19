@@ -24,38 +24,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
+namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollectionInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollectionInterface;
 
 /**
- * Interface LayoutCatalogInterface is used to list the available themes to generate
- * mail templates. It also allows you to list the available layouts for a specific theme.
- * Layouts are divided in two categories "core" and "modules" layouts.
+ * Class MailTheme basic immutable implementation of MailThemeInterface.
  */
-interface LayoutCatalogInterface
+class Theme implements ThemeInterface
 {
-    const LIST_MAIL_THEMES_HOOK = 'actionListMailThemes';
-    const LIST_MAIL_THEME_LAYOUTS_HOOK = 'actionListMailThemeLayouts';
+    /** @var string */
+    private $name;
 
     /**
-     * Returns the list of existing themes.
-     *
-     * @throws FileNotFoundException
-     *
-     * @return MailThemeCollectionInterface
+     * @var LayoutCollectionInterface
      */
-    public function listThemes();
+    private $layouts;
 
     /**
-     * Returns a collection of layouts via a MailLayoutCollectionInterface
-     *
-     * @param string $theme
-     *
-     * @throws FileNotFoundException
-     *
+     * @param $name
+     */
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * @return LayoutCollectionInterface
      */
-    public function listLayouts($theme);
+    public function getLayouts()
+    {
+        return $this->layouts;
+    }
+
+    /**
+     * @param LayoutCollectionInterface $layouts
+     *
+     * @return $this
+     */
+    public function setLayouts($layouts)
+    {
+        $this->layouts = $layouts;
+
+        return $this;
+    }
 }

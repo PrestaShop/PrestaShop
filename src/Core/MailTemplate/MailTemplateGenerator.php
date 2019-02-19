@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -38,16 +36,13 @@ use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Class MailTemplateGenerator iterates through the layouts in the provided catalog,
+ * Class MailTemplateGenerator iterates through the layouts in the provided theme,
  * it uses the Renderer to display them (with the requested LanguageInterface) and
  * then export them as template files in the specified output folder.
  */
 class MailTemplateGenerator
 {
     use LoggerAwareTrait;
-
-    /** @var LayoutCatalogInterface */
-    private $catalog;
 
     /** @var MailTemplateRendererInterface */
     private $renderer;
@@ -56,34 +51,28 @@ class MailTemplateGenerator
     private $fileSystem;
 
     /**
-     * @param LayoutCatalogInterface $catalog
      * @param MailTemplateRendererInterface $renderer
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        LayoutCatalogInterface $catalog,
         MailTemplateRendererInterface $renderer,
         LoggerInterface $logger = null
     ) {
-        $this->catalog = $catalog;
         $this->renderer = $renderer;
         $this->logger = null !== $logger ? $logger : new NullLogger();
         $this->fileSystem = new Filesystem();
     }
 
     /**
-     * @param string $theme
+     * @param ThemeInterface $theme
      * @param LanguageInterface $language
      * @param string $coreOutputFolder
      * @param string $modulesOutputFolder
      *
      * @throws FileNotFoundException
-     * @throws InvalidArgumentException
      */
-    public function generateThemeTemplates($theme, LanguageInterface $language, $coreOutputFolder, $modulesOutputFolder)
+    public function generateTemplates(ThemeInterface $theme, LanguageInterface $language, $coreOutputFolder, $modulesOutputFolder)
     {
-        $this->checkMailTheme($theme);
-
         if (!is_dir($coreOutputFolder)) {
             throw new FileNotFoundException(sprintf(
                 'Invalid core output folder "%s"',
@@ -99,7 +88,7 @@ class MailTemplateGenerator
         }
 
         /** @var LayoutCollectionInterface $layouts */
-        $layouts = $this->catalog->listLayouts($theme);
+        $layouts = $theme->getLayouts();
         /** @var LayoutInterface $layout */
         foreach ($layouts as $layout) {
             if (!empty($layout->getModuleName())) {
@@ -118,29 +107,6 @@ class MailTemplateGenerator
             $txtTemplatePath = $this->generateTemplatePath($layout, MailTemplateInterface::TXT_TYPE, $outputFolder);
             $this->fileSystem->dumpFile($txtTemplatePath, $generatedTemplate);
             $this->logger->info(sprintf('Generate template %s at html: %s, txt: %s', $layout->getName(), $htmlTemplatePath, $txtTemplatePath));
-        }
-    }
-
-    /**
-     * @param string $theme
-     *
-     * @throws InvalidArgumentException
-     */
-    private function checkMailTheme($theme)
-    {
-        /** @var MailThemeCollectionInterface $availableThemes */
-        $availableThemes = $this->catalog->listThemes();
-        $themeNames = [];
-        /** @var MailThemeInterface $availableTheme */
-        foreach ($availableThemes as $availableTheme) {
-            $themeNames[] = $availableTheme->getName();
-        }
-        if (!in_array($theme, $themeNames)) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid theme used "%s", only available themes are: %s',
-                $theme,
-                implode(', ', $themeNames)
-            ));
         }
     }
 

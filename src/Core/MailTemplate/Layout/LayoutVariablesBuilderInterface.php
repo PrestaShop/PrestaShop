@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
- * MailLayoutVariablesBuilderInterface is used by the MailTemplateRendererInterface
+ * LayoutVariablesBuilderInterface is used by the MailTemplateRendererInterface
  * to render the mails, it returns an array of generic layout variables like:
  *  - templateModuleName: name of the associated module
  *  - languageIsRTL: is the language read from Right To Left

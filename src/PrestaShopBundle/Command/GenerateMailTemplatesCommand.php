@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
+use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -59,7 +60,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $theme = $input->getArgument('theme');
+        $themeName = $input->getArgument('theme');
         $coreOutputFolder = $input->getArgument('coreOutputFolder');
         if (file_exists($coreOutputFolder)) {
             $coreOutputFolder = realpath($coreOutputFolder);
@@ -76,13 +77,17 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
         $locale = $input->getArgument('locale');
         $language = $this->getLanguage($locale);
 
-        $output->writeln(sprintf('Exporting mail with theme %s for language %s', $theme, $language->getName()));
+        /** @var ThemeCatalogInterface $themeCatalog */
+        $themeCatalog = $this->getContainer()->get(ThemeCatalogInterface::class);
+        $theme = $themeCatalog->getByName($themeName);
+
+        $output->writeln(sprintf('Exporting mail with theme %s for language %s', $theme->getName(), $language->getName()));
         $output->writeln(sprintf('Core output folder: %s', $coreOutputFolder));
         $output->writeln(sprintf('Modules output folder: %s', $modulesOutputFolder));
 
         /** @var MailTemplateGenerator $catalog */
         $generator = $this->getContainer()->get('prestashop.core.mail_template.generator');
-        $generator->generateThemeTemplates($theme, $language, $coreOutputFolder, $modulesOutputFolder);
+        $generator->generateTemplates($theme, $language, $coreOutputFolder, $modulesOutputFolder);
     }
 
     /**
