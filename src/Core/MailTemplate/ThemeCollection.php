@@ -26,27 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
+use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+
 /**
- * Class MailTheme basic immutable implementation of MailThemeInterface.
+ * Class MailThemeCollection is a collection of MailThemeInterface elements.
  */
-class MailTheme implements MailThemeInterface
+class ThemeCollection extends AbstractTypedCollection implements ThemeCollectionInterface
 {
-    /** @var string */
-    private $name;
-
-    /**
-     * @param $name
-     */
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    protected function getType()
     {
-        return $this->name;
+        return ThemeInterface::class;
     }
 }

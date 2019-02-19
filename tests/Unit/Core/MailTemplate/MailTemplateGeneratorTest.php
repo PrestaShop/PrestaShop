@@ -30,15 +30,13 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollection;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTheme;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollection;
+use PrestaShop\PrestaShop\Core\MailTemplate\Theme;
+use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -59,8 +57,8 @@ class MailTemplateGeneratorTest extends TestCase
     /** @var Filesystem */
     private $fs;
 
-    /** @var LayoutCollectionInterface */
-    private $layouts;
+    /** @var ThemeInterface */
+    private $theme;
 
     public function setUp()
     {
@@ -71,7 +69,8 @@ class MailTemplateGeneratorTest extends TestCase
         $this->coreTempDir = $this->outputTempDir . DIRECTORY_SEPARATOR . MailTemplateInterface::CORE_CATEGORY;
         $this->modulesTempDir = $this->outputTempDir . DIRECTORY_SEPARATOR . MailTemplateInterface::MODULES_CATEGORY;
         $this->fs->remove($this->outputTempDir);
-        $this->layouts = new LayoutCollection([
+        $this->theme = new Theme('classic');
+        $this->theme->setLayouts(new LayoutCollection([
             new Layout(
                 'account',
                 implode(DIRECTORY_SEPARATOR, [$this->coreTempDir, 'account.html.twig']),
@@ -89,67 +88,38 @@ class MailTemplateGeneratorTest extends TestCase
                 implode(DIRECTORY_SEPARATOR, [$this->modulesTempDir, 'ps_emailalerts', 'productoutofstock.txt.twig']),
                 'ps_reminder'
             ),
-        ]);
+        ]));
         $this->fs->mkdir($this->coreTempDir);
         $this->fs->mkdir($this->modulesTempDir);
     }
 
     public function testConstructor()
     {
+        /** @var MailTemplateRendererInterface $mailRenderer */
         $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $catalogMock = $this->getMockBuilder(LayoutCatalogInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $generator = new MailTemplateGenerator(
-            $catalogMock,
-            $mailRenderer
-        );
+        $generator = new MailTemplateGenerator($mailRenderer);
         $this->assertNotNull($generator);
-    }
-
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid theme used "toto", only available themes are: titi, tata
-     */
-    public function testInvalidTheme()
-    {
-        $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $generator = new MailTemplateGenerator(
-            $this->createCatalogMock(['titi', 'tata']),
-            $mailRenderer
-        );
-        $this->assertNotNull($generator);
-
-        $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $this->coreTempDir, $this->modulesTempDir);
     }
 
     public function testInvalidCoreOutputFolders()
     {
+        /** @var MailTemplateRendererInterface $mailRenderer */
         $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $generator = new MailTemplateGenerator(
-            $this->createCatalogMock(['titi', 'tata', 'toto']),
-            $mailRenderer
-        );
+        $generator = new MailTemplateGenerator($mailRenderer);
         $this->assertNotNull($generator);
 
         $fakeFolder = $this->tempDir . DIRECTORY_SEPARATOR . 'invisible';
         $caughtException = null;
         try {
-            $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $fakeFolder, $this->modulesTempDir);
+            $generator->generateTemplates($this->theme, $this->createLanguageMock(), $fakeFolder, $this->modulesTempDir);
         } catch (FileNotFoundException $e) {
             $caughtException = $e;
         }
@@ -164,21 +134,19 @@ class MailTemplateGeneratorTest extends TestCase
 
     public function testInvalidModulesOutputFolders()
     {
+        /** @var MailTemplateRendererInterface $mailRenderer */
         $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $generator = new MailTemplateGenerator(
-            $this->createCatalogMock(['titi', 'tata', 'toto']),
-            $mailRenderer
-        );
+        $generator = new MailTemplateGenerator($mailRenderer);
         $this->assertNotNull($generator);
 
         $fakeFolder = $this->tempDir . DIRECTORY_SEPARATOR . 'invisible';
         $caughtException = null;
         try {
-            $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $this->coreTempDir, $fakeFolder);
+            $generator->generateTemplates($this->theme, $this->createLanguageMock(), $this->coreTempDir, $fakeFolder);
         } catch (FileNotFoundException $e) {
             $caughtException = $e;
         }
@@ -193,13 +161,10 @@ class MailTemplateGeneratorTest extends TestCase
 
     public function testGenerateTemplates()
     {
-        $generator = new MailTemplateGenerator(
-            $this->createCatalogMock(['classic'], $this->layouts),
-            $this->createRendererMock()
-        );
+        $generator = new MailTemplateGenerator($this->createRendererMock());
         $this->assertNotNull($generator);
 
-        $generator->generateThemeTemplates('classic', $this->createLanguageMock(), $this->coreTempDir, $this->modulesTempDir);
+        $generator->generateTemplates($this->theme, $this->createLanguageMock(), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
             'core/account.html' => 'account_html__',
             'core/account.txt' => 'account_txt__',
@@ -213,13 +178,10 @@ class MailTemplateGeneratorTest extends TestCase
 
     public function testGenerateTemplatesWithLocale()
     {
-        $generator = new MailTemplateGenerator(
-            $this->createCatalogMock(['classic'], $this->layouts),
-            $this->createRendererMock()
-        );
+        $generator = new MailTemplateGenerator($this->createRendererMock());
         $this->assertNotNull($generator);
 
-        $generator->generateThemeTemplates('classic', $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
+        $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
             'core/account.html' => 'account_html__fr',
             'core/account.txt' => 'account_txt__fr',
@@ -257,7 +219,7 @@ class MailTemplateGeneratorTest extends TestCase
         ;
 
         $renderer
-            ->expects($this->exactly($this->layouts->count()))
+            ->expects($this->exactly($this->theme->getLayouts()->count()))
             ->method('renderHtml')
             ->will($this->returnCallback(function (LayoutInterface $layout, LanguageInterface $language) {
                 return implode('_', [$layout->getName(), 'html', $layout->getModuleName(), $language->getIsoCode()]);
@@ -265,7 +227,7 @@ class MailTemplateGeneratorTest extends TestCase
         ;
 
         $renderer
-            ->expects($this->exactly($this->layouts->count()))
+            ->expects($this->exactly($this->theme->getLayouts()->count()))
             ->method('renderTxt')
             ->will($this->returnCallback(function (LayoutInterface $layout, LanguageInterface $language) {
                 return implode('_', [$layout->getName(), 'txt', $layout->getModuleName(), $language->getIsoCode()]);
@@ -273,44 +235,6 @@ class MailTemplateGeneratorTest extends TestCase
         ;
 
         return $renderer;
-    }
-
-    /**
-     * @param array $availableThemes
-     * @param LayoutCollectionInterface|null $collection
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutCatalogInterface
-     */
-    private function createCatalogMock($availableThemes = [], LayoutCollectionInterface $collection = null)
-    {
-        $catalogMock = $this->getMockBuilder(LayoutCatalogInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        if (!empty($availableThemes)) {
-            $themes = new MailThemeCollection();
-            foreach ($availableThemes as $availableTheme) {
-                $themes->add(new MailTheme($availableTheme));
-            }
-
-            $catalogMock
-                ->expects($this->once())
-                ->method('listThemes')
-                ->willReturn($themes)
-            ;
-        }
-
-        if (null !== $collection) {
-            $catalogMock
-                ->expects($this->once())
-                ->method('listLayouts')
-                ->with($this->equalTo('classic'))
-                ->willReturn($collection)
-            ;
-        }
-
-        return $catalogMock;
     }
 
     /**

@@ -2,11 +2,11 @@ services:
   _defaults:
     public: true
 
-  PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCatalogInterface: '@prestashop.core.mail_template.mail_layout_folder_catalog'
+  PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface: '@prestashop.core.mail_template.theme_folder_catalog'
   PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface: '@prestashop.adapter.mail_template.twig_renderer'
 
-  prestashop.core.mail_template.mail_layout_folder_catalog:
-    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Layout\FolderLayoutCatalog'
+  prestashop.core.mail_template.theme_folder_catalog:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog'
     arguments:
       - '%mail_themes_dir%'
       - '@prestashop.core.hook.dispatcher'
@@ -21,7 +21,6 @@ services:
   prestashop.core.mail_template.generator:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator'
     arguments:
-      - '@PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCatalogInterface'
       - '@PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface'
       - '@logger'
 

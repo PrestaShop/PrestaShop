@@ -26,18 +26,27 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
-
 /**
- * Class MailThemeCollection is a collection of MailThemeInterface elements.
+ * Interface ThemeCollectionInterface contains a list of themes to
+ * generate mail templates. Modules can add/remove their own through the hook:
+ *  ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK = actionListMailThemes
  */
-class MailThemeCollection extends AbstractTypedCollection implements MailThemeCollectionInterface
+interface ThemeCollectionInterface extends \IteratorAggregate, \Countable
 {
     /**
-     * {@inheritdoc}
+     * @param ThemeInterface $theme
+     *
+     * @return bool
      */
-    protected function getType()
-    {
-        return MailThemeInterface::class;
-    }
+    public function contains($theme);
+
+    /**
+     * @param ThemeInterface $theme
+     */
+    public function add($theme);
+
+    /**
+     * @param ThemeInterface $theme
+     */
+    public function remove($theme);
 }

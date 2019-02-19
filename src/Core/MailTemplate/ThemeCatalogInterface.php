@@ -26,12 +26,32 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+
 /**
- * Interface MailThemeInterface is used to define mail templates
- * themes. It is very simple for now (only a name) but it could evolve in
- * the future (include a config, a parent theme, ...)
+ * Interface ThemeCatalogInterface is used to list the available themes to generate
+ * mail templates, each one containing its own layouts. Layouts are divided in two
+ * categories "core" and "modules" layouts. You can change the themes collection or
+ * modify a theme's layout collection via the hook:
+ *  ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK = actionListMailThemes
  */
-interface MailThemeInterface
+interface ThemeCatalogInterface
 {
-    public function getName();
+    const LIST_MAIL_THEMES_HOOK = 'actionListMailThemes';
+
+    /**
+     * Returns the list of existing themes.
+     *
+     * @return ThemeCollectionInterface
+     */
+    public function listThemes();
+
+    /**
+     * @param $theme
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return ThemeInterface
+     */
+    public function getByName($theme);
 }

@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
- * MailTemplateTransformerInterface is used by the MailTemplateRendererInterface to
- * apply a transformation on the generated template (textify html, inline css, add a
- * css or an image per language).
+ * TransformationInterface is used by the MailTemplateRendererInterface to apply a
+ * transformation on the generated template (textify html, inline css, add a css or
+ * an image per language).
  */
 interface TransformationInterface
 {
