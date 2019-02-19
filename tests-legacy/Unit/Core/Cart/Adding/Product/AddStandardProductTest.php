@@ -30,6 +30,9 @@ use Configuration;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 use Product;
 
+/**
+ * behat equivalent : add_standard_product.feature
+ */
 class AddStandardProductTest extends AbstractCartTest
 {
     public function testProductCanBeAddedInCartIfAvailable()
