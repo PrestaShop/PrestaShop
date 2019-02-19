@@ -102,50 +102,74 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * Persist (create or update) filters into database.
+     * Persist (create or update) filters into database using employee and unique key
+     *
+     * @param int $employeeId
+     * @param int $shopId
+     * @param array $filters
+     * @param string $uniqueKey
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function createOrUpdateByEmployeeAndUniqueKey(
+        $employeeId,
+        $shopId,
+        array $filters,
+        $uniqueKey
+    ) {
+        $adminFilter = $this->findOneBy([
+            'employee' => $employeeId,
+            'shop' => $shopId,
+            'uniqueKey' => $uniqueKey,
+        ]);
+
+        $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
+
+        $adminFilter
+            ->setController('')
+            ->setAction('')
+            ->setUniqueKey($uniqueKey)
+            ->setEmployee($employeeId)
+            ->setShop($shopId)
+            ->setFilter(json_encode($filters))
+        ;
+
+        $this->getEntityManager()->persist($adminFilter);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Persist (create or update) filters into database using employee and controller name and its action name.
      * 
      * @param int $employeeId
      * @param int $shopId
      * @param array $filters
      * @param string $controller
      * @param string $action
-     * @param string $uniqueKey
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function persist(
+    public function createOrUpdateByEmployeeAndRouteParams(
         $employeeId,
         $shopId,
         $filters,
         $controller,
-        $action,
-        $uniqueKey
+        $action
     ) {
-        $doesFilterCreatedUsingUniqueKey = isset($filters['filters'][$uniqueKey]);
 
-        if ($doesFilterCreatedUsingUniqueKey) {
-            $adminFilter = $this->findOneBy([
-                'employee' => $employeeId,
-                'shop' => $shopId,
-                'uniqueKey' => $uniqueKey,
-            ]);
-
-            $filters['filters'] = $filters['filters'][$uniqueKey];
-        } else {
-            $adminFilter = $this->findOneBy([
-                'employee' => $employeeId,
-                'shop' => $shopId,
-                'controller' => $controller,
-                'action' => $action,
-            ]);
-        }
+        $adminFilter = $this->findOneBy([
+            'employee' => $employeeId,
+            'shop' => $shopId,
+            'controller' => $controller,
+            'action' => $action,
+        ]);
 
         $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
 
         $adminFilter
-            ->setController($doesFilterCreatedUsingUniqueKey ? '' : $controller)
-            ->setAction($doesFilterCreatedUsingUniqueKey ? '' : $action)
-            ->setUniqueKey($doesFilterCreatedUsingUniqueKey ? $uniqueKey : '')
+            ->setController($controller)
+            ->setAction($action)
+            ->setUniqueKey('')
             ->setEmployee($employeeId)
             ->setShop($shopId)
             ->setFilter(json_encode($filters))
