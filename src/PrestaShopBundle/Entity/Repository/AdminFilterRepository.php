@@ -102,50 +102,25 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * @param $employeeId
-     * @param $shopId
-     * @param $filters
-     * @param $controller
-     * @param $action
-     *
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function createOrUpdateByEmployeeAndRouteParams($employeeId, $shopId, $filters, $controller, $action)
-    {
-        $adminFilter = $this->findOneBy([
-            'employee' => $employeeId,
-            'shop' => $shopId,
-            'controller' => $controller,
-            'action' => $action,
-        ]);
-
-        $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
-
-        $adminFilter->setAction($action)
-            ->setController($controller)
-            ->setEmployee($employeeId)
-            ->setShop($shopId)
-            ->setFilter(json_encode($filters));
-
-        $this->getEntityManager()->persist($adminFilter);
-        $this->getEntityManager()->flush();
-    }
-
-    /**
      * Persist (create or update) filters into database.
-     *
-     * @param array $filters
-     * @param string $uniqueKey
+     * 
      * @param int $employeeId
      * @param int $shopId
-     * @param $controller
+     * @param array $filters
+     * @param string $controller
      * @param string $action
+     * @param string $uniqueKey
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function persist(array $filters, $uniqueKey, $employeeId, $shopId, $controller, $action)
-    {
+    public function persist(
+        $employeeId,
+        $shopId,
+        $filters,
+        $controller,
+        $action,
+        $uniqueKey
+    ) {
         $doesFilterCreatedUsingUniqueKey = isset($filters['filters'][$uniqueKey]);
 
         if ($doesFilterCreatedUsingUniqueKey) {
