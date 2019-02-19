@@ -27,19 +27,25 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use Symfony\Component\Translation\MessageCatalogueInterface;
+
+/**
+ * Defines what should be the default catalogue, contains all the translations keys.
+ */
 interface UseDefaultCatalogueInterface
 {
     /**
-     * Get the default catalogue from xliff files.
+     * Get the default catalogue
      *
-     * @param bool $empty if true, empty the catalogue
+     * @param bool $empty if true, empty the catalogue values (keep the keys)
      *
-     * @return \Symfony\Component\Translation\MessageCatalogueInterface Return a default catalogue with all keys
+     * @return MessageCatalogueInterface Return a default catalogue with all keys
      */
     public function getDefaultCatalogue($empty = true);
 
     /**
-     * @return string Path to app/Resources/translations/default/{locale}
+     * @return string Path to the default directory
+     *                Most of the time, it's `app/Resources/translations/default/{locale}`
      */
     public function getDefaultResourceDirectory();
 }

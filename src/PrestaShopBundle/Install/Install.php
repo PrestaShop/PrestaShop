@@ -947,7 +947,6 @@ class Install extends AbstractInstall
     {
         /**
          * TODO: Remove blacklist once 1.7 is out.
-         * TODO 2: Also used by NativeModulesProvider class
          */
         $blacklist = array(
             'bankwire',

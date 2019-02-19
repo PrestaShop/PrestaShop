@@ -87,6 +87,21 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     }
 
     /**
+     * @deprecated since 1.7.6, to be removed in 1.8.x
+     *
+     * @return string
+     */
+    public function getModuleDirectory()
+    {
+        @trigger_error(
+            'getModuleDirectory function is deprecated and will be removed in 1.8.x',
+            E_USER_DEPRECATED
+        );
+
+        return $this->modulesDirectory;
+    }
+
+    /**
      * @param string $modulesDirectory the path to the modules directory
      */
     public function setModulesDirectory($modulesDirectory)

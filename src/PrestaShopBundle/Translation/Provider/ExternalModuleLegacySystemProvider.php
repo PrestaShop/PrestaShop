@@ -57,11 +57,6 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     private $moduleName;
 
-    /**
-     * @var string the domain name
-     */
-    protected $domain;
-
     public function __construct(
         LoaderInterface $databaseLoader,
         $resourceDirectory,
@@ -82,14 +77,6 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     public function getTranslationDomains()
     {
         return ['#^' . $this->getModuleDomain() . '*#i'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilters()
-    {
-        return [];
     }
 
     /**
@@ -121,7 +108,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         ;
 
         try {
-            $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->getLocale());
+            $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->locale);
             $defaultCatalogue->addCatalogue($additionalDefaultCatalogue);
         } catch (UnsupportedLocaleException $exception) {
             // Do nothing as support of legacy file is deprecated
@@ -173,7 +160,10 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getLegacyCatalogue()
     {
-        $catalogueFromFiles = $this->moduleProvider->getXliffCatalogue();
+        $catalogueFromFiles = $this->moduleProvider
+            ->setLocale($this->locale)
+            ->getXliffCatalogue()
+        ;
 
         try {
             $defaultCatalogue = $this->getDefaultCatalogue();
@@ -222,23 +212,5 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         $messageCatalogue->addCatalogue($databaseCatalogue);
 
         return $messageCatalogue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
     }
 }

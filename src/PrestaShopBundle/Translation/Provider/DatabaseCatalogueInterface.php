@@ -34,7 +34,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 interface DatabaseCatalogueInterface
 {
     /**
-     * @var string|null the PrestaShop theme
+     * @param string|null $themeName the Theme name
      *
      * @return MessageCatalogue
      */

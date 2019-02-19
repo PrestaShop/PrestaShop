@@ -59,7 +59,7 @@ class TranslationController extends ApiController
             $queryParamsCollection = $this->queryParams->fromRequest($request);
             $queryParams = $queryParamsCollection->getQueryParams();
 
-            /** @var @var TranslationService $translationService */
+            /** @var TranslationService $translationService */
             $translationService = $this->container->get('prestashop.service.translation');
 
             $locale = $request->attributes->get('locale');
