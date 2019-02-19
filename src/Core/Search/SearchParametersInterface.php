@@ -49,21 +49,6 @@ interface SearchParametersInterface
      * @param string $action the action name
      *
      * @return Filters A collection of filters
-     *
-     * @deprecated since 1.7.6.0, to be removed in 1.8. Use $this->getFiltersFromPersistence() instead.
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass);
-
-    /**
-     * Get filters that are stored in database.
-     *
-     * @param int $employeeId
-     * @param int $shopId
-     * @param string $controller
-     * @param string $action
-     * @param string $filtersClassName
-     *
-     * @return Filters
-     */
-    public function getFiltersFromPersistence($employeeId, $shopId, $controller, $action, $filtersClassName);
 }

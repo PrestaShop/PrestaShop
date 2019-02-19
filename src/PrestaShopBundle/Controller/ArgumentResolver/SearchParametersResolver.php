@@ -116,7 +116,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         //Override with saved filters if present
         if ($request->isMethod('GET')) {
             /** @var Filters $savedFilters */
-            $savedFilters = $this->searchParameters->getFiltersFromPersistence(
+            $savedFilters = $this->searchParameters->getFiltersFromRepository(
                 $this->employee->getId(),
                 $this->shopId,
                 $controller,
@@ -144,12 +144,12 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
             $filtersToSave = $filters->all();
             unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
             $this->adminFilterRepository->persist(
-                $filtersToSave,
-                $filtersClass::getKey(),
                 $this->employee->getId(),
                 $this->shopId,
+                $filtersToSave,
                 $controller,
-                $action
+                $action,
+                $filtersClass::getKey()
             );
         }
         $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
