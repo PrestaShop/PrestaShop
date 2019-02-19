@@ -113,6 +113,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
         /** @var Filters $filters */
         $filters = new $filtersClass($filtersClass::getDefaults());
+
         //Override with saved filters if present
         if ($request->isMethod('GET')) {
             /** @var Filters $savedFilters */
@@ -127,6 +128,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
                 $filters->add($savedFilters->all());
             }
         }
+
         //Then override with query filters if present
         $query = $request->query;
         $queryHasFilters = false;
@@ -143,14 +145,30 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
             //Update the saved filters (which have been modified by the query)
             $filtersToSave = $filters->all();
             unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
-            $this->adminFilterRepository->persist(
-                $this->employee->getId(),
-                $this->shopId,
-                $filtersToSave,
-                $controller,
-                $action,
+
+            $doesFiltersFoundByUniqueKey = $this->searchParameters->doesFilterExistByUniqueKey(
+                $request,
                 $filtersClass::getKey()
             );
+
+            if ($doesFiltersFoundByUniqueKey) {
+                $this->adminFilterRepository->createOrUpdateByEmployeeAndUniqueKey(
+                    $this->employee->getId(),
+                    $this->shopId,
+                    $filtersToSave,
+                    $filtersClass::getKey()
+                );
+            }
+
+            if (!$doesFiltersFoundByUniqueKey) {
+                $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
+                    $this->employee->getId(),
+                    $this->shopId,
+                    $filtersToSave,
+                    $controller,
+                    $action
+                );
+            }
         }
         $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
         $this->dispatcher->dispatch(FilterSearchCriteriaEvent::NAME, $filterSearchParametersEvent);

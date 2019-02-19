@@ -422,7 +422,7 @@ class SearchParametersResolverTest extends TestCase
             unset($savedParameters['offset']);
             $repositoryMock
                 ->expects($this->once())
-                ->method('persist')
+                ->method('createOrUpdateByEmployeeAndRouteParams')
                 ->with(
                     $this->equalTo(self::EMPLOYEE_ID),
                     $this->equalTo(self::SHOP_ID),

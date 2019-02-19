@@ -51,4 +51,14 @@ interface SearchParametersInterface
      * @return Filters A collection of filters
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass);
+
+    /**
+     * Checks if the request has a key which matches with filter class key.
+     *
+     * @param Request $request
+     * @param string $uniqueKey the filterClass:getKey() method
+     *
+     * @return bool
+     */
+    public function doesFilterExistByUniqueKey(Request $request, $uniqueKey);
 }
