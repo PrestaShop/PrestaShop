@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,35 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-  {% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Adapter\Tax\QueryHandler;
 
-  {% block content %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {{ include('@PrestaShop/Admin/Improve/International/Tax/Blocks/form.html.twig', {'taxForm': taxForm}) }}
-      </div>
-    </div>
-  {% endblock %}
+use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
+use Tax;
+
+/**
+ * Handles query which gets tax object for editing
+ */
+final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTaxForEditingHandlerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(GetTaxForEditing $query)
+    {
+        $tax = new Tax($query->getTaxId()->getValue());
+        $this->assertTaxWasFound($query->getTaxId(), $tax);
+
+        return new EditableTax(
+            $query->getTaxId(),
+            $tax->name,
+            $tax->rate,
+            $tax->active,
+            $tax->getAssociatedShops()
+        );
+    }
+}

@@ -1,3 +1,10 @@
+admin_taxes_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:index'
+    _legacy_controller: AdminTaxes
+
 admin_taxes_edit:
   path: /{taxId}/edit
   methods: [GET, POST]

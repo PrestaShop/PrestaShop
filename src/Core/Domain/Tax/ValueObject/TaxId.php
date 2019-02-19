@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,45 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-  {% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject;
 
-  {% block content %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {{ include('@PrestaShop/Admin/Improve/International/Tax/Blocks/form.html.twig', {'taxForm': taxForm}) }}
-      </div>
-    </div>
-  {% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
+
+/**
+ * Provides tax id data
+ */
+class TaxId
+{
+    /**
+     * @var int
+     */
+    private $taxId;
+
+    /**
+     * @param int $taxId
+     *
+     * @throws TaxException
+     */
+    public function __construct($taxId)
+    {
+        if (!is_int($taxId) || $taxId <= 0) {
+            throw new TaxConstraintException(
+                sprintf('Invalid Tax id: %s', var_export($taxId, true)),
+                TaxConstraintException::INVALID_TAX_ID
+            );
+        }
+
+        $this->taxId = (int) $taxId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->taxId;
+    }
+}

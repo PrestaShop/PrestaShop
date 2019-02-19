@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,13 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-  {% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Tax\Exception;
 
-  {% block content %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {{ include('@PrestaShop/Admin/Improve/International/Tax/Blocks/form.html.twig', {'taxForm': taxForm}) }}
-      </div>
-    </div>
-  {% endblock %}
+/**
+ * Is thrown when tax is not found by provided id
+ */
+class TaxNotFoundException extends TaxException
+{
+}

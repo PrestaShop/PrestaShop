@@ -27,21 +27,46 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible for handling "Improve > International > Taxes" page.
  */
 class TaxController extends FrameworkBundleAdminController
 {
+    public function indexAction()
+    {
+        //@todo: get rid after rebase
+        dump('implement');
+        die;
+    }
+
     /**
      * Handles tax edit
      *
+     * @param Request $request
      * @param $taxId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function editAction($taxId)
+    public function editAction(Request $request, $taxId)
     {
-        return $this->render('@PrestaShop/Admin/Improve/International/Tax/edit.html.twig');
+        $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
+        $taxFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_form_builder');
+
+        $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
+        $taxForm->handleRequest($request);
+        $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
+
+        if (null !== $result->getIdentifiableObjectId()) {
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Tax/edit.html.twig', [
+            'taxForm' => $taxForm->createView(),
+        ]);
     }
 }
