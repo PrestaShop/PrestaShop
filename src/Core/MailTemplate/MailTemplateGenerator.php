@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -54,14 +55,16 @@ class MailTemplateGenerator
     /**
      * @param MailLayoutCatalogInterface $catalog
      * @param MailTemplateRendererInterface $renderer
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         MailLayoutCatalogInterface $catalog,
-        MailTemplateRendererInterface $renderer
+        MailTemplateRendererInterface $renderer,
+        LoggerInterface $logger = null
     ) {
         $this->catalog = $catalog;
         $this->renderer = $renderer;
-        $this->logger = new NullLogger();
+        $this->logger = null !== $logger ? $logger : new NullLogger();
         $this->fileSystem = new Filesystem();
     }
 

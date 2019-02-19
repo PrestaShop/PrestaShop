@@ -23,10 +23,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCatalogInterface'
       - '@PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface'
-    calls:
-      - method: setLogger
-        arguments:
-          - '@logger'
+      - '@logger'
 
   prestashop.core.mail_template.transformation.css_inline:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation'
