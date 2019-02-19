@@ -49,19 +49,9 @@ final class SearchParameters implements SearchParametersInterface
      */
     public function getFiltersFromRequest(Request $request, $filterClass)
     {
-        $filters = [];
+        $filters = $this->formatFiltersFromRequest($request);
 
-        foreach (self::FILTER_TYPES as $type) {
-            if ($request->request->has($type)) {
-                $filters[$type] = $request->request->get($type);
-            } elseif ($request->query->has($type)) {
-                $filters[$type] = $request->query->get($type);
-            }
-        }
-
-        $doesFilterExistByUniqueKey = isset($filters['filters'][$filterClass::getKey()]);
-
-        if ($doesFilterExistByUniqueKey) {
+        if ($this->doesFilterExistByUniqueKey($request, $filterClass::getKey())) {
             $filters['filters'] = $filters['filters'][$filterClass::getKey()];
         } else if (isset($filters['filters'])) {
             foreach ($filters['filters'] as $filterKey => $filterValue) {
@@ -105,5 +95,36 @@ final class SearchParameters implements SearchParametersInterface
         }
 
         return new $filtersClass($savedFilters);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function doesFilterExistByUniqueKey(Request $request, $uniqueKey)
+    {
+        $filters = $this->formatFiltersFromRequest($request);
+
+        return isset($filters['filters'][$uniqueKey]);
+    }
+
+    /**
+     * Gets formatted filters directly from the request
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function formatFiltersFromRequest(Request $request)
+    {
+        $filters = [];
+        foreach (self::FILTER_TYPES as $type) {
+            if ($request->request->has($type)) {
+                $filters[$type] = $request->request->get($type);
+            } elseif ($request->query->has($type)) {
+                $filters[$type] = $request->query->get($type);
+            }
+        }
+
+        return $filters;
     }
 }
