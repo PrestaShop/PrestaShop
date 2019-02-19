@@ -28,7 +28,8 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 /**
  * Class MailLayout is the default implementation of MailLayoutInterface,
- * it is a simple immutable data container with no logic.
+ * it is a simple immutable data container with no logic. It contains the
+ * basic info about a mail layout which is used to generate a MailTemplate.
  */
 class MailLayout implements MailLayoutInterface
 {
@@ -52,8 +53,8 @@ class MailLayout implements MailLayoutInterface
      */
     public function __construct(
         $name,
-        $htmlPath = '',
-        $txtPath = '',
+        $htmlPath,
+        $txtPath,
         $moduleName = ''
     ) {
         $this->name = $name;

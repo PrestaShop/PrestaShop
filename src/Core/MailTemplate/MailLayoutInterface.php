@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 /**
- * Interface MailLayoutInterface is used to contain the basic info about a mail layout
+ * Interface MailLayoutInterface is used to contain the basic info about a mail layout.
  */
 interface MailLayoutInterface
 {

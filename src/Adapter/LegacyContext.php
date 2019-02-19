@@ -47,20 +47,22 @@ class LegacyContext
     /** @var Currency */
     private $employeeCurrency;
 
-    /** @var string */
+    /** @var string Contains the base uri for mail themes (by default https://domain.com/mails/themes/). Used for mails assets. */
     private $mailThemesUri;
 
     /** @var Tools */
     private $tools;
 
     /**
-     * This constructor must remain empty to avoid BC breaks. If you need to
-     * inject services please implement a setter and use the method injection
-     * instead.
+     * @param string|null $mailThemesUri
+     * @param Tools|null $tools
      */
-    public function __construct()
-    {
-        $this->tools = new Tools();
+    public function __construct(
+        $mailThemesUri = null,
+        Tools $tools = null
+    ) {
+        $this->mailThemesUri = $mailThemesUri;
+        $this->tools = null !== $tools ? $tools : new Tools();
     }
 
     /**
@@ -163,13 +165,11 @@ class LegacyContext
     /**
      * Url to the mail themes folder
      *
-     * @since 1.7.6
-     *
      * @return string
      */
     public function getMailThemesUrl()
     {
-        return $this->tools->getShopDomain(true) . __PS_BASE_URI__ . $this->mailThemesUri;
+        return $this->tools->getShopDomainSsl(true) . __PS_BASE_URI__ . $this->mailThemesUri;
     }
 
     /**
@@ -314,17 +314,5 @@ class LegacyContext
     public function getMailThemesUri()
     {
         return $this->mailThemesUri;
-    }
-
-    /**
-     * @param string $mailThemesUri
-     *
-     * @return LegacyContext
-     */
-    public function setMailThemesUri($mailThemesUri)
-    {
-        $this->mailThemesUri = $mailThemesUri;
-
-        return $this;
     }
 }
