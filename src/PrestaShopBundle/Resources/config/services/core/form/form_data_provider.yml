@@ -39,8 +39,15 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
+<<<<<<< HEAD
   prestashop.core.form.identifiable_object.data_provider.category_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CategoryFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+=======
+  prestashop.core.form.identifiable_object.data_provider.tax_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+>>>>>>> 7fcf83630e... [WIP] Edit tax form
