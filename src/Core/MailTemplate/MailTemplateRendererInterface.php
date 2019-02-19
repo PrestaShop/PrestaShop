@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 
 /**
@@ -38,20 +39,20 @@ interface MailTemplateRendererInterface
     const GET_MAIL_LAYOUT_TRANSFORMATIONS = 'actionGetMailLayoutTransformations';
 
     /**
-     * @param MailLayoutInterface $layout
+     * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
      * @return string
      */
-    public function renderTxt(MailLayoutInterface $layout, LanguageInterface $language);
+    public function renderTxt(LayoutInterface $layout, LanguageInterface $language);
 
     /**
-     * @param MailLayoutInterface $layout
+     * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
      * @return string
      */
-    public function renderHtml(MailLayoutInterface $layout, LanguageInterface $language);
+    public function renderHtml(LayoutInterface $layout, LanguageInterface $language);
 
     /**
      * Adds a transformer to the renderer, when template is rendered all transformers

@@ -29,11 +29,11 @@ namespace Tests\Unit\Core\MailTemplate;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilder;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilder;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 
-class MailLayoutVariablesBuilderTest extends TestCase
+class LayoutVariablesBuilderTest extends TestCase
 {
     public function testConstructor()
     {
@@ -43,10 +43,10 @@ class MailLayoutVariablesBuilderTest extends TestCase
             ->getMock()
         ;
 
-        $builder = new MailLayoutVariablesBuilder($dispatcherMock);
+        $builder = new LayoutVariablesBuilder($dispatcherMock);
         $this->assertNotNull($builder);
 
-        $builder = new MailLayoutVariablesBuilder($dispatcherMock, ['locale' => 'en']);
+        $builder = new LayoutVariablesBuilder($dispatcherMock, ['locale' => 'en']);
         $this->assertNotNull($builder);
     }
 
@@ -67,7 +67,7 @@ class MailLayoutVariablesBuilderTest extends TestCase
             'locale' => 'en-EN',
         ];
 
-        $builder = new MailLayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock));
+        $builder = new LayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock));
         $builtVariables = $builder->buildVariables($layoutMock, $languageMock);
 
         $this->assertEquals($expectedVariables, $builtVariables);
@@ -90,7 +90,7 @@ class MailLayoutVariablesBuilderTest extends TestCase
             'languageDefaultFont' => '',
             'locale' => 'en-EN',
         ];
-        $builder = new MailLayoutVariablesBuilder(
+        $builder = new LayoutVariablesBuilder(
             $this->createHookDispatcherMock($expectedVariables, $layoutMock),
             [
                 'url' => 'http://test.com',
@@ -118,7 +118,7 @@ class MailLayoutVariablesBuilderTest extends TestCase
             'languageDefaultFont' => 'Tahoma,',
             'locale' => 'ar-AR',
         ];
-        $builder = new MailLayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock));
+        $builder = new LayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock));
         $builtVariables = $builder->buildVariables($layoutMock, $languageMock);
 
         $this->assertEquals($expectedVariables, $builtVariables);
@@ -126,11 +126,11 @@ class MailLayoutVariablesBuilderTest extends TestCase
 
     /**
      * @param array $expectedVariables
-     * @param MailLayoutInterface $mailLayout
+     * @param LayoutInterface $mailLayout
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
      */
-    private function createHookDispatcherMock(array $expectedVariables, MailLayoutInterface $mailLayout)
+    private function createHookDispatcherMock(array $expectedVariables, LayoutInterface $mailLayout)
     {
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
@@ -141,10 +141,10 @@ class MailLayoutVariablesBuilderTest extends TestCase
             ->expects($this->once())
             ->method('dispatchWithParameters')
             ->with(
-                $this->equalTo(MailLayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK),
+                $this->equalTo(LayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK),
                 $this->callback(function (array $hookParameters) use ($expectedVariables, $mailLayout) {
                     $this->assertEquals($expectedVariables, $hookParameters['mailLayoutVariables']);
-                    $this->assertInstanceOf(MailLayoutInterface::class, $hookParameters['mailLayout']);
+                    $this->assertInstanceOf(LayoutInterface::class, $hookParameters['mailLayout']);
                     $this->assertEquals($mailLayout, $hookParameters['mailLayout']);
 
                     return true;
@@ -190,11 +190,11 @@ class MailLayoutVariablesBuilderTest extends TestCase
     /**
      * @param array $expectedMethods
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|MailLayoutInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutInterface
      */
     private function buildLayoutMock(array $expectedMethods)
     {
-        $layoutMock = $this->getMockBuilder(MailLayoutInterface::class)
+        $layoutMock = $this->getMockBuilder(LayoutInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;

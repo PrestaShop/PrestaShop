@@ -29,12 +29,12 @@ namespace Tests\Unit\Core\MailTemplate;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayout;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCatalogInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCollection;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCollectionInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCatalogInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollection;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollectionInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTheme;
@@ -59,7 +59,7 @@ class MailTemplateGeneratorTest extends TestCase
     /** @var Filesystem */
     private $fs;
 
-    /** @var MailLayoutCollectionInterface */
+    /** @var LayoutCollectionInterface */
     private $layouts;
 
     public function setUp()
@@ -71,19 +71,19 @@ class MailTemplateGeneratorTest extends TestCase
         $this->coreTempDir = $this->outputTempDir . DIRECTORY_SEPARATOR . MailTemplateInterface::CORE_CATEGORY;
         $this->modulesTempDir = $this->outputTempDir . DIRECTORY_SEPARATOR . MailTemplateInterface::MODULES_CATEGORY;
         $this->fs->remove($this->outputTempDir);
-        $this->layouts = new MailLayoutCollection([
-            new MailLayout(
+        $this->layouts = new LayoutCollection([
+            new Layout(
                 'account',
                 implode(DIRECTORY_SEPARATOR, [$this->coreTempDir, 'account.html.twig']),
                 implode(DIRECTORY_SEPARATOR, [$this->coreTempDir, 'account.txt.twig'])
             ),
-            new MailLayout(
+            new Layout(
                 'followup_1',
                 implode(DIRECTORY_SEPARATOR, [$this->modulesTempDir, 'followup', 'followup_1.html.twig']),
                 '',
                 'followup'
             ),
-            new MailLayout(
+            new Layout(
                 'productoutofstock',
                 '',
                 implode(DIRECTORY_SEPARATOR, [$this->modulesTempDir, 'ps_emailalerts', 'productoutofstock.txt.twig']),
@@ -101,7 +101,7 @@ class MailTemplateGeneratorTest extends TestCase
             ->getMock()
         ;
 
-        $catalogMock = $this->getMockBuilder(MailLayoutCatalogInterface::class)
+        $catalogMock = $this->getMockBuilder(LayoutCatalogInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -259,7 +259,7 @@ class MailTemplateGeneratorTest extends TestCase
         $renderer
             ->expects($this->exactly($this->layouts->count()))
             ->method('renderHtml')
-            ->will($this->returnCallback(function (MailLayoutInterface $layout, LanguageInterface $language) {
+            ->will($this->returnCallback(function (LayoutInterface $layout, LanguageInterface $language) {
                 return implode('_', [$layout->getName(), 'html', $layout->getModuleName(), $language->getIsoCode()]);
             }))
         ;
@@ -267,7 +267,7 @@ class MailTemplateGeneratorTest extends TestCase
         $renderer
             ->expects($this->exactly($this->layouts->count()))
             ->method('renderTxt')
-            ->will($this->returnCallback(function (MailLayoutInterface $layout, LanguageInterface $language) {
+            ->will($this->returnCallback(function (LayoutInterface $layout, LanguageInterface $language) {
                 return implode('_', [$layout->getName(), 'txt', $layout->getModuleName(), $language->getIsoCode()]);
             }))
         ;
@@ -277,13 +277,13 @@ class MailTemplateGeneratorTest extends TestCase
 
     /**
      * @param array $availableThemes
-     * @param MailLayoutCollectionInterface|null $collection
+     * @param LayoutCollectionInterface|null $collection
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|MailLayoutCatalogInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutCatalogInterface
      */
-    private function createCatalogMock($availableThemes = [], MailLayoutCollectionInterface $collection = null)
+    private function createCatalogMock($availableThemes = [], LayoutCollectionInterface $collection = null)
     {
-        $catalogMock = $this->getMockBuilder(MailLayoutCatalogInterface::class)
+        $catalogMock = $this->getMockBuilder(LayoutCatalogInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;

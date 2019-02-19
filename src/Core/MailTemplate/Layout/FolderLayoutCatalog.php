@@ -24,10 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTheme;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollection;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollectionInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -36,9 +40,9 @@ use Symfony\Component\Finder\SplFileInfo;
  * simply on existing files on the $mailThemesFolder (no database, or config files).
  * If a module includes its own theme folder it can override the default one through
  * the hook:
- *  MailLayoutFolderCatalog::GET_MAIL_THEME_FOLDER_HOOK => actionGetMailThemeFolder
+ *  LayoutFolderCatalog::GET_MAIL_THEME_FOLDER_HOOK => actionGetMailThemeFolder
  */
-class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
+class FolderLayoutCatalog implements LayoutCatalogInterface
 {
     const GET_MAIL_THEME_FOLDER_HOOK = 'actionGetMailThemeFolder';
 
@@ -84,7 +88,7 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
 
         //This hook allows you to add/remove a mail theme
         $this->hookDispatcher->dispatchWithParameters(
-            MailLayoutCatalogInterface::LIST_MAIL_THEMES_HOOK,
+            LayoutCatalogInterface::LIST_MAIL_THEMES_HOOK,
             ['mailThemes' => $mailThemes]
         );
 
@@ -107,13 +111,13 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
         );
         $this->checkThemeFolder($mailThemeFolder);
 
-        $mailThemeLayouts = new MailLayoutCollection();
+        $mailThemeLayouts = new LayoutCollection();
         $this->listCoreLayouts($mailThemeLayouts, $mailThemeFolder);
         $this->listModulesLayouts($mailThemeLayouts, $mailThemeFolder);
 
         //This hook allows to add/remove layouts to a mail theme
         $this->hookDispatcher->dispatchWithParameters(
-            MailLayoutCatalogInterface::LIST_MAIL_THEME_LAYOUTS_HOOK,
+            LayoutCatalogInterface::LIST_MAIL_THEME_LAYOUTS_HOOK,
             [
                 'mailTheme' => $mailTheme,
                 'mailThemeLayouts' => $mailThemeLayouts,
@@ -124,10 +128,10 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
     }
 
     /**
-     * @param MailLayoutCollectionInterface $collection
+     * @param LayoutCollectionInterface $collection
      * @param string $mailThemeFolder
      */
-    private function listCoreLayouts(MailLayoutCollectionInterface $collection, $mailThemeFolder)
+    private function listCoreLayouts(LayoutCollectionInterface $collection, $mailThemeFolder)
     {
         $coreLayoutsFolder = implode(DIRECTORY_SEPARATOR, [
             $mailThemeFolder,
@@ -141,10 +145,10 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
     }
 
     /**
-     * @param MailLayoutCollectionInterface $collection
+     * @param LayoutCollectionInterface $collection
      * @param string $mailThemeFolder
      */
-    private function listModulesLayouts(MailLayoutCollectionInterface $collection, $mailThemeFolder)
+    private function listModulesLayouts(LayoutCollectionInterface $collection, $mailThemeFolder)
     {
         $moduleLayoutsFolder = implode(DIRECTORY_SEPARATOR, [
             $mailThemeFolder,
@@ -166,12 +170,12 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
     }
 
     /**
-     * @param MailLayoutCollectionInterface $collection
+     * @param LayoutCollectionInterface $collection
      * @param string $folder
      * @param string $moduleName
      */
     private function addLayoutsFromFolder(
-        MailLayoutCollectionInterface $collection,
+        LayoutCollectionInterface $collection,
         $folder,
         $moduleName = ''
     ) {
@@ -193,7 +197,7 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
         }
 
         foreach ($layoutFiles as $layoutName => $layouts) {
-            $collection->add(new MailLayout(
+            $collection->add(new Layout(
                 $layoutName,
                 $layouts[MailTemplateInterface::HTML_TYPE],
                 $layouts[MailTemplateInterface::TXT_TYPE],

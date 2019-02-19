@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 /**
- * Interface MailTemplateThemeInterface is used to define mail templates
+ * Interface MailThemeInterface is used to define mail templates
  * themes. It is very simple for now (only a name) but it could evolve in
  * the future (include a config, a parent theme, ...)
  */

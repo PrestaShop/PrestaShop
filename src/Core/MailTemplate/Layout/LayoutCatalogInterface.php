@@ -24,17 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollectionInterface;
 
-class MailLayoutCollection extends AbstractTypedCollection implements MailLayoutCollectionInterface
+/**
+ * Interface LayoutCatalogInterface is used to list the available themes to generate
+ * mail templates. It also allows you to list the available layouts for a specific theme.
+ * Layouts are divided in two categories "core" and "modules" layouts.
+ */
+interface LayoutCatalogInterface
 {
+    const LIST_MAIL_THEMES_HOOK = 'actionListMailThemes';
+    const LIST_MAIL_THEME_LAYOUTS_HOOK = 'actionListMailThemeLayouts';
+
     /**
-     * {@inheritdoc}
+     * Returns the list of existing themes.
+     *
+     * @throws FileNotFoundException
+     *
+     * @return MailThemeCollectionInterface
      */
-    protected function getType()
-    {
-        return MailLayoutInterface::class;
-    }
+    public function listThemes();
+
+    /**
+     * Returns a collection of layouts via a MailLayoutCollectionInterface
+     *
+     * @param string $theme
+     *
+     * @throws FileNotFoundException
+     *
+     * @return LayoutCollectionInterface
+     */
+    public function listLayouts($theme);
 }

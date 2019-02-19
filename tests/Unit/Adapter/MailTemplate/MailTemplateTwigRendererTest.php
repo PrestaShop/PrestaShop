@@ -30,8 +30,8 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollectionInterface;
@@ -47,7 +47,7 @@ class MailTemplateTwigRendererTest extends TestCase
             ->getMock()
         ;
 
-        $builderMock = $this->getMockBuilder(MailLayoutVariablesBuilderInterface::class)
+        $builderMock = $this->getMockBuilder(LayoutVariablesBuilderInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -271,13 +271,13 @@ class MailTemplateTwigRendererTest extends TestCase
     }
 
     /**
-     * @param MailLayoutInterface $mailLayout
+     * @param LayoutInterface $mailLayout
      * @param string $templateType
      * @param int $transformationsCount
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
      */
-    private function createHookDispatcherMock(MailLayoutInterface $mailLayout, $templateType, $transformationsCount = 0)
+    private function createHookDispatcherMock(LayoutInterface $mailLayout, $templateType, $transformationsCount = 0)
     {
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
@@ -307,11 +307,11 @@ class MailTemplateTwigRendererTest extends TestCase
      * @param array $variables
      * @param LanguageInterface $expectedLanguage
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|MailLayoutVariablesBuilderInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutVariablesBuilderInterface
      */
     private function createVariablesBuilderMock(array $variables, LanguageInterface $expectedLanguage)
     {
-        $builderMock = $this->getMockBuilder(MailLayoutVariablesBuilderInterface::class)
+        $builderMock = $this->getMockBuilder(LayoutVariablesBuilderInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -320,7 +320,7 @@ class MailTemplateTwigRendererTest extends TestCase
             ->expects($this->once())
             ->method('buildVariables')
             ->with(
-                $this->isInstanceOf(MailLayoutInterface::class),
+                $this->isInstanceOf(LayoutInterface::class),
                 $this->equalTo($expectedLanguage)
             )
             ->willReturn($variables)
@@ -344,11 +344,11 @@ class MailTemplateTwigRendererTest extends TestCase
     /**
      * @param array $expectedPaths
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|MailLayoutInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutInterface
      */
     private function createMailLayoutMock(array $expectedPaths)
     {
-        $mailLayoutMock = $this->getMockBuilder(MailLayoutInterface::class)
+        $mailLayoutMock = $this->getMockBuilder(LayoutInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
