@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -35,28 +36,37 @@ use Symfony\Component\HttpFoundation\Request;
 class AddonsStoreController extends FrameworkBundleAdminController
 {
     /**
-     * @var string the controller name for routing
-     */
-    const CONTROLLER_NAME = 'AdminAddonsCatalog';
-
-    /**
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
+        $pageContent = @file_get_contents($this->getAddonsUrl($request));
+
+        if (!$pageContent) {
+            $this->addFlash('error', $this->trans(
+                'An unexpected error occurred.',
+                'Admin.Notifications.Error'
+            ));
+
+            return $this->redirectToRoute('admin_module_catalog');
+        }
+
         return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', array(
-            'pageContent' => file_get_contents($this->getAddonsUrl($request)),
+            'pageContent' => $pageContent,
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminAddonsCatalog'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
+            'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
         ));
     }
 
@@ -67,14 +77,17 @@ class AddonsStoreController extends FrameworkBundleAdminController
      */
     private function getAddonsUrl(Request $request)
     {
-        $psVersion = $this->get('prestashop.core.foundation.version')->getVersion();
-        $parent_domain = $request->getSchemeAndHttpHost();
         $context = $this->getContext();
-        $currencyCode = $context->currency->iso_code;
-        $languageCode = $context->language->iso_code;
-        $countryCode = $context->country->iso_code;
-        $activity = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_ACTIVITY');
 
-        return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain";
+        $queryParameters = [
+            'psVersion' => $this->get('prestashop.core.foundation.version')->getVersion(),
+            'isoLang' => $context->language->iso_code,
+            'isoCurrency' => $context->currency->iso_code,
+            'isoCountry' => $context->country->iso_code,
+            'activity' => (int)$this->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_ACTIVITY'),
+            'parentUrl' => $request->getSchemeAndHttpHost(),
+        ];
+
+        return 'https://addons.prestashop.com/iframe/search-1.7.php?' . http_build_query($queryParameters);
     }
 }
