@@ -10,6 +10,8 @@ services:
 
   prestashop.adapter.contact.query_handler.get_contact_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\QueryHandler\GetContactForEditingHandler'
+    arguments:
+      - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing' }
 
