@@ -63,7 +63,7 @@ final class SearchParameters implements SearchParametersInterface
 
         if ($doesFilterExistByUniqueKey) {
             $filters['filters'] = $filters['filters'][$filterClass::getKey()];
-        } else {
+        } else if (isset($filters['filters'])) {
             foreach ($filters['filters'] as $filterKey => $filterValue) {
                 if (is_array($filterValue)) {
                     $filters['filters'] = $filterValue;
@@ -81,27 +81,20 @@ final class SearchParameters implements SearchParametersInterface
     /**
      * {@inheritdoc}
      */
-    public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass)
+    public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filtersClass)
     {
-        return $this->getFiltersFromPersistence($employeeId, $shopId, $filterClass);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFiltersFromPersistence($employeeId, $shopId, $controller, $action, $filtersClassName)
-    {
-        $adminFilter = $this->adminFilterRepository->findOneBy([
-            'employee' => $employeeId,
-            'controller' => $controller,
-            'action' => $action,
-        ]);
+        $adminFilter = $this->adminFilterRepository->findByEmployeeAndRouteParams(
+            $employeeId,
+            $shopId,
+            $controller,
+            $action
+        );
 
         if (null === $adminFilter) {
             $adminFilter = $this->adminFilterRepository->findOneBy([
                 'employee' => $employeeId,
                 'shop' => $shopId,
-                'uniqueKey' => $filtersClassName::getKey(),
+                'uniqueKey' => $filtersClass::getKey(),
             ]);
         }
 
@@ -111,14 +104,6 @@ final class SearchParameters implements SearchParametersInterface
             $savedFilters = json_decode($adminFilter->getFilter(), true);
         }
 
-        $filters = [];
-
-        $defaultValues = $filtersClassName::getDefaults();
-
-        foreach (self::FILTER_TYPES as $type) {
-            $filters[$type] = isset($savedFilters[$type]) ? $savedFilters[$type] : $defaultValues[$type];
-        }
-
-        return new $filtersClassName($filters);
+        return new $filtersClass($savedFilters);
     }
 }
