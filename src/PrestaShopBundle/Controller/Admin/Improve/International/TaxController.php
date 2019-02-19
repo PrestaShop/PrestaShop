@@ -46,7 +46,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class TaxController is responsible for handling "Improve > International > Taxes" page.
+ * Responsible for handling "Improve > International > Taxes" page.
  */
 class TaxController extends FrameworkBundleAdminController
 {
@@ -134,6 +134,18 @@ class TaxController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_taxes_index', ['filters' => $filters]);
+    }
+
+    /**
+     * Handles tax edit
+     *
+     * @param $taxId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction($taxId)
+    {
+        return $this->render('@PrestaShop/Admin/Improve/International/Tax/edit.html.twig');
     }
 
     /**
