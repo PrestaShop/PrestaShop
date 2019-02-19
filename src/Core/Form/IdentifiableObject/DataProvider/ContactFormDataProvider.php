@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\DTO\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
+use Symfony\Component\Form\DataTransformerInterface;
 
 /**
  * Class ContactFormDataProvider
@@ -47,15 +48,23 @@ final class ContactFormDataProvider implements FormDataProviderInterface
     private $contextShopIds;
 
     /**
+     * @var DataTransformerInterface
+     */
+    private $stringArrayToIntegerArrayDataTransformer;
+
+    /**
      * @param CommandBusInterface $queryBus
+     * @param DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
      * @param array $contextShopIds
      */
     public function __construct(
         CommandBusInterface $queryBus,
+        DataTransformerInterface $stringArrayToIntegerArrayDataTransformer,
         array $contextShopIds
     ) {
         $this->queryBus = $queryBus;
         $this->contextShopIds = $contextShopIds;
+        $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
     }
 
     /**
@@ -82,8 +91,10 @@ final class ContactFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
+        $shopIds = $this->stringArrayToIntegerArrayDataTransformer->reverseTransform($this->contextShopIds);
+
         return [
-            'shop_association' => $this->contextShopIds,
+            'shop_association' => $shopIds,
         ];
     }
 }

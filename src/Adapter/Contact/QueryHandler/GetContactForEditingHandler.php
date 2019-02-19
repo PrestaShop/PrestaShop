@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryHandler\GetContactForEditingHandlerInterface;
 use PrestaShopException;
+use Symfony\Component\Form\DataTransformerInterface;
 
 /**
  * Class GetContactForEditingHandler is responsible for getting the data for contact edit page.
@@ -41,6 +42,19 @@ use PrestaShopException;
  */
 final class GetContactForEditingHandler implements GetContactForEditingHandlerInterface
 {
+    /**
+     * @var DataTransformerInterface
+     */
+    private $stringArrayToIntegerArrayDataTransformer;
+
+    /**
+     * @param DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+     */
+    public function __construct(DataTransformerInterface $stringArrayToIntegerArrayDataTransformer)
+    {
+        $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -66,7 +80,7 @@ final class GetContactForEditingHandler implements GetContactForEditingHandlerIn
                 $contact->email,
                 $contact->customer_service,
                 $contact->description,
-                $contact->getAssociatedShops()
+                $this->stringArrayToIntegerArrayDataTransformer->reverseTransform($contact->getAssociatedShops())
             );
         } catch (PrestaShopException $e) {
             throw new ContactException(
