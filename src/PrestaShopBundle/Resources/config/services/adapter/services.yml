@@ -53,10 +53,9 @@ services:
 
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
-        calls:
-            - method: 'setMailThemesUri'
-              arguments:
-                - "%mail_themes_uri%"
+        arguments:
+            - "%mail_themes_uri%"
+            - '@prestashop.adapter.tools'
 
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger
