@@ -55,11 +55,11 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleDirectory());
 
         $this->provider = new ExternalModuleLegacySystemProvider(
-            $moduleProvider,
             $loaderMock,
             $this->getModuleDirectory(),
             $legacyFileLoader,
-            $extractor
+            $extractor,
+            $moduleProvider
         );
 
         $this->provider->setModuleName('some_module');

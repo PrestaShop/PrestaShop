@@ -27,6 +27,9 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -48,19 +51,14 @@ class ThemeProvider extends AbstractProvider
     public $filesystem;
 
     /**
-     * @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
+     * @var ThemeRepository
      */
     public $themeRepository;
 
     /**
-     * @var \PrestaShopBundle\Translation\Extractor\ThemeExtractor
+     * @var ThemeExtractor
      */
     public $themeExtractor;
-
-    /**
-     * @var string the translation domain label
-     */
-    private $domain;
 
     /**
      * @var string Path to app/Resources/translations/
@@ -68,26 +66,19 @@ class ThemeProvider extends AbstractProvider
     public $defaultTranslationDir;
 
     /**
-     * Set domain.
-     *
-     * @param $domain
-     *
-     * @return $this
-     */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
      * Get domain.
+     *
+     * @deprecated since 1.7.6, to be removed in 1.8.x
      *
      * @return mixed
      */
     public function getDomain()
     {
+        @trigger_error(
+            'getDomain function is deprecated and will be removed in 1.8.x',
+            E_USER_DEPRECATED
+        );
+
         return $this->domain;
     }
 
@@ -100,7 +91,7 @@ class ThemeProvider extends AbstractProvider
             return ['*'];
         }
 
-        return ['^' . $this->getDomain()];
+        return ['^' . $this->domain];
     }
 
     /**
@@ -112,7 +103,7 @@ class ThemeProvider extends AbstractProvider
             return ['*'];
         }
 
-        return ['#^' . $this->getDomain() . '#'];
+        return ['#^' . $this->domain . '#'];
     }
 
     /**
@@ -138,7 +129,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @param null $baseDir
+     * @param string|null $baseDir
      *
      * @return string Path to app/themes/{themeName}/translations/{locale}
      */
@@ -155,7 +146,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getDirectories()
     {
@@ -166,7 +157,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @return string
+     * @return string the path to the Theme translations folder
      */
     public function getThemeResourcesDirectory()
     {
@@ -174,7 +165,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @param $themeName string The theme name
+     * @param string $themeName The theme name
      *
      * @return self
      */
@@ -186,9 +177,9 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @param null $themeName
+     * @param string|null $themeName
      *
-     * @return \Symfony\Component\Translation\MessageCatalogue
+     * @return MessageCatalogueInterface
      */
     public function getDatabaseCatalogue($themeName = null)
     {
@@ -199,6 +190,11 @@ class ThemeProvider extends AbstractProvider
         return parent::getDatabaseCatalogue($themeName);
     }
 
+    /**
+     * @throws \Exception
+     *
+     * Will update translations files of the Theme
+     */
     public function synchronizeTheme()
     {
         $theme = $this->themeRepository->getInstanceByName($this->themeName);
@@ -223,7 +219,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @return \Symfony\Component\Translation\MessageCatalogue
+     * @return MessageCatalogueInterface
      *
      * @throws \Exception
      */
@@ -236,22 +232,9 @@ class ThemeProvider extends AbstractProvider
 
     /**
      * {@inheritdoc}
-     * string Path to app/Resources/translations/{locale}.
      */
     public function getDefaultResourceDirectory()
     {
         return $this->defaultTranslationDir . DIRECTORY_SEPARATOR . $this->locale;
-    }
-
-    /**
-     * @param string $locale the Catalogue locale
-     *
-     * @return $this
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
     }
 }

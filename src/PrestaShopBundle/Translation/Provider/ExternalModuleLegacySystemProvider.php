@@ -63,11 +63,11 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     protected $domain;
 
     public function __construct(
-        SearchProviderInterface $moduleProvider,
         LoaderInterface $databaseLoader,
         $resourceDirectory,
         LoaderInterface $legacyFileLoader,
-        LegacyModuleExtractorInterface $legacyModuleExtractor
+        LegacyModuleExtractorInterface $legacyModuleExtractor,
+        SearchProviderInterface $moduleProvider
     ) {
         $this->moduleProvider = $moduleProvider;
         $this->legacyFileLoader = $legacyFileLoader;

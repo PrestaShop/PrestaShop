@@ -74,11 +74,11 @@ services:
     prestashop.translation.external_module_provider:
         class: PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider
         arguments:
-            - "@prestashop.translation.module_provider"
             - "@prestashop.translation.database_loader"
             - "%modules_dir%"
             - "@prestashop.translation.legacy_file_loader"
             - "@prestashop.translation.legacy_module.extractor"
+            - "@prestashop.translation.module_provider"
         tags:
         - { name: "ps.translation_provider" }
 
