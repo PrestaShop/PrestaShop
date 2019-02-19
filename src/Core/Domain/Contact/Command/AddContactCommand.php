@@ -149,7 +149,7 @@ class AddContactCommand extends AbstractContactCommand
      *
      * @throws ContactConstraintException
      */
-    public function setShopAssociation($shopAssociation)
+    public function setShopAssociation(array $shopAssociation)
     {
         if (!$this->assertArrayContainsAllIntegerValues($shopAssociation)) {
             throw new ContactConstraintException(
