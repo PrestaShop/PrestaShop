@@ -2,7 +2,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Context\Context;
+use Behat\Behat\Context\Context as BehatContext;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 
 /**
@@ -12,7 +12,7 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
  * - cache clear between steps
  * - ...
  */
-abstract class AbstractPrestaShopFeatureContext implements Context
+abstract class AbstractPrestaShopFeatureContext implements BehatContext
 {
     /**
      * PrestaShop Symfony AppKernel
