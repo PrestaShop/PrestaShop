@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use PrestaShopBundle\Translation\Locale\Converter;
 
@@ -118,10 +119,17 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     /**
      * Get the PrestaShop locale from real locale.
      *
+     * @deprecated since 1.7.6, to be removed in 1.8.x
+     *
      * @return string The PrestaShop locale
      */
     public function getPrestaShopLocale()
     {
+        @trigger_error(
+            '`AbstractProvider::getPrestaShopLocale` function is deprecated and will be removed in 1.8.x',
+            E_USER_DEPRECATED
+        );
+
         return Converter::toPrestaShopLocale($this->locale);
     }
 
@@ -148,12 +156,12 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      */
     public function getDefaultCatalogue($empty = true)
     {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
+        $defaultCatalogue = new MessageCatalogue($this->locale);
 
         foreach ($this->getFilters() as $filter) {
             $filteredCatalogue = $this->getCatalogueFromPaths(
                 [$this->getDefaultResourceDirectory()],
-                $this->getLocale(),
+                $this->locale,
                 $filter
             );
             $defaultCatalogue->addCatalogue($filteredCatalogue);
@@ -224,11 +232,11 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * @param MessageCatalogue $messageCatalogue
+     * @param MessageCatalogueInterface $messageCatalogue
      *
-     * @return MessageCatalogue Empty the catalogue
+     * @return MessageCatalogueInterface Empty the catalogue
      */
-    public function emptyCatalogue(MessageCatalogue $messageCatalogue)
+    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
     {
         foreach ($messageCatalogue as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {

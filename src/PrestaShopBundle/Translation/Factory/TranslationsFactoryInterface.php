@@ -27,7 +27,7 @@
 
 namespace PrestaShopBundle\Translation\Factory;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 interface TranslationsFactoryInterface
 {
@@ -41,7 +41,7 @@ interface TranslationsFactoryInterface
      *
      * @throws ProviderNotFoundException
      *
-     * @return MessageCatalogue
+     * @return MessageCatalogueInterface
      */
     public function createCatalogue($identifier, $locale = self::DEFAULT_LOCALE);
 
@@ -55,7 +55,7 @@ interface TranslationsFactoryInterface
      *
      * @throws ProviderNotFoundException
      *
-     * @@return array Translation tree structure
+     * @return array Translation tree structure
      */
     public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null);
 }

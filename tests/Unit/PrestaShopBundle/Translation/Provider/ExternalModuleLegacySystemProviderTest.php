@@ -88,8 +88,8 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $this->assertInstanceOf(MessageCatalogueInterface::class, $this->provider->getLegacyCatalogue());
         $legacyCatalogue = $this->provider->getLegacyCatalogue();
 
-        dump($legacyCatalogue->all());
-        $this->assertCount(5, $legacyCatalogue->all());
+        // 5 from files + 100 from translations/fr.php file
+        $this->assertCount(111, $legacyCatalogue->all());
     }
 
     /**

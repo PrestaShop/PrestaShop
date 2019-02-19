@@ -48,17 +48,18 @@ final class LegacyFileLoader implements LoaderInterface
      */
     public function load($path, $locale, $domain = 'messages')
     {
-        global $_MODULE;
+        // Each legacy file declare this variable to store the translations
+        $_MODULE = [];
         $catalogue = new MessageCatalogue($locale);
         $shopLocale = Converter::toLegacyLocale($locale);
-        $filepath = $path . "$shopLocale.php";
+        $filePath = $path . "$shopLocale.php";
 
-        if (!file_exists($filepath)) {
-            throw UnsupportedLocaleException::fileNotFound($filepath, $locale);
+        if (!file_exists($filePath)) {
+            throw UnsupportedLocaleException::fileNotFound($filePath, $locale);
         }
 
         // Load a global array $_MODULE
-        include_once $filepath;
+        include_once $filePath;
 
         foreach ($_MODULE as $translationKey => $translationValue) {
             $id = $this->getId($translationKey);
