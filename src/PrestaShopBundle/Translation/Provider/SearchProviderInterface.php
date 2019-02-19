@@ -27,7 +27,11 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-interface SearchProviderInterface extends ProviderInterface, UseDefaultCatalogueInterface, XliffCatalogueInterface, DatabaseCatalogueInterface
+interface SearchProviderInterface extends
+    ProviderInterface,
+    UseDefaultCatalogueInterface,
+    XliffCatalogueInterface,
+    DatabaseCatalogueInterface
 {
     /**
      * @param string $domain
