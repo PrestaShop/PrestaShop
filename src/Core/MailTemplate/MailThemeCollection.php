@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
+/**
+ * Class MailThemeCollection is a collection of MailThemeInterface elements.
+ */
 class MailThemeCollection extends AbstractTypedCollection implements MailThemeCollectionInterface
 {
     /**

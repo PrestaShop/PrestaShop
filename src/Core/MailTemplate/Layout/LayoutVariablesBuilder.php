@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
  *  - it includes default variables (set in the constructor)
  *  - it dispatches a hook to allow overriding its output
  */
-class MailLayoutVariablesBuilder implements MailLayoutVariablesBuilderInterface
+class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
 {
     /** @var array */
     private $defaultVariables;
@@ -68,7 +68,7 @@ class MailLayoutVariablesBuilder implements MailLayoutVariablesBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildVariables(MailLayoutInterface $mailLayout, LanguageInterface $language)
+    public function buildVariables(LayoutInterface $mailLayout, LanguageInterface $language)
     {
         $languageDefaultFont = '';
         if (isset($this->languageDefaultFonts[$language->getIsoCode()])) {
@@ -85,7 +85,7 @@ class MailLayoutVariablesBuilder implements MailLayoutVariablesBuilderInterface
 
         //This hook allows to change the variables of a layout
         $this->hookDispatcher->dispatchWithParameters(
-            MailLayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK,
+            LayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK,
             [
                 'mailLayout' => $mailLayout,
                 'mailLayoutVariables' => &$mailLayoutVariables,

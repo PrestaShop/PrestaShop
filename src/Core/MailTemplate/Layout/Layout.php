@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
 
 /**
  * Class MailLayout is the default implementation of MailLayoutInterface,
  * it is a simple immutable data container with no logic. It contains the
  * basic info about a mail layout which is used to generate a MailTemplate.
  */
-class MailLayout implements MailLayoutInterface
+class Layout implements LayoutInterface
 {
     /** @var string */
     private $name;

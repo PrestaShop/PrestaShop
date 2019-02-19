@@ -24,38 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
+
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
- * Interface MailLayoutInterface is used to contain the basic info about a mail layout.
+ * MailLayoutVariablesBuilderInterface is used by the MailTemplateRendererInterface
+ * to render the mails, it returns an array of generic layout variables like:
+ *  - templateModuleName: name of the associated module
+ *  - languageIsRTL: is the language read from Right To Left
+ *  - locale: the locale in which the template is generated
+ *  - emailPublicWebRoot: public mail root for assets
  */
-interface MailLayoutInterface
+interface LayoutVariablesBuilderInterface
 {
-    /**
-     * Name of the layout to describe its purpose
-     *
-     * @return string
-     */
-    public function getName();
+    const BUILD_LAYOUT_VARIABLES_HOOK = 'actionBuildLayoutVariables';
 
     /**
-     * Absolute path of the html layout file
+     * @param LayoutInterface $layout
+     * @param LanguageInterface $language
      *
-     * @return string
+     * @return array
      */
-    public function getHtmlPath();
-
-    /**
-     * Absolute path of the html layout file
-     *
-     * @return string
-     */
-    public function getTxtPath();
-
-    /**
-     * Which module this layout is associated to (if any)
-     *
-     * @return string|null
-     */
-    public function getModuleName();
+    public function buildVariables(LayoutInterface $layout, LanguageInterface $language);
 }

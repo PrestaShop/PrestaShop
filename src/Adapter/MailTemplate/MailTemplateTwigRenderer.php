@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollection;
@@ -46,7 +46,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /** @var EngineInterface */
     private $engine;
 
-    /** @var MailLayoutVariablesBuilderInterface */
+    /** @var LayoutVariablesBuilderInterface */
     private $variablesBuilder;
 
     /** @var HookDispatcherInterface */
@@ -57,12 +57,12 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
 
     /**
      * @param EngineInterface $engine
-     * @param MailLayoutVariablesBuilderInterface $variablesBuilder
+     * @param LayoutVariablesBuilderInterface $variablesBuilder
      * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         EngineInterface $engine,
-        MailLayoutVariablesBuilderInterface $variablesBuilder,
+        LayoutVariablesBuilderInterface $variablesBuilder,
         HookDispatcherInterface $hookDispatcher
     ) {
         $this->engine = $engine;
@@ -72,33 +72,33 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     }
 
     /**
-     * @param MailLayoutInterface $layout
+     * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
      * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      *
      * @return string
      */
-    public function renderHtml(MailLayoutInterface $layout, LanguageInterface $language)
+    public function renderHtml(LayoutInterface $layout, LanguageInterface $language)
     {
         return $this->render($layout, $language, MailTemplateInterface::HTML_TYPE);
     }
 
     /**
-     * @param MailLayoutInterface $layout
+     * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
      * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      *
      * @return string
      */
-    public function renderTxt(MailLayoutInterface $layout, LanguageInterface $language)
+    public function renderTxt(LayoutInterface $layout, LanguageInterface $language)
     {
         return $this->render($layout, $language, MailTemplateInterface::TXT_TYPE);
     }
 
     /**
-     * @param MailLayoutInterface $layout
+     * @param LayoutInterface $layout
      * @param LanguageInterface $language
      * @param string $templateType
      *
@@ -107,7 +107,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @return string
      */
     private function render(
-        MailLayoutInterface $layout,
+        LayoutInterface $layout,
         LanguageInterface $language,
         $templateType
     ) {
@@ -137,14 +137,14 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     }
 
     /**
-     * @param MailLayoutInterface $mailLayout
+     * @param LayoutInterface $mailLayout
      * @param string $templateType
      *
      * @return TransformationCollection
      *
      * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      */
-    private function getMailLayoutTransformations(MailLayoutInterface $mailLayout, $templateType)
+    private function getMailLayoutTransformations(LayoutInterface $mailLayout, $templateType)
     {
         $templateTransformations = new TransformationCollection();
         /** @var TransformationInterface $transformation */

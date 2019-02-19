@@ -24,27 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
 
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
-/**
- * MailLayoutVariablesBuilderInterface is used by the MailTemplateRendererInterface
- * to render the mails, it returns an array of generic layout variables like:
- *  - templateModuleName: name of the associated module
- *  - languageIsRTL: is the language read from Right To Left
- *  - locale: the locale in which the template is generated
- *  - emailPublicWebRoot: public mail root for assets
- */
-interface MailLayoutVariablesBuilderInterface
+class LayoutCollection extends AbstractTypedCollection implements LayoutCollectionInterface
 {
-    const BUILD_LAYOUT_VARIABLES_HOOK = 'actionBuildLayoutVariables';
-
     /**
-     * @param MailLayoutInterface $layout
-     * @param LanguageInterface $language
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function buildVariables(MailLayoutInterface $layout, LanguageInterface $language);
+    protected function getType()
+    {
+        return LayoutInterface::class;
+    }
 }

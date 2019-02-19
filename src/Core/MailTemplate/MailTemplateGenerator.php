@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCatalogInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollectionInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -43,7 +46,7 @@ class MailTemplateGenerator
 {
     use LoggerAwareTrait;
 
-    /** @var MailLayoutCatalogInterface */
+    /** @var LayoutCatalogInterface */
     private $catalog;
 
     /** @var MailTemplateRendererInterface */
@@ -53,12 +56,12 @@ class MailTemplateGenerator
     private $fileSystem;
 
     /**
-     * @param MailLayoutCatalogInterface $catalog
+     * @param LayoutCatalogInterface $catalog
      * @param MailTemplateRendererInterface $renderer
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        MailLayoutCatalogInterface $catalog,
+        LayoutCatalogInterface $catalog,
         MailTemplateRendererInterface $renderer,
         LoggerInterface $logger = null
     ) {
@@ -95,9 +98,9 @@ class MailTemplateGenerator
             ));
         }
 
-        /** @var MailLayoutCollectionInterface $layouts */
+        /** @var LayoutCollectionInterface $layouts */
         $layouts = $this->catalog->listLayouts($theme);
-        /** @var MailLayoutInterface $layout */
+        /** @var LayoutInterface $layout */
         foreach ($layouts as $layout) {
             if (!empty($layout->getModuleName())) {
                 $outputFolder = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $layout->getModuleName(), 'mails']);
@@ -142,13 +145,13 @@ class MailTemplateGenerator
     }
 
     /**
-     * @param MailLayoutInterface $layout
+     * @param LayoutInterface $layout
      * @param string $templateType
      * @param string $outputFolder
      *
      * @return string
      */
-    private function generateTemplatePath(MailLayoutInterface $layout, $templateType, $outputFolder)
+    private function generateTemplatePath(LayoutInterface $layout, $templateType, $outputFolder)
     {
         return implode(DIRECTORY_SEPARATOR, [$outputFolder, $layout->getName()]) . '.' . $templateType;
     }
