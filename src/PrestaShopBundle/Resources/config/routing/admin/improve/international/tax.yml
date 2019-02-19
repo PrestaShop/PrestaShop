@@ -57,3 +57,12 @@ admin_taxes_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkDelete'
     _legacy_controller: AdminTaxes
+
+admin_taxes_edit:
+  path: /{taxId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:edit'
+    _legacy_controller: AdminTaxes
+  requirements:
+    taxId: \d+
