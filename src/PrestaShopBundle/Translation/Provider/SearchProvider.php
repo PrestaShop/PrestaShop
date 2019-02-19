@@ -27,42 +27,30 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 /**
- * Able to search translations for a specific translation domains accross
+ * Able to search translations for a specific translation domains across
  * multiple sources
  */
 class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
-    /**
-     * @var string the translation domain label
-     */
-    private $domain;
-
     /**
      * @var string the "modules" directory path
      */
     private $modulesDirectory;
 
     /**
-     * Set domain.
-     *
-     * @param $domain
-     *
-     * @return $this
-     */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
      * Get domain.
+     *
+     * @deprecated since 1.7.6, to be removed in 1.8.x
      *
      * @return mixed
      */
     public function getDomain()
     {
+        @trigger_error(
+            'getDomain function is deprecated and will be removed in 1.8.x',
+            E_USER_DEPRECATED
+        );
+
         return $this->domain;
     }
 
@@ -71,7 +59,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return ['^' . $this->getDomain()];
+        return ['^' . $this->domain];
     }
 
     /**
@@ -79,7 +67,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getFilters()
     {
-        return ['#^' . $this->getDomain() . '#'];
+        return ['#^' . $this->domain . '#'];
     }
 
     /**
@@ -98,25 +86,11 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 
-    public function getModulesDirectory()
-    {
-        return $this->modulesDirectory;
-    }
-
+    /**
+     * @param string $modulesDirectory the path to the modules directory
+     */
     public function setModulesDirectory($modulesDirectory)
     {
         $this->modulesDirectory = $modulesDirectory;
-    }
-
-    /**
-     * @param string $locale the Catalogue locale
-     *
-     * @return $this
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
     }
 }
