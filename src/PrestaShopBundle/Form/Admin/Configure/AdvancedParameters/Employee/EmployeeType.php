@@ -95,9 +95,6 @@ final class EmployeeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $isRestrictedAccess = $options['is_restricted_access'];
-        $isSuperAdmin = $options['is_super_admin'];
-
         $builder
             ->add('firstname', TextType::class, [
                 'constraints' => [
@@ -142,7 +139,7 @@ final class EmployeeType extends AbstractType
             ])
         ;
 
-        if ($isRestrictedAccess) {
+        if ($options['is_restricted_access']) {
             $builder
                 ->add('change_password', ChangePasswordType::class)
                 ->add('prestashop_addons', AddonsConnectType::class, [
@@ -150,7 +147,9 @@ final class EmployeeType extends AbstractType
                 ]
             );
         } else {
-            $builder->add('password', PasswordType::class);
+            $builder->add('password', PasswordType::class, [
+                'required' => !$options['is_for_editing'],
+            ]);
         }
 
         $builder
@@ -165,7 +164,7 @@ final class EmployeeType extends AbstractType
             ])
         ;
 
-        if (!$isRestrictedAccess) {
+        if (!$options['is_restricted_access']) {
             $builder
                 ->add(
                     'active',
@@ -186,7 +185,7 @@ final class EmployeeType extends AbstractType
             if ($this->isMultistoreFeatureActive) {
                 $builder->add('shop_association', ShopChoiceTreeType::class, [
                     'required' => false,
-                    'disabled' => $isSuperAdmin,
+                    'disabled' => $options['is_super_admin'],
                     'constraints' => [
                         new NotBlank([
                             'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
@@ -211,11 +210,16 @@ final class EmployeeType extends AbstractType
                 // - Addons connect field is shown,
                 // - Shop association field is not shown.
                 'is_restricted_access' => false,
+
                 // Is this form for showing data for a super admin.
                 'is_super_admin' => false,
+
+                // Is this form used for editing the employee.
+                'is_for_editing' => false,
             ])
             ->setAllowedTypes('is_restricted_access', 'bool')
             ->setAllowedTypes('is_super_admin', 'bool')
+            ->setAllowedTypes('is_for_editing', 'bool')
         ;
     }
 }
