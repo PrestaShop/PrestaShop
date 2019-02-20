@@ -23,34 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% set layoutTitle = 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') %}
-
-{% block content %}
-  <div id="orderCreationContainer">
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </h3>
+  <div class="card-body">
     <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/customer.html.twig' %}
+      <div class="col-3">
+        <span class="float-right">{{ 'Search for a voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig' %}
+      <div class="col-4">
+        <input type="text" class="form-control">
       </div>
-    </div>
-
-    <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/vouchers.html.twig' %}
+        <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
+        <button class="btn btn-primary" type="button">
+          {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
       </div>
     </div>
   </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/order_create.bundle.js') }}"></script>
-{% endblock %}
+</div>
