@@ -24,19 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Translation\Loader;
+namespace Tests\Integration\PrestaShopBundle\Translation\Loader;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="LegacyFileLoaderTest"
+ * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="LegacyFileLoaderTest"
  */
-class LegacyFileLoaderTest extends TestCase
+class LegacyFileLoaderTest extends KernelTestCase
 {
     public function testExtract()
     {
+        self::bootKernel();
+        $localeConverter = self::$kernel->getContainer()->get('prestashop.core.translation.locale.converter');
         $extractor = new LegacyFileLoader();
         $catalogue = $extractor->load($this->getTranslationsFolder(), 'fr-FR');
 
