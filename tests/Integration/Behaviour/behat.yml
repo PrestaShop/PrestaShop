@@ -9,7 +9,8 @@ default:
             paths:
                 features: Features/Scenarii/Cart
             contexts:
-                - Tests\Integration\Behaviour\Features\Context\ConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\PackConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ContextFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartFeatureContext

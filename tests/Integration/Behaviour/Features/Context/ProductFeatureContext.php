@@ -64,7 +64,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @When I change quantity of product named :productName in my cart with quantity :productQuantity and operator :operator, result of change is :expectedStr
+     * @When /^I change quantity of product named "(.*)" in my cart with quantity (\d+) and operator "(up|down|nothing)", result of change is (OK|KO)$/
      */
     public function iChangeProductQuantityInMyCart($productName, $productQuantity, $operator, $expectedStr)
     {
@@ -449,6 +449,109 @@ class ProductFeatureContext implements BehatContext
             $customization->delete();
         }
         $this->customizationsInCart = [];
+    }
+
+    /* PACK */
+
+    /**
+     * @Given product with name :packName is a pack containing quantity :containedQuantity of product named :containedProductName
+     */
+    public function productWithNameIsAPackContainingQuantityOfProductNamed($packName, $containedQuantity, $containedProductName)
+    {
+        if (!isset($this->products[$packName])) {
+            throw new \Exception('Product with name "' . $packName . '" was not added in fixtures');
+        }
+        if (!isset($this->products[$containedProductName])) {
+            throw new \Exception('Product with name "' . $containedProductName . '" was not added in fixtures');
+        }
+        Pack::addItem(
+            $this->products[$packName]->id,
+            $this->products[$containedProductName]->id,
+            $containedQuantity
+        );
+    }
+
+    /**
+     * @Then /^pack with name "([^"]*)" (is in stock|is not in stock) for quantity (\d+)$/
+     */
+    public function packWithNameIsInStockForQuantity($packName, $inStock, $packQuantity)
+    {
+        if (!isset($this->products[$packName])) {
+            throw new \Exception('Product with name "' . $packName . '" was not added in fixtures');
+        }
+        $result = Pack::isInStock($this->products[$packName]->id, $packQuantity);
+        switch ($inStock) {
+            case 'is in stock':
+                $expected = true;
+                break;
+            case 'is not in stock':
+                $expected = false;
+                break;
+            default:
+                throw new \Exception('Unknown stock status: ' . $inStock);
+                break;
+        }
+        if ($result !== $expected) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $inStock,
+                    $result ? 'is in stock' : 'is not in stock'
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then product :productName is considered as a pack
+     */
+    public function productIsConsideredAsAPack($productName)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        if (!Pack::isPack($this->products[$productName]->id)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s to be considered as a pack, it is not',
+                    $productName
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then Deep quantity of product named :productName in my cart should be :productQuantity
+     */
+    public function deepQuantityOfProductNamedInMyCartShouldBe($productName, $productQuantity)
+    {
+        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, null);
+        if ($productQuantity != $nbProduct['deep_quantity']) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $productQuantity,
+                    $nbProduct['deep_quantity']
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then Product count in my cart should be :productCount
+     */
+    public function productCountInMyCartShouldBe($productCount)
+    {
+        $currentCartProducts = $this->getCurrentCart()->getProducts(true);
+        if ($productCount != count($currentCartProducts)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $productCount,
+                    count($currentCartProducts)
+                )
+            );
+        }
     }
 
 }
