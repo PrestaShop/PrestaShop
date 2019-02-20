@@ -42,6 +42,7 @@ module.exports = {
     themes: './js/pages/themes',
     profiles: './js/pages/profiles',
     cms_page: './js/pages/cms-page',
+    tax: './js/pages/tax',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
