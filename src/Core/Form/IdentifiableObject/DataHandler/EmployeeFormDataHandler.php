@@ -111,6 +111,10 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setProfileId((int) $data['profile'])
         ;
 
+        if (isset($data['password'])) {
+            $command->setPlainPassword($data['password']);
+        }
+
         if (isset($data['shop_association'])) {
             $shopAssociation = $data['shop_association'] ?: [];
             $command->setShopAssociation(

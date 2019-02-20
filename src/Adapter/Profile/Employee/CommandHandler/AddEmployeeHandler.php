@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\AddEmployeeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
@@ -34,6 +35,19 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 
 final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmployeeHandlerInterface
 {
+    /**
+     * @var Hashing
+     */
+    private $hashing;
+
+    /**
+     * @param Hashing $hashing
+     */
+    public function __construct(Hashing $hashing)
+    {
+        $this->hashing = $hashing;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -64,7 +78,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee->default_tab = $command->getDefaultPageId();
         $employee->optin = $command->isSubscribedToNewsletter();
         $employee->active = $command->isActive();
-        $employee->passwd = $command->getPlainPassword();
+        $employee->passwd = $this->hashing->hash($command->getPlainPassword());
 
         if (false === $employee->add()) {
             throw new EmployeeException(
