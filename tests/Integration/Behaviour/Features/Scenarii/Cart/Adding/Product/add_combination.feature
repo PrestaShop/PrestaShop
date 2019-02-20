@@ -24,7 +24,6 @@ Feature: Add product combination in cart
     Given I have an empty default cart
     Given there is a product with name "product7" and price 19.812 and quantity 1000
     Given product with name "product7" has a combination with name "combi1" and quantity 500
-    Given product with name "product7" is out of stock
     When I add combination named "combi1" of product named "product7" in my cart with quantity 600
     Then Quantity of combination named "combi1" of product named "product7" in my cart should be 600
     Then Remaining quantity of combination named "combi1" for product named "product7" should be "-100"

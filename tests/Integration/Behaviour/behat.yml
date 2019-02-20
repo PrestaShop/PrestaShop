@@ -15,3 +15,4 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext

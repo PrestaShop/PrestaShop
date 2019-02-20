@@ -4,6 +4,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
 use Behat\Behat\Tester\Exception\PendingException;
+use Cart;
 use Combination;
 use Configuration;
 use Customization;
@@ -38,6 +39,24 @@ class ProductFeatureContext implements BehatContext
     protected $customizationFields = [];
 
     /* PRODUCTS */
+
+    /**
+     * @param $productName
+     * @return bool
+     */
+    public function productWithNameExists($productName)
+    {
+        return isset($this->products[$productName]);
+    }
+
+    /**
+     * @param $productName
+     * @return Product
+     */
+    public function getProductWithName($productName)
+    {
+        return $this->products[$productName];
+    }
 
     /**
      * @Given there is a product with name :productName and price :price and quantity :productQuantity
@@ -173,8 +192,14 @@ class ProductFeatureContext implements BehatContext
      */
     public function productWithNameIsOutOfStock($productName)
     {
-        $this->products[$productName]->out_of_stock = 1;
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        $this->products[$productName]->quantity     = 0;
+        $this->products[$productName]->out_of_stock = 0;
         $this->products[$productName]->save();
+        StockAvailable::setQuantity($this->products[$productName]->id, 0, 0);
+        StockAvailable::setProductOutOfStock((int) $this->products[$productName]->id, 0);
     }
 
     /* COMBINATION */
@@ -311,6 +336,9 @@ class ProductFeatureContext implements BehatContext
         if (!isset($this->products[$productName])) {
             throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
         }
+        $this->products[$productName]->customizable = 1;
+        $this->products[$productName]->save();
+
         $customizationField = new CustomizationField();
         $customizationField->id_product = $this->products[$productName]->id;
         $customizationField->type = 1; // text field
@@ -532,23 +560,6 @@ class ProductFeatureContext implements BehatContext
                     'Expects %s, got %s instead',
                     $productQuantity,
                     $nbProduct['deep_quantity']
-                )
-            );
-        }
-    }
-
-    /**
-     * @Then Product count in my cart should be :productCount
-     */
-    public function productCountInMyCartShouldBe($productCount)
-    {
-        $currentCartProducts = $this->getCurrentCart()->getProducts(true);
-        if ($productCount != count($currentCartProducts)) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $productCount,
-                    count($currentCartProducts)
                 )
             );
         }
