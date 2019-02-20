@@ -9,8 +9,11 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
 
 
+use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class CmsPageCategoryType extends AbstractType
@@ -22,6 +25,26 @@ class CmsPageCategoryType extends AbstractType
     {
         $builder
             ->add('name', TranslatableType::class)
+            ->add('is_displayed', SwitchType::class, [
+                'required' => false,
+            ])
+            ->add('parent_category', MaterialChoiceTreeType::class, [
+                'required' => false,
+            ])
+            ->add('description', TranslatableType::class, [
+                'required' => false,
+                'type' => TextareaType::class,
+            ])
+            ->add('meta_title', TranslatableType::class, [
+                'required' => false,
+            ])
+            ->add('meta_description', TranslatableType::class, [
+                'required' => false,
+            ])
+            ->add('meta_keywords', TranslatableType::class, [
+                'required' => false,
+            ])
+            ->add('friendly_url', TranslatableType::class)
         ;
     }
 }
