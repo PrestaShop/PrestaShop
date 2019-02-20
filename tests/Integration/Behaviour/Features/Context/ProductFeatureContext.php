@@ -4,6 +4,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
 use Behat\Behat\Tester\Exception\PendingException;
+use Combination;
 use Pack;
 use Product;
 use StockAvailable;
@@ -17,6 +18,11 @@ class ProductFeatureContext implements BehatContext
      * @var Product[]
      */
     protected $products = [];
+
+    /**
+     * @var Combination[][]
+     */
+    protected $combinations = [];
 
     /**
      * @Given there is a product with name :productName and price :price and quantity :quantity
@@ -47,6 +53,9 @@ class ProductFeatureContext implements BehatContext
      */
     public function iChangeProductQuantityInMyCarty($productName, $quantity, $operator, $expectedStr)
     {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
         $expected = $expectedStr == 'OK';
         $result = $this->getCurrentCart()->updateQty($quantity, $this->products[$productName]->id, null, false, $operator);
         if ($expected != $result) {
@@ -146,11 +155,134 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
+     * This hook can be used to perform a database cleaning of added objects
+     *
+     * @AfterScenario
+     */
+    public function afterScenario_cleanCombinations()
+    {
+        // delete products
+        foreach ($this->combinations as $productName => $combinations) {
+            foreach ($combinations as $combinationName => $combination) {
+                $combination->delete();
+            }
+        }
+        $this->products = [];
+    }
+
+    /**
      * @Given product with name :productName is out of stock
      */
     public function productWithNameIsOutOfStock($productName)
     {
         $this->products[$productName]->out_of_stock = 1;
         $this->products[$productName]->save();
+    }
+
+    /**
+     * @Given product with name :productName has a combination with name :combinationName and quantity :combinationQuantity
+     */
+    public function productWithNameHasACombinationWithNameAndQuantity($productName, $combinationName, $combinationQuantity)
+    {
+        if (isset($this->combinations[$productName][$combinationName])) {
+            throw new \Exception('Product with name "' . $productName . '" has already a combination with name "' . $combinationName . '"');
+        }
+        $combination = new Combination();
+        $combination->reference = $combinationName;
+        $combination->id_product = $this->products[$productName]->id;
+        $combination->quantity = $combinationQuantity;
+        $combination->add();
+        StockAvailable::setQuantity((int)$this->products[$productName]->id, $combination->id, $combination->quantity);
+        $this->combinations[$productName][$combinationName] = $combination;
+    }
+
+    /**
+     * @Then Remaining quantity of combination named :combinationName for product named :productName should be :combinationQuantity
+     */
+    public function remainingQuantityOfCombinationNamedForProductNamedShouldBe($combinationName, $productName, $combinationQuantity)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        if (!isset($this->combinations[$productName][$combinationName])) {
+            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
+        }
+        $nbProduct = Product::getQuantity($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id, null, $this->getCurrentCart(), null);
+        if ($combinationQuantity != $nbProduct) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $combinationQuantity,
+                    $nbProduct
+                )
+            );
+        }
+    }
+
+    /**
+     * @When I add combination named :combinationName of product named :productName in my cart with quantity :combinationQuantity
+     */
+    public function iAddCombinationNamedOfProductNamedInMyCartWithQuantity($combinationName, $productName, $combinationQuantity)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        if (!isset($this->combinations[$productName][$combinationName])) {
+            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
+        }
+        $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        if (!$result) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects true, got %s instead',
+                    $result
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then I am not able to add combination named :combinationName of product named :productName in my cart with quantity :quantity
+     */
+    public function iAmNotAbleToAddPCombinationNamedOfroductNamedInMyCartWithQuantity($combinationName, $productName, $quantity)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        if (!isset($this->combinations[$productName][$combinationName])) {
+            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
+        }
+        $result = $this->getCurrentCart()->updateQty($quantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        if ($result) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects false, got %s instead',
+                    $result
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then Quantity of combination named :combinationName of product named :productName in my cart should be :combinationQuantity
+     */
+    public function quantityOfCombinationNamedOfProductNamedInMyCartShouldBe($combinationName, $productName, $combinationQuantity)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        if (!isset($this->combinations[$productName][$combinationName])) {
+            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
+        }
+        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id, null);
+        if ($combinationQuantity != $nbProduct['quantity']) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $combinationQuantity,
+                    $nbProduct['quantity']
+                )
+            );
+        }
     }
 }
