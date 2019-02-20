@@ -31,6 +31,9 @@ use CartRule;
 use Configuration;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 
+/**
+ * behat equivalent : Scenarii/Cart/Adding/CartRule/add_cartrule.feature
+ */
 class AddRuleTest extends AbstractCartTest
 {
     protected $cartRulesFeatureActive;

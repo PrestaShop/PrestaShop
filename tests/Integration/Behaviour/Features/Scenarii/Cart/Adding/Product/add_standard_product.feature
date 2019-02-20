@@ -21,7 +21,6 @@ Feature: Add product in cart
     Given Shop configuration of "PS_ORDER_OUT_OF_STOCK" is set to 1
     Given I have an empty default cart
     Given there is a product with name "product1" and price 19.812 and quantity 1000
-    Given product with name "product1" is out of stock
     When I add product named "product1" in my cart with quantity 1100
     Then Quantity of product named "product1" in my cart should be 1100
     Then Remaining quantity of product named "product1" should be "-100"

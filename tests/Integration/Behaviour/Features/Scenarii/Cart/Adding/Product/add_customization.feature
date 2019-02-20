@@ -23,7 +23,6 @@ Feature: Add product customization in cart
     Given I have an empty default cart
     Given there is a product with name "product8" and price 26.364 and quantity 30
     Given product with name "product8" has a customization field with name "custo1"
-    Given product with name "product8" is out of stock
     When I add customization named "custo1" of product named "product8" in my cart with quantity 41
     Then Quantity of customization named "custo1" of product named "product8" in my cart should be 41
     Then Remaining quantity of customization named "custo1" for product named "product8" should be "-11"
