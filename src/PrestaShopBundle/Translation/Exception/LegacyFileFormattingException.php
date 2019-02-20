@@ -26,12 +26,12 @@
 
 namespace PrestaShopBundle\Translation\Exception;
 
-use Symfony\Component\Translation\Exception\NotFoundResourceException;
+use Symfony\Component\Translation\Exception\InvalidResourceException;
 
 /**
- * Will be thrown if a locale is not supported in Legacy format
+ * Will be thrown if a legacy file for a locale is found, but invalid.
  */
-final class UnsupportedLocaleException extends NotFoundResourceException
+final class LegacyFileFormattingException extends InvalidResourceException
 {
     /**
      * @param string $filePath the expected file path of the translations
@@ -39,11 +39,11 @@ final class UnsupportedLocaleException extends NotFoundResourceException
      *
      * @return self
      */
-    public static function fileNotFound($filePath, $locale)
+    public static function fileIsInvalid($filePath, $locale)
     {
         $exceptionMessage = sprintf(
-            'The locale "%s" is not supported, because we can\'t find the related file in the module:
-            have you created the file "%s"?',
+            'The locale "%s" is not supported, because we find an invalid file in the module:
+            have you updated the file "%s" manually?',
             $locale,
             $filePath
         );

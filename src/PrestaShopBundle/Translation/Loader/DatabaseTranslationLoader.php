@@ -47,7 +47,7 @@ class DatabaseTranslationLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      *
-     * @todo: this method doesn't fits the interface
+     * @todo: this method doesn't match the interface
      */
     public function load($resource, $locale, $domain = 'messages', $theme = null)
     {

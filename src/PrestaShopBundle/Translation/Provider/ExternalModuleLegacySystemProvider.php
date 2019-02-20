@@ -31,6 +31,7 @@ use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
+use Exception;
 
 /**
  * Be able to retrieve information from legacy translation files
@@ -102,10 +103,17 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getDefaultCatalogue($empty = true)
     {
-        $defaultCatalogue = $this->moduleProvider
-            ->setLocale($this->locale)
-            ->getDefaultCatalogue()
-        ;
+        $defaultCatalogue = new MessageCatalogue($this->locale);
+
+        try {
+            $defaultCatalogue = $this->moduleProvider
+                ->setModuleName($this->moduleName)
+                ->setLocale($this->locale)
+                ->getDefaultCatalogue()
+            ;
+        } catch (Exception $exception) {
+            // Do nothing if xliff files doesn't exists
+        }
 
         try {
             $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->locale);
@@ -143,14 +151,6 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     }
 
     /**
-     * @return string returns the module domain
-     */
-    private function getModuleDomain()
-    {
-        return 'Modules' . Container::camelize($this->moduleName);
-    }
-
-    /**
      * The extracted catalogue come from translations folder.
      * The default catalogue come from module code parsing.
      *
@@ -160,42 +160,32 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getLegacyCatalogue()
     {
-        $catalogueFromFiles = $this->moduleProvider
-            ->setLocale($this->locale)
-            ->getXliffCatalogue()
-        ;
+        $legacyFilesCatalogue = new MessageCatalogue($this->locale);
+        $catalogueFromPhpAndSmartyFiles = $this->getDefaultCatalogue();
 
         try {
-            $defaultCatalogue = $this->getDefaultCatalogue();
-
-            $extractedCatalogue = $this->legacyFileLoader->load(
+            $catalogueFromLegacyTranslationFiles = $this->legacyFileLoader->load(
                 $this->getDefaultResourceDirectory(),
                 $this->locale,
-                $this->getModuleDomain()
+                $this->domain
             );
 
-            $legacyFilesCatalogue = new MessageCatalogue($this->locale);
-
-            $translations = $defaultCatalogue->all($this->getModuleDomain());
-
-            foreach (array_keys($translations) as $translationKey) {
+            foreach (array_keys($catalogueFromPhpAndSmartyFiles->all($this->domain)) as $translationKey) {
                 $legacyKey = md5($translationKey);
 
-                if ($extractedCatalogue->has($legacyKey, $this->getModuleDomain())) {
+                if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $this->domain)) {
                     $legacyFilesCatalogue->set(
                         $translationKey,
-                        $extractedCatalogue->get($legacyKey, $this->getModuleDomain()),
-                        $this->getModuleDomain()
+                        $catalogueFromLegacyTranslationFiles->get($legacyKey, $this->domain),
+                        $this->domain
                     );
                 }
             }
-
-            $catalogueFromFiles->addCatalogue($legacyFilesCatalogue);
         } catch (UnsupportedLocaleException $exception) {
             // Do nothing as support of legacy file is deprecated
         }
 
-        return $catalogueFromFiles;
+        return $legacyFilesCatalogue;
     }
 
     /**
@@ -212,5 +202,13 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         $messageCatalogue->addCatalogue($databaseCatalogue);
 
         return $messageCatalogue;
+    }
+
+    /**
+     * @return string returns the module domain
+     */
+    private function getModuleDomain()
+    {
+        return 'Modules' . Container::camelize($this->moduleName);
     }
 }
