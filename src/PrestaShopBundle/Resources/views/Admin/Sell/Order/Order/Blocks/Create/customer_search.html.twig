@@ -48,7 +48,71 @@
         </button>
       </div>
     </div>
-    <div class="row mt-3 js-customer-search-results"></div>
+    <div class="row">
+      <div class="col">
+        <div class="row mt-3 js-customer-search-results"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <ul class="nav nav-pills" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active show"
+               id="customerCartsTab"
+               data-toggle="pill"
+               href="#customerCartsTabContent"
+               role="tab"
+               aria-controls="pills-home"
+               aria-expanded="true"
+               aria-selected="true"
+            >
+              {{ 'Carts'|trans({}, 'Admin.Global') }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"
+               id="customerOrdersTab"
+               data-toggle="pill"
+               href="#customerOrdersTabContent"
+               role="tab"
+               aria-controls="pills-home"
+               aria-expanded="true"
+               aria-selected="true"
+            >
+              {{ 'Orders'|trans({}, 'Admin.Global') }}
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade active show" id="customerCartsTabContent" role="tabpanel" aria-labelledby="pills-home-tab">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>7</td>
+                  <td>2019-02-20 07:22:10</td>
+                  <td>$45.00</td>
+                  <td class="text-right">
+                    <button type="button" class="btn btn-primary">{{ 'Details'|trans({}, 'Admin.Global') }}</button>
+                    <button type="button" class="btn btn-primary">{{ 'Use'|trans({}, 'Admin.Global') }}</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="customerOrdersTabContent" role="tabpanel" aria-labelledby="pills-home-tab">
+            Orders
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
