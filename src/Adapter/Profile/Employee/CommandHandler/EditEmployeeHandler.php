@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\EditEmployeeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
@@ -39,6 +40,19 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
  */
 final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditEmployeeHandlerInterface
 {
+    /**
+     * @var Hashing
+     */
+    private $hashing;
+
+    /**
+     * @param Hashing $hashing
+     */
+    public function __construct(Hashing $hashing)
+    {
+        $this->hashing = $hashing;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -73,7 +87,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->id_profile = $command->getProfileId();
 
         if (null !== $command->getPlainPassword()) {
-            $employee->passwd = $command->getPlainPassword();
+            $employee->passwd = $this->hashing->hash($command->getPlainPassword());
         }
 
         if (false === $employee->update()) {
