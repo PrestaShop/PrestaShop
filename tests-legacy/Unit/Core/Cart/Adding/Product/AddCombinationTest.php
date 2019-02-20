@@ -30,6 +30,9 @@ use Configuration;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 use Product;
 
+/**
+ * behat equivalent : Scenarii/Cart/add_combination.feature
+ */
 class AddCombinationTest extends AbstractCartTest
 {
     public function testCombinationCanBeAddedInCartIfAvailable()
