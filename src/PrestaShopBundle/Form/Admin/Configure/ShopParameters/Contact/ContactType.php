@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -37,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Class ContactType
@@ -74,7 +76,21 @@ class ContactType extends AbstractType
     {
         //todo: for translatable type add validation after Traffic & Seo form page pr is merged.
         $builder
-            ->add('title', TranslatableType::class)
+            ->add('title', TranslatableType::class, [
+                'options' => [ //todo: defaultLanguageConstraint
+                    'constraints' => [
+                        new Regex([
+                                'pattern' => '/^[^<>={}]*$/u',
+                                'message' => $this->trans(
+                                    '%s is invalid.',
+                                    [],
+                                    'Admin.Notifications.Error'
+                                ),
+                            ]
+                        )
+                    ],
+                ],
+            ])
             ->add('email', EmailType::class, [
                 'required' => false,
                 'constraints' => [
@@ -91,6 +107,17 @@ class ContactType extends AbstractType
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans(
+                                '%s is invalid.',
+                                [],
+                                'Admin.Notifications.Error'
+                            ),
+                        ])
+                    ],
+                ],
             ])
         ;
 
