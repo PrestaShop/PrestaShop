@@ -28,17 +28,32 @@ namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
 
 use Contact;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\AddContactHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotAddContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShopException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class AddContactHandler is used for adding contact data.
  */
 final class AddContactHandler extends AbstractObjectModelHandler implements AddContactHandlerInterface
 {
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
 
     /**
      * {@inheritdoc}
@@ -58,6 +73,7 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
             }
 
             if (null !== $command->getLocalisedDescription()) {
+                $this->assertIsCleanHtml($command->getLocalisedDescription());
                 $entity->description = $command->getLocalisedDescription();
             }
 
@@ -77,6 +93,27 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
                 0,
                 $exception
             );
+        }
+    }
+
+    /**
+     * Assets that the value should not contain script tags or javascript events.
+     *
+     * @param array $localisedDescriptions
+     *
+     * @throws ContactConstraintException
+     */
+    private function assertIsCleanHtml(array $localisedDescriptions)
+    {
+        foreach ($localisedDescriptions as $description) {
+            $errors = $this->validator->validate($description, new CleanHtml());
+
+            if (0 !== count($errors)) {
+                throw new ContactConstraintException(
+                    sprintf('Given description "%s" contains javascript events or script tags', $description),
+                    ContactConstraintException::INVALID_DESCRIPTION
+                );
+            }
         }
     }
 }

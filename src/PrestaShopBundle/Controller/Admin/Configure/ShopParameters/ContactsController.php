@@ -306,7 +306,7 @@ class ContactsController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     [
                         sprintf(
-                            '%s',
+                            '"%s"',
                             $this->trans('Shop association', 'Admin.Global')
                         ),
                     ]
@@ -316,11 +316,21 @@ class ContactsController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     [
                         sprintf(
-                            '%s',
+                            '"%s"',
                             $this->trans('Title', 'Admin.Global')
                         ),
                     ]
                 ),
+                ContactConstraintException::INVALID_DESCRIPTION => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Description', 'Admin.Global')
+                        ),
+                    ]
+                )
             ],
             DomainConstraintException::class => [
                 DomainConstraintException::INVALID_EMAIL => $this->trans(
@@ -328,7 +338,7 @@ class ContactsController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     [
                         sprintf(
-                            '%s',
+                            '"%s"',
                             $this->trans('Email address', 'Admin.Global')
                         ),
                     ]
