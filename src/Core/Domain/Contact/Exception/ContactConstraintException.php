@@ -33,4 +33,5 @@ class ContactConstraintException extends ContactException
 {
     const INVALID_TITLE = 1;
     const INVALID_SHOP_ASSOCIATION = 2;
+    const INVALID_DESCRIPTION = 3;
 }
