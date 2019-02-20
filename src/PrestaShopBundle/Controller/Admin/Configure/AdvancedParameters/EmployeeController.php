@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCommand;
@@ -236,14 +237,11 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $employeeFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.employee_form_handler');
-        $employeeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.employee_form_builder');
-
-        $employeeForm = $employeeFormBuilder->getForm();
+        $employeeForm = $this->getEmployeeFormBuilder()->getForm();
         $employeeForm->handleRequest($request);
 
         try {
-            $result = $employeeFormHandler->handle($employeeForm);
+            $result = $this->getEmployeeFormHandler()->handle($employeeForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
@@ -284,11 +282,24 @@ class EmployeeController extends FrameworkBundleAdminController
         $formAccessChecker = $this->get('prestashop.adapter.employee.form_access_checker');
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
 
-        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor($employeeId, [], [
+        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
             'is_restricted_access' => $isRestrictedAccess,
             'is_super_admin' => $formAccessChecker->isSuperAdmin($employeeId),
+            'is_for_editing' => true,
         ]);
-        $employeeForm->handleRequest($request);
+
+        try {
+            $employeeForm->handleRequest($request);
+            $result = $this->getEmployeeFormHandler()->handleFor((int) $employeeId, $employeeForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_employees_index');
+            }
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
 
         $editableEmployee = $this->getQueryBus()->handle(new GetEmployeeForEditing((int) $employeeId));
 
@@ -310,6 +321,14 @@ class EmployeeController extends FrameworkBundleAdminController
     protected function getEmployeeFormBuilder()
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.employee_form_builder');
+    }
+
+    /**
+     * @return FormHandler
+     */
+    protected function getEmployeeFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.employee_form_handler');
     }
 
     /**
