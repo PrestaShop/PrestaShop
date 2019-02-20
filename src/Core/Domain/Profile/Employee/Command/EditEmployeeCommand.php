@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Password;
 
 /**
  * Edit employee with given data.
@@ -87,7 +88,7 @@ class EditEmployeeCommand
     private $shopAssociation;
 
     /**
-     * @var string
+     * @var Password
      */
     private $plainPassword;
 
@@ -300,7 +301,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return string
+     * @return Password
      */
     public function getPlainPassword()
     {
@@ -308,11 +309,11 @@ class EditEmployeeCommand
     }
 
     /**
-     * @param string $plainPassword
+     * @param Password $plainPassword
      *
      * @return EditEmployeeCommand
      */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword(Password $plainPassword)
     {
         $this->plainPassword = $plainPassword;
 
