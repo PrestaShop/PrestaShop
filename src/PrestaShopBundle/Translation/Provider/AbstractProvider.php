@@ -167,7 +167,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
             $defaultCatalogue->addCatalogue($filteredCatalogue);
         }
 
-        if ($empty) {
+        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
         }
 

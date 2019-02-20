@@ -42,8 +42,8 @@ final class LegacyFileFormattingException extends InvalidResourceException
     public static function fileIsInvalid($filePath, $locale)
     {
         $exceptionMessage = sprintf(
-            'The locale "%s" is not supported, because we find an invalid file in the module:
-            have you updated the file "%s" manually?',
+            'The locale "%s" is not supported, because we have found an invalid file in the module.
+            Have you updated the file "%s" manually?',
             $locale,
             $filePath
         );
