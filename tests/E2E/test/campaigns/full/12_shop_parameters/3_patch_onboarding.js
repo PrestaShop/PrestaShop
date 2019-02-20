@@ -29,6 +29,11 @@ scenario('Welcome Module', () => {
   scenario('The first tutorial step : Create the first product ', () => {
     common.firstStep(ProductList);
   }, 'common_client');
+
+  /**
+   * Related issue Here
+   * https://github.com/PrestaShop/PrestaShop/issues/12560
+   */
   scenario(' The second Tutorial step : Give the shop an own identity', () => {
     common.secondStep();
   }, 'common_client');

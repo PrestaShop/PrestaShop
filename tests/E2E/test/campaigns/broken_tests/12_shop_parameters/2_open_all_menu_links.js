@@ -11,6 +11,10 @@ const common = require('../../common_scenarios/shop_parameters');
 const {Performance} = require('../../../selectors/BO/advancedParameters/performance');
 let promise = Promise.resolve();
 
+/**
+ * This script should be moved to the campaign full when this issue will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/12506
+ **/
 scenario('Open all menu links in the Back Office', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -77,6 +81,10 @@ scenario('Open all menu links in the Back Office', () => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu, PagesForm.Design.cms_category_form, "Pages");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.positions_submenu, PagesForm.Design.position_module_form, "Positions");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.image_settings_submenu, PagesForm.Design.image_type_form, "Image settings");
+      /**
+       * Related issue Here
+       * https://github.com/PrestaShop/PrestaShop/issues/12506
+       */
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.link_widget_submenu, PagesForm.Design.configuration_link_form, "Link widget");
     }, 'common_client');
     scenario('Check all the menu links of "Shipping" in the Back Office', client => {

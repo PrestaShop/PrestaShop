@@ -6,9 +6,9 @@
  * [id="PS-151"][Name="Live exchange rates"]
  **/
 
-const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
-const commonCurrency = require('../../../../common_scenarios/currency');
-const {Localization} = require('../../../../../selectors/BO/international/localization');
+const {AccessPageBO} = require('../../../../selectors/BO/access_page');
+const commonCurrency = require('../../../common_scenarios/currency');
+const {Localization} = require('../../../../selectors/BO/international/localization');
 let wrongCurrencyData = {
     name: 'CHF',
     exchangeRate: '0,86'
