@@ -5,6 +5,9 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Behat\Behat\Context\Context as BehatContext;
 use Behat\Behat\Tester\Exception\PendingException;
 use Combination;
+use Configuration;
+use Customization;
+use CustomizationField;
 use Pack;
 use Product;
 use StockAvailable;
@@ -25,19 +28,31 @@ class ProductFeatureContext implements BehatContext
     protected $combinations = [];
 
     /**
-     * @Given there is a product with name :productName and price :price and quantity :quantity
+     * @var Customization[]
      */
-    public function thereIsAProductWithNameAndPriceAndQuantity($productName, $price, $quantity)
+    protected $customizationsInCart = [];
+
+    /**
+     * @var CustomizationField[][]
+     */
+    protected $customizationFields = [];
+
+    /* PRODUCTS */
+
+    /**
+     * @Given there is a product with name :productName and price :price and quantity :productQuantity
+     */
+    public function thereIsAProductWithNameAndPriceAndQuantity($productName, $price, $productQuantity)
     {
-        $this->createProduct($productName, $price, $quantity);
+        $this->createProduct($productName, $price, $productQuantity);
     }
 
     /**
-     * @When I add product named :productName in my cart with quantity :quantity
+     * @When I add product named :productName in my cart with quantity :productQuantity
      */
-    public function iAddProductNamedInMyCartWithQuantity($productName, $quantity)
+    public function iAddProductNamedInMyCartWithQuantity($productName, $productQuantity)
     {
-        $result = $this->getCurrentCart()->updateQty($quantity, $this->products[$productName]->id);
+        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id);
         if (!$result) {
             throw new \RuntimeException(
                 sprintf(
@@ -49,15 +64,15 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @When I change quantity of product named :productName in my cart with quantity :quantity and operator :operator, result of change is :expectedStr
+     * @When I change quantity of product named :productName in my cart with quantity :productQuantity and operator :operator, result of change is :expectedStr
      */
-    public function iChangeProductQuantityInMyCarty($productName, $quantity, $operator, $expectedStr)
+    public function iChangeProductQuantityInMyCart($productName, $productQuantity, $operator, $expectedStr)
     {
         if (!isset($this->products[$productName])) {
             throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
         }
         $expected = $expectedStr == 'OK';
-        $result = $this->getCurrentCart()->updateQty($quantity, $this->products[$productName]->id, null, false, $operator);
+        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id, null, false, $operator);
         if ($expected != $result) {
             throw new \RuntimeException(
                 sprintf(
@@ -70,16 +85,16 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Quantity of product named :productName in my cart should be :quantity
+     * @Then Quantity of product named :productName in my cart should be :productQuantity
      */
-    public function quantityOfProductNamedInMyCartShouldBe($productName, $quantity)
+    public function quantityOfProductNamedInMyCartShouldBe($productName, $productQuantity)
     {
         $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, null);
-        if ($quantity != $nbProduct['quantity']) {
+        if ($productQuantity != $nbProduct['quantity']) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
-                    $quantity,
+                    $productQuantity,
                     $nbProduct['quantity']
                 )
             );
@@ -87,19 +102,19 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Remaining quantity of product named :productName should be :quantity
+     * @Then Remaining quantity of product named :productName should be :productQuantity
      */
-    public function remainingQuantityOfProductNamedShouldBe($productName, $quantity)
+    public function remainingQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
         if (!isset($this->products[$productName])) {
             throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
         }
         $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), null);
-        if ($quantity != $nbProduct) {
+        if ($productQuantity != $nbProduct) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
-                    $quantity,
+                    $productQuantity,
                     $nbProduct
                 )
             );
@@ -107,11 +122,11 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then I am not able to add product named :productName in my cart with quantity :quantity
+     * @Then I am not able to add product named :productName in my cart with quantity :productQuantity
      */
-    public function iAmNotAbleToAddProductNamedInMyCartWithQuantity($productName, $quantity)
+    public function iAmNotAbleToAddProductNamedInMyCartWithQuantity($productName, $productQuantity)
     {
-        $result = $this->getCurrentCart()->updateQty($quantity, $this->products[$productName]->id);
+        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id);
         if ($result) {
             throw new \RuntimeException(
                 sprintf(
@@ -122,7 +137,7 @@ class ProductFeatureContext implements BehatContext
         }
     }
 
-    protected function createProduct($productName, $price, $quantity)
+    protected function createProduct($productName, $price, $productQuantity)
     {
         if (isset($this->products[$productName])) {
             throw new \Exception('Product with name "' . $productName . '" was already added in fixtures');
@@ -130,7 +145,7 @@ class ProductFeatureContext implements BehatContext
         $product = new Product();
         $product->price = $price;
         $product->name = $productName;
-        $product->quantity = $quantity;
+        $product->quantity = $productQuantity;
         $product->add();
         StockAvailable::setQuantity((int)$product->id, 0, $product->quantity);
 
@@ -147,25 +162,8 @@ class ProductFeatureContext implements BehatContext
      */
     public function afterScenario_cleanProducts()
     {
-        // delete products
         foreach ($this->products as $product) {
             $product->delete();
-        }
-        $this->products = [];
-    }
-
-    /**
-     * This hook can be used to perform a database cleaning of added objects
-     *
-     * @AfterScenario
-     */
-    public function afterScenario_cleanCombinations()
-    {
-        // delete products
-        foreach ($this->combinations as $productName => $combinations) {
-            foreach ($combinations as $combinationName => $combination) {
-                $combination->delete();
-            }
         }
         $this->products = [];
     }
@@ -178,6 +176,8 @@ class ProductFeatureContext implements BehatContext
         $this->products[$productName]->out_of_stock = 1;
         $this->products[$productName]->save();
     }
+
+    /* COMBINATION */
 
     /**
      * @Given product with name :productName has a combination with name :combinationName and quantity :combinationQuantity
@@ -242,9 +242,9 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then I am not able to add combination named :combinationName of product named :productName in my cart with quantity :quantity
+     * @Then I am not able to add combination named :combinationName of product named :productName in my cart with quantity :combinationQuantity
      */
-    public function iAmNotAbleToAddPCombinationNamedOfroductNamedInMyCartWithQuantity($combinationName, $productName, $quantity)
+    public function iAmNotAbleToAddPCombinationNamedOfroductNamedInMyCartWithQuantity($combinationName, $productName, $combinationQuantity)
     {
         if (!isset($this->products[$productName])) {
             throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
@@ -252,7 +252,7 @@ class ProductFeatureContext implements BehatContext
         if (!isset($this->combinations[$productName][$combinationName])) {
             throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
         }
-        $result = $this->getCurrentCart()->updateQty($quantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
         if ($result) {
             throw new \RuntimeException(
                 sprintf(
@@ -285,4 +285,170 @@ class ProductFeatureContext implements BehatContext
             );
         }
     }
+
+    /**
+     * This hook can be used to perform a database cleaning of added objects
+     *
+     * @AfterScenario
+     */
+    public function afterScenario_cleanCombinations()
+    {
+        foreach ($this->combinations as $productName => $combinations) {
+            foreach ($combinations as $combinationName => $combination) {
+                $combination->delete();
+            }
+        }
+        $this->combinations = [];
+    }
+
+    /* CUSTOMIZATION */
+
+    /**
+     * @Given product with name :productName has a customization field with name :customizationFieldName
+     */
+    public function productWithNameHasACustomizationWithName($productName, $customizationFieldName)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        $customizationField = new CustomizationField();
+        $customizationField->id_product = $this->products[$productName]->id;
+        $customizationField->type = 1; // text field
+        $customizationField->required = 1;
+        $customizationField->name = [
+            (int)Configuration::get('PS_LANG_DEFAULT') => $customizationFieldName,
+        ];
+        $customizationField->add();
+        $this->customizationFields[$productName][$customizationFieldName] = $customizationField;
+    }
+
+    /**
+     * @Then Remaining quantity of customization named :customizationFieldName for product named :productName should be :customizationQuantity
+     */
+    public function remainingQuantityOfCustomizationNamedForProductNamedShouldBe($customizationFieldName, $productName, $customizationQuantity)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        if (!isset($this->customizationFields[$productName][$customizationFieldName])) {
+            throw new \Exception('Customization field with name "' . $customizationFieldName . '" for product with name "' . $productName . '" was not added in fixtures');
+        }
+        $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), $this->customizationsInCart[$productName]->id);
+        if ($customizationQuantity != $nbProduct) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $customizationQuantity,
+                    $nbProduct
+                )
+            );
+        }
+    }
+
+    /**
+     * @When I add customization named :customizationFieldName of product named :productName in my cart with quantity :customizationFieldQuantity
+     */
+    public function iAddCustomizationNamedOfProductNamedInMyCartWithQuantity($customizationFieldName, $productName, $customizationFieldQuantity)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
+        $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->products[$productName]->id, null, $this->customizationsInCart[$productName]->id);
+        if (!$result) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects true, got %s instead',
+                    $result
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then I am not able to add customization named :customizationFieldName of product named :productName in my cart with quantity :customizationFieldQuantity
+     */
+    public function iAmNotAbleToAddPCustomizationNamedOfroductNamedInMyCartWithQuantity($customizationFieldName, $productName, $customizationFieldQuantity)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        if (!isset($this->customizationFields[$productName][$customizationFieldName])) {
+            throw new \Exception('Customization field with name "' . $customizationFieldName . '" for product with name "' . $productName . '" was not added in fixtures');
+        }
+        $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
+        $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->products[$productName]->id, null, $this->customizationFields[$productName][$customizationFieldName]->id);
+        if ($result) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects false, got %s instead',
+                    $result
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then Quantity of customization named :customizationFieldName of product named :productName in my cart should be :customizationFieldQuantity
+     */
+    public function quantityOfCustomizationNamedOfProductNamedInMyCartShouldBe($customizationFieldName, $productName, $customizationFieldQuantity)
+    {
+        if (!isset($this->products[$productName])) {
+            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
+        }
+        if (!isset($this->customizationsInCart[$productName])) {
+            throw new \Exception('Customization for product with name "' . $productName . '" was not added in fixtures');
+        }
+        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, $this->customizationsInCart[$productName]->id);
+        if ($customizationFieldQuantity != $nbProduct['quantity']) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $customizationFieldQuantity,
+                    $nbProduct['quantity']
+                )
+            );
+        }
+    }
+
+    protected function addCustomizationInCurrentCartForProductNamedIfNotExist($productName)
+    {
+        if (isset($this->customizationsInCart[$productName])) {
+            return;
+        }
+
+        $customization = new Customization();
+        $customization->id_product = $this->products[$productName]->id;
+        $customization->id_product_attribute = 0;
+        $customization->id_address_delivery = 0;
+        $customization->quantity = 0;
+        $customization->quantity_refunded = 0;
+        $customization->quantity_returned = 0;
+        $customization->in_cart = 0;
+        $customization->id_cart = $this->getCurrentCart()->id;
+        $customization->add();
+
+        $this->customizationsInCart[$productName] = $customization;
+    }
+
+    /**
+     * This hook can be used to perform a database cleaning of added objects
+     *
+     * @AfterScenario
+     */
+    public function afterScenario_cleanCustomizations()
+    {
+        foreach ($this->customizationFields as $productName => $customizationFields) {
+            foreach ($customizationFields as $customizationFieldName => $customizationField) {
+                $customizationField->delete();
+            }
+        }
+        $this->customizationFields = [];
+
+        foreach ($this->customizationsInCart as $productName => $customization) {
+            $customization->delete();
+        }
+        $this->customizationsInCart = [];
+    }
+
 }
