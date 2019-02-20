@@ -48,7 +48,8 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
     {
         self::bootKernel();
         $loaderMock = $this->createMock(LoaderInterface::class);
-        $legacyFileLoader = new LegacyFileLoader();
+        $localeConverter = self::$kernel->getContainer()->get('prestashop.core.translation.locale.converter');
+        $legacyFileLoader = new LegacyFileLoader($localeConverter);
         $phpExtractor = new PhpExtractor();
         $moduleProvider = self::$kernel->getContainer()->get('prestashop.translation.module_provider');
         $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');

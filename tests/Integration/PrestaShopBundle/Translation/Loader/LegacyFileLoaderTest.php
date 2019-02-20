@@ -39,7 +39,7 @@ class LegacyFileLoaderTest extends KernelTestCase
     {
         self::bootKernel();
         $localeConverter = self::$kernel->getContainer()->get('prestashop.core.translation.locale.converter');
-        $extractor = new LegacyFileLoader();
+        $extractor = new LegacyFileLoader($localeConverter);
         $catalogue = $extractor->load($this->getTranslationsFolder(), 'fr-FR');
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
