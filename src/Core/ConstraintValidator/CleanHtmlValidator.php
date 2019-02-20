@@ -8,28 +8,40 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsCleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class IsCleanHtmlValidator extends ConstraintValidator
+/**
+ * Class CleanHtmlValidator is responsible for validating the html content to prevent from having javascript events
+ * or script tags.
+ */
+class CleanHtmlValidator extends ConstraintValidator
 {
     /**
      * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof IsCleanHtml) {
-            throw new UnexpectedTypeException($constraint, IsCleanHtml::class);
+        if (!$constraint instanceof CleanHtml) {
+            throw new UnexpectedTypeException($constraint, CleanHtml::class);
         }
 
         if (!is_string($value)) {
             throw new UnexpectedTypeException($value, 'string');
         }
 
-        $containsScriptTags = preg_match('/<[\s]*script/ims', $value);
-        $containsJavascriptEvents =
+        $containsScriptTags = preg_match('/<[\s]*script/ims', $value) || preg_match('/.*script\:/ims', $value);
+        $containsJavascriptEvents = preg_match('/(' . $this->getJavascriptEvents() . ')[\s]*=/ims', $value);
+
+        if ($containsScriptTags || $containsJavascriptEvents) {
+            $this->context->buildViolation($constraint->message)
+                ->setTranslationDomain('Admin.Notifications.Error')
+                ->setParameter('%s', $this->formatValue($value))
+                ->addViolation()
+            ;
+        }
     }
 
     /**
