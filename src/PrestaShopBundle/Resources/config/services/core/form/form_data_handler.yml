@@ -51,3 +51,4 @@ services:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+      - '@prestashop.adapter.employee.form_access_checker'

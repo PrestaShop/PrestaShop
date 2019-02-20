@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 
 /**
  * Handles submitted employee form's data.
@@ -55,18 +56,26 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
     private $superAdminProfileId;
 
     /**
+     * @var EmployeeFormAccessCheckerInterface
+     */
+    private $employeeFormAccessChecker;
+
+    /**
      * @param CommandBusInterface $bus
      * @param array $defaultShopAssociation
      * @param int $superAdminProfileId
+     * @param EmployeeFormAccessCheckerInterface $employeeFormAccessChecker
      */
     public function __construct(
         CommandBusInterface $bus,
         array $defaultShopAssociation,
-        $superAdminProfileId
+        $superAdminProfileId,
+        EmployeeFormAccessCheckerInterface $employeeFormAccessChecker
     ) {
         $this->bus = $bus;
         $this->defaultShopAssociation = $defaultShopAssociation;
         $this->superAdminProfileId = $superAdminProfileId;
+        $this->employeeFormAccessChecker = $employeeFormAccessChecker;
     }
     /**
      * {@inheritdoc}
@@ -111,8 +120,14 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setProfileId((int) $data['profile'])
         ;
 
-        if (isset($data['password'])) {
-            $command->setPlainPassword($data['password']);
+        if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {
+            if (isset($data['password'])) {
+                $command->setPlainPassword($data['password']);
+            }
+        } else {
+            if (isset($data['change_password'])) {
+
+            }
         }
 
         if (isset($data['shop_association'])) {

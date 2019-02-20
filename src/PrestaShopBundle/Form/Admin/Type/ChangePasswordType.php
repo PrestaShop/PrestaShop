@@ -48,15 +48,11 @@ class ChangePasswordType extends AbstractType
             ->add('change_password_button', ButtonType::class, [
                 'label' => false,
             ])
-            ->add('old_password', PasswordType::class, [
-                'disabled' => true,
-            ])
+            ->add('old_password', PasswordType::class)
             ->add('new_password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'disabled' => true,
             ])
             ->add('generated_password', TextType::class, [
-                'disabled' => true,
                 'label' => false,
             ])
             ->add('generate_password_button', ButtonType::class)
@@ -70,7 +66,7 @@ class ChangePasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'required' => true,
+            'required' => false,
         ]);
     }
 }
