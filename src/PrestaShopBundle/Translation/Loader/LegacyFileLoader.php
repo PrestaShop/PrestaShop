@@ -27,9 +27,9 @@
 
 namespace PrestaShopBundle\Translation\Loader;
 
-use PrestaShopBundle\Translation\Locale\Converter;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Exception\LegacyFileFormattingException;
 
@@ -45,6 +45,16 @@ final class LegacyFileLoader implements LoaderInterface
     const LEGACY_TRANSLATION_FORMAT = '#\<\{(?<module>[\w-]+)\}prestashop\>(?<domain>[\w-]+)_(?<id>[\w-]+)#';
 
     /**
+     * @var Converter the locale Converter
+     */
+    private $localeConverter;
+
+    public function __construct(Converter $converter)
+    {
+        $this->localeConverter = $converter;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function load($path, $locale, $domain = 'messages')
@@ -52,7 +62,7 @@ final class LegacyFileLoader implements LoaderInterface
         // Each legacy file declare this variable to store the translations
         $_MODULE = [];
         $catalogue = new MessageCatalogue($locale);
-        $shopLocale = Converter::toLegacyLocale($locale);
+        $shopLocale = $this->localeConverter->toLegacyLocale($locale);
         $filePath = $path . "$shopLocale.php";
 
         if (!file_exists($filePath)) {

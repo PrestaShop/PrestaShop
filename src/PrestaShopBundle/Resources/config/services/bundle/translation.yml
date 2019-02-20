@@ -109,6 +109,8 @@ services:
 
     prestashop.translation.legacy_file_loader:
       class: PrestaShopBundle\Translation\Loader\LegacyFileLoader
+      arguments:
+        - "@prestashop.core.translation.locale.converter"
       tags:
       - {name: translation.loader, alias: legacy_files}
 
