@@ -23,36 +23,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="row">
-  <div class="col">
-    <div class="card">
-      <h3 class="card-header">{{ 'Customer'|trans({}, 'Admin.Global') }}</h3>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-3">
-            <span class="float-right">{{ 'Search for a customer'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-          </div>
-          <div class="col">
-            <input type="text"
-                   class="form-control"
-                   id="customerSearchInput"
-                   data-url="{{ getAdminLink('AdminCustomers') }}"
-            >
-            <small class="form-text">
-              {{ 'Search for an existing customer by typing the first letters of his/her name.'|trans({}, 'Admin.Orderscustomers.Help') }}
-            </small>
-          </div>
-          <div class="col">
-            <span class="mr-2">{{ 'or' }}</span>
+<div class="card">
+  <h3 class="card-header">{{ 'Customer'|trans({}, 'Admin.Global') }}</h3>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-3">
+        <span class="float-right">{{ 'Search for a customer'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      </div>
+      <div class="col-4">
+        <input type="text"
+               class="form-control"
+               id="customerSearchInput"
+               data-url="{{ getAdminLink('AdminCustomers') }}"
+        >
+        <small class="form-text">
+          {{ 'Search for an existing customer by typing the first letters of his/her name.'|trans({}, 'Admin.Orderscustomers.Help') }}
+        </small>
+      </div>
+      <div class="col">
+        <span class="mr-2">{{ 'or' }}</span>
 
-            <button class="btn btn-primary" type="button">
-              {{ 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
-            </button>
-          </div>
-        </div>
-        <div class="row mt-3 js-customer-search-results"></div>
+        <button class="btn btn-primary" type="button">
+          {{ 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
       </div>
     </div>
+    <div class="row mt-3 js-customer-search-results"></div>
   </div>
 </div>
 
