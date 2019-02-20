@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +49,7 @@ class TaxController extends FrameworkBundleAdminController
      * Handles tax edit
      *
      * @param Request $request
-     * @param $taxId
+     * @param int $taxId
      *
      * @return Response
      */
@@ -75,9 +76,11 @@ class TaxController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_taxes_index');
             }
         }
+        $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing((int) $taxId));
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/edit.html.twig', [
             'taxForm' => $taxForm->createView(),
+            'taxName' => $editableTax->getName()[$this->getContextLangId()],
         ]);
     }
 

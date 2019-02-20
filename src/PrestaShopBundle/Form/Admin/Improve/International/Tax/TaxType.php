@@ -104,7 +104,9 @@ class TaxType extends AbstractType
                     new Type([
                         'type' => 'numeric',
                         'message' => $this->translator->trans(
-                            'This field must contain only numeric values', [], 'Admin.Notifications.Error'
+                            'This field is invalid, it must contain numeric values',
+                            [],
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                     new NotBlank([

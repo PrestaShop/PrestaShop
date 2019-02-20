@@ -30,17 +30,26 @@
     <div class="card-header">
       {{ 'Taxes'|trans({}, 'Admin.Global') }}
     </div>
+
     <div class="card-block row">
       <div class="card-text">
+        {% set nameHint %}
+          {{ 'Tax name to display in carts and on invoices (e.g. "VAT").'|trans({}, 'Admin.International.Help') }}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') }} {{ ' <>;=#{}' }}
+        {% endset %}
+
         {{ ps.form_group_row(taxForm.name, {}, {
-          'label': 'Name'|trans({}, 'Admin.Global')
+          'label': 'Name'|trans({}, 'Admin.Global'),
+          'help': nameHint,
         }) }}
+
+        {% set rateHint %}
+          {{ 'Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)'|trans({}, 'Admin.International.Help') }}
+        {% endset %}
 
         {{ ps.form_group_row(taxForm.rate, {}, {
           'label': 'Rate'|trans({}, 'Admin.International.Feature'),
-          'attr': {
-            'maxlength': 6
-          }
+          'help': rateHint,
         }) }}
 
         {{ ps.form_group_row(taxForm.is_enabled, {}, {
