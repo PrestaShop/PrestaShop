@@ -28,16 +28,25 @@
     <i class="material-icons">account_circle</i>
   </div>
   <div class="dropdown-menu dropdown-menu-right">
-    <div class="text-center employee_avatar">
-      <img class="avatar rounded-circle" src="{$employee->getImage()}" />
-      <span>{$employee->firstname} {$employee->lastname}</span>
-    </div>
-    <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}">
-      <i class="material-icons">settings_applications</i>
+    <div class="employee-wrapper-avatar">
+      
+      <span class="employee_avatar"><img class="avatar rounded-circle" src="{$employee->getImage()}" /></span>
+      <span class="employee_profile">{l s='Welcome back'} {$employee->firstname}</span>
+      <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}">
+      <i class="material-icons">settings</i>
       {l s='Your profile'}
     </a>
-    <a class="dropdown-item employee-link" id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}">
-      <i class="material-icons">power_settings_new</i>
+    </div>
+    
+    <p class="divider"></p>
+    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17'}"><i class="material-icons">book</i> {l s='Resources'}</a>
+    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17'}"><i class="material-icons">school</i> {l s='Training'}</a>
+    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17'}"><i class="material-icons">person_pin_circle</i> {l s='Find an Expert'}</a>
+    <a class="dropdown-item" href="{l s='https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17'}"><i class="material-icons">extension</i> {l s='Prestashop MarketPlace'}</a>
+    <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17'}"><i class="material-icons">help</i> {l s='Help Center'}</a>
+    <p class="divider"></p>
+    <a class="dropdown-item employee-link text-center" id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}">
+      <i class="material-icons d-lg-none">power_settings_new</i>
       <span>{l s='Sign out'}</span>
     </a>
   </div>
