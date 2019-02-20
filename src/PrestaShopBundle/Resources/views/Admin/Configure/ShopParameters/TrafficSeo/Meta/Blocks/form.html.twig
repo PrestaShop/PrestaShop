@@ -33,8 +33,7 @@
         </div>
         <div class="card-block row">
           <div class="card-text">
-
-            {{ ps.form_group_row(metaForm.page_name, {'attr': {'class': 'js-meta-page-name'}}, {
+            {{ ps.form_group_row(metaForm.page_name, {'attr': {'class': 'js-meta-page-name', 'data-toggle': 'select2', 'data-minimumResultsForSearch': '7'}}, {
               'label': 'Page name'|trans({}, 'Admin.Shopparameters.Feature'),
               'help': 'Name of the related page.'|trans({}, 'Admin.Shopparameters.Help')
             }) }}
