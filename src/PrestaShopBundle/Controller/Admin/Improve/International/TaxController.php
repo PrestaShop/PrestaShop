@@ -140,7 +140,7 @@ class TaxController extends FrameworkBundleAdminController
      * Handles tax edit
      *
      * @param Request $request
-     * @param $taxId
+     * @param int $taxId
      *
      * @return Response
      */
@@ -167,9 +167,11 @@ class TaxController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_taxes_index');
             }
         }
+        $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing((int) $taxId));
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/edit.html.twig', [
             'taxForm' => $taxForm->createView(),
+            'taxName' => $editableTax->getName()[$this->getContextLangId()],
         ]);
     }
 
