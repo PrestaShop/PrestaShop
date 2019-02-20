@@ -1,6 +1,6 @@
-Feature: Cart Calculation
+Feature: Add product combination in cart
   As a customer
-  I must be able to get correct price for my cart
+  I must be able to correctly add product combinations in my cart
 
   Scenario: Add combination in cart
     Given I have an empty default cart

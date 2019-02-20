@@ -1,6 +1,6 @@
-Feature: Cart Calculation
+Feature: Add product in cart
   As a customer
-  I must be able to get correct price for my cart
+  I must be able to correctly add products in my cart
 
   Scenario: Add product(s) in cart
     Given I have an empty default cart
