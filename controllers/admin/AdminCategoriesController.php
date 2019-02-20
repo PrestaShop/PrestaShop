@@ -225,7 +225,7 @@ class AdminCategoriesControllerCore extends AdminController
         if (empty($categories_tree)
             && ($this->_category->id != (int) Configuration::get('PS_ROOT_CATEGORY') || Tools::isSubmit('id_category'))
             && (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1)) {
-            $categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
+            $categories_tree = array(array('name' => $this->_category->name[$this->context->language->id], 'id_category' => $this->_category->id));
         }
 
         $categories_tree = array_reverse($categories_tree);
