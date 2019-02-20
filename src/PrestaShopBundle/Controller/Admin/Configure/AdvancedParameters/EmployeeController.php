@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
@@ -368,6 +369,27 @@ class EmployeeController extends FrameworkBundleAdminController
                     '%id%' => $e instanceof CannotDeleteEmployeeException ? $e->getEmployeeId()->getValue() : 0,
                 ]
             ),
+            EmployeeConstraintException::class => [
+                EmployeeConstraintException::INVALID_EMAIL => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Email', 'Admin.Global'))]
+                ),
+                EmployeeConstraintException::INVALID_FIRST_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Firstname', 'Admin.Global'))]
+                ),
+                EmployeeConstraintException::INVALID_LAST_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Lastname', 'Admin.Global'))]
+                ),
+                EmployeeConstraintException::INCORRECT_PASSWORD => $this->trans(
+                    'Your current password is invalid.',
+                    'Admin.Advparameters.Notification'
+                ),
+            ],
         ];
     }
 
