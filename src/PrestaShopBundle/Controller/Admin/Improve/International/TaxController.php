@@ -151,12 +151,21 @@ class TaxController extends FrameworkBundleAdminController
 
         $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
         $taxForm->handleRequest($request);
-        $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
 
-        if (null !== $result->getIdentifiableObjectId()) {
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        try {
+            $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
 
-            return $this->redirectToRoute('admin_taxes_index');
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_taxes_index');
+            }
+        } catch (TaxException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof TaxNotFoundException) {
+                return $this->redirectToRoute('admin_taxes_index');
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/edit.html.twig', [
