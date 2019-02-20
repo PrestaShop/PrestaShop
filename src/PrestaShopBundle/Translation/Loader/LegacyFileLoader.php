@@ -31,6 +31,7 @@ use PrestaShopBundle\Translation\Locale\Converter;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
+use PrestaShopBundle\Translation\Exception\LegacyFileFormattingException;
 
 /**
  * Able to convert old translation files (in translations/es.php) into
@@ -41,7 +42,7 @@ final class LegacyFileLoader implements LoaderInterface
     /**
      * @var string the expected format of a legacy translation key
      */
-    const LEGACY_TRANSLATION_FORMAT = '#\<\{([\w-]+)\}prestashop\>([\w-]+)_([\w-]+)#';
+    const LEGACY_TRANSLATION_FORMAT = '#\<\{(?<module>[\w-]+)\}prestashop\>(?<domain>[\w-]+)_(?<id>[\w-]+)#';
 
     /**
      * {@inheritdoc}
@@ -76,8 +77,11 @@ final class LegacyFileLoader implements LoaderInterface
      */
     private function getId($key)
     {
-        preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $params);
+        preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $matches);
+        if (empty($matches['id'][0])) {
+            throw LegacyFileFormattingException::fileIsInvalid();
+        }
 
-        return $params[3][0];
+        return $matches['id'][0];
     }
 }

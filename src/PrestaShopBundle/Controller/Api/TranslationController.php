@@ -334,7 +334,8 @@ class TranslationController extends ApiController
      * @param $catalogue
      * @param $type
      * @param $selected
-     * @param null $search
+     * @param string|null $search
+     * @param string|null $module
      *
      * @return array
      */
