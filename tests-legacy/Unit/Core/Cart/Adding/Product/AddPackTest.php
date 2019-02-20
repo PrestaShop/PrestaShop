@@ -32,6 +32,9 @@ use Pack;
 use Product;
 use StockAvailable;
 
+/**
+ * behat equivalent : Scenarii/Cart/add_pack.feature
+ */
 class AddPackTest extends AbstractCartTest
 {
     /** @var int */
@@ -43,7 +46,7 @@ class AddPackTest extends AbstractCartTest
     /**
      * Object from test database
      *
-     * @var int
+     * @var Product
      */
     protected $pack;
 
