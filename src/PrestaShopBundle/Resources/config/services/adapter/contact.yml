@@ -17,6 +17,8 @@ services:
 
   prestashop.adapter.contact.command_handler.edit_contact:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\EditContactHandler'
+    arguments:
+      - '@validator'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand' }
 
