@@ -36,7 +36,7 @@ services:
 
 # Query handlers
 
-    prestashop.adapter.cms_page.query_handler.get_cms_page_categories_for_breadcrumbs:
+    prestashop.adapter.cms_page.query_handler.get_cms_page_categories_for_breadcrumbs:form
         class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoriesForBreadcrumbHandler
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

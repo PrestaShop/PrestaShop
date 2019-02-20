@@ -34,6 +34,7 @@ services:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
 
+
   prestashop.core.form.identifiable_object.data_provider.meta_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MetaFormDataProvider'
     arguments:
@@ -51,3 +52,6 @@ services:
       - '@prestashop.core.query_bus'
       - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+
+  prestashop.core.form.identifiable_object.data_provider.cms_page_category_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CmsPageCategoryFormDataProvider'

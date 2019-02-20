@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryN
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
@@ -130,13 +131,12 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function editCmsCategoryAction($cmsCategoryId)
     {
-//        todo: remove legacy parts once form is ready and demoRestricted on post action
-        $legacyLink = $this->getAdminLink('AdminCmsContent', [
-            'id_cms_category' => $cmsCategoryId,
-            'updatecms_category' => 1,
-        ]);
+        $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
+        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
 
-        return $this->redirect($legacyLink);
+        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit_category.html.twig', [
+            'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
+        ]);
     }
 
     /**
@@ -383,6 +383,16 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToParentIndexPageByBulkIds($cmsCategoriesToDisable);
+    }
+
+    /**
+     * Gets cms page category form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getCmsPageCategoryFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.cms_page_category_form_builder');
     }
 
     /**
