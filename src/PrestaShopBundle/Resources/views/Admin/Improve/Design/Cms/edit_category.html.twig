@@ -32,3 +32,8 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/cms_page.bundle.js') }}"></script>
+{% endblock %}

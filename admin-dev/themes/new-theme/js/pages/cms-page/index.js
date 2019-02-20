@@ -34,6 +34,7 @@ import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-act
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import PositionExtension from '../../components/grid/extension/position-extension';
+import ChoiceTree from "../../components/form/choice-tree";
 
 const $ = window.$;
 
@@ -50,4 +51,6 @@ $(() => {
   cmsCategory.addExtension(new SubmitRowActionExtension());
   cmsCategory.addExtension(new ColumnTogglingExtension());
   cmsCategory.addExtension(new PositionExtension());
+
+  new ChoiceTree('#cms_page_category_parent_category');
 });
