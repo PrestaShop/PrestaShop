@@ -31,6 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -42,6 +43,16 @@ use Symfony\Component\Validator\Constraints\Type;
 class TaxType extends AbstractType
 {
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -49,26 +60,69 @@ class TaxType extends AbstractType
         $builder
             ->add('name', TranslatableType::class, [
                 'options' => [
-                    'required' => true,
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->translator->trans(
+                                '%s is invalid.',
+                                [
+                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            ),
                         ]),
-                        new NotBlank(),
+                        new NotBlank([
+                            'message' => $this->translator->trans(
+                                'The %s field is required.',
+                                [
+                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                        new Length([
+                            'max' => 32,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 32],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                     ],
                 ],
             ])
             ->add('rate', TextType::class, [
-                'required' => true,
                 'constraints' => [
                     new Length([
                         'max' => 6,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 6],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
-                    new Type('numeric'),
-                    new NotBlank(),
+                    new Type([
+                        'type' => 'numeric',
+                        'message' => $this->translator->trans(
+                            'This field must contain only numeric values', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->translator->trans(
+                                    'Rate', [], 'Admin.International.Feature'
+                                )),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
                 ],
             ])
-            ->add('is_enabled', SwitchType::class)
+            ->add('is_enabled', SwitchType::class, [
+                'required' => false,
+            ])
         ;
     }
 }
