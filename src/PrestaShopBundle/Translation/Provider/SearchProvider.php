@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use Symfony\Component\Translation\Loader\LoaderInterface;
+
 /**
  * Able to search translations for a specific translation domains across
  * multiple sources
@@ -37,17 +39,24 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     private $modulesDirectory;
 
+    public function __construct(LoaderInterface $databaseLoader, $resourceDirectory, $modulesDirectory)
+    {
+        $this->modulesDirectory = $modulesDirectory;
+
+        parent::__construct($databaseLoader, $resourceDirectory);
+    }
+
     /**
      * Get domain.
      *
-     * @deprecated since 1.7.6, to be removed in 1.8.x
+     * @deprecated since 1.7.6, to be removed in the next major
      *
      * @return mixed
      */
     public function getDomain()
     {
         @trigger_error(
-            'getDomain function is deprecated and will be removed in 1.8.x',
+            __METHOD__ . ' function is deprecated and will be removed in the next major',
             E_USER_DEPRECATED
         );
 
@@ -87,14 +96,14 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     }
 
     /**
-     * @deprecated since 1.7.6, to be removed in 1.8.x
+     * @deprecated since 1.7.6, to be removed in the next major
      *
      * @return string
      */
     public function getModuleDirectory()
     {
         @trigger_error(
-            'getModuleDirectory function is deprecated and will be removed in 1.8.x',
+            __METHOD__ . ' function is deprecated and will be removed in the next major',
             E_USER_DEPRECATED
         );
 

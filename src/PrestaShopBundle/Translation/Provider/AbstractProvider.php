@@ -238,9 +238,9 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      */
     public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
     {
-        foreach ($messageCatalogue as $domain => $messages) {
+        foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
-                $messageCatalogue[$domain][$translationKey] = '';
+                $messageCatalogue->set($translationKey, '', $domain);
             }
         }
 

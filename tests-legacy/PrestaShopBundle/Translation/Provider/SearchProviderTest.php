@@ -44,7 +44,7 @@ class SearchProviderTest extends TestCase
             ->getMock();
 
         self::$resourcesDir = __DIR__.'/../../resources/translations';
-        $this->provider = new SearchProvider($loader, self::$resourcesDir);
+        $this->provider = new SearchProvider($loader, self::$resourcesDir, '');
 
         $this->provider->setDomain('AdminActions');
     }

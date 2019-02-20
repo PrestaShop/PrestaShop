@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Translation\Extractor;
+namespace Tests\Integration\PrestaShopBundle\Translation\Extractor;
 
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
@@ -32,7 +32,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
- * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="LegacyModuleExtractorTest"
+ * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="LegacyModuleExtractorTest"
  */
 class LegacyModuleExtractorTest extends KernelTestCase
 {
@@ -41,7 +41,10 @@ class LegacyModuleExtractorTest extends KernelTestCase
      */
     const DOMAIN_NAME = 'ModulesSomeModule';
 
-    public function testExtract()
+    /**
+     * @cover extract
+     */
+    public function testLegacyModuleExtractorShouldReturnACatalogue()
     {
         self::bootKernel();
         $phpExtractor = new PhpExtractor();
@@ -51,13 +54,12 @@ class LegacyModuleExtractorTest extends KernelTestCase
         $catalogue = $extractor->extract('some_module', 'fr-FR');
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
-        $this->assertCount(5, $catalogue->all(self::DOMAIN_NAME));
     }
 
     /**
-     * @depends testExtract
+     * @depends testLegacyModuleExtractorShouldReturnACatalogue
      */
-    public function testExtractionTranslations()
+    public function testExtractedCatalogueContainsTheExpectedTranslations()
     {
         self::bootKernel();
         $phpExtractor = new PhpExtractor();
@@ -65,6 +67,7 @@ class LegacyModuleExtractorTest extends KernelTestCase
         $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleFolder());
 
         $catalogue = $extractor->extract('some_module', 'fr-FR');
+        $this->assertCount(5, $catalogue->all(self::DOMAIN_NAME));
         $this->assertTrue($catalogue->has(
             'An error occured, please check your zip file',
             self::DOMAIN_NAME

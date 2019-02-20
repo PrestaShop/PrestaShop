@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
+namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
 use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
@@ -35,7 +35,7 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
- * @doc ./vendor/bin/phpunit -c tests/Unit/phpunit.xml --filter="ExternalModuleLegacySystemProviderTest"
+ * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="ExternalModuleLegacySystemProviderTest"
  */
 class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 {
@@ -62,7 +62,10 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
             $moduleProvider
         );
 
-        $this->provider->setModuleName('some_module');
+        $this->provider
+            ->setModuleName('some_module')
+            ->setDomain('ModulesSomeModule')
+        ;
 
         parent::setUp();
     }
@@ -82,14 +85,19 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $this->assertSame('external_legacy_module', $this->provider->getIdentifier());
     }
 
+    /**
+     * In the module same_module, you can find:
+     * 1 translation in the controller
+     * 4 translations in Smarty files
+     * and 88 unique translations in the translations folder for the locale fr-FR
+     */
     public function testGetLegacyCatalogueWithDefinedLocale()
     {
         $this->provider->setLocale('fr-FR');
-        $this->assertInstanceOf(MessageCatalogueInterface::class, $this->provider->getLegacyCatalogue());
         $legacyCatalogue = $this->provider->getLegacyCatalogue();
+        $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 
-        // 5 from files + 100 from translations/fr.php file
-        $this->assertCount(111, $legacyCatalogue->all());
+        $this->assertCount(5, $legacyCatalogue->all('ModulesSomeModule'));
     }
 
     /**
