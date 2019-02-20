@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Password;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -33,12 +35,15 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Class ChangePasswordType is responsible for defining "change password" form type.
  */
 class ChangePasswordType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -51,6 +56,9 @@ class ChangePasswordType extends AbstractType
             ->add('old_password', PasswordType::class)
             ->add('new_password', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'constraints' => [
+                    $this->getLengthConstraint(Password::MAX_LENGTH, Password::MIN_LENGTH),
+                ]
             ])
             ->add('generated_password', TextType::class, [
                 'label' => false,
@@ -68,5 +76,34 @@ class ChangePasswordType extends AbstractType
         $resolver->setDefaults([
             'required' => false,
         ]);
+    }
+
+    /**
+     * @param int $maxLength
+     * @param int|null $minLength
+     *
+     * @return Length
+     */
+    private function getLengthConstraint($maxLength, $minLength = null)
+    {
+        $options = [
+            'max' => $maxLength,
+            'maxMessage' => $this->trans(
+                'This field cannot be longer than %limit% characters',
+                ['%limit%' => $maxLength],
+                'Admin.Notifications.Error'
+            ),
+        ];
+
+        if (null !== $minLength) {
+            $options['min'] = $minLength;
+            $options['minMessage'] = $this->trans(
+                'This field cannot be shorter than %limit% characters',
+                ['%limit%' => $minLength],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        return new Length($options);
     }
 }

@@ -87,7 +87,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->id_profile = $command->getProfileId();
 
         if (null !== $command->getPlainPassword()) {
-            $employee->passwd = $this->hashing->hash($command->getPlainPassword());
+            $employee->passwd = $this->hashing->hash($command->getPlainPassword()->getValue());
         }
 
         if (false === $employee->update()) {

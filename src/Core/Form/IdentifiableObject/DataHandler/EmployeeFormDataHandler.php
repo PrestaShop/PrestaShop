@@ -27,13 +27,17 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
 
 /**
  * Handles submitted employee form's data.
@@ -61,21 +65,37 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
     private $employeeFormAccessChecker;
 
     /**
+     * @var EmployeeDataProviderInterface
+     */
+    private $employeeDataProvider;
+
+    /**
+     * @var Hashing
+     */
+    private $hashing;
+
+    /**
      * @param CommandBusInterface $bus
      * @param array $defaultShopAssociation
      * @param int $superAdminProfileId
      * @param EmployeeFormAccessCheckerInterface $employeeFormAccessChecker
+     * @param EmployeeDataProviderInterface $employeeDataProvider
+     * @param Hashing $hashing
      */
     public function __construct(
         CommandBusInterface $bus,
         array $defaultShopAssociation,
         $superAdminProfileId,
-        EmployeeFormAccessCheckerInterface $employeeFormAccessChecker
+        EmployeeFormAccessCheckerInterface $employeeFormAccessChecker,
+        EmployeeDataProviderInterface $employeeDataProvider,
+        Hashing $hashing
     ) {
         $this->bus = $bus;
         $this->defaultShopAssociation = $defaultShopAssociation;
         $this->superAdminProfileId = $superAdminProfileId;
         $this->employeeFormAccessChecker = $employeeFormAccessChecker;
+        $this->employeeDataProvider = $employeeDataProvider;
+        $this->hashing = $hashing;
     }
     /**
      * {@inheritdoc}
@@ -121,13 +141,16 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         ;
 
         if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {
-            if (isset($data['password'])) {
-                $command->setPlainPassword($data['password']);
-            }
-        } else {
             if (isset($data['change_password'])) {
+                $this->assertPasswordIsSameAsOldPassword(
+                    $data['change_password']['old_password'],
+                    $id
+                );
 
+                $command->setPlainPassword(new Password($data['change_password']['new_password']));
             }
+        } elseif (isset($data['password'])) {
+            $command->setPlainPassword(new Password($data['password']));
         }
 
         if (isset($data['shop_association'])) {
@@ -141,5 +164,25 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         $employeeId = $this->bus->handle($command);
 
         return $employeeId->getValue();
+    }
+
+    /**
+     * Asserts if given password is the same as employee's password.
+     *
+     * @param string $plainPassword
+     * @param int $employeeId
+     *
+     * @throws EmployeeConstraintException
+     */
+    private function assertPasswordIsSameAsOldPassword($plainPassword, $employeeId)
+    {
+        $oldPassword = $this->employeeDataProvider->getHashedPasswordById($employeeId);
+
+        if ($this->hashing->hash($plainPassword) !== $oldPassword) {
+            throw new EmployeeConstraintException(
+                'Old password is invalid.',
+                EmployeeConstraintException::INCORRECT_PASSWORD
+            );
+        }
     }
 }

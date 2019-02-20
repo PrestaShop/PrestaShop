@@ -745,6 +745,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.change_password:
+        class: 'PrestaShopBundle\Form\Admin\Type\ChangePasswordType'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+           - { name: form.type }
+
     form.type.addons_connect:
         class: 'PrestaShopBundle\Form\Admin\Type\AddonsConnectType'
         arguments:
