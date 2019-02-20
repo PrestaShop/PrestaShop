@@ -746,20 +746,23 @@
   </div>
   <div class="card card-body js-change-password-block d-none">
     {{- ps.form_group_row(form.old_password, oldPasswordVars, {
-      label: oldPasswordVars.label
+      label: oldPasswordVars.label,
+      required: true
     }) -}}
 
     {# New password first input #}
     {# Empty help text needed to render the text container for validation feedback messages #}
     {{- ps.form_group_row(form.new_password.children.first, newPasswordFirstVars, {
       label: newPasswordFirstVars.label,
-      help: ''
+      help: '',
+      required: true
     }) -}}
 
     {# New password second input (confirmation) #}
     {{- ps.form_group_row(form.new_password.children.second, newPasswordSecondVars, {
       label: newPasswordSecondVars.label,
-      help: ''
+      help: '',
+      required: true
     }) -}}
 
     <div class="form-group row">

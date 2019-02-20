@@ -61,6 +61,7 @@ export default class ChangePasswordControl {
       .add(this.newPasswordSecondSelector);
 
     this.passwordHandler = new ChangePasswordHandler();
+    this._hideInputsBlock();
     this.initEvents();
   }
 
