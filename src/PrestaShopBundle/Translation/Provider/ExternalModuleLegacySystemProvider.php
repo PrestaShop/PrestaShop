@@ -182,7 +182,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
                 }
             }
         } catch (UnsupportedLocaleException $exception) {
-            // Do nothing as support of legacy file is deprecated
+            $legacyFilesCatalogue = $catalogueFromPhpAndSmartyFiles;
         }
 
         return $legacyFilesCatalogue;
