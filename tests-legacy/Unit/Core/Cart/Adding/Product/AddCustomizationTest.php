@@ -32,7 +32,7 @@ use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 use Product;
 
 /**
- * behat equivalent : Scenarii/Cart/add_customization.feature
+ * behat equivalent : Scenarii/Cart/Adding/Product/add_customization.feature
  */
 class AddCustomizationTest extends AbstractCartTest
 {

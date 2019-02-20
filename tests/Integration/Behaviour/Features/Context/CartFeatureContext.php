@@ -3,6 +3,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
+use Cart;
 use Context;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
 
@@ -42,7 +43,42 @@ class CartFeatureContext implements BehatContext
             foreach ($productDatas as $productData) {
                 $this->getCurrentCart()->updateQty(0, $productData['id_product'], $productData['id_product_attribute']);
             }
+            // delete cart
+            $this->getCurrentCart()->delete();
         }
     }
 
+    /**
+     * @Then Product count in my cart should be :productCount
+     */
+    public function productCountInMyCartShouldBe($productCount)
+    {
+        $currentCartProducts = $this->getCurrentCart()->getProducts(true);
+        if ($productCount != count($currentCartProducts)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $productCount,
+                    count($currentCartProducts)
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then Total product count in my cart should be :productCount
+     */
+    public function totalProductCountInMyCartShouldBe($productCount)
+    {
+        $currentCartProducts = Cart::getNbProducts($this->getCurrentCart()->id);
+        if ($productCount != $currentCartProducts) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $productCount,
+                    $currentCartProducts
+                )
+            );
+        }
+    }
 }

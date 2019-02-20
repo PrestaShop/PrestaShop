@@ -31,7 +31,7 @@ use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 use Product;
 
 /**
- * behat equivalent : Scenarii/Cart/add_standard_product.feature
+ * behat equivalent : Scenarii/Cart/Adding/Product/add_standard_product.feature
  */
 class AddStandardProductTest extends AbstractCartTest
 {

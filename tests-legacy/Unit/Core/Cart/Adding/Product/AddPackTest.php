@@ -33,7 +33,7 @@ use Product;
 use StockAvailable;
 
 /**
- * behat equivalent : Scenarii/Cart/add_pack.feature
+ * behat equivalent : Scenarii/Cart/Adding/Product/add_pack.feature
  */
 class AddPackTest extends AbstractCartTest
 {
