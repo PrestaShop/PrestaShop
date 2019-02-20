@@ -28,7 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\AddEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
 
 /**
  * Handles submitted employee form's data.
@@ -96,6 +100,27 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        // TODO: Implement update() method.
+        $command = (new EditEmployeeCommand($id))
+            ->setFirstName(new FirstName($data['firstname']))
+            ->setLastName(new LastName($data['lastname']))
+            ->setEmail(new Email($data['email']))
+            ->setIsSubscribedToNewsletter((bool) $data['optin'])
+            ->setDefaultPageId((int) $data['default_page'])
+            ->setLanguageId((int) $data['language'])
+            ->setActive((bool) $data['active'])
+            ->setProfileId((int) $data['profile'])
+        ;
+
+        if (isset($data['shop_association'])) {
+            $shopAssociation = $data['shop_association'] ?: [];
+            $command->setShopAssociation(
+                array_map(function ($shopId) { return (int) $shopId; }, $shopAssociation)
+            );
+        }
+
+        /** @var EmployeeId $employeeId */
+        $employeeId = $this->bus->handle($command);
+
+        return $employeeId->getValue();
     }
 }

@@ -59,7 +59,7 @@ admin_employees_create:
 
 admin_employees_edit:
   path: /{employeeId}/edit
-  methods: [GET]
+  methods: [GET,POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:edit'
     _legacy_controller: AdminEmployees
