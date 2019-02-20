@@ -528,9 +528,9 @@ form#importDropzone {
 
 .hook-panel {
   margin-bottom: 10px !important;
-  border: solid #E6E6E6 1px;
-  box-shadow: rgba(black,0.10) 0 -2px 0 inset;
-  border-radius: 3px;
+  // border: solid #E6E6E6 1px;
+  // box-shadow: rgba(black,0.10) 0 -2px 0 inset;
+  // border-radius: 3px;
   padding: 10px 10px 5px 10px;
 
   .highlight {
@@ -569,22 +569,98 @@ form#importDropzone {
     display: table;
     width: 100%;
     padding: 5px 0;
-    margin-bottom: -1px;
-    border: solid 1px #9ed0ec;
+    // margin-bottom: -1px;
+    border-bottom: solid 1px #bbcdd2;
     background: #fff;
+    &:hover{
+      background-color: #fafbfc;
 
+      .drag_indicator{
+        color: #b3c7cd;
+        opacity: 1;
+      }
+    }
+    &:focus{
+      outline: none;
+    }
+    &:active,&:visited{
+      border-radius: 3px;
+      box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+      background-color: #6c868e;
+
+      .module-name,
+      .module-description{
+        color: #fff;
+        .text-muted{
+          color: #fff !important;
+        }
+      }
+      .module-column-actions{
+        i{
+          color: #fff;
+        }
+      }
+
+      .drag_indicator{
+        color: #fff;
+        opacity: 1;
+      } 
+      .selectbox{
+        border-color: #fff;
+      }
+    }
     &.draggable {
-      cursor: pointer;
+      cursor: all-scroll;
     }
   }
 
   .module-column-select {
     display: table-cell;
-    width: 22px;
+    // width: 22px;
+    width: 90px;
     min-height: 35px;
     vertical-align: middle;
-    text-align: center;
-    border-right: 1px solid #ddd;
+    // text-align: center;
+    // border-right: 1px solid #ddd;
+      // text-align: right;
+    padding: 0 10px;
+      .drag_indicator{
+        opacity: 0;
+      }
+      input[type="checkbox"]{
+        display:none;
+        
+      }
+ 
+      .selectbox{
+        width:16px;
+        height: 16px;
+        border:1.5px solid #bbcdd2;
+        border-radius: 2px;
+        vertical-align: middle;
+        margin: 0;
+        position: relative;
+      //   &:before{
+      //     width:100%;
+      //     height: 100%;
+      //     content:'';
+      //     position: absolute;
+      //   }
+        .done{
+          opacity: 0;
+          color:#fff;
+          margin-top: -14px;
+          font-size: 1.1em;
+          margin-left: -1px;
+        }
+      }
+      input[type="checkbox"]:checked ~ label{
+        background-color: #25b9d7;
+        border-color: #25b9d7;
+        .done{
+          opacity: 1;
+        }
+      }
   }
 
   .module-column-position {
@@ -594,14 +670,16 @@ form#importDropzone {
     text-align: right;
 
     .index-position {
-      border: solid 1px #ccc;
-      background-color: #eee;
+      border: solid 1px #bbcdd2;
+      background-color: #fff;
       padding: 0 5px;
       font-size: 1em;
-      color: #aaa;
-      text-shadow: white 1px 1px;
-      border-radius: 3px;
-      box-shadow: rgba(0,0,0,0.2) 0 1px 3px inset;
+      width: 40px;
+      font-size: 1em;
+      // color: #aaa;
+      // text-shadow: white 1px 1px;
+      // border-radius: 3px;
+      // box-shadow: rgba(0,0,0,0.2) 0 1px 3px inset;
     }
   }
 
@@ -611,21 +689,33 @@ form#importDropzone {
     text-align: center;
     vertical-align: middle;
     img {
-      max-width: 57px;
+      max-width: 40px;
     }
   }
 
-  .module-column-infos {
+  .module-column-infos,
+  .module-column-description {
     display: table-cell;
     height: 50px;
     vertical-align: middle;
+    font-size:.95em;
     .module-name {
-      font-size: 1.2em;
+      // font-size: 1.2em;
+      color: #25b9d7;
     }
 
     .module-description {
-      @extend .text-muted;
+      color: #363a41;
+      // font-size: 1.15em;
     }
+  }
+
+  .module-column-infos{
+      width: 200px;
+      padding: 0 4px;
+  }
+  .module-column-description{
+    width: 679px;
   }
 
   .module-column-actions {
@@ -635,6 +725,10 @@ form#importDropzone {
     text-align: right;
     .btn-group {
       text-align: right;
+      .btn-outline-primary{
+        border: none;
+        color: #6c868e;
+      }
     }
   }
 
