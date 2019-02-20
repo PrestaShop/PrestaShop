@@ -31,6 +31,9 @@ use Customization;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 use Product;
 
+/**
+ * behat equivalent : Scenarii/Cart/add_customization.feature
+ */
 class AddCustomizationTest extends AbstractCartTest
 {
     protected $customizations = [];

@@ -1,22 +1,15 @@
 <?php
 
-namespace Tests\Integration\Behaviour\Features\Context;
+namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Behat\Behat\Context\Context as BehatContext;
-use Behat\Behat\Tester\Exception\PendingException;
 use Configuration;
-use Pack;
-use Product;
-use StockAvailable;
 
-class ConfigurationFeatureContext implements BehatContext
+abstract class AbstractConfigurationFeatureContext implements BehatContext
 {
     protected $previousConfiguration = [];
 
-    /**
-     * @Given Shop configuration of :index is set to :value
-     */
-    public function shopConfigurationOfIsSetTo($index, $value)
+    protected function setConfiguration($index, $value)
     {
         $this->previousConfiguration[$index] = Configuration::get($index);
         Configuration::set($index, $value);
