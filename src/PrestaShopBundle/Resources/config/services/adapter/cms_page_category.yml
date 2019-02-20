@@ -50,3 +50,8 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection
 
+    prestashop.adapter.cms_page.categories_provider:
+        class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CategoriesProvider'
+        arguments:
+          - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+

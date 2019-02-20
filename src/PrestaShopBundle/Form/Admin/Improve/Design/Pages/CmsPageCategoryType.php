@@ -19,6 +19,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 class CmsPageCategoryType extends AbstractType
 {
     /**
+     * @var array
+     */
+    private $allCmsCategories;
+
+    public function __construct(array $allCmsCategories)
+    {
+        $this->allCmsCategories = $allCmsCategories;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -30,6 +40,8 @@ class CmsPageCategoryType extends AbstractType
             ])
             ->add('parent_category', MaterialChoiceTreeType::class, [
                 'required' => false,
+                'choices_tree' => $this->allCmsCategories,
+                'choice_value' => 'id_cms_category',
             ])
             ->add('description', TranslatableType::class, [
                 'required' => false,
