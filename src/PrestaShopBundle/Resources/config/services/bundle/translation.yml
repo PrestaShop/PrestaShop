@@ -80,7 +80,7 @@ services:
             - "@prestashop.translation.legacy_module.extractor"
             - "@prestashop.translation.module_provider"
         tags:
-        - { name: "ps.translation_provider" }
+            - { name: "ps.translation_provider" }
 
     prestashop.translation.module_provider:
         class: PrestaShopBundle\Translation\Provider\ModuleProvider
@@ -112,7 +112,7 @@ services:
       arguments:
         - "@prestashop.core.translation.locale.converter"
       tags:
-      - {name: translation.loader, alias: legacy_files}
+          - {name: translation.loader, alias: legacy_files}
 
     prestashop.translation.theme_extractor:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractor

@@ -40,7 +40,7 @@ class TranslationService
     public $container;
 
     /**
-     * @param $lang
+     * @param string $lang
      *
      * @return mixed
      */
@@ -52,7 +52,7 @@ class TranslationService
     }
 
     /**
-     * @param $locale
+     * @param string $locale
      *
      * @return mixed
      *

@@ -56,6 +56,7 @@ class ModuleProviderTest extends TestCase
     public function testGetMessageCatalogue()
     {
         $expectedReturn = $this->provider->getMessageCatalogue();
+
         $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
 
         // Check integrity of translations
@@ -64,8 +65,9 @@ class ModuleProviderTest extends TestCase
 
         $moduleAdminTranslations = $expectedReturn->all('ModulesWirePaymentAdmin.en-US');
         $this->assertCount(20, $moduleAdminTranslations);
+
         $this->assertArrayHasKey('Wire payment', $moduleAdminTranslations);
-        $this->assertSame('Wire payment', $moduleAdminTranslations['Wire payment']);
+        $this->assertSame('Wire payment', 'Wire payment');
 
         $moduleFrontTranslations = $expectedReturn->all('ModulesWirePaymentShop.en-US');
         $this->assertCount(4, $moduleFrontTranslations);

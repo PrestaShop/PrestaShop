@@ -122,7 +122,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
             // Do nothing as support of legacy file is deprecated
         }
 
-        if ($empty) {
+        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
         }
 
