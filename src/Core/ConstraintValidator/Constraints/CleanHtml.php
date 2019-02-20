@@ -9,10 +9,14 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\IsCleanHtmlValidator;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
 use Symfony\Component\Validator\Constraint;
 
-class IsCleanHtml extends Constraint
+/**
+ * Class CleanHtml is responsible for validating the html content to prevent from having javascript events
+ * or script tags.
+ */
+class CleanHtml extends Constraint
 {
     public $message = '%s is invalid.';
 
@@ -21,6 +25,6 @@ class IsCleanHtml extends Constraint
      */
     public function validatedBy()
     {
-        return IsCleanHtmlValidator::class;
+        return CleanHtmlValidator::class;
     }
 }
