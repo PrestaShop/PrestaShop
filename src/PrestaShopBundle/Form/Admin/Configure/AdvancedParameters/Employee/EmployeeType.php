@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Password;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\ClickableAvatarType;
 use PrestaShopBundle\Form\Admin\Type\AddonsConnectType;
@@ -42,6 +43,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email as EmployeeEmail;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -98,40 +100,21 @@ final class EmployeeType extends AbstractType
         $builder
             ->add('firstname', TextType::class, [
                 'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                    ]),
-                    new Length([
-                        'max' => FirstName::MAX_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => FirstName::MAX_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
+                    $this->getNotBlankConstraint(),
+                    $this->getLengthConstraint(FirstName::MAX_LENGTH),
                 ],
             ])
             ->add('lastname', TextType::class, [
                 'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                    ]),
-                    new Length([
-                        'max' => LastName::MAX_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => LastName::MAX_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
+                    $this->getNotBlankConstraint(),
+                    $this->getLengthConstraint(LastName::MAX_LENGTH),
                 ],
             ])
             ->add('avatar', ClickableAvatarType::class)
             ->add('email', EmailType::class, [
                 'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                    ]),
+                    $this->getNotBlankConstraint(),
+                    $this->getLengthConstraint(EmployeeEmail::MAX_LENGTH),
                     new Email([
                         'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
@@ -149,6 +132,9 @@ final class EmployeeType extends AbstractType
         } else {
             $builder->add('password', PasswordType::class, [
                 'required' => !$options['is_for_editing'],
+                'constraints' => [
+                    $this->getLengthConstraint(Password::MAX_LENGTH, Password::MIN_LENGTH),
+                ],
             ]);
         }
 
@@ -187,9 +173,7 @@ final class EmployeeType extends AbstractType
                     'required' => false,
                     'disabled' => $options['is_super_admin'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                        ]),
+                        $this->getNotBlankConstraint(),
                     ],
                 ]);
             }
@@ -221,5 +205,44 @@ final class EmployeeType extends AbstractType
             ->setAllowedTypes('is_super_admin', 'bool')
             ->setAllowedTypes('is_for_editing', 'bool')
         ;
+    }
+
+    /**
+     * @param int $maxLength
+     * @param int|null $minLength
+     *
+     * @return Length
+     */
+    private function getLengthConstraint($maxLength, $minLength = null)
+    {
+        $options = [
+            'max' => $maxLength,
+            'maxMessage' => $this->trans(
+                'This field cannot be longer than %limit% characters',
+                ['%limit%' => $maxLength],
+                'Admin.Notifications.Error'
+            ),
+        ];
+
+        if (null !== $minLength) {
+            $options['min'] = $minLength;
+            $options['minMessage'] = $this->trans(
+                'This field cannot be shorter than %limit% characters',
+                ['%limit%' => $minLength],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        return new Length($options);
+    }
+
+    /**
+     * @return NotBlank
+     */
+    private function getNotBlankConstraint()
+    {
+        return new NotBlank([
+            'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+        ]);
     }
 }

@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Password;
 
 /**
  * Adds new employee with given data
@@ -81,7 +82,7 @@ class AddEmployeeCommand
     private $shopAssociation;
 
     /**
-     * @var string
+     * @var Password
      */
     private $plainPassword;
 
@@ -118,7 +119,7 @@ class AddEmployeeCommand
         $this->active = $active;
         $this->profileId = $profileId;
         $this->shopAssociation = $shopAssociation;
-        $this->plainPassword = $plainPassword;
+        $this->plainPassword = new Password($plainPassword);
     }
 
     /**
@@ -194,7 +195,7 @@ class AddEmployeeCommand
     }
 
     /**
-     * @return string
+     * @return Password
      */
     public function getPlainPassword()
     {
