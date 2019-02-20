@@ -50,6 +50,12 @@
       text-align: left;
     }
 
+     > a{
+      &.btn-outline-secondary{
+        margin-right: 15px;
+      }
+    }
+
     button {
       background-color: white;
       border: 1px solid #899ea5;
