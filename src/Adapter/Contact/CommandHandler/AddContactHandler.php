@@ -73,7 +73,7 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
             }
 
             if (null !== $command->getLocalisedDescription()) {
-                $this->assertIsCleanHtml($command->getLocalisedDescription());
+                $this->assertDescriptionContainsCleanHtmlValues($command->getLocalisedDescription());
                 $entity->description = $command->getLocalisedDescription();
             }
 
@@ -103,7 +103,7 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
      *
      * @throws ContactConstraintException
      */
-    private function assertIsCleanHtml(array $localisedDescriptions)
+    private function assertDescriptionContainsCleanHtmlValues(array $localisedDescriptions)
     {
         foreach ($localisedDescriptions as $description) {
             $errors = $this->validator->validate($description, new CleanHtml());

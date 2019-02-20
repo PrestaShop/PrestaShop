@@ -28,19 +28,35 @@ namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
 
 use Contact;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\EditContactHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotUpdateContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShopException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class EditContactHandler is responsible for editing contact data.
  */
 final class EditContactHandler extends AbstractObjectModelHandler implements EditContactHandlerInterface
 {
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -65,6 +81,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
             }
 
             if (null !== $command->getLocalisedDescription()) {
+                $this->assertDescriptionContainsCleanHtmlValues($command->getLocalisedDescription());
                 $entity->description = $command->getLocalisedDescription();
             }
 
@@ -101,5 +118,26 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
         }
 
         return new ContactId((int) $entity->id);
+    }
+
+    /**
+     * Assets that the value should not contain script tags or javascript events.
+     *
+     * @param array $localisedDescriptions
+     *
+     * @throws ContactConstraintException
+     */
+    private function assertDescriptionContainsCleanHtmlValues(array $localisedDescriptions)
+    {
+        foreach ($localisedDescriptions as $description) {
+            $errors = $this->validator->validate($description, new CleanHtml());
+
+            if (0 !== count($errors)) {
+                throw new ContactConstraintException(
+                    sprintf('Given description "%s" contains javascript events or script tags', $description),
+                    ContactConstraintException::INVALID_DESCRIPTION
+                );
+            }
+        }
     }
 }
