@@ -67,7 +67,7 @@ class ModulesDoctrinePassListBuilder
                 if (empty($moduleNamespace)) {
                     continue;
                 }
-                $modulePrefix = 'Module'.Inflector::camelize($modulePath->getFilename());
+                $modulePrefix = 'Module' . Inflector::camelize($modulePath->getFilename());
                 $moduleEntityDirectory = realpath($modulePath . '/src/Entity');
                 $mappingPass = DoctrineOrmMappingsPass::createAnnotationMappingDriver([$moduleNamespace], [$moduleEntityDirectory], [], false, [$modulePrefix => $moduleNamespace]);
                 $mappingsPassList[$moduleEntityDirectory] = $mappingPass;

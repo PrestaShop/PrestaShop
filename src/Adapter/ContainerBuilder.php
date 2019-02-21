@@ -104,6 +104,7 @@ class ContainerBuilder
      * @param bool $isDebug
      *
      * @return ContainerInterface|SfContainerBuilder|null
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function initContainer($name, $isDebug)
@@ -144,6 +145,7 @@ class ContainerBuilder
 
     /**
      * @return SfContainerBuilder
+     *
      * @throws \Exception
      */
     private function buildContainer()
@@ -220,6 +222,7 @@ class ContainerBuilder
 
     /**
      * @param SfContainerBuilder $container
+     *
      * @throws \Exception
      */
     private function loadServices(SfContainerBuilder $container)
@@ -243,7 +246,7 @@ class ContainerBuilder
         if (null !== $moduleRepository) {
             $activeModules = $moduleRepository->getActiveModules();
             foreach ($activeModules as $module) {
-                $autoloader = _PS_ROOT_DIR_.'/modules/'.$module.'/vendor/autoload.php';
+                $autoloader = _PS_ROOT_DIR_ . '/modules/' . $module . '/vendor/autoload.php';
 
                 if (file_exists($autoloader)) {
                     include_once $autoloader;
