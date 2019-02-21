@@ -26,15 +26,51 @@
 
 namespace LegacyTests\Endpoints;
 
+use Tools;
+
 class AjaxTest extends AbstractEndpointAdminTest
 {
-    public function testAjaxEndpoint()
+    public function testAjaxEndpointForGettingNotifications()
     {
         $this->employeeLogin();
 
         $_POST['getNotifications'] = 1;
 
-        chdir(_PS_ROOT_DIR_ . '/admin-dev/');
+        ob_start();
         require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = json_decode(ob_get_clean());
+
+        $this->assertNotNull($output);
+        $this->assertObjectHasAttribute('order', $output);
+        $this->assertObjectHasAttribute('customer_message', $output);
+        $this->assertObjectHasAttribute('customer', $output);
+    }
+
+    public function testAjaxEndpointForMarkingNotificationAsRead()
+    {
+        $this->employeeLogin();
+
+        $_POST['updateElementEmployee'] = 1;
+        $_POST['updateElementEmployeeType'] = 'order';'incompatibleValue';
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = ob_get_clean();
+
+        $this->assertSame('1', $output);
+    }
+
+    public function testAjaxEndpointForMarkingNotificationAsReadButWithWrongInputData()
+    {
+        $this->employeeLogin();
+
+        $_POST['updateElementEmployee'] = 1;
+        $_POST['updateElementEmployeeType'] = 'incompatibleValue';
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = ob_get_clean();
+
+        $this->assertEmpty($output);
     }
 }

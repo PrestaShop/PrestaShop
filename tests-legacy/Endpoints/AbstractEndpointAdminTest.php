@@ -26,11 +26,22 @@
 
 namespace LegacyTests\Endpoints;
 
+
+use AppKernel;
 use Cache;
+use Context;
+use Employee;
 use PhpEncryption;
 
 abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 {
+    protected function setUp()
+    {
+        parent::setUp();
+        define('_PS_TAB_MODULE_LIST_URL_', '');
+        Context::getContext()->employee = new Employee(1);
+    }
+
     protected function employeeLogin()
     {
         $cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
