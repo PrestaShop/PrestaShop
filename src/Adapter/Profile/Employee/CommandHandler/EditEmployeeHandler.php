@@ -31,7 +31,9 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\EditEmployeeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use Shop;
 
 /**
  * Handles command which edits employee using legacy object model
@@ -86,6 +88,14 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->active = $command->isActive();
         $employee->id_profile = $command->getProfileId();
 
+        $shopAssociation = $command->getShopAssociation();
+
+        if (!$employee->isSuperAdmin() && empty($shopAssociation)) {
+            throw new MissingShopAssociationException(
+                'Employee must be associated to at least one shop.'
+            );
+        }
+
         if (null !== $command->getPlainPassword()) {
             $employee->passwd = $this->hashing->hash($command->getPlainPassword()->getValue());
         }
@@ -96,6 +106,12 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
             );
         }
 
-        $this->associateWithShops($employee, $command->getShopAssociation());
+        if ($employee->isSuperAdmin()) {
+            $shopAssociation = array_values(Shop::getShops(false, null, true));
+        }
+
+        if (null !== $shopAssociation) {
+            $this->associateWithShops($employee, $shopAssociation);
+        }
     }
 }
