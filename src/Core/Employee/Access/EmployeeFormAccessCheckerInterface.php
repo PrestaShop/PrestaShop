@@ -48,4 +48,13 @@ interface EmployeeFormAccessCheckerInterface
      * @return bool
      */
     public function isSuperAdmin($employeeId);
+
+    /**
+     * Check if context employee can access edit form for given employee.
+     *
+     * @param int $employeeId
+     *
+     * @return bool
+     */
+    public function canAccessEditFormFor($employeeId);
 }

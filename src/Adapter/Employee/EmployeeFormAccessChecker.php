@@ -72,4 +72,17 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
 
         return $employee->isSuperAdmin();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function canAccessEditFormFor($employeeId)
+    {
+        // To access super admin edit form you must be a super admin.
+        if ($this->isSuperAdmin($employeeId)) {
+            return $this->contextEmployeeProvider->isSuperAdmin();
+        }
+
+        return true;
+    }
 }
