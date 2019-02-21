@@ -776,7 +776,7 @@ class ProductLazyArray extends AbstractLazyArray
                     : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'available';
-            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] > 0) {
+            } elseif ($product['quantity_wanted'] > 1 && $product['quantity'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
                     array(),
