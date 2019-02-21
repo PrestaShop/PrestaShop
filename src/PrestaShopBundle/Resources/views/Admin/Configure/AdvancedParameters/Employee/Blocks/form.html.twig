@@ -106,7 +106,7 @@
           }) }}
         {% endif %}
 
-        {% if isRestrictedAccess %}
+        {% if isRestrictedAccess and showAddonsConnectButton %}
           {{ ps.form_group_row(employeeForm.prestashop_addons, { attr: {
             class: 'btn-outline-secondary',
           }}, {

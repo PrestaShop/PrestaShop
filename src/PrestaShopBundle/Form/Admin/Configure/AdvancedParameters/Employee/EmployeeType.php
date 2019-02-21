@@ -123,12 +123,17 @@ final class EmployeeType extends AbstractType
         ;
 
         if ($options['is_restricted_access']) {
-            $builder
-                ->add('change_password', ChangePasswordType::class)
-                ->add('prestashop_addons', AddonsConnectType::class, [
-                    'label' => $this->trans('Sign in', [], 'Admin.Advparameters.Feature'),
-                ]
-            );
+            $builder->add('change_password', ChangePasswordType::class);
+
+            if ($options['show_addons_connect_button']) {
+                $builder->add(
+                    'prestashop_addons',
+                    AddonsConnectType::class,
+                    [
+                        'label' => $this->trans('Sign in', [], 'Admin.Advparameters.Feature'),
+                    ]
+                );
+            }
         } else {
             $builder->add('password', PasswordType::class, [
                 'required' => !$options['is_for_editing'],
@@ -200,10 +205,14 @@ final class EmployeeType extends AbstractType
 
                 // Is this form used for editing the employee.
                 'is_for_editing' => false,
+
+                // Whether to show addons connect button in the form.
+                'show_addons_connect_button' => true,
             ])
             ->setAllowedTypes('is_restricted_access', 'bool')
             ->setAllowedTypes('is_super_admin', 'bool')
             ->setAllowedTypes('is_for_editing', 'bool')
+            ->setAllowedTypes('show_addons_connect_button', 'bool')
         ;
     }
 
