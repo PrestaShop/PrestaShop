@@ -68,7 +68,6 @@ class FilterTest extends TestCase
         $this->assertInternalType('array', $this->filter->toArray());
         $this->assertInternalType('integer', $this->filter->getMagnitude());
 
-
         // Facet public integrity of default Facet data
         $this->assertEmpty($this->filter->getLabel());
         $this->assertEmpty($this->filter->getType());
