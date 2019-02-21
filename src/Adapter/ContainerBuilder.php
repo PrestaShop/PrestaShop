@@ -29,10 +29,13 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Doctrine\ORM\Tools\Setup;
 use LegacyCompilerPass;
-use PrestaShopBundle\DependencyInjection\Compiler\LoadDoctrineFromModulesPassFactory;
+use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrinePassListBuilder;
 use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Resource\DirectoryResource;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
@@ -74,6 +77,11 @@ class ContainerBuilder
     private $dumpFile;
 
     /**
+     * @var ConfigCache
+     */
+    private $containerConfigCache;
+
+    /**
      * @param string $name
      * @param bool $isDebug
      *
@@ -106,11 +114,12 @@ class ContainerBuilder
         $this->environment = $this->getEnvironment();
         $this->containerClassName = ucfirst($this->containerName) . 'Container';
         $this->dumpFile = _PS_CACHE_DIR_ . $this->containerClassName . '.php';
+        $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->isDebug);
 
-        $container = null;
-        if (!$this->isDebug) {
-            $container = $this->loadDumpedContainer();
-        }
+        //Necessary to require all annotation classes from Doctrine
+        Setup::createAnnotationMetadataConfiguration([]);
+
+        $container = $this->loadDumpedContainer();
         if (null === $container) {
             $container = $this->buildContainer();
         }
@@ -124,12 +133,11 @@ class ContainerBuilder
      */
     private function loadDumpedContainer()
     {
-        if (!file_exists($this->dumpFile)) {
-            return null;
+        $container = null;
+        if ($this->containerConfigCache->isFresh()) {
+            require_once $this->dumpFile;
+            $container = new $this->containerClassName();
         }
-
-        require_once $this->dumpFile;
-        $container = new $this->containerClassName();
 
         return $container;
     }
@@ -149,11 +157,12 @@ class ContainerBuilder
 
         $container->compile();
 
-        if (!$this->isDebug) {
-            //Dump the container file
-            $dumper = new PhpDumper($container);
-            file_put_contents($this->dumpFile, $dumper->dump(array('class' => $this->containerClassName)));
-        }
+        //Dump the container file
+        $dumper = new PhpDumper($container);
+        $this->containerConfigCache->write(
+            $dumper->dump(['class' => $this->containerClassName]),
+            $container->getResources()
+        );
 
         return $container;
     }
@@ -193,17 +202,19 @@ class ContainerBuilder
         $config = require $configFile;
         $activeModules = $moduleRepository->getActiveModules();
 
-        //Necessary to require all annotation classes from Doctrine
-        Setup::createAnnotationMetadataConfiguration([]);
-
         $container->registerExtension(new DoctrineExtension());
         $container->loadFromExtension('doctrine', $config['doctrine']);
 
-        $doctrinePassFactory = new LoadDoctrineFromModulesPassFactory();
-        $compilerPassList = $doctrinePassFactory->buildCompilerPassList($activeModules);
+        $doctrinePassFactory = new ModulesDoctrinePassListBuilder($activeModules);
+        $compilerPassList = $doctrinePassFactory->getCompilerPassList($activeModules);
         /** @var CompilerPassInterface $compilerPass */
-        foreach ($compilerPassList as $compilerPass) {
+        foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
             $container->addCompilerPass($compilerPass);
+            if (is_dir($compilerResourcePath)) {
+                $container->addResource(new DirectoryResource($compilerResourcePath));
+            } elseif (is_file($compilerResourcePath)) {
+                $container->addResource(new FileResource($compilerResourcePath));
+            }
         }
     }
 
