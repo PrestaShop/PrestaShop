@@ -7,3 +7,8 @@ services:
 
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
+
+    prestashop.adapter.environment:
+      class: PrestaShop\PrestaShop\Adapter\Environment
+      arguments:
+        - !php/const _PS_MODE_DEV_
