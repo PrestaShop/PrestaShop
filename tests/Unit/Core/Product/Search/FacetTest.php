@@ -69,7 +69,6 @@ class FacetTest extends TestCase
         $this->assertInternalType('array', $this->facet->getFilters());
         $this->assertInternalType('array', $this->facet->toArray());
 
-
         // Facet public integrity of default Facet data
         $this->assertEmpty($this->facet->getLabel());
         $this->assertEmpty($this->facet->getType());

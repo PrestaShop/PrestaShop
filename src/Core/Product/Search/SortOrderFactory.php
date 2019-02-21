@@ -31,7 +31,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * This class is not a factory but a provider of default Sort Orders.
  *
- * @deprecated since 1.7.5 and to be removed in 1.8: use SortOrdersCollection:getDefaults instead.
+ * @deprecated since 1.7.6 and to be removed in the next major: use SortOrdersCollection:getDefaults instead.
  */
 class SortOrderFactory
 {
@@ -42,6 +42,10 @@ class SortOrderFactory
 
     public function __construct(TranslatorInterface $translator)
     {
+        @trigger_error(
+            'This class is deprecated since 1.7.6, use SortOrdersCollection::getDefaults instead.',
+            E_USER_DEPRECATED
+        );
         $this->translator = $translator;
     }
 
@@ -52,22 +56,6 @@ class SortOrderFactory
      */
     public function getDefaultSortOrders()
     {
-        return [
-            (new SortOrder('product', 'position', 'desc'))->setLabel(
-                $this->translator->trans('Relevance', array(), 'Shop.Theme.Catalog')
-            ),
-            (new SortOrder('product', 'name', 'asc'))->setLabel(
-                $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
-            ),
-            (new SortOrder('product', 'name', 'desc'))->setLabel(
-                $this->translator->trans('Name, Z to A', array(), 'Shop.Theme.Catalog')
-            ),
-            (new SortOrder('product', 'price', 'asc'))->setLabel(
-                $this->translator->trans('Price, low to high', array(), 'Shop.Theme.Catalog')
-            ),
-            (new SortOrder('product', 'price', 'desc'))->setLabel(
-                $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
-            ),
-        ];
+        return SortOrdersCollection::getDefaults();
     }
 }
