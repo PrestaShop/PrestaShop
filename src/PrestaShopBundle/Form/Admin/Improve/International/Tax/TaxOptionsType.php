@@ -33,14 +33,14 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Handles "Improve > International > Taxes" options form
+ * Defines "Improve > International > Taxes" options form
  */
 class TaxOptionsType extends AbstractType
 {
     /**
-     * @var array
+     * @var bool
      */
-    private $taxOptionsConfiguration;
+    private $ecoTaxEnabled;
 
     /**
      * @var FormChoiceProviderInterface
@@ -52,12 +52,19 @@ class TaxOptionsType extends AbstractType
      */
     private $taxRuleGroupChoiceProvider;
 
+    /**
+     * TaxOptionsType constructor.
+     *
+     * @param bool $ecoTaxEnabled
+     * @param FormChoiceProviderInterface $taxAddressTypeChoiceProvider
+     * @param FormChoiceProviderInterface $taxRuleGroupChoiceProvider
+     */
     public function __construct(
-        array $taxOptionsConfiguration,
+        $ecoTaxEnabled,
         FormChoiceProviderInterface $taxAddressTypeChoiceProvider,
         FormChoiceProviderInterface $taxRuleGroupChoiceProvider
     ) {
-        $this->taxOptionsConfiguration = $taxOptionsConfiguration;
+        $this->ecoTaxEnabled = $ecoTaxEnabled;
         $this->taxAddressTypeChoiceProvider = $taxAddressTypeChoiceProvider;
         $this->taxRuleGroupChoiceProvider = $taxRuleGroupChoiceProvider;
     }
@@ -75,7 +82,7 @@ class TaxOptionsType extends AbstractType
             ->add('use_eco_tax', SwitchType::class)
         ;
 
-        if ($this->taxOptionsConfiguration['use_eco_tax']) {
+        if ($this->ecoTaxEnabled) {
             $builder->add('eco_tax_rule_group', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
             ]);

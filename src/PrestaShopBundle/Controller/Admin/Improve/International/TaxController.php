@@ -61,7 +61,6 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_taxes_index"
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
