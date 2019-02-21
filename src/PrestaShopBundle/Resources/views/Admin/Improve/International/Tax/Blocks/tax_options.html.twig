@@ -65,10 +65,12 @@
           {{ 'Use ecotax'|trans({}, 'Admin.International.Feature') }}
         </label>
         <div class="col-sm">
-          <small class="form-text">
-            {{ 'If you disable the ecotax, the ecotax for all your products will be set to 0.'|trans({}, 'Admin.International.Help') }}
-          </small>
           {{ form_widget(taxOptionsForm.options.use_eco_tax) }}
+          {% if (taxOptionsForm.options.use_eco_tax.vars.value != 0) %}
+            <small class="form-text">
+              {{ 'If you disable the ecotax, the ecotax for all your products will be set to 0.'|trans({}, 'Admin.International.Help') }}
+            </small>
+          {% endif %}
         </div>
       </div>
       {% if taxOptionsForm.options.eco_tax_rule_group is defined %}
