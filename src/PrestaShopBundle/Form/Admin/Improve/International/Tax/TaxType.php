@@ -59,8 +59,17 @@ class TaxType extends AbstractType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                //@todo: DefaultLanguage constraint
                 'options' => [
                     'constraints' => [
+                        new Length([
+                            'max' => 32,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 32],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->translator->trans(
@@ -71,28 +80,22 @@ class TaxType extends AbstractType
                                 'Admin.Notifications.Error'
                             ),
                         ]),
-                        new NotBlank([
-                            'message' => $this->translator->trans(
-                                'The %s field is required.',
-                                [
-                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
-                                ],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]),
-                        new Length([
-                            'max' => 32,
-                            'maxMessage' => $this->translator->trans(
-                                'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 32],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]),
                     ],
                 ],
             ])
             ->add('rate', TextType::class, [
                 'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->translator->trans(
+                                    'Rate', [], 'Admin.International.Feature'
+                                )),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
                     new Length([
                         'max' => 6,
                         'maxMessage' => $this->translator->trans(
@@ -106,17 +109,6 @@ class TaxType extends AbstractType
                         'message' => $this->translator->trans(
                             'This field is invalid, it must contain numeric values',
                             [],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                    new NotBlank([
-                        'message' => $this->translator->trans(
-                            'The %s field is required.',
-                            [
-                                sprintf('"%s"', $this->translator->trans(
-                                    'Rate', [], 'Admin.International.Feature'
-                                )),
-                            ],
                             'Admin.Notifications.Error'
                         ),
                     ]),
