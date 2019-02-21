@@ -655,7 +655,9 @@ class CartCore extends ObjectModel
         // Build SELECT
         $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, cp.`id_customization`, pl.`name`, p.`is_virtual`,
                         pl.`description_short`, pl.`available_now`, pl.`available_later`, product_shop.`id_category_default`, p.`id_supplier`,
+                        pl.`quantity_name`, pl.`unit_name`, pl.`unit_name_multiplied`,
                         p.`id_manufacturer`, m.`name` AS manufacturer_name, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`,
+                        p.`quantity_step`, p.`quantity_multiplier`,
                         product_shop.`available_for_order`, product_shop.`show_price`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price_ratio`,
                         stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
                         p.`available_date`, p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
@@ -1289,6 +1291,13 @@ class CartCore extends ObjectModel
         $id_product = (int)$id_product;
         $id_product_attribute = (int)$id_product_attribute;
         $product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
+        $quantity_step = $product->quantity_step;
+        $quantity_multiplier = $product->quantity_multiplier;
+        $rest = $quantity % $quantity_step;
+        if ($rest != 0) {
+            # round up to one step
+            $quantity = $quantity - $rest + $quantity_step;
+        }
 
         if ($id_product_attribute) {
             $combination = new Combination((int)$id_product_attribute);
@@ -1355,6 +1364,10 @@ class CartCore extends ObjectModel
                         return false;
                     }
                 } else if ($operator == 'down') {
+                    if ($cartProductQuantity['quantity'] - $quantity < $minimal_quantity) {
+                        return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
+                    }
+
                     $cartFirstLevelProductQuantity = $this->getProductQuantity((int) $id_product, (int) $id_product_attribute, $id_customization);
                     $updateQuantity = '- ' . $quantity;
                     $newProductQuantity = $productQuantity + $quantity;

@@ -151,8 +151,10 @@ class ProductPresenter
 
         if ($settings->include_taxes) {
             $price = $regular_price = $product['price'];
+            $price_multiplied = $product['price_multiplied'];
         } else {
             $price = $regular_price = $product['price_tax_exc'];
+            $price_multiplied = $product['price_tax_exc_multiplied'];
         }
 
         if ($product['specific_prices']) {
@@ -178,6 +180,8 @@ class ProductPresenter
 
         $presentedProduct['price_amount'] = $price;
         $presentedProduct['price'] = $this->priceFormatter->format($price);
+        $presentedProduct['price_amount_multiplied'] = $price_multiplied;
+        $presentedProduct['price_multiplied'] = $this->priceFormatter->format($price_multiplied);
         $presentedProduct['regular_price_amount'] = $regular_price;
         $presentedProduct['regular_price'] = $this->priceFormatter->format($regular_price);
 
@@ -851,6 +855,11 @@ class ProductPresenter
             "reference_to_display",
             "delivery_in_stock",
             "delivery_out_stock",
+            "quantity_step",
+            "quantity_multiplier",
+            "quantity_name",
+            "unit_name",
+            "unit_name_multiplied",
         );
     }
 

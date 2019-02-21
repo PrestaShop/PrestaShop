@@ -128,6 +128,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'tags',
             'delivery_in_stock',
             'delivery_out_stock',
+            'quantity_name',
+            'unit_name',
+            'unit_name_multiplied',
         );
 
         //define unused key for manual binding
@@ -483,6 +486,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'id_product_attributes' => $this->getProductAttributes(),
                 'out_of_stock' => $this->product->out_of_stock,
                 'minimal_quantity' => $this->product->minimal_quantity,
+                'quantity_step' => $this->product->quantity_step,
+                'quantity_multiplier' => $this->product->quantity_multiplier,
+                'quantity_name' => $this->product->quantity_name,
+                'unit_name' => $this->product->unit_name,
+                'unit_name_multiplied' => $this->product->unit_name_multiplied,
                 'low_stock_threshold' => $this->product->low_stock_threshold,
                 'low_stock_alert' => (bool) $this->product->low_stock_alert,
                 'available_now' => $this->product->available_now,

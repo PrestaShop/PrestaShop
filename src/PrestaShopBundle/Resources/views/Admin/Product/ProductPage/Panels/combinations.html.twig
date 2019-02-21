@@ -42,11 +42,43 @@
                     </div>
                   {% endif %}
                   <div class="col-md-4">
+                    <label class="form-control-label">{{ formQuantityName.vars.label }}</label>
+                    {{ form_errors(formQuantityName) }}
+                    {{ form_widget(formQuantityName) }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
                     <label class="form-control-label">{{ formStockMinimalQuantity.vars.label }}</label>
                     <span class="help-box" data-toggle="popover"
                           data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                     {{ form_errors(formStockMinimalQuantity) }}
                     {{ form_widget(formStockMinimalQuantity) }}
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-control-label">{{ formQuantitySteps.vars.label }}</label>
+                    {{ form_errors(formQuantitySteps) }}
+                    {{ form_widget(formQuantitySteps) }}
+                  </div>
+                </div>
+              </fieldset>
+              <h3>{{ 'Quantity multipliers'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+              <fieldset class="form-group">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="form-control-label">{{ formQuantityMultiplier.vars.label }}</label>
+                    {{ form_errors(formQuantityMultiplier) }}
+                    {{ form_widget(formQuantityMultiplier) }}
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-control-label">{{ formUnitName.vars.label }}</label>
+                    {{ form_errors(formUnitName) }}
+                    {{ form_widget(formUnitName) }}
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-control-label">{{ formUnitNameMultiplied.vars.label }}</label>
+                    {{ form_errors(formUnitNameMultiplied) }}
+                    {{ form_widget(formUnitNameMultiplied) }}
                   </div>
                 </div>
               </fieldset>

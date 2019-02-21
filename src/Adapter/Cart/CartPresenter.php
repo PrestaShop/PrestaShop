@@ -117,9 +117,13 @@ class CartPresenter implements PresenterInterface
         if ($this->includeTaxes()) {
             $rawProduct['price_amount'] = $rawProduct['price_wt'];
             $rawProduct['price'] = $this->priceFormatter->format($rawProduct['price_wt']);
+            $rawProduct['price_amount_multiplied'] = (float)$rawProduct['price_wt'] / (float)$rawProduct['quantity_multiplier'];
+            $rawProduct['price_multiplied'] = $this->priceFormatter->format((float)$rawProduct['price_wt'] / (float)$rawProduct['quantity_multiplier']);
         } else {
             $rawProduct['price_amount'] = $rawProduct['price'];
             $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->priceFormatter->format($rawProduct['price']);
+            $rawProduct['price_amount_multiplied'] = (float)$rawProduct['price'] / (float)$rawProduct['quantity_multiplier'];
+            $rawProduct['price_multiplied'] = $rawProduct['price_tax_exc_multiplied'] = $this->priceFormatter->format((float)$rawProduct['price'] / (float)$rawProduct['quantity_multiplier']);
         }
 
         if ($rawProduct['price_amount'] && $rawProduct['unit_price_ratio'] > 0) {
@@ -372,6 +376,9 @@ class CartPresenter implements PresenterInterface
         );
 
         $products_count = array_reduce($products, function ($count, $product) {
+            if ((float)$product['quantity_multiplier'] != 1.0) {
+                return $count + 1;
+            }
             return $count + $product['quantity'];
         }, 0);
 

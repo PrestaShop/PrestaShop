@@ -286,6 +286,21 @@ class ProductCore extends ObjectModel
      */
     public $delivery_out_stock;
 
+    /** @var int Steps in quantity */
+    public $quantity_step = 1;
+
+    /** @var float Multiplication of quantity for display */
+    public $quantity_multiplier = 1.0;
+
+    /** @var string Quantity name */
+    public $quantity_name;
+
+    /** @var string Unit name not multiplied */
+    public $unit_name;
+
+    /** @var string Unit name multiplied */
+    public $unit_name_multiplied;
+
     public static $_taxCalculationMethod = null;
     protected static $_prices = array();
     protected static $_pricesLevel2 = array();
@@ -347,6 +362,10 @@ class ProductCore extends ObjectModel
                 'size' => 255
             ),
 
+            'quantity_multiplier' =>      array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            #TODO: make multishop?
+            'quantity_step' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+
             /* Shop fields */
             'id_category_default' =>      array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
             'id_tax_rules_group' =>       array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
@@ -400,6 +419,9 @@ class ProductCore extends ObjectModel
             'description_short' =>  array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'available_now' =>      array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'available_later' =>    array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
+            'quantity_name' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
+            'unit_name' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
+            'unit_name_multiplied' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
         ),
         'associations' => array(
             'manufacturer' =>        array('type' => self::HAS_ONE),
@@ -1306,14 +1328,14 @@ class ProductCore extends ObjectModel
             $order_by_prefix = $order_by[0];
             $order_by = $order_by[1];
         }
-        $sql = 'SELECT p.*, product_shop.*, pl.* , m.`name` AS manufacturer_name, s.`name` AS supplier_name
+        $sql = 'SELECT p.*, product_shop.*, pl.*, m.`name` AS manufacturer_name, s.`name` AS supplier_name
 				FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)'.
                 ($id_category ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` c ON (c.`id_product` = p.`id_product`)' : '').'
-				WHERE pl.`id_lang` = '.(int)$id_lang.
+                WHERE pl.`id_lang` = '.(int)$id_lang.
                     ($id_category ? ' AND c.`id_category` = '.(int)$id_category : '').
                     ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').
                     ($only_active ? ' AND product_shop.`active` = 1' : '').'
@@ -2556,6 +2578,7 @@ class ProductCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select(
             'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
+            p.`quantity_step`, p.`quantity_multiplier`, pl.`quantity_name`, pl.`unit_name`, pl.`unit_name_multiplied`,
 			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
 			(DATEDIFF(product_shop.`date_add`,
 				DATE_SUB(
@@ -2697,6 +2720,7 @@ class ProductCore extends ObjectModel
             // no group by needed : there's only one attribute with cover=1 for a given id_product + shop
             $sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
+                        p.`quantity_step`, p.`quantity_multiplier`, pl.`quantity_name`, pl.`unit_name`, pl.`unit_name_multiplied`,
 						p.`ean13`, p.`isbn`, p.`upc`, image_shop.`id_image` id_image, il.`legend`,
 						DATEDIFF(product_shop.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00",
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
@@ -2820,6 +2844,7 @@ class ProductCore extends ObjectModel
 			IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
 			pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 			pl.`name`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
+            p.`quantity_step`, p.`quantity_multiplier`, pl.`quantity_name`, pl.`unit_name`, pl.`unit_name_multiplied`,
 			DATEDIFF(
 				p.`date_add`,
 				DATE_SUB(
@@ -3893,7 +3918,8 @@ class ProductCore extends ObjectModel
     public function getAccessories($id_lang, $active = true)
     {
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
-					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
+					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`,pl.`available_later`,
+                    p.`quantity_step`, p.`quantity_multiplier`, pl.`quantity_name`, pl.`unit_name`, pl.`unit_name_multiplied`,
 					image_shop.`id_image` id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default, IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
 					DATEDIFF(
 						p.`date_add`,
@@ -4656,6 +4682,19 @@ class ProductCore extends ObjectModel
             true,
             $quantity
         );
+        $row['price_tax_exc_multiplied'] = Tools::ps_round(
+            Product::getPriceStatic(
+                (int)$row['id_product'],
+                false,
+                $id_product_attribute,
+                8,
+                null,
+                false,
+                true,
+                $quantity
+            ) / (float)$row['quantity_multiplier'],
+            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6)
+        );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
             $row['price_tax_exc'] = Tools::ps_round($row['price_tax_exc'], 2);
@@ -4678,6 +4717,32 @@ class ProductCore extends ObjectModel
                 false,
                 false,
                 $quantity
+            );
+            $row['price_multiplied'] = Tools::ps_round(
+                Product::getPriceStatic(
+                    (int)$row['id_product'],
+                    true,
+                    $id_product_attribute,
+                    8,
+                    null,
+                    false,
+                    true,
+                    $quantity
+                ) / (float)$row['quantity_multiplier'],
+                6
+            );
+            $row['price_without_reduction_multiplied'] = Tools::ps_round(
+                Product::getPriceStatic(
+                    (int)$row['id_product'],
+                    false,
+                    $id_product_attribute,
+                    8,
+                    null,
+                    false,
+                    false,
+                    $quantity
+                ) / (float)$row['quantity_multiplier'],
+                2
             );
         } else {
             $row['price'] = Tools::ps_round(
@@ -4702,6 +4767,32 @@ class ProductCore extends ObjectModel
                 false,
                 false,
                 $quantity
+            );
+            $row['price_multiplied'] = Tools::ps_round(
+                Product::getPriceStatic(
+                    (int)$row['id_product'],
+                    true,
+                    $id_product_attribute,
+                    8,
+                    null,
+                    false,
+                    true,
+                    $quantity
+                ) / (float)$row['quantity_multiplier'],
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION')
+            );
+            $row['price_without_reduction_multiplied'] = Tools::ps_round(
+                Product::getPriceStatic(
+                    (int)$row['id_product'],
+                    true,
+                    $id_product_attribute,
+                    8,
+                    null,
+                    false,
+                    false,
+                    $quantity
+                ) / (float)$row['quantity_multiplier'],
+                6
             );
         }
 
@@ -6100,7 +6191,7 @@ class ProductCore extends ObjectModel
                 COUNT(pa.id_product) = ' . count($idAttributes)
         );
 
-        if ($idProductAttribute === false && $find_best) {
+        if ($idProductAttribute === false && $findBest) {
             //find the best possible combination
             //first we order $idAttributes by the group position
             $orderred = array();

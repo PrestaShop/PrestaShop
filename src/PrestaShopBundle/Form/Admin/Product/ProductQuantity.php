@@ -160,6 +160,63 @@ class ProductQuantity extends CommonAbstractType
                 )
             )
             ->add(
+                'quantity_step',
+                FormType\NumberType::class,
+                array(
+                    'required' => true,
+                    'label' => $this->translator->trans('Minimal quantity steps allowed', [], 'Admin.Catalog.Feature'),
+                    'constraints' => array(
+                        new Assert\NotBlank(),
+                        new Assert\Type(array('type' => 'numeric')),
+                    ),
+                )
+            )
+            ->add(
+                'quantity_multiplier',
+                FormType\NumberType::class,
+                array(
+                    'required' => true,
+                    'label' => $this->translator->trans('Multiplier for showing quantity', [], 'Admin.Catalog.Feature'),
+                    'constraints' => array(
+                        new Assert\NotBlank(),
+                        new Assert\Type(array('type' => 'float')),
+                    ),
+                )
+            )
+            ->add(
+                'quantity_name',
+                TranslateType::class,
+                array(
+                    'type' => FormType\TextType::class,
+                    'options' => [],
+                    'locales' => $this->locales,
+                    'hideTabs' => true,
+                    'label' => $this->translator->trans('Quantity name', [], 'Admin.Catalog.Feature'),
+                )
+            )
+            ->add(
+                'unit_name',
+                TranslateType::class,
+                array(
+                    'type' => FormType\TextType::class,
+                    'options' => [],
+                    'locales' => $this->locales,
+                    'hideTabs' => true,
+                    'label' => $this->translator->trans('Unit name', [], 'Admin.Catalog.Feature'),
+                )
+            )
+            ->add(
+                'unit_name_multiplied',
+                TranslateType::class,
+                array(
+                    'type' => FormType\TextType::class,
+                    'options' => [],
+                    'locales' => $this->locales,
+                    'hideTabs' => true,
+                    'label' => $this->translator->trans('Unit name when multiplied', [], 'Admin.Catalog.Feature'),
+                )
+            )
+            ->add(
                 'low_stock_threshold',
                 FormType\NumberType::class,
                 array(
