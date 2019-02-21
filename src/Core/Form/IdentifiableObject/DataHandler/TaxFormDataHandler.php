@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
@@ -55,7 +56,16 @@ final class TaxFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        //@todo: implement create
+        $command = new AddTaxCommand(
+            $data['name'],
+            (float) $data['rate'],
+            (bool) $data['is_enabled']
+        );
+
+        /** @var TaxId $taxId */
+        $taxId = $this->commandBus->handle($command);
+
+        return $taxId->getValue();
     }
 
     /**
@@ -70,10 +80,12 @@ final class TaxFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new EditTaxCommand($id);
-        $command->setName($data['name']);
-        $command->setRate((float) $data['rate']);
-        $command->setEnabled((bool) $data['is_enabled']);
+        $command = new EditTaxCommand(
+            $id,
+            $data['name'],
+            (float) $data['rate'],
+            (bool) $data['is_enabled']
+        );
 
         /** @var TaxId $taxId */
         $taxId = $this->commandBus->handle($command);

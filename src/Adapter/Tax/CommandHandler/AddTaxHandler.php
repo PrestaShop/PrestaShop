@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
-use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\EditTaxHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\AddTaxHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use PrestaShopException;
@@ -37,31 +37,30 @@ use Tax;
 /**
  * Handles command which is responsible for tax editing
  */
-final class EditTaxHandler extends AbstractTaxHandler implements EditTaxHandlerInterface
+final class AddTaxHandler extends AbstractTaxHandler implements AddTaxHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws TaxException
      */
-    public function handle(EditTaxCommand $command)
+    public function handle(AddTaxCommand $command)
     {
-        $tax = new Tax($command->getTaxId()->getValue());
-        $this->assertTaxWasFound($command->getTaxId(), $tax);
+        $tax = new Tax();
 
         $tax->name = $command->getName();
         $tax->rate = $command->getRate();
         $tax->active = $command->isEnabled();
 
         try {
-            if (!$tax->update()) {
+            if (!$tax->save()) {
                 throw new TaxException(
-                    sprintf('Cannot update tax with id "%s"', $tax->id)
+                    sprintf('Cannot create tax with id "%s"', $tax->id)
                 );
             }
         } catch (PrestaShopException $e) {
             throw new TaxException(
-                sprintf('Cannot update tax with id "%s"', $tax->id)
+                sprintf('Cannot create tax with id "%s"', $tax->id)
             );
         }
 

@@ -85,6 +85,36 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
+     * Handles tax creation
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
+        $taxFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_form_builder');
+
+        $taxForm = $taxFormBuilder->getForm();
+        $taxForm->handleRequest($request);
+        try {
+            $result = $taxFormHandler->handle($taxForm);
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_taxes_index');
+            }
+        } catch (TaxException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Tax/create.html.twig', [
+            'taxForm' => $taxForm->createView(),
+        ]);
+    }
+
+    /**
      * Gets error messages for exceptions
      *
      * @return array

@@ -68,6 +68,8 @@ final class TaxFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [];
+        return [
+            'is_enabled' => false,
+        ];
     }
 }

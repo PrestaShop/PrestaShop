@@ -13,3 +13,10 @@ admin_taxes_edit:
     _legacy_controller: AdminTaxes
   requirements:
     taxId: \d+
+
+admin_taxes_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:create'
+    _legacy_controller: AdminTaxes
