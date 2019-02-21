@@ -26,8 +26,10 @@
 
 namespace Tests\Integration\Adapter;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ContainerBuilderTest extends TestCase
 {
@@ -35,5 +37,21 @@ class ContainerBuilderTest extends TestCase
     {
         $container = ContainerBuilder::getContainer('front', true);
         $this->assertNotNull($container);
+        $this->assertInstanceOf(ContainerInterface::class, $container);
+
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+        $this->assertNotNull($entityManager);
+        $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
+    }
+
+    public function testGetAdminContainer()
+    {
+        $container = ContainerBuilder::getContainer('admin', true);
+        $this->assertNotNull($container);
+        $this->assertInstanceOf(ContainerInterface::class, $container);
+
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+        $this->assertNotNull($entityManager);
+        $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
     }
 }

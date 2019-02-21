@@ -4,12 +4,12 @@ imports:
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/common.yml }
 
 services:
-  hashing:
-    class: PrestaShop\PrestaShop\Core\Crypto\Hashing
+    hashing:
+        class: PrestaShop\PrestaShop\Core\Crypto\Hashing
 
-  prestashop.database.naming_strategy:
-    class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
-    arguments: ['%database_prefix%']
+    prestashop.database.naming_strategy:
+        class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
+        arguments: ['%database_prefix%']
 
-  annotation_reader:
-    class: Doctrine\Common\Annotations\AnnotationReader
+    annotation_reader:
+        class: Doctrine\Common\Annotations\AnnotationReader

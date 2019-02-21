@@ -230,9 +230,7 @@ class ContainerBuilder
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $servicesPath = _PS_CONFIG_DIR_ . sprintf('services/%s/services_%s.yml', $this->containerName, $this->environment);
-        if (file_exists($servicesPath)) {
-            $loader->load($servicesPath);
-        }
+        $loader->load($servicesPath);
     }
 
     /**
