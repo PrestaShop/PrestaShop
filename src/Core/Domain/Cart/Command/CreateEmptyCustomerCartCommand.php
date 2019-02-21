@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
  * Creates empty cart with given defaults for customer
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 class CreateEmptyCustomerCartCommand
 {
     /**
-     * @var CartId
+     * @var CustomerId
      */
     private $customerId;
 
@@ -43,11 +43,11 @@ class CreateEmptyCustomerCartCommand
      */
     public function __construct($customerId)
     {
-        $this->customerId = $customerId;
+        $this->customerId = new CustomerId($customerId);
     }
 
     /**
-     * @return CartId
+     * @return CustomerId
      */
     public function getCustomerId()
     {
