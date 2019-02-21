@@ -27,11 +27,15 @@
 namespace PrestaShopBundle\Kernel;
 
 use Doctrine\DBAL\DriverManager;
+use PrestaShop\PrestaShop\Adapter\Environment;
 
 /**
- * Class ModuleRepositoryFactory is used to build the ModuleRepository in context where symfony
- * container is not available or not yet initialised (ex: AppKernel, PrestaShop\PrestaShop\Adapter\ContainerBuilder).
- * This factory is able to fetch the necessary parameters itself and builds the database connection for ModuleRepository
+ * Class ModuleRepositoryFactory is used to build the ModuleRepository in context where symfony container is not
+ * available or not yet initialised (ex: AppKernel, PrestaShop\PrestaShop\Adapter\ContainerBuilder).
+ * This factory is able to fetch the necessary parameters itself and builds the database connection for ModuleRepository.
+ *
+ * WARNING: this factory is only to be used in the specific cases mentioned above, for any other case please use the
+ * 'prestashop.module_kernel.repository' or 'prestashop.bundle.repository.module' depending on your needs.
  */
 class ModuleRepositoryFactory
 {
@@ -70,22 +74,16 @@ class ModuleRepositoryFactory
     }
 
     /**
-     * @param array|null $parameters
      * @param string|null $environment
+     * @param array|null $parameters
      */
-    public function __construct(array $parameters = null, $environment = null)
+    public function __construct($environment = null, array $parameters = null)
     {
-        $this->parameters = $parameters;
-        if (null === $environment) {
-            if (!empty($_SERVER['APP_ENV'])) {
-                $environment = $_SERVER['APP_ENV'];
-            } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-                $environment = 'test';
-            } else {
-                $environment = defined(_PS_MODE_DEV_) && _PS_MODE_DEV_ ? 'dev' : 'prod';
-            }
-        }
         $this->environment = $environment;
+        if (null === $environment) {
+            $this->environment = (new Environment())->getEnvironment();
+        }
+        $this->parameters = $parameters;
     }
 
     /**
@@ -145,6 +143,9 @@ class ModuleRepositoryFactory
     {
         if (null === $this->parameters && !empty($this->getParametersFile())) {
             $config = require $this->getParametersFile();
+            if ('test' === $this->environment) {
+                $config['parameters']['database_name'] = 'test_' . $config['parameters']['database_name'];
+            }
 
             $this->parameters = $config['parameters'];
         }

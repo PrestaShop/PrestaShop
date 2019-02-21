@@ -58,17 +58,17 @@ class ModulesDoctrinePassListBuilder
     public function getCompilerPassList()
     {
         $mappingsPassList = [];
-        /** @var SplFileInfo $modulePath */
-        foreach ($this->getModulesPaths() as $modulePath) {
-            if (in_array($modulePath->getFilename(), $this->activeModules)
-                && is_dir($modulePath . '/src/Entity')
+        /** @var SplFileInfo $moduleFolder */
+        foreach ($this->getModulesFolders() as $moduleFolder) {
+            if (in_array($moduleFolder->getFilename(), $this->activeModules)
+                && is_dir($moduleFolder . '/src/Entity')
             ) {
-                $moduleNamespace = $this->getModuleNamespace($modulePath);
+                $moduleNamespace = $this->getModuleNamespace($moduleFolder);
                 if (empty($moduleNamespace)) {
                     continue;
                 }
-                $modulePrefix = 'Module' . Inflector::camelize($modulePath->getFilename());
-                $moduleEntityDirectory = realpath($modulePath . '/src/Entity');
+                $modulePrefix = 'Module' . Inflector::camelize($moduleFolder->getFilename());
+                $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
                 $mappingPass = DoctrineOrmMappingsPass::createAnnotationMappingDriver([$moduleNamespace], [$moduleEntityDirectory], [], false, [$modulePrefix => $moduleNamespace]);
                 $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
             }
@@ -78,14 +78,14 @@ class ModulesDoctrinePassListBuilder
     }
 
     /**
-     * @param SplFileInfo $modulePath
+     * @param SplFileInfo $moduleFolder
      *
      * @return string
      */
-    private function getModuleNamespace(SplFileInfo $modulePath)
+    private function getModuleNamespace(SplFileInfo $moduleFolder)
     {
         $finder = new Finder();
-        $finder->files()->in($modulePath->getRealPath() . DIRECTORY_SEPARATOR . 'src/Entity')->name('*.php');
+        $finder->files()->in($moduleFolder->getRealPath() . DIRECTORY_SEPARATOR . 'src/Entity')->name('*.php');
         foreach ($finder as $phpFile) {
             $phpContent = file_get_contents($phpFile->getRealPath());
             if (false !== preg_match('~namespace[ \t]+(.+)[ \t]*;~Um', $phpContent, $matches)) {
@@ -99,7 +99,7 @@ class ModulesDoctrinePassListBuilder
     /**
      * @return Finder
      */
-    private function getModulesPaths()
+    private function getModulesFolders()
     {
         return Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
     }
