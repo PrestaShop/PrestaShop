@@ -26,12 +26,40 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Cart;
+use Configuration;
+use Context;
+use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCartForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCartForCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
 final class CreateEmptyCartForCustomerHandler implements CreateEmptyCartForCustomerHandlerInterface
 {
     public function handle(CreateEmptyCartForCustomerCommand $command)
     {
+        $customer = new Customer($command->getCustomerId()->getValue());
+        $cart = new Cart();
+
+        $cart->recyclable = 0;
+        $cart->gift = 0;
+
+        $cart->id_customer = $customer->id;
+        $cart->secure_key = $customer->secure_key;
+
+        $cart->id_shop = (int) Context::getContext()->shop->id;
+        $cart->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+
+        $addresses = $customer->getAddresses($cart->id_lang);
+        $addressId = !empty($addresses) ? (int) reset($addresses)['id_address'] : null;
+
+        $cart->id_address_delivery = $addressId;
+        $cart->id_address_invoice = $addressId;
+
+        $cart->setNoMultishipping();
+        $cart->save();
+
+        return new CartId((int) $cart->id);
     }
 }
