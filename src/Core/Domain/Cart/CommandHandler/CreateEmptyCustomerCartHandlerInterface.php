@@ -24,33 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 
-/**
- * Creates empty cart with given defaults for customer
- */
-class CreateEmptyCartForCustomerCommand
+interface CreateEmptyCustomerCartHandlerInterface
 {
-    /**
-     * @var CartId
-     */
-    private $customerId;
-
-    /**
-     * @param int $customerId
-     */
-    public function __construct($customerId)
-    {
-        $this->customerId = $customerId;
-    }
-
-    /**
-     * @return CartId
-     */
-    public function getCustomerId()
-    {
-        return $this->customerId;
-    }
+    public function handle(CreateEmptyCustomerCartCommand $command);
 }
