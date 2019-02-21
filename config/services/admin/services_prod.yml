@@ -4,6 +4,7 @@ imports:
 services:
     filesystem:
         class: Symfony\Component\Filesystem\Filesystem
+
     finder:
         class: Symfony\Component\Finder\Finder
 
@@ -24,16 +25,6 @@ services:
     theme_manager:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
         arguments: ["@shop", "@configuration", "@theme_validator", "@employee", "@filesystem", "@finder", "@hook_configurator"]
-
-    hashing:
-        class: PrestaShop\PrestaShop\Core\Crypto\Hashing
-
-    prestashop.database.naming_strategy:
-      class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
-      arguments: ['%database_prefix%']
-
-    annotation_reader:
-      class: Doctrine\Common\Annotations\AnnotationReader
 
     context.static:
         class: Context
