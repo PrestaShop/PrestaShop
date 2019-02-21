@@ -521,9 +521,11 @@ class LanguageCore extends ObjectModel
 
             // Database translations deletion
             $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
+            $tableNameKey = 'Tables_in_' . _DB_NAME_;
+
             foreach ($result as $row) {
-                if (isset($row['Tables_in_' . _DB_NAME_]) && !empty($row['Tables_in_' . _DB_NAME_]) && preg_match('/' . preg_quote(_DB_PREFIX_) . '_lang/', $row['Tables_in_' . _DB_NAME_])) {
-                    if (!Db::getInstance()->execute('DELETE FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $this->id)) {
+                if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey]) && preg_match('/_lang$/', $row[$tableNameKey])) {
+                    if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id)) {
                         return false;
                     }
                 }
