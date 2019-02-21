@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
@@ -293,12 +294,13 @@ class EmployeeController extends FrameworkBundleAdminController
         }
 
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
+        $canAccessAddonsConnect = $formAccessChecker->canAccessAddonsConnect();
 
         $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
             'is_restricted_access' => $isRestrictedAccess,
             'is_super_admin' => $formAccessChecker->isSuperAdmin($employeeId),
             'is_for_editing' => true,
-            'show_addons_connect_button' => $formAccessChecker->canAccessAddonsConnect(),
+            'show_addons_connect_button' => $canAccessAddonsConnect,
         ]);
 
         try {
@@ -319,7 +321,7 @@ class EmployeeController extends FrameworkBundleAdminController
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
             'isRestrictedAccess' => $isRestrictedAccess,
-            'showAddonsConnectButton' => $formAccessChecker->canAccessAddonsConnect(),
+            'showAddonsConnectButton' => $canAccessAddonsConnect,
             'editableEmployee' => $editableEmployee,
         ];
 
@@ -381,6 +383,10 @@ class EmployeeController extends FrameworkBundleAdminController
                 [
                     '%id%' => $e instanceof CannotDeleteEmployeeException ? $e->getEmployeeId()->getValue() : 0,
                 ]
+            ),
+            MissingShopAssociationException::class => $this->trans(
+                'The employee must be associated with at least one shop.',
+                'Admin.Advparameters.Notification'
             ),
             EmployeeConstraintException::class => [
                 EmployeeConstraintException::INVALID_EMAIL => $this->trans(
