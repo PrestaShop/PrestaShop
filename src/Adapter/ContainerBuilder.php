@@ -149,9 +149,11 @@ class ContainerBuilder
 
         $container->compile();
 
-        //Dump the container file
-        $dumper = new PhpDumper($container);
-        file_put_contents($this->dumpFile, $dumper->dump(array('class' => $this->containerClassName)));
+        if (!$this->isDebug) {
+            //Dump the container file
+            $dumper = new PhpDumper($container);
+            file_put_contents($this->dumpFile, $dumper->dump(array('class' => $this->containerClassName)));
+        }
 
         return $container;
     }
