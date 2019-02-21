@@ -36,7 +36,7 @@ use ToolsCore as Tools;
 
 @trigger_error('Using '.__FILE__.' to make an ajax call is deprecated. Use a controller instead.', E_USER_DEPRECATED);
 
-require dirname(__FILE__).'/../classes/Tools.php';
+require_once dirname(__FILE__) . '/../classes/Tools.php';
 
 /**
  * Ajax calls to the controller AdminReferrers
@@ -63,7 +63,7 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $fields = array_map(function ($elem) {
         return ['field' => $elem];
     }, $import->getAvailableFields(true));
-    die(json_encode($fields));
+    echo json_encode($fields);
 }
 
 /**
@@ -128,7 +128,7 @@ if (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
     $_GET['action'] = 'emailHTML';
 }
 
-if (1 === $_GET['ajax']) {
+if (1 === Tools::getValue('ajax')) {
     require_once dirname(__FILE__).'/index.php';
 }
 
@@ -154,7 +154,6 @@ if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.co
 if (Tools::isSubmit('getNotifications')) {
     $notification = new Notification;
     echo json_encode($notification->getLastElements());
-    die(0);
 }
 
 /**
@@ -164,5 +163,5 @@ if (Tools::isSubmit('getNotifications')) {
  */
 if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
     $notification = new Notification;
-    die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
+    echo $notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType'));
 }
