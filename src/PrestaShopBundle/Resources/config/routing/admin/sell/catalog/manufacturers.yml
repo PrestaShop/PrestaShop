@@ -1,0 +1,22 @@
+admin_manufacturers_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index'
+    _legacy_controller: AdminManufacturers
+
+admin_manufacturers_create:
+  path: manufacturers/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
+    _legacy_controller: AdminManufacturers
+
+admin_manufacturers_edit:
+  path: manufacturers/{manufacturerId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:edit'
+    _legacy_controller: AdminManufacturers
+  requirements:
+    manufacturerId: \d+
