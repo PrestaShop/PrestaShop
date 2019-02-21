@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Kernel;
 
-
 use Doctrine\DBAL\DriverManager;
 
 /**
@@ -91,6 +90,7 @@ class ModuleRepositoryFactory
 
     /**
      * @return ModuleRepository
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function getRepository()
@@ -108,6 +108,7 @@ class ModuleRepositoryFactory
 
     /**
      * @return \Doctrine\DBAL\Connection
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     private function getConnection()
@@ -126,7 +127,7 @@ class ModuleRepositoryFactory
     }
 
     /**
-     * @return string file path to PrestaShop configuration parameters.
+     * @return string file path to PrestaShop configuration parameters
      */
     private function getParametersFile()
     {
