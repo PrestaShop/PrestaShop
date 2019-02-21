@@ -111,7 +111,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     {
         // Pre configuration...
         if (isset($this->wsObject->urlSegment)) {
-            for ($i = 1; $i < 6; ++$i ) {
+            for ($i = 1; $i < 6; ++$i) {
                 if (count($this->wsObject->urlSegment) == $i) {
                     $this->wsObject->urlSegment[$i] = '';
                 }
