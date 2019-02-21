@@ -255,6 +255,7 @@ class EmployeeController extends FrameworkBundleAdminController
 
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
+            'showAddonsConnectButton' => false,
         ];
 
         return $this->render(
@@ -297,6 +298,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'is_restricted_access' => $isRestrictedAccess,
             'is_super_admin' => $formAccessChecker->isSuperAdmin($employeeId),
             'is_for_editing' => true,
+            'show_addons_connect_button' => $formAccessChecker->canAccessAddonsConnect(),
         ]);
 
         try {
@@ -317,6 +319,7 @@ class EmployeeController extends FrameworkBundleAdminController
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
             'isRestrictedAccess' => $isRestrictedAccess,
+            'showAddonsConnectButton' => $formAccessChecker->canAccessAddonsConnect(),
             'editableEmployee' => $editableEmployee,
         ];
 
