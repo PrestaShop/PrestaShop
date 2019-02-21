@@ -177,9 +177,6 @@ final class EmployeeType extends AbstractType
                 $builder->add('shop_association', ShopChoiceTreeType::class, [
                     'required' => false,
                     'disabled' => $options['is_super_admin'],
-                    'constraints' => [
-                        $this->getNotBlankConstraint(),
-                    ],
                 ]);
             }
         }
