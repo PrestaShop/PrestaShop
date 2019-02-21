@@ -27,15 +27,18 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use Exception;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
+use PrestaShopException;
 
 /**
  * This class will provide data from DB / ORM about Currency.
  */
-class CurrencyDataProvider
+class CurrencyDataProvider implements CurrencyDataProviderInterface
 {
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
 
@@ -44,7 +47,7 @@ class CurrencyDataProvider
      */
     private $shopId;
 
-    public function __construct(Configuration $configuration, $shopId)
+    public function __construct(ConfigurationInterface $configuration, $shopId)
     {
         $this->configuration = $configuration;
         $this->shopId = $shopId;

@@ -37,12 +37,12 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 class Price extends NumberSpecification
 {
     /**
-     * Currency display option : symbol notation.
+     * Currency display option: symbol notation.
      */
     const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
     /**
-     * Currency display option : ISO code notation.
+     * Currency display option: ISO code notation.
      */
     const CURRENCY_DISPLAY_CODE = 'code';
 
@@ -91,7 +91,7 @@ class Price extends NumberSpecification
      * @param string $currencySymbol
      *                               Currency symbol of this price (eg. : €)
      * @param $currencyCode
-     *  Currency code of this price (eg. : EUR)
+     *  Currency code of this price (e.g.: EUR)
      *
      * @throws LocalizationException
      */
@@ -136,7 +136,7 @@ class Price extends NumberSpecification
 
     /**
      * Get the currency symbol
-     * eg. : €.
+     * e.g.: €.
      *
      * @return string
      */
@@ -147,7 +147,7 @@ class Price extends NumberSpecification
 
     /**
      * Get the currency ISO code
-     * eg. : EUR.
+     * e.g.: EUR.
      *
      * @return string
      */
