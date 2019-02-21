@@ -115,19 +115,13 @@ class ManufacturerController extends FrameworkBundleAdminController
         );
     }
 
-    public function createManufacturerAction()
+    public function createAction()
     {
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function viewManufacturerAction()
-    {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
-    }
-
-    public function editManufacturerAction()
+    public function editAction()
     {
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
@@ -345,7 +339,6 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_manufacturers_index');
     }
-
     /**
      * Provides error messages for exceptions
      *
