@@ -30,13 +30,13 @@ use Cart;
 use Configuration;
 use Context;
 use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCartForCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCartForCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCustomerCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
-final class CreateEmptyCartForCustomerHandler implements CreateEmptyCartForCustomerHandlerInterface
+final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHandlerInterface
 {
-    public function handle(CreateEmptyCartForCustomerCommand $command)
+    public function handle(CreateEmptyCustomerCartCommand $command)
     {
         $customer = new Customer($command->getCustomerId()->getValue());
         $cart = new Cart();
