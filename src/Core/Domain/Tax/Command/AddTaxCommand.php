@@ -26,19 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-
 /**
- * Edits given tax with provided data
+ * Adds new tax
  */
-class EditTaxCommand
+class AddTaxCommand
 {
-    /**
-     * @var TaxId
-     */
-    private $taxId;
-
     /**
      * @var array
      */
@@ -55,31 +47,19 @@ class EditTaxCommand
     private $enabled;
 
     /**
-     * @param $taxId
      * @param array $name
      * @param float $rate
      * @param bool $enabled
-     *
-     * @throws TaxException
      */
-    public function __construct($taxId, array $name, $rate, $enabled)
+    public function __construct(array $name, $rate, $enabled)
     {
-        $this->taxId = new TaxId($taxId);
         $this->name = $name;
         $this->rate = $rate;
         $this->enabled = $enabled;
     }
 
     /**
-     * @return TaxId
-     */
-    public function getTaxId()
-    {
-        return $this->taxId;
-    }
-
-    /**
-     * @return array $name
+     * @return array
      */
     public function getName()
     {
@@ -87,7 +67,15 @@ class EditTaxCommand
     }
 
     /**
-     * @return float $rate
+     * @param array $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return float
      */
     public function getRate()
     {
@@ -95,10 +83,26 @@ class EditTaxCommand
     }
 
     /**
-     * @return bool $enabled
+     * @param float $rate
+     */
+    public function setRate($rate)
+    {
+        $this->rate = $rate;
+    }
+
+    /**
+     * @return bool
      */
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
     }
 }
