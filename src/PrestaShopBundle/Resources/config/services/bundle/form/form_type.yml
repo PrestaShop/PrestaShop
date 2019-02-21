@@ -724,7 +724,7 @@ services:
     form.type.international.tax:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
       arguments:
-        - '@=service("prestashop.core.tax.tax_options_configuration").getConfiguration()'
+        - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_USE_ECOTAX")'
         - '@=service("prestashop.core.form.choice_provider.tax_address_type_choice_provider")'
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
       tags:

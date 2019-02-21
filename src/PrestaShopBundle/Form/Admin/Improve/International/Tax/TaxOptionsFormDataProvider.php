@@ -39,6 +39,9 @@ final class TaxOptionsFormDataProvider implements FormDataProviderInterface
      */
     private $taxOptionsDataConfiguration;
 
+    /**
+     * @param DataConfigurationInterface $taxOptionsDataConfiguration
+     */
     public function __construct(DataConfigurationInterface $taxOptionsDataConfiguration)
     {
         $this->taxOptionsDataConfiguration = $taxOptionsDataConfiguration;

@@ -3,4 +3,4 @@ services:
     public: true
 
   prestashop.adapter.tax.ecotax.ecotax_resetter:
-    class: 'PrestaShop\PrestaShop\Adapter\Tax\Ecotax\EcotaxResetter'
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\Ecotax\ProductEcotaxResetter'
