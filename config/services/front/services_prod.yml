@@ -2,9 +2,6 @@ imports:
   - { resource: ../common.yml }
 
 services:
-    hashing:
-        class: PrestaShop\PrestaShop\Core\Crypto\Hashing
-
     prestashop.core.filter.front_end_object.main:
         class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\MainFilter
         arguments:
@@ -46,10 +43,3 @@ services:
             - method: queue
               arguments:
                 - ['@prestashop.core.filter.front_end_object.search_result_product']
-
-    prestashop.database.naming_strategy:
-        class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
-        arguments: ['%database_prefix%']
-
-    annotation_reader:
-        class: Doctrine\Common\Annotations\AnnotationReader
