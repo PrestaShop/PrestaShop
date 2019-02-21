@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use TaxRulesGroup;
 
 /**
- * Provides tax rule group choices
+ * Provides tax rule group choices with tax rule name as key and id as value
  */
 final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface
 {
