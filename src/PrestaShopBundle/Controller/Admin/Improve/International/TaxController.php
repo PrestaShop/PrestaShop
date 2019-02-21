@@ -163,6 +163,7 @@ class TaxController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/create.html.twig', [
             'taxForm' => $taxForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
@@ -202,6 +203,7 @@ class TaxController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/edit.html.twig', [
             'taxForm' => $taxForm->createView(),
             'taxName' => $editableTax->getName()[$this->getContextLangId()],
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
