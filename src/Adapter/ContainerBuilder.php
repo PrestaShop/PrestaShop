@@ -31,6 +31,7 @@ use Doctrine\ORM\Tools\Setup;
 use LegacyCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadDoctrineFromModulesPassFactory;
 use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
@@ -43,6 +44,36 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 class ContainerBuilder
 {
     /**
+     * @var ContainerInterface
+     */
+    private static $container;
+
+    /**
+     * @var bool
+     */
+    private $isDebug;
+
+    /**
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * @var string
+     */
+    private $containerName;
+
+    /**
+     * @var string
+     */
+    private $containerClassName;
+
+    /**
+     * @var string
+     */
+    private $dumpFile;
+
+    /**
      * @param string $name
      * @param bool $isDebug
      *
@@ -52,25 +83,84 @@ class ContainerBuilder
      */
     public static function getContainer($name, $isDebug)
     {
-        if (!empty($_SERVER['APP_ENV'])) {
-            $environment = $_SERVER['APP_ENV'];
-        } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-            $environment = 'test';
-        } else {
-            $environment = $isDebug ? 'dev' : 'prod';
+        if (null === self::$container) {
+            $builder = new ContainerBuilder();
+            self::$container = $builder->initContainer($name, $isDebug);
         }
 
-        $containerName = ucfirst($name) . 'Container';
-        $file = _PS_CACHE_DIR_ . "${containerName}.php";
+        return self::$container;
+    }
 
-        if (!$isDebug && file_exists($file)) {
-            require_once $file;
+    /**
+     * @param string $name
+     * @param bool $isDebug
+     *
+     * @return ContainerInterface|SfContainerBuilder|null
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function initContainer($name, $isDebug)
+    {
+        $this->containerName = $name;
+        $this->isDebug = $isDebug;
 
-            return new $containerName();
+        $this->environment = $this->getEnvironment();
+        $this->containerClassName = ucfirst($this->containerName) . 'Container';
+        $this->dumpFile = _PS_CACHE_DIR_ . $this->containerClassName . '.php';
+
+        $container = null;
+        if (!$this->isDebug) {
+            $container = $this->loadDumpedContainer();
+        }
+        if (null === $container) {
+            $container = $this->buildContainer();
+        }
+        $this->loadModulesAutoloader();
+
+        return $container;
+    }
+
+    /**
+     * @return ContainerInterface|null
+     */
+    private function loadDumpedContainer()
+    {
+        if (!file_exists($this->dumpFile)) {
+            return null;
         }
 
+        require_once $this->dumpFile;
+        $container = new $this->containerClassName();
+
+        return $container;
+    }
+
+    /**
+     * @return SfContainerBuilder
+     * @throws \Exception
+     */
+    private function buildContainer()
+    {
         $container = new SfContainerBuilder();
 
+        $this->initParameters($container);
+        $container->addCompilerPass(new LegacyCompilerPass());
+        $this->initDoctrine($container);
+        $this->loadServices($container);
+
+        $container->compile();
+
+        //Dump the container file
+        $dumper = new PhpDumper($container);
+        file_put_contents($this->dumpFile, $dumper->dump(array('class' => $this->containerClassName)));
+
+        return $container;
+    }
+
+    /**
+     * @param SfContainerBuilder $container
+     */
+    private function initParameters(SfContainerBuilder $container)
+    {
         $parameters = require _PS_ROOT_DIR_ . '/app/config/parameters.php';
         foreach ($parameters['parameters'] as $parameter => $value) {
             $container->setParameter($parameter, $value);
@@ -78,55 +168,28 @@ class ContainerBuilder
         $container->setParameter('kernel.bundles', []);
         $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app/');
         $container->setParameter('kernel.name', 'app');
-        $container->setParameter('kernel.debug', $isDebug);
-        $container->setParameter('kernel.environment', $environment);
+        $container->setParameter('kernel.debug', $this->isDebug);
+        $container->setParameter('kernel.environment', $this->environment);
         $container->setParameter('kernel.cache_dir', _PS_CACHE_DIR_);
-
-        $container->addCompilerPass(new LegacyCompilerPass());
-
-        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
-        if (null !== $moduleRepository) {
-            $activeModules = $moduleRepository->getActiveModules();
-            self::addDoctrine($container, $activeModules);
-            self::enableComposerAutoloaderOnModules($activeModules);
-        }
-
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-        $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${environment}.yml";
-        $loader->load($servicesPath);
-
-        $container->compile();
-
-        $dumper = new PhpDumper($container);
-        file_put_contents($file, $dumper->dump(array('class' => $containerName)));
-
-        return $container;
     }
 
     /**
-     * Enable auto loading of module Composer autoloader if needed.
-     * Need to be done as earlier as possible in application lifecycle.
+     * @param SfContainerBuilder $container
      *
-     * @param array $modules the list of modules
+     * @throws \Doctrine\DBAL\DBALException
      */
-    private static function enableComposerAutoloaderOnModules($modules)
-    {
-        foreach ($modules as $module) {
-            $autoloader = _PS_ROOT_DIR_.'/modules/'.$module.'/vendor/autoload.php';
-
-            if (file_exists($autoloader)) {
-                include_once $autoloader;
-            }
-        }
-    }
-
-    private static function addDoctrine(SfContainerBuilder $container, array $activeModules)
+    private function initDoctrine(SfContainerBuilder $container)
     {
         $configFile = _PS_ROOT_DIR_ . '/app/config/config.php';
         if (!file_exists($configFile)) {
             return;
         }
+        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
+        if (null === $moduleRepository) {
+            return;
+        }
         $config = require $configFile;
+        $activeModules = $moduleRepository->getActiveModules();
 
         //Necessary to require all annotation classes from Doctrine
         Setup::createAnnotationMetadataConfiguration([]);
@@ -140,5 +203,55 @@ class ContainerBuilder
         foreach ($compilerPassList as $compilerPass) {
             $container->addCompilerPass($compilerPass);
         }
+    }
+
+    /**
+     * @param SfContainerBuilder $container
+     * @throws \Exception
+     */
+    private function loadServices(SfContainerBuilder $container)
+    {
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
+        $servicesPath = _PS_CONFIG_DIR_ . sprintf('services/%s/services_%s.yml', $this->containerName, $this->environment);
+        if (file_exists($servicesPath)) {
+            $loader->load($servicesPath);
+        }
+    }
+
+    /**
+     * Loops through all active modules and automatically include their autoload (if present).
+     * Needs to be done as earlier as possible in application lifecycle.
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function loadModulesAutoloader()
+    {
+        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
+        if (null !== $moduleRepository) {
+            $activeModules = $moduleRepository->getActiveModules();
+            foreach ($activeModules as $module) {
+                $autoloader = _PS_ROOT_DIR_.'/modules/'.$module.'/vendor/autoload.php';
+
+                if (file_exists($autoloader)) {
+                    include_once $autoloader;
+                }
+            }
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getEnvironment()
+    {
+        if (!empty($_SERVER['APP_ENV'])) {
+            $environment = $_SERVER['APP_ENV'];
+        } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
+            $environment = 'test';
+        } else {
+            $environment = $this->isDebug ? 'dev' : 'prod';
+        }
+
+        return $environment;
     }
 }
