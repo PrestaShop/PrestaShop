@@ -35,25 +35,33 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Load services stored in installed modules.
  */
-class LoadDoctrineFromModulesPassFactory
+class ModulesDoctrinePassListBuilder
 {
     /**
-     * @param array $installedModules
+     * @var array
+     */
+    private $activeModules;
+
+    /**
+     * @param array $activeModules
+     */
+    public function __construct(array $activeModules)
+    {
+        $this->activeModules = $activeModules;
+    }
+
+    /**
+     * Returns a list of CompilerPassInterface indexed with their associated resource.
      *
      * @return CompilerPassInterface[]
      */
-    public function buildCompilerPassList(array $installedModules)
-    {
-        return $this->buildAnnotationMappingsPass($installedModules);
-    }
-
-    private function buildAnnotationMappingsPass(array $installedModules)
+    public function getCompilerPassList()
     {
         $mappingsPassList = [];
         /** @var SplFileInfo $modulePath */
         foreach ($this->getModulesPaths() as $modulePath) {
-            if (in_array($modulePath->getFilename(), $installedModules)
-                && file_exists($modulePath . '/src/Entity')
+            if (in_array($modulePath->getFilename(), $this->activeModules)
+                && is_dir($modulePath . '/src/Entity')
             ) {
                 $moduleNamespace = $this->getModuleNamespace($modulePath);
                 if (empty($moduleNamespace)) {
@@ -62,7 +70,7 @@ class LoadDoctrineFromModulesPassFactory
                 $modulePrefix = 'Module'.Inflector::camelize($modulePath->getFilename());
                 $moduleEntityDirectory = realpath($modulePath . '/src/Entity');
                 $mappingPass = DoctrineOrmMappingsPass::createAnnotationMappingDriver([$moduleNamespace], [$moduleEntityDirectory], [], false, [$modulePrefix => $moduleNamespace]);
-                $mappingsPassList[] = $mappingPass;
+                $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
             }
         }
 

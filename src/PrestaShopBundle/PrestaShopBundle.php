@@ -27,7 +27,7 @@
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
-use PrestaShopBundle\DependencyInjection\Compiler\LoadDoctrineFromModulesPassFactory;
+use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrinePassListBuilder;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTwigServiceCompilerPass;
@@ -35,6 +35,8 @@ use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPa
 use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
 use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
+use Symfony\Component\Config\Resource\DirectoryResource;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -63,11 +65,17 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
         $container->addCompilerPass(new OverrideTwigServiceCompilerPass());
 
-        $doctrinePassFactory = new LoadDoctrineFromModulesPassFactory();
-        $compilerPassList = $doctrinePassFactory->buildCompilerPassList($container->getParameter('kernel.active_modules'));
+        $doctrinePassFactory = new ModulesDoctrinePassListBuilder($container->getParameter('kernel.active_modules'));
+        $compilerPassList = $doctrinePassFactory->getCompilerPassList();
+
         /** @var CompilerPassInterface $compilerPass */
-        foreach ($compilerPassList as $compilerPass) {
+        foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
             $container->addCompilerPass($compilerPass);
+            if (is_dir($compilerResourcePath)) {
+                $container->addResource(new DirectoryResource($compilerResourcePath));
+            } elseif (is_file($compilerResourcePath)) {
+                $container->addResource(new FileResource($compilerResourcePath));
+            }
         }
     }
 }
