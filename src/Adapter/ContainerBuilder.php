@@ -103,7 +103,7 @@ class ContainerBuilder
      * @param string $name
      * @param bool $isDebug
      *
-     * @return ContainerInterface|SfContainerBuilder|null
+     * @return ContainerInterface|SfContainerBuilder
      *
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -112,7 +112,8 @@ class ContainerBuilder
         $this->containerName = $name;
         $this->isDebug = $isDebug;
 
-        $this->environment = $this->getEnvironment();
+        $environment = new Environment($isDebug);
+        $this->environment = $environment->getEnvironment();
         $this->containerClassName = ucfirst($this->containerName) . 'Container';
         $this->dumpFile = _PS_CACHE_DIR_ . $this->containerClassName . '.php';
         $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->isDebug);
@@ -253,21 +254,5 @@ class ContainerBuilder
                 }
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function getEnvironment()
-    {
-        if (!empty($_SERVER['APP_ENV'])) {
-            $environment = $_SERVER['APP_ENV'];
-        } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-            $environment = 'test';
-        } else {
-            $environment = $this->isDebug ? 'dev' : 'prod';
-        }
-
-        return $environment;
     }
 }
