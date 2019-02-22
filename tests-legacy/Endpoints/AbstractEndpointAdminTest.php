@@ -26,18 +26,20 @@
 
 namespace LegacyTests\Endpoints;
 
-
 use AppKernel;
 use Cache;
 use Context;
 use Employee;
 use PhpEncryption;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use ReflectionClass;
 
 abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 {
     protected function setUp()
     {
         parent::setUp();
+        $this->initContainerInstance();
         define('_PS_TAB_MODULE_LIST_URL_', '');
         Context::getContext()->employee = new Employee(1);
     }
@@ -50,5 +52,23 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
         $cookieName = 'PrestaShop-' . md5(_PS_VERSION_ . 'psAdmin');
         $_COOKIE[$cookieName] = $cipherTool->encrypt($cookieContent);
         Cache::store('isLoggedBack' . 1, true);
+    }
+
+    /**
+     * Force the static property SymfonyContainer::instance so that the Link class
+     * has access to the router
+     *
+     * @throws \ReflectionException
+     */
+    private function initContainerInstance()
+    {
+        $kernel = new AppKernel('test', true);
+        $kernel->boot();
+
+        $reflectedClass = new ReflectionClass(SymfonyContainer::class);
+        $instanceProperty = $reflectedClass->getProperty('instance');
+        $instanceProperty->setAccessible(true);
+        $instanceProperty->setValue($kernel->getContainer());
+        $instanceProperty->setAccessible(false);
     }
 }

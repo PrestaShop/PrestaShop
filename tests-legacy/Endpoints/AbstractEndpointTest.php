@@ -26,12 +26,12 @@
 
 namespace LegacyTests\Endpoints;
 
+use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use LegacyTests\Unit\ContextMocker;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractEndpointTest extends TestCase
 {
-
     /**
      * @var ContextMocker
      */
@@ -39,7 +39,6 @@ abstract class AbstractEndpointTest extends TestCase
 
     protected function setUp()
     {
-        parent::setUp();
         define('_PS_IN_TEST_', true);
         define('_PS_ROOT_DIR_', __DIR__ . '/../..');
         define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin-dev');
@@ -49,5 +48,6 @@ abstract class AbstractEndpointTest extends TestCase
         require_once _PS_CONFIG_DIR_ . 'bootstrap.php';
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
+        parent::setUp();
     }
 }
