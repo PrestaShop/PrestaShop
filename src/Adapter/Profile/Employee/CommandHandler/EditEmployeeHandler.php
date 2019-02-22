@@ -31,8 +31,10 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\EditEmployeeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use Shop;
 
 /**
@@ -48,11 +50,20 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $hashing;
 
     /**
-     * @param Hashing $hashing
+     * @var ProfileAccessCheckerInterface
      */
-    public function __construct(Hashing $hashing)
-    {
+    private $profileAccessChecker;
+
+    /**
+     * @param Hashing $hashing
+     * @param ProfileAccessCheckerInterface $profileAccessChecker
+     */
+    public function __construct(
+        Hashing $hashing,
+        ProfileAccessCheckerInterface $profileAccessChecker
+    ) {
         $this->hashing = $hashing;
+        $this->profileAccessChecker = $profileAccessChecker;
     }
 
     /**
@@ -60,6 +71,10 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      */
     public function handle(EditEmployeeCommand $command)
     {
+        if (!$this->profileAccessChecker->canAccessProfile((int) $command->getProfileId())) {
+            throw new InvalidProfileException('The provided profile is invalid');
+        }
+
         $employee = new Employee($command->getEmployeeId()->getValue());
 
         $this->updateEmployeeWithCommandData($employee, $command);
@@ -74,8 +89,6 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      * @param EditEmployeeCommand $command
      *
      * @throws EmployeeException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
     private function updateEmployeeWithCommandData(Employee $employee, EditEmployeeCommand $command)
     {
