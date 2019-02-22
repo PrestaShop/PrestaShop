@@ -85,7 +85,7 @@ class FolderThemeCatalog implements ThemeCatalogInterface
             $dirFinder->files()->in($mailThemeFolder->getRealPath());
             if ($dirFinder->count() > 0) {
                 $mailTheme = new Theme($mailThemeFolder->getFilename());
-                $layouts = $this->listLayouts($mailTheme->getName());
+                $layouts = $this->findThemeLayouts($mailTheme->getName());
                 $mailTheme->setLayouts($layouts);
                 $mailThemes[] = $mailTheme;
             }
@@ -137,7 +137,7 @@ class FolderThemeCatalog implements ThemeCatalogInterface
      *
      * @return LayoutCollectionInterface
      */
-    private function listLayouts($mailTheme)
+    private function findThemeLayouts($mailTheme)
     {
         $mailThemeFolder = implode(DIRECTORY_SEPARATOR, [$this->mailThemesFolder, $mailTheme]);
         //This hook allows to change the mail them folder
@@ -151,8 +151,8 @@ class FolderThemeCatalog implements ThemeCatalogInterface
         $this->checkThemeFolder($mailThemeFolder);
 
         $mailThemeLayouts = new LayoutCollection();
-        $this->listCoreLayouts($mailThemeLayouts, $mailThemeFolder);
-        $this->listModulesLayouts($mailThemeLayouts, $mailThemeFolder);
+        $this->addCoreLayouts($mailThemeLayouts, $mailThemeFolder);
+        $this->addModulesLayouts($mailThemeLayouts, $mailThemeFolder);
 
         return $mailThemeLayouts;
     }
@@ -161,7 +161,7 @@ class FolderThemeCatalog implements ThemeCatalogInterface
      * @param LayoutCollectionInterface $collection
      * @param string $mailThemeFolder
      */
-    private function listCoreLayouts(LayoutCollectionInterface $collection, $mailThemeFolder)
+    private function addCoreLayouts(LayoutCollectionInterface $collection, $mailThemeFolder)
     {
         $coreLayoutsFolder = implode(DIRECTORY_SEPARATOR, [
             $mailThemeFolder,
@@ -178,7 +178,7 @@ class FolderThemeCatalog implements ThemeCatalogInterface
      * @param LayoutCollectionInterface $collection
      * @param string $mailThemeFolder
      */
-    private function listModulesLayouts(LayoutCollectionInterface $collection, $mailThemeFolder)
+    private function addModulesLayouts(LayoutCollectionInterface $collection, $mailThemeFolder)
     {
         $moduleLayoutsFolder = implode(DIRECTORY_SEPARATOR, [
             $mailThemeFolder,

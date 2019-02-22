@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
@@ -45,10 +46,7 @@ class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
     private $hookDispatcher;
 
     /**
-     * This is a non exhaustive list of language which need a specific font
-     * so that their characters are correctly displayed.
-     *
-     * @var array
+     * @var LanguageDefaultFontsCatalog
      */
     private $languageDefaultFonts = array(
         'fa' => 'Tahoma',
@@ -57,11 +55,16 @@ class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
+     * @param LanguageDefaultFontsCatalog $languageDefaultFonts
      * @param array $defaultVariables
      */
-    public function __construct(HookDispatcherInterface $hookDispatcher, array $defaultVariables = [])
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        LanguageDefaultFontsCatalog $languageDefaultFonts,
+        array $defaultVariables = []
+    ) {
         $this->hookDispatcher = $hookDispatcher;
+        $this->languageDefaultFonts = $languageDefaultFonts;
         $this->defaultVariables = $defaultVariables;
     }
 
@@ -70,9 +73,9 @@ class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
      */
     public function buildVariables(LayoutInterface $mailLayout, LanguageInterface $language)
     {
-        $languageDefaultFont = '';
-        if (isset($this->languageDefaultFonts[$language->getIsoCode()])) {
-            $languageDefaultFont = $this->languageDefaultFonts[$language->getIsoCode()] . ',';
+        $languageDefaultFont = $this->languageDefaultFonts->getDefaultFontByLanguage($language);
+        if (!empty($languageDefaultFont)) {
+            $languageDefaultFont .=  ',';
         }
 
         $mailLayoutVariables = array_merge($this->defaultVariables, [

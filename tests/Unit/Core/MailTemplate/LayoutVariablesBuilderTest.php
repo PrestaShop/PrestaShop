@@ -28,6 +28,7 @@ namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilder;
@@ -43,10 +44,16 @@ class LayoutVariablesBuilderTest extends TestCase
             ->getMock()
         ;
 
-        $builder = new LayoutVariablesBuilder($dispatcherMock);
+        /** @var LanguageDefaultFontsCatalog $fontCatalog */
+        $fontCatalog = $this->getMockBuilder(LanguageDefaultFontsCatalog::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $builder = new LayoutVariablesBuilder($dispatcherMock, $fontCatalog);
         $this->assertNotNull($builder);
 
-        $builder = new LayoutVariablesBuilder($dispatcherMock, ['locale' => 'en']);
+        $builder = new LayoutVariablesBuilder($dispatcherMock, $fontCatalog, ['locale' => 'en']);
         $this->assertNotNull($builder);
     }
 
@@ -67,7 +74,7 @@ class LayoutVariablesBuilderTest extends TestCase
             'locale' => 'en-EN',
         ];
 
-        $builder = new LayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock));
+        $builder = new LayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock), $this->buildFontCatalog());
         $builtVariables = $builder->buildVariables($layoutMock, $languageMock);
 
         $this->assertEquals($expectedVariables, $builtVariables);
@@ -92,6 +99,7 @@ class LayoutVariablesBuilderTest extends TestCase
         ];
         $builder = new LayoutVariablesBuilder(
             $this->createHookDispatcherMock($expectedVariables, $layoutMock),
+            $this->buildFontCatalog(),
             [
                 'url' => 'http://test.com',
                 'languageDefaultFont' => 'overriddenFont',
@@ -118,7 +126,10 @@ class LayoutVariablesBuilderTest extends TestCase
             'languageDefaultFont' => 'Tahoma,',
             'locale' => 'ar-AR',
         ];
-        $builder = new LayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock));
+        $builder = new LayoutVariablesBuilder(
+            $this->createHookDispatcherMock($expectedVariables, $layoutMock),
+            $this->buildFontCatalog()
+        );
         $builtVariables = $builder->buildVariables($layoutMock, $languageMock);
 
         $this->assertEquals($expectedVariables, $builtVariables);
@@ -208,5 +219,33 @@ class LayoutVariablesBuilderTest extends TestCase
         }
 
         return $layoutMock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageDefaultFontsCatalog
+     */
+    private function buildFontCatalog()
+    {
+        $fontCatalog = $this->getMockBuilder(LanguageDefaultFontsCatalog::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $fontCatalog
+            ->expects($this->once())
+            ->method('getDefaultFontByLanguage')
+            ->with(
+                $this->isInstanceOf(LanguageInterface::class)
+            )
+            ->willReturnCallback(function (LanguageInterface $language) {
+                if (in_array($language->getIsoCode(), ['ar', 'fa'])) {
+                    return 'Tahoma';
+                }
+
+                return '';
+            })
+        ;
+
+        return $fontCatalog;
     }
 }

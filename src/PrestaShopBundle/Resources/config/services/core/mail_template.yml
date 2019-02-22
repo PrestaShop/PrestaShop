@@ -15,6 +15,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilder'
     arguments:
       - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.language.language_default_fonts_catalog'
       -
         mailThemesUrl: "@=service('prestashop.adapter.legacy.context').getMailThemesUrl()"
 
