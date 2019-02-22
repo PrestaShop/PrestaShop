@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
  * Handles submitted manufacturer form data
@@ -58,9 +60,26 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function update($languageId, array $data)
+    public function update($manufacturerId, array $data)
     {
-        //@todo: implement
-        return [];
+        $command = (new EditManufacturerCommand($manufacturerId))
+            ->setName((string) $data['name'])
+            ->setLocalizedShortDescriptions($data['short_description'])
+            ->setLocalizedDescriptions($data['description'])
+            ->setLocalizedMetaDescriptions($data['meta_description'])
+            ->setLocalizedMetaTitles($data['meta_title'])
+            ->setLocalizedMetaKeywords($data['meta_keyword'])
+            ->setEnabled((bool) $data['is_enabled'])
+        ;
+        if (isset($data['shop_association'])) {
+            $shopAssociation = $data['shop_association'] ?: [];
+            $shopAssociation = array_map(function ($shopId) { return (int) $shopId; }, $shopAssociation);
+
+            $command->setShopAssociation($shopAssociation);
+        }
+        /** @var ManufacturerId $manufacturerId */
+        $manufacturerId = $this->bus->handle($command);
+
+        return $manufacturerId->getValue();
     }
 }
