@@ -27,29 +27,41 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ManufacturerController is responsible for "Sell > Catalog > Brands & Suppliers" page.
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
-    public function indexAction()
-    {
-        //@todo: remove on rebase
-        dump('implement index');die;
-    }
-
     public function createAction()
     {
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function editAction()
+    /**
+     * Edits manufacturer
+     *
+     * @param Request $request
+     * @param $manufacturerId
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $manufacturerId)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        $manufacturerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
+        $manufacturerFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
+        $manufacturerForm = $manufacturerFormBuilder->getFormFor($manufacturerId);
+        $manufacturerForm->handleRequest($request);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/edit.html.twig', [
+            'manufacturerForm' => $manufacturerForm->createView(),
+            'manufacturerName' => 'test',
+        ]);
     }
+
     /**
      * Provides error messages for exceptions
      *

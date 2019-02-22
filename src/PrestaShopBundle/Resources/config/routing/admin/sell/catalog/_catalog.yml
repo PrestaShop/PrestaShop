@@ -11,5 +11,5 @@ _suppliers:
     prefix: /suppliers/
 
 _manufacturers:
-    resource: "manufacturers.yml"
-    prefix: /brands/
+    resource: "manufacturer.yml"
+    prefix: /brands
