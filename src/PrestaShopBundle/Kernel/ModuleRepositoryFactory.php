@@ -94,7 +94,7 @@ class ModuleRepositoryFactory
     public function getRepository()
     {
         if (null !== $this->getParameters() && null === $this->moduleRepository) {
-            $databasePrefix = $this->parameters['database_prefix'];
+            $databasePrefix = $this->getParameters()['database_prefix'];
             $this->moduleRepository = new ModuleRepository(
                 $this->getConnection(),
                 $databasePrefix
@@ -129,7 +129,7 @@ class ModuleRepositoryFactory
      */
     private function getParametersFile()
     {
-        if (file_exists(__DIR__ . '/../../../app/config/parameters.php')) {
+        if (null === $this->parametersFile && file_exists(__DIR__ . '/../../../app/config/parameters.php')) {
             $this->parametersFile = realpath(__DIR__ . '/../../../app/config/parameters.php');
         }
 
