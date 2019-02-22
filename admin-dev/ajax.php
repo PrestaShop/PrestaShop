@@ -54,28 +54,6 @@ if (Tools::isSubmit('ajaxReferrers')) {
 }
 
 /**
- * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
- * Not moved / Not duplicated
- */
-if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
-    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
-    die(json_encode($children_categories));
-}
-
-/**
- * Import controller: Fields available for a given entity
- * -> Moved in Symfony
- */
-if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
-    $import = new AdminImportController();
-
-    $fields = array_map(function ($elem) {
-        return ['field' => $elem];
-    }, $import->getAvailableFields(true));
-    echo json_encode($fields);
-}
-
-/**
  * Return the list of a pack of products
  * Not found
  *
@@ -109,6 +87,28 @@ if (Tools::isSubmit('searchCategory')) {
             echo trim($result['name']).'|'.(int)$result['id_category']."\n";
         }
     }
+}
+
+/**
+ * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
+ * Not moved / Not duplicated
+ */
+if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
+    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
+    die(json_encode($children_categories));
+}
+
+/**
+ * Import controller: Fields available for a given entity
+ * -> Moved in Symfony
+ */
+if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
+    $import = new AdminImportController();
+
+    $fields = array_map(function ($elem) {
+        return ['field' => $elem];
+    }, $import->getAvailableFields(true));
+    echo json_encode($fields);
 }
 
 /**
@@ -160,6 +160,19 @@ $context = Context::getContext();
 // Not used anymore, but kept just in case
 if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
     readfile('https://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
+}
+
+/**
+ * Import controller: Fields available for a given entity
+ * -> Moved in Symfony
+ */
+if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
+    $import = new AdminImportController();
+
+    $fields = array_map(function ($elem) {
+        return ['field' => $elem];
+    }, $import->getAvailableFields(true));
+    echo json_encode($fields);
 }
 
 /**
