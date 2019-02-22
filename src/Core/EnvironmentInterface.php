@@ -37,7 +37,7 @@ interface EnvironmentInterface
      *
      * @return string
      */
-    public function getEnvironment();
+    public function getName();
 
     /**
      * Indicates if debug mode is enabled

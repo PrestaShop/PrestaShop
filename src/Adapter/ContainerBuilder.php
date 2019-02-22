@@ -113,14 +113,12 @@ class ContainerBuilder
         $this->isDebug = $isDebug;
 
         $environment = new Environment($isDebug);
-        $this->environment = $environment->getEnvironment();
+        $this->environment = $environment->getName();
         $this->containerClassName = ucfirst($this->containerName) . 'Container';
         $this->dumpFile = _PS_CACHE_DIR_ . $this->containerClassName . '.php';
         $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->isDebug);
 
-        //Necessary to require all annotation classes from Doctrine
-        Setup::createAnnotationMetadataConfiguration([]);
-
+        $this->loadDoctrineAnnotationMetadata();
         $container = $this->loadDumpedContainer();
         if (null === $container) {
             $container = $this->buildContainer();
@@ -219,6 +217,17 @@ class ContainerBuilder
                 $container->addResource(new FileResource($compilerResourcePath));
             }
         }
+    }
+
+    /**
+     * In symfony context doctrine classes (like Table, Entity, ...) are available thanks to
+     * the autoloader. In this specific context we don't have the general autoloader, so we need
+     * to include these classes manually. This is performed in Doctrine\ORM\Configuration::newDefaultAnnotationDriver
+     * which is called in Setup::createAnnotationMetadataConfiguration.
+     */
+    private function loadDoctrineAnnotationMetadata()
+    {
+        Setup::createAnnotationMetadataConfiguration([]);
     }
 
     /**
