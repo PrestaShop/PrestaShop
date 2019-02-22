@@ -70,7 +70,7 @@
         <textarea class="form-control"></textarea>
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
       <div class="col offset-sm-3">
         <button type="button" class="btn btn-primary">
           {{ 'Send an email to the customer with the link to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
@@ -78,6 +78,29 @@
         <a href="#" class="" target="_blank">
           {{ 'Go on payment page to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
         </a>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">
+        <span class="float-right">{{ 'Payment'|trans({}, 'Admin.Global') }}</span>
+      </div>
+      <div class="col-4">
+        <select class="form-control"></select>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">
+        <span class="float-right">{{ 'Order status'|trans({}, 'Admin.Shopparameters.Feature') }}</span>
+      </div>
+      <div class="col-4">
+        <select class="form-control"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col offset-sm-3">
+        <button class="btn btn-primary" type="button">
+          {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
       </div>
     </div>
   </div>
