@@ -254,7 +254,6 @@ class AdminTranslationsControllerCore extends AdminController
         );
 
         $this->toolbar_scroll = false;
-        $this->base_tpl_view = 'main.tpl';
 
         $this->content .= $this->renderKpis();
         $this->content .= parent::renderView();
