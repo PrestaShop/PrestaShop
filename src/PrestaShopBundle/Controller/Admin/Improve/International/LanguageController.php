@@ -105,6 +105,7 @@ class LanguageController extends AbstractAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/International/Language/create.html.twig', [
             'languageForm' => $languageForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
@@ -150,6 +151,7 @@ class LanguageController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Language/edit.html.twig', [
             'languageForm' => $languageForm->createView(),
             'editableLanguage' => $editableLanguage,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
