@@ -196,9 +196,6 @@ final class EmployeeType extends AbstractType
                 // - Shop association field is not shown.
                 'is_restricted_access' => false,
 
-                // Is this form for showing data for a super admin.
-                'is_super_admin' => false,
-
                 // Is this form used for editing the employee.
                 'is_for_editing' => false,
 
@@ -206,7 +203,6 @@ final class EmployeeType extends AbstractType
                 'show_addons_connect_button' => true,
             ])
             ->setAllowedTypes('is_restricted_access', 'bool')
-            ->setAllowedTypes('is_super_admin', 'bool')
             ->setAllowedTypes('is_for_editing', 'bool')
             ->setAllowedTypes('show_addons_connect_button', 'bool')
         ;
