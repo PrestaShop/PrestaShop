@@ -38,7 +38,14 @@ class ContainerBuilderTest extends TestCase
         $container = ContainerBuilder::getContainer('front', true);
         $this->assertNotNull($container);
         $this->assertInstanceOf(ContainerInterface::class, $container);
+    }
 
+    /**
+     * @depends testGetFrontContainer
+     */
+    public function testGetFrontContainerShouldContainsAnInstanceOfEntityManager()
+    {
+        $container = ContainerBuilder::getContainer('front', true);
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $this->assertNotNull($entityManager);
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
@@ -49,7 +56,14 @@ class ContainerBuilderTest extends TestCase
         $container = ContainerBuilder::getContainer('admin', true);
         $this->assertNotNull($container);
         $this->assertInstanceOf(ContainerInterface::class, $container);
+    }
 
+    /**
+     * @depends testGetAdminContainer
+     */
+    public function testGetAdminContainerShouldContainsAnInstanceOfEntityManager()
+    {
+        $container = ContainerBuilder::getContainer('admin', true);
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $this->assertNotNull($entityManager);
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
