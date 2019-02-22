@@ -49,6 +49,11 @@ class EditManufacturerCommand
     private $localizedShortDescriptions;
 
     /**
+     * @var string[]|null
+     */
+    private $localizedDescriptions;
+
+    /**
      * @var array|null
      */
     private $logoImage;
@@ -79,11 +84,11 @@ class EditManufacturerCommand
     private $associatedShops;
 
     /**
-     * @param ManufacturerId $manufacturerId
+     * @param int $manufacturerId
      */
-    public function __construct(ManufacturerId $manufacturerId)
+    public function __construct($manufacturerId)
     {
-        $this->manufacturerId = $manufacturerId;
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
     }
 
     /**
@@ -104,10 +109,14 @@ class EditManufacturerCommand
 
     /**
      * @param string|null $name
+     *
+     * @return self
      */
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -119,11 +128,35 @@ class EditManufacturerCommand
     }
 
     /**
+     * @return string[]|null
+     */
+    public function getLocalizedDescriptions()
+    {
+        return $this->localizedDescriptions;
+    }
+
+    /**
+     * @param string[]|null $localizedDescriptions
+     *
+     * @return self
+     */
+    public function setLocalizedDescriptions($localizedDescriptions)
+    {
+        $this->localizedDescriptions = $localizedDescriptions;
+
+        return $this;
+    }
+
+    /**
      * @param string[]|null $localizedShortDescriptions
+     *
+     * @return self
      */
     public function setLocalizedShortDescriptions($localizedShortDescriptions)
     {
         $this->localizedShortDescriptions = $localizedShortDescriptions;
+
+        return $this;
     }
 
     /**
@@ -136,10 +169,14 @@ class EditManufacturerCommand
 
     /**
      * @param array|null $logoImage
+     *
+     * @return self
      */
     public function setLogoImage($logoImage)
     {
         $this->logoImage = $logoImage;
+
+        return $this;
     }
 
     /**
@@ -152,10 +189,14 @@ class EditManufacturerCommand
 
     /**
      * @param string[]|null $localizedMetaTitles
+     *
+     * @return self
      */
     public function setLocalizedMetaTitles($localizedMetaTitles)
     {
         $this->localizedMetaTitles = $localizedMetaTitles;
+
+        return $this;
     }
 
     /**
@@ -168,10 +209,14 @@ class EditManufacturerCommand
 
     /**
      * @param string[]|null $localizedMetaDescriptions
+     *
+     * @return self
      */
     public function setLocalizedMetaDescriptions($localizedMetaDescriptions)
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
+
+        return $this;
     }
 
     /**
@@ -184,41 +229,53 @@ class EditManufacturerCommand
 
     /**
      * @param string[]|null $localizedMetaKeywords
+     *
+     * @return self
      */
     public function setLocalizedMetaKeywords($localizedMetaKeywords)
     {
         $this->localizedMetaKeywords = $localizedMetaKeywords;
+
+        return $this;
     }
 
     /**
      * @return bool|null
      */
-    public function getEnabled()
+    public function isEnabled()
     {
         return $this->enabled;
     }
 
     /**
      * @param bool|null $enabled
+     *
+     * @return self
      */
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
+
+        return $this;
     }
 
     /**
      * @return array|null
      */
-    public function getAssociatedShops()
+    public function getShopAssociation()
     {
         return $this->associatedShops;
     }
 
     /**
      * @param array|null $associatedShops
+     *
+     * @return self
      */
-    public function setAssociatedShops($associatedShops)
+    public function setShopAssociation($associatedShops)
     {
         $this->associatedShops = $associatedShops;
+
+        return $this;
     }
 }

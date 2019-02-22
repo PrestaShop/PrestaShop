@@ -7,3 +7,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing'
+
+  prestashop.adapter.manufacturer.command_handler.edit_manufacturer_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\EditManufacturerHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand'
