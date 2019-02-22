@@ -27,6 +27,7 @@
 namespace Tests\Integration\Adapter;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -67,5 +68,15 @@ class ContainerBuilderTest extends TestCase
     {
         ContainerBuilder::getContainer('front', true);
         $this->assertTrue(class_exists('\PrestaShop\Module\Banner\Entity\Banner'));
+    }
+
+    public function testDoctrineModuleMapping()
+    {
+        $container = ContainerBuilder::getContainer('front', true);
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+        /** @var ClassMetadata $classMetadata */
+        $classMetadata = $entityManager->getClassMetadata('\PrestaShop\Module\Banner\Entity\Banner');
+        $this->assertNotNull($classMetadata);
     }
 }
