@@ -46,8 +46,7 @@ final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTax
             $query->getTaxId(),
             $tax->name,
             $tax->rate,
-            $tax->active,
-            $tax->getAssociatedShops()
+            $tax->active
         );
     }
 }

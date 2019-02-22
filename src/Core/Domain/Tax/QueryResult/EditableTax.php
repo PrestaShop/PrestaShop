@@ -41,7 +41,7 @@ class EditableTax
     /**
      * @var string[]
      */
-    private $name;
+    private $localizedNames;
 
     /**
      * @var float
@@ -54,26 +54,19 @@ class EditableTax
     private $active;
 
     /**
-     * @var array
-     */
-    private $shopAssociation;
-
-    /**
      * EditableTax constructor.
      *
      * @param TaxId $taxId
      * @param string[] $name
      * @param float $rate
      * @param bool $active
-     * @param array $shopAssociation
      */
-    public function __construct(TaxId $taxId, array $name, $rate, $active, array $shopAssociation)
+    public function __construct(TaxId $taxId, array $name, $rate, $active)
     {
         $this->taxId = $taxId;
-        $this->name = $name;
+        $this->localizedNames = $name;
         $this->rate = $rate;
         $this->active = $active;
-        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -87,9 +80,9 @@ class EditableTax
     /**
      * @return string[]
      */
-    public function getName()
+    public function getLocalizedNames()
     {
-        return $this->name;
+        return $this->localizedNames;
     }
 
     /**
@@ -106,13 +99,5 @@ class EditableTax
     public function isActive()
     {
         return $this->active;
-    }
-
-    /**
-     * @return array
-     */
-    public function getShopAssociation()
-    {
-        return $this->shopAssociation;
     }
 }
