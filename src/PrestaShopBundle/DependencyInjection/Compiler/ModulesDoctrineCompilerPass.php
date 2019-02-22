@@ -28,39 +28,48 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
 use Doctrine\Common\Util\Inflector;
+use Symfony\Component\Config\Resource\DirectoryResource;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Load services stored in installed modules.
  */
-class ModulesDoctrinePassListBuilder
+class ModulesDoctrineCompilerPass implements CompilerPassInterface
 {
     /**
-     * @var array
+     * @inheritDoc
      */
-    private $activeModules;
-
-    /**
-     * @param array $activeModules
-     */
-    public function __construct(array $activeModules)
+    public function process(ContainerBuilder $container)
     {
-        $this->activeModules = $activeModules;
+        $activeModules = $container->getParameter('kernel.active_modules');
+        $compilerPassList = $this->getCompilerPassList($activeModules);
+        /** @var CompilerPassInterface $compilerPass */
+        foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
+            $compilerPass->process($container);
+            if (is_dir($compilerResourcePath)) {
+                $container->addResource(new DirectoryResource($compilerResourcePath));
+            } elseif (is_file($compilerResourcePath)) {
+                $container->addResource(new FileResource($compilerResourcePath));
+            }
+        }
     }
 
     /**
      * Returns a list of CompilerPassInterface indexed with their associated resource.
+     * @param array $activeModules
      *
-     * @return CompilerPassInterface[]
+     * @return array
      */
-    public function getCompilerPassList()
+    private function getCompilerPassList(array $activeModules)
     {
         $mappingsPassList = [];
         /** @var SplFileInfo $moduleFolder */
         foreach ($this->getModulesFolders() as $moduleFolder) {
-            if (in_array($moduleFolder->getFilename(), $this->activeModules)
+            if (in_array($moduleFolder->getFilename(), $activeModules)
                 && is_dir($moduleFolder . '/src/Entity')
             ) {
                 $moduleNamespace = $this->getModuleNamespace($moduleFolder);
@@ -101,6 +110,6 @@ class ModulesDoctrinePassListBuilder
      */
     private function getModulesFolders()
     {
-        return Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
+        return Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
     }
 }

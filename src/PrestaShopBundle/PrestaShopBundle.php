@@ -27,7 +27,7 @@
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
-use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrinePassListBuilder;
+use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTwigServiceCompilerPass;
@@ -64,18 +64,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
         $container->addCompilerPass(new OverrideTwigServiceCompilerPass());
-
-        $doctrinePassFactory = new ModulesDoctrinePassListBuilder($container->getParameter('kernel.active_modules'));
-        $compilerPassList = $doctrinePassFactory->getCompilerPassList();
-
-        /** @var CompilerPassInterface $compilerPass */
-        foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
-            $container->addCompilerPass($compilerPass);
-            if (is_dir($compilerResourcePath)) {
-                $container->addResource(new DirectoryResource($compilerResourcePath));
-            } elseif (is_file($compilerResourcePath)) {
-                $container->addResource(new FileResource($compilerResourcePath));
-            }
-        }
+        $container->addCompilerPass(new ModulesDoctrineCompilerPass());
     }
 }
