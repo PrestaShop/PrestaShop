@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
 
 /**
  * Provides data for manufacturers add/edit forms
@@ -50,7 +52,7 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CommandBusInterface $bus
-     * @param bool $isMultistoreFeatureActive
+     * @param $multistoreEnabled
      * @param int[] $defaultShopAssociation
      */
     public function __construct(
@@ -66,10 +68,26 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData($languageId)
+    public function getData($manufacturerId)
     {
-        //@todo: implement
-        return [];
+        /** @var EditableManufacturer $editableManufacturer */
+        $editableManufacturer = $this->bus->handle(new GetManufacturerForEditing((int) $manufacturerId));
+
+        $data = [
+            'name' => $editableManufacturer->getName(),
+            'short_description' => $editableManufacturer->getLocalizedShortDescriptions(),
+            'description' => $editableManufacturer->getLocalizedDescriptions(),
+            'meta_title' => $editableManufacturer->getLocalizedMetaTitles(),
+            'meta_description' => $editableManufacturer->getLocalizedMetaDescriptions(),
+            'meta_keyword' => $editableManufacturer->getLocalizedMetaKeywords(),
+            'is_enabled' => $editableManufacturer->isEnabled(),
+        ];
+
+        if ($this->multistoreEnabled) {
+            $data['shop_association'] = $editableManufacturer->getAssociatedShops();
+        }
+
+        return $data;
     }
 
     /**

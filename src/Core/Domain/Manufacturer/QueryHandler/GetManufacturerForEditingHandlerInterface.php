@@ -27,14 +27,18 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
 
 /**
- * Defines contract for service that gets manufacturer for editing
+ * Defines contract for GetManufacturerForEditingHandler
+>>>>>>> 324c887cde... Implemented data provider for manufacturerForm and enabled javascript in manufacturer edit page
  */
 interface GetManufacturerForEditingHandlerInterface
 {
     /**
      * @param GetManufacturerForEditing $query
+     *
+     * @return EditableManufacturer
      */
     public function handle(GetManufacturerForEditing $query);
 }

@@ -40,7 +40,7 @@ class GetManufacturerForEditing
     private $manufacturerId;
 
     /**
-     * @param int
+     * @param int $manufacturerId
      *
      * @throws ManufacturerConstraintException
      */
@@ -50,7 +50,7 @@ class GetManufacturerForEditing
     }
 
     /**
-     * @return ManufacturerId
+     * @return ManufacturerId $manufacturerId
      */
     public function getManufacturerId()
     {
