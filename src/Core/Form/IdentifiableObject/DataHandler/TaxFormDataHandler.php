@@ -80,12 +80,11 @@ final class TaxFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new EditTaxCommand(
-            $id,
-            $data['name'],
-            (float) $data['rate'],
-            (bool) $data['is_enabled']
-        );
+        $command = (new EditTaxCommand($id))
+            ->setLocalizedNames($data['name'])
+            ->setRate((float) $data['rate'])
+            ->setEnabled((bool) $data['is_enabled'])
+        ;
 
         /** @var TaxId $taxId */
         $taxId = $this->commandBus->handle($command);
