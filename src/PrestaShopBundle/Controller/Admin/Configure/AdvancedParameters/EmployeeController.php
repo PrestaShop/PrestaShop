@@ -298,7 +298,6 @@ class EmployeeController extends FrameworkBundleAdminController
 
         $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
             'is_restricted_access' => $isRestrictedAccess,
-            'is_super_admin' => $formAccessChecker->isSuperAdmin($employeeId),
             'is_for_editing' => true,
             'show_addons_connect_button' => $canAccessAddonsConnect,
         ]);
