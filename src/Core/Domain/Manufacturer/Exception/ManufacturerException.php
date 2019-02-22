@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,15 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Edit: %name%'|trans({'%name%': manufacturerName}, 'Admin.Actions') %}
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/manufacturer.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Base exception for manufacturer sub-domain
+ */
+class ManufacturerException extends DomainException
+{
+}
