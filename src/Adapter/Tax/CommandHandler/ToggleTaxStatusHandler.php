@@ -57,7 +57,7 @@ final class ToggleTaxStatusHandler extends AbstractTaxHandler implements ToggleT
             }
         } catch (PrestaShopException $e) {
             throw new TaxException(
-                sprintf('An error occurred when enabling Tax with id "%s"', $taxIdValue)
+                sprintf('An error occurred when enabling ETax with id "%s"', $taxIdValue)
             );
         }
     }
