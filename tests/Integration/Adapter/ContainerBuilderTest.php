@@ -40,10 +40,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertInstanceOf(ContainerInterface::class, $container);
     }
 
-    /**
-     * @depends testGetFrontContainer
-     */
-    public function testGetFrontContainerShouldContainsAnInstanceOfEntityManager()
+    public function testFrontContainerContainsAnEntityManager()
     {
         $container = ContainerBuilder::getContainer('front', true);
         $entityManager = $container->get('doctrine.orm.entity_manager');
@@ -58,14 +55,17 @@ class ContainerBuilderTest extends TestCase
         $this->assertInstanceOf(ContainerInterface::class, $container);
     }
 
-    /**
-     * @depends testGetAdminContainer
-     */
-    public function testGetAdminContainerShouldContainsAnInstanceOfEntityManager()
+    public function testGetAdminContainerContainsAnEntityManager()
     {
         $container = ContainerBuilder::getContainer('admin', true);
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $this->assertNotNull($entityManager);
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
+    }
+
+    public function testContainerLoadsModuleAutoload()
+    {
+        ContainerBuilder::getContainer('front', true);
+        $this->assertTrue(class_exists('\PrestaShop\Module\Banner\Entity\Banner'));
     }
 }

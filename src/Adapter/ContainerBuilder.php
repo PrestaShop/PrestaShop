@@ -26,17 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Doctrine\ORM\Tools\Setup;
 use LegacyCompilerPass;
-use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrinePassListBuilder;
+use PrestaShop\PrestaShop\Adapter\Container\ContainerBuilderExtensionInterface;
+use PrestaShop\PrestaShop\Adapter\Container\DoctrineBuilderExtension;
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Resource\DirectoryResource;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -49,12 +47,7 @@ class ContainerBuilder
     /**
      * @var ContainerInterface
      */
-    private static $container;
-
-    /**
-     * @var bool
-     */
-    private $isDebug;
+    private static $containers;
 
     /**
      * @var string
@@ -82,48 +75,55 @@ class ContainerBuilder
     private $containerConfigCache;
 
     /**
-     * @param string $name
+     * @param string $containerName
      * @param bool $isDebug
      *
      * @return SfContainerBuilder
      *
      * @throws \Exception
      */
-    public static function getContainer($name, $isDebug)
+    public static function getContainer($containerName, $isDebug)
     {
-        if (null === self::$container) {
-            $builder = new ContainerBuilder();
-            self::$container = $builder->initContainer($name, $isDebug);
+        if (!isset(self::$containers[$containerName]) || null === self::$containers[$containerName]) {
+            $builder = new ContainerBuilder(new Environment($isDebug));
+            self::$containers[$containerName] = $builder->buildContainer($containerName);
         }
 
-        return self::$container;
+        return self::$containers[$containerName];
     }
 
     /**
-     * @param string $name
-     * @param bool $isDebug
+     * @param EnvironmentInterface $environment
+     */
+    public function __construct(EnvironmentInterface $environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * @param string $containerName
      *
      * @return ContainerInterface|SfContainerBuilder
      *
      * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
-    public function initContainer($name, $isDebug)
+    public function buildContainer($containerName)
     {
-        $this->containerName = $name;
-        $this->isDebug = $isDebug;
-
-        $environment = new Environment($isDebug);
-        $this->environment = $environment->getName();
+        $this->containerName = $containerName;
         $this->containerClassName = ucfirst($this->containerName) . 'Container';
         $this->dumpFile = _PS_CACHE_DIR_ . $this->containerClassName . '.php';
-        $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->isDebug);
+        $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->environment->isDebug());
 
+        //These methods load required files like autoload or annotation metadata so we need to load
+        //them at each container creation, this can't be compiled.
         $this->loadDoctrineAnnotationMetadata();
+        $this->loadModulesAutoloader();
+
         $container = $this->loadDumpedContainer();
         if (null === $container) {
-            $container = $this->buildContainer();
+            $container = $this->compileContainer();
         }
-        $this->loadModulesAutoloader();
 
         return $container;
     }
@@ -147,14 +147,21 @@ class ContainerBuilder
      *
      * @throws \Exception
      */
-    private function buildContainer()
+    private function compileContainer()
     {
         $container = new SfContainerBuilder();
 
-        $this->initParameters($container);
         $container->addCompilerPass(new LegacyCompilerPass());
-        $this->initDoctrine($container);
         $this->loadServices($container);
+
+        //Build extensions
+        $builderExtensions = [
+            new DoctrineBuilderExtension($this->environment),
+        ];
+        /** @var ContainerBuilderExtensionInterface $builderExtension */
+        foreach ($builderExtensions as $builderExtension) {
+            $builderExtension->build($container);
+        }
 
         $container->compile();
 
@@ -166,57 +173,6 @@ class ContainerBuilder
         );
 
         return $container;
-    }
-
-    /**
-     * @param SfContainerBuilder $container
-     */
-    private function initParameters(SfContainerBuilder $container)
-    {
-        $parameters = require _PS_ROOT_DIR_ . '/app/config/parameters.php';
-        foreach ($parameters['parameters'] as $parameter => $value) {
-            $container->setParameter($parameter, $value);
-        }
-        $container->setParameter('kernel.bundles', []);
-        $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app/');
-        $container->setParameter('kernel.name', 'app');
-        $container->setParameter('kernel.debug', $this->isDebug);
-        $container->setParameter('kernel.environment', $this->environment);
-        $container->setParameter('kernel.cache_dir', _PS_CACHE_DIR_);
-    }
-
-    /**
-     * @param SfContainerBuilder $container
-     *
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    private function initDoctrine(SfContainerBuilder $container)
-    {
-        $configFile = _PS_ROOT_DIR_ . '/app/config/config.php';
-        if (!file_exists($configFile)) {
-            return;
-        }
-        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
-        if (null === $moduleRepository) {
-            return;
-        }
-        $config = require $configFile;
-        $activeModules = $moduleRepository->getActiveModules();
-
-        $container->registerExtension(new DoctrineExtension());
-        $container->loadFromExtension('doctrine', $config['doctrine']);
-
-        $doctrinePassFactory = new ModulesDoctrinePassListBuilder($activeModules);
-        $compilerPassList = $doctrinePassFactory->getCompilerPassList($activeModules);
-        /** @var CompilerPassInterface $compilerPass */
-        foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
-            $container->addCompilerPass($compilerPass);
-            if (is_dir($compilerResourcePath)) {
-                $container->addResource(new DirectoryResource($compilerResourcePath));
-            } elseif (is_file($compilerResourcePath)) {
-                $container->addResource(new FileResource($compilerResourcePath));
-            }
-        }
     }
 
     /**
@@ -238,7 +194,7 @@ class ContainerBuilder
     private function loadServices(SfContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-        $servicesPath = _PS_CONFIG_DIR_ . sprintf('services/%s/services_%s.yml', $this->containerName, $this->environment);
+        $servicesPath = _PS_CONFIG_DIR_ . sprintf('services/%s/services_%s.yml', $this->containerName, $this->environment->getName());
         $loader->load($servicesPath);
     }
 
@@ -254,7 +210,7 @@ class ContainerBuilder
         if (null !== $moduleRepository) {
             $activeModules = $moduleRepository->getActiveModules();
             foreach ($activeModules as $module) {
-                $autoloader = _PS_ROOT_DIR_ . '/modules/' . $module . '/vendor/autoload.php';
+                $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';
 
                 if (file_exists($autoloader)) {
                     include_once $autoloader;
