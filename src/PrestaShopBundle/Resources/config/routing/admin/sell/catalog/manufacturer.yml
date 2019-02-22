@@ -2,7 +2,8 @@ admin_manufacturers_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index'
+    ##todo: implement index action
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
     _legacy_controller: AdminManufacturers
 
 #
@@ -16,7 +17,7 @@ admin_manufacturers_search:
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_create:
-  path: manufacturers/add
+  path: /new
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
@@ -32,7 +33,7 @@ admin_manufacturers_view:
     manufacturerId: \d+
 
 admin_manufacturers_edit:
-  path: manufacturers/{manufacturerId}/edit
+  path: /{manufacturerId}/edit
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:edit'

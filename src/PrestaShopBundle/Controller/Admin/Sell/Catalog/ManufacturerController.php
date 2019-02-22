@@ -115,10 +115,25 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function editAction()
+    /**
+     * Edits manufacturer
+     *
+     * @param Request $request
+     * @param $manufacturerId
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $manufacturerId)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        $manufacturerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
+        $manufacturerFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
+        $manufacturerForm = $manufacturerFormBuilder->getFormFor($manufacturerId);
+        $manufacturerForm->handleRequest($request);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/edit.html.twig', [
+            'manufacturerForm' => $manufacturerForm->createView(),
+            'manufacturerName' => 'test',
+        ]);
     }
 
     /**
@@ -333,6 +348,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_manufacturers_index');
     }
+
     /**
      * Provides error messages for exceptions
      *

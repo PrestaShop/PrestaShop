@@ -774,3 +774,11 @@ services:
             - '@translator'
         tags:
             - { name: form.type }
+
+    form.type.sell.manufacturer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Manufacturer\ManufacturerType'
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+        tags:
+            - { name: form.type }
