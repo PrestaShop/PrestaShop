@@ -32,6 +32,7 @@ const $ = window.$;
  */
 export default class OrderCreator {
   constructor() {
+    this.data = {};
     this.$container = $('#orderCreationContainer');
 
     this.customerSearcher = new CustomerSearcher();
@@ -50,7 +51,16 @@ export default class OrderCreator {
    */
   _onCustomerChooseForOrderCreation(event) {
     const $chooseBtn = $(event.currentTarget);
+    const $customerCard = $chooseBtn.closest('.card');
 
-    console.log($chooseBtn.data('customer-id'));
+    $chooseBtn.addClass('d-none');
+
+    $customerCard.addClass('border-success');
+    $customerCard.find('.js-change-customer-btn').removeClass('d-none');
+
+    this.$container.find('.js-search-customer-block').addClass('d-none');
+    this.$container.find('.js-customer-search-result:not(.border-success)').remove();
+
+    this.data.customer_id = $chooseBtn.data('customer-id');
   }
 }
