@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
  */
 class GetTaxForEditing
 {
+    /**
+     * @var TaxId
+     */
     private $taxId;
 
     /**

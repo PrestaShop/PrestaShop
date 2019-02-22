@@ -34,7 +34,7 @@ class AddTaxCommand
     /**
      * @var array
      */
-    private $name;
+    private $localizedNames;
 
     /**
      * @var float
@@ -47,13 +47,13 @@ class AddTaxCommand
     private $enabled;
 
     /**
-     * @param array $name
+     * @param array $localizedNames
      * @param float $rate
      * @param bool $enabled
      */
-    public function __construct(array $name, $rate, $enabled)
+    public function __construct(array $localizedNames, $rate, $enabled)
     {
-        $this->name = $name;
+        $this->localizedNames = $localizedNames;
         $this->rate = $rate;
         $this->enabled = $enabled;
     }
@@ -61,17 +61,9 @@ class AddTaxCommand
     /**
      * @return array
      */
-    public function getName()
+    public function getLocalizedNames()
     {
-        return $this->name;
-    }
-
-    /**
-     * @param array $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+        return $this->localizedNames;
     }
 
     /**
@@ -80,14 +72,6 @@ class AddTaxCommand
     public function getRate()
     {
         return $this->rate;
-    }
-
-    /**
-     * @param float $rate
-     */
-    public function setRate($rate)
-    {
-        $this->rate = $rate;
     }
 
     /**

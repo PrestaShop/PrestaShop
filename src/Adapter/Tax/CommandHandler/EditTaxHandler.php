@@ -49,9 +49,15 @@ final class EditTaxHandler extends AbstractTaxHandler implements EditTaxHandlerI
         $tax = new Tax($command->getTaxId()->getValue());
         $this->assertTaxWasFound($command->getTaxId(), $tax);
 
-        $tax->name = $command->getName();
-        $tax->rate = $command->getRate();
-        $tax->active = $command->isEnabled();
+        if (null !== $command->getLocalizedNames()) {
+            $tax->name = $command->getLocalizedNames();
+        }
+        if (null !== $command->getRate()) {
+            $tax->rate = $command->getRate();
+        }
+        if (null !== $command->isEnabled()) {
+            $tax->active = $command->isEnabled();
+        }
 
         try {
             if (!$tax->update()) {
