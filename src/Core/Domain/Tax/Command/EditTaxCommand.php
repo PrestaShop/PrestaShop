@@ -40,34 +40,28 @@ class EditTaxCommand
     private $taxId;
 
     /**
-     * @var array
+     * @var array|null
      */
-    private $name;
+    private $localizedNames;
 
     /**
-     * @var float
+     * @var float|null
      */
     private $rate;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $enabled;
 
     /**
-     * @param $taxId
-     * @param array $name
-     * @param float $rate
-     * @param bool $enabled
+     * @param int $taxId
      *
      * @throws TaxException
      */
-    public function __construct($taxId, array $name, $rate, $enabled)
+    public function __construct($taxId)
     {
         $this->taxId = new TaxId($taxId);
-        $this->name = $name;
-        $this->rate = $rate;
-        $this->enabled = $enabled;
     }
 
     /**
@@ -79,15 +73,27 @@ class EditTaxCommand
     }
 
     /**
-     * @return array $name
+     * @return array|null
      */
-    public function getName()
+    public function getLocalizedNames()
     {
-        return $this->name;
+        return $this->localizedNames;
     }
 
     /**
-     * @return float $rate
+     * @param array|null $localizedNames
+     *
+     * @return self
+     */
+    public function setLocalizedNames($localizedNames)
+    {
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return float|null
      */
     public function getRate()
     {
@@ -95,10 +101,34 @@ class EditTaxCommand
     }
 
     /**
-     * @return bool $enabled
+     * @param float|null $rate
+     *
+     * @return self
+     */
+    public function setRate($rate)
+    {
+        $this->rate = $rate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
      */
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * @param bool|null $enabled
+     *
+     * @return self
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 }

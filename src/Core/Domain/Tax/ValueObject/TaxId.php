@@ -52,7 +52,7 @@ class TaxId
             );
         }
 
-        $this->taxId = (int) $taxId;
+        $this->taxId = $taxId;
     }
 
     /**

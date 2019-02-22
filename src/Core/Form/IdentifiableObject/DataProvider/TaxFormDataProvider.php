@@ -51,13 +51,13 @@ final class TaxFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData($id)
+    public function getData($taxId)
     {
         /** @var EditableTax $editableTax */
-        $editableTax = $this->queryBus->handle(new GetTaxForEditing($id));
+        $editableTax = $this->queryBus->handle(new GetTaxForEditing($taxId));
 
         return [
-            'name' => $editableTax->getName(),
+            'name' => $editableTax->getLocalizedNames(),
             'rate' => $editableTax->getRate(),
             'is_enabled' => $editableTax->isActive(),
         ];

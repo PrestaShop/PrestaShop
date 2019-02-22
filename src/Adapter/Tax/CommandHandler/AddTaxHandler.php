@@ -48,7 +48,7 @@ final class AddTaxHandler extends AbstractTaxHandler implements AddTaxHandlerInt
     {
         $tax = new Tax();
 
-        $tax->name = $command->getName();
+        $tax->name = $command->getLocalizedNames();
         $tax->rate = $command->getRate();
         $tax->active = $command->isEnabled();
 
