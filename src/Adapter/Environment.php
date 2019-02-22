@@ -44,13 +44,13 @@ class Environment implements EnvironmentInterface
     /**
      * @var string
      */
-    private $environment;
+    private $name;
 
     /**
      * @param bool|null $isDebug
-     * @param string|null $environment
+     * @param string|null $name
      */
-    public function __construct($isDebug = null, $environment = null)
+    public function __construct($isDebug = null, $name = null)
     {
         if (null === $isDebug) {
             $this->isDebug = defined(_PS_MODE_DEV_) ? _PS_MODE_DEV_ : true;
@@ -58,14 +58,14 @@ class Environment implements EnvironmentInterface
             $this->isDebug = $isDebug;
         }
 
-        $this->environment = $environment;
-        if (null === $this->environment) {
+        $this->name = $name;
+        if (null === $this->name) {
             if (!empty($_SERVER['APP_ENV'])) {
-                $this->environment = $_SERVER['APP_ENV'];
+                $this->name = $_SERVER['APP_ENV'];
             } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-                $this->environment = 'test';
+                $this->name = 'test';
             } else {
-                $this->environment = $this->isDebug ? 'dev' : 'prod';
+                $this->name = $this->isDebug ? 'dev' : 'prod';
             }
         }
     }
@@ -73,9 +73,9 @@ class Environment implements EnvironmentInterface
     /**
      * {@inheritdoc}
      */
-    public function getEnvironment()
+    public function getName()
     {
-        return $this->environment;
+        return $this->name;
     }
 
     /**

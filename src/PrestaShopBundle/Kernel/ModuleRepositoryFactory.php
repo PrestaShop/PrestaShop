@@ -81,7 +81,7 @@ class ModuleRepositoryFactory
     {
         $this->environment = $environment;
         if (null === $environment) {
-            $this->environment = (new Environment())->getEnvironment();
+            $this->environment = (new Environment())->getName();
         }
         $this->parameters = $parameters;
     }
