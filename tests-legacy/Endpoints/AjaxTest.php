@@ -30,10 +30,46 @@ use Tools;
 
 class AjaxTest extends AbstractEndpointAdminTest
 {
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->employeeLogin();
+    }
+
+    public function testAjaxEndpointForReferrersFilterCase()
+    {
+        $_GET['ajaxReferrers'] = 1;
+        $_GET['ajaxProductFilter'] = 1;
+        $_GET['token'] = Tools::getAdminTokenLite('AdminReferrers');
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = json_decode(ob_get_clean());
+
+        $this->assertTrue(is_array($output));
+        if (count($output)) {
+            $firstElem = reset($output);
+            // Test some properties, not all of them
+            $this->assertObjectHasAttribute('id_product', $firstElem);
+            $this->assertObjectHasAttribute('product_name', $firstElem);
+            $this->assertObjectHasAttribute('sales', $firstElem);
+        }
+    }
+
+    public function testAjaxEndpointForReferrersFillCase()
+    {
+        $_GET['ajaxReferrers'] = 1;
+        $_GET['ajaxFillProducts'] = 1;
+        $_GET['token'] = Tools::getAdminTokenLite('AdminReferrers');
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = json_decode(ob_get_clean());
+        $this->assertTrue(is_array($output)); 
+    }
+
     public function testAjaxEndpointForGettingNotifications()
     {
-        $this->employeeLogin();
-
         $_POST['getNotifications'] = 1;
 
         ob_start();
@@ -48,8 +84,6 @@ class AjaxTest extends AbstractEndpointAdminTest
 
     public function testAjaxEndpointForMarkingNotificationAsRead()
     {
-        $this->employeeLogin();
-
         $_POST['updateElementEmployee'] = 1;
         $_POST['updateElementEmployeeType'] = 'order';'incompatibleValue';
 
@@ -62,8 +96,6 @@ class AjaxTest extends AbstractEndpointAdminTest
 
     public function testAjaxEndpointForMarkingNotificationAsReadButWithWrongInputData()
     {
-        $this->employeeLogin();
-
         $_POST['updateElementEmployee'] = 1;
         $_POST['updateElementEmployeeType'] = 'incompatibleValue';
 
