@@ -54,19 +54,6 @@ if (Tools::isSubmit('ajaxReferrers')) {
 }
 
 /**
- * Import controller: Fields available for a given entity
- * -> Moved in Symfony
- */
-if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
-    $import = new AdminImportController();
-
-    $fields = array_map(function ($elem) {
-        return ['field' => $elem];
-    }, $import->getAvailableFields(true));
-    echo json_encode($fields);
-}
-
-/**
  * Return the list of a pack of products
  * Not found
  *
@@ -143,6 +130,19 @@ $context = Context::getContext();
 // Not used anymore, but kept just in case
 if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
     readfile('https://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
+}
+
+/**
+ * Import controller: Fields available for a given entity
+ * -> Moved in Symfony
+ */
+if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
+    $import = new AdminImportController();
+
+    $fields = array_map(function ($elem) {
+        return ['field' => $elem];
+    }, $import->getAvailableFields(true));
+    echo json_encode($fields);
 }
 
 /**
