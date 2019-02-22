@@ -528,9 +528,6 @@ form#importDropzone {
 
 .hook-panel {
   margin-bottom: 10px !important;
-  // border: solid #E6E6E6 1px;
-  // box-shadow: rgba(black,0.10) 0 -2px 0 inset;
-  // border-radius: 3px;
   padding: 10px 10px 5px 10px;
 
   .highlight {
@@ -569,12 +566,10 @@ form#importDropzone {
     display: table;
     width: 100%;
     padding: 5px 0;
-    // margin-bottom: -1px;
     border-bottom: solid 1px #bbcdd2;
     background: #fff;
     &:hover{
       background-color: #fafbfc;
-
       .drag_indicator{
         color: #b3c7cd;
         opacity: 1;
@@ -583,11 +578,11 @@ form#importDropzone {
     &:focus{
       outline: none;
     }
-    &:active,&:visited{
+    &:active,
+    &:visited {
       border-radius: 3px;
       box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
       background-color: #6c868e;
-
       .module-name,
       .module-description{
         color: #fff;
@@ -616,20 +611,15 @@ form#importDropzone {
 
   .module-column-select {
     display: table-cell;
-    // width: 22px;
     width: 90px;
     min-height: 35px;
     vertical-align: middle;
-    // text-align: center;
-    // border-right: 1px solid #ddd;
-      // text-align: right;
     padding: 0 10px;
       .drag_indicator{
         opacity: 0;
       }
       input[type="checkbox"]{
         display:none;
-        
       }
  
       .selectbox{
@@ -640,12 +630,6 @@ form#importDropzone {
         vertical-align: middle;
         margin: 0;
         position: relative;
-      //   &:before{
-      //     width:100%;
-      //     height: 100%;
-      //     content:'';
-      //     position: absolute;
-      //   }
         .done{
           opacity: 0;
           color:#fff;
@@ -676,10 +660,6 @@ form#importDropzone {
       font-size: 1em;
       width: 40px;
       font-size: 1em;
-      // color: #aaa;
-      // text-shadow: white 1px 1px;
-      // border-radius: 3px;
-      // box-shadow: rgba(0,0,0,0.2) 0 1px 3px inset;
     }
   }
 
@@ -700,13 +680,11 @@ form#importDropzone {
     vertical-align: middle;
     font-size:.95em;
     .module-name {
-      // font-size: 1.2em;
       color: #25b9d7;
     }
 
     .module-description {
       color: #363a41;
-      // font-size: 1.15em;
     }
   }
 
