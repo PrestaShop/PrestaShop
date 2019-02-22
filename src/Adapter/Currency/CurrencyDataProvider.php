@@ -47,6 +47,9 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     private $shopId;
 
+    /** @var Currency */
+    private $defaultCurrency;
+
     public function __construct(ConfigurationInterface $configuration, $shopId)
     {
         $this->configuration = $configuration;
@@ -152,8 +155,20 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getDefaultCurrencyIsoCode()
     {
-        $defaultCurrencyId = $this->configuration->get('PS_CURRENCY_DEFAULT');
+        return $this->getDefaultCurrency()->iso_code;
+    }
 
-        return (new Currency($defaultCurrencyId, null, $this->shopId))->iso_code;
+    /**
+     * Returns default Currency set in Configuration
+     *
+     * @return Currency
+     */
+    public function getDefaultCurrency()
+    {
+        if (null === $this->defaultCurrency) {
+            $this->defaultCurrency = new Currency((int) $this->configuration->get('PS_CURRENCY_DEFAULT'), null, $this->shopId);
+        }
+
+        return $this->defaultCurrency;
     }
 }

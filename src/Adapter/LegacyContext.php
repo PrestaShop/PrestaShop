@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use AdminController;
 use AdminLegacyLayoutControllerCore;
 use Context;
+use Currency;
 use Employee;
 use Language;
 use RuntimeException;
@@ -43,6 +44,27 @@ use Tab;
  */
 class LegacyContext
 {
+    /** @var Currency */
+    private $employeeCurrency;
+
+    /** @var string Contains the base uri for mail themes (by default https://domain.com/mails/themes/). Used for mails assets. */
+    private $mailThemesUri;
+
+    /** @var Tools */
+    private $tools;
+
+    /**
+     * @param string|null $mailThemesUri
+     * @param Tools|null $tools
+     */
+    public function __construct(
+        $mailThemesUri = null,
+        Tools $tools = null
+    ) {
+        $this->mailThemesUri = $mailThemesUri;
+        $this->tools = null !== $tools ? $tools : new Tools();
+    }
+
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
      * that will contains all you need in the Core architecture.
@@ -141,6 +163,16 @@ class LegacyContext
     }
 
     /**
+     * Url to the mail themes folder
+     *
+     * @return string
+     */
+    public function getMailThemesUrl()
+    {
+        return $this->tools->getShopDomainSsl(true) . __PS_BASE_URI__ . $this->mailThemesUri;
+    }
+
+    /**
      * This fix is used to have a ready translation in the smarty 'l' function.
      * Called by AutoResponseFormatTrait in beforeActionSuggestResponseFormat().
      * So if you do not use this Trait, you must call this method by yourself in the action.
@@ -229,16 +261,16 @@ class LegacyContext
 
     /**
      * Returns Currency set for the current employee.
+     *
+     * @return Currency
      */
     public function getEmployeeCurrency()
     {
-        static $employeeCurrency;
-
-        if (null === $employeeCurrency) {
-            $employeeCurrency = $this->getContext()->currency->sign;
+        if (null === $this->employeeCurrency && $this->getContext()->currency) {
+            $this->employeeCurrency = $this->getContext()->currency->sign;
         }
 
-        return $employeeCurrency;
+        return $this->employeeCurrency;
     }
 
     /**
@@ -274,5 +306,13 @@ class LegacyContext
         $tab = new Tab($idTab);
 
         return $tab->class_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMailThemesUri()
+    {
+        return $this->mailThemesUri;
     }
 }

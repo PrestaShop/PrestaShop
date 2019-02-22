@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
@@ -35,20 +36,17 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
  */
 class LayoutExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
-    /**
-     * @var LegacyContext
-     */
+    /** @var LegacyContext */
     private $context;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $environment;
 
-    /**
-     * @var Configuration
-     */
+    /** @var Configuration */
     private $configuration;
+
+    /** @var CurrencyDataProvider */
+    private $currencyDataProvider;
 
     /**
      * Constructor.
@@ -56,13 +54,20 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * Keeps the Context to look inside language settings.
      *
      * @param LegacyContext $context
-     * @param string environment
+     * @param string $environment
+     * @param Configuration $configuration
+     * @param CurrencyDataProvider $currencyDataProvider
      */
-    public function __construct(LegacyContext $context, $environment)
-    {
+    public function __construct(
+        LegacyContext $context,
+        $environment,
+        Configuration $configuration,
+        CurrencyDataProvider $currencyDataProvider
+    ) {
         $this->context = $context;
         $this->environment = $environment;
-        $this->configuration = new Configuration();
+        $this->configuration = $configuration;
+        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
@@ -72,9 +77,25 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      */
     public function getGlobals()
     {
+        /*
+         * As this is a twig extension we need to be very resilient and prevent it from crashing
+         * the environment, for example the command debug:twig should not fail because of this extension
+         */
+
+        try {
+            $defaultCurrency = $this->context->getEmployeeCurrency() ?: $this->currencyDataProvider->getDefaultCurrency();
+        } catch (\Exception $e) {
+            $defaultCurrency = null;
+        }
+        try {
+            $rootUrl = $this->context->getRootUrl();
+        } catch (\Exception $e) {
+            $rootUrl = null;
+        }
+
         return array(
-            'default_currency' => $this->context->getEmployeeCurrency(),
-            'root_url' => $this->context->getRootUrl(),
+            'default_currency' => $defaultCurrency,
+            'root_url' => $rootUrl,
             'js_translatable' => array(),
         );
     }

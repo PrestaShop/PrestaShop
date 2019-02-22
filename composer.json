@@ -36,6 +36,7 @@
         "nikic/php-parser": "^2.1",
         "paragonie/random_compat": "^1.4|^2.0",
         "pear/archive_tar": "~1.4.2",
+        "pelago/emogrifier": "^2.1",
         "phpoffice/phpspreadsheet": "~1.5",
         "prestashop/blockreassurance": "^3",
         "prestashop/contactform": "^4",
@@ -100,6 +101,7 @@
         "sensio/framework-extra-bundle": "^5.0.0",
         "shudrum/array-finder": "^1.1.0",
         "smarty/smarty": "^3.1.31",
+        "soundasleep/html2text": "^0.5.0",
         "swiftmailer/swiftmailer": "~5.4.3",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
@@ -171,6 +173,10 @@
         ],
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
+        ],
+        "integration-tests": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
         ],
         "phpunit-admin": [
             "@composer create-test-db",
