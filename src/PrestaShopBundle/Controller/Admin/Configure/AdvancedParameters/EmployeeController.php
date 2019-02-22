@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -385,6 +386,10 @@ class EmployeeController extends FrameworkBundleAdminController
             ),
             MissingShopAssociationException::class => $this->trans(
                 'The employee must be associated with at least one shop.',
+                'Admin.Advparameters.Notification'
+            ),
+            InvalidProfileException::class => $this->trans(
+                'The provided profile is invalid',
                 'Admin.Advparameters.Notification'
             ),
             EmployeeConstraintException::class => [

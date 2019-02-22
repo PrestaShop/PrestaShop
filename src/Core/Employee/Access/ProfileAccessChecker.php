@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Profile;
+namespace PrestaShop\PrestaShop\Core\Employee\Access;
 
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
-use Profile;
 
 /**
- * Class ProfileDataProvider provides employee profile data using legacy logic.
+ * Class ProfileAccessChecker checks profile access for employee.
  */
-class ProfileDataProvider
+final class ProfileAccessChecker implements ProfileAccessCheckerInterface
 {
     /**
      * @var ContextEmployeeProviderInterface
@@ -57,25 +56,14 @@ class ProfileDataProvider
     }
 
     /**
-     * Get employee profiles.
-     *
-     * @param int $languageId
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getProfiles($languageId)
+    public function canAccessProfile($profileId)
     {
-        $profiles = Profile::getProfiles($languageId);
-
-        if ($profiles && !$this->contextEmployeeProvider->isSuperAdmin()) {
-            foreach ($profiles as $key => $profile) {
-                if ($profile['id_profile'] == $this->superAdminProfileId) {
-                    unset($profiles[$key]);
-                    break;
-                }
-            }
+        if ($this->contextEmployeeProvider->isSuperAdmin()) {
+            return true;
         }
 
-        return $profiles ?: [];
+        return $profileId !== $this->superAdminProfileId;
     }
 }

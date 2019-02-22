@@ -37,6 +37,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\AddEmployeeHandler'
     arguments:
       - '@prestashop.core.crypto.hashing'
+      - '@prestashop.core.employee.profile_access_checker'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\AddEmployeeCommand }
 
@@ -44,6 +45,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\EditEmployeeHandler'
     arguments:
       - '@prestashop.core.crypto.hashing'
+      - '@prestashop.core.employee.profile_access_checker'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand }
 

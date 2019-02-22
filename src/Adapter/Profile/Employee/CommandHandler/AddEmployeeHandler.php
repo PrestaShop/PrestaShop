@@ -31,7 +31,9 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\AddEmployeeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 
 final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmployeeHandlerInterface
 {
@@ -41,11 +43,20 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
     private $hashing;
 
     /**
-     * @param Hashing $hashing
+     * @var ProfileAccessCheckerInterface
      */
-    public function __construct(Hashing $hashing)
-    {
+    private $profileAccessChecker;
+
+    /**
+     * @param Hashing $hashing
+     * @param ProfileAccessCheckerInterface $profileAccessChecker
+     */
+    public function __construct(
+        Hashing $hashing,
+        ProfileAccessCheckerInterface $profileAccessChecker
+    ) {
         $this->hashing = $hashing;
+        $this->profileAccessChecker = $profileAccessChecker;
     }
 
     /**
@@ -53,6 +64,10 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
      */
     public function handle(AddEmployeeCommand $command)
     {
+        if (!$this->profileAccessChecker->canAccessProfile((int) $command->getProfileId())) {
+            throw new InvalidProfileException('The provided profile is invalid');
+        }
+
         $employee = $this->createLegacyEmployeeObjectFromCommand($command);
 
         $this->associateWithShops($employee, $command->getShopAssociation());
