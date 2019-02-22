@@ -43,6 +43,8 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDe
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -133,8 +135,25 @@ class ManufacturerController extends FrameworkBundleAdminController
     {
         $manufacturerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
         $manufacturerFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
-        $manufacturerForm = $manufacturerFormBuilder->getFormFor($manufacturerId);
-        $manufacturerForm->handleRequest($request);
+
+        try {
+            $manufacturerForm = $manufacturerFormBuilder->getFormFor((int) $manufacturerId);
+            $manufacturerForm->handleRequest($request);
+
+            $result = $manufacturerFormHandler->handleFor((int) $manufacturerId, $manufacturerForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof ManufacturerNotFoundException) {
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
