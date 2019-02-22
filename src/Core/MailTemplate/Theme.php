@@ -42,7 +42,7 @@ class Theme implements ThemeInterface
     private $layouts;
 
     /**
-     * @param $name
+     * @param string $name
      */
     public function __construct($name)
     {

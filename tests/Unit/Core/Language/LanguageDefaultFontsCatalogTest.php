@@ -26,7 +26,6 @@
 
 namespace Tests\Unit\Core\Language;
 
-
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;

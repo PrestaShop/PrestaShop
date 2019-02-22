@@ -47,7 +47,7 @@ interface ThemeCatalogInterface
     public function listThemes();
 
     /**
-     * @param $theme
+     * @param string $theme
      *
      * @throws InvalidArgumentException
      *

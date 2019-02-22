@@ -75,11 +75,11 @@ class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
     {
         $languageDefaultFont = $this->languageDefaultFonts->getDefaultFontByLanguage($language);
         if (!empty($languageDefaultFont)) {
-            $languageDefaultFont .=  ',';
+            $languageDefaultFont .= ',';
         }
 
         $mailLayoutVariables = array_merge($this->defaultVariables, [
-            'languageIsRTL' => (bool) $language->isRTL(),
+            'languageIsRTL' => $language->isRTL(),
             'languageDefaultFont' => $languageDefaultFont,
             'templateName' => $mailLayout->getName(),
             'templateModuleName' => $mailLayout->getModuleName(),

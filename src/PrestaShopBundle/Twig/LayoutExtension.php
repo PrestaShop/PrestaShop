@@ -54,7 +54,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * Keeps the Context to look inside language settings.
      *
      * @param LegacyContext $context
-     * @param string environment
+     * @param string $environment
      * @param Configuration $configuration
      * @param CurrencyDataProvider $currencyDataProvider
      */
