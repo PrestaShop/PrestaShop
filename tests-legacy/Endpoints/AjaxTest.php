@@ -26,6 +26,7 @@
 
 namespace LegacyTests\Endpoints;
 
+use Context;
 use Tools;
 
 class AjaxTest extends AbstractEndpointAdminTest
@@ -35,6 +36,8 @@ class AjaxTest extends AbstractEndpointAdminTest
         parent::setUp();
         $this->employeeLogin();
     }
+
+    // Referrers calls
 
     public function testAjaxEndpointForReferrersFilterCase()
     {
@@ -67,6 +70,117 @@ class AjaxTest extends AbstractEndpointAdminTest
         $output = json_decode(ob_get_clean());
         $this->assertTrue(is_array($output)); 
     }
+
+    // Import calls
+
+    public function testAjaxEndpointForImportAvailableFields()
+    {
+        $_GET['getAvailableFields'] = 1;
+        $_GET['entity'] = 'product';
+        $_GET['token'] = Tools::getAdminTokenLite('AdminImport');
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = json_decode(ob_get_clean());
+        $this->assertTrue(is_array($output)); 
+    }
+
+    public function testAjaxEndpointForProductPack()
+    {
+        $_GET['ajaxProductPackItems'] = 1;
+        $_GET['token'] = Tools::getAdminTokenLite('AdminProducts');
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = json_decode(ob_get_clean());
+        $this->assertTrue(is_array($output));
+    }
+
+    public function testAjaxEndpointForCategoryTree()
+    {
+        $_GET['getChildrenCategories'] = 1;
+        $_GET['id_category_parent'] = 1;
+        $_GET['token'] = Tools::getAdminTokenLite('AdminCategories');
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = json_decode(ob_get_clean());
+        $this->assertNotNull($output);
+        if (count($output)) {
+            $firstElem = reset($output);
+            // Test some properties, not all of them
+            $this->assertObjectHasAttribute('id_category', $firstElem);
+            $this->assertObjectHasAttribute('name', $firstElem);
+            $this->assertObjectHasAttribute('has_children', $firstElem);
+        }
+    }
+
+    public function testAjaxEndpointForCategorySearch()
+    {
+        $_GET['searchCategory'] = 1;
+        $_GET['token'] = Tools::getAdminTokenLite('AdminCategories');
+
+        $_GET['q'] = 'Home';
+        $_GET['limit'] = 10;
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = ob_get_clean();
+        $this->assertNotEmpty($output);
+        // Response sample: "Home Accessories|8"
+        $this->assertTrue(strpos($output, '|') !== false);
+    }
+
+    public function testAjaxEndpointForCategoryParentId()
+    {
+        $_GET['getParentCategoriesId'] = 1;
+        $_GET['id_category'] = 2;
+        $_GET['token'] = Tools::getAdminTokenLite('AdminCategories');
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = json_decode(ob_get_clean());
+        $this->assertTrue(is_array($output));
+        if (count($output)) {
+            $firstElem = reset($output);
+            // Test some properties, not all of them
+            $this->assertObjectHasAttribute('id_category', $firstElem);
+        }
+    }
+
+    // Zones
+
+    public function testAjaxEndpointForZones()
+    {
+        $_GET['getZones'] = 1;
+        $_GET['token'] = Tools::getAdminTokenLite('AdminZones');
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = json_decode(ob_get_clean());
+
+        $this->assertObjectHasAttribute('hasError', $output);
+        $this->assertObjectHasAttribute('errors', $output);
+        $this->assertObjectHasAttribute('data', $output);
+    }
+
+    // Email HTML
+
+    public function testAjaxEndpointForEmailHTML()
+    {
+        $_GET['getEmailHTML'] = 1;
+        $_GET['email'] = Context::getContext()->shop->getBaseURI() . 'themes/classic/mails/en/test.html';
+        $_GET['token'] = Tools::getAdminTokenLite('AdminTranslations');
+
+        ob_start();
+        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
+        $output = ob_get_clean();
+
+        $this->assertNotEmpty($output);
+        $this->assertNotSame($output, strip_tags($output));
+    }
+
+    // Notifications
 
     public function testAjaxEndpointForGettingNotifications()
     {
