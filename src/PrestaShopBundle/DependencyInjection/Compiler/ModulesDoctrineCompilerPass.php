@@ -50,11 +50,11 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
         /** @var CompilerPassInterface $compilerPass */
         foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
             $compilerPass->process($container);
-            if (is_dir($compilerResourcePath)) {
-                $container->addResource(new DirectoryResource($compilerResourcePath));
-            } elseif (is_file($compilerResourcePath)) {
-                $container->addResource(new FileResource($compilerResourcePath));
-            }
+            $container->addResource(
+                is_dir($compilerResourcePath) ?
+                new DirectoryResource($compilerResourcePath) :
+                new FileResource($compilerResourcePath)
+            );
         }
     }
 
