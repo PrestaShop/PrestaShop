@@ -75,13 +75,14 @@ class AverageTaxOfProductsTaxCalculator
         }
 
         $actual_tax = 0;
-        foreach ($amounts as &$data) {
+        foreach ($amounts as $key => &$data) {
             $data = Tools::ps_round(
                 $price_before_tax * ($data['base'] / $total_base) * $data['rate'] / 100,
                 $round_precision,
                 $round_mode
             );
             $actual_tax += $data;
+            $amounts[$key] = array('id_tax' => $data);
         }
         unset($data);
 
