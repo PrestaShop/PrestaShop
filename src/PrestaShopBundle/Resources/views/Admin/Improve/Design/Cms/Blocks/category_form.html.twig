@@ -75,6 +75,12 @@
           'help': 'Only letters and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help')
         }) }}
 
+        {% if cmsPageCategoryForm.shop_association is defined %}
+          {{ ps.form_group_row(cmsPageCategoryForm.shop_association, {}, {
+            'label': 'Shop association'|trans({}, 'Admin.Global')
+          }) }}
+        {% endif %}
+
       </div>
     </div>
   </div>

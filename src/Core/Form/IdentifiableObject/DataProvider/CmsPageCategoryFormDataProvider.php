@@ -22,11 +22,18 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @var array
      */
-    public function __construct(CommandBusInterface $queryBus)
+    private $contextShopIds;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     * @param array $contextShopIds
+     */
+    public function __construct(CommandBusInterface $queryBus, array $contextShopIds)
     {
         $this->queryBus = $queryBus;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -48,6 +55,7 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
             'meta_description' => $editableCmsPageCategory->getLocalisedMetaDescription(),
             'meta_keywords' => $editableCmsPageCategory->getLocalisedMetaKeywords(),
             'friendly_url' => $editableCmsPageCategory->getLocalisedFriendlyUrl(),
+            'shop_association' => $editableCmsPageCategory->getShopIds(),
         ];
     }
 
@@ -56,6 +64,8 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return null;
+        return [
+            'shop_association' => $this->contextShopIds,
+        ];
     }
 }

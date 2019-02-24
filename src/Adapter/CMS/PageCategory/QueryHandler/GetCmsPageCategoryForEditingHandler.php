@@ -59,6 +59,8 @@ final class GetCmsPageCategoryForEditingHandler implements GetCmsPageCategoryFor
                     )
                 );
             }
+
+            $shopIds = is_array($cmsPageCategory->getAssociatedShops()) ? $cmsPageCategory->getAssociatedShops() : [];
         } catch (PrestaShopException $exception) {
             throw new CmsPageCategoryException(
                 sprintf(
@@ -78,7 +80,8 @@ final class GetCmsPageCategoryForEditingHandler implements GetCmsPageCategoryFor
             is_array($cmsPageCategory->meta_description) ? $cmsPageCategory->meta_description : [],
             is_array($cmsPageCategory->meta_keywords) ? $cmsPageCategory->meta_keywords : [],
             is_array($cmsPageCategory->meta_title) ? $cmsPageCategory->meta_title : [],
-            is_array($cmsPageCategory->link_rewrite) ? $cmsPageCategory->link_rewrite : []
+            is_array($cmsPageCategory->link_rewrite) ? $cmsPageCategory->link_rewrite : [],
+            $shopIds
         );
     }
 }

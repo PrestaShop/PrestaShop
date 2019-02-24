@@ -10,22 +10,37 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
 
 
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CmsPageCategoryType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var array
      */
     private $allCmsCategories;
 
-    public function __construct(array $allCmsCategories)
+    /**
+     * @var bool
+     */
+    private $isShopFeatureEnabled;
+
+    /**
+     * @param array $allCmsCategories
+     * @param bool $isShopFeatureEnabled
+     */
+    public function __construct(array $allCmsCategories, $isShopFeatureEnabled)
     {
         $this->allCmsCategories = $allCmsCategories;
+        $this->isShopFeatureEnabled = $isShopFeatureEnabled;
     }
 
     /**
@@ -58,5 +73,21 @@ class CmsPageCategoryType extends AbstractType
             ])
             ->add('friendly_url', TranslatableType::class)
         ;
+
+        if ($this->isShopFeatureEnabled) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->trans('Shop association', [], 'Admin.Global')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]);
+        }
     }
 }

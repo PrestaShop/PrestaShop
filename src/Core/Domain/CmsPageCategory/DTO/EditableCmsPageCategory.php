@@ -72,6 +72,10 @@ class EditableCmsPageCategory
      * @var array
      */
     private $metaTitle;
+    /**
+     * @var array
+     */
+    private $shopIds;
 
     /**
      * @param array $localisedName
@@ -82,6 +86,7 @@ class EditableCmsPageCategory
      * @param array $localisedMetaKeywords
      * @param array $metaTitle
      * @param array $localisedFriendlyUrl
+     * @param array $shopIds
      *
      * @throws CmsPageCategoryException
      */
@@ -93,7 +98,8 @@ class EditableCmsPageCategory
         array $localisedMetaDescription,
         array $localisedMetaKeywords,
         array $metaTitle,
-        array $localisedFriendlyUrl
+        array $localisedFriendlyUrl,
+        array $shopIds
     ) {
 
         $this->localisedName = $localisedName;
@@ -104,6 +110,7 @@ class EditableCmsPageCategory
         $this->localisedMetaKeywords = $localisedMetaKeywords;
         $this->localisedFriendlyUrl = $localisedFriendlyUrl;
         $this->metaTitle = $metaTitle;
+        $this->shopIds = $shopIds;
     }
 
     /**
@@ -168,5 +175,13 @@ class EditableCmsPageCategory
     public function getLocalisedFriendlyUrl()
     {
         return $this->localisedFriendlyUrl;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShopIds()
+    {
+        return $this->shopIds;
     }
 }
