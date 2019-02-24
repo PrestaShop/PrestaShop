@@ -127,12 +127,19 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @param int $cmsCategoryId
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function editCmsCategoryAction($cmsCategoryId)
     {
         $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
-        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+
+        try {
+            $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+        } catch (CmsPageCategoryException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+
+            return $this->redirectToParentIndexPage((int) $cmsCategoryId);
+        }
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit_category.html.twig', [
             'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),

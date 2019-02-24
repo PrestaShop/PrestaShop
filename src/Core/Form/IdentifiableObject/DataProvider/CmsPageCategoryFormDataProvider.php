@@ -37,7 +37,7 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         /** @var EditableCmsPageCategory $editableCmsPageCategory */
-        $editableCmsPageCategory = $this->queryBus->handle(new GetCmsPageCategoryForEditing((int) $id));
+        $editableCmsPageCategory = $this->queryBus->handle(new GetCmsPageCategoryForEditing($id));
 
         return [
             'name' => $editableCmsPageCategory->getLocalisedName(),
