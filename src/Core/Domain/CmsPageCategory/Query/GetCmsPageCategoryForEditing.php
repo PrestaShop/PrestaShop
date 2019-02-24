@@ -24,17 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
- * Class CmsPageCategoryId is responsible for providing identificator for cms page category
+ * Class GetCmsPageCategoryForEditing is responsible for retrieving cms page category form data.
  */
-class CmsPageCategoryId
+class GetCmsPageCategoryForEditing
 {
     /**
-     * @var int
+     * @var CmsPageCategoryId
      */
     private $cmsPageCategoryId;
 
@@ -45,29 +46,14 @@ class CmsPageCategoryId
      */
     public function __construct($cmsPageCategoryId)
     {
-        $this->assertIsIntegerAndLargerThenZero($cmsPageCategoryId);
-        $this->cmsPageCategoryId = (int) $cmsPageCategoryId;
+        $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
     }
 
     /**
-     * @return int
+     * @return CmsPageCategoryId
      */
-    public function getValue()
+    public function getCmsPageCategoryId()
     {
         return $this->cmsPageCategoryId;
-    }
-
-    /**
-     * @param int $cmsPageCategoryId
-     *
-     * @throws CmsPageCategoryException
-     */
-    private function assertIsIntegerAndLargerThenZero($cmsPageCategoryId)
-    {
-        if (!is_int($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
-            throw new CmsPageCategoryException(
-                sprintf('Invalid cms page category id %s supplied', var_export($cmsPageCategoryId, true))
-            );
-        }
     }
 }

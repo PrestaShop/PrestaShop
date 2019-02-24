@@ -50,6 +50,12 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection
 
+    prestashop.adapter.cms_page.query_handler.get_cms_page_category_for_editing:
+        class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoryForEditingHandler
+        tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing
+
     prestashop.adapter.cms_page.categories_provider:
         class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CategoriesProvider'
         arguments:
