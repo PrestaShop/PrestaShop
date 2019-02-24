@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Container;
 
-
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
