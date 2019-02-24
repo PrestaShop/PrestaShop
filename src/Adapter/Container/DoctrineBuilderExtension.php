@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Container;
 
-
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
@@ -54,7 +53,7 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function build(ContainerBuilder $container)
     {
@@ -99,5 +98,4 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
         $container->setParameter('kernel.environment', $this->environment->getName());
         $container->setParameter('kernel.cache_dir', _PS_CACHE_DIR_);
     }
-
 }

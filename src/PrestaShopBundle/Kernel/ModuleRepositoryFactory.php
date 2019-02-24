@@ -129,7 +129,7 @@ class ModuleRepositoryFactory
      */
     private function getParametersFile()
     {
-        if (null === $this->parametersFile && file_exists(__DIR__ . '/../../../app/config/parameters.php')) {
+        if (empty($this->parametersFile) && file_exists(__DIR__ . '/../../../app/config/parameters.php')) {
             $this->parametersFile = realpath(__DIR__ . '/../../../app/config/parameters.php');
         }
 
