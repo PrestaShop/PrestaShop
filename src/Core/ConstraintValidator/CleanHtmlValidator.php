@@ -28,12 +28,12 @@ class CleanHtmlValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, CleanHtml::class);
         }
 
-        if (!is_string($value)) {
-            throw new UnexpectedTypeException($value, 'string');
-        }
-
         if (!$value) {
             return;
+        }
+
+        if (!is_string($value)) {
+            throw new UnexpectedTypeException($value, 'string');
         }
 
         $containsScriptTags = preg_match('/<[\s]*script/ims', $value) || preg_match('/.*script\:/ims', $value);

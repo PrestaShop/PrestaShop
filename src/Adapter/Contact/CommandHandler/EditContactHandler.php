@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
 use Contact;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\EditContactHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotUpdateContactException;
@@ -77,6 +78,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
             }
 
             if (null !== $command->getLocalisedTitles()) {
+                $this->assertLocalisedTitleContainsDefaultLanguage($command->getLocalisedTitles());
                 $entity->name = $command->getLocalisedTitles();
             }
 
@@ -138,6 +140,25 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
                     ContactConstraintException::INVALID_DESCRIPTION
                 );
             }
+        }
+    }
+
+    /**
+     * Checks if the localised titles array contains value for the default language.
+     *
+     * @param array $localisedTitle
+     *
+     * @throws ContactConstraintException
+     */
+    private function assertLocalisedTitleContainsDefaultLanguage(array $localisedTitle)
+    {
+        $errors = $this->validator->validate($localisedTitle, new DefaultLanguage());
+
+        if (0 !== count($errors)) {
+            throw new ContactConstraintException(
+                'Title field is not found for default language',
+                ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE
+            );
         }
     }
 }
