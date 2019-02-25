@@ -47,6 +47,7 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
     /**
      * @var string used to make the hook selectable
      */
+    private $identifier;
 
     /**
      * @param KpiInterface[] $kpis
