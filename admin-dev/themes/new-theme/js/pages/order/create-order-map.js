@@ -22,13 +22,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from "./create-order-page";
 
-const $ = window.$;
+/**
+ * Encapsulates selectors for "Create order" page
+ */
+export default {
+  createOrderContainer: '#orderCreationContainer',
 
-$(document).ready(() => {
-  const createOrderPage = new CreateOrderPage();
-
-  createOrderPage.listenForCustomerSearch();
-  createOrderPage.listenForCustomerChooseForOrderCreation();
-});
+  // selectors related to customer searcher component
+  customerSearchInput: '#customerSearchInput',
+  customerSearchResultsBlock: '.js-customer-search-results',
+  customerSearchResultTemplate: '#customerSearchResultTemplate',
+  changeCustomerBtn: '.js-change-customer-btn',
+  customerSearchBlock: '.js-search-customer-block'
+}

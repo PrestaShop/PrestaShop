@@ -23,21 +23,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import * as createOrderPageMap from "./create-order-map";
+
 const $ = window.$;
 
 /**
  * Searches customers for which order is being created
  */
-export default class CustomerSearcher {
+export default class CustomerSearcherComponent {
   constructor() {
-    this.$searchInput = $('#customerSearchInput');
-    this.$customerSearchResultBlock = $('.js-customer-search-results');
+    this.$searchInput = $(createOrderPageMap.customerSearchInput);
+    this.$customerSearchResultBlock = $(createOrderPageMap.customerSearchResultsBlock);
 
-    this.$searchInput.on('input', (event) => {
+    this.$searchInput.on('input', () => {
       this._doSearch();
     });
 
     return {};
+  }
+
+  /**
+   *
+   * @param {Event} chooseCustomerEvent
+   *
+   * @return {Number}
+   */
+  chooseCustomerForOrderCreation(chooseCustomerEvent) {
+    const $chooseBtn = $(chooseCustomerEvent.currentTarget);
+    const $customerCard = $chooseBtn.closest('.card');
+    const $container = $(createOrderPageMap.createOrderContainer);
+
+    $chooseBtn.addClass('d-none');
+
+    $customerCard.addClass('border-success');
+    $customerCard.find(createOrderPageMap.changeCustomerBtn).removeClass('d-none');
+
+    $container.find(createOrderPageMap.customerSearchBlock).addClass('d-none');
+    $container.find('.js-customer-search-result:not(.border-success)').remove();
+
+    return $chooseBtn.data('customer-id');
   }
 
   /**
@@ -95,7 +119,7 @@ export default class CustomerSearcher {
    * @private
    */
   _showCustomer(customer) {
-    const $customerSearchResultTemplate = $($('#customerSearchResultTemplate').html());
+    const $customerSearchResultTemplate = $($(createOrderPageMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
     $template.find('.js-customer-name').text(`${customer.first_name} ${customer.last_name}`);

@@ -23,23 +23,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CustomerSearcher from "./customer-searcher";
+import * as createOrderPageMap from "./create-order-map";
+import CustomerSearcherComponent from "./customer-searcher-component";
 
 const $ = window.$;
 
 /**
- *
+ * Page Object for "Create order" page
  */
-export default class OrderCreator {
+export default class CreateOrderPage {
   constructor() {
     this.data = {};
-    this.$container = $('#orderCreationContainer');
+    this.$container = $(createOrderPageMap.createOrderContainer);
 
-    this.customerSearcher = new CustomerSearcher();
+    this.customerSearcher = new CustomerSearcherComponent();
 
-    this.$container.on('click', '.js-choose-customer-btn', (event) => {
-      this._onCustomerChooseForOrderCreation(event);
-    });
+    return {
+      listenForCustomerSearch: () => {
+
+      },
+      listenForCustomerChooseForOrderCreation: () => {
+        this.$container.on('click', '.js-choose-customer-btn', (event) => {
+          this.data.customer_id = this.customerSearcher.chooseCustomerForOrderCreation(event);
+        });
+      }
+    };
   }
 
   /**
@@ -50,18 +58,7 @@ export default class OrderCreator {
    * @private
    */
   _onCustomerChooseForOrderCreation(event) {
-    const $chooseBtn = $(event.currentTarget);
-    const $customerCard = $chooseBtn.closest('.card');
 
-    $chooseBtn.addClass('d-none');
-
-    $customerCard.addClass('border-success');
-    $customerCard.find('.js-change-customer-btn').removeClass('d-none');
-
-    this.$container.find('.js-search-customer-block').addClass('d-none');
-    this.$container.find('.js-customer-search-result:not(.border-success)').remove();
-
-    this.data.customer_id = $chooseBtn.data('customer-id');
   }
 }
 
