@@ -105,7 +105,7 @@ abstract class ModuleGridCore extends Module
             return Context::getContext()->getTranslator()->trans('Grid engine selected is unavailable.', array(), 'Admin.Modules.Notification');
         }
 
-        $grider = Context::getContext()->link->getAdminLink('AdminStats') . '&action=graphGrid&ajax=1&render=' . $render . '&module=' . Tools::safeOutput(Tools::getValue('module'));
+        $grider = Context::getContext()->link->getAdminLink('AdminStats', true, [], ['action' => 'graphGrid', 'ajax' => 1, 'render' => $render, 'module' => Tools::safeOutput(Tools::getValue('module'))]);
 
         $context = Context::getContext();
         $grider .= '&id_employee=' . (int) $context->employee->id;
