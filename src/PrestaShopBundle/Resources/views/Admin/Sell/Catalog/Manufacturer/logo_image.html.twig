@@ -1,8 +1,4 @@
-{% if logoImage is defined and logoImage is not null %}
-  <div>
-    <figure class="figure">
-      <img src="{{ logoImage.path }}" class="figure-img img-fluid img-thumbnail">
-      <figcaption class="figure-caption">{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ logoImage.size }}</figcaption>
-    </figure>
-  </div>
-{% endif %}
+<figure class="figure">
+  <img src="{{ logoImage.path }}" class="figure-img img-fluid img-thumbnail">
+  <figcaption class="figure-caption">{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ logoImage.size }}</figcaption>
+</figure>
