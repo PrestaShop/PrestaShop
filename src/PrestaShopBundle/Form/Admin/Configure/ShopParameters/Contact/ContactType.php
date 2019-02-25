@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -74,10 +75,13 @@ class ContactType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //todo: for translatable type add validation after Traffic & Seo form page pr is merged.
         $builder
             ->add('title', TranslatableType::class, [
-                'options' => [ //todo: defaultLanguageConstraint
+                'error_bubbling' => false,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
                     'constraints' => [
                         new Regex([
                                 'pattern' => '/^[^<>={}]*$/u',
