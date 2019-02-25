@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class ContactFormDataHandler
+ * Class ContactFormDataHandler is responsible for handling create and update of contact form.
  */
 final class ContactFormDataHandler implements FormDataHandlerInterface
 {

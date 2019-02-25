@@ -60,6 +60,7 @@ class EditableContact
      * @var string[]
      */
     private $localisedDescription;
+
     /**
      * @var int[]
      */

@@ -40,6 +40,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class AddContactHandler is used for adding contact data.
+ *
+ * @internal
  */
 final class AddContactHandler extends AbstractObjectModelHandler implements AddContactHandlerInterface
 {
