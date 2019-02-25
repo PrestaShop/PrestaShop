@@ -61,7 +61,16 @@ class ProfilesController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/index.html.twig',
             [
+                'layoutHeaderToolbarBtn' => [
+                    'add'=> [
+                        'href' => $this->generateUrl('admin_profiles_create'),
+                        'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
+                        'icon' => 'add_circle_outline',
+                  ],
+                ],
                 'help_link' => $this->generateSidebarLink('AdminProfiles'),
+                'enableSidebar' => true,
+                'layoutTitle' => $this->trans('Profiles', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($profilesGridFactory->getGrid($filters)),
             ]
         );

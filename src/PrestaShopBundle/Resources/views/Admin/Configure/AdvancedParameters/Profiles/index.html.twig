@@ -25,16 +25,6 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% set layoutTitle = 'Profiles'|trans({}, 'Admin.Navigation.Menu') %}
-{% set enableSidebar = true %}
-{% set layoutHeaderToolbarBtn = {
-  'add': {
-    'href': path('admin_profiles_create'),
-    'desc': 'Add new profile'|trans({}, 'Admin.Advparameters.Feature'),
-    'icon': 'add_circle_outline'
-  }
-} %}
-
 {% block content %}
   {% block profiles_list_panel %}
     <div class="row">
