@@ -323,6 +323,13 @@ class ContactsController extends FrameworkBundleAdminController
                         ),
                     ]
                 ),
+                ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE => $this->trans(
+                    'The field %field_name% is required at least in your default language.',
+                    'Admin.Notifications.Error',
+                    [
+                        '%field_name%' => $this->trans('Title', 'Admin.Global'),
+                    ]
+                ),
                 ContactConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
