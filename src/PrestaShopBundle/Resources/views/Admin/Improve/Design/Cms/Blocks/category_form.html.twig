@@ -83,6 +83,18 @@
 
       </div>
     </div>
+
+    <div class="card-footer">
+      <div class="d-inline-flex">
+        <a href="{{ path('admin_cms_pages_index', {'id_cms_category' : app.request.query.get('id_cms_category')}) }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+      </div>
+      <div class="d-inline-flex float-right">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+
   </div>
 
   {{ form_rest(cmsPageCategoryForm) }}

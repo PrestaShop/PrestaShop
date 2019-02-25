@@ -27,7 +27,7 @@
 
 {% set layoutHeaderToolbarBtn = {
   add: {
-    href: path('admin_cms_pages_create_cms_category', {'cmsCategoryParentId' : app.request.attributes.get('cmsCategoryParentId')}),
+    href: path('admin_cms_pages_create_cms_category', {'id_cms_category' : app.request.query.get('id_cms_category')}),
     desc: 'Add new page category'|trans({}, 'Admin.Design.Help'),
     icon: 'add_circle_outline',
   }

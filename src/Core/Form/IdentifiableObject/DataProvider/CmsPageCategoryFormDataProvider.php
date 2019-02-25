@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\DTO\EditableCmsPageCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
@@ -65,6 +66,7 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
+            'parent_category' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
             'shop_association' => $this->contextShopIds,
         ];
     }
