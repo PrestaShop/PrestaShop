@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\AddCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
@@ -38,14 +39,14 @@ final class CmsPageCategoryFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        $cmsPageCategoryCommand = new AddCmsPageCategoryCommand(
+        $addCmsPageCategoryCommand = new AddCmsPageCategoryCommand(
             $data['name'],
             $data['friendly_url'],
             (int) $data['parent_category'],
             $data['is_displayed']
         );
 
-        $cmsPageCategoryCommand
+        $addCmsPageCategoryCommand
             ->setLocalisedDescription($data['description'])
             ->setLocalisedMetaDescription($data['meta_description'])
             ->setLocalisedMetaKeywords($data['meta_keywords'])
@@ -54,16 +55,35 @@ final class CmsPageCategoryFormDataHandler implements FormDataHandlerInterface
         ;
 
         /** @var CmsPageCategoryId $result */
-        $result = $this->commandBus->handle($cmsPageCategoryCommand);
+        $result = $this->commandBus->handle($addCmsPageCategoryCommand);
 
         return $result->getValue();
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws CmsPageCategoryException
      */
     public function update($id, array $data)
     {
-        // TODO: Implement update() method.
+        $editCmsPageCategoryCommand = new EditCmsPageCategoryCommand((int) $id);
+
+        $editCmsPageCategoryCommand
+            ->setLocalisedName($data['name'])
+            ->setLocalisedFriendlyUrl($data['friendly_url'])
+            ->setParentId((int) $data['parent_category'])
+            ->setIsDisplayed($data['is_displayed'])
+            ->setLocalisedDescription($data['description'])
+            ->setLocalisedMetaDescription($data['meta_description'])
+            ->setLocalisedMetaKeywords($data['meta_keywords'])
+            ->setLocalisedMetaTitle($data['meta_title'])
+            ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
+        ;
+
+        /** @var CmsPageCategoryId $result */
+        $result = $this->commandBus->handle($editCmsPageCategoryCommand);
+
+        return $result->getValue();
     }
 }

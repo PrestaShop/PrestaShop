@@ -26,19 +26,91 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
+use CMSCategory;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\EditCmsPageCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotUpdateCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
+use PrestaShopException;
 
 /**
  * Edits cms page category.
  */
-final class EditCmsPageCategoryHandler implements EditCmsPageCategoryHandlerInterface
+final class EditCmsPageCategoryHandler extends AbstractObjectModelHandler implements EditCmsPageCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws CmsPageCategoryException
      */
     public function handle(EditCmsPageCategoryCommand $command)
     {
+        //todo: assertion of default language
+        //todo: link rewrite validation
+        //todo: not same category assigning
+        //todo: position stuff
 
+        try {
+            $cmsPageCategory = new CMSCategory($command->getCmsPageCategoryId()->getValue());
+
+            if (0 >= $cmsPageCategory->id) {
+                throw new CmsPageCategoryNotFoundException(
+                    sprintf('Unable to find cms page category with id "%s"', $cmsPageCategory->id)
+                );
+            }
+
+            if (null !== $command->getLocalisedName()) {
+                $cmsPageCategory->name = $command->getLocalisedName();
+            }
+
+            if (null !== $command->isDisplayed()) {
+                $cmsPageCategory->active = $command->isDisplayed();
+            }
+
+            if (null !== $command->getParentId()) {
+                $cmsPageCategory->id_parent = $command->getParentId()->getValue();
+            }
+
+            if (null !== $command->getLocalisedDescription()) {
+                $cmsPageCategory->description = $command->getLocalisedDescription();
+            }
+
+            if (null !== $command->getLocalisedMetaTitle()) {
+                $cmsPageCategory->meta_title = $command->getLocalisedMetaTitle();
+            }
+
+            if (null !== $command->getLocalisedMetaDescription()) {
+                $cmsPageCategory->meta_description = $command->getLocalisedMetaDescription();
+            }
+
+            if (null !== $command->getLocalisedMetaKeywords()) {
+                $cmsPageCategory->meta_keywords = $command->getLocalisedMetaKeywords();
+            }
+
+            if (null !== $command->getLocalisedFriendlyUrl()) {
+                $cmsPageCategory->link_rewrite = $command->getLocalisedFriendlyUrl();
+            }
+
+            if (false === $cmsPageCategory->update()) {
+                throw new CannotUpdateCmsPageCategoryException(
+                    'Failed to update cms page category'
+                );
+            }
+
+            if (null !== $command->getShopAssociation()) {
+                $this->associateWithShops($cmsPageCategory, $command->getShopAssociation());
+            }
+        } catch (PrestaShopException $exception) {
+            throw new CmsPageCategoryException(
+                'An unexpected error occurred when updating cms page category',
+                0,
+                $exception
+            );
+        }
+
+        return new CmsPageCategoryId((int) $cmsPageCategory->id);
     }
 }

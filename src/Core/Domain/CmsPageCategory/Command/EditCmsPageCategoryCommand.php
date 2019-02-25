@@ -166,13 +166,15 @@ class EditCmsPageCategoryCommand
     }
 
     /**
-     * @param CmsPageCategoryId $parentId
+     * @param int $parentId
      *
      * @return self
+     *
+     * @throws CmsPageCategoryException
      */
     public function setParentId($parentId)
     {
-        $this->parentId = $parentId;
+        $this->parentId = new CmsPageCategoryId($parentId);
         return $this;
     }
 

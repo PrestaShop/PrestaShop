@@ -52,7 +52,8 @@ $(() => {
   cmsCategory.addExtension(new SubmitRowActionExtension());
   cmsCategory.addExtension(new ColumnTogglingExtension());
   cmsCategory.addExtension(new PositionExtension());
-
+  //todo: multishop choice tree enable
   new ChoiceTree('#cms_page_category_parent_category');
+
   new TranslatableInput();
 });

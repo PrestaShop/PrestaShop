@@ -123,7 +123,7 @@ class CmsPageController extends FrameworkBundleAdminController
                     'success',
                     $this->trans('Successful creation.', 'Admin.Notifications.Success')
                 );
-
+                //todo: redirect to specific parent
                 return $this->redirectToRoute('admin_cms_pages_index');
             }
         } catch (CmsPageCategoryException $exception) {
@@ -146,20 +146,33 @@ class CmsPageController extends FrameworkBundleAdminController
      * )
      *
      * @param int $cmsCategoryId
+     * @param Request $request
      *
      * @return Response
      */
-    public function editCmsCategoryAction($cmsCategoryId)
+    public function editCmsCategoryAction($cmsCategoryId, Request $request)
     {
         $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
 
         try {
             $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+            $cmsPageCategoryForm->handleRequest($request);
+
+            $result = $this->getCmsPageCategoryFormHandler()->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                //todo: redirect to specific parent
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
+
             $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
-        } catch (CmsPageCategoryException $exception) {
+        } catch (CmsPageCategoryNotFoundException $exception) {
             $this->addFlash('error', $this->handleException($exception));
 
             return $this->redirectToParentIndexPage((int) $cmsCategoryId);
+        } catch (CmsPageCategoryException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit_category.html.twig', [
