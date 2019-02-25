@@ -45,6 +45,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -190,12 +192,15 @@ class ManufacturerController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
         }
+        /** @var EditableManufacturer $editableManufacturer */
+        $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'manufacturerForm' => $manufacturerForm->createView(),
-            'manufacturerName' => 'test',
+            'manufacturerName' => $editableManufacturer->getName(),
+            'logoImage' => $editableManufacturer->getLogoImage(),
         ]);
     }
 

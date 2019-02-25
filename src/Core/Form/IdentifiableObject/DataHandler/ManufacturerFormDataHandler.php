@@ -49,9 +49,10 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
     {
         $this->bus = $bus;
     }
-        /**
-         * {@inheritdoc}
-         */
+
+    /**
+     * {@inheritdoc}
+     */
     public function create(array $data)
     {
         if (!isset($data['shop_association']) || !$data['shop_association']) {

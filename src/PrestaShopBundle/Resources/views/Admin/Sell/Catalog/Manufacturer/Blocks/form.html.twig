@@ -39,12 +39,23 @@
       {{ ps.form_group_row(manufacturerForm.short_description, {}, {
         'label': 'Short description'|trans({}, 'Admin.Global')
       }) }}
+
       {{ ps.form_group_row(manufacturerForm.description, {}, {
         'label': 'Description'|trans({}, 'Admin.Global')
       }) }}
       {{ ps.form_group_row(manufacturerForm.logo, {}, {
         'label': 'Logo'|trans({}, 'Admin.Global')
       }) }}
+
+      {% if logoImage is defined and logoImage is not null %}
+        <div class="form-group row">
+          <label for="" class="form-control-label"></label>
+          <div class="col-sm">
+            {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/logo_image.html.twig' %}
+          </div>
+        </div>
+      {% endif %}
+
       {{ ps.form_group_row(manufacturerForm.meta_title, {}, {
         'label': 'Meta title'|trans({}, 'Admin.Global')
       }) }}
