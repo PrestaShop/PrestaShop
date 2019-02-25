@@ -235,7 +235,7 @@ class ContactsController extends FrameworkBundleAdminController
      */
     public function deleteBulkAction(Request $request)
     {
-        $contactIds = $request->request->get('contact_bulk');
+        $contactIds = $request->request->get('Contact_bulk');
         $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
 
         if ($errors = $contactDeleter->delete($contactIds)) {
