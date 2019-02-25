@@ -40,7 +40,7 @@ require_once dirname(__FILE__) . '/../classes/Tools.php';
 
 /**
  * Ajax calls to the controller AdminReferrers
- * -> Moved in legacy
+ * -> Moved to legacy
  */
 if (Tools::isSubmit('ajaxReferrers')) {
     $_GET['ajax'] = 1;
@@ -57,7 +57,7 @@ if (Tools::isSubmit('ajaxReferrers')) {
  * Return the list of a pack of products
  * Not found
  *
- * -> Moved in legacy
+ * -> Moved to legacy
  */
 if (Tools::isSubmit('ajaxProductPackItems')) {
     $_GET['ajax'] = 1;
@@ -67,7 +67,7 @@ if (Tools::isSubmit('ajaxProductPackItems')) {
 
 /**
  * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
- * -> Moved in legacy, in AdminCategories
+ * -> Moved to legacy, in AdminCategories
  */
 if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
     $_GET['ajax'] = 1;
@@ -78,7 +78,7 @@ if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_par
 /**
  * Search for a category
  *
- * -> moved in legacy
+ * -> Moved to legacy
  */
 if (Tools::isSubmit('searchCategory')) {
     $_GET['ajax'] = 1;
@@ -89,7 +89,7 @@ if (Tools::isSubmit('searchCategory')) {
 /**
  * Get all parents of a given category
  *
- * -> moved in legacy
+ * -> Moved to legacy
  */
 if (Tools::isSubmit('getParentCategoriesId') && Tools::isSubmit('id_category')) {
     $_GET['ajax'] = 1;
