@@ -69,7 +69,9 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
     {
         $kpiRow = new KpiRow();
 
-        $this->hookDispatcher->dispatchWithParameters($this->getHookName($this->identifier), $this->kpis);
+        $this->hookDispatcher->dispatchWithParameters($this->getHookName($this->identifier), [
+            'kpis' => &$this->kpis
+        ]);
 
         foreach ($this->kpis as $kpi) {
             $kpiRow->addKpi($kpi);
@@ -85,6 +87,6 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
      */
     private function getHookName($identifier)
     {
-        return 'action' . ucfirst($identifier) . 'KpiRow';
+        return 'action' . ucfirst($identifier) . 'KpiRowModifier';
     }
 }
