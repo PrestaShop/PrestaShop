@@ -26,12 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler;
 
-<<<<<<< HEAD
-=======
 use HelperList;
 use ImageManager;
-use Manufacturer;
->>>>>>> 5aff4ddbb8... Logo image rendering on edit action
 use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler\GetManufacturerForEditingHandlerInterface;
@@ -73,18 +69,14 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
         return new EditableManufacturer(
             $manufacturerId,
             $manufacturer->name,
-<<<<<<< HEAD
-            $manufacturer->active
-=======
+            $manufacturer->active,
             $manufacturer->short_description,
             $manufacturer->description,
             $manufacturer->meta_title,
             $manufacturer->meta_description,
             $manufacturer->meta_keywords,
-            $manufacturer->active,
             $manufacturer->getAssociatedShops(),
             $this->getLogoImage($manufacturerId)
->>>>>>> 5aff4ddbb8... Logo image rendering on edit action
         );
     }
 
