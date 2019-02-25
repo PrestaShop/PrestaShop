@@ -41,7 +41,7 @@ import ChoiceTree from '../../components/form/choice-tree';
  */
 export default class ContactsPage {
   constructor() {
-    const contactGrid = new Grid('contact');
+    const contactGrid = new Grid('Contact');
 
     contactGrid.addExtension(new ReloadListActionExtension());
     contactGrid.addExtension(new ExportToSqlManagerExtension());
