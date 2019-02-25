@@ -42,9 +42,10 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufactu
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -127,13 +128,11 @@ class ManufacturerController extends FrameworkBundleAdminController
     public function createAction(Request $request)
 
     {
-        $manufacturerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
-        $manufacturerFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
         try {
-            $manufacturerForm = $manufacturerFormBuilder->getForm();
+            $manufacturerForm = $this->getFormBuilder()->getForm();
             $manufacturerForm->handleRequest($request);
 
-            $result = $manufacturerFormHandler->handle($manufacturerForm);
+            $result = $this->getFormHandler()->handle($manufacturerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -165,14 +164,11 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, $manufacturerId)
     {
-        $manufacturerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
-        $manufacturerFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
-
         try {
-            $manufacturerForm = $manufacturerFormBuilder->getFormFor((int) $manufacturerId);
+            $manufacturerForm = $this->getFormBuilder()->getFormFor((int) $manufacturerId);
             $manufacturerForm->handleRequest($request);
 
-            $result = $manufacturerFormHandler->handleFor((int) $manufacturerId, $manufacturerForm);
+            $result = $this->getFormHandler()->handleFor((int) $manufacturerId, $manufacturerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -453,6 +449,20 @@ class ManufacturerController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            ManufacturerNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            ManufacturerImageUploadingException::class => [
+                ManufacturerImageUploadingException::MEMORY_LIMIT_RESTRICTION => $this->trans(
+                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ',
+                    'Admin.Notifications.Error'
+                ),
+                ManufacturerImageUploadingException::UNEXPECTED_ERROR => $this->trans(
+                    'An error occurred while uploading the image.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 
@@ -490,9 +500,25 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         foreach ($addressIds as $i => $addressId) {
-            $addressIds[$i] = (int) $addressId;
+            $addressIds[$i] = (int)$addressId;
         }
 
         return $addressIds;
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
     }
 }
