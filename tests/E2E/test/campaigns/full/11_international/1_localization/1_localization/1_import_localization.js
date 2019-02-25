@@ -75,9 +75,9 @@ scenario('"Import a localization pack and check you can use it"', () => {
     commonLocalization.deleteLanguage('Italian', false);
     commonCurrency.accessToCurrencies();
     commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
-    commonCurrency.deleteCurrency(true, '×\nSuccessful deletion.');
+    commonCurrency.deleteCurrency(true, 'close\nSuccessful deletion.');
     commonCurrency.checkCurrencyByIsoCode(secondCurrencyData);
-    commonCurrency.deleteCurrency(true, '×\nSuccessful deletion.');
+    commonCurrency.deleteCurrency(true, 'close\nSuccessful deletion.');
     scenario('Click on "Reset" button', client => {
       test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
     }, 'common_client');

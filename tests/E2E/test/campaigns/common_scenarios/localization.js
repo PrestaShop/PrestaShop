@@ -271,7 +271,7 @@ module.exports = {
       test('should click on "dropdown toggle" button', () => client.waitForExistAndClick(Localization.languages.dropdown_button));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Localization.languages.delete_button));
       test('should accept the confirmation alert', () => client.alertAccept());
-      test('should verify the appearance of the green validation', () => client.checkTextValue(InternationalPage.success_panel, '×\nSuccessful deletion.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.languages.success_panel, 'Successful deletion.'));
       test('should click on "Reset" button', () => client.waitForExistAndClick(Localization.languages.reset_button));
     }, 'common_client');
   },

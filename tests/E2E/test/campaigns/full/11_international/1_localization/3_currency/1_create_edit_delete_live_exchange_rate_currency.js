@@ -29,10 +29,10 @@ let wrongCurrencyData = {
     name: 'CHF',
     exchangeRate: '1.86'
   },
-  successMessage = '×\nSuccessful creation.',
+  successMessage = 'close\nSuccessful creation.',
   wrongMessage = '×\n2 errors\nThe currency conversion rate cannot be equal to 0.\nThe conversion_rate field is invalid.',
-  updateSuccessMessage = '×\nSuccessful update.',
-  deleteSuccessMessage = '×\nSuccessful deletion.';
+  updateSuccessMessage = 'close\nSuccessful update.',
+  deleteSuccessMessage = 'close\nSuccessful deletion.';
 
 scenario('Create, edit, delete and live exchange rate currency', () => {
   scenario('Login in the Back Office', client => {
@@ -47,7 +47,7 @@ scenario('Create, edit, delete and live exchange rate currency', () => {
     commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
     scenario('Enable currency', client => {
       test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1)
-        .replace('%ICON', "icon-remove")));
+        .replace('%ICON', "not-valid")));
     }, 'common_client');
     commonCurrency.checkCurrencyFO(firstCurrencyData);
     commonCurrency.accessToCurrencies();
@@ -58,8 +58,8 @@ scenario('Create, edit, delete and live exchange rate currency', () => {
     scenario('Click on "Reset" button', client => {
       test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
     }, 'common_client');
-    commonCurrency.sortCurrency(Localization.Currencies.currency_iso_code_column, 'ISO code');
-    commonCurrency.sortCurrency(Localization.Currencies.currency_exchange_rate, 'Exchange rate', true);
+    commonCurrency.sortCurrency(Localization.Currencies.currency_iso_code_column, 'iso_code');
+    commonCurrency.sortCurrency(Localization.Currencies.currency_exchange_rate, 'conversion_rate', true);
     commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
     commonCurrency.checkCurrencyByStatus();
   }, 'common_client');
@@ -76,14 +76,14 @@ scenario('Create, edit, delete and live exchange rate currency', () => {
     commonCurrency.editCurrency(editedCurrencyData, updateSuccessMessage, false);
     scenario('Check the "Status" of the edited currency', client => {
       test('should check that the "Status" icon is well disabled', () => client.waitForExist(Localization.Currencies.check_icon.replace('%ID', 1)
-        .replace('%ICON', "icon-remove")));
+        .replace('%ICON', "not-valid")));
     }, 'common_client');
     commonCurrency.editCancelCurrency();
     scenario('Verify that we go back to the currencies page and nothing has changed', client => {
       test('should check the appearance of currencies table', () => client.waitForExist(Localization.Currencies.table_currencies));
       test('should check that "Exchange rate" is equal to ' + editedCurrencyData.exchangeRate, () => client.checkTextValue(Localization.Currencies.currency_exchange_rate.replace('%ID', 1), editedCurrencyData.exchangeRate));
       test('should check that the "Status" icon is well disabled', () => client.waitForExist(Localization.Currencies.check_icon.replace('%ID', 1)
-        .replace('%ICON', "icon-remove")));
+        .replace('%ICON', "not-valid")));
     }, 'common_client');
   }, 'common_client');
 
@@ -108,7 +108,7 @@ scenario('Create, edit, delete and live exchange rate currency', () => {
     commonCurrency.checkCurrencyByIsoCode(secondCurrencyData);
     commonCurrency.deleteCurrency(true, deleteSuccessMessage);
     scenario('Turn the "Live exchange rates" toggle button disable', client => {
-      test('should click on "Live exchange rates" toggle button', () => client.waitForExistAndClick(Localization.Currencies.live_exchange_rate_toggle_button));
+      test('should click on "Live exchange rates" toggle button', () => client.waitForExistAndClick(Localization.Currencies.live_exchange_rate_toggle_button.replace('%ID', 0)));
     }, 'common_client');
   }, 'common_client');
 
