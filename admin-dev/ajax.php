@@ -40,7 +40,7 @@ require_once dirname(__FILE__) . '/../classes/Tools.php';
 
 /**
  * Ajax calls to the controller AdminReferrers
- * -> Moved in legacy
+ * -> Moved to legacy
  */
 if (Tools::isSubmit('ajaxReferrers')) {
     $_GET['ajax'] = 1;
@@ -57,7 +57,7 @@ if (Tools::isSubmit('ajaxReferrers')) {
  * Return the list of a pack of products
  * Not found
  *
- * -> Moved in legacy
+ * -> Moved to legacy
  */
 if (Tools::isSubmit('ajaxProductPackItems')) {
     $_GET['ajax'] = 1;
@@ -99,8 +99,9 @@ if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_par
 }
 
 /**
- * Import controller: Fields available for a given entity
- * -> Moved in Symfony
+ * Search for a category
+ *
+ * -> Moved to legacy
  */
 if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
@@ -113,8 +114,8 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
 
 /**
  * Get all parents of a given category
- * 
- * -> TODO in Symfony stack
+ *
+ * -> Moved to legacy
  */
 if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
     $category = new Category((int)$id_category);
