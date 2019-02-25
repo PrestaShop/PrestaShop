@@ -502,7 +502,6 @@ $header-text-color: #4e6167;
     top: 0.9rem !important;
     left: 0.3rem !important;
     margin: 0;
-    // min-width: 10.625rem;
     min-width: 17.5rem;
     hr {
       border-top-width: 2px;
@@ -539,13 +538,9 @@ $header-text-color: #4e6167;
     
     .employee_avatar {
       text-align: center;
-      // border-bottom: 1px solid $color-separator;
       padding: 0.687rem 0 1rem;
       margin-bottom: 0.46875rem;
       font-weight: 600;
-      img {
-        // display: none;
-      }
     }
     .profile-link{
       margin: 0 0 0 auto !important;
