@@ -44,8 +44,19 @@ class AddonsStoreController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        $pageContent = @file_get_contents($this->getAddonsUrl($request));
+
+        if (!$pageContent) {
+            $this->addFlash('error', $this->trans(
+                'It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.',
+                'Admin.Notifications.Error'
+            ));
+
+            return $this->redirectToRoute('admin_module_catalog');
+        }
+
         return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', array(
-            'pageContent' => file_get_contents($this->getAddonsUrl($request)),
+            'pageContent' => $pageContent,
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
