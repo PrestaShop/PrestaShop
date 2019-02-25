@@ -63,9 +63,23 @@ class AdminSearchConfControllerCore extends AdminController
             'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
         );
 
+        $params = [
+            'action' => 'searchCron',
+            'ajax' => 1,
+            'full' => 1,
+            'token' => $this->getTokenForCron(),
+        ];
+        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+            $params['id_shop'] = (int) Context::getContext()->shop->id;
+        }
+
         // Search options
-        $cron_url = Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1' .
-            '&full=1&token=' . $this->getTokenForCron() . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '');
+        $cron_url = Context::getContext()->link->getAdminLink(
+            'AdminSearch',
+            false,
+            [],
+            $params
+        );
 
         list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . _DB_PREFIX_ . 'product p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
 
