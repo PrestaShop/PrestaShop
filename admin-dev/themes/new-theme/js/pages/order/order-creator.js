@@ -43,7 +43,7 @@ export default class OrderCreator {
   }
 
   /**
-   * Chooses customer for which order is being created
+   * Choses customer for which order is being created
    *
    * @param {Event} event
    *
@@ -64,3 +64,5 @@ export default class OrderCreator {
     this.data.customer_id = $chooseBtn.data('customer-id');
   }
 }
+
+
