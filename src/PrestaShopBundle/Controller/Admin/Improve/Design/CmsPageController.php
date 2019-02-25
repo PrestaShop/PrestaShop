@@ -104,12 +104,31 @@ class CmsPageController extends FrameworkBundleAdminController
      *     message="You do not have permission to add this."
      * )
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function createCmsCategoryAction()
+    public function createCmsCategoryAction(Request $request)
     {
         $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
         $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getForm();
+
+        $cmsPageCategoryForm->handleRequest($request);
+
+        try {
+            $result = $this->getCmsPageCategoryFormHandler()->handle($cmsPageCategoryForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
+        } catch (CmsPageCategoryException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Cms/create_category.html.twig', [
             'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
@@ -532,7 +551,7 @@ class CmsPageController extends FrameworkBundleAdminController
             return $exceptionTypeDictionary[$exceptionType];
         }
 
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+        return $this->getFallbackErrorMessage($exceptionType, $exception->getCode());
     }
 
     /**
@@ -560,6 +579,6 @@ class CmsPageController extends FrameworkBundleAdminController
             return $exceptionTypeDictionary[$exceptionType][$statusCode];
         }
 
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+        return $this->getFallbackErrorMessage($exceptionType, $statusCode);
     }
 }

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\AddCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\AddCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotAddCmsPageCategoryException;
@@ -35,9 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 use PrestaShopException;
 
 /**
- * Class AddCmsPageCategoryHandler
+ * Adds cms page category
  */
-final class AddCmsPageCategoryHandler implements AddCmsPageCategoryHandlerInterface
+final class AddCmsPageCategoryHandler extends AbstractObjectModelHandler implements AddCmsPageCategoryHandlerInterface
 {
 
     /**
@@ -67,6 +68,7 @@ final class AddCmsPageCategoryHandler implements AddCmsPageCategoryHandlerInterf
                 );
             }
 
+            $this->associateWithShops($cmsPageCategory, $command->getShopAssociation());
         } catch (PrestaShopException $exception) {
             throw new CmsPageCategoryException(
                 'An unexpected error occurred when adding cms page category',

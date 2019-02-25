@@ -68,6 +68,7 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
         return [
             'parent_category' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
             'shop_association' => $this->contextShopIds,
+            'is_displayed' => true,
         ];
     }
 }
