@@ -91,7 +91,7 @@ class ContactType extends AbstractType
                                     'Admin.Notifications.Error'
                                 ),
                             ]
-                        )
+                        ),
                     ],
                 ],
             ])
@@ -104,7 +104,7 @@ class ContactType extends AbstractType
                             [],
                             'Admin.Notifications.Error'
                         ),
-                    ])
+                    ]),
                 ],
             ])
             ->add('is_messages_saving_enabled', SwitchType::class)
@@ -119,7 +119,7 @@ class ContactType extends AbstractType
                                 [],
                                 'Admin.Notifications.Error'
                             ),
-                        ])
+                        ]),
                     ],
                 ],
             ])
