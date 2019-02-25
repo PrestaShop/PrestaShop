@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
 use Symfony\Component\Validator\Constraint;
 

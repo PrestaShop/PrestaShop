@@ -64,7 +64,6 @@ final class SingleDefaultLanguageArrayToFilledArrayDataTransformer implements Da
     public function reverseTransform($values)
     {
         if (!$this->assertIsValidForDataTransforming($values)) {
-
             return $values;
         }
 
