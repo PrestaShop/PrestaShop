@@ -90,7 +90,6 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
             if (null !== $command->getShopAssociation()) {
                 $this->associateWithShops($entity, $command->getShopAssociation());
             }
-
         } catch (PrestaShopException $exception) {
             throw new ContactException(
                 'An unexpected error occurred when adding contact',

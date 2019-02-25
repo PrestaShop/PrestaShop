@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
+
 /**
  * Class StringArrayToIntegerArrayTransformer is responsible for  applying reverse transformation when form is being
  * submitted. If its array, it casts all elements to integer.
@@ -51,7 +52,7 @@ final class StringArrayToIntegerArrayDataTransformer implements DataTransformerI
             return $value;
         }
 
-        return array_map(function ($item){
+        return array_map(function ($item) {
             return (int) $item;
         }, $value);
     }

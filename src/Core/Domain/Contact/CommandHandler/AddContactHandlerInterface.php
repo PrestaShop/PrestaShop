@@ -35,8 +35,6 @@ interface AddContactHandlerInterface
 {
     /**
      * @param AddContactCommand $command
-     *
-     * @return void
      */
     public function handle(AddContactCommand $command);
 }

@@ -155,7 +155,6 @@ class ContactsController extends FrameworkBundleAdminController
      * )
      *
      * @param int $contactId
-     *
      * @param Request $request
      *
      * @return Response
@@ -283,7 +282,6 @@ class ContactsController extends FrameworkBundleAdminController
         $type = get_class($exception);
 
         if (isset($exceptionDictionary[$type])) {
-
             return $exceptionDictionary[$type];
         }
 
@@ -337,7 +335,7 @@ class ContactsController extends FrameworkBundleAdminController
                             $this->trans('Description', 'Admin.Global')
                         ),
                     ]
-                )
+                ),
             ],
             DomainConstraintException::class => [
                 DomainConstraintException::INVALID_EMAIL => $this->trans(
@@ -357,7 +355,6 @@ class ContactsController extends FrameworkBundleAdminController
         $code = $exception->getCode();
 
         if (isset($exceptionDictionary[$type][$code])) {
-
             return $exceptionDictionary[$type][$code];
         }
 
