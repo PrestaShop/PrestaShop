@@ -127,7 +127,7 @@ class AddContactCommand extends AbstractContactCommand
      *
      * @return self
      */
-    public function setLocalisedDescription($localisedDescription)
+    public function setLocalisedDescription(array $localisedDescription)
     {
         $this->localisedDescription = $localisedDescription;
 

@@ -178,7 +178,6 @@ class EditContactCommand extends AbstractContactCommand
      */
     public function getLocalisedDescription()
     {
-        //todo: clean html validation?
         return $this->localisedDescription;
     }
 
