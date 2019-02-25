@@ -86,7 +86,7 @@
 
       <div class="form-group row">
         <label class="form-control-label">
-          {{ 'Category Cover Image'|trans({}, 'Admin.Catalog.Feature') }}
+          {{ 'Category cover image'|trans({}, 'Admin.Catalog.Feature') }}
         </label>
         <div class="col-sm">
           {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig' %}
@@ -146,7 +146,7 @@
         </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.meta_title) }}
-          <small class="form-text">{{ 'Forbidden characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}</small>
+          <small class="form-text">{{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}</small>
         </div>
       </div>
 
@@ -157,7 +157,7 @@
         <div class="col-sm">
           {{ form_widget(categoryForm.meta_description) }}
           <small class="form-text">
-            {{ 'Forbidden characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+            {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
           </small>
         </div>
       </div>
@@ -169,7 +169,7 @@
         <div class="col-sm">
           {{ form_widget(categoryForm.meta_keyword) }}
           <small class="form-text">
-            {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') ~ ('Forbidden characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}' }}
+            {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') ~ ('Invalid characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}' }}
           </small>
         </div>
       </div>
@@ -189,7 +189,7 @@
 
       <div class="form-group row">
         <label class="form-control-label">
-          {{ 'Group access'|trans({}, 'Admin.Global') }}
+          {{ 'Group access'|trans({}, 'Admin.Catalog.Feature') }}
         </label>
         <div class="col-sm">
           {{ form_widget(categoryForm.group_association) }}
