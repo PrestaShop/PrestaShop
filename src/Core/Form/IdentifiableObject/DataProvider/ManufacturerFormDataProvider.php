@@ -84,7 +84,7 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
         ];
 
         if ($this->multistoreEnabled) {
-            $data['shop_association'] = $editableManufacturer->getAssociatedShops();
+            $data['shop_association'] = $editableManufacturer->getShopAssociation();
         }
 
         return $data;
@@ -95,7 +95,12 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        //@todo: implement
-        return [];
+        $data['is_enabled'] = true;
+
+        if ($this->multistoreEnabled) {
+            $data['shop_association'] = $this->defaultShopAssociation;
+        }
+
+        return $data;
     }
 }

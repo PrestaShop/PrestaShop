@@ -24,52 +24,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult;
-
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command;
 
 /**
- * Transfers manufacturer data for editing
+ * Creates manufacturer with provided data
  */
-class EditableManufacturer
+class AddManufacturerCommand
 {
-    /**
-     * @var ManufacturerId
-     */
-    private $manufacturerId;
-
     /**
      * @var string
      */
     private $name;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedShortDescriptions;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedDescriptions;
 
     /**
-     * @var array|null
+     * @var string
      */
-    private $logoImage;
+    private $logoImagePath;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedMetaTitles;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedMetaKeywords;
 
@@ -84,47 +77,36 @@ class EditableManufacturer
     private $shopAssociation;
 
     /**
-     * @param ManufacturerId $manufacturerId
      * @param string $name
+     * @param string[]|null $localizedShortDescriptions
+     * @param string[]|null $localizedDescriptions
+     * @param string|null $logoImagePath
+     * @param string[]|null $localizedMetaTitles
+     * @param string[]|null $localizedMetaDescriptions
+     * @param string[]|null $localizedMetaKeywords
      * @param bool $enabled
-     * @param array|null $localizedShortDescriptions
-     * @param array|null $localizedDescriptions
-     * @param array|null $logoImage
-     * @param array|null $localizedMetaTitles
-     * @param array|null $localizedMetaDescriptions
-     * @param array|null $localizedMetaKeywords
      * @param array $shopAssociation
      */
     public function __construct(
-        ManufacturerId $manufacturerId,
         $name,
         $enabled = false,
+        $logoImagePath = null,
         array $localizedShortDescriptions = null,
         array $localizedDescriptions = null,
         array $localizedMetaTitles = null,
         array $localizedMetaDescriptions = null,
         array $localizedMetaKeywords = null,
-        array $logoImage = null,
-        array $shopAssociation = []
+        array $shopAssociation = null
     ) {
-        $this->manufacturerId = $manufacturerId;
         $this->name = $name;
         $this->localizedShortDescriptions = $localizedShortDescriptions;
         $this->localizedDescriptions = $localizedDescriptions;
-        $this->logoImage = $logoImage;
+        $this->logoImagePath = $logoImagePath;
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
         $this->localizedMetaKeywords = $localizedMetaKeywords;
         $this->enabled = $enabled;
         $this->shopAssociation = $shopAssociation;
-    }
-
-    /**
-     * @return ManufacturerId
-     */
-    public function getManufacturerId()
-    {
-        return $this->manufacturerId;
     }
 
     /**
@@ -152,11 +134,11 @@ class EditableManufacturer
     }
 
     /**
-     * @return array|null
+     * @return string|null
      */
-    public function getLogoImage()
+    public function getLogoImagePath()
     {
-        return $this->logoImage;
+        return $this->logoImagePath;
     }
 
     /**
@@ -192,7 +174,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return array
+     * @return string[]|null
      */
     public function getShopAssociation()
     {
