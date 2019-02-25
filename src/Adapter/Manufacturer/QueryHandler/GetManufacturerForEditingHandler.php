@@ -66,19 +66,19 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
     {
         $manufacturerId = $query->getManufacturerId();
         $manufacturer = new Manufacturer($manufacturerId->getValue());
-        $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
+        $this->associateWithShops($manufacturer, $manufacturer->getAssociatedShops());
 
         return new EditableManufacturer(
             $manufacturerId,
             $manufacturer->name,
+            $manufacturer->active,
             $manufacturer->short_description,
             $manufacturer->description,
             $manufacturer->meta_title,
             $manufacturer->meta_description,
             $manufacturer->meta_keywords,
-            $manufacturer->active,
-            $manufacturer->getAssociatedShops(),
-            $this->getLogoImage($manufacturerId)
+            $this->getLogoImage($manufacturerId),
+            $manufacturer->getAssociatedShops()
         );
     }
 

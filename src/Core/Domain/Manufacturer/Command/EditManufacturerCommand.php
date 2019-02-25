@@ -79,7 +79,7 @@ class EditManufacturerCommand
     private $enabled;
 
     /**
-     * @var array|null
+     * @var array
      */
     private $associatedShops;
 
@@ -260,7 +260,7 @@ class EditManufacturerCommand
     }
 
     /**
-     * @return array|null
+     * @return array
      */
     public function getShopAssociation()
     {
@@ -268,7 +268,7 @@ class EditManufacturerCommand
     }
 
     /**
-     * @param array|null $associatedShops
+     * @param array $associatedShops
      *
      * @return self
      */

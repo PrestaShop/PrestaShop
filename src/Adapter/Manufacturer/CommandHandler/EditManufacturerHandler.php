@@ -48,11 +48,10 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
         $manufacturerId = $command->getManufacturerId();
         $manufacturer = new Manufacturer($manufacturerId->getValue());
         $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
-
         $this->populateManufacturerWithData($manufacturer, $command);
 
         try {
-            $this->updateShopAssociation($command);
+            $this->associateWithShops($manufacturer, $command->getShopAssociation());
 
             if (!$manufacturer->update()) {
                 throw new ManufacturerException(
@@ -66,23 +65,6 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
         }
 
         return $manufacturerId;
-    }
-
-    /**
-     * Updates shop association if it was changed
-     *
-     * @param EditManufacturerCommand $command
-     */
-    private function updateShopAssociation(EditManufacturerCommand $command)
-    {
-        if (null === $command->getShopAssociation()) {
-            return;
-        }
-
-        $this->associateWithShops(
-            $command->getManufacturerId()->getValue(),
-            $command->getShopAssociation()
-        );
     }
 
     /**
