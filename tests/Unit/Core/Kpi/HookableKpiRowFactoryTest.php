@@ -28,6 +28,7 @@ namespace Tests\Unit\Core\Kpi;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Kpi\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
@@ -52,6 +53,47 @@ class HookableKpiRowFactoryTest extends TestCase
             ],
             $this->createMock(HookDispatcherInterface::class),
             'fooBar'
+        );
+
+        $this->assertInstanceOf(KpiRowFactoryInterface::class, $factory);
+    }
+
+    public function testCantBeConstructedWithInvalidKpis()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Kpi must be an instance of KpiInterface, got `string`.');
+
+        $kpiMock1 = $this->createMock(KpiInterface::class);
+        $kpiMock2 = $this->createMock(KpiInterface::class);
+
+        $factory = new HookableKpiRowFactory(
+            [
+                $kpiMock1,
+                $kpiMock2,
+                'kpiMock3',
+            ],
+            $this->createMock(HookDispatcherInterface::class),
+            'fooBar'
+        );
+
+        $this->assertInstanceOf(KpiRowFactoryInterface::class, $factory);
+    }
+
+    public function testCantBeConstructedWithInvalidIdentifier()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Identifier must be a string, got `boolean`.');
+
+        $kpiMock1 = $this->createMock(KpiInterface::class);
+        $kpiMock2 = $this->createMock(KpiInterface::class);
+
+        $factory = new HookableKpiRowFactory(
+            [
+                $kpiMock1,
+                $kpiMock2,
+            ],
+            $this->createMock(HookDispatcherInterface::class),
+            false
         );
 
         $this->assertInstanceOf(KpiRowFactoryInterface::class, $factory);

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Kpi\Row;
 
+use PrestaShop\PrestaShop\Core\Kpi\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
@@ -59,9 +60,11 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
         HookDispatcherInterface $hookDispatcher,
         $identifier
     ) {
-        $this->kpis = $kpis;
-        $this->hookDispatcher = $hookDispatcher;
-        $this->identifier = $identifier;
+        if ($this->validateKpis($kpis) && $this->validateIdentifier($identifier)) {
+            $this->kpis = $kpis;
+            $this->hookDispatcher = $hookDispatcher;
+            $this->identifier = $identifier;
+        }
     }
 
     /**
@@ -75,11 +78,47 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
             'kpis' => &$this->kpis,
         ]);
 
-        foreach ($this->kpis as $kpi) {
-            $kpiRow->addKpi($kpi);
+        if ($this->validateKpis($this->kpis)) {
+            foreach ($this->kpis as $kpi) {
+                $kpiRow->addKpi($kpi);
+            }
+
+            return $kpiRow;
+        }
+    }
+
+    /**
+     * @param array $kpis
+     *
+     * @return bool true if valid, else throw an exception
+     *
+     * @throws InvalidArgumentException
+     */
+    private function validateKpis(array $kpis)
+    {
+        foreach ($kpis as $kpi) {
+            if (!$kpi instanceof KpiInterface) {
+                throw InvalidArgumentException::invalidKpi($kpi);
+            }
         }
 
-        return $kpiRow;
+        return true;
+    }
+
+    /**
+     * @param mixed $identifier
+     *
+     * @return bool true if valid, else throw an exception
+     *
+     * @throws InvalidArgumentException
+     */
+    private function validateIdentifier($identifier)
+    {
+        if (!is_string($identifier)) {
+            throw InvalidArgumentException::invalidIdentifier($identifier);
+        }
+
+        return true;
     }
 
     /**
