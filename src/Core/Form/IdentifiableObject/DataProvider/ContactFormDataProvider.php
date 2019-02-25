@@ -33,7 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
- * Class ContactFormDataProvider
+ * Class ContactFormDataProvider is responsible for providing form data for contacts by contact id or by giving default
+ * values.
  */
 final class ContactFormDataProvider implements FormDataProviderInterface
 {

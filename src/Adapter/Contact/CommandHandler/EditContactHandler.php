@@ -42,6 +42,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class EditContactHandler is responsible for editing contact data.
+ *
+ * @internal
  */
 final class EditContactHandler extends AbstractObjectModelHandler implements EditContactHandlerInterface
 {

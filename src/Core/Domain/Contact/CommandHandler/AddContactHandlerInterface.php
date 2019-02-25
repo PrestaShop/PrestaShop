@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 
 /**
- * Interface AddContactHandlerInterface
+ * Interface AddContactHandlerInterface defines contract for AddContactHandler.
  */
 interface AddContactHandlerInterface
 {
