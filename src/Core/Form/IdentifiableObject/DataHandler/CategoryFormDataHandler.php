@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Creates/updates category from data submited in category form
+ * Creates/updates category from data submitted in category form
  */
 final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
 {
