@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCate
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
@@ -103,16 +104,16 @@ class CmsPageController extends FrameworkBundleAdminController
      *     message="You do not have permission to add this."
      * )
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function createCmsCategoryAction()
     {
-//        todo: remove legacy parts once form is ready and demoRestricted on post action
-        $legacyLink = $this->getAdminLink('AdminCmsContent', [
-            'addcms_category' => 1,
-        ]);
+        $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
+        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getForm();
 
-        return $this->redirect($legacyLink);
+        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/create_category.html.twig', [
+            'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
+        ]);
     }
 
     /**
@@ -400,6 +401,14 @@ class CmsPageController extends FrameworkBundleAdminController
     private function getCmsPageCategoryFormBuilder()
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.cms_page_category_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getCmsPageCategoryFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.cms_page_category_form_handler');
     }
 
     /**
