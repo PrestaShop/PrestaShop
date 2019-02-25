@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -35,11 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
 class AddonsStoreController extends FrameworkBundleAdminController
 {
     /**
-     * @var string the controller name for routing
-     */
-    const CONTROLLER_NAME = 'AdminAddonsCatalog';
-
-    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -54,9 +52,9 @@ class AddonsStoreController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminAddonsCatalog'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
+            'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
         ));
     }
 
@@ -75,6 +73,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
         $countryCode = $context->country->iso_code;
         $activity = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_ACTIVITY');
 
+        // GET parameters are concatenated this way in order to ensure they are not encoded
         return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain";
     }
 }
