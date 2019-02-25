@@ -27,8 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Handles submitted manufacturer form data
@@ -47,14 +49,37 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
     {
         $this->bus = $bus;
     }
-
-    /**
-     * {@inheritdoc}
-     */
+        /**
+         * {@inheritdoc}
+         */
     public function create(array $data)
     {
-        //@todo: implement
-        return [];
+        if (!isset($data['shop_association']) || !$data['shop_association']) {
+            $data['shop_association'] = [];
+        }
+
+        /** @var UploadedFile $uploadedFlagImage */
+        $uploadedLogo = $data['logo'];
+        $logoPath = null;
+
+        if ($uploadedLogo instanceof UploadedFile) {
+            $logoPath = $uploadedLogo->getPathname();
+        }
+
+        /** @var ManufacturerId $manufacturerId */
+        $manufacturerId = $this->bus->handle(new AddManufacturerCommand(
+            $data['name'],
+            $data['is_enabled'],
+            $logoPath,
+            $data['short_description'],
+            $data['description'],
+            $data['meta_title'],
+            $data['meta_description'],
+            $data['meta_keyword'],
+            $data['shop_association']
+        ));
+
+        return $manufacturerId->getValue();
     }
 
     /**

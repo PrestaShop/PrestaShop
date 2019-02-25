@@ -29,25 +29,61 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ManufacturerController is responsible for "Sell > Catalog > Brands & Suppliers" page.
+ * Is responsible for "Sell > Catalog > Brands & Suppliers" page.
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
-    public function createAction()
+    /**
+     * Show & process manufacturer creation.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        $manufacturerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
+        $manufacturerFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
+        try {
+            $manufacturerForm = $manufacturerFormBuilder->getForm();
+            $manufacturerForm->handleRequest($request);
+
+            $result = $manufacturerFormHandler->handle($manufacturerForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/add.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'manufacturerForm' => $manufacturerForm->createView(),
+        ]);
     }
 
     /**
-     * Edits manufacturer
+     * Show & process manufacturer editing.
      *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param int $manufacturerId
      * @param Request $request
-     * @param $manufacturerId
      *
      * @return Response
      */

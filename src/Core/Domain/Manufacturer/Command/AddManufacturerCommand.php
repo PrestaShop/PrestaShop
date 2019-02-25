@@ -24,20 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult;
-
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command;
 
 /**
- * Transfers manufacturer data for editing
+ * Creates manufacturer with provided data
  */
-class EditableManufacturer
+class AddManufacturerCommand
 {
-    /**
-     * @var ManufacturerId
-     */
-    private $manufacturerId;
-
     /**
      * @var string
      */
@@ -54,9 +47,9 @@ class EditableManufacturer
     private $localizedDescriptions;
 
     /**
-     * @var array
+     * @var string
      */
-    private $logoImage;
+    private $logoImagePath;
 
     /**
      * @var string[]
@@ -84,47 +77,36 @@ class EditableManufacturer
     private $shopAssociation;
 
     /**
-     * @param ManufacturerId $manufacturerId
      * @param string $name
-     * @param array $localizedShortDescriptions
-     * @param array $localizedDescriptions
-     * @param array $logoImage
-     * @param array $localizedMetaTitles
-     * @param array $localizedMetaDescriptions
-     * @param array $localizedMetaKeywords
+     * @param string[]|null $localizedShortDescriptions
+     * @param string[]|null $localizedDescriptions
+     * @param string|null $logoImagePath
+     * @param string[]|null $localizedMetaTitles
+     * @param string[]|null $localizedMetaDescriptions
+     * @param string[]|null $localizedMetaKeywords
      * @param bool $enabled
      * @param array $shopAssociation
      */
     public function __construct(
-        ManufacturerId $manufacturerId,
         $name,
-        array $localizedShortDescriptions,
-        array $localizedDescriptions,
-        array $logoImage,
-        array $localizedMetaTitles,
-        array $localizedMetaDescriptions,
-        array $localizedMetaKeywords,
-        $enabled,
-        array $shopAssociation
+        $enabled = false,
+        $logoImagePath = null,
+        array $localizedShortDescriptions = null,
+        array $localizedDescriptions = null,
+        array $localizedMetaTitles = null,
+        array $localizedMetaDescriptions = null,
+        array $localizedMetaKeywords = null,
+        array $shopAssociation = null
     ) {
-        $this->manufacturerId = $manufacturerId;
         $this->name = $name;
         $this->localizedShortDescriptions = $localizedShortDescriptions;
         $this->localizedDescriptions = $localizedDescriptions;
-        $this->logoImage = $logoImage;
+        $this->logoImagePath = $logoImagePath;
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
         $this->localizedMetaKeywords = $localizedMetaKeywords;
         $this->enabled = $enabled;
         $this->shopAssociation = $shopAssociation;
-    }
-
-    /**
-     * @return ManufacturerId
-     */
-    public function getManufacturerId()
-    {
-        return $this->manufacturerId;
     }
 
     /**
@@ -136,7 +118,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getLocalizedShortDescriptions()
     {
@@ -144,7 +126,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getLocalizedDescriptions()
     {
@@ -152,15 +134,15 @@ class EditableManufacturer
     }
 
     /**
-     * @return array
+     * @return string|null
      */
-    public function getLogoImage()
+    public function getLogoImagePath()
     {
-        return $this->logoImage;
+        return $this->logoImagePath;
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaTitles()
     {
@@ -168,7 +150,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaDescriptions()
     {
@@ -176,7 +158,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaKeywords()
     {
@@ -192,7 +174,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return array
+     * @return string[]|null
      */
     public function getShopAssociation()
     {
