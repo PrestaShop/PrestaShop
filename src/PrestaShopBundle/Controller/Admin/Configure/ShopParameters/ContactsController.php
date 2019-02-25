@@ -59,6 +59,16 @@ class ContactsController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/index.html.twig',
             [
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
+                'layoutTitle' => $this->trans('Contacts', 'Admin.Navigation.Menu'),
+                'requireAddonsSearch' => true,
+                'layoutHeaderToolbarBtn' => [
+                    'add' => [
+                        'desc' => $this->trans('Add new contact', 'Admin.Shopparameters.Feature'),
+                        'icon' => 'add_circle_outline',
+                        'href' => $this->generateUrl('admin_contacts_create'),
+                    ],
+                ],
                 'contactGrid' => $this->presentGrid($contactGrid),
             ]
         );

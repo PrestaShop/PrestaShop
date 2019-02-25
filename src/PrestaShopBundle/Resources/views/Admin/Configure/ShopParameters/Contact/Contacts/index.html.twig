@@ -25,17 +25,6 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% set layoutTitle = 'Contacts'|trans({}, 'Admin.Navigation.Menu') %}
-{% set enableSidebar = true %}
-{% set requireAddonsSearch = true %}
-{% set layoutHeaderToolbarBtn = {
-  'add': {
-    'desc': 'Add new contact'|trans({}, 'Admin.Shopparameters.Feature'),
-    'icon': 'add_circle_outline',
-    'href': path('admin_contacts_create')
-  }
-} %}
-
 {% block content %}
   {% block contacts_list_panel %}
     <div class="row">
