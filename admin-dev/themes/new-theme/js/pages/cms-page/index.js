@@ -35,6 +35,7 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import PositionExtension from '../../components/grid/extension/position-extension';
 import ChoiceTree from "../../components/form/choice-tree";
+import TranslatableInput from "../../components/translatable-input";
 
 const $ = window.$;
 
@@ -53,4 +54,5 @@ $(() => {
   cmsCategory.addExtension(new PositionExtension());
 
   new ChoiceTree('#cms_page_category_parent_category');
+  new TranslatableInput();
 });
