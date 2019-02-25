@@ -136,6 +136,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
         try {
             $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+            $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
         } catch (CmsPageCategoryException $exception) {
             $this->addFlash('error', $this->handleException($exception));
 
@@ -144,6 +145,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit_category.html.twig', [
             'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
+            'cmsCategoryParentId' => $cmsCategoryParentId,
         ]);
     }
 
@@ -263,7 +265,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
 
-            return $this->redirectToParentIndexPage((int) $cmsCategoryParentId);
+            return $this->redirectToParentIndexPage($cmsCategoryParentId);
         }
 
         $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
@@ -276,7 +278,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToParentIndexPage((int) $cmsCategoryParentId);
+        return $this->redirectToParentIndexPage($cmsCategoryParentId);
     }
 
     /**
@@ -439,10 +441,8 @@ class CmsPageController extends FrameworkBundleAdminController
     {
         $routeParameters = [];
         try {
-            /** @var CmsPageCategoryId $cmsPageCategoryParentId */
-            $cmsPageCategoryParentId = $this->getQueryBus()->handle(
-                new GetCmsPageParentCategoryIdForRedirection($cmsPageCategoryId)
-            );
+
+            $cmsPageCategoryParentId = $this->getParentCategoryId($cmsPageCategoryId);
 
             if ($cmsPageCategoryParentId->getValue() !== CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID) {
                 $routeParameters = [
@@ -453,6 +453,25 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_cms_pages_index', $routeParameters);
+    }
+
+    /**
+     * Gets parent id according to the given child
+     *
+     * @param int $cmsPageCategoryChildId
+     *
+     * @return CmsPageCategoryId
+     *
+     * @throws CmsPageCategoryException
+     */
+    private function getParentCategoryId($cmsPageCategoryChildId)
+    {
+        /** @var CmsPageCategoryId $cmsPageCategoryParentId */
+        $cmsPageCategoryParentId = $this->getQueryBus()->handle(
+            new GetCmsPageParentCategoryIdForRedirection($cmsPageCategoryChildId)
+        );
+
+        return $cmsPageCategoryParentId;
     }
 
     /**
