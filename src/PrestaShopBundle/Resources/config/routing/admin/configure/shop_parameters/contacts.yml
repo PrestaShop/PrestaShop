@@ -4,6 +4,7 @@ admin_contacts_index:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:index'
         _legacy_controller: AdminContacts
+        _legacy_link: AdminContacts
 
 admin_contacts_search:
     path: /
