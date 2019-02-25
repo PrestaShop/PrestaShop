@@ -2,8 +2,11 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.language.query_handler.get_language_for_editing:
+  prestashop.adapter.manufacturer.query_handler.get_manufacturer_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler\GetManufacturerForEditingHandler'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing'

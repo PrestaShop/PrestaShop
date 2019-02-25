@@ -54,7 +54,7 @@ class EditableManufacturer
     private $localizedDescriptions;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $logoImage;
 
@@ -88,7 +88,7 @@ class EditableManufacturer
      * @param string $name
      * @param array $localizedShortDescriptions
      * @param array $localizedDescriptions
-     * @param array $logoImage
+     * @param array|null $logoImage
      * @param array $localizedMetaTitles
      * @param array $localizedMetaDescriptions
      * @param array $localizedMetaKeywords
@@ -100,12 +100,12 @@ class EditableManufacturer
         $name,
         array $localizedShortDescriptions,
         array $localizedDescriptions,
-        array $logoImage,
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
         array $localizedMetaKeywords,
         $enabled,
-        array $shopAssociation
+        array $shopAssociation,
+        array $logoImage = null
     ) {
         $this->manufacturerId = $manufacturerId;
         $this->name = $name;
@@ -152,7 +152,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getLogoImage()
     {

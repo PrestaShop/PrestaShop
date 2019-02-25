@@ -27,15 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
 use Context;
-use Db;
 use ImageManager;
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
-use PrestaShopDatabaseException;
-use Shop;
 
 /**
  * Provides reusable methods for manufacturer command/query handlers

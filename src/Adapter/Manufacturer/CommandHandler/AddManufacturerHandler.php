@@ -47,7 +47,6 @@ final class AddManufacturerHandler extends AbstractManufacturerHandler implement
         $this->fillLegacyManufacturerWithData($manufacturer, $command);
 
         try {
-
             if (!$manufacturer->add()) {
                 throw new ManufacturerException(
                     sprintf('Failed to add new manufacturer "%s"', $command->getName())
@@ -58,7 +57,6 @@ final class AddManufacturerHandler extends AbstractManufacturerHandler implement
             if (null !== $command->getLogoImagePath()) {
                 $this->uploadImage($manufacturer->id, $command->getLogoImagePath());
             }
-
         } catch (\PrestaShopException $e) {
             throw new ManufacturerException(
                 sprintf('Failed to add new manufacturer "%s"', $command->getName())
