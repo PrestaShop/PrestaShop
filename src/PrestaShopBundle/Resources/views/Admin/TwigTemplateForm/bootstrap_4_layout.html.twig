@@ -642,15 +642,15 @@
 {% endblock material_multiple_choice_table_widget %}
 
 {% block translatable_widget -%}
-  {{ form_errors(form) }}
   <div class="input-group locale-input-group js-locale-input-group d-flex">
+    {% set classes = attr.class|default('') %}
     {% for translateField in form %}
-      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
-      {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
+      {% set innerClasses = classes ~ translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+      {% set innerClasses = innerClasses ~ ' js-locale-' ~ translateField.vars.label %}
       {% if default_locale.id_lang != translateField.vars.name %}
-        {% set classes = classes ~ ' d-none' %}
+        {% set innerClasses = innerClasses ~ ' d-none' %}
       {% endif %}
-      <div class="{{ classes }}" style="flex-grow: 1;">
+      <div class="{{ innerClasses }}" style="flex-grow: 1;">
         {{ form_widget(translateField) }}
       </div>
     {% endfor %}
