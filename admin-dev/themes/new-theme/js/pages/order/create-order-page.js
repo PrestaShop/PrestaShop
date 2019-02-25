@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import * as createOrderPageMap from "./create-order-map";
+import createOrderPageMap from "./create-order-map";
 import CustomerSearcherComponent from "./customer-searcher-component";
 
 const $ = window.$;
@@ -34,32 +34,21 @@ const $ = window.$;
 export default class CreateOrderPage {
   constructor() {
     this.data = {};
-    this.$container = $(createOrderPageMap.createOrderContainer);
+    this.$container = $(createOrderPageMap.orderCreationContainer);
 
     this.customerSearcher = new CustomerSearcherComponent();
 
     return {
       listenForCustomerSearch: () => {
-
+        this.$container.on('input', createOrderPageMap.customerSearchInput, () => {
+          this.customerSearcher.onCustomerSearch();
+        });
       },
       listenForCustomerChooseForOrderCreation: () => {
-        this.$container.on('click', '.js-choose-customer-btn', (event) => {
-          this.data.customer_id = this.customerSearcher.chooseCustomerForOrderCreation(event);
+        this.$container.on('click', createOrderPageMap.chooseCustomerBtn, (event) => {
+          this.data.customer_id = this.customerSearcher.onCustomerChooseForOrderCreation(event);
         });
       }
     };
   }
-
-  /**
-   * Choses customer for which order is being created
-   *
-   * @param {Event} event
-   *
-   * @private
-   */
-  _onCustomerChooseForOrderCreation(event) {
-
-  }
 }
-
-

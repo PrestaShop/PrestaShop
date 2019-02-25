@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import * as createOrderPageMap from "./create-order-map";
+import createOrderPageMap from "./create-order-map";
 
 const $ = window.$;
 
@@ -35,11 +35,14 @@ export default class CustomerSearcherComponent {
     this.$searchInput = $(createOrderPageMap.customerSearchInput);
     this.$customerSearchResultBlock = $(createOrderPageMap.customerSearchResultsBlock);
 
-    this.$searchInput.on('input', () => {
-      this._doSearch();
-    });
-
-    return {};
+    return {
+      onCustomerSearch: () => {
+        this._doSearch();
+      },
+      onCustomerChooseForOrderCreation: (event) => {
+        return this._chooseCustomerForOrderCreation(event);
+      }
+    };
   }
 
   /**
@@ -48,10 +51,10 @@ export default class CustomerSearcherComponent {
    *
    * @return {Number}
    */
-  chooseCustomerForOrderCreation(chooseCustomerEvent) {
+  _chooseCustomerForOrderCreation(chooseCustomerEvent) {
     const $chooseBtn = $(chooseCustomerEvent.currentTarget);
     const $customerCard = $chooseBtn.closest('.card');
-    const $container = $(createOrderPageMap.createOrderContainer);
+    const $container = $(createOrderPageMap.orderCreationContainer);
 
     $chooseBtn.addClass('d-none');
 
@@ -59,7 +62,7 @@ export default class CustomerSearcherComponent {
     $customerCard.find(createOrderPageMap.changeCustomerBtn).removeClass('d-none');
 
     $container.find(createOrderPageMap.customerSearchBlock).addClass('d-none');
-    $container.find('.js-customer-search-result:not(.border-success)').remove();
+    $container.find(createOrderPageMap.notSelectedCustomerSearchResults).remove();
 
     return $chooseBtn.data('customer-id');
   }
@@ -122,13 +125,13 @@ export default class CustomerSearcherComponent {
     const $customerSearchResultTemplate = $($(createOrderPageMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
-    $template.find('.js-customer-name').text(`${customer.first_name} ${customer.last_name}`);
-    $template.find('.js-customer-email').text(customer.email);
-    $template.find('.js-customer-id').text(customer.id);
-    $template.find('.js-customer-birthday').text(customer.birthday);
+    $template.find(createOrderPageMap.customerSearchResultName).text(`${customer.first_name} ${customer.last_name}`);
+    $template.find(createOrderPageMap.customerSearchResultEmail).text(customer.email);
+    $template.find(createOrderPageMap.customerSearchResultId).text(customer.id);
+    $template.find(createOrderPageMap.customerSearchResultBirthday).text(customer.birthday);
 
-    $template.find('.js-details-customer-btn').data('customer-id', customer.id);
-    $template.find('.js-choose-customer-btn').data('customer-id', customer.id);
+    $template.find(createOrderPageMap.customerDetailsBtn).data('customer-id', customer.id);
+    $template.find(createOrderPageMap.chooseCustomerBtn).data('customer-id', customer.id);
 
     return this.$customerSearchResultBlock.append($template);
   }

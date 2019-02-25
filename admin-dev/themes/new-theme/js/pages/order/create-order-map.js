@@ -27,12 +27,19 @@
  * Encapsulates selectors for "Create order" page
  */
 export default {
-  createOrderContainer: '#orderCreationContainer',
+  orderCreationContainer: '#orderCreationContainer',
 
   // selectors related to customer searcher component
   customerSearchInput: '#customerSearchInput',
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customerSearchResultTemplate',
   changeCustomerBtn: '.js-change-customer-btn',
-  customerSearchBlock: '.js-search-customer-block'
-}
+  customerSearchBlock: '.js-search-customer-block',
+  chooseCustomerBtn: '.js-choose-customer-btn',
+  notSelectedCustomerSearchResults: '.js-customer-search-result:not(.border-success)',
+  customerSearchResultName: '.js-customer-name',
+  customerSearchResultEmail: '.js-customer-email',
+  customerSearchResultId: '.js-customer-id',
+  customerSearchResultBirthday: '.js-customer-birthday',
+  customerDetailsBtn: '.js-details-customer-btn',
+};
