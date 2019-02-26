@@ -29,7 +29,7 @@
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">Brand</i>
-    {{ 'Brands'|trans({}, 'Admin.Global') }}
+    {{ 'Brands'|trans({}, 'Admin.Catalog.Feature') }}
   </h3>
   <div class="card-block row">
     <div class="card-text">
@@ -51,8 +51,13 @@
         'label': 'Description'|trans({}, 'Admin.Global')
       }) }}
 
+      {% set logoHint %}
+        {{ 'Upload a brand logo from your computer.'|trans({}, 'Admin.Catalog.Help') }}
+      {% endset %}
+
       {{ ps.form_group_row(manufacturerForm.logo, {}, {
-        'label': 'Logo'|trans({}, 'Admin.Global')
+        'label': 'Logo'|trans({}, 'Admin.Global'),
+        'help': logoHint
       }) }}
 
       {% if logoImage is defined and logoImage is not null %}
@@ -65,17 +70,28 @@
       {% endif %}
 
       {{ ps.form_group_row(manufacturerForm.meta_title, {}, {
-        'label': 'Meta title'|trans({}, 'Admin.Global')
+        'label': 'Meta title'|trans({}, 'Admin.Global'),
+        'help': invalidCharsHint
       }) }}
+
       {{ ps.form_group_row(manufacturerForm.meta_description, {}, {
-        'label': 'Meta description'|trans({}, 'Admin.Global')
+        'label': 'Meta description'|trans({}, 'Admin.Global'),
+        'help': invalidCharsHint
       }) }}
+
+      {% set keywordHint %}
+        {{ 'To add "tags," click inside the field, write something, and then press "Enter."'|trans({}, 'Admin.Catalog.Help') }}
+        {{ invalidCharsHint }}
+      {% endset %}
       {{ ps.form_group_row(manufacturerForm.meta_keyword, {}, {
-        'label': 'Meta keywords'|trans({}, 'Admin.Global')
+        'label': 'Meta keywords'|trans({}, 'Admin.Global'),
+        'help': keywordHint
       }) }}
+
       {{ ps.form_group_row(manufacturerForm.is_enabled, {}, {
         'label': 'Enabled'|trans({}, 'Admin.Global')
       }) }}
+
       {% if manufacturerForm.shop_association is defined %}
         {{ ps.form_group_row(manufacturerForm.shop_association, {}, {
           'label': 'Shop association'|trans({}, 'Admin.Global')
