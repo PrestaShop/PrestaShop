@@ -83,10 +83,6 @@ class AdminProductDataUpdater implements ProductInterface
             $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
         }
 
-        if (count($failedIdList) > 0) {
-            throw new UpdateProductException('Cannot change activation state on many requested products', 5004);
-        }
-
         return true;
     }
 
@@ -167,6 +163,10 @@ class AdminProductDataUpdater implements ProductInterface
         $product = new Product($productId);
         if (!Validate::isLoadedObject($product)) {
             throw new \Exception('AdminProductDataUpdater->duplicateProduct() received an unknown ID.', 5005);
+        }
+        if ((($product->validateFields(false, true)) !== true)
+            || (($product->validateFieldsLang(false, true)) !== true)) {
+            throw new UpdateProductException('Cannot duplicate many requested products', 5004);
         }
         
         $id_product_old = $product->id;
