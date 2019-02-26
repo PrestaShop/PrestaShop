@@ -24,6 +24,8 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+use Symfony\Component\HttpFoundation\Response;
+
 class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificManagementInterface
 {
     /**
@@ -204,30 +206,42 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     public function executeFileGetAndHead()
     {
         $a = new Attachment((int) $this->wsObject->urlSegment[2]);
-        if ($a) {
-            // Physical file location
-            $file = _PS_DOWNLOAD_DIR_ . $a->file;
-            // Check if file exists
-            if (file_exists($file)) {
-                // Return file details
-                return array(
-                    'file' => $file,
-                    'mime' => $a->mime,
-                    'file_name' => $a->file_name,
-                    'file_size' => $a->file_size,
-                );
-            } else {
-                throw new WebserviceException(sprintf('Unable to load the attachment file for attachment %d', $this->wsObject->urlSegment[2]), array(
+        if (!$a) {
+            throw new WebserviceException(
+                sprintf(
+                    'Attachment %d not found',
+                    $this->wsObject->urlSegment[2]
+                ),
+                [
                     1,
-                    500,
-                ));
-            }
-        } else {
-            throw new WebserviceException(sprintf('Attachment %d not found', $this->wsObject->urlSegment[2]), array(
-                1,
-                500,
-            ));
+                    Response::HTTP_INTERNAL_SERVER_ERROR,
+                ]
+            );
         }
+
+        // Physical file location
+        $file = _PS_DOWNLOAD_DIR_ . $a->file;
+        // Check if file exists
+        if (!file_exists($file)) {
+            throw new WebserviceException(
+                sprintf(
+                    'Unable to load the attachment file for attachment %d',
+                    $this->wsObject->urlSegment[2]
+                ),
+                [
+                    1,
+                    Response::HTTP_INTERNAL_SERVER_ERROR,
+                ]
+            );
+        }
+
+        // Return file details
+        return array(
+            'file' => $file,
+            'mime' => $a->mime,
+            'file_name' => $a->file_name,
+            'file_size' => $a->file_size,
+        );
     }
 
     /**
@@ -246,11 +260,15 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
             // Ensure file is within allowed size limit
             if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-                $this->wsObject->errors[] = sprintf($this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'), (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024), number_format(($_FILES['file']['size'] / 1024), 2, '.', ''));
+                $this->wsObject->errors[] = sprintf(
+                    $this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
+                    Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024,
+                    number_format(($_FILES['file']['size'] / 1024), 2, '.', '')
+                );
             } else {
                 // Assign unique id
                 do {
-                    $uniqid = sha1(microtime());
+                    $uniqid = sha1(uniqid()); // must be a sha1
                 } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqid));
 
                 $a->file_name = $_FILES['file']['name'];

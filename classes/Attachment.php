@@ -173,23 +173,24 @@ class AttachmentCore extends ObjectModel
     /**
      * Unassociate all products from the current object
      *
-     * @param bool $update_cache
-     *                           If set to true attachment cache will be updated
+     * @param bool $update_cache If set to true attachment cache will be updated
      *
      * @return bool Deletion result
      */
-    public function deleteAttachments($update_attachment_cache = true)
+    public function deleteAttachments($updateAttachmentCache = true)
     {
-        $product_ids = Db::getInstance()->executeS('
-			SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product_attachment`
-			WHERE `id_attachment` = ' . (int) $this->id);
-        $res = Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'product_attachment`
-			WHERE `id_attachment` = ' . (int) $this->id);
+        $productIds = Db::getInstance()->executeS(
+            'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product_attachment`
+			WHERE `id_attachment` = ' . (int) $this->id
+        );
+        $res = Db::getInstance()->execute(
+            'DELETE FROM `' . _DB_PREFIX_ . 'product_attachment`
+			WHERE `id_attachment` = ' . (int) $this->id
+        );
 
-        if (isset($update_attachment_cache) && (bool) $update_attachment_cache === true) {
-            foreach ($product_ids as $product_id) {
-                Product::updateCacheAttachment((int) $product_id);
+        if ($updateAttachmentCache === true) {
+            foreach ($productIds as $productId) {
+                Product::updateCacheAttachment((int) $productId);
             }
         }
 
