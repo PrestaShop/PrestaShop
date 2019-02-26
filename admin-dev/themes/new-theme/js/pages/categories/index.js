@@ -39,7 +39,7 @@ import DeleteCategoriesBulkActionExtension from "../../components/grid/extension
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
 import TextWithLengthCounter from "../../components/form/text-with-length-counter";
-import TextToLinkRewriteCopier from "../../components/text-to-link-rewrite-copier";
+import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copier";
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
 
@@ -65,12 +65,12 @@ $(() => {
   new ChoiceTable();
   new TextWithLengthCounter();
 
-  new TextToLinkRewriteCopier({
+  textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',
     destinationElementSelector: 'input[name^="category[link_rewrite]"]',
   });
 
-  new TextToLinkRewriteCopier({
+  textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="root_category[name]"]',
     destinationElementSelector: 'input[name^="root_category[link_rewrite]"]',
   });

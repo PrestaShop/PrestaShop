@@ -26,6 +26,19 @@
 const $ = window.$;
 
 /**
+ * Gets language id by target element.
+ *
+ * @param {jQuery} $targetElement
+ *
+ * @returns {Number|null}
+ */
+const getLanguageIdByElement = ($targetElement) => {
+  const langId = $targetElement.attr('data-lang-id');
+
+  return typeof langId === 'undefined' ? null : parseInt(langId);
+};
+
+/**
  * Component which allows to copy regular text to url friendly text
  *
  * Usage example in template:
@@ -35,7 +48,7 @@ const $ = window.$;
  *
  * in javascript:
  *
- * new TextToLinkRewriteCopier({
+ * new textToLinkRewriteCopier({
  *   sourceElementSelector: '.js-link-rewrite-copier-source'
  *   destinationElementSelector: '.js-link-rewrite-copier-destination',
  * });
@@ -45,7 +58,7 @@ const $ = window.$;
  *
  * You can also pass additional options to change the event name, or encoding format:
  *
- * new TextToLinkRewriteCopier({
+ * new textToLinkRewriteCopier({
  *   sourceElementSelector: '.js-link-rewrite-copier-source'
  *   destinationElementSelector: '.js-link-rewrite-copier-destination',
  *   options: {
@@ -55,32 +68,17 @@ const $ = window.$;
  * });
  *
  */
-export default class TextToLinkRewriteCopier {
-  constructor({ sourceElementSelector, destinationElementSelector, options = { eventName: 'input', encoding: 'UTF-8' } }) {
+const textToLinkRewriteCopier = ({ sourceElementSelector, destinationElementSelector, options = { eventName: 'input', encoding: 'UTF-8' } }) => {
 
     $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
       const $nameInput = $(event.currentTarget);
-      const langId = this._getLanguageIdByElement($nameInput);
+      const langId = getLanguageIdByElement($nameInput);
       let elementToModifySelector = null !== langId ? `${destinationElementSelector}[data-lang-id="${langId}"]` : destinationElementSelector;
 
       $(elementToModifySelector).val(str2url($nameInput.val(), options.encoding));
     })
+};
 
-    return {};
-  }
+export default textToLinkRewriteCopier;
 
-  /**
-   * Gets language id by target element.
-   *
-   * @param {jQuery} $targetElement
-   *
-   * @returns {Number|null}
-   *
-   * @private
-   */
-  _getLanguageIdByElement($targetElement) {
-    const langId = $targetElement.attr('data-lang-id');
 
-    return typeof langId === 'undefined' ? null : parseInt(langId);
-  }
-}
