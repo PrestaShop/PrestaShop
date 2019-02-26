@@ -85,11 +85,6 @@ table .column-filters td:last-child .grid-reset-button {
 
 .grid {
   .grid-table {
-    .position {
-      border: 1px solid rgb(187, 205, 210);
-      padding: 5px 20px;
-    }
-
     // styling for every row in grid table
     tr {
       $tr: &;
@@ -117,13 +112,6 @@ table .column-filters td:last-child .grid-reset-button {
           a:after {
             color: white;
           }
-
-          .position {
-            color: black;
-            background: white;
-            border: 1px solid rgb(187, 205, 210);
-            padding: 5px 20px;
-          }
         }
       }
 
@@ -132,13 +120,6 @@ table .column-filters td:last-child .grid-reset-button {
       // ---------------------------------------------
 
       td {
-        // specific styles for Category Position column (category_position.html.twig) type
-        .category-position-column {
-          .position {
-            background: white;
-          }
-        }
-
         // specific styles for Draggable column (draggable.html.twig) type
         .draggable-column {
           color: transparent;
