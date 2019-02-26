@@ -48,7 +48,7 @@ const getLanguageIdByElement = ($targetElement) => {
  *
  * in javascript:
  *
- * new textToLinkRewriteCopier({
+ * textToLinkRewriteCopier({
  *   sourceElementSelector: '.js-link-rewrite-copier-source'
  *   destinationElementSelector: '.js-link-rewrite-copier-destination',
  * });
@@ -58,7 +58,7 @@ const getLanguageIdByElement = ($targetElement) => {
  *
  * You can also pass additional options to change the event name, or encoding format:
  *
- * new textToLinkRewriteCopier({
+ * textToLinkRewriteCopier({
  *   sourceElementSelector: '.js-link-rewrite-copier-source'
  *   destinationElementSelector: '.js-link-rewrite-copier-destination',
  *   options: {
