@@ -48,7 +48,7 @@ class SearchCronTest extends AbstractEndpointAdminTest
         $output = json_decode(ob_get_clean());
 
         // Nothing is returned by this call
-        $this->assertNull();
+        $this->assertNull($output);
 
     }
 }
