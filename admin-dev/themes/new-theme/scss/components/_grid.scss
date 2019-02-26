@@ -85,7 +85,6 @@ table .column-filters td:last-child .grid-reset-button {
 
 .grid {
   .grid-table {
-    // styling for every row in grid table
     tr {
       $tr: &;
 
@@ -93,7 +92,7 @@ table .column-filters td:last-child .grid-reset-button {
         background: #fafbfc;
       }
 
-      // when row is being dragged this class is applied
+      // styling for row that is being dragged
       &.dragging-row {
         background: #fafbfc;
         cursor: move;
@@ -115,20 +114,27 @@ table .column-filters td:last-child .grid-reset-button {
         }
       }
 
-      // ---------------------------------------------
-      // Column styling (content inside each <td> tag)
-      // ---------------------------------------------
-
+      // ---------------------------------
+      // Styling for specific column types
+      // ---------------------------------
       td {
-        // specific styles for Draggable column (draggable.html.twig) type
-        .draggable-column {
-          color: transparent;
-          cursor: move;
+        &.draggable-type {
+          .draggable-column {
+            color: transparent;
+            cursor: move;
+          }
 
           @at-root {
             #{$tr}:hover .draggable-column {
-              color: #15b7d7;
+              color: #15b7d7 !important;
             }
+          }
+        }
+
+        &.action-type {
+          .dropdown-item:focus,
+          .dropdown-item:hover {
+            background-color: transparent;
           }
         }
       }
