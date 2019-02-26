@@ -2,15 +2,15 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.constraint_validator.is_url_rewrite_validator:
-    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator'
+  prestashop.bundle.constraint.constraint.is_url_rewrite_validator:
+    class: 'PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\IsUrlRewriteValidator'
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_ALLOW_ACCENTED_CHARS_URL")'
     tags:
       - { name: validator.constraint_validator }
 
-  prestashop.core.constraint_validator.default_language_validator:
-    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\DefaultLanguageValidator'
+  prestashop.bundle.constraint.constraint.default_language_validator:
+    class: 'PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\DefaultLanguageValidator'
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
     tags:

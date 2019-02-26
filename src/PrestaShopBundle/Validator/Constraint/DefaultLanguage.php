@@ -24,26 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
+namespace PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class IsUrlRewrite is responsible of validating url rewrites according to several patterns
- * which differ when ascending urls are enabled or not.
- *
- * @Annotation
+ * Class DefaultLanguage is responsible for checking if the array contains default language id - its common to require
+ * default language to be presented when saving required multi-language fields.
  */
-class IsUrlRewrite extends Constraint
+class DefaultLanguage extends Constraint
 {
-    public $message = '%s is invalid.';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validatedBy()
-    {
-        return IsUrlRewriteValidator::class;
-    }
+    public $message = 'The field %field_name% is required at least in your default language.';
 }

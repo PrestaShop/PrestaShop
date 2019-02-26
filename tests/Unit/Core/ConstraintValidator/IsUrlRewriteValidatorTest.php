@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
+use PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\IsUrlRewrite;
+use PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\IsUrlRewriteValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;

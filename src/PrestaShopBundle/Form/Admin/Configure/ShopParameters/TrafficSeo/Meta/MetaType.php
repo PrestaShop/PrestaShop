@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
+use PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\DefaultLanguage;
+use PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\IsUrlRewrite;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;

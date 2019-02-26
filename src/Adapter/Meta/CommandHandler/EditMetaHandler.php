@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 use Meta;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
+use PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\DefaultLanguage;
+use PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotEditMetaException;

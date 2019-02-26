@@ -24,30 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
+namespace PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Class IsUrlRewriteValidator is responsible of validating url rewrites according to several patterns
- * which differ when ascending urls are enabled or not.
+ * Class DefaultLanguageValidator is responsilbe for doing the actual validation under DefaultLanguage constraint.
  */
-class IsUrlRewriteValidator extends ConstraintValidator
+class DefaultLanguageValidator extends ConstraintValidator
 {
     /**
-     * @var bool
+     * @var int
      */
-    private $isAscendedCharsAllowed;
+    private $defaultLanguageId;
 
     /**
-     * @param bool $isAscendedCharsAllowed
+     * @param int $defaultLanguageId
      */
-    public function __construct($isAscendedCharsAllowed)
+    public function __construct($defaultLanguageId)
     {
-        $this->isAscendedCharsAllowed = $isAscendedCharsAllowed;
+        $this->defaultLanguageId = $defaultLanguageId;
     }
 
     /**
@@ -55,42 +53,23 @@ class IsUrlRewriteValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof IsUrlRewrite) {
-            throw new UnexpectedTypeException($constraint, IsUrlRewrite::class);
+        if (!$constraint instanceof DefaultLanguage) {
+            throw new UnexpectedTypeException($constraint, DefaultLanguage::class);
         }
 
-        if (null === $value || '' === $value) {
-            return;
+        if (!is_array($value)) {
+            throw new UnexpectedTypeException($value, 'array');
         }
 
-        if (!is_string($value)) {
-            throw new UnexpectedTypeException($value, 'string');
-        }
-
-        if (!$this->isUrlRewriteValid($value)) {
+        if (empty($value[$this->defaultLanguageId])) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
-                ->setParameter('%s', $this->formatValue($value))
+                ->setParameter(
+                    '%field_name%',
+                    $this->context->getObject() ? $this->context->getObject()->getName() : ''
+                )
                 ->addViolation()
             ;
         }
-    }
-
-    /**
-     * Validates url rewrite according the patterns which vary based on ascended chars allowed setting.
-     *
-     * @param string $urlRewrite
-     *
-     * @return false|int
-     */
-    private function isUrlRewriteValid($urlRewrite)
-    {
-        $pattern = '/^[_a-zA-Z0-9\-]+$/';
-
-        if ($this->isAscendedCharsAllowed) {
-            $pattern = '/^[_a-zA-Z0-9\pL\pS-]+$/u';
-        }
-
-        return preg_match($pattern, $urlRewrite);
     }
 }
