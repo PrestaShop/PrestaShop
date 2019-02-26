@@ -73,9 +73,7 @@ class AdminProductDataUpdater implements ProductInterface
         $failedIdList = array();
         foreach ($productListId as $productId) {
             $product = new Product($productId);
-            if (!Validate::isLoadedObject($product)
-                || (($product->validateFields(false, true)) !== true)
-                || (($product->validateFieldsLang(false, true)) !== true)) {
+            if (!Validate::isLoadedObject($product)) {
                 $failedIdList[] = $productId;
                 continue;
             }
@@ -167,10 +165,6 @@ class AdminProductDataUpdater implements ProductInterface
         $product = new Product($productId);
         if (!Validate::isLoadedObject($product)) {
             throw new \Exception('AdminProductDataUpdater->duplicateProduct() received an unknown ID.', 5005);
-        }
-        if ((($product->validateFields(false, true)) !== true)
-            || (($product->validateFieldsLang(false, true)) !== true)) {
-            throw new UpdateProductException('Cannot duplicate many requested products', 5004);
         }
 
         $id_product_old = $product->id;
