@@ -25,10 +25,17 @@
 
 import TranslatableInput from '../../components/translatable-input';
 import TextWithLengthCounter from '../../components/form/text-with-length-counter';
+import TaggableField from '../../components/taggable-field';
 
 const $ = window.$;
 
 $(() => {
   new TranslatableInput();
   new TextWithLengthCounter();
+  new TaggableField({
+    tokenFieldSelector: 'input.js-taggable-field',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
 });
