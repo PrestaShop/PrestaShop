@@ -26,11 +26,37 @@
 const $ = window.$;
 
 /**
- * Copies name of category to link rewrite input.
+ * Component which allows to replace regular text to url friendly text
+ *
+ * Usage example in template:
+ *
+ * <input name="target-input" class="js-target-input"> // The original text will be taken from this element
+ * <input name="destination-input" class="js-destination-input"> // Modified text will be added to this input
+ *
+ * in javascript:
+ *
+ * new ElementToLinkRewriteCopier({
+ *   targetElementSelector: '.js-target-input'
+ *   destinationElementSelector: '.js-destination-input',
+ * });
+ *
+ * If the target-input has value "test name" the link rewrite value will be "test-name".
+ * If the target-input has value "test name #$" link rewrite will be "test-name-" since #$ are un allowed characters in url.
+ *
+ * You can also pass additional options to change the event name, or encoding format:
+ *
+ * new ElementToLinkRewriteCopier({
+ *   targetElementSelector: '.js-target-input'
+ *   destinationElementSelector: '.js-destination-input',
+ *   options: {
+ *     eventName: 'change', // default is 'input'
+ *     encoding: 'US-ASCII', //default is 'UTF-8'
+ *   }
+ * });
+ *
  */
 export default class ElementToLinkRewriteCopier {
-  constructor(parameters) {
-    const { targetElementSelector, destinationElementSelector, options = { eventName: 'input', } } = parameters;
+  constructor({ targetElementSelector, destinationElementSelector, options = { eventName: 'input', encoding: 'UTF-8' } }) {
 
     $(document).on(options.eventName, `${targetElementSelector}`, (event) => {
       const $nameInput = $(event.currentTarget);
@@ -41,7 +67,7 @@ export default class ElementToLinkRewriteCopier {
         elementToModifySelector = `${destinationElementSelector}[data-lang-id="${langId}"]`;
       }
 
-      $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8'));
+      $(elementToModifySelector).val(str2url($nameInput.val(), options.encoding));
     })
   }
 
