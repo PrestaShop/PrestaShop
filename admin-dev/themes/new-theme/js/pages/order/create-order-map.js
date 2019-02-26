@@ -34,7 +34,7 @@ export default {
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customerSearchResultTemplate',
   changeCustomerBtn: '.js-change-customer-btn',
-  customerSearchBlock: '.js-search-customer-block',
+  customerSearchRow: '.js-search-customer-row',
   chooseCustomerBtn: '.js-choose-customer-btn',
   notSelectedCustomerSearchResults: '.js-customer-search-result:not(.border-success)',
   customerSearchResultName: '.js-customer-name',
@@ -42,4 +42,6 @@ export default {
   customerSearchResultId: '.js-customer-id',
   customerSearchResultBirthday: '.js-customer-birthday',
   customerDetailsBtn: '.js-details-customer-btn',
+  customerSearchResultColumn: '.js-customer-search-result-col',
+  customerSearchBlock: '#customerSearchBlock',
 };

@@ -28,7 +28,9 @@
 {% set layoutTitle = 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') %}
 
 {% block content %}
-  <div id="orderCreationContainer">
+  <div id="orderCreationContainer"
+       data-cart-summary-url="{{ getAdminLink('AdminOrders', true, {'action': 'searchCarts', 'ajax': 1}) }}"
+  >
     <div class="row">
       <div class="col">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/customer.html.twig' %}

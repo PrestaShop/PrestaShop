@@ -48,7 +48,19 @@ export default class CreateOrderPage {
         this.$container.on('click', createOrderPageMap.chooseCustomerBtn, (event) => {
           this.data.customer_id = this.customerSearcher.onCustomerChooseForOrderCreation(event);
         });
+
+        this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => {
+          this.customerSearcher.onCustomerChange();
+        });
       }
     };
+  }
+
+  _loadCartSummary() {
+    $.ajax(this.$container.data('cart-summary-url'), {
+
+    }).then(() => {
+
+    });
   }
 }

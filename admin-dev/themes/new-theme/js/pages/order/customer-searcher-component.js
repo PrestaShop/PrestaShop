@@ -32,6 +32,7 @@ const $ = window.$;
  */
 export default class CustomerSearcherComponent {
   constructor() {
+    this.$container = $(createOrderPageMap.customerSearchBlock);
     this.$searchInput = $(createOrderPageMap.customerSearchInput);
     this.$customerSearchResultBlock = $(createOrderPageMap.customerSearchResultsBlock);
 
@@ -41,6 +42,9 @@ export default class CustomerSearcherComponent {
       },
       onCustomerChooseForOrderCreation: (event) => {
         return this._chooseCustomerForOrderCreation(event);
+      },
+      onCustomerChange: () => {
+        this._showCustomerSearch();
       }
     };
   }
@@ -54,15 +58,17 @@ export default class CustomerSearcherComponent {
   _chooseCustomerForOrderCreation(chooseCustomerEvent) {
     const $chooseBtn = $(chooseCustomerEvent.currentTarget);
     const $customerCard = $chooseBtn.closest('.card');
-    const $container = $(createOrderPageMap.orderCreationContainer);
 
     $chooseBtn.addClass('d-none');
 
     $customerCard.addClass('border-success');
     $customerCard.find(createOrderPageMap.changeCustomerBtn).removeClass('d-none');
 
-    $container.find(createOrderPageMap.customerSearchBlock).addClass('d-none');
-    $container.find(createOrderPageMap.notSelectedCustomerSearchResults).remove();
+    this.$container.find(createOrderPageMap.customerSearchRow).addClass('d-none');
+    this.$container.find(createOrderPageMap.notSelectedCustomerSearchResults)
+      .closest(createOrderPageMap.customerSearchResultColumn)
+      .remove()
+    ;
 
     return $chooseBtn.data('customer-id');
   }
@@ -154,6 +160,15 @@ export default class CustomerSearcherComponent {
    */
   _clearShownCustomers() {
     this.$customerSearchResultBlock.empty();
+  }
+
+  /**
+   * Shows customer search block
+   *
+   * @private
+   */
+  _showCustomerSearch() {
+    this.$container.find(createOrderPageMap.customerSearchRow).removeClass('d-none');
   }
 }
 
