@@ -30,13 +30,16 @@ use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Validator\Constraint\IsCatalogName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Defines form for manufacturer create/edit actions (Sell > Catalog > Brands & Suppliers)
@@ -76,12 +79,23 @@ class ManufacturerType extends AbstractType
                     new NotBlank([
                         'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
+                    new Length([
+                        'max' => 64,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 32],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new IsCatalogName(),
                 ],
             ])
+            //@todo: implement isCleanHtml constraint
             ->add('short_description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
             ])
+            //@todo: implement isCleanHtml constraint
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
@@ -93,12 +107,38 @@ class ManufacturerType extends AbstractType
                 'type' => TextWithLengthCounterType::class,
                 'required' => false,
                 'options' => [
-                    'max_length' => 70,
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->translator->trans(
+                                '%s is invalid.',
+                                [
+                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                    'max_length' => 255,
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->translator->trans(
+                                '%s is invalid.',
+                                [
+                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
             ->add('meta_keyword', TranslatableType::class, [
                 'type' => TextType::class,
@@ -107,6 +147,18 @@ class ManufacturerType extends AbstractType
                     'attr' => [
                         'class' => 'js-taggable-field',
                         'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
+                    ],
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->translator->trans(
+                                '%s is invalid.',
+                                [
+                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                     ],
                 ],
             ])
