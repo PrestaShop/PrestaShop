@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\ConstraintValidator;
+namespace Tests\Unit\PrestaShopBundle\Validator\Constraint;
 
 use PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\IsUrlRewrite;
 use PrestaShop\PrestaShop\PrestaShopBundle\Validator\Constraint\IsUrlRewriteValidator;
