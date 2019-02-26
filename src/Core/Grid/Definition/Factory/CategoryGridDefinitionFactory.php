@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Category\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DraggableColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
@@ -192,6 +191,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('id_category')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -199,6 +201,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('name')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -206,6 +211,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('description')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search description', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -229,6 +237,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('position')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
+                    ],
                 ])
             );
         }
