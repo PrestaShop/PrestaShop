@@ -59,7 +59,7 @@ if (Tools::isSubmit('ajaxReferrers')) {
  *
  * -> Moved to legacy
  */
-if (Tools::isSubmit('ajaxProductPackItems')) {
+elseif (Tools::isSubmit('ajaxProductPackItems')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminProducts';
     $_GET['action'] = 'productPackItems';
@@ -69,7 +69,7 @@ if (Tools::isSubmit('ajaxProductPackItems')) {
  * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
  * -> Moved to legacy, in AdminCategories
  */
-if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
+elseif (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminCategories';
     $_GET['action'] = 'childrenCategories';
@@ -80,7 +80,7 @@ if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_par
  *
  * -> Moved to legacy
  */
-if (Tools::isSubmit('searchCategory')) {
+elseif (Tools::isSubmit('searchCategory')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminCategories';
     $_GET['action'] = 'searchCategory';
@@ -91,7 +91,7 @@ if (Tools::isSubmit('searchCategory')) {
  *
  * -> Moved to legacy
  */
-if (Tools::isSubmit('getParentCategoriesId') && Tools::isSubmit('id_category')) {
+elseif (Tools::isSubmit('getParentCategoriesId') && Tools::isSubmit('id_category')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminCategories';
     $_GET['action'] = 'parentCategories';
@@ -103,13 +103,13 @@ if (Tools::isSubmit('getParentCategoriesId') && Tools::isSubmit('id_category')) 
  *
  * -> Moved in legacy
  */
-if (Tools::isSubmit('getZones')) {
+elseif (Tools::isSubmit('getZones')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminZones';
     $_GET['action'] = 'zones';
 }
 
-if (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
+elseif (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminTranslations';
     $_GET['action'] = 'emailHTML';
@@ -136,7 +136,7 @@ if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.co
  * Import controller: Fields available for a given entity
  * -> Moved in Symfony
  */
-if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
+elseif (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
 
     $fields = array_map(function ($elem) {
@@ -151,7 +151,7 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
  *
  * -> Duplicated (NOT MOVED) in Symfony
  */
-if (Tools::isSubmit('getNotifications')) {
+elseif (Tools::isSubmit('getNotifications')) {
     $notification = new Notification;
     echo json_encode($notification->getLastElements());
 }
@@ -161,7 +161,7 @@ if (Tools::isSubmit('getNotifications')) {
  *
  * -> Duplicated (NOT MOVED) in Symfony
  */
-if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
+elseif (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
     $notification = new Notification;
     echo $notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType'));
 }

@@ -169,7 +169,7 @@ class AjaxTest extends AbstractEndpointAdminTest
     public function testAjaxEndpointForEmailHTML()
     {
         $_GET['getEmailHTML'] = 1;
-        $_GET['email'] = Context::getContext()->shop->getBaseURI() . 'themes/classic/mails/en/test.html';
+        $_GET['email'] = Context::getContext()->shop->getBaseURI() . 'mails/en/test.html';
         $_GET['token'] = Tools::getAdminTokenLite('AdminTranslations');
 
         ob_start();
