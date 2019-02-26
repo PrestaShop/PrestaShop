@@ -65,8 +65,6 @@ class TranslatableType extends AbstractType
                 $typeOptions['required'] = false;
             }
 
-            $typeOptions['attr']['data-lang-id'] = $locale['id_lang'];
-
             $builder->add($locale['id_lang'], $options['type'], $typeOptions);
         }
     }

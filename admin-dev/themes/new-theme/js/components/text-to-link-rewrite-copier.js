@@ -26,28 +26,28 @@
 const $ = window.$;
 
 /**
- * Component which allows to replace regular text to url friendly text
+ * Component which allows to copy regular text to url friendly text
  *
  * Usage example in template:
  *
- * <input name="target-input" class="js-target-input"> // The original text will be taken from this element
- * <input name="destination-input" class="js-destination-input"> // Modified text will be added to this input
+ * <input name="source-input" class="js-link-rewrite-copier-source"> // The original text will be taken from this element
+ * <input name="destination-input" class="js-link-rewrite-copier-destination"> // Modified text will be added to this input
  *
  * in javascript:
  *
- * new ElementToLinkRewriteCopier({
- *   targetElementSelector: '.js-target-input'
- *   destinationElementSelector: '.js-destination-input',
+ * new TextToLinkRewriteCopier({
+ *   sourceElementSelector: '.js-link-rewrite-copier-source'
+ *   destinationElementSelector: '.js-link-rewrite-copier-destination',
  * });
  *
- * If the target-input has value "test name" the link rewrite value will be "test-name".
- * If the target-input has value "test name #$" link rewrite will be "test-name-" since #$ are un allowed characters in url.
+ * If the source-input has value "test name" the link rewrite value will be "test-name".
+ * If the source-input has value "test name #$" link rewrite will be "test-name-" since #$ are un allowed characters in url.
  *
  * You can also pass additional options to change the event name, or encoding format:
  *
- * new ElementToLinkRewriteCopier({
- *   targetElementSelector: '.js-target-input'
- *   destinationElementSelector: '.js-destination-input',
+ * new TextToLinkRewriteCopier({
+ *   sourceElementSelector: '.js-link-rewrite-copier-source'
+ *   destinationElementSelector: '.js-link-rewrite-copier-destination',
  *   options: {
  *     eventName: 'change', // default is 'input'
  *     encoding: 'US-ASCII', //default is 'UTF-8'
@@ -55,20 +55,18 @@ const $ = window.$;
  * });
  *
  */
-export default class ElementToLinkRewriteCopier {
-  constructor({ targetElementSelector, destinationElementSelector, options = { eventName: 'input', encoding: 'UTF-8' } }) {
+export default class TextToLinkRewriteCopier {
+  constructor({ sourceElementSelector, destinationElementSelector, options = { eventName: 'input', encoding: 'UTF-8' } }) {
 
-    $(document).on(options.eventName, `${targetElementSelector}`, (event) => {
+    $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
       const $nameInput = $(event.currentTarget);
       const langId = this._getLanguageIdByElement($nameInput);
-      let elementToModifySelector = destinationElementSelector;
-
-      if (null !== langId) {
-        elementToModifySelector = `${destinationElementSelector}[data-lang-id="${langId}"]`;
-      }
+      let elementToModifySelector = null !== langId ? `${destinationElementSelector}[data-lang-id="${langId}"]` : destinationElementSelector;
 
       $(elementToModifySelector).val(str2url($nameInput.val(), options.encoding));
     })
+
+    return {};
   }
 
   /**
@@ -76,7 +74,7 @@ export default class ElementToLinkRewriteCopier {
    *
    * @param {jQuery} $targetElement
    *
-   * @returns {(null|number)}
+   * @returns {Number|null}
    *
    * @private
    */
