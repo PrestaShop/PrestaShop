@@ -36,6 +36,7 @@ class CategoriesProvider
      */
     public function getAllNestedCategories()
     {
+        //todo: write own sql here
         $result = CMSCategory::getRecurseCategory(
             $this->contextLanguageId,
             CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
