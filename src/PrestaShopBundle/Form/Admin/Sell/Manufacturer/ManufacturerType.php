@@ -103,6 +103,12 @@ class ManufacturerType extends AbstractType
             ->add('meta_keyword', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => false,
+                'options' => [
+                    'attr' => [
+                        'class' => 'js-taggable-field',
+                        'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
+                    ],
+                ],
             ])
             ->add('is_enabled', SwitchType::class, [
                 'required' => false,
