@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="card" id="customerSearchBlock">
   <h3 class="card-header">{{ 'Customer'|trans({}, 'Admin.Global') }}</h3>
   <div class="card-body">
-    <div class="row js-search-customer-block mb-3">
+    <div class="row js-search-customer-row mb-3">
       <div class="col-3">
         <span class="float-right">{{ 'Search for a customer'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
       </div>
@@ -53,7 +53,7 @@
         <div class="row js-customer-search-results"></div>
       </div>
     </div>
-    <div class="row">
+    <div class="row js-customer-carts d-none">
       <div class="col">
         <ul class="nav nav-pills" role="tablist">
           <li class="nav-item">
@@ -117,7 +117,7 @@
 </div>
 
 <div id="customerSearchResultTemplate" class="d-none">
-  <div class="col-4">
+  <div class="col-4 js-customer-search-result-col">
     <div class="card js-customer-search-result">
       <div class="card-header">
         <h3 class="card-header-title d-inline-block js-customer-name"></h3>

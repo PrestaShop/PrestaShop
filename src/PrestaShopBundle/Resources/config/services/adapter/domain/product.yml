@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.domain.product.query_handler.search_product_for_order_creation_handler:
+    class: PrestaShop\PrestaShop\Adapter\Domain\Product\QueryHandler\SearchProductForOrderCreationHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForOrderCreation

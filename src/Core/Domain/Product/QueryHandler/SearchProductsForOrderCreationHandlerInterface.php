@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,26 +22,21 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="card d-none" id="vouchersBlock">
-  <h3 class="card-header">
-    {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </h3>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-3">
-        <span class="float-right">{{ 'Search for a voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-      </div>
-      <div class="col-4">
-        <input type="text" class="form-control">
-      </div>
-      <div class="col">
-        <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
-        <button class="btn btn-primary" type="button">
-          {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForOrderCreation;
+
+/**
+ * Interface for service that handles products searching for order creation
+ */
+interface SearchProductsForOrderCreationHandlerInterface
+{
+    /**
+     * @param SearchProductsForOrderCreation $query
+     *
+     * @return array
+     */
+    public function handle(SearchProductsForOrderCreation $query);
+}
