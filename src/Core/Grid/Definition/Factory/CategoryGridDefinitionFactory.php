@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Category\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DraggableColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -117,16 +118,12 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $columns = (new ColumnCollection())
             ->add(
-                (new BulkActionColumn('bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_category',
-                ])
-            )
-            ->add(
-                (new DataColumn('id_category'))
+                (new IdentifierColumn('id_category'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_category',
+                    'identifier_field' => 'id_category',
+                    'bulk_field' => 'id_category',
+                    'with_bulk_field' => true,
                 ])
             )
             ->add(
@@ -177,7 +174,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                             'update_route' => 'AdminCategories',
                         ])
                 )
-                ->addBefore('bulk', new DraggableColumn('position_drag'))
+                ->addBefore('id_category', new DraggableColumn('position_drag'))
             ;
         }
 
