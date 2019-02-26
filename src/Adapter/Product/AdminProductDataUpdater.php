@@ -168,7 +168,7 @@ class AdminProductDataUpdater implements ProductInterface
         if (!Validate::isLoadedObject($product)) {
             throw new \Exception('AdminProductDataUpdater->duplicateProduct() received an unknown ID.', 5005);
         }
-
+        
         $id_product_old = $product->id;
         if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP) {
             $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
