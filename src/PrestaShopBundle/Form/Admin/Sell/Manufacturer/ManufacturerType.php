@@ -77,7 +77,9 @@ class ManufacturerType extends AbstractType
             ->add('name', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
                     ]),
                     new Length([
                         'max' => 64,
@@ -111,11 +113,7 @@ class ManufacturerType extends AbstractType
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [
-                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
-                                ],
-                                'Admin.Notifications.Error'
+                                '%s is invalid.', [], 'Admin.Notifications.Error'
                             ),
                         ]),
                     ],
@@ -130,11 +128,7 @@ class ManufacturerType extends AbstractType
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [
-                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
-                                ],
-                                'Admin.Notifications.Error'
+                                '%s is invalid.', [], 'Admin.Notifications.Error'
                             ),
                         ]),
                     ],
@@ -172,7 +166,9 @@ class ManufacturerType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ]);
