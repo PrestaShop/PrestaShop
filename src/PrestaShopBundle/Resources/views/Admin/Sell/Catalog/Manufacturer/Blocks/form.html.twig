@@ -33,16 +33,24 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
+      {% set invalidCharsHint %}
+        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+      {% endset %}
+
       {{ ps.form_group_row(manufacturerForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Global')
+        'label': 'Name'|trans({}, 'Admin.Global'),
+        'help': invalidCharsHint
       }) }}
+
       {{ ps.form_group_row(manufacturerForm.short_description, {}, {
-        'label': 'Short description'|trans({}, 'Admin.Global')
+        'label': 'Short description'|trans({}, 'Admin.Global'),
+        'help': invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(manufacturerForm.description, {}, {
         'label': 'Description'|trans({}, 'Admin.Global')
       }) }}
+
       {{ ps.form_group_row(manufacturerForm.logo, {}, {
         'label': 'Logo'|trans({}, 'Admin.Global')
       }) }}
@@ -68,9 +76,11 @@
       {{ ps.form_group_row(manufacturerForm.is_enabled, {}, {
         'label': 'Enabled'|trans({}, 'Admin.Global')
       }) }}
-      {{ ps.form_group_row(manufacturerForm.shop_association, {}, {
-        'label': 'Shop association'|trans({}, 'Admin.Global')
-      }) }}
+      {% if manufacturerForm.shop_association is defined %}
+        {{ ps.form_group_row(manufacturerForm.shop_association, {}, {
+          'label': 'Shop association'|trans({}, 'Admin.Global')
+        }) }}
+      {% endif %}
     </div>
   </div>
   <div class="card-footer">

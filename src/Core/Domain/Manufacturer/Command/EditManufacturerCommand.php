@@ -79,7 +79,7 @@ class EditManufacturerCommand
     private $enabled;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $associatedShops;
 
@@ -268,7 +268,7 @@ class EditManufacturerCommand
     }
 
     /**
-     * @param array $associatedShops
+     * @param array|null $associatedShops
      *
      * @return self
      */
