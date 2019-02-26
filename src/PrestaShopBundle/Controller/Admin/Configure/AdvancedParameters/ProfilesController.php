@@ -62,7 +62,7 @@ class ProfilesController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/index.html.twig',
             [
                 'layoutHeaderToolbarBtn' => [
-                    'add'=> [
+                    'add' => [
                         'href' => $this->generateUrl('admin_profiles_create'),
                         'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
                         'icon' => 'add_circle_outline',
