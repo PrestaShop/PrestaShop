@@ -461,5 +461,9 @@
     <access id="access_1_470" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_READ"/>
     <access id="access_1_471" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_UPDATE"/>
     <access id="access_1_472" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_DELETE"/>
+    <access id="access_1_473" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_CREATE"/>
+    <access id="access_1_474" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_READ"/>
+    <access id="access_1_475" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_UPDATE"/>
+    <access id="access_1_476" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_DELETE"/>
   </entities>
 </entity_access>
