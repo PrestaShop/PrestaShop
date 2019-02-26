@@ -283,11 +283,11 @@ class AdminProductWrapper
         } elseif ($reduction_type == 'percentage' && ((float) $reduction <= 0 || (float) $reduction > 100)) {
             $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', array(), 'Admin.Catalog.Notification');
         }
-        
+
         if (!empty($this->errors)) {
             return $this->errors;
         }
-        
+
         $validationResult = $this->validateSpecificPrice(
             $id_product,
             $id_shop,
