@@ -23,26 +23,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = window.$;
+
 /**
  * Copies name of category to link rewrite input.
  */
-export default class NameToLinkRewriteCopier {
-  constructor() {
-    ['category', 'root_category'].forEach((categoryType) => {
-      const $categoryForm = $(`form[name="${categoryType}"]`);
+export default class ElementToLinkRewriteCopier {
+  constructor(parameters) {
+    const { targetElementSelector, destinationElementSelector, options = { eventName: 'input', } } = parameters;
 
-      if (0 ===  $categoryForm.length) {
-        return;
+    $(document).on(options.eventName, `${targetElementSelector}`, (event) => {
+      const $nameInput = $(event.currentTarget);
+      const langId = this._getLanguageIdByElement($nameInput);
+      let elementToModifySelector = destinationElementSelector;
+
+      if (null !== langId) {
+        elementToModifySelector = `${destinationElementSelector}[data-lang-id="${langId}"]`;
       }
 
-      $categoryForm.on('input', `input[name^="${categoryType}[name]"]`, (event) => {
-        const $nameInput = $(event.currentTarget);
-        const langId = $nameInput.closest('.js-locale-input').data('lang-id');
+      $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8'));
+    })
+  }
 
-        $categoryForm
-          .find(`input[name="${categoryType}[link_rewrite][${langId}]"]`)
-          .val(str2url($nameInput.val(), 'UTF-8'));
-      });
-    });
+  /**
+   * Gets language id by target element.
+   *
+   * @param {jQuery} $targetElement
+   *
+   * @returns {(null|number)}
+   *
+   * @private
+   */
+  _getLanguageIdByElement($targetElement) {
+    const langId = $targetElement.attr('data-lang-id');
+
+    return typeof langId === 'undefined' ? null : parseInt(langId);
   }
 }
