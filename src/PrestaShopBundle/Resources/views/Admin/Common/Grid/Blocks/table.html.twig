@@ -40,7 +40,7 @@
       {% for record in grid.data.records %}
         <tr>
           {% for column in grid.columns %}
-            <td>
+            <td class="{{ column.type }}-type">
               {{ column_content(record, column, grid) }}
             </td>
           {% endfor %}
