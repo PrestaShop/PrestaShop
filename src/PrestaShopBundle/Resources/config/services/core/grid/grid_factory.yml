@@ -65,6 +65,11 @@ services:
         calls:
           - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
+    prestashop.core.grid.factory.category_decorator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Factory\CategoryGridFactoryDecorator'
+        arguments:
+          - '@prestashop.core.grid.factory.category'
+
     prestashop.core.grid.factory.employee:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
