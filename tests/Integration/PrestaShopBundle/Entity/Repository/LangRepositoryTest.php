@@ -38,7 +38,7 @@ class LangRepositoryTest extends KernelTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->bootKernel();
+        self::bootKernel();
     }
 
     public function testInterface()
@@ -91,5 +91,10 @@ class LangRepositoryTest extends KernelTestCase
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
         $locale = $languageRepository->getLocaleByIsoCode('en');
         $this->assertEquals('en-US', $locale);
+    }
+
+    protected function tearDown()
+    {
+        self::$kernel->shutdown();
     }
 }

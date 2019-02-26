@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Command;
+namespace LegacyTests\Integration\PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -42,7 +42,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
     {
         parent::setUp();
         $this->fileSystem = new Filesystem();
-        self::bootKernel();
+        $this->bootKernel();
     }
 
     /**
@@ -206,10 +206,5 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $this->fileSystem->mkdir($outputFolder);
 
         return $outputFolder;
-    }
-
-    protected function tearDown()
-    {
-        self::$kernel->shutdown();
     }
 }

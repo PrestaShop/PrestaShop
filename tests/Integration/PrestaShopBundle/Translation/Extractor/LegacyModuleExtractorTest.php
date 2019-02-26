@@ -79,6 +79,11 @@ class LegacyModuleExtractorTest extends KernelTestCase
         );
     }
 
+    protected function tearDown()
+    {
+        self::$kernel->shutdown();
+    }
+
     /**
      * @return string
      */

@@ -52,6 +52,11 @@ class LegacyFileLoaderTest extends KernelTestCase
         );
     }
 
+    protected function tearDown()
+    {
+        self::$kernel->shutdown();
+    }
+
     /**
      * @return string
      */

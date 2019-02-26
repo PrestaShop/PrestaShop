@@ -26,12 +26,9 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
-use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
-use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
@@ -47,16 +44,16 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
     protected function setUp()
     {
         self::bootKernel();
-        $loaderMock = $this->createMock(LoaderInterface::class);
-        $localeConverter = self::$kernel->getContainer()->get('prestashop.core.translation.locale.converter');
-        $legacyFileLoader = new LegacyFileLoader($localeConverter);
-        $phpExtractor = new PhpExtractor();
-        $moduleProvider = self::$kernel->getContainer()->get('prestashop.translation.module_provider');
-        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
+        $container = self::$kernel->getContainer();
+        $databaseLoader = $container->get('prestashop.translation.database_loader');
+        $legacyFileLoader = $container->get('prestashop.translation.legacy_file_loader');
+        $phpExtractor = $container->get('prestashop.translation.extractor.php');
+        $moduleProvider = $container->get('prestashop.translation.module_provider');
+        $smartyExtractor = $container->get('prestashop.translation.extractor.smarty');
         $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleDirectory());
 
         $this->provider = new ExternalModuleLegacySystemProvider(
-            $loaderMock,
+            $databaseLoader,
             $this->getModuleDirectory(),
             $legacyFileLoader,
             $extractor,
@@ -67,8 +64,11 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
             ->setModuleName('some_module')
             ->setDomain('ModulesSomeModule')
         ;
+    }
 
-        parent::setUp();
+    protected function tearDown()
+    {
+        self::$kernel->shutdown();
     }
 
     public function testGetTranslationDomains()
