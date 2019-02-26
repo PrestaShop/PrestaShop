@@ -23,16 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr>
-  <td colspan="{{ grid.columns|length }}" {% if grid.attributes.is_empty_state %}class="border-0"{% endif %}>
-    {% if grid.attributes.is_empty_state %}
-      {% include [
-        '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/'~grid.id~'.html.twig',
-        '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig'
-        ] with {'grid': grid}
-      %}
-    {% else %}
-      {% include '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig' with {'grid': grid} %}
-    {% endif %}
-  </td>
-</tr>
+<div class="text-center">
+  <p class="mb-0 mt-2"><i class="material-icons">warning</i></p>
+  <p class="mb-2">{{ 'No records found'|trans({}, 'Admin.Global') }}</p>
+</div>

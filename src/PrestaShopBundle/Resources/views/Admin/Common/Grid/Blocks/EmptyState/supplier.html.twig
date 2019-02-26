@@ -23,16 +23,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr>
-  <td colspan="{{ grid.columns|length }}" {% if grid.attributes.is_empty_state %}class="border-0"{% endif %}>
-    {% if grid.attributes.is_empty_state %}
-      {% include [
-        '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/'~grid.id~'.html.twig',
-        '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig'
-        ] with {'grid': grid}
-      %}
-    {% else %}
-      {% include '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig' with {'grid': grid} %}
-    {% endif %}
-  </td>
-</tr>
+<div class="text-center showcase-list-card">
+  <img class="img-responsive mt-3 img-rtl" src="{{ asset('themes/new-theme/img/empty_state/supplier.svg') }}">
+
+  <p class="mt-4 showcase-list-card__header">{{ 'Keep in touch with your suppliers'|trans({}, 'Admin.Catalog.Feature') }}</p>
+
+  <p class="mx-auto showcase-list-card__message">
+    {{ 'Having suppliers is optional if brands supply you directly. Make sure you don\'t confuse product suppliers and product brands to facilitate stock management.'|trans({}, 'Admin.Catalog.Feature') }}
+  </p>
+
+  <div class="mt-4">
+    <a href="{{ documentation_link('supplier') }}" target="_blank" class="btn btn-outline-secondary mr-1">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
+    <a href="{{ path('admin_suppliers_create') }}" class="btn btn-primary ml-1">{{ 'Add new supplier'|trans({}, 'Admin.Catalog.Feature') }}</a>
+  </div>
+</div>
