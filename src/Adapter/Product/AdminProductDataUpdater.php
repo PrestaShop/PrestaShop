@@ -73,7 +73,7 @@ class AdminProductDataUpdater implements ProductInterface
         $failedIdList = array();
         foreach ($productListId as $productId) {
             $product = new Product($productId);
-            if (!Validate::isLoadedObject($product)) {
+            if (!Validate::isLoadedObject($product) {
                 $failedIdList[] = $productId;
 
                 continue;
