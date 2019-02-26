@@ -73,7 +73,9 @@ class AdminProductDataUpdater implements ProductInterface
         $failedIdList = array();
         foreach ($productListId as $productId) {
             $product = new Product($productId);
-            if (!Validate::isLoadedObject($product) {
+            if (!Validate::isLoadedObject($product)
+                || (($product->validateFields(false, true)) !== true)
+                || (($product->validateFieldsLang(false, true)) !== true)) {
                 $failedIdList[] = $productId;
 
                 continue;
@@ -81,6 +83,10 @@ class AdminProductDataUpdater implements ProductInterface
             $product->active = ($activate ? 1 : 0);
             $product->update();
             $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
+        }
+
+        if (count($failedIdList) > 0) {
+            throw new UpdateProductException('Cannot change activation state on many requested products', 5004);
         }
 
         return true;
