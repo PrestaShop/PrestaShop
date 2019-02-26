@@ -96,7 +96,7 @@ class AddManufacturerCommand
         array $localizedMetaTitles = null,
         array $localizedMetaDescriptions = null,
         array $localizedMetaKeywords = null,
-        array $shopAssociation = null
+        array $shopAssociation = []
     ) {
         $this->name = $name;
         $this->localizedShortDescriptions = $localizedShortDescriptions;
@@ -174,7 +174,7 @@ class AddManufacturerCommand
     }
 
     /**
-     * @return string[]|null
+     * @return array
      */
     public function getShopAssociation()
     {

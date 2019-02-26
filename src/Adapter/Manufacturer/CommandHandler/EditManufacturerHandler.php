@@ -51,7 +51,9 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
         $this->populateManufacturerWithData($manufacturer, $command);
 
         try {
-            $this->associateWithShops($manufacturer, $command->getShopAssociation());
+            if (null !== $command->getShopAssociation()) {
+                $this->associateWithShops($manufacturer, $command->getShopAssociation());
+            }
 
             if (!$manufacturer->update()) {
                 throw new ManufacturerException(
