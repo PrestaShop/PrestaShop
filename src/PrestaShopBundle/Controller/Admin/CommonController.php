@@ -55,7 +55,7 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function notificationsAction()
     {
-        // Adapter needed here?
+        // TODO: Use CQRS
         return new JsonResponse((new \Notification())->getLastElements());
     }
 
@@ -67,7 +67,7 @@ class CommonController extends FrameworkBundleAdminController
     public function notificationsAckAction(Request $request)
     {
         $type = $request->request->get('type');
-        // Adapter needed here?
+        // TODO: Use CQRS
         return new JsonResponse((new \Notification())->updateEmployeeLastElement($type));
     }
 
