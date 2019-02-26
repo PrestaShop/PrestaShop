@@ -123,8 +123,8 @@ class CmsPageController extends FrameworkBundleAdminController
                     'success',
                     $this->trans('Successful creation.', 'Admin.Notifications.Success')
                 );
-                //todo: redirect to specific parent
-                return $this->redirectToRoute('admin_cms_pages_index');
+
+                return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
             }
         } catch (CmsPageCategoryException $exception) {
             $this->addFlash('error', $this->handleException($exception));
@@ -149,21 +149,23 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return Response
+     *
+     * @throws CmsPageCategoryException
      */
     public function editCmsCategoryAction($cmsCategoryId, Request $request)
     {
         $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
+        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+        $cmsPageCategoryForm->handleRequest($request);
+        $cmsCategoryParentId = null;
 
         try {
-            $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
-            $cmsPageCategoryForm->handleRequest($request);
-
             $result = $this->getCmsPageCategoryFormHandler()->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-                //todo: redirect to specific parent
-                return $this->redirectToRoute('admin_cms_pages_index');
+
+                return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
             }
 
             $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
@@ -198,6 +200,8 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param int $cmsCategoryId
      *
      * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
      */
     public function deleteCmsCategoryAction($cmsCategoryId)
     {
@@ -235,6 +239,8 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
      */
     public function deleteBulkCmsCategoryAction(Request $request)
     {
@@ -276,6 +282,8 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
      */
     public function updateCmsCategoryPositionAction(Request $request)
     {
@@ -330,6 +338,8 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param int $cmsCategoryId
      *
      * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
      */
     public function toggleCmsCategoryAction($cmsCategoryId)
     {
@@ -366,6 +376,8 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
      */
     public function bulkCmsPageStatusEnableAction(Request $request)
     {
@@ -406,6 +418,8 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
      */
     public function bulkCmsPageStatusDisableAction(Request $request)
     {
@@ -452,6 +466,8 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param array $cmsPageCategoryIds
      *
      * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
      */
     private function redirectToParentIndexPageByBulkIds(array $cmsPageCategoryIds)
     {
@@ -468,20 +484,31 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param int $cmsPageCategoryId
      *
      * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
      */
     private function redirectToParentIndexPage($cmsPageCategoryId)
     {
+        $cmsPageCategoryParentId = $this->getParentCategoryId($cmsPageCategoryId);
+
+        return $this->redirectToIndexPageById($cmsPageCategoryParentId->getValue());
+    }
+
+    /**
+     * Redirects to index page by given id.
+     *
+     * @param $cmsPageCategoryId
+     *
+     * @return RedirectResponse
+     */
+    private function redirectToIndexPageById($cmsPageCategoryId)
+    {
         $routeParameters = [];
-        try {
 
-            $cmsPageCategoryParentId = $this->getParentCategoryId($cmsPageCategoryId);
-
-            if ($cmsPageCategoryParentId->getValue() !== CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID) {
-                $routeParameters = [
-                    'id_cms_category' => $cmsPageCategoryParentId->getValue(),
-                ];
-            }
-        } catch (CmsPageCategoryException $e) {
+        if ($cmsPageCategoryId !== CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID) {
+            $routeParameters = [
+                'id_cms_category' => $cmsPageCategoryId,
+            ];
         }
 
         return $this->redirectToRoute('admin_cms_pages_index', $routeParameters);
