@@ -51,4 +51,9 @@ class CmsPageCategoryConstraintException extends CmsPageCategoryException
      * @var int Is used to raise an error when friendly url is missing for the field.
      */
     const MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL = 4;
+
+    /**
+     * @var int Is used to validate category name to match the specific pattern.
+     */
+    const INVALID_CATEGORY_NAME = 5;
 }

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
@@ -93,6 +94,8 @@ class AddCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
         $parentId,
         $isDisplayed
     ) {
+        $this->assertCategoryName($localisedName);
+
         $this->localisedName = $localisedName;
         $this->localisedFriendlyUrl = $localisedFriendlyUrl;
         $this->parentId = new CmsPageCategoryId($parentId);

@@ -26,10 +26,35 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
+
 /**
  * Class AbstractCmsPageCategoryCommand
  */
 abstract class AbstractCmsPageCategoryCommand
 {
-    // todo: add common assertions for cms page category add/edit commands
+    /**
+     * Checks if given names matches pattern.
+     *
+     * @param array $names
+     *
+     * @throws CmsPageCategoryConstraintException
+     */
+    protected function assertCategoryName(array $names)
+    {
+        $regex = '/^[^<>;=#{}]*$/u';
+
+        foreach ($names as $name) {
+            if (!preg_match($regex, $name)) {
+                throw new CmsPageCategoryConstraintException(
+                    sprintf(
+                      'Given category name "%s" does not match pattern "%s"',
+                      $name,
+                      $regex
+                    ),
+                    CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME
+                );
+            }
+        }
+    }
 }
