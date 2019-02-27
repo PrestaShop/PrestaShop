@@ -130,8 +130,8 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
-                    'route' => 'admin_category_edit',
-                    'route_param_name' => 'categoryId',
+                    'route' => 'admin_category_listing',
+                    'route_param_name' => 'id_category',
                     'route_param_field' => 'id_category',
                 ])
             )
