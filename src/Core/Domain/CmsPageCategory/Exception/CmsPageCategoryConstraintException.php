@@ -46,4 +46,9 @@ class CmsPageCategoryConstraintException extends CmsPageCategoryException
      * @var int Is used to raise an error when default language is missing for the field.
      */
     const MISSING_DEFAULT_LANGUAGE_FOR_NAME = 3;
+
+    /**
+     * @var int Is used to raise an error when friendly url is missing for the field.
+     */
+    const MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL = 4;
 }

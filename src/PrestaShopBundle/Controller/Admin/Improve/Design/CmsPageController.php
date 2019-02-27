@@ -620,7 +620,17 @@ class CmsPageController extends FrameworkBundleAdminController
                                 '"%s"',
                                 $this->trans('Name', 'Admin.Global')),
                         ]
-                    )
+                    ),
+                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Friendly URL', 'Admin.Global')),
+                        ]
+                    ),
 
             ],
         ];

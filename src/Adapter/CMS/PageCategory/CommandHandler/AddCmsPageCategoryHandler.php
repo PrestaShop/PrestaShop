@@ -54,6 +54,13 @@ final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler imp
                 CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME
             );
         }
+
+        if (!$this->assertHasDefaultLanguage($command->getLocalisedFriendlyUrl())) {
+            throw new CmsPageCategoryConstraintException(
+                'Missing friendly url in default language',
+                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL
+            );
+        }
         //todo: link rewrite validation
 
         try {
