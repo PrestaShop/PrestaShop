@@ -178,7 +178,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
     {
         $oldPassword = $this->employeeDataProvider->getHashedPasswordById($employeeId);
 
-        if ($this->hashing->hash($plainPassword) !== $oldPassword) {
+        if (!$this->hashing->checkHash($plainPassword, $oldPassword)) {
             throw new EmployeeConstraintException(
                 'Old password is invalid.',
                 EmployeeConstraintException::INCORRECT_PASSWORD
