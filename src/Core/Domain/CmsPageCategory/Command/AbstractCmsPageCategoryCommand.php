@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryC
  */
 abstract class AbstractCmsPageCategoryCommand
 {
+    const CATEGORY_NAME_REGEX_PATTERN = '/^[^<>;=#{}]*$/u';
+    const GENERIC_NAME_REGEX_PATTERN = '/^[^<>={}]*$/u'; //todo: test descriptions
+
     /**
      * Checks if given names matches pattern.
      *
@@ -42,19 +45,96 @@ abstract class AbstractCmsPageCategoryCommand
      */
     protected function assertCategoryName(array $names)
     {
-        $regex = '/^[^<>;=#{}]*$/u';
-
         foreach ($names as $name) {
-            if (!preg_match($regex, $name)) {
+            if (!preg_match(self::CATEGORY_NAME_REGEX_PATTERN, $name)) {
                 throw new CmsPageCategoryConstraintException(
                     sprintf(
                       'Given category name "%s" does not match pattern "%s"',
                       $name,
-                      $regex
+                      self::CATEGORY_NAME_REGEX_PATTERN
                     ),
                     CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME
                 );
             }
         }
+    }
+
+    /**
+     * @param array $localisedMetaTitles
+     *
+     * @throws CmsPageCategoryConstraintException
+     */
+    protected function assertIsGenericNameForMetaTitle(array $localisedMetaTitles)
+    {
+        $assertionResult = $this->assertIsGenericName($localisedMetaTitles);
+
+        if (true !== $assertionResult) {
+            throw new CmsPageCategoryConstraintException(
+                sprintf(
+                    'Given meta title "%s" does not match pattern "%s"',
+                    $assertionResult,
+                    self::GENERIC_NAME_REGEX_PATTERN
+                ),
+                CmsPageCategoryConstraintException::INVALID_META_TITLE
+            );
+        }
+    }
+
+    /**
+     * @param array $localisedMetaDescription
+     *
+     * @throws CmsPageCategoryConstraintException
+     */
+    protected function assertIsGenericNameForMetaDescription(array $localisedMetaDescription)
+    {
+        $assertionResult = $this->assertIsGenericName($localisedMetaDescription);
+
+        if (true !== $assertionResult) {
+            throw new CmsPageCategoryConstraintException(
+                sprintf(
+                    'Given meta description "%s" does not match pattern "%s"',
+                    $assertionResult,
+                    self::GENERIC_NAME_REGEX_PATTERN
+                ),
+                CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION
+            );
+        }
+    }
+
+    /**
+     * @param array $localisedMetaKeywords
+     *
+     * @throws CmsPageCategoryConstraintException
+     */
+    protected function assertIsGenericNameForMetaKeywords(array $localisedMetaKeywords)
+    {
+        $assertionResult = $this->assertIsGenericName($localisedMetaKeywords);
+
+        if (true !== $assertionResult) {
+            throw new CmsPageCategoryConstraintException(
+                sprintf(
+                    'Given meta keyword "%s" does not match pattern "%s"',
+                    $assertionResult,
+                    self::GENERIC_NAME_REGEX_PATTERN
+                ),
+                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS
+            );
+        }
+    }
+
+    /**
+     * @param array $localisedNames
+     *
+     * @return bool|string
+     */
+    private function assertIsGenericName(array $localisedNames)
+    {
+        foreach ($localisedNames as $localisedName) {
+            if (!preg_match(self::GENERIC_NAME_REGEX_PATTERN, $localisedName)) {
+                return $localisedName;
+            }
+        }
+
+        return true;
     }
 }

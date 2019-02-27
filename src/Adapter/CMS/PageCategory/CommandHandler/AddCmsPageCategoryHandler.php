@@ -62,7 +62,7 @@ final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler imp
             );
         }
 
-        $this->assertIsValidLinkRewrite($command->getLocalisedFriendlyUrl());
+
         //todo: link rewrite validation
 
         try {

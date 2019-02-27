@@ -65,7 +65,7 @@ abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
 
     /**
      * @param array $localisedUrls
-     * 
+     *
      * @throws CmsPageCategoryConstraintException
      */
     protected function assertIsValidLinkRewrite(array $localisedUrls)
@@ -83,5 +83,10 @@ abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
                 );
             }
         }
+    }
+
+    protected function assertDescriptionContainsCleanHtml(array $localisedDescription)
+    {
+        //todo: wait for clean html validator to be merged.
     }
 }

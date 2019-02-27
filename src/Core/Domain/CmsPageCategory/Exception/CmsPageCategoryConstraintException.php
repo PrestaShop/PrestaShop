@@ -61,4 +61,19 @@ class CmsPageCategoryConstraintException extends CmsPageCategoryException
      * @var int Is used to validate link rewrite that matches specific regex pattern.
      */
     const INVALID_LINK_REWRITE = 6;
+
+    /**
+     * @var int Is used to validate meta title for specific regex pattern.
+     */
+    const INVALID_META_TITLE = 7;
+
+    /**
+     * @var int Is used to validate meta description for specific regex pattern
+     */
+    const INVALID_META_DESCRIPTION = 8;
+
+    /**
+     * @var int Is used to validate meta keywords for specific regex pattern.
+     */
+    const INVALID_META_KEYWORDS = 9;
 }

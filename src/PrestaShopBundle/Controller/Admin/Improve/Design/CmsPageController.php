@@ -651,6 +651,36 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Friendly URL', 'Admin.Global')),
                         ]
                     ),
+                CmsPageCategoryConstraintException::INVALID_META_TITLE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Meta title', 'Admin.Global')),
+                        ]
+                    ),
+                CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Meta description', 'Admin.Global')),
+                        ]
+                    ),
+                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Meta keywords', 'Admin.Global')),
+                        ]
+                    ),
             ],
         ];
 
