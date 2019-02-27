@@ -30,6 +30,7 @@ use Employee;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\AddEmployeeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
@@ -68,6 +69,8 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
             throw new InvalidProfileException('The provided profile is invalid');
         }
 
+        $this->assertEmailIsUsed($command->getEmail()->getValue());
+
         $employee = $this->createLegacyEmployeeObjectFromCommand($command);
 
         $this->associateWithShops($employee, $command->getShopAssociation());
@@ -102,5 +105,20 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         }
 
         return $employee;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @throws EmailAlreadyUsedException
+     */
+    private function assertEmailIsUsed($email)
+    {
+        if (Employee::employeeExists($email)) {
+            throw new EmailAlreadyUsedException(
+                $email,
+                'An account already exists for this email address'
+            );
+        }
     }
 }

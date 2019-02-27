@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\MissingShopAssociationException;
@@ -391,6 +392,14 @@ class EmployeeController extends FrameworkBundleAdminController
             InvalidProfileException::class => $this->trans(
                 'The provided profile is invalid',
                 'Admin.Advparameters.Notification'
+            ),
+            EmailAlreadyUsedException::class => sprintf(
+                '%s %s',
+                $this->trans(
+                    'An account already exists for this email address:',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                $e instanceof EmailAlreadyUsedException ? $e->getEmail() : ''
             ),
             EmployeeConstraintException::class => [
                 EmployeeConstraintException::INVALID_EMAIL => $this->trans(
