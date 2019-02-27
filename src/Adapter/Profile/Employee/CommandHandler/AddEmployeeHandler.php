@@ -36,6 +36,11 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileE
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 
+/**
+ * Handles command which adds new employee using legacy object model
+ *
+ * @internal
+ */
 final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmployeeHandlerInterface
 {
     /**
