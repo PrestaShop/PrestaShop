@@ -124,6 +124,7 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
