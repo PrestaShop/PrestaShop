@@ -63,19 +63,18 @@ const getLanguageIdByElement = ($targetElement) => {
  *   destinationElementSelector: '.js-link-rewrite-copier-destination',
  *   options: {
  *     eventName: 'change', // default is 'input'
- *     encoding: 'US-ASCII', //default is 'UTF-8'
  *   }
  * });
  *
  */
-const textToLinkRewriteCopier = ({ sourceElementSelector, destinationElementSelector, options = { eventName: 'input', encoding: 'UTF-8' } }) => {
+const textToLinkRewriteCopier = ({ sourceElementSelector, destinationElementSelector, options = { eventName: 'input', } }) => {
 
     $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
       const $nameInput = $(event.currentTarget);
       const langId = getLanguageIdByElement($nameInput);
       let elementToModifySelector = null !== langId ? `${destinationElementSelector}[data-lang-id="${langId}"]` : destinationElementSelector;
 
-      $(elementToModifySelector).val(str2url($nameInput.val(), options.encoding));
+      $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8'));
     })
 };
 
