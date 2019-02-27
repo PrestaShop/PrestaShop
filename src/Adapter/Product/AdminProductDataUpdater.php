@@ -171,7 +171,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->duplicateProduct() received an unknown ID.', 5005);
         }
 
-        if ((($product->validateFields(false, true)) !== true)
+        if ($product->validateFields(false, true) !== true
             || (($product->validateFieldsLang(false, true)) !== true)) {
             throw new UpdateProductException('Cannot duplicate many requested products', 5004);
         }
