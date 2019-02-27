@@ -32,13 +32,18 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 class CmsPageCategoryConstraintException extends CmsPageCategoryException
 {
     /**
-     * @var int Is used when incorrect values supplied for bulk cms categories operations
+     * @var int Is used when incorrect values supplied for bulk cms categories operations.
      */
     const INVALID_BULK_DATA = 1;
 
     /**
      * @var int Is used when cms page category is moved to the same category as it is
-     * or if it is moved to its child category
+     * or if it is moved to its child category.
      */
     const CANNOT_MOVE_CATEGORY_TO_PARENT = 2;
+
+    /**
+     * @var int Is used to raise an error when default language is missing for the field.
+     */
+    const MISSING_DEFAULT_LANGUAGE_FOR_NAME = 3;
 }

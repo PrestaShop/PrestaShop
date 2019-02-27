@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -49,8 +50,15 @@ abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
         $this->validator = $validator;
     }
 
-    private function assertHasDefaultLanguage(array $localisedTexts)
+    /**
+     * @param array $localisedTexts
+     *
+     * @return bool
+     */
+    protected function assertHasDefaultLanguage(array $localisedTexts)
     {
-        
+        $errors = $this->validator->validate($localisedTexts, new DefaultLanguage());
+
+        return 0 === count($errors);
     }
 }

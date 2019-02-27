@@ -30,6 +30,7 @@ use CMSCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\AddCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\AddCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotAddCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopException;
@@ -47,7 +48,12 @@ final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler imp
      */
     public function handle(AddCmsPageCategoryCommand $command)
     {
-        //todo: assertion of default language
+        if (!$this->assertHasDefaultLanguage($command->getLocalisedName())) {
+            throw new CmsPageCategoryConstraintException(
+                'Missing name in default language',
+                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME
+            );
+        }
         //todo: link rewrite validation
 
         try {

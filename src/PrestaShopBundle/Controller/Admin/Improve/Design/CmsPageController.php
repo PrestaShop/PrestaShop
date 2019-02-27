@@ -610,7 +610,18 @@ class CmsPageController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
                 CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT =>
-                    $this->trans('The page Category cannot be moved here.', 'Admin.Design.Notification')
+                    $this->trans('The page Category cannot be moved here.', 'Admin.Design.Notification'),
+                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Name', 'Admin.Global')),
+                        ]
+                    )
+
             ],
         ];
 

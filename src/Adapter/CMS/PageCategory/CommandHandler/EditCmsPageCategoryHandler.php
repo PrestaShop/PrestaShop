@@ -50,7 +50,6 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
      */
     public function handle(EditCmsPageCategoryCommand $command)
     {
-        //todo: assertion of default language
         //todo: link rewrite validation
         //todo: position stuff
 
@@ -64,6 +63,12 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
             }
 
             if (null !== $command->getLocalisedName()) {
+                if (!$this->assertHasDefaultLanguage($command->getLocalisedName())) {
+                    throw new CmsPageCategoryConstraintException(
+                        'Missing name in default language',
+                        CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME
+                    );
+                }
                 $cmsPageCategory->name = $command->getLocalisedName();
             }
 
