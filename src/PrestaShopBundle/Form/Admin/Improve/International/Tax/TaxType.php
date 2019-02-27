@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
@@ -59,9 +60,9 @@ class TaxType extends AbstractType
     {
         $builder
             ->add('name', TranslatableType::class, [
-                //@todo: DefaultLanguage constraint
                 'options' => [
                     'constraints' => [
+                        new DefaultLanguage(),
                         new Length([
                             'max' => 32,
                             'maxMessage' => $this->translator->trans(
@@ -71,6 +72,7 @@ class TaxType extends AbstractType
                             ),
                         ]),
                         new Regex([
+                            //@todo: isGenericName Constraint istead
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->translator->trans(
                                 '%s is invalid.',
