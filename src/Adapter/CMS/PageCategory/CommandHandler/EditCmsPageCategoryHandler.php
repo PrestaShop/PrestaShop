@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryE
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Edits cms page category.
@@ -51,7 +52,6 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
     {
         //todo: assertion of default language
         //todo: link rewrite validation
-        //todo: not same category assigning
         //todo: position stuff
 
         try {

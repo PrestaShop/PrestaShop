@@ -29,11 +29,28 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 use CMSCategory;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Holds the abstraction required for Adding or updating the cms page category.
  */
 abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
 {
-    //todo: keep abstraction or remove it
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
+    private function assertHasDefaultLanguage(array $localisedTexts)
+    {
+        
+    }
 }
