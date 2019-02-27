@@ -30,7 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Validator\Constraint\IsCatalogName;
+use PrestaShopBundle\Validator\Constraint\LegacyConstraint;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -39,7 +39,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Defines form for manufacturer create/edit actions (Sell > Catalog > Brands & Suppliers)
@@ -85,11 +84,13 @@ class ManufacturerType extends AbstractType
                         'max' => 64,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 32],
+                            ['%limit%' => 64],
                             'Admin.Notifications.Error'
                         ),
                     ]),
-                    new IsCatalogName(),
+                    new LegacyConstraint([
+                        'type' => 'catalog_name',
+                    ]),
                 ],
             ])
             //@todo: implement isCleanHtml constraint
@@ -110,11 +111,8 @@ class ManufacturerType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->translator->trans(
-                                '%s is invalid.', [], 'Admin.Notifications.Error'
-                            ),
+                        new LegacyConstraint([
+                            'type' => 'generic_name',
                         ]),
                     ],
                     'max_length' => 255,
@@ -125,10 +123,15 @@ class ManufacturerType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->translator->trans(
-                                '%s is invalid.', [], 'Admin.Notifications.Error'
+                        new LegacyConstraint([
+                            'type' => 'generic_name',
+                        ]),
+                        new Length([
+                            'max' => 512,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 512],
+                                'Admin.Notifications.Error'
                             ),
                         ]),
                     ],
@@ -143,15 +146,8 @@ class ManufacturerType extends AbstractType
                         'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
                     ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [
-                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
-                                ],
-                                'Admin.Notifications.Error'
-                            ),
+                        new LegacyConstraint([
+                            'type' => 'generic_name',
                         ]),
                     ],
                 ],
