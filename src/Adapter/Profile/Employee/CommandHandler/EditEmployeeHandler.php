@@ -30,6 +30,7 @@ use Employee;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\EditEmployeeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\MissingShopAssociationException;
@@ -76,6 +77,8 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         }
 
         $employee = new Employee($command->getEmployeeId()->getValue());
+
+        $this->assertEmailIsUsed($employee, $command->getEmail()->getValue());
 
         $this->updateEmployeeWithCommandData($employee, $command);
 
@@ -125,6 +128,27 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
 
         if (null !== $shopAssociation) {
             $this->associateWithShops($employee, $shopAssociation);
+        }
+    }
+
+    /**
+     * @param Employee $employee
+     * @param string $email
+     *
+     * @throws EmailAlreadyUsedException
+     */
+    private function assertEmailIsUsed(Employee $employee, $email)
+    {
+        // Don't count own email as usage.
+        if ($employee->email === $email) {
+            return;
+        }
+
+        if (Employee::employeeExists($email)) {
+            throw new EmailAlreadyUsedException(
+                $email,
+                'An account already exists for this email address'
+            );
         }
     }
 }
