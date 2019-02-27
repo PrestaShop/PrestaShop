@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\EditEmployeeHandlerInterface;
@@ -62,18 +63,26 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $contextEmployeeProvider;
 
     /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
+     * @param LegacyContext $legacyContext
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
-        ContextEmployeeProviderInterface $contextEmployeeProvider
+        ContextEmployeeProviderInterface $contextEmployeeProvider,
+        LegacyContext $legacyContext
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
         $this->contextEmployeeProvider = $contextEmployeeProvider;
+        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -90,6 +99,10 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $this->assertEmailIsUsed($employee, $command->getEmail()->getValue());
 
         $this->updateEmployeeWithCommandData($employee, $command);
+
+        if (null !== $command->getPlainPassword()) {
+            $this->updatePasswordInCookie($employee);
+        }
 
         return new EmployeeId((int) $employee->id);
     }
@@ -166,6 +179,20 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
                 $email,
                 'An account already exists for this email address'
             );
+        }
+    }
+
+    /**
+     * Update employee password in cookie.
+     *
+     * @param Employee $employee
+     */
+    private function updatePasswordInCookie(Employee $employee)
+    {
+        if ($employee->id == $this->contextEmployeeProvider->getId()) {
+            $this->legacyContext->getContext()->cookie->passwd = $employee->passwd;
+            $this->legacyContext->getContext()->employee->passwd = $employee->passwd;
+            $this->legacyContext->getContext()->cookie->write();
         }
     }
 }
