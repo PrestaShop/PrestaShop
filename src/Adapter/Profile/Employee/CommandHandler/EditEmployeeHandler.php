@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileE
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use Shop;
 
 /**
@@ -56,15 +57,23 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $profileAccessChecker;
 
     /**
+     * @var ContextEmployeeProviderInterface
+     */
+    private $contextEmployeeProvider;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
+     * @param ContextEmployeeProviderInterface $contextEmployeeProvider
      */
     public function __construct(
         Hashing $hashing,
-        ProfileAccessCheckerInterface $profileAccessChecker
+        ProfileAccessCheckerInterface $profileAccessChecker,
+        ContextEmployeeProviderInterface $contextEmployeeProvider
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
+        $this->contextEmployeeProvider = $contextEmployeeProvider;
     }
 
     /**
@@ -101,11 +110,15 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->optin = $command->isSubscribedToNewsletter();
         $employee->default_tab = $command->getDefaultPageId();
         $employee->id_lang = $command->getLanguageId();
-        $employee->active = $command->isActive();
-        $employee->id_profile = $command->getProfileId();
         $employee->id_last_order = $employee->getLastElementsForNotify('order');
         $employee->id_last_customer_message = $employee->getLastElementsForNotify('customer_message');
         $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
+
+        // Allow changing profile and active status only when editing not own account.
+        if ($employee->id != $this->contextEmployeeProvider->getId()) {
+            $employee->id_profile = $command->getProfileId();
+            $employee->active = $command->isActive();
+        }
 
         $shopAssociation = $command->getShopAssociation();
 
@@ -129,7 +142,8 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
             $shopAssociation = array_values(Shop::getShops(false, null, true));
         }
 
-        if (null !== $shopAssociation) {
+        // Allow changing shop association only when editing not own account.
+        if (null !== $shopAssociation && $employee->id != $this->contextEmployeeProvider->getId()) {
             $this->associateWithShops($employee, $shopAssociation);
         }
     }
