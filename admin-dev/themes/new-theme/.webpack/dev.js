@@ -13,16 +13,6 @@ function devConfig() {
     }
   );
 
-  dev.module.rules.push({
-    test:/\.(s*)css$/,
-    use: [
-      'style-loader',
-      'css-loader',
-      'postcss-loader',
-      'sass-loader'
-    ]
-  });
-
 
   /*
    * This is currently a workaround to distribute file while running
