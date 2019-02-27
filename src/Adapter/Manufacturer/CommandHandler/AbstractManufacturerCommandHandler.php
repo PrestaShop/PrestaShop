@@ -39,47 +39,55 @@ use PrestaShopException;
 abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHandler
 {
     /**
-     * Deletes manufacturer
+     * Gets legacy Manufacturer
      *
      * @param ManufacturerId $manufacturerId
+     *
+     * @return Manufacturer
+     *
+     * @throws ManufacturerNotFoundException
+     */
+    protected function getManufacturer(ManufacturerId $manufacturerId)
+    {
+        $manufacturer = new Manufacturer($manufacturerId->getValue());
+        $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
+
+        return $manufacturer;
+    }
+
+    /**
+     * Deletes legacy Manufacturer
+     *
+     * @param Manufacturer $manufacturer
      *
      * @return bool
      *
      * @throws ManufacturerException
-     * @throws ManufacturerNotFoundException
      */
-    protected function deleteLegacyManufacturer(ManufacturerId $manufacturerId)
+    protected function deleteManufacturer(Manufacturer $manufacturer)
     {
-        $manufacturerIdValue = $manufacturerId->getValue();
-        $manufacturer = new Manufacturer($manufacturerIdValue);
-        $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
-
         try {
             return $manufacturer->delete();
         } catch (PrestaShopException $e) {
             throw new ManufacturerException(sprintf(
                 'An error occurred when deleting Manufacturer object with id "%s".',
-                $manufacturerIdValue
+                $manufacturer->id
             ));
         }
     }
 
     /**
-     * Toggles manufacturer status
+     * Toggles legacy manufacturer status
      *
-     * @param ManufacturerId $manufacturerId
+     * @param Manufacturer $manufacturer
      * @param bool $newStatus
      *
      * @return bool
      *
      * @throws ManufacturerException
-     * @throws ManufacturerNotFoundException
      */
-    protected function toggleLegacyManufacturerStatus(ManufacturerId $manufacturerId, $newStatus)
+    protected function toggleManufacturerStatus(Manufacturer $manufacturer, $newStatus)
     {
-        $manufacturerIdValue = $manufacturerId->getValue();
-        $manufacturer = new Manufacturer($manufacturerIdValue);
-        $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
         $manufacturer->active = $newStatus;
 
         try {
@@ -87,7 +95,7 @@ abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHa
         } catch (PrestaShopException $e) {
             throw new ManufacturerException(sprintf(
                 'An error occurred when updating manufacturer status with id "%s"',
-                $manufacturerIdValue
+                $manufacturer->id
             ));
         }
     }

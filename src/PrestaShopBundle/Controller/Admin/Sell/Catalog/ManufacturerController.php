@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -126,6 +127,9 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Deletes manufacturer
      *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
      * @param $manufacturerId
      *
      * @return RedirectResponse
@@ -148,13 +152,16 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Deletes manufacturers on bulk action
      *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     public function bulkDeleteAction(Request $request)
     {
-        $manufacturerIds = $request->request->get('manufacturer_bulk');
+        $manufacturerIds = $this->getBulkManufacturersFromRequest($request);
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteManufacturerCommand($manufacturerIds));
@@ -172,16 +179,19 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Enables manufacturers on bulk action
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     public function bulkEnableAction(Request $request)
     {
-        $manufacturersIds = $request->request->get('manufacturer_bulk');
+        $manufacturerIds = $this->getBulkManufacturersFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleManufacturerStatusCommand($manufacturersIds, true));
+            $this->getCommandBus()->handle(new BulkToggleManufacturerStatusCommand($manufacturerIds, true));
 
             $this->addFlash(
                 'success',
@@ -197,16 +207,19 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Disables manufacturers on bulk action
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     public function bulkDisableAction(Request $request)
     {
-        $manufacturersIds = $request->request->get('manufacturer_bulk');
+        $manufacturerIds = $this->getBulkManufacturersFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleManufacturerStatusCommand($manufacturersIds, false));
+            $this->getCommandBus()->handle(new BulkToggleManufacturerStatusCommand($manufacturerIds, false));
 
             $this->addFlash(
                 'success',
@@ -221,6 +234,9 @@ class ManufacturerController extends FrameworkBundleAdminController
 
     /**
      * Toggles manufacturer status
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
      * @param int $manufacturerId
      *
@@ -266,6 +282,9 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Deletes address
      *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
      * @param int $addressId
      *
      * @return RedirectResponse
@@ -291,9 +310,19 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
+    /**
+     * Deletes adresses in bulk action
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkDeleteAddressAction(Request $request)
     {
-        $addressIds = $request->request->get('manufacturer_address_bulk');
+        $addressIds = $this->getBulkAddressesFromRequest($request);
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressIds));
@@ -351,5 +380,45 @@ class ManufacturerController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkManufacturersFromRequest(Request $request)
+    {
+        $manufacturerIds = $request->request->get('manufacturer_bulk');
+
+        if (!is_array($manufacturerIds)) {
+            return [];
+        }
+
+        foreach ($manufacturerIds as $i => $manufacturerId) {
+            $manufacturerIds[$i] = (int) $manufacturerId;
+        }
+
+        return $manufacturerIds;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkAddressesFromRequest(Request $request)
+    {
+        $addressIds = $request->request->get('manufacturer_address_bulk');
+
+        if (!is_array($addressIds)) {
+            return [];
+        }
+
+        foreach ($addressIds as $i => $addressId) {
+            $addressIds[$i] = (int) $addressId;
+        }
+
+        return $addressIds;
     }
 }

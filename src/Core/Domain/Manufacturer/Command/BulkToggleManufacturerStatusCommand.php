@@ -46,7 +46,7 @@ class BulkToggleManufacturerStatusCommand
     private $manufacturerIds;
 
     /**
-     * @param array $manufacturerIds
+     * @param int[] $manufacturerIds
      * @param bool $expectedStatus
      *
      * @throws ManufacturerConstraintException
@@ -76,14 +76,14 @@ class BulkToggleManufacturerStatusCommand
     }
 
     /**
-     * @param array $manufacturerIds
+     * @param int[] $manufacturerIds
      *
      * @throws ManufacturerConstraintException
      */
     private function setManufacturerIds(array $manufacturerIds)
     {
         foreach ($manufacturerIds as $manufacturerId) {
-            $this->manufacturerIds[] = new ManufacturerId((int) $manufacturerId);
+            $this->manufacturerIds[] = new ManufacturerId($manufacturerId);
         }
     }
 

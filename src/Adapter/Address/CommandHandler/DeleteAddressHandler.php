@@ -42,7 +42,7 @@ final class DeleteAddressHandler extends AbstractAddressCommandHandler implement
     {
         $addressIdValue = $command->getAddressId()->getValue();
 
-        if (!$this->deleteLegacyAddress($command->getAddressId())) {
+        if (!$this->deleteAddress($command->getAddressId())) {
             throw new DeleteAddressException(
                 sprintf('Cannot delete Address object with id "%s".', $addressIdValue),
                 DeleteAddressException::FAILED_DELETE

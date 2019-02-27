@@ -41,11 +41,11 @@ final class BulkDeleteAddressHandler extends AbstractAddressCommandHandler imple
     public function handle(BulkDeleteAddressCommand $command)
     {
         foreach ($command->getAdressIds() as $addressId) {
-            $addressIdValue = $addressId->getValue();
+            $address = $this->getAddress($addressId);
 
-            if (!$this->deleteLegacyAddress($addressId)) {
+            if (!$this->deleteAddress($address)) {
                 throw new DeleteAddressException(
-                    sprintf('Cannot delete Address object with id "%s".', $addressIdValue),
+                    sprintf('Cannot delete Address object with id "%s".', $addressId->getValue()),
                     DeleteAddressException::FAILED_BULK_DELETE
                 );
             }

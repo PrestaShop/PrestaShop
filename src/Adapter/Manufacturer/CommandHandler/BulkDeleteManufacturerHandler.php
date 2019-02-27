@@ -41,9 +41,11 @@ final class BulkDeleteManufacturerHandler extends AbstractManufacturerCommandHan
     public function handle(BulkDeleteManufacturerCommand $command)
     {
         foreach ($command->getManufacturerIds() as $manufacturerId) {
-            if (!$this->deleteLegacyManufacturer($manufacturerId)) {
+            $manufacturer = $this->getManufacturer($manufacturerId);
+
+            if (!$this->deleteManufacturer($manufacturer)) {
                 throw new DeleteManufacturerException(sprintf(
-                    'Cannot delete Manufacturer object with id "%s".', $manufacturerId->getValue()),
+                    'Cannot delete Manufacturer object with id "%s".', $manufacturer->id),
                     DeleteManufacturerException::FAILED_BULK_DELETE
                 );
             }
