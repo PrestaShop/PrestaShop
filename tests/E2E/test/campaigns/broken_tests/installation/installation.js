@@ -16,6 +16,10 @@ const welcomeScenarios = require('../../common_scenarios/welcome');
 require('../../../globals.webdriverio.js');
 require('../../install_upgrade/01_install.js');
 
+/**
+ * This script should be moved to the campaign installation when this issues will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/12168 && https://github.com/PrestaShop/PrestaShop/issues/10744
+ **/
 scenario('Check language, country and currency', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
