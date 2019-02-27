@@ -172,7 +172,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         if ($product->validateFields(false, true) !== true
-            || (($product->validateFieldsLang(false, true)) !== true)) {
+            || $product->validateFieldsLang(false, true) !== true) {
             throw new UpdateProductException('Cannot duplicate many requested products', 5004);
         }
 
