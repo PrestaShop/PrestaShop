@@ -54,6 +54,9 @@ $(() => {
   cmsCategory.addExtension(new PositionExtension());
   //todo: multishop choice tree enable
   new ChoiceTree('#cms_page_category_parent_category');
+  
+  const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
+  shopChoiceTree.enableAutoCheckChildren();
 
   new TranslatableInput();
 });
