@@ -72,4 +72,5 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CategoriesProvider'
         arguments:
           - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+          - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
 
