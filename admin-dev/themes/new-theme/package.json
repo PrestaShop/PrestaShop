@@ -5,7 +5,8 @@
   "private": "true",
   "scripts": {
     "build": "NODE_ENV=production webpack --progress --colors --debug --display-chunks",
-    "dev": "webpack --progress --colors --debug --display-chunks --watch"
+    "dev": "webpack --progress --colors --debug --display-chunks --watch",
+    "watch": "npm run dev"
   },
   "author": "PrestaShop",
   "license": "OSL-3.0",
