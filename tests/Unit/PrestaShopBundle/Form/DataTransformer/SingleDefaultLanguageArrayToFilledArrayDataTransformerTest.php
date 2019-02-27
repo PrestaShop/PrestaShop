@@ -67,15 +67,15 @@ class SingleDefaultLanguageArrayToFilledArrayDataTransformerTest extends TestCas
                 [
                     2 => 'my text',
                     3 => '',
-                ]
+                ],
             ],
             [
                 [
                     $this->defaultLanguageId => 'test1',
                     2 => 'test2',
                     3 => 'test3',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
