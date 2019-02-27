@@ -95,6 +95,7 @@ scenario('Check language, country and currency', () => {
         await client.pause(0);
       }
     });
+    test('should go back to the "Back Office"', () => client.switchWindow(0));
     test('should go to "International > Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
     test('should set language from browser: "Yes"', () => client.waitForExistAndClick(Localization.Localization.language_browser_yes_label));
     test('should set default country from browser: "Yes"', () => client.waitForExistAndClick(Localization.Localization.country_browser_yes_label));

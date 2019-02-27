@@ -69,6 +69,7 @@ scenario('Check that the buttons in header product page works successfully', () 
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
         .then(() => client.switchWindow(1));
     });
+    test('should switch the front office language to French', () => client.changeLanguage('fr'));
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'produit' + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the "Product name" is in french language', () => client.checkTextValue(productPage.product_name, ('produit' + date_time).toUpperCase()));

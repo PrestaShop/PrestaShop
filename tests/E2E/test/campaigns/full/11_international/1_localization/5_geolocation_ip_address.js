@@ -2,10 +2,10 @@
  * This script is based on the scenario described in this test link
  * [id="PS-153"][Name="By IP Adress"]
  **/
-const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
-const {Localization} = require('../../../../../selectors/BO/international/localization');
-const {Menu} = require('../../../../../selectors/BO/menu.js');
-const welcomeScenarios = require('../../../../common_scenarios/welcome');
+const {AccessPageBO} = require('../../../../selectors/BO/access_page');
+const {Localization} = require('../../../../selectors/BO/international/localization');
+const {Menu} = require('../../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 scenario('"Geolocation by IP Address"', () => {

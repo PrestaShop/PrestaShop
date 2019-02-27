@@ -3,10 +3,10 @@
  * [id="PS-143"][Name="Local unites: Change the advanced settings and check they are applied"]
  **/
 
-const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
-const commonLocalization = require('../../../../common_scenarios/localization');
-const {OnBoarding} = require('../../../../../selectors/BO/onboarding');
-const {AddProductPage} = require('../../../../../selectors/BO/add_product_page');
+const {AccessPageBO} = require('../../../../selectors/BO/access_page');
+const commonLocalization = require('../../../common_scenarios/localization');
+const {OnBoarding} = require('../../../../selectors/BO/onboarding');
+const {AddProductPage} = require('../../../../selectors/BO/add_product_page');
 let firstLocalUnitsData = {
     weight: 'kg',
     distance: 'km',
