@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\EditCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotUpdateCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
@@ -39,7 +40,7 @@ use PrestaShopException;
 /**
  * Edits cms page category.
  */
-final class EditCmsPageCategoryHandler extends AbstractObjectModelHandler implements EditCmsPageCategoryHandlerInterface
+final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler implements EditCmsPageCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -71,6 +72,10 @@ final class EditCmsPageCategoryHandler extends AbstractObjectModelHandler implem
             }
 
             if (null !== $command->getParentId()) {
+                $this->assertCmsCategoryCanBeMovedToParent(
+                    $command->getCmsPageCategoryId()->getValue(),
+                    $command->getParentId()->getValue()
+                );
                 $cmsPageCategory->id_parent = $command->getParentId()->getValue();
             }
 
@@ -112,5 +117,27 @@ final class EditCmsPageCategoryHandler extends AbstractObjectModelHandler implem
         }
 
         return new CmsPageCategoryId((int) $cmsPageCategory->id);
+    }
+
+    /**
+     * Adds if the current category is not being moved to the same category or its own child.
+     *
+     * @param int $cmsCategoryId
+     * @param int $cmsCategoryParentId
+     *
+     * @throws CmsPageCategoryConstraintException
+     */
+    private function assertCmsCategoryCanBeMovedToParent($cmsCategoryId, $cmsCategoryParentId)
+    {
+        if (!CMSCategory::checkBeforeMove($cmsCategoryId, $cmsCategoryParentId)) {
+            throw new CmsPageCategoryConstraintException(
+                sprintf(
+                    'Unable to move cms category "%s" to parent category "%s"',
+                    $cmsCategoryId,
+                    $cmsCategoryParentId
+                ),
+                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT
+            );
+        }
     }
 }

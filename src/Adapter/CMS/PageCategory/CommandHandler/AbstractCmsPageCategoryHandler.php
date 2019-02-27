@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,26 +19,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
+namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
+
+use CMSCategory;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 
 /**
- * Class CmsPageCategoryConstraintException
+ * Holds the abstraction required for Adding or updating the cms page category.
  */
-class CmsPageCategoryConstraintException extends CmsPageCategoryException
+abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
 {
-    /**
-     * @var int Is used when incorrect values supplied for bulk cms categories operations
-     */
-    const INVALID_BULK_DATA = 1;
-
-    /**
-     * @var int Is used when cms page category is moved to the same category as it is
-     * or if it is moved to its child category
-     */
-    const CANNOT_MOVE_CATEGORY_TO_PARENT = 2;
+    //todo: keep abstraction or remove it
 }

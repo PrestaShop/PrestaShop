@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\AddCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\AddCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotAddCmsPageCategoryException;
@@ -38,7 +37,7 @@ use PrestaShopException;
 /**
  * Adds cms page category
  */
-final class AddCmsPageCategoryHandler extends AbstractObjectModelHandler implements AddCmsPageCategoryHandlerInterface
+final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler implements AddCmsPageCategoryHandlerInterface
 {
 
     /**

@@ -609,6 +609,8 @@ class CmsPageController extends FrameworkBundleAdminController
                     'You must select at least one element to delete.',
                     'Admin.Notifications.Error'
                 ),
+                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT =>
+                    $this->trans('The page Category cannot be moved here.', 'Admin.Design.Notification')
             ],
         ];
 
