@@ -40,11 +40,11 @@ final class ToggleManufacturerStatusHandler extends AbstractManufacturerCommandH
      */
     public function handle(ToggleManufacturerStatusCommand $command)
     {
-        $manufacturerId = $command->getManufacturerId();
+        $manufacturer = $this->getManufacturer($command->getManufacturerId());
 
-        if (!$this->toggleLegacyManufacturerStatus($manufacturerId, $command->getExpectedStatus())) {
+        if (!$this->toggleManufacturerStatus($manufacturer, $command->getExpectedStatus())) {
             throw new UpdateManufacturerException(
-                sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturerId->getValue()),
+                sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturer->id),
                 UpdateManufacturerException::FAILED_UPDATE_STATUS
             );
         }

@@ -41,9 +41,11 @@ final class BulkToggleManufacturerStatusHandler extends AbstractManufacturerComm
     public function handle(BulkToggleManufacturerStatusCommand $command)
     {
         foreach ($command->getManufacturerIds() as $manufacturerId) {
-            if (!$this->toggleLegacyManufacturerStatus($manufacturerId, $command->getExpectedStatus())) {
+            $manufacturer = $this->getManufacturer($manufacturerId);
+
+            if (!$this->toggleManufacturerStatus($manufacturer, $command->getExpectedStatus())) {
                 throw new UpdateManufacturerException(
-                    sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturerId->getValue()),
+                    sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturer->id),
                     UpdateManufacturerException::FAILED_BULK_UPDATE_STATUS
                 );
             }

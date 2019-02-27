@@ -65,7 +65,7 @@ class BulkDeleteAddressCommand
     private function setAddressIds(array $addressIds)
     {
         foreach ($addressIds as $addressId) {
-            $this->addressIds[] = new AddressId((int) $addressId);
+            $this->addressIds[] = new AddressId($addressId);
         }
     }
 }
