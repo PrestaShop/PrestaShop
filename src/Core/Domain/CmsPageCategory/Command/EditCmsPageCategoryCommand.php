@@ -105,20 +105,6 @@ class EditCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
     }
 
     /**
-     * @param int $cmsPageCategoryId
-     *
-     * @return self
-     *
-     * @throws CmsPageCategoryException
-     */
-    public function setCmsPageCategoryId($cmsPageCategoryId)
-    {
-        $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
-
-        return $this;
-    }
-
-    /**
      * @return array
      */
     public function getLocalisedName()

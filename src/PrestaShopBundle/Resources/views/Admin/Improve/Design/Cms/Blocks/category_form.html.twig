@@ -35,11 +35,12 @@
     <div class="card-block row">
       <div class="card-text">
 
-        {% set invalidCharactersLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>;=#{}' %}
+        {% set invalidCharactersForCatalogLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>;=#{}' %}
+        {% set invalidCharactersForNameLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>=#{}' %}
 
         {{ ps.form_group_row(cmsPageCategoryForm.name, {}, {
           'label': 'Name'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersLabel
+          'help': invalidCharactersForCatalogLabel
         }) }}
 
         {{ ps.form_group_row(cmsPageCategoryForm.is_displayed, {}, {
@@ -52,22 +53,21 @@
 
         {{ ps.form_group_row(cmsPageCategoryForm.description, {}, {
           'label': 'Description'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersLabel
         }) }}
 
         {{ ps.form_group_row(cmsPageCategoryForm.meta_title, {}, {
           'label': 'Meta title'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersLabel
+          'help': invalidCharactersForNameLabel
         }) }}
 
         {{ ps.form_group_row(cmsPageCategoryForm.meta_description, {}, {
           'label': 'Meta description'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersLabel
+          'help': invalidCharactersForNameLabel
         }) }}
 
         {{ ps.form_group_row(cmsPageCategoryForm.meta_keywords, {}, {
           'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersLabel
+          'help': invalidCharactersForNameLabel
         }) }}
 
         {{ ps.form_group_row(cmsPageCategoryForm.friendly_url, {}, {
