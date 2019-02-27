@@ -103,22 +103,35 @@ export default class CreateOrderPage {
    * @private
    */
   _renderCheckoutHistory(checkoutHistory) {
+    this._renderCustomerCarts(checkoutHistory.carts);
+    this._renderCustomerOrders(checkoutHistory.orders);
+
+    $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
+  }
+
+  /**
+   * Renders customer carts
+   *
+   * @param {Object} carts
+   * @private
+   */
+  _renderCustomerCarts(carts) {
     const $cartsTable = $(createOrderPageMap.customerCartsTable);
     const $cartsTableRowTemplate = $($(createOrderPageMap.customerCartsTableRowTemplate).html());
 
     $cartsTable.find('tbody').empty();
 
-    for (let key in checkoutHistory.carts) {
-      if (!checkoutHistory.carts.hasOwnProperty(key)) {
+    for (let key in carts) {
+      if (!carts.hasOwnProperty(key)) {
         continue;
       }
 
-      const cart = checkoutHistory.carts[key];
+      const cart = carts[key];
       const $template = $cartsTableRowTemplate.clone();
 
-      $template.find('td:first').text(cart.id_cart);
-      $template.find('td:nth-child(2)').text(cart.date_add);
-      $template.find('td:nth-child(3)').text(cart.total_price);
+      $template.find('.js-cart-id').text(cart.id_cart);
+      $template.find('.js-cart-date').text(cart.date_add);
+      $template.find('.js-cart-total').text(cart.total_price);
 
       $cartsTable.find('tbody').append($template);
     }
@@ -134,5 +147,37 @@ export default class CreateOrderPage {
    */
   _renderCartSummary(cartSummary) {
 
+  }
+
+  /**
+   * Renders customer orders
+   *
+   * @param {Object} orders
+   * @private
+   */
+  _renderCustomerOrders(orders) {
+    const $ordersTable = $(createOrderPageMap.customerOrdersTable);
+    const $rowTemplate = $($(createOrderPageMap.customerOrdersTableRowTemplate).html());
+
+    $ordersTable.find('tbody').empty();
+
+    console.log(orders);
+
+    for (let key in Object.keys(orders)) {
+      if (!orders.hasOwnProperty(key)) {
+        continue;
+      }
+
+      const order = orders[key];
+      const $template = $rowTemplate.clone();
+
+      $template.find('.js-order-id').text(order.id_order);
+      $template.find('.js-order-date').text(order.date_add);
+      $template.find('.js-order-products').text(order.nb_products);
+      $template.find('.js-order-total-paid').text(order.total_paid_real);
+      $template.find('.js-order-status').text(order.order_state);
+
+      $ordersTable.find('tbody').append($template);
+    }
   }
 }

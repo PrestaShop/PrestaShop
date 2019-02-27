@@ -98,7 +98,20 @@
             </table>
           </div>
           <div class="tab-pane fade" id="customerOrdersTabContent" role="tabpanel" aria-labelledby="pills-home-tab">
-            Orders
+            <table class="table" id="customerOrdersTable">
+              <thead>
+              <tr>
+                <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Total paid'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+                <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -144,9 +157,23 @@
 
 <script id="customerCartsTableRowTemplate" type="text/html">
   <tr>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td class="js-cart-id"></td>
+    <td class="js-cart-date"></td>
+    <td class="js-cart-total"></td>
+    <td class="text-right">
+      <button class="btn btn-primary">{{ 'Details'|trans({}, 'Admin.Global') }}</button>
+      <button class="btn btn-primary">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+    </td>
+  </tr>
+</script>
+
+<script id="customerOrdersTableRowTemplate" type="text/html">
+  <tr>
+    <td class="js-order-id"></td>
+    <td class="js-order-date"></td>
+    <td class="js-order-products"></td>
+    <td class="js-order-total-paid"></td>
+    <td class="js-order-status"></td>
     <td class="text-right">
       <button class="btn btn-primary">{{ 'Details'|trans({}, 'Admin.Global') }}</button>
       <button class="btn btn-primary">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>

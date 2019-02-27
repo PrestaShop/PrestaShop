@@ -47,4 +47,6 @@ export default {
   customerCartsTable: '#customerCartsTable',
   customerCartsTableRowTemplate: '#customerCartsTableRowTemplate',
   customerCheckoutHistory: '#customerCheckoutHistory',
+  customerOrdersTable: '#customerOrdersTable',
+  customerOrdersTableRowTemplate: '#customerOrdersTableRowTemplate',
 };
