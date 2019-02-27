@@ -53,7 +53,7 @@
         <div class="row js-customer-search-results"></div>
       </div>
     </div>
-    <div class="row js-customer-carts d-none">
+    <div class="row d-none" id="customerCheckoutHistory">
       <div class="col">
         <ul class="nav nav-pills" role="tablist">
           <li class="nav-item">
@@ -85,7 +85,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane fade active show" id="customerCartsTabContent" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table">
+            <table class="table" id="customerCartsTable">
               <thead>
                 <tr>
                   <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
@@ -94,17 +94,7 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>7</td>
-                  <td>2019-02-20 07:22:10</td>
-                  <td>$45.00</td>
-                  <td class="text-right">
-                    <button type="button" class="btn btn-primary">{{ 'Details'|trans({}, 'Admin.Global') }}</button>
-                    <button type="button" class="btn btn-primary">{{ 'Use'|trans({}, 'Admin.Global') }}</button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
           <div class="tab-pane fade" id="customerOrdersTabContent" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -151,3 +141,15 @@
     </div>
   </div>
 </div>
+
+<script id="customerCartsTableRowTemplate" type="text/html">
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td class="text-right">
+      <button class="btn btn-primary">{{ 'Details'|trans({}, 'Admin.Global') }}</button>
+      <button class="btn btn-primary">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+    </td>
+  </tr>
+</script>

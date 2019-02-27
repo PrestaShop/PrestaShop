@@ -44,4 +44,7 @@ export default {
   customerDetailsBtn: '.js-details-customer-btn',
   customerSearchResultColumn: '.js-customer-search-result-col',
   customerSearchBlock: '#customerSearchBlock',
+  customerCartsTable: '#customerCartsTable',
+  customerCartsTableRowTemplate: '#customerCartsTableRowTemplate',
+  customerCheckoutHistory: '#customerCheckoutHistory',
 };

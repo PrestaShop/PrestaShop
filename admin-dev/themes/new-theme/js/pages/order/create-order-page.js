@@ -39,28 +39,100 @@ export default class CreateOrderPage {
     this.customerSearcher = new CustomerSearcherComponent();
 
     return {
-      listenForCustomerSearch: () => {
-        this.$container.on('input', createOrderPageMap.customerSearchInput, () => {
-          this.customerSearcher.onCustomerSearch();
-        });
-      },
-      listenForCustomerChooseForOrderCreation: () => {
-        this.$container.on('click', createOrderPageMap.chooseCustomerBtn, (event) => {
-          this.data.customer_id = this.customerSearcher.onCustomerChooseForOrderCreation(event);
-        });
-
-        this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => {
-          this.customerSearcher.onCustomerChange();
-        });
-      }
+      listenForCustomerSearch: () => this._handleCustomerSearch(),
+      listenForCustomerChooseForOrderCreation: () => this._handleCustomerChooseForOrderCreation(),
     };
   }
 
-  _loadCartSummary() {
-    $.ajax(this.$container.data('cart-summary-url'), {
-
-    }).then(() => {
-
+  /**
+   * Searches for customer
+   *
+   * @private
+   */
+  _handleCustomerSearch() {
+    this.$container.on('input', createOrderPageMap.customerSearchInput, () => {
+      this.customerSearcher.onCustomerSearch();
     });
+  }
+
+  /**
+   * Chooses customer for which order is being created
+   *
+   * @private
+   */
+  _handleCustomerChooseForOrderCreation() {
+    this.$container.on('click', createOrderPageMap.chooseCustomerBtn, (event) => {
+      this.data.customer_id = this.customerSearcher.onCustomerChooseForOrderCreation(event);
+
+      this._loadCartSummaryAfterChoosingCustomer();
+    });
+
+    this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => {
+      this.customerSearcher.onCustomerChange();
+    });
+  }
+
+  /**
+   * Loads cart summary with customer's carts & orders history.
+   *
+   * @private
+   */
+  _loadCartSummaryAfterChoosingCustomer() {
+    $.ajax(this.$container.data('cart-summary-url'), {
+      method: 'POST',
+      data: {
+        'id_customer': this.data.customer_id,
+      },
+      dataType: 'json'
+    }).then((response) => {
+      const checkoutHistory = {
+        carts: response.carts,
+        orders: response.orders
+      };
+
+      this._renderCheckoutHistory(checkoutHistory);
+      //this._renderCheckoutHistory();
+    });
+  }
+
+  /**
+   * Renders previous Carts & Orders from customer history
+   *
+   * @param {Object} checkoutHistory
+   *
+   * @private
+   */
+  _renderCheckoutHistory(checkoutHistory) {
+    const $cartsTable = $(createOrderPageMap.customerCartsTable);
+    const $cartsTableRowTemplate = $($(createOrderPageMap.customerCartsTableRowTemplate).html());
+
+    $cartsTable.find('tbody').empty();
+
+    for (let key in checkoutHistory.carts) {
+      if (!checkoutHistory.carts.hasOwnProperty(key)) {
+        continue;
+      }
+
+      const cart = checkoutHistory.carts[key];
+      const $template = $cartsTableRowTemplate.clone();
+
+      $template.find('td:first').text(cart.id_cart);
+      $template.find('td:nth-child(2)').text(cart.date_add);
+      $template.find('td:nth-child(3)').text(cart.total_price);
+
+      $cartsTable.find('tbody').append($template);
+    }
+
+    $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
+  }
+
+  /**
+   * Renders cart summary on the page
+   *
+   * @param {Object} cartSummary
+   * @private
+   */
+  _renderCartSummary(cartSummary) {
+
   }
 }
