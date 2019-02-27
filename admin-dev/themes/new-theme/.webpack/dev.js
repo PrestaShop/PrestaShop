@@ -1,3 +1,4 @@
+const path = require('path');
 const common = require('./common.js');
 
 /**
@@ -8,17 +9,14 @@ function devConfig() {
   let dev = Object.assign(
     common,
     {
-      mode: 'development',
       devtool: 'inline-source-map',
+      devServer: {
+        hot: true,
+        contentBase: path.resolve(__dirname, '/../public'),
+        publicPath: '/',
+      },
     }
   );
-
-
-  /*
-   * This is currently a workaround to distribute file while running
-   * the webpack dev server.
-   */
-  dev.output.publicPath = '/admin-dev/themes/new-theme/public/';
 
   return dev;
 }

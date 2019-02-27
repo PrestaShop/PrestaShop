@@ -2,9 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const cssExtractedFileName = 'theme';
 
 module.exports = {
@@ -59,41 +57,18 @@ module.exports = {
       app: path.resolve(__dirname, '../js/app'),
     },
   },
-  optimization: {
-    // With mini-css-extract-plugin, one file is created for each '.js' where css is imported.
-    // The use of this optimization merges them into one file.
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: cssExtractedFileName,
-          test: /\.(s*)css$/,
-          chunks: 'all'
-        }
-      }
-    },
-    minimizer: [
-      new OptimizeCSSAssetsPlugin(),
-    ]
-  },
   module: {
     rules: [
-      {
-        test:/\.(s*)css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
-        ]
-      },
       {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
         use: [{
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
-          }
+            presets: [
+              ['es2015', {modules: false}],
+            ],
+          },
         }],
       },
       {
@@ -139,7 +114,47 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
+            css: 'postcss-loader',
+            scss: 'style-loader!css-loader!sass-loader',
+          },
+        },
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader'],
+        }),
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true,
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
+          ],
+        }),
       },
       // FILES
       {
@@ -149,43 +164,15 @@ module.exports = {
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].css'
-    }),
+    new ExtractTextPlugin('theme.css'),
     new CleanWebpackPlugin(['public'], {
       root: path.resolve(__dirname, '../'),
       exclude: ['theme.rtlfix']
     }),
-    new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
-    {
-      apply: (compiler) => {
-        /**
-         * When using mini-css-extract-plugin and merging all chunks to one file (see optimization configuration),
-         * a [cssExtractedFileName].bundle.js is created. This file is required for the js entry point to be executed.
-         * see: https://github.com/webpack-contrib/mini-css-extract-plugin/issues/147
-         * This hook merges the [cssExtractedFileName].bundle.js into the main.bundle.js file, so we avoid
-         * to include the [cssExtractedFileName].bundle.js into the html
-         */
-        compiler.hooks.afterEmit.tap('AfterEmitTest', (compilation) => {
-          let mainBundle = fs.createWriteStream('./public/main.bundle.js', {flags: 'a'});
-          let themeBundle = fs.createReadStream('./public/'+ cssExtractedFileName +'.bundle.js');
-
-          mainBundle.on('pipe', function() {
-            console.log('prestashop-post-operation: Merging bundle.main.js and '+ cssExtractedFileName +'.bundle.js');
-          });
-
-          mainBundle.on('close', function() {
-            console.log('prestashop-post-operation: Merging done.');
-          });
-
-          themeBundle.pipe(mainBundle);
-        });
-      }
-    },
   ],
 };
