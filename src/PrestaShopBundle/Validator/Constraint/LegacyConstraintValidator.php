@@ -28,17 +28,21 @@ namespace PrestaShopBundle\Validator\Constraint;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\InvalidArgumentException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Validates that value contains only allowed symbols
+ * Replicates legacy validation
  */
-class IsCatalogNameValidator extends ConstraintValidator
+class LegacyConstraintValidator extends ConstraintValidator
 {
+    /**
+     * {@inheritdoc}
+     */
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof IsCatalogName) {
-            throw new UnexpectedTypeException($constraint, IsCatalogName::class);
+        if (!$constraint instanceof LegacyConstraint) {
+            throw new UnexpectedTypeException($constraint, LegacyConstraint::class);
         }
 
         if (null === $value || '' === $value) {
@@ -49,7 +53,7 @@ class IsCatalogNameValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'string');
         }
 
-        if (!preg_match($this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $value)) {
+        if (!preg_match($this->getPattern($constraint->type), $value)) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameter('%s', $this->formatValue($value))
@@ -59,9 +63,35 @@ class IsCatalogNameValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $pattern
+     * @param string $type
      *
      * @return string
+     */
+    private function getPattern($type)
+    {
+        $typePatterns = [
+            'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
+            'generic_name' => $this->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
+        ];
+
+        if (isset($typePatterns[$type])) {
+            return $typePatterns[$type];
+        }
+
+        throw new InvalidArgumentException(sprintf(
+            'Type "%s" is not defined. Defined types are: %s',
+            $type,
+            implode(',', array_keys($typePatterns))
+        ));
+    }
+
+    /**
+     * Delete unicode class from regular expression patterns.
+     * Cleaning non unicode is optional. Refer to legacy Validate to see if it's needed.
+     *
+     * @param string $pattern
+     *
+     * @return string pattern
      */
     private function cleanNonUnicodeSupport($pattern)
     {

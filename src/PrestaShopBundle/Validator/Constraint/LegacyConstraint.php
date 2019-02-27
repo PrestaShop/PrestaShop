@@ -29,9 +29,25 @@ namespace PrestaShopBundle\Validator\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Check for product, category, manufacturer or supplier name validity
+ * Encapsulates ValidateCore constraints for legacy object models
  */
-class IsCatalogName extends Constraint
+class LegacyConstraint extends Constraint
 {
+    /**
+     * @var string
+     */
     public $message = '%s is invalid';
+
+    /**
+     * @var string
+     */
+    public $type;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredOptions()
+    {
+        return ['type'];
+    }
 }

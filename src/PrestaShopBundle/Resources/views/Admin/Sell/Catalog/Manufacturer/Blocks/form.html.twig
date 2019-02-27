@@ -33,18 +33,22 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      {% set invalidCharsHint %}
+      {% set invalidCatalogNameHint %}
         {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
       {% endset %}
 
       {{ ps.form_group_row(manufacturerForm.name, {}, {
         'label': 'Name'|trans({}, 'Admin.Global'),
-        'help': invalidCharsHint
+        'help': invalidCatalogNameHint
       }) }}
+
+      {% set invalidGenericNameHint %}
+        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
+      {% endset %}
 
       {{ ps.form_group_row(manufacturerForm.short_description, {}, {
         'label': 'Short description'|trans({}, 'Admin.Global'),
-        'help': invalidCharsHint
+        'help': invalidGenericNameHint
       }) }}
 
       {{ ps.form_group_row(manufacturerForm.description, {}, {
@@ -71,18 +75,19 @@
 
       {{ ps.form_group_row(manufacturerForm.meta_title, {}, {
         'label': 'Meta title'|trans({}, 'Admin.Global'),
-        'help': invalidCharsHint
+        'help': invalidGenericNameHint
       }) }}
 
       {{ ps.form_group_row(manufacturerForm.meta_description, {}, {
         'label': 'Meta description'|trans({}, 'Admin.Global'),
-        'help': invalidCharsHint
+        'help': invalidGenericNameHint
       }) }}
 
       {% set keywordHint %}
         {{ 'To add "tags," click inside the field, write something, and then press "Enter."'|trans({}, 'Admin.Catalog.Help') }}
-        {{ invalidCharsHint }}
+        {{ invalidGenericNameHint }}
       {% endset %}
+
       {{ ps.form_group_row(manufacturerForm.meta_keyword, {}, {
         'label': 'Meta keywords'|trans({}, 'Admin.Global'),
         'help': keywordHint
