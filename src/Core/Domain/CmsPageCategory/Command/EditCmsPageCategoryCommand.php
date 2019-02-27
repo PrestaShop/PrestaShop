@@ -27,13 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command;
 
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Edits cms page category.
  */
-class EditCmsPageCategoryCommand
+class EditCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
 {
     /**
      * @var CmsPageCategoryId
@@ -129,9 +130,12 @@ class EditCmsPageCategoryCommand
      * @param array $localisedName
      *
      * @return self
+     *
+     * @throws CmsPageCategoryConstraintException
      */
     public function setLocalisedName(array $localisedName)
     {
+        $this->assertCategoryName($localisedName);
         $this->localisedName = $localisedName;
 
         return $this;

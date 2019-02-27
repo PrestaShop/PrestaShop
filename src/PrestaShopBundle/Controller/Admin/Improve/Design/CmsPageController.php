@@ -641,7 +641,16 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Name', 'Admin.Global')),
                         ]
                     ),
-
+                CmsPageCategoryConstraintException::INVALID_LINK_REWRITE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Friendly URL', 'Admin.Global')),
+                        ]
+                    ),
             ],
         ];
 

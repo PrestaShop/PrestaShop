@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 use CMSCategory;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -60,5 +61,27 @@ abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
         $errors = $this->validator->validate($localisedTexts, new DefaultLanguage());
 
         return 0 === count($errors);
+    }
+
+    /**
+     * @param array $localisedUrls
+     * 
+     * @throws CmsPageCategoryConstraintException
+     */
+    protected function assertIsValidLinkRewrite(array $localisedUrls)
+    {
+        foreach ($localisedUrls as $localisedUrl) {
+            $errors = $this->validator->validate($localisedUrl, new IsUrlRewrite());
+
+            if (0 !== count($errors)) {
+                throw new CmsPageCategoryConstraintException(
+                    sprintf(
+                        'Given friendly url "%s" is not valid for link rewrite',
+                        $localisedUrl
+                    ),
+                    CmsPageCategoryConstraintException::INVALID_LINK_REWRITE
+                );
+            }
+        }
     }
 }

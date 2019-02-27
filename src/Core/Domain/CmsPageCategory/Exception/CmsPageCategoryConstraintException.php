@@ -56,4 +56,9 @@ class CmsPageCategoryConstraintException extends CmsPageCategoryException
      * @var int Is used to validate category name to match the specific pattern.
      */
     const INVALID_CATEGORY_NAME = 5;
+
+    /**
+     * @var int Is used to validate link rewrite that matches specific regex pattern.
+     */
+    const INVALID_LINK_REWRITE = 6;
 }

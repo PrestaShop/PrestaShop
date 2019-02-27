@@ -61,6 +61,8 @@ final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler imp
                 CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL
             );
         }
+
+        $this->assertIsValidLinkRewrite($command->getLocalisedFriendlyUrl());
         //todo: link rewrite validation
 
         try {
