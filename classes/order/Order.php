@@ -2545,10 +2545,17 @@ class OrderCore extends ObjectModel
 
         // add real order products
         foreach ($this->getProducts() as $product) {
-            $new_cart->updateQty( $product['product_quantity'], 
-                    (int) $product['product_id'],
-                    null, false, 'up', 0, null, true,
-                    true ); // - skipAvailabilityCheckOutOfStock
+            $new_cart->updateQty(
+                $product['product_quantity'],
+                (int) $product['product_id'],
+                null,
+                false,
+                'up',
+                0,
+                null,
+                true,
+                true
+            ); // - skipAvailabilityCheckOutOfStock
         }
 
         // get new shipping cost
