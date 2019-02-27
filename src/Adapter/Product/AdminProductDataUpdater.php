@@ -75,7 +75,7 @@ class AdminProductDataUpdater implements ProductInterface
             $product = new Product($productId);
             if (!Validate::isLoadedObject($product)
                 || (($product->validateFields(false, true)) !== true)
-                || (($product->validateFieldsLang(false, true)) !== true)) {
+                || $product->validateFieldsLang(false, true) !== true) {
                 $failedIdList[] = $productId;
 
                 continue;
