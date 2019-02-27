@@ -52,7 +52,7 @@ class ClickableAvatarType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'click_url' => 'http://www.prestashop.com/forums/index.php?app=core&module=usercp',
+                'click_url' => 'https://www.prestashop.com/forums/',
                 'image_alt' => '',
                 'required' => false,
             ])
