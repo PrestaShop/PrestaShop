@@ -59,14 +59,14 @@ class AddContactCommandTest extends TestCase
                     '',
                     null,
                     true,
-                ]
+                ],
             ],
             [
                 [
                     '{}',
                     'test<=',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -94,14 +94,14 @@ class AddContactCommandTest extends TestCase
             [
                 [
                     '1',
-                ]
+                ],
             ],
             [
                 [
                     null,
                     false,
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }
