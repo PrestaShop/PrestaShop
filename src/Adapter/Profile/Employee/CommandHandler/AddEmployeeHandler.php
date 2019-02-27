@@ -97,6 +97,9 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee->optin = $command->isSubscribedToNewsletter();
         $employee->active = $command->isActive();
         $employee->passwd = $this->hashing->hash($command->getPlainPassword()->getValue());
+        $employee->id_last_order = $employee->getLastElementsForNotify('order');
+        $employee->id_last_customer_message = $employee->getLastElementsForNotify('customer_message');
+        $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
 
         if (false === $employee->add()) {
             throw new EmployeeException(

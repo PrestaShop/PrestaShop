@@ -103,6 +103,9 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->id_lang = $command->getLanguageId();
         $employee->active = $command->isActive();
         $employee->id_profile = $command->getProfileId();
+        $employee->id_last_order = $employee->getLastElementsForNotify('order');
+        $employee->id_last_customer_message = $employee->getLastElementsForNotify('customer_message');
+        $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
 
         $shopAssociation = $command->getShopAssociation();
 
