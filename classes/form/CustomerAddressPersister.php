@@ -68,6 +68,11 @@ class CustomerAddressPersisterCore
             $old_address = new Address($address->id);
             $address->id = $address->id_address = null;
 
+            $this->cart->updateAddressId(
+                $old_address->id,
+                $address->id
+            );
+
             return $address->save() && $old_address->delete();
         }
 
