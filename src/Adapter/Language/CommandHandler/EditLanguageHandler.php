@@ -59,7 +59,7 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         $this->moveTranslationsIfIsoChanged($language, $command);
 
         $this->updateLanguageWithCommandData($language, $command);
-        $this->updateShopAssociationIfChanged($command);
+        $this->updateShopAssociationIfChanged($language, $command);
         $this->uploadFlagImageIfChanged($language, $command);
 
         return new LanguageId((int) $language->id);
@@ -185,16 +185,17 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
     }
 
     /**
+     * @param Language $language
      * @param EditLanguageCommand $command
      */
-    private function updateShopAssociationIfChanged(EditLanguageCommand $command)
+    private function updateShopAssociationIfChanged(Language $language, EditLanguageCommand $command)
     {
         if (null === $command->getShopAssociation()) {
             return;
         }
 
         $this->associateWithShops(
-            $command->getLanguageId()->getValue(),
+            $language,
             $command->getShopAssociation()
         );
     }
