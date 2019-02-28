@@ -1147,13 +1147,13 @@ class AdminCategoriesControllerCore extends AdminController
             ORDER BY c.`position`
             LIMIT ' . (int) $limit
         );
-        $echo = '';
+        $returnData = [];
         if ($results) {
             foreach ($results as $result) {
-                $echo .= trim($result['name']) . '|' . (int) $result['id_category'] . PHP_EOL;
+                $returnData[] = trim($result['name']) . '|' . (int) $result['id_category'];
             }
         }
-        $this->ajaxRender($echo);
+        $this->ajaxRender(implode(PHP_EOL, $returnData));
     }
 
     /**
