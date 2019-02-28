@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,11 +69,10 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilderByFilters($searchCriteria->getFilters());
-        $qb->select('a.id_address, m.name, a.firstname, a.lastname, a.postcode, a.city, cl.name as country_name');
+        $qb->select('a.id_address, m.name, a.firstname, a.lastname, a.postcode, a.city, cl.name as country');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-//            ->applySorting($searchCriteria, $qb) //todo: test sorting
         ;
 
         return $qb;
@@ -123,7 +122,13 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'manufacturer',
                 'm', 'm.id_manufacturer = a.id_manufacturer'
             )
+            ->andWhere('a.id_customer = 0')
+            ->andWhere('a.id_supplier = 0')
+            ->andWhere('a.id_warehouse = 0')
+            ->andWhere('a.deleted = 0')
         ;
+        //@todo: Enable filtering when its fixed in another PR
+        return $qb;
 
         foreach ($filters as $name => $value) {
             if (!in_array($name, $allowedFilters, true)) {
@@ -141,11 +146,6 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
                 $qb->setParameter($name, '%' . $value . '%');
             }
         }
-
-        $qb->andWhere('a.id_customer = 0')
-            ->andWhere('a.id_supplier = 0')
-            ->andWhere('a.id_warehouse = 0')
-            ->andWhere('a.deleted = 0');
 
         return $qb;
     }

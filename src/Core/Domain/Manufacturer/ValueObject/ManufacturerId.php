@@ -39,7 +39,7 @@ class ManufacturerId
     private $id;
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @throws ManufacturerConstraintException
      */

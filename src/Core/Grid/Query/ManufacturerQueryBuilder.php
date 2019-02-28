@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
 {
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
     private $searchCriteriaApplicator;
     /**
      * @var int[]
@@ -64,22 +67,26 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $sortableFields = ['id_manufacturer', 'name', 'adresses_count', 'products_count', 'active'];
+        $addressesQb = $this->connection->createQueryBuilder();
+        $addressesQb->select('COUNT(a.`id_manufacturer`) AS `addresses_count`')
+            ->from($this->dbPrefix . 'address', 'a')
+            ->where('m.`id_manufacturer` = a.`id_manufacturer`')
+            ->andWhere('a.`deleted` = 0')
+            ->groupBy('a.`id_manufacturer`')
+        ;
 
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('m.`id_manufacturer`, m.`name`, m.`active`')
-            ->addSelect('COUNT(DISTINCT p.`id_product`) AS `products_count`')
-            ->addSelect('COUNT(DISTINCT a.`id_manufacturer`) AS `addresses_count`')
+            ->addSelect('COUNT(p.`id_product`) AS `products_count`')
+            ->addSelect('('.$addressesQb->getSQL().') AS addresses_count')
             ->groupBy('m.`id_manufacturer`')
         ;
 
-        $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
-        $orderBy = $searchCriteria->getOrderBy();
-
-        if ($orderBy && in_array($orderBy, $sortableFields, true)) {
-            $qb->addOrderBy('products_count', $searchCriteria->getOrderWay());
-        }
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb)
+        ;
 
         return $qb;
     }
@@ -120,12 +127,6 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'product',
                 'p',
                 'm.`id_manufacturer` = p.`id_manufacturer`'
-            )
-            ->leftJoin(
-                'm',
-                $this->dbPrefix . 'address',
-                'a',
-                'a.`id_manufacturer` = m.`id_manufacturer`'
             )
         ;
 
