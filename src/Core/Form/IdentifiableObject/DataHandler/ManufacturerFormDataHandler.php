@@ -101,7 +101,7 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             $shopAssociation = $data['shop_association'] ?: [];
             $shopAssociation = array_map(function ($shopId) { return (int) $shopId; }, $shopAssociation);
 
-            $command->setShopAssociation($shopAssociation);
+            $command->setAssociatedShops($shopAssociation);
         }
         /** @var ManufacturerId $manufacturerId */
         $manufacturerId = $this->bus->handle($command);

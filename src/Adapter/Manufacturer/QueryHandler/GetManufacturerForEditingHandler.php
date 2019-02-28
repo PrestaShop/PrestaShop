@@ -92,7 +92,7 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
         $pathToImage = _PS_MANU_IMG_DIR_ . $manufacturerId->getValue() . '.jpg';
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
-            'manufacturer_mini_' . $manufacturerId->getValue() . '_' . $this->contextShopId . '.jpg',
+            'manufacturer_' . $manufacturerId->getValue() . '_' . $this->contextShopId . '.jpg',
             HelperList::LIST_THUMBNAIL_SIZE
         );
 

@@ -40,20 +40,25 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 abstract class AbstractManufacturerHandler extends AbstractObjectModelHandler
 {
     /**
-     * Validates that requested manufacturer was found
+     * Gets legacy Manufacturer
      *
      * @param ManufacturerId $manufacturerId
-     * @param Manufacturer $manufacturer
+     *
+     * @return Manufacturer
      *
      * @throws ManufacturerNotFoundException
      */
-    protected function assertManufacturerWasFound(ManufacturerId $manufacturerId, Manufacturer $manufacturer)
+    protected function getManufacturer(ManufacturerId $manufacturerId)
     {
+        $manufacturer = new Manufacturer($manufacturerId->getValue());
+
         if ($manufacturer->id !== $manufacturerId->getValue()) {
             throw new ManufacturerNotFoundException(
                 sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
             );
         }
+
+        return $manufacturer;
     }
 
     /**

@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
@@ -67,7 +67,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -103,7 +103,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof ManufacturerNotFoundException) {

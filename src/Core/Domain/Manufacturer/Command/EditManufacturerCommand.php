@@ -262,17 +262,17 @@ class EditManufacturerCommand
     /**
      * @return array
      */
-    public function getShopAssociation()
+    public function getAssociatedShops()
     {
         return $this->associatedShops;
     }
 
     /**
-     * @param array|null $associatedShops
+     * @param $associatedShops
      *
      * @return self
      */
-    public function setShopAssociation($associatedShops)
+    public function setAssociatedShops($associatedShops)
     {
         $this->associatedShops = $associatedShops;
 
