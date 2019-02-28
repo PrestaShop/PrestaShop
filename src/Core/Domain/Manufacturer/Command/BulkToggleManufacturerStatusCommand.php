@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
@@ -50,7 +49,7 @@ class BulkToggleManufacturerStatusCommand
      * @param bool $expectedStatus
      *
      * @throws ManufacturerConstraintException
-     * @throws DomainConstraintException
+     * @throws ManufacturerConstraintException
      */
     public function __construct(array $manufacturerIds, $expectedStatus)
     {
@@ -92,14 +91,14 @@ class BulkToggleManufacturerStatusCommand
      *
      * @param $value
      *
-     * @throws DomainConstraintException
+     * @throws ManufacturerConstraintException
      */
     private function assertIsBool($value)
     {
         if (!is_bool($value)) {
-            throw new DomainConstraintException(
+            throw new ManufacturerConstraintException(
                 sprintf('Status must be of type bool, but given %s', var_export($value, true)),
-                DomainConstraintException::INVALID_STATUS_TYPE
+                ManufacturerConstraintException::INVALID_STATUS
             );
         }
     }

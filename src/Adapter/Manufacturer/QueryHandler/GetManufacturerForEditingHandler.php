@@ -26,35 +26,83 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler;
 
-use Manufacturer;
+use HelperList;
+use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler\GetManufacturerForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
 /**
- * Gets manufacturer for editing
+ * Handles query which gets manufacturer for editing
  */
 final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler implements GetManufacturerForEditingHandlerInterface
 {
+    /**
+     * @var ImageTagSourceParserInterface
+     */
+    private $imageTagSourceParser;
+
+    /**
+     * @var int
+     */
+    private $contextShopId;
+
+    public function __construct(
+        ImageTagSourceParserInterface $imageTagSourceParser,
+        $contextShopId
+    ) {
+        $this->imageTagSourceParser = $imageTagSourceParser;
+        $this->contextShopId = $contextShopId;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(GetManufacturerForEditing $query)
     {
-        $manufacturer = new Manufacturer($query->getManufacturerId()->getValue());
-        $this->assertManufacturerWasFound($query->getManufacturerId(), $manufacturer);
+        $manufacturerId = $query->getManufacturerId();
+        $manufacturer = $this->getManufacturer($manufacturerId);
 
         return new EditableManufacturer(
-            $query->getManufacturerId(),
+            $manufacturerId,
             $manufacturer->name,
+            $manufacturer->active,
             $manufacturer->short_description,
             $manufacturer->description,
             $manufacturer->meta_title,
             $manufacturer->meta_description,
             $manufacturer->meta_keywords,
-            $manufacturer->getAssociatedShops(),
-            $manufacturer->active
+            $this->getLogoImage($manufacturerId),
+            $manufacturer->getAssociatedShops()
         );
+    }
+
+    /**
+     * @param ManufacturerId $manufacturerId
+     *
+     * @return array|null
+     */
+    private function getLogoImage(ManufacturerId $manufacturerId)
+    {
+        $pathToImage = _PS_MANU_IMG_DIR_ . $manufacturerId->getValue() . '.jpg';
+        $imageTag = ImageManager::thumbnail(
+            $pathToImage,
+            'manufacturer_mini_' . $manufacturerId->getValue() . '_' . $this->contextShopId . '.jpg',
+            HelperList::LIST_THUMBNAIL_SIZE
+        );
+
+        $imageSize = file_exists($pathToImage) ? filesize($pathToImage) / 1000 : '';
+
+        if (empty($imageTag) || empty($imageSize)) {
+            return null;
+        }
+
+        return [
+            'size' => sprintf('%skB', $imageSize),
+            'path' => $this->imageTagSourceParser->parse($imageTag),
+        ];
     }
 }

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
- * Transfers editable manufacturer data
+ * Transfers manufacturer data for editing
  */
 class EditableManufacturer
 {
@@ -44,71 +44,79 @@ class EditableManufacturer
     private $name;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    private $shortDescription;
+    private $localizedShortDescriptions;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    private $description;
+    private $localizedDescriptions;
 
     /**
-     * @var string[]
+     * @var array|null
      */
-    private $metaTitle;
+    private $logoImage;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    private $metaDescription;
+    private $localizedMetaTitles;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    private $metaKeywords;
+    private $localizedMetaDescriptions;
 
     /**
-     * @var array
+     * @var string[]|null
      */
-    private $shopAssociation;
+    private $localizedMetaKeywords;
 
     /**
      * @var bool
      */
-    private $active;
+    private $enabled;
+
+    /**
+     * @var array
+     */
+    private $associatedShops;
 
     /**
      * @param ManufacturerId $manufacturerId
      * @param string $name
-     * @param string[] $shortDescription
-     * @param string[] $description
-     * @param string[] $metaTitle
-     * @param string[] $metaDescription
-     * @param string[] $metaKeywords
-     * @param array $shopAssociation
-     * @param bool $active
+     * @param bool $enabled
+     * @param array|null $localizedShortDescriptions
+     * @param array|null $localizedDescriptions
+     * @param array|null $logoImage
+     * @param array|null $localizedMetaTitles
+     * @param array|null $localizedMetaDescriptions
+     * @param array|null $localizedMetaKeywords
+     * @param array $associatedShops
      */
     public function __construct(
-        $manufacturerId,
+        ManufacturerId $manufacturerId,
         $name,
-        array $shortDescription,
-        array $description,
-        array $metaTitle,
-        array $metaDescription,
-        array $metaKeywords,
-        array $shopAssociation,
-        $active
+        $enabled = false,
+        array $localizedShortDescriptions = null,
+        array $localizedDescriptions = null,
+        array $localizedMetaTitles = null,
+        array $localizedMetaDescriptions = null,
+        array $localizedMetaKeywords = null,
+        array $logoImage = null,
+        array $associatedShops = []
     ) {
         $this->manufacturerId = $manufacturerId;
         $this->name = $name;
-        $this->shortDescription = $shortDescription;
-        $this->description = $description;
-        $this->metaTitle = $metaTitle;
-        $this->metaDescription = $metaDescription;
-        $this->metaKeywords = $metaKeywords;
-        $this->shopAssociation = $shopAssociation;
-        $this->active = $active;
+        $this->localizedShortDescriptions = $localizedShortDescriptions;
+        $this->localizedDescriptions = $localizedDescriptions;
+        $this->logoImage = $logoImage;
+        $this->localizedMetaTitles = $localizedMetaTitles;
+        $this->localizedMetaDescriptions = $localizedMetaDescriptions;
+        $this->localizedMetaKeywords = $localizedMetaKeywords;
+        $this->enabled = $enabled;
+        $this->associatedShops = $associatedShops;
     }
 
     /**
@@ -128,58 +136,66 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getShortDescription()
+    public function getLocalizedShortDescriptions()
     {
-        return $this->shortDescription;
+        return $this->localizedShortDescriptions;
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getDescription()
+    public function getLocalizedDescriptions()
     {
-        return $this->description;
+        return $this->localizedDescriptions;
     }
 
     /**
-     * @return string[]
+     * @return array|null
      */
-    public function getMetaTitle()
+    public function getLogoImage()
     {
-        return $this->metaTitle;
+        return $this->logoImage;
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getMetaDescription()
+    public function getLocalizedMetaTitles()
     {
-        return $this->metaDescription;
+        return $this->localizedMetaTitles;
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getMetaKeywords()
+    public function getLocalizedMetaDescriptions()
     {
-        return $this->metaKeywords;
+        return $this->localizedMetaDescriptions;
     }
 
     /**
-     * @return array
+     * @return string[]|null
      */
-    public function getShopAssociation()
+    public function getLocalizedMetaKeywords()
     {
-        return $this->shopAssociation;
+        return $this->localizedMetaKeywords;
     }
 
     /**
      * @return bool
      */
-    public function isActive()
+    public function isEnabled()
     {
-        return $this->active;
+        return $this->enabled;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssociatedShops()
+    {
+        return $this->associatedShops;
     }
 }

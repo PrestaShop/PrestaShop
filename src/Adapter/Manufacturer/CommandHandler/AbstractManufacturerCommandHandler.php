@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShopException;
 
 /**
@@ -38,23 +36,6 @@ use PrestaShopException;
  */
 abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHandler
 {
-    /**
-     * Gets legacy Manufacturer
-     *
-     * @param ManufacturerId $manufacturerId
-     *
-     * @return Manufacturer
-     *
-     * @throws ManufacturerNotFoundException
-     */
-    protected function getManufacturer(ManufacturerId $manufacturerId)
-    {
-        $manufacturer = new Manufacturer($manufacturerId->getValue());
-        $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
-
-        return $manufacturer;
-    }
-
     /**
      * Deletes legacy Manufacturer
      *
