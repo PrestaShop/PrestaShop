@@ -7159,12 +7159,16 @@ class ProductCore extends ObjectModel
      */
     public function setWsAttachments($attachments)
     {
-        $this->deleteAttachments(true);
-        foreach ($attachments as $attachment) {
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment`
+        try {
+            $this->deleteAttachments(true);
+            foreach ($attachments as $attachment) {
+                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment`
     				(`id_product`, `id_attachment`) VALUES (' . (int) $this->id . ', ' . (int) $attachment['id'] . ')');
+            }
+            Product::updateCacheAttachment((int) $this->id);
+        } catch (Exception $e) {
+            return false;
         }
-        Product::updateCacheAttachment((int) $this->id);
 
         return true;
     }

@@ -1412,7 +1412,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    public function executeEntityPost()
+    protected function executeEntityPost()
     {
         return $this->saveEntityFromXml(201);
     }
@@ -1422,7 +1422,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    public function executeEntityPut()
+    protected function executeEntityPut()
     {
         return $this->saveEntityFromXml(200);
     }
@@ -1432,7 +1432,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    public function executeEntityDelete()
+    protected function executeEntityDelete()
     {
         $objects = [];
         $arr_avoid_id = [];
@@ -1762,7 +1762,7 @@ class WebserviceRequestCore
      *
      * @return array with displaying informations (used in the dispatcher)
      */
-    public function returnOutput()
+    protected function returnOutput()
     {
         $return = [];
 

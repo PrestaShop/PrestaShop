@@ -58,11 +58,11 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      */
 
     /**
-     * @param WebserviceOutputBuilderCore $obj
+     * @param WebserviceOutputBuilder $obj
      *
      * @return WebserviceSpecificManagementInterface
      */
-    public function setObjectOutput(WebserviceOutputBuilderCore $obj)
+    public function setObjectOutput(WebserviceOutputBuilder $obj)
     {
         $this->objOutput = $obj;
 
@@ -74,7 +74,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         return $this->objOutput;
     }
 
-    public function setWsObject(WebserviceRequestCore $obj)
+    public function setWsObject(WebserviceRequest $obj)
     {
         $this->wsObject = $obj;
 
@@ -205,8 +205,8 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      */
     public function executeFileGetAndHead()
     {
-        $a = new Attachment((int) $this->wsObject->urlSegment[2]);
-        if (!$a) {
+        $attachment = new Attachment((int) $this->wsObject->urlSegment[2]);
+        if (!$attachment) {
             throw new WebserviceException(
                 sprintf(
                     'Attachment %d not found',
@@ -220,7 +220,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
 
         // Physical file location
-        $file = _PS_DOWNLOAD_DIR_ . $a->file;
+        $file = _PS_DOWNLOAD_DIR_ . $attachment->file;
         // Check if file exists
         if (!file_exists($file)) {
             throw new WebserviceException(
@@ -238,9 +238,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         // Return file details
         return array(
             'file' => $file,
-            'mime' => $a->mime,
-            'file_name' => $a->file_name,
-            'file_size' => $a->file_size,
+            'mime' => $attachment->mime,
+            'file_name' => $attachment->file_name,
+            'file_size' => $attachment->file_size,
         );
     }
 
@@ -254,7 +254,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     public function executeFileAddAndEdit()
     {
         // Load attachment with or without id depending on method
-        $a = $this->wsObject->method == 'PUT' ? new Attachment((int) $this->wsObject->urlSegment[1]) : new Attachment();
+        $attachment = new Attachment($this->wsObject->method == 'PUT' ? (int) $this->wsObject->urlSegment[1] : null);
 
         // Check form data
         if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
@@ -271,25 +271,25 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     $uniqid = sha1(uniqid()); // must be a sha1
                 } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqid));
 
-                $a->file_name = $_FILES['file']['name'];
-                $a->file = $uniqid;
-                $a->mime = $_FILES['file']['type'];
-                $a->name[Configuration::get('PS_LANG_DEFAULT')] = $_POST['name'];
+                $attachment->file_name = $_FILES['file']['name'];
+                $attachment->file = $uniqid;
+                $attachment->mime = $_FILES['file']['type'];
+                $attachment->name[Configuration::get('PS_LANG_DEFAULT')] = $_POST['name'];
 
                 // Move file to download dir
                 if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $uniqid)) {
                     $this->wsObject->errors[] = $this->l('Failed to copy the file.');
-                    unlink(_PS_DOWNLOAD_DIR_ . $a->file);
-                    $a->delete();
+                    unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
+                    $attachment->delete();
                 } else {
                     // Create/update attachment
-                    if ($a->id) {
-                        $a->update();
+                    if ($attachment->id) {
+                        $attachment->update();
                     } else {
-                        $a->add();
+                        $attachment->add();
                     }
                     // Remember affected entity
-                    $this->attachment_id = $a->id;
+                    $this->attachment_id = $attachment->id;
                 }
 
                 // Delete temp file

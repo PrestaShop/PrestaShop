@@ -289,26 +289,26 @@ class AttachmentCore extends ObjectModel
      */
     public static function getProductAttached($idLang, $list)
     {
-        $idsAttachments = [];
-        if (is_array($list)) {
-            foreach ($list as $attachment) {
-                $idsAttachments[] = $attachment['id_attachment'];
-            }
+        if (!is_array($list)) {
+            return false;
+        }
 
-            $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'product_attachment` pa
+        $idsAttachments = array();
+        foreach ($list as $attachment) {
+            $idsAttachments[] = $attachment['id_attachment'];
+        }
+
+        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'product_attachment` pa
 					LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pa.`id_product` = pl.`id_product`' . Shop::addSqlRestrictionOnLang('pl') . ')
 					WHERE `id_attachment` IN (' . implode(',', array_map('intval', $idsAttachments)) . ')
 					AND pl.`id_lang` = ' . (int) $idLang;
-            $tmp = Db::getInstance()->executeS($sql);
-            $productAttachments = [];
-            foreach ($tmp as $t) {
-                $productAttachments[$t['id_attachment']][] = $t['name'];
-            }
-
-            return $productAttachments;
-        } else {
-            return false;
+        $tmp = Db::getInstance()->executeS($sql);
+        $productAttachments = array();
+        foreach ($tmp as $t) {
+            $productAttachments[$t['id_attachment']][] = $t['name'];
         }
+
+        return $productAttachments;
     }
 
     /**
@@ -331,13 +331,19 @@ class AttachmentCore extends ObjectModel
      * Set products ids of current attachment for association.
      *
      * @param $products ids
+     *
+     * @return bool
      */
     public function setWsProducts($products)
     {
-        $this->deleteAttachments(true);
-        foreach ($products as $product) {
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment` (`id_product`, `id_attachment`) VALUES (' . (int) $product['id'] . ', ' . (int) $this->id . ')');
-            Product::updateCacheAttachment((int) $product['id']);
+        try {
+            $this->deleteAttachments(true);
+            foreach ($products as $product) {
+                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment` (`id_product`, `id_attachment`) VALUES (' . (int) $product['id'] . ', ' . (int) $this->id . ')');
+                Product::updateCacheAttachment((int) $product['id']);
+            }
+        } catch (Exception $e) {
+            return false;
         }
 
         return true;
