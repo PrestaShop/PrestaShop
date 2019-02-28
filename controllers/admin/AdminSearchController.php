@@ -42,14 +42,15 @@ class AdminSearchControllerCore extends AdminController
     public function checkToken()
     {
         // Specific check for the ajax request 'searchCron'
-        if (Tools::isSubmit('action') && 'searchCron' === Tools::getValue('action')) {
-            if (substr(
+        if (Tools::isSubmit('action')
+            && 'searchCron' === Tools::getValue('action')
+            && substr(
                 _COOKIE_KEY_,
                 static::TOKEN_CHECK_START_POS,
                 static::TOKEN_CHECK_LENGTH
-            ) === Tools::getValue('token')) {
-                return true;
-            }
+            ) === Tools::getValue('token')
+        ) {
+            return true;
         }
 
         return parent::checkToken();

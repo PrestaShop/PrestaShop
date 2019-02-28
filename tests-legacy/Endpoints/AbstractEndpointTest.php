@@ -39,7 +39,6 @@ abstract class AbstractEndpointTest extends TestCase
 
     protected function setUp()
     {
-        define('_PS_IN_TEST_', true);
         define('_PS_ROOT_DIR_', __DIR__ . '/../..');
         define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin-dev');
         //define('_DB_PREFIX_', 'ps_');
