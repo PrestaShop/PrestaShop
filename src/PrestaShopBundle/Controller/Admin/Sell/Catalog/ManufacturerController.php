@@ -28,13 +28,14 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
@@ -142,7 +143,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -169,7 +170,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -197,7 +198,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -225,7 +226,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -248,13 +249,13 @@ class ManufacturerController extends FrameworkBundleAdminController
             /** @var EditableManufacturer $editableManufacturer */
             $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
             $this->getCommandBus()->handle(
-                new ToggleManufacturerStatusCommand((int) $manufacturerId, !$editableManufacturer->isActive())
+                new ToggleManufacturerStatusCommand((int) $manufacturerId, !$editableManufacturer->isEnabled())
             );
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -297,7 +298,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (DomainException $e) {
+        } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -330,7 +331,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (DomainException $e) {
+        } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
