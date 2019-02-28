@@ -87,6 +87,10 @@ final class ManufacturerGridDataFactory implements GridDataFactoryInterface
             $manufacturers[$i]['logo'] = $this->manufacturerLogoThumbnailProvider->getPath(
                 $manufacturer['id_manufacturer']
             );
+
+            if (null === $manufacturers[$i]['addresses_count']) {
+                $manufacturers[$i]['addresses_count'] = '--';
+            }
         }
 
         return $manufacturers;
