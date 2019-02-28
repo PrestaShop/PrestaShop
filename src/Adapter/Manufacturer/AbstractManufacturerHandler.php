@@ -48,7 +48,7 @@ abstract class AbstractManufacturerHandler extends AbstractObjectModelHandler
      *
      * @return Manufacturer
      *
-     * @throws ManufacturerNotFoundException
+     * @throws ManufacturerException
      */
     protected function getManufacturer(ManufacturerId $manufacturerId)
     {
@@ -57,6 +57,7 @@ abstract class AbstractManufacturerHandler extends AbstractObjectModelHandler
         } catch (PrestaShopException $e) {
             throw new ManufacturerException('Failed to create new manufacturer', 0, $e);
         }
+
         if ($manufacturer->id !== $manufacturerId->getValue()) {
             throw new ManufacturerNotFoundException(
                 sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())

@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDe
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -145,7 +144,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -181,7 +180,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-        } catch (DomainException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof ManufacturerNotFoundException) {
