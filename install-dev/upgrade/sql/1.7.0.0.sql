@@ -242,4 +242,5 @@ INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`)
         `value`
     FROM `PREFIX_configuration` c WHERE `name` = 'PS_DELIVERY_PREFIX'
     AND NOT EXISTS (SELECT 1 FROM `PREFIX_configuration_lang` WHERE `id_configuration` = c.`id_configuration`)
-)
+);
+
