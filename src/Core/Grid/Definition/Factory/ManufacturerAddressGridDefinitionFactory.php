@@ -50,26 +50,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectActionUrl;
-
-    /**
-     * @param string $resetActionUrl
-     * @param string $redirectActionUrl
-     */
-    public function __construct($resetActionUrl, $redirectActionUrl)
-    {
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectActionUrl = $redirectActionUrl;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getId()
@@ -240,10 +220,12 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectActionUrl,
+                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route_params' => [
+                        'controller' => 'manufacturer',
+                        'action' => 'index',
                     ],
+                    'redirect_route' => 'admin_manufacturers_index',
                 ])
             )
         ;
