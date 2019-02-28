@@ -90,8 +90,10 @@ export default class CreateOrderPage {
         orders: response.orders
       };
 
+      console.log('Cart summary with checkout history', response);
+
       this._renderCheckoutHistory(checkoutHistory);
-      //this._renderCheckoutHistory();
+      this._renderCartSummary(response);
     });
   }
 
@@ -113,6 +115,7 @@ export default class CreateOrderPage {
    * Renders customer carts
    *
    * @param {Object} carts
+   *
    * @private
    */
   _renderCustomerCarts(carts) {
@@ -143,16 +146,20 @@ export default class CreateOrderPage {
    * Renders cart summary on the page
    *
    * @param {Object} cartSummary
+   *
    * @private
    */
   _renderCartSummary(cartSummary) {
+    this._renderAddressesSelect(cartSummary);
 
+    this._showCartSummary();
   }
 
   /**
    * Renders customer orders
    *
    * @param {Object} orders
+   *
    * @private
    */
   _renderCustomerOrders(orders) {
@@ -178,6 +185,68 @@ export default class CreateOrderPage {
       $template.find('.js-order-status').text(order.order_state);
 
       $ordersTable.find('tbody').append($template);
+    }
+  }
+
+  /**
+   * Shows Cart, Vouchers, Addresses blocks
+   *
+   * @private
+   */
+  _showCartSummary() {
+    $(createOrderPageMap.cartBlock).removeClass('d-none');
+    $(createOrderPageMap.vouchersBlock).removeClass('d-none');
+    $(createOrderPageMap.addressesBlock).removeClass('d-none');
+  }
+
+  /**
+   * Renders Delivery & Invoice addresses select
+   *
+   * @param {Object} cartSummary
+   *
+   * @private
+   */
+  _renderAddressesSelect(cartSummary) {
+    let deliveryAddressDetailsContent = '';
+    let invoiceAddressDetailsContent = '';
+
+    const $deliveryAddressSelect = $(createOrderPageMap.deliveryAddressSelect);
+    const $invoiceAddressSelect = $(createOrderPageMap.invoiceAddressSelect);
+
+    for (let key in Object.keys(cartSummary.addresses)) {
+      if (!cartSummary.addresses.hasOwnProperty(key)) {
+        continue;
+      }
+
+      let address = cartSummary.addresses[key];
+
+      let deliveryAddressOption = {
+        value: address.id_address,
+        text: address.alias
+      };
+
+      let invoiceAddressOption = {
+        value: address.id_address,
+        text: address.alias
+      };
+
+      if (cartSummary.cart.id_address_delivery === address.id_address) {
+        deliveryAddressDetailsContent = address.formated_address;
+        deliveryAddressOption.selected = 'selected';
+      }
+
+      if (cartSummary.cart.id_address_invoice === address.id_address) {
+        invoiceAddressDetailsContent = address.formated_address;
+        invoiceAddressOption.selected = 'selected';
+      }
+
+      $deliveryAddressSelect.append($('<option>', deliveryAddressOption));
+      $invoiceAddressSelect.append($('<option>', invoiceAddressOption));
+    }
+
+    if (deliveryAddressDetailsContent) {
+      $(createOrderPageMap.deliveryAddressDetails).html(deliveryAddressDetailsContent);
+      $(createOrderPageMap.invoiceAddressDetails).html(invoiceAddressDetailsContent);
     }
   }
 }

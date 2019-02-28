@@ -29,7 +29,7 @@
 export default {
   orderCreationContainer: '#orderCreationContainer',
 
-  // selectors related to customer searcher component
+  // selectors related to customer block
   customerSearchInput: '#customerSearchInput',
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customerSearchResultTemplate',
@@ -49,4 +49,20 @@ export default {
   customerCheckoutHistory: '#customerCheckoutHistory',
   customerOrdersTable: '#customerOrdersTable',
   customerOrdersTableRowTemplate: '#customerOrdersTableRowTemplate',
+
+  // selectors related to cart block
+  cartBlock: '#cartBlock',
+
+  // selectors related to vouchers block
+  vouchersBlock: '#vouchersBlock',
+
+  // selectors related to addresses block
+  addressesBlock: '#addressesBlock',
+  deliveryAddressDetails: '#deliveryAddressDetails',
+  invoiceAddressDetails: '#invoiceAddressDetails',
+  deliveryAddressSelect: '#deliveryAddressSelect',
+  invoiceAddressSelect: '#invoiceAddressSelect',
+
+  // selectors related to summary block
+  summaryBlock: '#summaryBlock',
 };
