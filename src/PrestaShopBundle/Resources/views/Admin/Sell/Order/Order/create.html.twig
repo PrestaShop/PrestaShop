@@ -30,6 +30,7 @@
 {% block content %}
   <div id="orderCreationContainer"
        data-cart-summary-url="{{ getAdminLink('AdminCarts', true, {'action': 'searchCarts', 'ajax': 1}) }}"
+       data-cart-addresses-url="{{ getAdminLink('AdminCarts', true, {'action': 'updateAddresses', 'ajax': 1}) }}"
   >
     <div class="row">
       <div class="col">

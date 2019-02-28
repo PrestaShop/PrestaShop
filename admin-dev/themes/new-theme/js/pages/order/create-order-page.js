@@ -70,6 +70,10 @@ export default class CreateOrderPage {
     this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => {
       this.customerSearcher.onCustomerChange();
     });
+
+    this.$container.on('change', createOrderPageMap.addressSelect, () => {
+      this._changeCartAddresses();
+    });
   }
 
   /**
@@ -85,12 +89,12 @@ export default class CreateOrderPage {
       },
       dataType: 'json'
     }).then((response) => {
+      this.data.cart_id = response.cart.id_cart;
+
       const checkoutHistory = {
         carts: response.carts,
         orders: response.orders
       };
-
-      console.log('Cart summary with checkout history', response);
 
       this._renderCheckoutHistory(checkoutHistory);
       this._renderCartSummary(response);
@@ -168,8 +172,6 @@ export default class CreateOrderPage {
 
     $ordersTable.find('tbody').empty();
 
-    console.log(orders);
-
     for (let key in Object.keys(orders)) {
       if (!orders.hasOwnProperty(key)) {
         continue;
@@ -213,6 +215,9 @@ export default class CreateOrderPage {
     const $deliveryAddressSelect = $(createOrderPageMap.deliveryAddressSelect);
     const $invoiceAddressSelect = $(createOrderPageMap.invoiceAddressSelect);
 
+    $deliveryAddressSelect.empty();
+    $invoiceAddressSelect.empty();
+
     for (let key in Object.keys(cartSummary.addresses)) {
       if (!cartSummary.addresses.hasOwnProperty(key)) {
         continue;
@@ -230,12 +235,12 @@ export default class CreateOrderPage {
         text: address.alias
       };
 
-      if (cartSummary.cart.id_address_delivery === address.id_address) {
+      if (parseInt(cartSummary.cart.id_address_delivery) === parseInt(address.id_address)) {
         deliveryAddressDetailsContent = address.formated_address;
         deliveryAddressOption.selected = 'selected';
       }
 
-      if (cartSummary.cart.id_address_invoice === address.id_address) {
+      if (parseInt(cartSummary.cart.id_address_invoice) === parseInt(address.id_address)) {
         invoiceAddressDetailsContent = address.formated_address;
         invoiceAddressOption.selected = 'selected';
       }
@@ -248,5 +253,41 @@ export default class CreateOrderPage {
       $(createOrderPageMap.deliveryAddressDetails).html(deliveryAddressDetailsContent);
       $(createOrderPageMap.invoiceAddressDetails).html(invoiceAddressDetailsContent);
     }
+  }
+
+  /**
+   * Changes cart addresses
+   *
+   * @private
+   */
+  _changeCartAddresses() {
+    $.ajax(this.$container.data('cart-addresses-url'), {
+      data: {
+        'id_customer': this.data.customer_id,
+        'id_cart': this.data.cart_id,
+        'id_address_delivery': $(createOrderPageMap.deliveryAddressSelect).val(),
+        'id_address_invoice': $(createOrderPageMap.invoiceAddressSelect).val(),
+      },
+      dataType: 'json'
+    }).then(response => {
+      this._persistCartSummaryData(response);
+
+      this._renderAddressesSelect(response);
+    });
+  }
+
+  /**
+   * Stores cart summary into "session" like variable
+   *
+   * @param {Object} cartSummary
+   *
+   * @private
+   */
+  _persistCartSummaryData(cartSummary) {
+    console.log(cartSummary);
+
+    this.data.cart_id = cartSummary.cart.id;
+    this.data.delivery_address_id = cartSummary.cart.id_address_delivery;
+    this.data.invoice_address_id = cartSummary.cart.id_address_invoice;
   }
 }

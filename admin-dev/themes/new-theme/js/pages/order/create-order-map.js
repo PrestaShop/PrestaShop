@@ -62,6 +62,7 @@ export default {
   invoiceAddressDetails: '#invoiceAddressDetails',
   deliveryAddressSelect: '#deliveryAddressSelect',
   invoiceAddressSelect: '#invoiceAddressSelect',
+  addressSelect: '.js-address-select',
 
   // selectors related to summary block
   summaryBlock: '#summaryBlock',
