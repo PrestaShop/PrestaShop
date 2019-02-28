@@ -40,6 +40,7 @@ use Search;
 use Shop;
 use ShopGroup;
 use Validate;
+use Language;
 
 /**
  * This class will update/insert/delete data from DB / ORM about Product, for both Front and Admin interfaces.
@@ -171,9 +172,15 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->duplicateProduct() received an unknown ID.', 5005);
         }
 
-        if ($product->validateFields(false, true) !== true
-            || $product->validateFieldsLang(false, true) !== true) {
-            throw new UpdateProductException('Cannot duplicate many requested products', 5004);
+        foreach (Language::getIDs(false) as $id_lang) {
+            if ($product->validateField('description_short', $product->description_short[$id_lang], $id_lang) !== true) {
+                throw new UpdateProductException(
+                    sprintf(
+                        'Cannot duplicate this product because the "Summary" field for the language "%s" is too long',
+                        Language::getIsoById($id_lang)
+                    )
+                );                                        
+            }
         }
 
         $id_product_old = $product->id;
