@@ -40,7 +40,9 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
     {
         parent::setUp();
         $this->initContainerInstance();
-        define('_PS_TAB_MODULE_LIST_URL_', '');
+        if (!defined('_PS_TAB_MODULE_LIST_URL_')) {
+            define('_PS_TAB_MODULE_LIST_URL_', '');
+        }
         Context::getContext()->employee = new Employee(1);
     }
 
