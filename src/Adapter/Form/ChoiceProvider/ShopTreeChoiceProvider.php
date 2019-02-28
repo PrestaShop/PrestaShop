@@ -58,6 +58,10 @@ final class ShopTreeChoiceProvider implements FormChoiceProviderInterface
             foreach ($shops as $shopId) {
                 $shop = Shop::getShop($shopId['id_shop']);
 
+                if (!$shop['id_shop']) {
+                    continue;
+                }
+
                 $shopGroupChoices['children'][] = [
                     'name' => $shop['name'],
                     'id_shop' => $shop['id_shop'],
