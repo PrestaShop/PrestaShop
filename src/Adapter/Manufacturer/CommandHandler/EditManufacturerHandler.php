@@ -46,13 +46,12 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
     public function handle(EditManufacturerCommand $command)
     {
         $manufacturerId = $command->getManufacturerId();
-        $manufacturer = new Manufacturer($manufacturerId->getValue());
-        $this->assertManufacturerWasFound($manufacturerId, $manufacturer);
+        $manufacturer = $this->getManufacturer($manufacturerId);
         $this->populateManufacturerWithData($manufacturer, $command);
 
         try {
-            if (null !== $command->getShopAssociation()) {
-                $this->associateWithShops($manufacturer, $command->getShopAssociation());
+            if (null !== $command->getAssociatedShops()) {
+                $this->associateWithShops($manufacturer, $command->getAssociatedShops());
             }
 
             if (!$manufacturer->update()) {
