@@ -321,8 +321,7 @@ class CartCore extends ObjectModel
 
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
         SET `id_address_delivery` = ' . (int) $id_address_new . '
-        WHERE  `id_cart` = ' . (int) $this->id . '
-            AND `id_address_delivery` = ' . (int) $id_address;
+        WHERE  `id_cart` = ' . (int) $this->id;
         Db::getInstance()->execute($sql);
 
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
