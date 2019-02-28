@@ -92,8 +92,8 @@ export default class CreateOrderPage {
       this.data.cart_id = response.cart.id_cart;
 
       const checkoutHistory = {
-        carts: response.carts,
-        orders: response.orders
+        carts: typeof response.carts !== 'undefined' ? response.carts : [],
+        orders: typeof response.orders !== 'undefined' ? response.orders : [],
       };
 
       this._renderCheckoutHistory(checkoutHistory);
@@ -127,6 +127,10 @@ export default class CreateOrderPage {
     const $cartsTableRowTemplate = $($(createOrderPageMap.customerCartsTableRowTemplate).html());
 
     $cartsTable.find('tbody').empty();
+
+    if (!carts) {
+      return;
+    }
 
     for (let key in carts) {
       if (!carts.hasOwnProperty(key)) {
@@ -172,6 +176,10 @@ export default class CreateOrderPage {
 
     $ordersTable.find('tbody').empty();
 
+    if (!orders) {
+      return;
+    }
+
     for (let key in Object.keys(orders)) {
       if (!orders.hasOwnProperty(key)) {
         continue;
@@ -212,11 +220,28 @@ export default class CreateOrderPage {
     let deliveryAddressDetailsContent = '';
     let invoiceAddressDetailsContent = '';
 
+    const $deliveryAddressDetails = $(createOrderPageMap.deliveryAddressDetails);
+    const $invoiceAddressDetails = $(createOrderPageMap.invoiceAddressDetails);
     const $deliveryAddressSelect = $(createOrderPageMap.deliveryAddressSelect);
     const $invoiceAddressSelect = $(createOrderPageMap.invoiceAddressSelect);
 
+    const $addressesContent = $(createOrderPageMap.addressesContent);
+    const $addressesWarningContent = $(createOrderPageMap.addressesWarning);
+
+    $deliveryAddressDetails.empty();
+    $invoiceAddressDetails.empty();
     $deliveryAddressSelect.empty();
     $invoiceAddressSelect.empty();
+
+    if (0 === cartSummary.addresses.length) {
+      $addressesWarningContent.removeClass('d-none');
+      $addressesContent.addClass('d-none');
+
+      return;
+    }
+
+    $addressesContent.removeClass('d-none');
+    $addressesWarningContent.addClass('d-none');
 
     for (let key in Object.keys(cartSummary.addresses)) {
       if (!cartSummary.addresses.hasOwnProperty(key)) {
@@ -251,6 +276,9 @@ export default class CreateOrderPage {
 
     if (deliveryAddressDetailsContent) {
       $(createOrderPageMap.deliveryAddressDetails).html(deliveryAddressDetailsContent);
+    }
+
+    if (invoiceAddressDetailsContent) {
       $(createOrderPageMap.invoiceAddressDetails).html(invoiceAddressDetailsContent);
     }
   }
@@ -284,8 +312,6 @@ export default class CreateOrderPage {
    * @private
    */
   _persistCartSummaryData(cartSummary) {
-    console.log(cartSummary);
-
     this.data.cart_id = cartSummary.cart.id;
     this.data.delivery_address_id = cartSummary.cart.id_address_delivery;
     this.data.invoice_address_id = cartSummary.cart.id_address_invoice;

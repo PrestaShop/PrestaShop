@@ -28,7 +28,16 @@
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
   </h3>
   <div class="card-body">
-    <div class="row">
+    <div class="row" id="addressesWarning">
+      <div class="col">
+        <div class="alert alert-warning">
+          <div class="alert-text">
+            {{ 'You must add at least one address to process the order.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="addressesContent">
       <div class="col">
         <span>{{ 'Delivery'|trans({}, 'Admin.Global') }}</span>
         <select class="form-control js-address-select" id="deliveryAddressSelect"></select>
