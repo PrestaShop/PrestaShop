@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -24,47 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Kpi\Row;
+namespace PrestaShop\PrestaShop\Core\Kpi\Exception;
 
-use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Class KpiRowFactory builds a KPI row.
- *
- * @deprecated since 1.7.6, will be removed in the next major version, use HookableKpiRowFactory instead.
+ * Will be thrown if Kpi factory arguments are invalid.
  */
-final class KpiRowFactory implements KpiRowFactoryInterface
+final class InvalidArgumentException extends CoreException
 {
     /**
-     * @var KpiInterface[]
+     * @param mixed $kpi
+     *
+     * @return InvalidArgumentException
      */
-    private $kpis;
-
-    /**
-     * @param KpiInterface ...$kpis
-     */
-    public function __construct(KpiInterface ...$kpis)
+    public static function invalidKpi($kpi)
     {
-        @trigger_error(
-            'Using `KpiRowFactory` class is deprecated and will be removed in the next major,' .
-            'use HookableKpiRowFactory instead',
-            E_USER_DEPRECATED
+        $exceptionMessage = sprintf(
+            'Kpi must be an instance of KpiInterface, got `%s`.',
+            gettype($kpi)
         );
 
-        $this->kpis = $kpis;
+        return new self($exceptionMessage);
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $identifier
+     *
+     * @return InvalidArgumentException
      */
-    public function build()
+    public static function invalidIdentifier($identifier)
     {
-        $kpiRow = new KpiRow();
+        $exceptionMessage = sprintf(
+            'Identifier must be a string, got `%s`.',
+            gettype($identifier)
+        );
 
-        foreach ($this->kpis as $kpi) {
-            $kpiRow->addKpi($kpi);
-        }
-
-        return $kpiRow;
+        return new self($exceptionMessage);
     }
 }
