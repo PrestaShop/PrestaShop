@@ -179,7 +179,7 @@ class AdminProductDataUpdater implements ProductInterface
                         'Cannot duplicate this product because the "Summary" field for the language "%s" is too long',
                         Language::getIsoById($id_lang)
                     )
-                );                                        
+                );
             }
         }
 
