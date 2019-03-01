@@ -42,6 +42,7 @@ import TextWithLengthCounter from "../../components/form/text-with-length-counte
 import NameToLinkRewriteCopier from "./name-to-link-rewrite-copier";
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
+import TaggableField from "../../components/taggable-field";
 
 const $ = window.$;
 
@@ -66,6 +67,13 @@ $(() => {
   new TextWithLengthCounter();
   new NameToLinkRewriteCopier();
   new FormSubmitButton();
+
+  new TaggableField({
+    tokenFieldSelector: 'input.js-taggable-field',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
 
   new ChoiceTree('#category_id_parent');
   new ChoiceTree('#category_shop_association').enableAutoCheckChildren();
