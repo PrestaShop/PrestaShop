@@ -59,7 +59,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Given there is a product with name :productName and price :price and quantity :productQuantity
+     * @Given /^there is a product with name (.+) and price ([\d\.]+) and quantity (\d+)$/
      */
     public function thereIsAProductWithNameAndPriceAndQuantity($productName, $price, $productQuantity)
     {
@@ -67,10 +67,11 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @When I add product named :productName in my cart with quantity :productQuantity
+     * @When /^I add product named (.+) in my cart with quantity (\d+)$/
      */
     public function iAddProductNamedInMyCartWithQuantity($productName, $productQuantity)
     {
+        $this->checkProductWithNameExists($productName);
         $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id);
         if (!$result) {
             throw new \RuntimeException(
@@ -83,13 +84,11 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^I change quantity of product named "(.*)" in my cart with quantity (\d+) and operator "(up|down|nothing)", result of change is (OK|KO)$/
+     * @When /^I change quantity of product named (.+) in my cart with quantity (\d+) and operator (up|down|nothing), result of change is (OK|KO)$/
      */
     public function iChangeProductQuantityInMyCart($productName, $productQuantity, $operator, $expectedStr)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
         $expected = $expectedStr == 'OK';
         $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id, null, false, $operator);
         if ($expected != $result) {
@@ -104,7 +103,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Quantity of product named :productName in my cart should be :productQuantity
+     * @Then /^Quantity of product named (.+) in my cart should be (\d+)$/
      */
     public function quantityOfProductNamedInMyCartShouldBe($productName, $productQuantity)
     {
@@ -121,13 +120,11 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Remaining quantity of product named :productName should be :productQuantity
+     * @Then /^Remaining quantity of product named (.+) should be ([\-\d]+)$/
      */
     public function remainingQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
         $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), null);
         if ($productQuantity != $nbProduct) {
             throw new \RuntimeException(
@@ -141,7 +138,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then I am not able to add product named :productName in my cart with quantity :productQuantity
+     * @Then /^I am not able to add product named (.+) in my cart with quantity (\d+)$/
      */
     public function iAmNotAbleToAddProductNamedInMyCartWithQuantity($productName, $productQuantity)
     {
@@ -179,7 +176,7 @@ class ProductFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function afterScenario_cleanProducts()
+    public function cleanProducts()
     {
         foreach ($this->products as $product) {
             $product->delete();
@@ -188,24 +185,43 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Given product with name :productName is out of stock
+     * @Given /^product with name (.+) is out of stock$/
+     * @param string $productName
      */
     public function productWithNameIsOutOfStock($productName)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->quantity = 0;
+        $this->products[$productName]->out_of_stock = 0;
+        $this->products[$productName]->save();
+        StockAvailable::setQuantity($this->products[$productName]->id, 0, 0);
+        StockAvailable::setProductOutOfStock((int)$this->products[$productName]->id, 0);
+    }
+
+    /**
+     * @param $productName
+     */
+    public function checkProductWithNameExists($productName)
     {
         if (!isset($this->products[$productName])) {
             throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
         }
-        $this->products[$productName]->quantity     = 0;
-        $this->products[$productName]->out_of_stock = 0;
+    }
+
+    /**
+     * @When /^product with name (.+) has following tax rule group id: (\d+)$/
+     */
+    public function setProductTaxRuleGroupId($productName, $taxRuleGroupId)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->id_tax_rules_group = $taxRuleGroupId;
         $this->products[$productName]->save();
-        StockAvailable::setQuantity($this->products[$productName]->id, 0, 0);
-        StockAvailable::setProductOutOfStock((int) $this->products[$productName]->id, 0);
     }
 
     /* COMBINATION */
 
     /**
-     * @Given product with name :productName has a combination with name :combinationName and quantity :combinationQuantity
+     * @Given /^product with name (.+) has a combination with name (.+) and quantity (\d+)$/
      */
     public function productWithNameHasACombinationWithNameAndQuantity($productName, $combinationName, $combinationQuantity)
     {
@@ -222,16 +238,12 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Remaining quantity of combination named :combinationName for product named :productName should be :combinationQuantity
+     * @Then /^Remaining quantity of combination named (.+) for product named (.+) should be ([\-\d]+)$/
      */
     public function remainingQuantityOfCombinationNamedForProductNamedShouldBe($combinationName, $productName, $combinationQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
-        if (!isset($this->combinations[$productName][$combinationName])) {
-            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
         $nbProduct = Product::getQuantity($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id, null, $this->getCurrentCart(), null);
         if ($combinationQuantity != $nbProduct) {
             throw new \RuntimeException(
@@ -245,16 +257,12 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @When I add combination named :combinationName of product named :productName in my cart with quantity :combinationQuantity
+     * @When /^I add combination named (.+) of product named (.+) in my cart with quantity (\d+)$/
      */
     public function iAddCombinationNamedOfProductNamedInMyCartWithQuantity($combinationName, $productName, $combinationQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
-        if (!isset($this->combinations[$productName][$combinationName])) {
-            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
         $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
         if (!$result) {
             throw new \RuntimeException(
@@ -267,16 +275,12 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then I am not able to add combination named :combinationName of product named :productName in my cart with quantity :combinationQuantity
+     * @Then /^I am not able to add combination named (.+) of product named (.+) in my cart with quantity (\d+)$/
      */
     public function iAmNotAbleToAddPCombinationNamedOfroductNamedInMyCartWithQuantity($combinationName, $productName, $combinationQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
-        if (!isset($this->combinations[$productName][$combinationName])) {
-            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
         $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
         if ($result) {
             throw new \RuntimeException(
@@ -289,16 +293,12 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Quantity of combination named :combinationName of product named :productName in my cart should be :combinationQuantity
+     * @Then /^Quantity of combination named (.+) of product named (.+) in my cart should be (\d+)$/
      */
     public function quantityOfCombinationNamedOfProductNamedInMyCartShouldBe($combinationName, $productName, $combinationQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
-        if (!isset($this->combinations[$productName][$combinationName])) {
-            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
         $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id, null);
         if ($combinationQuantity != $nbProduct['quantity']) {
             throw new \RuntimeException(
@@ -316,7 +316,7 @@ class ProductFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function afterScenario_cleanCombinations()
+    public function cleanCombinations()
     {
         foreach ($this->combinations as $productName => $combinations) {
             foreach ($combinations as $combinationName => $combination) {
@@ -326,16 +326,25 @@ class ProductFeatureContext implements BehatContext
         $this->combinations = [];
     }
 
+    /**
+     * @param $productName
+     * @param $combinationName
+     */
+    public function checkCombinationWithNameExists($productName, $combinationName)
+    {
+        if (!isset($this->combinations[$productName][$combinationName])) {
+            throw new \Exception('Combination with name "' . $combinationName . '" for product with name "' . $productName . '" was not added in fixtures');
+        }
+    }
+
     /* CUSTOMIZATION */
 
     /**
-     * @Given product with name :productName has a customization field with name :customizationFieldName
+     * @Given /^product with name (.+) has a customization field with name (.+)$/
      */
     public function productWithNameHasACustomizationWithName($productName, $customizationFieldName)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
         $this->products[$productName]->customizable = 1;
         $this->products[$productName]->save();
 
@@ -351,16 +360,12 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Remaining quantity of customization named :customizationFieldName for product named :productName should be :customizationQuantity
+     * @Then /^Remaining quantity of customization named (.+) for product named (.+) should be ([\-\d]+)$/
      */
     public function remainingQuantityOfCustomizationNamedForProductNamedShouldBe($customizationFieldName, $productName, $customizationQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
-        if (!isset($this->customizationFields[$productName][$customizationFieldName])) {
-            throw new \Exception('Customization field with name "' . $customizationFieldName . '" for product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
+        $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
         $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), $this->customizationsInCart[$productName]->id);
         if ($customizationQuantity != $nbProduct) {
             throw new \RuntimeException(
@@ -374,13 +379,11 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @When I add customization named :customizationFieldName of product named :productName in my cart with quantity :customizationFieldQuantity
+     * @When /^I add customization named (.+) of product named (.+) in my cart with quantity (\d+)$/
      */
     public function iAddCustomizationNamedOfProductNamedInMyCartWithQuantity($customizationFieldName, $productName, $customizationFieldQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
         $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
         $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->products[$productName]->id, null, $this->customizationsInCart[$productName]->id);
         if (!$result) {
@@ -394,16 +397,12 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then I am not able to add customization named :customizationFieldName of product named :productName in my cart with quantity :customizationFieldQuantity
+     * @Then /^I am not able to add customization named (.+) of product named (.+) in my cart with quantity (\d+)$/
      */
     public function iAmNotAbleToAddPCustomizationNamedOfroductNamedInMyCartWithQuantity($customizationFieldName, $productName, $customizationFieldQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
-        if (!isset($this->customizationFields[$productName][$customizationFieldName])) {
-            throw new \Exception('Customization field with name "' . $customizationFieldName . '" for product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
+        $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
         $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
         $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->products[$productName]->id, null, $this->customizationFields[$productName][$customizationFieldName]->id);
         if ($result) {
@@ -417,16 +416,12 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Quantity of customization named :customizationFieldName of product named :productName in my cart should be :customizationFieldQuantity
+     * @Then /^Quantity of customization named (.+) of product named (.+) in my cart should be (\d+)$/
      */
     public function quantityOfCustomizationNamedOfProductNamedInMyCartShouldBe($customizationFieldName, $productName, $customizationFieldQuantity)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
-        if (!isset($this->customizationsInCart[$productName])) {
-            throw new \Exception('Customization for product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
+        $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
         $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, $this->customizationsInCart[$productName]->id);
         if ($customizationFieldQuantity != $nbProduct['quantity']) {
             throw new \RuntimeException(
@@ -464,7 +459,7 @@ class ProductFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function afterScenario_cleanCustomizations()
+    public function cleanCustomizations()
     {
         foreach ($this->customizationFields as $productName => $customizationFields) {
             foreach ($customizationFields as $customizationFieldName => $customizationField) {
@@ -479,19 +474,37 @@ class ProductFeatureContext implements BehatContext
         $this->customizationsInCart = [];
     }
 
+    /**
+     * @param $productName
+     * @param $customizationFieldName
+     */
+    public function checkCustomizationWithNameExists($productName, $customizationFieldName)
+    {
+        if (!isset($this->customizationFields[$productName][$customizationFieldName])) {
+            throw new \Exception('Customization field with name "' . $customizationFieldName . '" for product with name "' . $productName . '" was not added in fixtures');
+        }
+    }
+
+    /**
+     * @param $productName
+     * @param $customizationFieldName
+     */
+    public function checkCustomizationIsInCart($productName)
+    {
+        if (!isset($this->customizationsInCart[$productName])) {
+            throw new \Exception('Customization for product with name "' . $productName . '" was not added in fixtures');
+        }
+    }
+
     /* PACK */
 
     /**
-     * @Given product with name :packName is a pack containing quantity :containedQuantity of product named :containedProductName
+     * @Given /^product with name (.+) is a pack containing quantity (\d+) of product named (.+)$/
      */
     public function productWithNameIsAPackContainingQuantityOfProductNamed($packName, $containedQuantity, $containedProductName)
     {
-        if (!isset($this->products[$packName])) {
-            throw new \Exception('Product with name "' . $packName . '" was not added in fixtures');
-        }
-        if (!isset($this->products[$containedProductName])) {
-            throw new \Exception('Product with name "' . $containedProductName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($packName);
+        $this->checkProductWithNameExists($containedProductName);
         Pack::addItem(
             $this->products[$packName]->id,
             $this->products[$containedProductName]->id,
@@ -500,13 +513,11 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^pack with name "([^"]*)" (is in stock|is not in stock) for quantity (\d+)$/
+     * @Then /^pack with name (.+) (is in stock|is not in stock) for quantity (\d+)$/
      */
     public function packWithNameIsInStockForQuantity($packName, $inStock, $packQuantity)
     {
-        if (!isset($this->products[$packName])) {
-            throw new \Exception('Product with name "' . $packName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($packName);
         $result = Pack::isInStock($this->products[$packName]->id, $packQuantity);
         switch ($inStock) {
             case 'is in stock':
@@ -531,13 +542,11 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then product :productName is considered as a pack
+     * @Then /^product (.+) is considered as a pack$/
      */
     public function productIsConsideredAsAPack($productName)
     {
-        if (!isset($this->products[$productName])) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->checkProductWithNameExists($productName);
         if (!Pack::isPack($this->products[$productName]->id)) {
             throw new \RuntimeException(
                 sprintf(
@@ -549,7 +558,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Deep quantity of product named :productName in my cart should be :productQuantity
+     * @Then /^Deep quantity of product named (.+) in my cart should be (\d+)$/
      */
     public function deepQuantityOfProductNamedInMyCartShouldBe($productName, $productQuantity)
     {
@@ -564,5 +573,4 @@ class ProductFeatureContext implements BehatContext
             );
         }
     }
-
 }

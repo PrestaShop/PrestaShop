@@ -29,11 +29,7 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 use Configuration;
 
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
- *
- * products are inserted as fixtures
- * products are inserted in cart from data providers
- * cart rules are inserted from data providers
+ * behat equivalent : Scenarii/Cart/Calculation/Carrier/cart_rule_carrier_specific.feature
  */
 class CartRulesCarrierSpecificTest extends AbstractCarrierTest
 {

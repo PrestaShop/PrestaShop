@@ -27,11 +27,7 @@
 namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
- *
- * products are inserted as fixtures
- * products are inserted in cart from data providers
- * cart rules are inserted from data providers
+ * behat equivalent : Scenarii/Cart/Calculation/Carrier/change_carrier_cart_rule.feature
  */
 class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 {

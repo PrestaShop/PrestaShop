@@ -28,12 +28,9 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\CartRules;
 
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
+
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
- *
- * products are inserted as fixtures
- * products are inserted in cart from data providers
- * cart rules are inserted from data providers
+ * behat equivalent : Scenarii/Cart/Calculation/CartRule/gift.feature
  */
 class CartRulesGiftTest extends AbstractCartCalculationTest
 {
@@ -74,7 +71,7 @@ class CartRulesGiftTest extends AbstractCartCalculationTest
                 * 3 * static::PRODUCT_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [13],
-                'oductCount' => 3,
+                'expectedProductCount' => 3,
                 'knownToFailOnV1'      => true,
             ],
             '2 products in cart, one cart rule offering a gift (in stock) and a global 10% discount'                                    => [

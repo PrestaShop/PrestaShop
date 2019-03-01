@@ -29,6 +29,9 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\Taxes;
 use Configuration;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
+/**
+ * behat equivalent : Scenarii/Cart/Calculation/Tax/tax.feature
+ */
 class CartTaxesTest extends AbstractCartCalculationTest
 {
     const TAX_RULE_GROUPID_1 = 32;

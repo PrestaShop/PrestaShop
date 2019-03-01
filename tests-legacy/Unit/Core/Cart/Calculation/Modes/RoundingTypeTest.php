@@ -31,6 +31,9 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Order;
 use Tools;
 
+/**
+ * behat equivalent : Scenarii/Cart/Calculation/RoundingType/*.feature
+ */
 class RoundingTypeTest extends AbstractCartCalculationTest
 {
     /**
