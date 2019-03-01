@@ -164,14 +164,11 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: "index.php",
+            url: $(this).data('toggle-url'),
+            type: 'post',
             cache: false,
             data: {
-                token: window.employee_token,
-                ajax: 1,
-                action: 'toggleMenu',
-                tab: 'AdminEmployees',
-                collapse: Number($('body').hasClass('page-sidebar-closed'))
+                shouldCollapse: Number($('body').hasClass('page-sidebar-closed'))
             },
         });
     });
