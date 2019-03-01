@@ -784,6 +784,14 @@ class LinkCore
                 $routeName = 'admin_international_translations_show_settings';
 
                 break;
+
+            case 'AdminEmployees':
+                // Linking legacy toggle menu action to migrated action.
+                if (isset($params['action']) && 'toggleMenu' === $params['action']) {
+                    $routeName = 'admin_employees_toggle_navigation';
+                }
+
+                break;
         }
 
         if (!empty($routeName) && null !== $sfRouter) {
