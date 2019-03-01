@@ -333,6 +333,21 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Change navigation status for employee.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function toggleNavigationAction(Request $request)
+    {
+        $navigationHandler = $this->get('prestashop.adapter.employee.navigation_handler');
+        $navigationHandler->toggleNavigation($request->request->getBoolean('shouldCollapse'));
+
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     protected function getEmployeeFormBuilder()
