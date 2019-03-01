@@ -32,7 +32,8 @@ import ChangePasswordControl from "../../components/form/change-password-control
  */
 export default class EmployeeEditPage {
   constructor() {
-    this.shopChoiceTree = new ChoiceTree('#employee_shop_association');
+    this.shopChoiceTreeSelector = '#employee_shop_association';
+    this.shopChoiceTree = new ChoiceTree(this.shopChoiceTreeSelector);
     this.employeeProfileSelector = '#employee_profile';
     this.tabsDropdownSelector = '#employee_default_page';
 
@@ -41,6 +42,7 @@ export default class EmployeeEditPage {
     new ChangePasswordControl();
 
     this.initEvents();
+    this._toggleShopTree();
   }
 
   /**
@@ -48,16 +50,10 @@ export default class EmployeeEditPage {
    */
   initEvents() {
     const $employeeProfilesDropdown = $(this.employeeProfileSelector);
-    const superAdminProfileId = $employeeProfilesDropdown.data('admin-profile');
     const getTabsUrl = $employeeProfilesDropdown.data('get-tabs-url');
     const t = this;
 
-    $(document).on('change', this.employeeProfileSelector, function () {
-      // Disable shop choice tree if superadmin profile is selected.
-      $(this).val() == superAdminProfileId ?
-        t.shopChoiceTree.disableAllInputs() :
-        t.shopChoiceTree.enableAllInputs();
-    });
+    $(document).on('change', this.employeeProfileSelector, () => this._toggleShopTree());
 
     // Reload tabs dropdown when employee profile is changed.
     $(document).on('change', this.employeeProfileSelector, function () {
@@ -110,6 +106,20 @@ export default class EmployeeEditPage {
         );
       }
     }
+  }
+
+  /**
+   * Hide shop choice tree if superadmin profile is selected, show it otherwise.
+   *
+   * @private
+   */
+  _toggleShopTree() {
+    const $employeeProfileDropdown = $(this.employeeProfileSelector);
+    const superAdminProfileId = $employeeProfileDropdown.data('admin-profile');
+    $(this.shopChoiceTreeSelector)
+      .closest('.form-group')
+      .toggleClass('d-none', $employeeProfileDropdown.val() == superAdminProfileId)
+    ;
   }
 
   /**
