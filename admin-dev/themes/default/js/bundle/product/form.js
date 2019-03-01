@@ -1319,6 +1319,7 @@ var imagesProduct = (function() {
         thumbnailWidth: 250,
         thumbnailHeight: null,
         acceptedFiles: 'image/*',
+        timeout: 0,
         dictRemoveFile: translate_javascripts['Delete'],
         dictFileTooBig: translate_javascripts['ToLargeFile'],
         dictCancelUpload: translate_javascripts['Delete'],
