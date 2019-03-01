@@ -67,12 +67,13 @@ export default class CreateOrderPage {
       this._loadCartSummaryAfterChoosingCustomer();
     });
 
-    this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => {
-      this.customerSearcher.onCustomerChange();
-    });
+    this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => this.customerSearcher.onCustomerChange());
+    this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
 
-    this.$container.on('change', createOrderPageMap.addressSelect, () => {
-      this._changeCartAddresses();
+    this.$container.on('click', '.js-use-cart-btn', () => {
+      const cartId = $(event.target).data('cart-id');
+
+      this._choosePreviousCart(cartId);
     });
   }
 
@@ -82,7 +83,7 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCartSummaryAfterChoosingCustomer() {
-    $.ajax(this.$container.data('cart-summary-url'), {
+    $.ajax(this.$container.data('last-empty-cart-url'), {
       method: 'POST',
       data: {
         'id_customer': this.data.customer_id,
@@ -116,7 +117,7 @@ export default class CreateOrderPage {
   }
 
   /**
-   * Renders customer carts
+   * Renders customer carts from checkout history
    *
    * @param {Object} carts
    *
@@ -143,6 +144,8 @@ export default class CreateOrderPage {
       $template.find('.js-cart-id').text(cart.id_cart);
       $template.find('.js-cart-date').text(cart.date_add);
       $template.find('.js-cart-total').text(cart.total_price);
+
+      $template.find('.js-use-cart-btn').data('cart-id', cart.id_cart);
 
       $cartsTable.find('tbody').append($template);
     }
@@ -315,5 +318,27 @@ export default class CreateOrderPage {
     this.data.cart_id = cartSummary.cart.id;
     this.data.delivery_address_id = cartSummary.cart.id_address_delivery;
     this.data.invoice_address_id = cartSummary.cart.id_address_invoice;
+  }
+
+  /**
+   * Choses previous cart from which order will be created
+   *
+   * @param {Number} cartId
+   *
+   * @private
+   */
+  _choosePreviousCart(cartId) {
+    $.ajax(this.$container.data('cart-summary-url'), {
+      method: 'POST',
+      data: {
+        id_cart: cartId,
+        id_customer: this.data.customer_id
+      },
+      dataType: 'json'
+    }).then(response => {
+      this._persistCartSummaryData(response);
+
+      this._renderCartSummary(response);
+    });
   }
 }
