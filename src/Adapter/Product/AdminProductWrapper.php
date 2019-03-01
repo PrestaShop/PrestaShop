@@ -300,7 +300,7 @@ class AdminProductWrapper
             $isThisAnUpdate
         );
 
-        if (false === $validationResult) {
+        if (false === $validationResult || count($this->errors)) {
             return $this->errors;
         }
 
