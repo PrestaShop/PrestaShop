@@ -63,3 +63,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Employee\NavigationHandler'
     arguments:
       - '@prestashop.adapter.legacy.context'
+
+  prestashop.adapter.employee.form_language_changer:
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\FormLanguageChanger'
+    arguments:
+      - '@prestashop.adapter.legacy.context'

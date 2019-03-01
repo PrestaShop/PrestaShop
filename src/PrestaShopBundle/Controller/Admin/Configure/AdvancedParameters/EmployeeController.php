@@ -348,6 +348,21 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Change employee form language.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function changeFormLanguageAction(Request $request)
+    {
+        $languageChanger = $this->get('prestashop.adapter.employee.form_language_changer');
+        $languageChanger->changeLanguage($request->request->get('language_iso_code'));
+
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     protected function getEmployeeFormBuilder()
