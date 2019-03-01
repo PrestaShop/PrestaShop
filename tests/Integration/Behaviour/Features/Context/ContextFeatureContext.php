@@ -18,7 +18,7 @@ class ContextFeatureContext implements BehatContext
      *
      * @BeforeScenario
      */
-    public function beforeScenario_mockContext()
+    public function mockContext()
     {
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
@@ -29,7 +29,7 @@ class ContextFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function afterScenario_resetContext()
+    public function resetContext()
     {
         if (empty($this->contextMocker)) {
             throw new \Exception('Context was not mocked');

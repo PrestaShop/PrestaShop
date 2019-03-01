@@ -31,6 +31,9 @@ use Context;
 use Currency;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
+/**
+ * behat equivalent : Scenarii/Cart/Calculation/Currency/currency.feature
+ */
 class CurrencyTest extends AbstractCartCalculationTest
 {
     /**

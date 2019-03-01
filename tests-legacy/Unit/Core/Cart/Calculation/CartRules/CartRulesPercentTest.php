@@ -28,12 +28,9 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\CartRules;
 
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
+
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
- *
- * products are inserted as fixtures
- * products are inserted in cart from data providers
- * cart rules are inserted from data providers
+ * behat equivalent : Scenarii/Cart/Calculation/CartRule/percent_*.feature
  */
 class CartRulesPercentTest extends AbstractCartCalculationTest
 {

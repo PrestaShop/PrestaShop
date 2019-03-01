@@ -44,22 +44,29 @@ class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @Given there is :count stored SQL requests
+     */
+    public function resetStoredSqlRequest($count)
+    {
+        $legacyDatabaseSingleton = \Db::getInstance(_PS_USE_SQL_SLAVE_);
+        $legacyDatabaseSingleton->delete('request_sql');
+    }
+
+    /**
      * @Then there should be :arg1 stored SQL request
      */
     public function assertStoredSqlRequestCount($count)
     {
-        // @todo: need improvement and decoupling
         $legacyDatabaseSingleton = \Db::getInstance(_PS_USE_SQL_SLAVE_);
-        $realCountResults = $legacyDatabaseSingleton->executeS('SELECT COUNT(*) AS result FROM ps_request_sql');
+        $realCountResults = $legacyDatabaseSingleton->executeS('SELECT COUNT(*) AS result FROM ' . _DB_PREFIX_ . 'request_sql');
 
         $realCount = current($realCountResults)['result'];
 
-        if ((int) $realCount !== (int) $count) {
+        if ((int)$realCount !== (int)$count) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %d sql stored requests, got %d instead',
-                    (int) $count,
-                    (int) $realCount
+                    (int)$count,
+                    (int)$realCount
                 )
             );
         }
