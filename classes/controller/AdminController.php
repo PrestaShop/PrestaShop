@@ -1781,6 +1781,9 @@ class AdminControllerCore extends Controller
             'display_header_javascript' => $this->display_header_javascript,
             'display_footer' => $this->display_footer,
             'js_def' => Media::getJsDef(),
+            'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
+                'action' => 'toggleMenu',
+            ]),
         ));
 
         // Use page title from meta_title if it has been set else from the breadcrumbs array
