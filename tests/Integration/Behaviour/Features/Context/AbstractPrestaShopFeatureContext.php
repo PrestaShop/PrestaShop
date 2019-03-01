@@ -2,7 +2,9 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use AppKernel;
 use Behat\Behat\Context\Context as BehatContext;
+use Db;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 
 /**
@@ -19,7 +21,7 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
      *
      * Required to access services through the container
      *
-     * @var \AppKernel
+     * @var AppKernel
      */
     protected static $kernel;
 
@@ -32,70 +34,37 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
     protected $latestResult;
 
     /** @var bool */
-    protected $flag_performDatabaseCleanHard = false;
-    /** @var bool */
-    protected $flag_performDatabaseCleanLight = false;
+    protected $flagPerformDatabaseCleanHard = false;
 
     /**
      * @BeforeSuite
      */
     public static function prepare($scope)
     {
-        require_once __DIR__ . '/bootstrap.php';
+        require_once __DIR__ . '/../../bootstrap.php';
 
-        self::$kernel = new \AppKernel('test', true);
+        self::$kernel = new AppKernel('test', true);
         self::$kernel->boot();
     }
 
     /**
-     * This hook can be used to flag a scenario as eligible for database hard reset
+     * This hook can be used to flag a feature for database hard reset
      *
-     * @BeforeScenario @database-hard-reset
+     * @BeforeFeature @database-feature
      */
-    public function beforeScenario_cleanDatabaseHard()
+    static public function cleanDatabaseHardPrepareFeature()
     {
-        $this->flag_performDatabaseCleanHard = true;
+        DatabaseCreator::restoreTestDB();
     }
 
     /**
-     * This hook can be used to flag a scenario as eligible for database light reset
+     * This hook can be used to flag a scenario for database hard reset
      *
-     * @BeforeScenario @database-light-reset
+     * @BeforeScenario @database-scenario
      */
-    public function beforeScenario_cleanDatabaseLight()
+    public function cleanDatabaseHardPrepare()
     {
-        $legacyDatabaseSingleton = \Db::getInstance(_PS_USE_SQL_SLAVE_);
-        $legacyDatabaseSingleton->execute('START TRANSACTION;');
-
-        $this->flag_performDatabaseCleanLight = true;
-    }
-
-    /**
-     * This hook can be used to perform a database hard reset if the scenario has been flagged accordingly
-     *
-     * @AfterScenario @database-hard-reset
-     */
-    public function afterScenario_cleanDatabaseHard()
-    {
-        if (true === $this->flag_performDatabaseCleanHard) {
-            $this->flag_performDatabaseCleanHard = false;
-            DatabaseCreator::restoreTestDB();
-        }
-    }
-
-    /**
-     * This hook can be used to perform a database light reset if the scenario has been flagged accordingly
-     *
-     * @AfterScenario @database-light-reset
-     */
-    public function afterScenario_cleanDatabaseLight()
-    {
-        if (true === $this->flag_performDatabaseCleanLight) {
-            $legacyDatabaseSingleton = \Db::getInstance(_PS_USE_SQL_SLAVE_);
-            $legacyDatabaseSingleton->execute('ROLLBACK');
-
-            $this->flag_performDatabaseCleanLight = false;
-        }
+        DatabaseCreator::restoreTestDB();
     }
 
     /**

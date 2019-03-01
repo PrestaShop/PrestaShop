@@ -3,6 +3,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
+use Behat\Behat\Tester\Exception\PendingException;
 use Cart;
 use Context;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
@@ -35,7 +36,7 @@ class CartFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function afterScenario_emptyCartProducts()
+    public function emptyCartProducts()
     {
         if ($this->getCurrentCart() !== null) {
             // remove products from cart
@@ -49,7 +50,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Product count in my cart should be :productCount
+     * @Then /^Distinct product count in my cart should be (\d+)$/
      */
     public function productCountInMyCartShouldBe($productCount)
     {
@@ -66,7 +67,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then Total product count in my cart should be :productCount
+     * @Then /^Total product count in my cart should be (\d+)$/
      */
     public function totalProductCountInMyCartShouldBe($productCount)
     {
@@ -77,6 +78,89 @@ class CartFeatureContext implements BehatContext
                     'Expects %s, got %s instead',
                     $productCount,
                     $currentCartProducts
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then /^Expected total of my cart tax included should be (precisely )?([\d\.]+)$/
+     */
+    public function totalCartWithTaxtShouldBe($precisely, $expectedTotal)
+    {
+        $this->expectsTotal($expectedTotal, 'v2', true, !empty($precisely));
+    }
+
+    /**
+     * @Then /^Expected total of my cart tax included should be (precisely )?([\d\.]+) with previous calculation method$/
+     */
+    public function totalCartWithTaxtOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
+    {
+        $this->expectsTotal($expectedTotal, 'v1', true, !empty($precisely));
+    }
+
+    /**
+     * @Then /^Expected total of my cart tax excluded should be (precisely )?([\d\.]+)$/
+     */
+    public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal)
+    {
+        $this->expectsTotal($expectedTotal, 'v2', false, !empty($precisely));
+    }
+
+    /**
+     * @Then /^Expected total of my cart tax excluded should be (precisely )?([\d\.]+) with previous calculation method$/
+     */
+    public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
+    {
+        $this->expectsTotal($expectedTotal, 'v1', false, !empty($precisely));
+    }
+
+    protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
+    {
+        $cart = $this->getCurrentCart();
+        $carrierId = (int)$cart->id_carrier <= 0 ? null : $cart->id_carrier;
+        if ($method == 'v1') {
+            $total = $cart->getOrderTotalV1($withTax, Cart::BOTH, null, $carrierId);
+        } else {
+            $total = $cart->getOrderTotal($withTax, Cart::BOTH, null, $carrierId);
+        }
+        if (!$precisely) {
+            // here we round values to avoid round issues : rounding modes are tested by specific tests
+            $expectedTotal = round($expectedTotal, 1);
+            $total = round($total, 1);
+        }
+        if ($expectedTotal != $total) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $expectedTotal,
+                    $total
+                )
+            );
+        }
+    }
+
+    /**
+     * @When /^I select gift wrapping$/
+     */
+    public function iSelectGiftWrapping()
+    {
+        $this->getCurrentCart()->gift = true;
+    }
+
+    /**
+     * @Then /^Cart shipping fees should be ([\d\.]+)$/
+     */
+    public function calculateCartShippingFees($expectedShippingFees)
+    {
+        $expectedTotal = round($expectedShippingFees, 1);
+        $shippingFees = round($this->getCurrentCart()->getPackageShippingCost($this->getCurrentCart()->id_carrier), 1);
+        if ($expectedTotal != $shippingFees) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $expectedTotal,
+                    $shippingFees
                 )
             );
         }
