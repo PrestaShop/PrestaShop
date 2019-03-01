@@ -30,6 +30,6 @@
  * Holds address info of a Customer.
  * This class extends AddressCore to be differentiated from other AddressCore objects in DB.
  */
-class CustomerAddressCore extends AddressCore
+class CustomerAddressCore extends Address
 {
 }
