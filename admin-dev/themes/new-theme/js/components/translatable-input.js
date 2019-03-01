@@ -45,10 +45,33 @@ class TranslatableInput {
         const localeItem = $(event.target);
         const form = localeItem.closest('form');
         const selectedLocale = localeItem.data('locale');
+        const localeButton = form.find(this.localeButtonSelector);
+        const changeLanguageUrl = localeButton.data('change-language-url');
 
-        form.find(this.localeButtonSelector).text(selectedLocale);
+        localeButton.text(selectedLocale);
         form.find(this.localeInputSelector).addClass('d-none');
         form.find(this.localeInputSelector+'.js-locale-' + selectedLocale).removeClass('d-none');
+
+        if (changeLanguageUrl) {
+          this._saveSelectedLanguage(changeLanguageUrl, selectedLocale);
+        }
+    }
+
+  /**
+   * Save language choice for employee forms.
+   *
+   * @param {String} changeLanguageUrl
+   * @param {String} selectedLocale
+   *
+   * @private
+   */
+    _saveSelectedLanguage(changeLanguageUrl, selectedLocale) {
+      $.post({
+        url: changeLanguageUrl,
+        data: {
+          language_iso_code: selectedLocale
+        },
+      });
     }
 }
 
