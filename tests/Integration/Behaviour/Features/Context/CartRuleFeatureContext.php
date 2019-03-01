@@ -1,9 +1,32 @@
 <?php
+/**
+ * 2007-2019 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
-use Behat\Behat\Tester\Exception\PendingException;
 use Cache;
 use CartRule;
 use Configuration;
@@ -14,7 +37,6 @@ use Db;
 
 class CartRuleFeatureContext implements BehatContext
 {
-
     use CartAwareTrait;
 
     /**
@@ -44,7 +66,6 @@ class CartRuleFeatureContext implements BehatContext
         }
         $this->cartRules = [];
     }
-
 
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
@@ -122,10 +143,10 @@ class CartRuleFeatureContext implements BehatContext
         $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
         $this->cartRules[$cartRuleName]->carrier_restriction = 1;
         $this->cartRules[$cartRuleName]->save();
-        Db::getInstance()->execute("
-          INSERT INTO " . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
-          VALUES('" . (int)$this->cartRules[$cartRuleName]->id . "',
-          '" . (int)$this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
+        Db::getInstance()->execute('
+          INSERT INTO ' . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
+          VALUES('" . (int) $this->cartRules[$cartRuleName]->id . "',
+          '" . (int) $this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
         ");
         Cache::clear();
     }
@@ -179,6 +200,7 @@ class CartRuleFeatureContext implements BehatContext
 
     /**
      * @When /^I add cart rule named (.+) to my cart$/
+     *
      * @param $cartRuleName
      */
     public function iAddCartRuleNamedToMyCart($cartRuleName)

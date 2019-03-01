@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2019 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
@@ -14,7 +38,6 @@ use Zone;
 
 class CarrierFeatureContext implements BehatContext
 {
-
     use CartAwareTrait;
 
     /**
@@ -85,7 +108,7 @@ class CarrierFeatureContext implements BehatContext
         }
         $country = new Country($countryId);
         // clone country to be able to properly reset previous data
-        $this->previousCountries[$countryName] = clone($country);
+        $this->previousCountries[$countryName] = clone $country;
         $this->countries[$countryName] = $country;
         $country->id_zone = $this->zones[$zoneName]->id;
         $country->active = 1;
@@ -184,6 +207,7 @@ class CarrierFeatureContext implements BehatContext
 
     /**
      * @param $carrierName
+     *
      * @return Carrier
      */
     public function getCarrierWithName($carrierName)
@@ -210,10 +234,10 @@ class CarrierFeatureContext implements BehatContext
             $this->priceRanges[] = $range;
         }
         $carrierPriceRange = [
-            'id_range_price' => (int)$range->id,
+            'id_range_price' => (int) $range->id,
             'id_range_weight' => null,
-            'id_carrier' => (int)$this->carriers[$carrierName]->id,
-            'id_zone' => (int)$this->zones[$zoneName]->id,
+            'id_carrier' => (int) $this->carriers[$carrierName]->id,
+            'id_zone' => (int) $this->zones[$zoneName]->id,
             'price' => $shippingPrices,
         ];
         $this->carriers[$carrierName]->addDeliveryPrice([$carrierPriceRange]);
