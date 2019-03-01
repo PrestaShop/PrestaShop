@@ -90,15 +90,11 @@ export default class NavBar {
           $('body').off('click.mobile');
         }
 
-        $.ajax({
-          url: "index.php",
+        $.post({
+          url: $(this).data('toggle-url'),
           cache: false,
           data: {
-            token: window.employee_token,
-            ajax: 1,
-            action: 'toggleMenu',
-            tab: 'AdminEmployees',
-            collapse: Number($('body').hasClass('page-sidebar-closed'))
+            shouldCollapse: Number($('body').hasClass('page-sidebar-closed'))
           },
         });
       });

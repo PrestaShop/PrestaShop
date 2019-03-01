@@ -65,3 +65,10 @@ admin_employees_edit:
     _legacy_controller: AdminEmployees
   requirements:
     employeeId: \d+
+
+
+admin_employees_toggle_navigation:
+  path: /toggle-navigation
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleNavigation'

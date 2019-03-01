@@ -99,6 +99,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'title' => $this->title ? $this->title : $this->page_header_toolbar_title,
             'toolbar_btn' => $this->page_header_toolbar_btn,
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+            'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
+                'action' => 'toggleMenu',
+            ]),
         );
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
