@@ -25,6 +25,7 @@
 
 import createOrderPageMap from "./create-order-map";
 import CustomerSearcherComponent from "./customer-searcher-component";
+import ShippingRenderer from "./shipping-renderer";
 
 const $ = window.$;
 
@@ -37,6 +38,7 @@ export default class CreateOrderPage {
     this.$container = $(createOrderPageMap.orderCreationContainer);
 
     this.customerSearcher = new CustomerSearcherComponent();
+    this.shippingRenderer = new ShippingRenderer();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -162,6 +164,9 @@ export default class CreateOrderPage {
    */
   _renderCartSummary(cartSummary) {
     this._renderAddressesSelect(cartSummary);
+
+    // render Summary block when at least 1 product is in cart
+    // and delivery options are available
 
     this._showCartSummary();
   }

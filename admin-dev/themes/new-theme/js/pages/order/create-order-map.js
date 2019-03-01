@@ -68,4 +68,7 @@ export default {
 
   // selectors related to summary block
   summaryBlock: '#summaryBlock',
+
+  // selectors related to shipping block
+  shippingBlock: '#shippingBlock',
 };
