@@ -75,26 +75,26 @@
 
           {{ ps.form_group_row(employeeForm.change_password, {
             change_password_button: {
-              label: 'Change password'|trans,
+              label: 'Change password...'|trans({}, 'messages'),
               attr: buttonAttributes,
             },
             generate_password_button: {
-              label: 'Generate password'|trans,
+              label: 'Generate password'|trans({}, 'messages'),
               attr: buttonAttributes
             },
             old_password: {
-              label: 'Current password'|trans,
+              label: 'Current password'|trans({}, 'messages'),
             },
             new_password: {
               first_options: {
-                label: 'New password'|trans,
+                label: 'New password'|trans({}, 'messages'),
               },
               second_options: {
-                label: 'Confirm password'|trans,
+                label: 'Confirm password'|trans({}, 'messages'),
               }
             },
             cancel_button: {
-              label: 'Cancel'|trans,
+              label: 'Cancel'|trans({}, 'Admin.Actions'),
               attr: buttonAttributes,
             }
           }, {
