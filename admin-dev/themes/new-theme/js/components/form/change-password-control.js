@@ -24,6 +24,7 @@
  */
 
 import ChangePasswordHandler from "../change-password-handler";
+import PasswordValidator from "../password-validator";
 
 const $ = window.$;
 
@@ -40,27 +41,32 @@ export default class ChangePasswordControl {
     this.generatePasswordButtonSelector = '#employee_change_password_generate_password_button';
 
     // Password inputs selectors
-    this.oldPasswordSelector = '#employee_change_password_old_password';
-    this.newPasswordFirstSelector = '#employee_change_password_new_password_first';
-    this.newPasswordSecondSelector = '#employee_change_password_new_password_second';
+    this.oldPasswordInputSelector = '#employee_change_password_old_password';
+    this.newPasswordInputSelector = '#employee_change_password_new_password_first';
+    this.confirmNewPasswordInputSelector = '#employee_change_password_new_password_second';
     this.generatedPasswordDisplaySelector = '#employee_change_password_generated_password';
 
     // Main input for password generation
     this.$newPasswordInputs = this.$inputsBlock
-      .find(this.newPasswordFirstSelector);
+      .find(this.newPasswordInputSelector);
 
     // Generated password will be copied to these inputs
     this.$copyPasswordInputs = this.$inputsBlock
-      .find(this.newPasswordSecondSelector)
+      .find(this.confirmNewPasswordInputSelector)
       .add(this.generatedPasswordDisplaySelector);
 
     // All inputs in the change password block, that are submittable with the form.
     this.$submittableInputs = this.$inputsBlock
-      .find(this.oldPasswordSelector)
-      .add(this.newPasswordFirstSelector)
-      .add(this.newPasswordSecondSelector);
+      .find(this.oldPasswordInputSelector)
+      .add(this.newPasswordInputSelector)
+      .add(this.confirmNewPasswordInputSelector);
 
     this.passwordHandler = new ChangePasswordHandler();
+    this.passwordValidator = new PasswordValidator(
+      this.newPasswordInputSelector,
+      this.confirmNewPasswordInputSelector
+    );
+
     this._hideInputsBlock();
     this.initEvents();
   }
@@ -87,7 +93,75 @@ export default class ChangePasswordControl {
 
       // Copy the generated password from main input to additional inputs
       this.$copyPasswordInputs.val(this.$newPasswordInputs.val());
+      this._checkPasswordValidity();
     });
+
+    $(document).on('keyup', `${this.newPasswordInputSelector},${this.confirmNewPasswordInputSelector}`, () => {
+      this._checkPasswordValidity();
+    });
+
+    // Prevent submitting the form if new password is not valid
+    $(document).on('submit', $(this.oldPasswordInputSelector).closest('form'), (event) => {
+      if (!this.passwordValidator.isPasswordValid()) {
+        event.preventDefault();
+      }
+    });
+  }
+
+  /**
+   * Check if password is valid, show error messages if it's not.
+   *
+   * @private
+   */
+  _checkPasswordValidity() {
+    if ($(this.oldPasswordInputSelector).is('disabled')) {
+      return;
+    }
+
+    const $firstPasswordErrorContainer = $(this.newPasswordInputSelector).parent().find('.form-text');
+    const $secondPasswordErrorContainer = $(this.confirmNewPasswordInputSelector).parent().find('.form-text');
+
+    $firstPasswordErrorContainer
+      .text(this._getPasswordLengthValidationMessage())
+      .toggleClass('text-danger', !this.passwordValidator.isPasswordLengthValid())
+    ;
+
+    $secondPasswordErrorContainer
+      .text(this._getPasswordConfirmationValidationMessage())
+      .toggleClass('text-danger', !this.passwordValidator.isPasswordMatchingConfirmation())
+    ;
+  }
+
+  /**
+   * Get password confirmation validation message.
+   *
+   * @returns {String}
+   * @private
+   */
+  _getPasswordConfirmationValidationMessage() {
+    if (!this.passwordValidator.isPasswordMatchingConfirmation()) {
+      return $(this.confirmNewPasswordInputSelector).data('invalid-password');
+    }
+
+    return '';
+  }
+
+  /**
+   * Get password length validation message.
+   *
+   * @returns {String}
+   * @private
+   */
+  _getPasswordLengthValidationMessage() {
+    if (this.passwordValidator.isPasswordTooShort()) {
+      return $(this.newPasswordInputSelector).data('password-too-short')
+    }
+
+    if (this.passwordValidator.isPasswordTooLong()) {
+      return $(this.newPasswordInputSelector).data('password-too-long');
+    }
+
+    return '';
   }
 
   /**
@@ -96,6 +170,7 @@ export default class ChangePasswordControl {
   _showInputsBlock() {
     this._show(this.$inputsBlock);
     this.$submittableInputs.removeAttr('disabled');
+    this.$submittableInputs.attr('required', 'required');
   }
 
   /**
@@ -104,6 +179,7 @@ export default class ChangePasswordControl {
   _hideInputsBlock() {
     this._hide(this.$inputsBlock);
     this.$submittableInputs.attr('disabled', 'disabled');
+    this.$submittableInputs.removeAttr('required');
     this.$inputsBlock.find('input').val('');
     this.$inputsBlock.find('.form-text').text('');
   }

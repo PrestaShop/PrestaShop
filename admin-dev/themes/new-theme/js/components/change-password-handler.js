@@ -47,10 +47,12 @@ export default class ChangePasswordHandler {
     $.passy.requirements.characters = 'DIGIT';
 
     $input.each((index, element) => {
-      const $output = $(element).parent().find('.form-text');
+      const $outputContainer = $('<span>');
+
+      $outputContainer.insertAfter($(element));
 
       $(element).passy((strength, valid) => {
-        this._displayFeedback($output, strength, valid);
+        this._displayFeedback($outputContainer, strength, valid);
       });
     });
   }
@@ -67,16 +69,16 @@ export default class ChangePasswordHandler {
   /**
    * Display feedback about password's strength.
    *
-   * @param $output
+   * @param {jQuery} $outputContainer a container to put feedback output into.
    * @param {number} passwordStrength
    * @param {boolean} isPasswordValid
    */
-  _displayFeedback($output, passwordStrength, isPasswordValid) {
+  _displayFeedback($outputContainer, passwordStrength, isPasswordValid) {
     const feedback = this._getPasswordStrengthFeedback(passwordStrength);
-    $output.text(feedback.message);
-    $output.removeClass('text-danger text-warning text-success');
-    $output.addClass(feedback.elementClass);
-    $output.toggleClass('d-none', !isPasswordValid);
+    $outputContainer.text(feedback.message);
+    $outputContainer.removeClass('text-danger text-warning text-success');
+    $outputContainer.addClass(feedback.elementClass);
+    $outputContainer.toggleClass('d-none', !isPasswordValid);
   }
 
   /**
