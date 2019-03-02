@@ -118,7 +118,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             $data['language'],
             $data['active'],
             $data['profile'],
-            $data['shop_association']
+            isset($data['shop_association']) ? $data['shop_association'] : $this->defaultShopAssociation
         ));
 
         return $employeeId->getValue();
