@@ -57,6 +57,7 @@ admin_employees_create:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:create'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:addemployee
 
 admin_employees_edit:
   path: /{employeeId}/edit
@@ -64,6 +65,9 @@ admin_employees_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:edit'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:updateemployee
+    _legacy_parameters:
+      id_employee: employeeId
   requirements:
     employeeId: \d+
 
