@@ -34,7 +34,7 @@ interface NavigationHandlerInterface
     /**
      * Toggle the navigation for employee (collapse/expand)
      *
-     * @param bool $shouldCollapse if true - collapse the navigation, expand it otherwise.
+     * @param bool $shouldCollapse if true - collapse the navigation, expand it otherwise
      */
     public function toggleNavigation($shouldCollapse);
 }
