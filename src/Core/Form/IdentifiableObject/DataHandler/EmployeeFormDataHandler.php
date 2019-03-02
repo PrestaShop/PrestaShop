@@ -141,7 +141,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         ;
 
         if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {
-            if (isset($data['change_password'])) {
+            if ($this->shouldChangePassword($data)) {
                 $this->assertPasswordIsSameAsOldPassword(
                     $data['change_password']['old_password'],
                     $id
@@ -184,5 +184,25 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
                 EmployeeConstraintException::INCORRECT_PASSWORD
             );
         }
+    }
+
+    /**
+     * Checks if all required fields are present in form data for changing the password.
+     *
+     * @param array $formData
+     *
+     * @return bool
+     */
+    private function shouldChangePassword(array $formData)
+    {
+        if (!isset($formData['change_password'])) {
+            return false;
+        }
+
+        return
+            null !== $formData['change_password']['old_password'] &&
+            null !== $formData['change_password']['new_password'] &&
+            null !== $formData['change_password']['generated_password']
+        ;
     }
 }

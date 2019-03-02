@@ -58,7 +58,22 @@ class ChangePasswordType extends AbstractType
                 'type' => PasswordType::class,
                 'constraints' => [
                     $this->getLengthConstraint(Password::MAX_LENGTH, Password::MIN_LENGTH),
-                ]
+                ],
+                'first_options' => [
+                    'attr' => [
+                        'data-password-too-short' => $this->getMinLengthValidationMessage(Password::MIN_LENGTH),
+                        'data-password-too-long' => $this->getMaxLengthValidationMessage(Password::MAX_LENGTH),
+                    ],
+                ],
+                'second_options' => [
+                    'attr' => [
+                        'data-invalid-password' => $this->trans(
+                            'Invalid password confirmation',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ],
+                ],
             ])
             ->add('generated_password', TextType::class, [
                 'label' => false,
@@ -88,22 +103,42 @@ class ChangePasswordType extends AbstractType
     {
         $options = [
             'max' => $maxLength,
-            'maxMessage' => $this->trans(
-                'This field cannot be longer than %limit% characters',
-                ['%limit%' => $maxLength],
-                'Admin.Notifications.Error'
-            ),
+            'maxMessage' => $this->getMaxLengthValidationMessage($maxLength),
         ];
 
         if (null !== $minLength) {
             $options['min'] = $minLength;
-            $options['minMessage'] = $this->trans(
-                'This field cannot be shorter than %limit% characters',
-                ['%limit%' => $minLength],
-                'Admin.Notifications.Error'
-            );
+            $options['minMessage'] = $this->getMinLengthValidationMessage($minLength);
         }
 
         return new Length($options);
+    }
+
+    /**
+     * @param int $minLength
+     *
+     * @return string
+     */
+    private function getMinLengthValidationMessage($minLength)
+    {
+        return $this->trans(
+            'This field cannot be shorter than %limit% characters',
+            ['%limit%' => $minLength],
+            'Admin.Notifications.Error'
+        );
+    }
+
+    /**
+     * @param int $maxLength
+     *
+     * @return string
+     */
+    private function getMaxLengthValidationMessage($maxLength)
+    {
+        return $this->trans(
+            'This field cannot be longer than %limit% characters',
+            ['%limit%' => $maxLength],
+            'Admin.Notifications.Error'
+        );
     }
 }
