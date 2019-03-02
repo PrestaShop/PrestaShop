@@ -97,6 +97,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         $this->employeeDataProvider = $employeeDataProvider;
         $this->hashing = $hashing;
     }
+
     /**
      * {@inheritdoc}
      */

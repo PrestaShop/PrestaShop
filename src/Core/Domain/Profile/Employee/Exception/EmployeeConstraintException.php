@@ -47,7 +47,7 @@ class EmployeeConstraintException extends EmployeeException
     const INVALID_LAST_NAME = 3;
 
     /**
-     * @var int Code is used when password of invalid length is provided for employee.
+     * @var int code is used when password of invalid length is provided for employee
      */
     const INVALID_PASSWORD = 4;
 

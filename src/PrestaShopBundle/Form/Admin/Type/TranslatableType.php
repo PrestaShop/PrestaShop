@@ -51,12 +51,12 @@ class TranslatableType extends AbstractType
     private $urlGenerator;
 
     /**
-     * @var bool indicates whether to save the selected form language or not.
+     * @var bool indicates whether to save the selected form language or not
      */
     private $saveFormLocaleChoice;
 
     /**
-     * @var string default form language ID.
+     * @var string default form language ID
      */
     private $defaultFormLanguageId;
 
