@@ -102,6 +102,11 @@ export default class ChangePasswordControl {
 
     // Prevent submitting the form if new password is not valid
     $(document).on('submit', $(this.oldPasswordInputSelector).closest('form'), (event) => {
+      // If password input is disabled - we don't need to validate it.
+      if ($(this.oldPasswordInputSelector).is(':disabled')) {
+        return;
+      }
+
       if (!this.passwordValidator.isPasswordValid()) {
         event.preventDefault();
       }
@@ -114,10 +119,6 @@ export default class ChangePasswordControl {
    * @private
    */
   _checkPasswordValidity() {
-    if ($(this.oldPasswordInputSelector).is('disabled')) {
-      return;
-    }
-
     const $firstPasswordErrorContainer = $(this.newPasswordInputSelector).parent().find('.form-text');
     const $secondPasswordErrorContainer = $(this.confirmNewPasswordInputSelector).parent().find('.form-text');
 
