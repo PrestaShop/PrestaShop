@@ -103,7 +103,7 @@
   {% set attr = vars.attr|default({}) %}
   {% set errors = [] %}
 
-  {% if not form.vars.valid  %}
+  {% if form.vars.valid is defined and not form.vars.valid  %}
     {% for parentError in form.vars.errors %}
       {% set errors = errors|merge([parentError.message]) %}
     {% endfor %}
