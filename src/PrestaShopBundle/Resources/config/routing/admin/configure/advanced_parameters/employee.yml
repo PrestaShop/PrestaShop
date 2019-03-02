@@ -4,6 +4,7 @@ admin_employees_index:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:index'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees
 
 admin_employees_search:
   path: /
