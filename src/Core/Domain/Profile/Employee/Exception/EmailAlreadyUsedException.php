@@ -39,7 +39,7 @@ class EmailAlreadyUsedException extends EmployeeException
     private $email;
 
     /**
-     * @param string $email the email that's being used.
+     * @param string $email the email that's being used
      * @param string $message
      * @param int $code
      * @param Exception|null $previous
