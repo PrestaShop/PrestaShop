@@ -139,7 +139,10 @@ class ContactsController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_contacts_index');
             }
         } catch (DomainException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/create.html.twig', [
@@ -178,7 +181,10 @@ class ContactsController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_contacts_index');
             }
         } catch (DomainException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/edit.html.twig', [
@@ -250,56 +256,17 @@ class ContactsController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handles exceptions by exception type or code.
+     * @param DomainException $e
      *
-     * @param DomainException $exception
-     *
-     * @return string
+     * @return array
      */
-    private function handleException(DomainException $exception)
+    private function getErrorMessages(DomainException $e)
     {
-        if (0 !== $exception->getCode()) {
-            return $this->getExceptionByTypeAndErrorCode($exception);
-        }
-
-        return $this->getExceptionByType($exception);
-    }
-
-    /**
-     * Gets exception by its type
-     *
-     * @param DomainException $exception
-     *
-     * @return string
-     */
-    private function getExceptionByType(DomainException $exception)
-    {
-        $exceptionDictionary = [
+        return [
             ContactNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
-        ];
-
-        $type = get_class($exception);
-
-        if (isset($exceptionDictionary[$type])) {
-            return $exceptionDictionary[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $exception->getCode());
-    }
-
-    /**
-     * Gets exception message by its type and code
-     *
-     * @param DomainException $exception
-     *
-     * @return string
-     */
-    private function getExceptionByTypeAndErrorCode(DomainException $exception)
-    {
-        $exceptionDictionary = [
             ContactConstraintException::class => [
                 ContactConstraintException::INVALID_SHOP_ASSOCIATION => $this->trans(
                     'The %s field is not valid',
@@ -352,14 +319,5 @@ class ContactsController extends FrameworkBundleAdminController
                 ),
             ],
         ];
-
-        $type = get_class($exception);
-        $code = $exception->getCode();
-
-        if (isset($exceptionDictionary[$type][$code])) {
-            return $exceptionDictionary[$type][$code];
-        }
-
-        return $this->getFallbackErrorMessage($type, $code);
     }
 }
