@@ -44,3 +44,4 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.getCategory()'
