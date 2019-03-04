@@ -45,6 +45,11 @@ class Pagination
      */
     public function setPagesCount($pagesCount)
     {
+        if (!is_int($pagesCount)) {
+            trigger_error(sprintf('Integer value is expected, got `%s`', gettype($pagesCount)), E_USER_NOTICE);
+            $pagesCount = (int) $pagesCount;
+        }
+
         $this->pagesCount = $pagesCount;
 
         return $this;
@@ -65,6 +70,11 @@ class Pagination
      */
     public function setPage($page)
     {
+        if (!is_int($page)) {
+            trigger_error(sprintf('Integer value is expected, got `%s`', gettype($page)), E_USER_NOTICE);
+            $page = (int) $page;
+        }
+
         $this->page = $page;
 
         return $this;
