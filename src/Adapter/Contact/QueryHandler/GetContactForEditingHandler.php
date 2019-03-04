@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Contact\QueryHandler;
 
 use Contact;
-use PrestaShop\PrestaShop\Core\Domain\Contact\DTO\EditableContact;
+use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
