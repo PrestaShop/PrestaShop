@@ -242,12 +242,14 @@ class CategoryCore extends ObjectModel
         if (!isset($changed)) {
             $changed = $this->getDuplicatePosition();
         }
+
+        error_reporting(E_ALL);
+        ini_set('display_errors', TRUE);
+
         if ($changed) {
             if (Tools::isSubmit('checkBoxShopAsso_category')) {
-                foreach (Tools::getValue('checkBoxShopAsso_category') as $idAssoObject => $row) {
-                    foreach ($row as $idShop => $value) {
-                        $this->addPosition((int) Category::getLastPosition((int) $this->id_parent, (int) $idShop), (int) $idShop);
-                    }
+                foreach (Tools::getValue('checkBoxShopAsso_category') as $idAssoObject => $idShop) {
+                    $this->addPosition((int) Category::getLastPosition((int) $this->id_parent, (int) $idShop), (int) $idShop);
                 }
             } else {
                 foreach (Shop::getShops(true) as $shop) {
