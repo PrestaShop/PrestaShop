@@ -130,7 +130,7 @@ class ContactsController extends FrameworkBundleAdminController
             $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
             $result = $contactFormHandler->handle($contactForm);
 
-            if ($result->isSubmitted() && $result->isValid()) {
+            if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash(
                     'success',
                     $this->trans('Successful creation.', 'Admin.Notifications.Success')
