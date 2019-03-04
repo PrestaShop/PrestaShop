@@ -40,11 +40,18 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
     private $categoryDataProvider;
 
     /**
-     * @param CategoryDataProvider $categoryDataProvider
+     * @var int
      */
-    public function __construct(CategoryDataProvider $categoryDataProvider)
+    private $contextShopRootCategoryId;
+
+    /**
+     * @param CategoryDataProvider $categoryDataProvider
+     * @param $contextShopRootCategoryId
+     */
+    public function __construct(CategoryDataProvider $categoryDataProvider, $contextShopRootCategoryId)
     {
         $this->categoryDataProvider = $categoryDataProvider;
+        $this->contextShopRootCategoryId = $contextShopRootCategoryId;
     }
 
     /**
@@ -52,7 +59,7 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $categories = $this->categoryDataProvider->getNestedCategories();
+        $categories = $this->categoryDataProvider->getNestedCategories($this->contextShopRootCategoryId);
         $choices = [];
 
         foreach ($categories as $category) {
