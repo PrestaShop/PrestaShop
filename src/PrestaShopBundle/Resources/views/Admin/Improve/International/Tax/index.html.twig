@@ -34,3 +34,9 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/tax.bundle.js') }}"></script>
+{% endblock %}
