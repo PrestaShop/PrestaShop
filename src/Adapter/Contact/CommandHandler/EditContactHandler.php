@@ -116,7 +116,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
     }
 
     /**
-     * Assets that the value should not contain script tags or javascript events.
+     * Validates that values does not contain script tags or javascript events.
      *
      * @param array $localisedDescriptions
      *
