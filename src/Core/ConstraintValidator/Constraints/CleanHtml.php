@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraint;
  * Class CleanHtml is responsible for validating the html content to prevent from having javascript events
  * or script tags.
  */
-class CleanHtml extends Constraint
+final class CleanHtml extends Constraint
 {
     public $message = '%s is invalid.';
 

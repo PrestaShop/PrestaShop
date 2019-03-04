@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Class EditableContact is responsible for providing required data form contact form.
+ * Transfers contact data for editing.
  */
 class EditableContact
 {

@@ -35,7 +35,7 @@ use Symfony\Component\Validator\ConstraintValidator;
  * Class CleanHtmlValidator is responsible for validating the html content to prevent from having javascript events
  * or script tags.
  */
-class CleanHtmlValidator extends ConstraintValidator
+final class CleanHtmlValidator extends ConstraintValidator
 {
     /**
      * {@inheritdoc}
@@ -67,7 +67,8 @@ class CleanHtmlValidator extends ConstraintValidator
     }
 
     /**
-     * Gets javascript events.
+     * Gets javascript events separated by pipeline which are used in preg match pattern to determine if string
+     * contains a javascript event. E.g onchange= is valid call for js event.
      *
      * @return string
      */
