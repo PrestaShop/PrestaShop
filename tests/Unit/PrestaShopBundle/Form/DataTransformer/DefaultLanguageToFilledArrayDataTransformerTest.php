@@ -27,12 +27,12 @@
 namespace Tests\Unit\PrestaShopBundle\Form\DataTransformer;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Form\DataTransformer\SingleDefaultLanguageArrayToFilledArrayDataTransformer;
+use PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer;
 
 /**
  * Class SingleDefaultLanguageArrayToFilledArrayDataTransformerTest
  */
-class SingleDefaultLanguageArrayToFilledArrayDataTransformerTest extends TestCase
+class DefaultLanguageToFilledArrayDataTransformerTest extends TestCase
 {
     /**
      * @var int
@@ -51,7 +51,7 @@ class SingleDefaultLanguageArrayToFilledArrayDataTransformerTest extends TestCas
      */
     public function testReverseTransformationItReturnsSameValueAsPassed($item)
     {
-        $dataTransformer = new SingleDefaultLanguageArrayToFilledArrayDataTransformer((string) $this->defaultLanguageId);
+        $dataTransformer = new DefaultLanguageToFilledArrayDataTransformer((string) $this->defaultLanguageId);
         $result = $dataTransformer->reverseTransform($item);
 
         $this->assertEquals($item, $result);
@@ -81,7 +81,7 @@ class SingleDefaultLanguageArrayToFilledArrayDataTransformerTest extends TestCas
 
     public function testReverseTransformationItReturnsFilledArray()
     {
-        $dataTransformer = new SingleDefaultLanguageArrayToFilledArrayDataTransformer($this->defaultLanguageId);
+        $dataTransformer = new DefaultLanguageToFilledArrayDataTransformer($this->defaultLanguageId);
         $result = $dataTransformer->reverseTransform([
             $this->defaultLanguageId => 'default language text',
             2 => 'another text should be left untouched',
