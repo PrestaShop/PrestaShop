@@ -72,7 +72,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'Contact';
+        return 'contact';
     }
 
     /**
