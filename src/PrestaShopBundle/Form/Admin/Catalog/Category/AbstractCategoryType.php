@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -38,6 +39,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
 /**
@@ -80,11 +83,22 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                'error_bubbling' => false,
                 'type' => TextType::class,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>;=#{}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
             ])
             ->add('active', SwitchType::class, [
                 'required' => false,
-                'data' => true,
             ])
             ->add('cover_image', FileType::class, [
                 'required' => false,
@@ -98,14 +112,28 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('meta_title', TranslatableType::class, [
                 'type' => TextWithLengthCounterType::class,
+                'required' => false,
                 'options' => [
-                    'max_length' => 70,
+                    'max_length' => 255,
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
+                'required' => false,
                 'type' => TextareaType::class,
                 'options' => [
                     'required' => false,
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
                 ],
             ])
             ->add('meta_keyword', TranslatableType::class, [
@@ -126,10 +154,27 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'type' => TextType::class,
+                'error_bubbling' => false,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[_a-zA-Z0-9\-]+$/',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
             ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'choices' => $this->customerGroupChoices,
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ]);
 
         if ($this->multistoreFeature->isUsed()) {
