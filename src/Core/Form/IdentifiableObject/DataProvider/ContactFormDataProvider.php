@@ -56,7 +56,7 @@ final class ContactFormDataProvider implements FormDataProviderInterface
     /**
      * @param CommandBusInterface $queryBus
      * @param DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
-     * @param array $contextShopIds
+     * @param int[] $contextShopIds
      */
     public function __construct(
         CommandBusInterface $queryBus,

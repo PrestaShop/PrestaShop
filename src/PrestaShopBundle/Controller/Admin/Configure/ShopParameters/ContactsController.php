@@ -142,7 +142,7 @@ class ContactsController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/add.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/create.html.twig', [
             'contactForm' => $contactForm->createView(),
         ]);
     }
