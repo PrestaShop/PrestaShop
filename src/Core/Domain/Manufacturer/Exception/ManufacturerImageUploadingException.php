@@ -40,4 +40,9 @@ class ManufacturerImageUploadingException extends ManufacturerException
      * @var int Code is used when unexpected error occurs while uploading image
      */
     const UNEXPECTED_ERROR = 2;
+
+    /**
+     * Code is used when image/images cannot be resized
+     */
+    const UNABLE_RESIZE = 3;
 }

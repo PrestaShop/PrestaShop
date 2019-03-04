@@ -41,10 +41,14 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditi
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -125,7 +129,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @return Response
      */
     public function createAction(Request $request)
-
     {
         try {
             $manufacturerForm = $this->getFormBuilder()->getForm();
@@ -138,7 +141,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-        } catch (ManufacturerException $e) {
+        } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -174,13 +177,14 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-        } catch (ManufacturerException $e) {
+        } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof ManufacturerNotFoundException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
         }
+
         /** @var EditableManufacturer $editableManufacturer */
         $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
 
@@ -413,6 +417,8 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     private function getErrorMessages()
     {
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+
         return [
             DeleteManufacturerException::class => [
                 DeleteManufacturerException::FAILED_DELETE => $this->trans(
@@ -452,13 +458,25 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
-            ManufacturerImageUploadingException::class => [
-                ManufacturerImageUploadingException::MEMORY_LIMIT_RESTRICTION => $this->trans(
+            MemoryLimitException::class => $this->trans(
                     'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ',
                     'Admin.Notifications.Error'
-                ),
-                ManufacturerImageUploadingException::UNEXPECTED_ERROR => $this->trans(
-                    'An error occurred while uploading the image.',
+            ),
+            ImageUploadException::class => $this->trans(
+                'An error occurred while uploading the image.',
+                'Admin.Notifications.Error'
+            ),
+            ImageOptimizationException::class => $this->trans(
+                'Unable to resize one or more of your pictures.',
+                'Admin.Catalog.Notification'
+            ),
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
+                        $iniConfig->getUploadMaxSizeInBytes(),
+                ]),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'
                 ),
             ],
@@ -499,7 +517,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         foreach ($addressIds as $i => $addressId) {
-            $addressIds[$i] = (int)$addressId;
+            $addressIds[$i] = (int) $addressId;
         }
 
         return $addressIds;

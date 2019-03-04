@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler;
 
-use HelperList;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
@@ -91,7 +90,10 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
             'manufacturer_' . $manufacturerId->getValue() . '_' . $this->contextShopId . '.jpg',
-            HelperList::LIST_THUMBNAIL_SIZE
+            350,
+            'jpg',
+            true,
+            true
         );
 
         $imageSize = file_exists($pathToImage) ? filesize($pathToImage) / 1000 : '';
