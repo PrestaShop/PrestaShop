@@ -27,9 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
 /**
- * Class DomainConstraintException
+ * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
  */
 class DomainConstraintException extends DomainException
 {
+    /**
+     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
+     */
     const INVALID_EMAIL = 1;
 }

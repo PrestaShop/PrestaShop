@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
 /**
- * Class GetContactForEditing is responsible for getting the data for contact edit page.
+ * Class GetContactForEditing is responsible for getting the data related with contact entity.
  */
 class GetContactForEditing
 {

@@ -77,9 +77,9 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
      *
      * @throws DomainException
      */
-    public function update($id, array $data)
+    public function update($contactId, array $data)
     {
-        $editContactCommand = (new EditContactCommand((int) $id))
+        $editContactCommand = (new EditContactCommand((int) $contactId))
             ->setLocalisedTitles($data['title'])
             ->setIsMessagesSavingEnabled($data['is_messages_saving_enabled'])
             ->setLocalisedDescription($data['description'])
