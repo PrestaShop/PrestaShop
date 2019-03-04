@@ -255,6 +255,50 @@ class VersionTest extends TestCase
     }
 
     /**
+     * @dataProvider getTwoVersionsToCompare
+     *
+     * @param $first string Version
+     * @param $second string Version
+     * @param $expectedComparison string Comparison character
+     *
+     * @throws InvalidVersionException
+     */
+    public function testCompareTwoVersions($first, $second, $expectedComparison)
+    {
+        $firstVersion = Version::buildFromString($first);
+        $secondVersion = Version::buildFromString($second);
+
+        if ($expectedComparison === '<') {
+            $this->assertTrue(
+                $firstVersion->isLessThan($secondVersion),
+                sprintf(
+                    'Failed to assert that %s is less than %s',
+                    $firstVersion,
+                    $secondVersion
+                )
+            );
+        } elseif ($expectedComparison === '>') {
+            $this->assertTrue(
+                $firstVersion->isGreaterThan($secondVersion),
+                sprintf(
+                    'Failed to assert that %s is greater than %s',
+                    $firstVersion,
+                    $secondVersion
+                )
+            );
+        } else {
+            $this->assertTrue(
+                $firstVersion->isEqualTo($secondVersion),
+                sprintf(
+                    'Failed to assert that %s is equal to %s',
+                    $firstVersion,
+                    $secondVersion
+                )
+            );
+        }
+    }
+
+    /**
      * @dataProvider getInvalidVersions
      *
      * @param $version string  Version
@@ -620,5 +664,25 @@ class VersionTest extends TestCase
     private function getVerb($result)
     {
         return $result ? 'is' : 'is NOT';
+    }
+
+    public function getTwoVersionsToCompare()
+    {
+        return [
+            // incremental build versions
+            ['1.7.7.0+build.1', '1.7.7.0+build.2', '<'],
+            // incremental nightly versions
+            ['1.7.7.0-dev+nightly.20190526', '1.7.7.0-dev+nightly.20190527', '<'],
+            // dev is less than alpha
+            ['1.7.7.0-dev+nightly.20190526', '1.7.7.0-alpha.1+build.156', '<'],
+            // alpha 1 is less than alpha 2
+            ['1.7.7.0-alpha.1', '1.7.7.0-alpha.2', '<'],
+            // alpha is less than beta
+            ['1.7.7.0-alpha.1', '1.7.7.0-beta.1', '<'],
+            // beta is less than RC
+            ['1.7.7.0-beta.1', '1.7.7.0-RC.1', '<'],
+            // RC is less than final
+            ['1.7.7.0-RC.1', '1.7.7.0', '<'],
+        ];
     }
 }
