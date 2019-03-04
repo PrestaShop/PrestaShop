@@ -48,13 +48,20 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $contextShopId;
 
     /**
+     * @var int
+     */
+    private $contextShopRootCategoryId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param int $contextShopId
+     * @param int $contextShopRootCategoryId
      */
-    public function __construct(CommandBusInterface $queryBus, $contextShopId)
+    public function __construct(CommandBusInterface $queryBus, $contextShopId, $contextShopRootCategoryId)
     {
         $this->queryBus = $queryBus;
         $this->contextShopId = $contextShopId;
+        $this->contextShopRootCategoryId = $contextShopRootCategoryId;
     }
 
     /**
@@ -88,6 +95,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         $defaultGroups = $this->queryBus->handle(new GetDefaultGroups());
 
         return [
+            'id_parent' => $this->contextShopRootCategoryId,
             'group_association' => [
                 $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
                 $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
