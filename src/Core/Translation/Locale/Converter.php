@@ -28,7 +28,9 @@
 namespace PrestaShop\PrestaShop\Core\Translation\Locale;
 
 /**
- * Helper to manipulate locales specific to PrestaShop
+ * Helper to manipulate the locales (IETF language tag) specific to PrestaShop
+ *
+ * @doc https://en.wikipedia.org/wiki/IETF_language_tag#Syntax_of_language_tags
  */
 final class Converter
 {
@@ -62,7 +64,7 @@ final class Converter
      *
      * @return string|bool the locale
      */
-    public function toLocale($legacyLocale)
+    public function toLanguageTag($legacyLocale)
     {
         $mappingLocales = $this->getLangToLocalesMapping();
 

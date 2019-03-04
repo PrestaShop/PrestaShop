@@ -67,7 +67,7 @@ class ModuleProviderTest extends TestCase
         $this->assertCount(20, $moduleAdminTranslations);
 
         $this->assertArrayHasKey('Wire payment', $moduleAdminTranslations);
-        $this->assertSame('Wire payment', 'Wire payment');
+        $this->assertSame('Wire payment', $moduleAdminTranslations['Wire payment']);
 
         $moduleFrontTranslations = $expectedReturn->all('ModulesWirePaymentShop.en-US');
         $this->assertCount(4, $moduleFrontTranslations);

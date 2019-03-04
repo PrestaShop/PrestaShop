@@ -109,12 +109,4 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
 
         return $this->modulesDirectory;
     }
-
-    /**
-     * @param string $modulesDirectory the path to the modules directory
-     */
-    public function setModulesDirectory($modulesDirectory)
-    {
-        $this->modulesDirectory = $modulesDirectory;
-    }
 }
