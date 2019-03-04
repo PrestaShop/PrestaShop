@@ -37,6 +37,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ShopLogosType extends AbstractType
 {
     /**
+     * @var bool
+     */
+    private $isShopFeatureUsed;
+
+    /**
+     * @param bool $isShopFeatureUsed
+     */
+    public function __construct($isShopFeatureUsed)
+    {
+        $this->isShopFeatureUsed = $isShopFeatureUsed;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -61,9 +74,15 @@ class ShopLogosType extends AbstractType
 
     private function appendWithMultiShopFormFields(FormBuilderInterface $builder)
     {
+        //todo: and not is all shop context
+        $isAllowedToDisplay = $this->isShopFeatureUsed;
         /** @var FormBuilderInterface $form */
         foreach ($builder as $form) {
-            $builder->add($form->getName() . '_is_restricted_to_shop', ShopRestrictionType::class);
+            $builder->add($form->getName() . '_is_restricted_to_shop', ShopRestrictionType::class, [
+                'attr' => [
+                    'is_allowed_to_display' => $isAllowedToDisplay,
+                ],
+            ]);
         }
     }
 }
