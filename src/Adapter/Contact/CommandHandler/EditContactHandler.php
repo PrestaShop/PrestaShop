@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -68,16 +69,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
     public function handle(EditContactCommand $command)
     {
         try {
-            $entity = new Contact($command->getContactId()->getValue());
-
-            if (0 >= $entity->id) {
-                throw new ContactNotFoundException(
-                    sprintf(
-                        'Contact object with id %s was not found',
-                        var_export($command->getContactId()->getValue(), true)
-                    )
-                );
-            }
+            $entity = $this->getContactEntityIfFound($command->getContactId()->getValue());
 
             if (null !== $command->getLocalisedTitles()) {
                 $this->assertLocalisedTitleContainsDefaultLanguage($command->getLocalisedTitles());
@@ -161,5 +153,32 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
                 ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE
             );
         }
+    }
+
+    /**
+     * Gets contact entity.
+     *
+     * @param int $contactId
+     *
+     * @return Contact
+     *
+     * @throws ContactNotFoundException
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    private function getContactEntityIfFound($contactId)
+    {
+        $entity = new Contact($contactId);
+
+        if (0 >= $entity->id) {
+            throw new ContactNotFoundException(
+                sprintf(
+                    'Contact object with id %s was not found',
+                    var_export($contactId, true)
+                )
+            );
+        }
+
+        return $entity;
     }
 }
