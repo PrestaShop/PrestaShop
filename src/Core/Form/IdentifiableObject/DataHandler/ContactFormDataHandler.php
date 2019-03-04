@@ -58,10 +58,13 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $addContactCommand = (new AddContactCommand($data['title'], $data['is_messages_saving_enabled']))
-            ->setEmail($data['email'])
             ->setLocalisedDescription($data['description'])
             ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
+
+        if ($data['email']) {
+            $addContactCommand->setEmail($data['email']);
+        }
 
         $this->commandBus->handle($addContactCommand);
     }
@@ -75,11 +78,14 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
     {
         $editContactCommand = (new EditContactCommand((int) $id))
             ->setLocalisedTitles($data['title'])
-            ->setEmail($data['email'])
             ->setIsMessagesSavingEnabled($data['is_messages_saving_enabled'])
             ->setLocalisedDescription($data['description'])
             ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
+
+        if ($data['email']) {
+            $editContactCommand->setEmail($data['email']);
+        }
 
         /** @var ContactId $result */
         $result = $this->commandBus->handle($editContactCommand);
