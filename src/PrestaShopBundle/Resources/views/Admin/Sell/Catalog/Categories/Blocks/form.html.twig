@@ -33,18 +33,10 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      <div class="form-group row">
-        <label class="form-control-label">
-          <span class="text-danger">*</span>
-          {{ 'Name'|trans({}, 'Admin.Global') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(categoryForm.name) }}
-          <small class="form-text">
-            {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
-          </small>
-        </div>
-      </div>
+      {{ ps.form_group_row(categoryForm.name, {}, {
+        'label': 'Name'|trans({}, 'Admin.Actions'),
+        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
 
       <div class="form-group row">
         {{ ps.label_with_help(('Displayed'|trans({}, 'Admin.Global')), ('Click on "Displayed" to index the category on your shop.'|trans({}, 'Admin.Catalog.Help'))) }}
@@ -71,17 +63,10 @@
       {% endif %}
 
       {% if categoryForm.description is defined %}
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Description'|trans({}, 'Admin.Global') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(categoryForm.description) }}
-          <small class="form-text">
-            {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
-          </small>
-        </div>
-      </div>
+        {{ ps.form_group_row(categoryForm.description, {}, {
+          'label': 'Description'|trans({}, 'Admin.Global'),
+          'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+        }) }}
       {% endif %}
 
       <div class="form-group row">
@@ -140,64 +125,40 @@
 
       {{ renderhook('displayBackOfficeCategory') }}
 
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Meta title'|trans({}, 'Admin.Global') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(categoryForm.meta_title) }}
-          <small class="form-text">{{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}</small>
-        </div>
-      </div>
+      {{ ps.form_group_row(categoryForm.meta_title, {}, {
+        'label': 'Meta title'|trans({}, 'Admin.Global'),
+        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
+      {{ ps.form_group_row(categoryForm.meta_description, {}, {
+        'label': 'Meta description'|trans({}, 'Admin.Global'),
+        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
+      {% set metaKeywordHelp %}
+        {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
+        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+      {% endset %}
+
+      {{ ps.form_group_row(categoryForm.meta_keyword, {}, {
+        'label': 'Meta keywords'|trans({}, 'Admin.Global'),
+        'help': metaKeywordHelp
+      }) }}
+
+      {{ ps.form_group_row(categoryForm.link_rewrite, {}, {
+        'label': 'Friendly URL'|trans({}, 'Admin.Global'),
+        'help': 'Only letters, numbers, underscore (_) and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help')
+      }) }}
+
+      {{ ps.form_group_row(categoryForm.group_association, {}, {
+        'label': 'Group access'|trans({}, 'Admin.Catalog.Feature'),
+        'help': 'Mark all of the customer groups which you would like to have access to this category.'|trans({}, 'Admin.Catalog.Help')
+      }) }}
 
       <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Meta description'|trans({}, 'Admin.Global') }}
-        </label>
+        <label class="form-control-label"></label>
         <div class="col-sm">
-          {{ form_widget(categoryForm.meta_description) }}
-          <small class="form-text">
-            {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
-          </small>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Meta keywords'|trans({}, 'Admin.Global') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(categoryForm.meta_keyword) }}
-          <small class="form-text">
-            {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') ~ ' ' ~ ('Invalid characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}' }}
-          </small>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          <span class="text-danger">*</span>
-          {{ 'Friendly URL'|trans({}, 'Admin.Global') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(categoryForm.link_rewrite) }}
-          <small class="form-text">
-            {{ 'Only letters, numbers, underscore (_) and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help') }}
-          </small>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Group access'|trans({}, 'Admin.Catalog.Feature') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(categoryForm.group_association) }}
-          <small class="form-text">
-            {{ 'Mark all of the customer groups which you would like to have access to this category.'|trans({}, 'Admin.Catalog.Help') }}
-          </small>
-
-          <div class="alert alert-info mt-3">
+          <div class="alert alert-info">
             <p class="mb-1">
               <strong>{{ 'You now have three default customer groups.'|trans({}, 'Admin.Catalog.Help') }}</strong>
             </p>
