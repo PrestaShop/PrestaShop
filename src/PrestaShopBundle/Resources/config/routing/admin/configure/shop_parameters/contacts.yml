@@ -12,6 +12,7 @@ admin_contacts_search:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:search'
         _legacy_controller: AdminContacts
+        _legacy_link: AdminContacts:submitFiltercontact
 
 admin_contacts_create:
     path: /new
@@ -19,6 +20,7 @@ admin_contacts_create:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:create'
         _legacy_controller: AdminContacts
+        _legacy_link: AdminContacts:addcontact
 
 admin_contacts_edit:
     path: /{contactId}/edit
@@ -26,6 +28,7 @@ admin_contacts_edit:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:edit'
         _legacy_controller: AdminContacts
+        _legacy_link: AdminContacts:updatecontact
     requirements:
         contactId: \d+
 
@@ -35,6 +38,7 @@ admin_contacts_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:delete'
         _legacy_controller: AdminContacts
+        _legacy_link: AdminContacts:deletecontact
     requirements:
         contactId: \d+
 
@@ -44,3 +48,4 @@ admin_contacts_delete_bulk:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:deleteBulk'
         _legacy_controller: AdminContacts
+        _legacy_link: AdminContacts:submitBulkdeletecontact
