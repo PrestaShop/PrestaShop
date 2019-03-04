@@ -53,6 +53,11 @@ class CategoryType extends AbstractCategoryType
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
+//                'options' => [
+//                    'constraints' => [
+//                        // @todo: add CleanHtml constraint
+//                    ],
+//                ],
             ])
         ;
     }

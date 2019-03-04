@@ -104,6 +104,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'shop_association' => [
                 $this->contextShopId,
             ],
+            'active' => true,
         ];
     }
 }
