@@ -107,10 +107,7 @@ class AddContactCommand extends AbstractContactCommand
      */
     public function setEmail($email)
     {
-        if ($email) {
-            $this->email = new Email($email);
-        }
-
+        $this->email = new Email($email);
         return $this;
     }
 
