@@ -29,10 +29,10 @@ namespace PrestaShopBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
- * Class SingleDefaultLanguageArrayToFilledArrayDataTransformer is responsible for filling empty array values with
+ * Class DefaultLanguageToFilledArrayDataTransformer is responsible for filling empty array values with
  * default language value if such exists.
  */
-final class SingleDefaultLanguageArrayToFilledArrayDataTransformer implements DataTransformerInterface
+final class DefaultLanguageToFilledArrayDataTransformer implements DataTransformerInterface
 {
     /**
      * @var int
