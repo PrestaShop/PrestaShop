@@ -738,6 +738,7 @@ services:
         tags:
             - { name: form.type }
 
+
     form.type.currency_exchange_rate:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
         arguments:
@@ -754,6 +755,7 @@ services:
       tags:
         - { name: form.type }
 
+<<<<<<< HEAD
     form.type.contact:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
         arguments:
@@ -834,5 +836,12 @@ services:
         - '@prestashop.adapter.form.choice_provider.country_state_by_id'
         - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
         - '@translator'
+      tags:
+        - { name: form.type }
+
+    form.type.shop_logos:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
+      arguments:
+        - '@=service("prestashop.adapter.multistore_feature").isUsed()'
       tags:
         - { name: form.type }

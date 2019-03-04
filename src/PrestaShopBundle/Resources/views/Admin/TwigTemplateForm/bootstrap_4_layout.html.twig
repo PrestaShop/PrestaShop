@@ -718,10 +718,12 @@
 {% endblock file_widget %}
 
 {% block shop_restriction_widget %}
-  <div class="md-checkbox md-checkbox-inline">
-    <label for="{{ form.vars.id }}">
-      <input id="{{ form.vars.id }}" type="checkbox" name="{{ form.vars.full_name }}" {{ form.vars.value ? 'checked' : '' }}>
-      <i class="md-checkbox-control"></i>
-    </label>
-  </div>
+  {% if form.vars.attr.is_allowed_to_display %}
+    <div class="md-checkbox md-checkbox-inline">
+      <label for="{{ form.vars.id }}">
+        <input id="{{ form.vars.id }}" type="checkbox" name="{{ form.vars.full_name }}" {{ form.vars.value ? 'checked' : '' }}>
+        <i class="md-checkbox-control"></i>
+      </label>
+    </div>
+  {% endif %}
 {% endblock %}
