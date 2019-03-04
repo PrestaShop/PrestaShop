@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
+use PrestaShopBundle\Form\Admin\Type\ShopRestrictionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -54,5 +55,15 @@ class ShopLogosType extends AbstractType
                 'required' => false,
             ])
         ;
+
+        $this->appendWithMultiShopFormFields($builder);
+    }
+
+    private function appendWithMultiShopFormFields(FormBuilderInterface $builder)
+    {
+        /** @var FormBuilderInterface $form */
+        foreach ($builder as $form) {
+            $builder->add($form->getName() . '_is_restricted_to_shop', ShopRestrictionType::class);
+        }
     }
 }
