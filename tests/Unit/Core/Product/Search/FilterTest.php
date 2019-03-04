@@ -74,11 +74,11 @@ class FilterTest extends TestCase
         $this->assertEmpty($this->filter->getNextEncodedFacets());
         $this->assertSame(0, $this->filter->getMagnitude());
         $this->assertTrue($this->filter->isDisplayed());
-        $this->assertTrue($this->filter->isActive());
+        $this->assertFalse($this->filter->isActive());
         $this->assertSame([
             'label' => '',
             'type' => '',
-            'active' => true,
+            'active' => false,
             'displayed' => true,
             'properties' => [],
             'magnitude' => 0,
@@ -123,7 +123,7 @@ class FilterTest extends TestCase
 
     public function testGetterAndIsserForActive()
     {
-        $this->assertTrue($this->filter->isActive());
+        $this->assertFalse($this->filter->isActive());
 
         $this->assertInstanceOf(Filter::class, $this->filter->setActive(false));
         $this->assertFalse($this->filter->isActive());
