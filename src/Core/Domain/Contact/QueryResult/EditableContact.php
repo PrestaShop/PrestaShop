@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Contact\DTO;
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
@@ -103,7 +103,7 @@ class EditableContact
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     public function getLocalisedTitles()
     {
