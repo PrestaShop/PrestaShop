@@ -30,10 +30,11 @@ use Category;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class AddCategoryHandler.
+ * Adds new category using legacy object model.
  *
  * @internal
  */
@@ -51,9 +52,11 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
 
         $this->populateCategoryWithCommandData($category, $command);
 
-        $category->add();
+        if (false === $category->validateFields(false)) {
+            throw new CategoryConstraintException('Invalid category data');
+        }
 
-        if (!$category->id) {
+        if (false === $category->add()) {
             throw new CannotAddCategoryException('Failed to add new category.');
         }
 
