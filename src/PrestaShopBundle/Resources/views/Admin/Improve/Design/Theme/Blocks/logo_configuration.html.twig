@@ -28,7 +28,7 @@
 <div class="card-group">
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
     {% block card_title %}
-      {{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}
+      {{ form_widget(shopLogosForm.header_logo_is_restricted_to_shop) }} {{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}
     {% endblock %}
     {% block card_content %}
       <p class="logo-card-description">
@@ -52,7 +52,8 @@
     {% block card_title %}
       <ul class="nav nav-pills" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active show"
+          {{ form_widget(shopLogosForm.mail_logo_is_restricted_to_shop) }}
+          <a class="nav-link active show d-inline-block"
              id="mail-tab"
              data-toggle="tab"
              href="#email-configuration"
@@ -65,7 +66,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"
+          {{ form_widget(shopLogosForm.invoice_logo_is_restricted_to_shop) }}
+          <a class="nav-link d-inline-block"
              id="invoice-tab"
              data-toggle="tab"
              href="#invoice-configuration"
@@ -74,7 +76,7 @@
              aria-expanded="true"
              aria-selected="true"
           >
-            {{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}
+             {{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}
           </a>
         </li>
       </ul>
@@ -120,7 +122,7 @@
 
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
     {% block card_title %}
-      {{ 'Favicon'|trans({}, 'Admin.Design.Feature') }}
+      {{ form_widget(shopLogosForm.favicon_is_restricted_to_shop) }} {{ 'Favicon'|trans({}, 'Admin.Design.Feature') }}
     {% endblock %}
     {% block card_content %}
       <p class="logo-card-description">
