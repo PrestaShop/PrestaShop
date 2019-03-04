@@ -714,3 +714,12 @@
    </span>
   </div>
 {% endblock generatable_text_widget %}
+
+{% block shop_restriction_widget %}
+  <div class="md-checkbox md-checkbox-inline">
+    <label for="{{ form.vars.id }}">
+      <input id="{{ form.vars.id }}" type="checkbox" name="{{ form.vars.full_name }}" {{ form.vars.value ? 'checked' : '' }}>
+      <i class="md-checkbox-control"></i>
+    </label>
+  </div>
+{% endblock %}
