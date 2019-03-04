@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -41,13 +42,21 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
      * @var CommandBusInterface
      */
     private $bus;
+    /**
+     * @var ImageUploaderInterface
+     */
+    private $imageUploader;
 
     /**
      * @param CommandBusInterface $bus
+     * @param ImageUploaderInterface $imageUploader
      */
-    public function __construct(CommandBusInterface $bus)
-    {
+    public function __construct(
+        CommandBusInterface $bus,
+        ImageUploaderInterface $imageUploader
+    ) {
         $this->bus = $bus;
+        $this->imageUploader = $imageUploader;
     }
 
     /**
@@ -59,19 +68,10 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             $data['shop_association'] = [];
         }
 
-        /** @var UploadedFile $uploadedFlagImage */
-        $uploadedLogo = $data['logo'];
-        $logoPath = null;
-
-        if ($uploadedLogo instanceof UploadedFile) {
-            $logoPath = $uploadedLogo->getPathname();
-        }
-
         /** @var ManufacturerId $manufacturerId */
         $manufacturerId = $this->bus->handle(new AddManufacturerCommand(
             $data['name'],
             $data['is_enabled'],
-            $logoPath,
             $data['short_description'],
             $data['description'],
             $data['meta_title'],
@@ -79,6 +79,13 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             $data['meta_keyword'],
             $data['shop_association']
         ));
+
+        /** @var UploadedFile $uploadedFlagImage */
+        $uploadedLogo = $data['logo'];
+
+        if ($uploadedLogo instanceof UploadedFile) {
+            $this->imageUploader->upload($manufacturerId->getValue(), $uploadedLogo);
+        }
 
         return $manufacturerId->getValue();
     }
@@ -88,6 +95,14 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
      */
     public function update($manufacturerId, array $data)
     {
+        /** @var UploadedFile $uploadedFlagImage */
+        $uploadedLogo = $data['logo'];
+        $logo = null;
+
+        if ($uploadedLogo instanceof UploadedFile) {
+            $this->imageUploader->upload($manufacturerId, $uploadedLogo);
+        }
+
         $command = (new EditManufacturerCommand($manufacturerId))
             ->setName((string) $data['name'])
             ->setLocalizedShortDescriptions($data['short_description'])
@@ -97,6 +112,7 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             ->setLocalizedMetaKeywords($data['meta_keyword'])
             ->setEnabled((bool) $data['is_enabled'])
         ;
+
         if (isset($data['shop_association'])) {
             $shopAssociation = $data['shop_association'] ?: [];
             $shopAssociation = array_map(function ($shopId) { return (int) $shopId; }, $shopAssociation);
