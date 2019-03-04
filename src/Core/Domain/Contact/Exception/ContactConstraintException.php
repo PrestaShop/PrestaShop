@@ -48,7 +48,7 @@ class ContactConstraintException extends ContactException
 
     /**
      * @var int - error is raised when an array does not have the default language value. It might not exist or is empty.
-     * DefaultLanguage constraint is used here.
+     *          DefaultLanguage constraint is used here.
      */
     const MISSING_TITLE_FOR_DEFAULT_LANGUAGE = 4;
 }
