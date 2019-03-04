@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\Exception;
 
 /**
- * Class CannotUpdateContactException
+ * Raised when failed to update contact entity.
  */
 class CannotUpdateContactException extends ContactException
 {

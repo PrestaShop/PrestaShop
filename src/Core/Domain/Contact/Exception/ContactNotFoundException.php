@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\Exception;
 
 /**
- * Class ContactNotFoundException
+ * Raised when contact was not found.
  */
 class ContactNotFoundException extends ContactException
 {

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Contact\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class ContactException
+ * An abstraction for all contact related exceptions. Use this one in catch clause to detect all related exceptions.
  */
 class ContactException extends DomainException
 {
