@@ -66,7 +66,10 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
             $addContactCommand->setEmail($data['email']);
         }
 
-        $this->commandBus->handle($addContactCommand);
+        /** @var ContactId $result */
+        $result = $this->commandBus->handle($addContactCommand);
+
+        return $result->getValue();
     }
 
     /**

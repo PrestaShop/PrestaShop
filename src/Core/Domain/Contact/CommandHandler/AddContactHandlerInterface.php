@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
 /**
  * Interface AddContactHandlerInterface defines contract for AddContactHandler.
@@ -35,6 +36,8 @@ interface AddContactHandlerInterface
 {
     /**
      * @param AddContactCommand $command
+     *
+     * @return ContactId
      */
     public function handle(AddContactCommand $command);
 }

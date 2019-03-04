@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\AddContactHandlerIn
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotAddContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -97,6 +98,8 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
                 $exception
             );
         }
+
+        return new ContactId((int) $entity->id);
     }
 
     /**
