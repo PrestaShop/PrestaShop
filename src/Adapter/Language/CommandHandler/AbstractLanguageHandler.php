@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
 use Context;
-use Db;
 use ImageManager;
 use ImageType;
 use Language;
@@ -37,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use Shop;
 
 /**
  * Encapsulates common legacy behavior for adding/editing language
