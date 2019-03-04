@@ -53,10 +53,6 @@ final class AddManufacturerHandler extends AbstractManufacturerHandler implement
                 );
             }
             $this->addShopAssociation($manufacturer, $command);
-
-            if (null !== $command->getLogoImagePath()) {
-                $this->uploadImage($manufacturer->id, $command->getLogoImagePath());
-            }
         } catch (\PrestaShopException $e) {
             throw new ManufacturerException(
                 sprintf('Failed to add new manufacturer "%s"', $command->getName())

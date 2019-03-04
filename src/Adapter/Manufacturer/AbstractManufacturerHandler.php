@@ -26,11 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
-use Context;
-use ImageManager;
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
@@ -59,47 +56,5 @@ abstract class AbstractManufacturerHandler extends AbstractObjectModelHandler
         }
 
         return $manufacturer;
-    }
-
-    /**
-     * @param int $manufacturerId
-     * @param string $newImagePath
-     */
-    protected function uploadImage($manufacturerId, $newImagePath)
-    {
-        $temporaryImage = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-        if (!$temporaryImage) {
-            return;
-        }
-
-        if (!move_uploaded_file($newImagePath, $temporaryImage)) {
-            return;
-        }
-
-        // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-        if (!ImageManager::checkImageMemoryLimit($temporaryImage)) {
-            throw new ManufacturerImageUploadingException(
-                'Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.',
-                ManufacturerImageUploadingException::MEMORY_LIMIT_RESTRICTION
-            );
-        }
-        // Copy new image
-        if (!ImageManager::resize($temporaryImage, _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')) {
-            throw new ManufacturerImageUploadingException(
-                'An error occurred while uploading the image. Check your directory permissions.',
-                ManufacturerImageUploadingException::UNEXPECTED_ERROR
-            );
-        }
-
-        if (file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')) {
-            $shopId = Context::getContext()->shop->id;
-            $currentFile = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '_' . $shopId . '.jpg';
-
-            if (file_exists($currentFile)) {
-                unlink($currentFile);
-            }
-        }
-
-        unlink($temporaryImage);
     }
 }

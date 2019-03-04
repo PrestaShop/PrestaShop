@@ -47,11 +47,6 @@ class AddManufacturerCommand
     private $localizedDescriptions;
 
     /**
-     * @var string
-     */
-    private $logoImagePath;
-
-    /**
      * @var string[]
      */
     private $localizedMetaTitles;
@@ -80,7 +75,6 @@ class AddManufacturerCommand
      * @param string $name
      * @param string[]|null $localizedShortDescriptions
      * @param string[]|null $localizedDescriptions
-     * @param string|null $logoImagePath
      * @param string[]|null $localizedMetaTitles
      * @param string[]|null $localizedMetaDescriptions
      * @param string[]|null $localizedMetaKeywords
@@ -90,7 +84,6 @@ class AddManufacturerCommand
     public function __construct(
         $name,
         $enabled = false,
-        $logoImagePath = null,
         array $localizedShortDescriptions = null,
         array $localizedDescriptions = null,
         array $localizedMetaTitles = null,
@@ -101,7 +94,6 @@ class AddManufacturerCommand
         $this->name = $name;
         $this->localizedShortDescriptions = $localizedShortDescriptions;
         $this->localizedDescriptions = $localizedDescriptions;
-        $this->logoImagePath = $logoImagePath;
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
         $this->localizedMetaKeywords = $localizedMetaKeywords;
@@ -131,14 +123,6 @@ class AddManufacturerCommand
     public function getLocalizedDescriptions()
     {
         return $this->localizedDescriptions;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLogoImagePath()
-    {
-        return $this->logoImagePath;
     }
 
     /**

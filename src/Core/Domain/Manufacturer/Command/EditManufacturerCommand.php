@@ -54,11 +54,6 @@ class EditManufacturerCommand
     private $localizedDescriptions;
 
     /**
-     * @var array|null
-     */
-    private $logoImage;
-
-    /**
      * @var string[]|null
      */
     private $localizedMetaTitles;
@@ -155,26 +150,6 @@ class EditManufacturerCommand
     public function setLocalizedShortDescriptions($localizedShortDescriptions)
     {
         $this->localizedShortDescriptions = $localizedShortDescriptions;
-
-        return $this;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getLogoImage()
-    {
-        return $this->logoImage;
-    }
-
-    /**
-     * @param array|null $logoImage
-     *
-     * @return self
-     */
-    public function setLogoImage($logoImage)
-    {
-        $this->logoImage = $logoImage;
 
         return $this;
     }
