@@ -228,7 +228,7 @@ class ModuleDataProvider
                     'Parse error detected in main class of module %module%! %parse_error%',
                     array(
                         '%module%' => $name,
-                        '%parse_error%' => $exception->getMessage()
+                        '%parse_error%' => $exception->getMessage(),
                     ),
                     'Admin.Modules.Notification'
                 )
