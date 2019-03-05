@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
+use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestrictionField;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -76,26 +77,48 @@ class ShopLogosType extends AbstractType
 
     private function appendWithMultiShopFormFields(FormBuilderInterface $builder)
     {
+        $suffix = '_is_restricted_to_shop';
+
         //todo: and not is all shop context
         $isAllowedToDisplay = $this->isShopFeatureUsed;
         /** @var FormBuilderInterface $form */
         foreach ($builder as $form) {
-            $builder->add($form->getName() . '_is_restricted_to_shop', ShopRestrictionType::class, [
+            $builder->add($form->getName() . $suffix, ShopRestrictionType::class, [
                 'attr' => [
                     'is_allowed_to_display' => $isAllowedToDisplay,
                 ],
             ]);
         }
 
-//        $builder->addModelTransformer(new CallbackTransformer(
-//            function ($form) {
-//
-//                return $form;
-//            },
-//            function ($form) {
-//
-//                return $form;
-//            }
-//        ));
+        $builder->addModelTransformer(new CallbackTransformer(
+            function ($form) {
+
+                return $form;
+            },
+            function ($form) use ($suffix) {
+                $restrictedToShopFields = [];
+                foreach ($form as $fieldName => $value) {
+                    $isShopRestrictionField = $this->stringEndsWith($fieldName, $suffix);
+
+                    if ($isShopRestrictionField) {
+                        $restrictedToShopFields[] = new ShopRestrictionField(
+                            str_replace($suffix, '', $fieldName),
+                            $value
+                        );
+                    }
+                }
+
+                $form['shop_restriction_fields'] = $restrictedToShopFields;
+
+                return $form;
+            }
+        ));
+    }
+
+    private function stringEndsWith($haystack, $needle)
+    {
+        $diff = \strlen($haystack) - \strlen($needle);
+
+        return $diff >= 0 && strpos($haystack, $needle, $diff) !== false;
     }
 }
