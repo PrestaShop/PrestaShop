@@ -26,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
+use Address;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
-use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
 /**
@@ -38,23 +36,6 @@ use PrestaShopException;
  */
 abstract class AbstractAddressCommandHandler extends AbstractAddressHandler
 {
-    /**
-     * Gets legacy Address
-     *
-     * @param AddressId $addressId
-     *
-     * @return Address
-     *
-     * @throws AddressNotFoundException
-     */
-    protected function getAddress(AddressId $addressId)
-    {
-        $address = new Address($addressId->getValue());
-        $this->assertAddressWasFound($addressId, $address);
-
-        return $address;
-    }
-
     /**
      * Deletes legacy Address
      *

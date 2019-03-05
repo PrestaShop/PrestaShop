@@ -27,8 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Address;
 
 use Address;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShopException;
 
 /**
  * Provides reusable methods for address command/query handlers
@@ -36,19 +38,26 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 abstract class AbstractAddressHandler
 {
     /**
-     * Validates that requested address was found
+     * Gets legacy address
      *
      * @param AddressId $addressId
-     * @param Address $address
      *
-     * @throws AddressNotFoundException
+     * @return Address
      */
-    protected function assertAddressWasFound(AddressId $addressId, Address $address)
+    protected function getAddress(AddressId $addressId)
     {
+        try {
+            $address = new Address($addressId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new AddressException('Failed to create new address', 0, $e);
+        }
+
         if ($address->id !== $addressId->getValue()) {
             throw new AddressNotFoundException(
                 sprintf('Address with id "%s" was not found.', $addressId->getValue())
             );
         }
+
+        return $address;
     }
 }

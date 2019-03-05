@@ -27,8 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
 use Manufacturer;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShopException;
 
 /**
  * Provides reusable methods for manufacturer command/query handlers
@@ -46,7 +48,11 @@ abstract class AbstractManufacturerHandler
      */
     protected function getManufacturer(ManufacturerId $manufacturerId)
     {
-        $manufacturer = new Manufacturer($manufacturerId->getValue());
+        try {
+            $manufacturer = new Manufacturer($manufacturerId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new ManufacturerException('Failed to create new manufacturer', 0, $e);
+        }
 
         if ($manufacturer->id !== $manufacturerId->getValue()) {
             throw new ManufacturerNotFoundException(
