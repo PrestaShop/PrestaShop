@@ -523,13 +523,14 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         foreach ($addressIds as $i => $addressId) {
-            $addressIds[$i] = (int) $addressId;
+            $addressIds[$i] = (int)$addressId;
         }
 
         return $addressIds;
     }
 
     /**
+<<<<<<< HEAD
      * @return FormHandlerInterface
      */
     private function getFormHandler()
@@ -543,5 +544,38 @@ class ManufacturerController extends FrameworkBundleAdminController
     private function getFormBuilder()
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
+    }
+
+    /**
+     * Show & process address creation.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAddressAction(Request $request)
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig');
+    }
+
+    /**
+     * Show & process address editing.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param int $addressId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAddressAction(Request $request, $addressId)
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig');
     }
 }
