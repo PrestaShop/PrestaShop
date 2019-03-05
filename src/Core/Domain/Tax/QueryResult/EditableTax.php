@@ -57,14 +57,14 @@ class EditableTax
      * EditableTax constructor.
      *
      * @param TaxId $taxId
-     * @param string[] $name
+     * @param string[] $localizedNames
      * @param float $rate
      * @param bool $active
      */
-    public function __construct(TaxId $taxId, array $name, $rate, $active)
+    public function __construct(TaxId $taxId, array $localizedNames, $rate, $active)
     {
         $this->taxId = $taxId;
-        $this->localizedNames = $name;
+        $this->localizedNames = $localizedNames;
         $this->rate = $rate;
         $this->active = $active;
     }

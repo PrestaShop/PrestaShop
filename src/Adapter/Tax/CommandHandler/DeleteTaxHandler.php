@@ -44,9 +44,8 @@ final class DeleteTaxHandler extends AbstractTaxHandler implements DeleteTaxHand
      */
     public function handle(DeleteTaxCommand $command)
     {
+        $tax = $this->getTax($command->getTaxId());
         $taxIdValue = $command->getTaxId()->getValue();
-        $tax = new Tax($taxIdValue);
-        $this->assertTaxWasFound($command->getTaxId(), $tax);
 
         try {
             if (!$tax->delete()) {
