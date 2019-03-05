@@ -46,9 +46,9 @@ class CartFeatureContext implements BehatContext
     public function iHaveAnEmptyDefaultCart()
     {
         $cart = new CartOld();
-        $cart->id_lang = (int) Context::getContext()->language->id;
-        $cart->id_currency = (int) Context::getContext()->currency->id;
-        $cart->id_shop = (int) Context::getContext()->shop->id;
+        $cart->id_lang = (int)Context::getContext()->language->id;
+        $cart->id_currency = (int)Context::getContext()->currency->id;
+        $cart->id_shop = (int)Context::getContext()->shop->id;
         $cart->add(); // required, else we cannot get the content when calculating total
         Context::getContext()->cart = $cart;
     }
@@ -106,7 +106,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Expected total of my cart tax included should be (precisely )?([\d\.]+)$/
+     * @Then /^Expected total of my cart tax included should be (precisely )?(\d+\.\d+)$/
      */
     public function totalCartWithTaxtShouldBe($precisely, $expectedTotal)
     {
@@ -114,7 +114,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Expected total of my cart tax included should be (precisely )?([\d\.]+) with previous calculation method$/
+     * @Then /^Expected total of my cart tax included should be (precisely )?(\d+\.\d+) with previous calculation method$/
      */
     public function totalCartWithTaxtOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
@@ -122,7 +122,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Expected total of my cart tax excluded should be (precisely )?([\d\.]+)$/
+     * @Then /^Expected total of my cart tax excluded should be (precisely )?(\d+\.\d+)$/
      */
     public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal)
     {
@@ -130,7 +130,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Expected total of my cart tax excluded should be (precisely )?([\d\.]+) with previous calculation method$/
+     * @Then /^Expected total of my cart tax excluded should be (precisely )?(\d+\.\d+) with previous calculation method$/
      */
     public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
@@ -140,7 +140,7 @@ class CartFeatureContext implements BehatContext
     protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
     {
         $cart = $this->getCurrentCart();
-        $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
+        $carrierId = (int)$cart->id_carrier <= 0 ? null : $cart->id_carrier;
         if ($method == 'v1') {
             $total = $cart->getOrderTotalV1($withTax, Cart::BOTH, null, $carrierId);
         } else {
@@ -171,12 +171,13 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Cart shipping fees should be ([\d\.]+)$/
+     * @Then /^Cart shipping fees should be (\d+\.\d+)( tax excluded| tax included)?$/
      */
-    public function calculateCartShippingFees($expectedShippingFees)
+    public function calculateCartShippingFees($expectedShippingFees, $taxes = null)
     {
+        $withTaxes = $taxes == ' tax excluded' ? false : true;
         $expectedTotal = round($expectedShippingFees, 1);
-        $shippingFees = round($this->getCurrentCart()->getPackageShippingCost($this->getCurrentCart()->id_carrier), 1);
+        $shippingFees = round($this->getCurrentCart()->getPackageShippingCost($this->getCurrentCart()->id_carrier, $withTaxes), 1);
         if ($expectedTotal != $shippingFees) {
             throw new \RuntimeException(
                 sprintf(

@@ -28,10 +28,13 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Address;
 use Behat\Behat\Context\Context as BehatContext;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Carrier;
 use CartRule;
 use Configuration;
+use Context;
 use Country;
+use Group;
 use RangePrice;
 use State;
 use Zone;
@@ -76,6 +79,17 @@ class CarrierFeatureContext implements BehatContext
     protected $priceRanges = [];
 
     /**
+     * @var CustomerFeatureContext
+     */
+    protected $customerFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
+    }
+
+    /**
      * @Given /^There is a zone with name (.+)$/
      */
     public function setZone($zoneName)
@@ -117,6 +131,16 @@ class CarrierFeatureContext implements BehatContext
 
     /**
      * @param $countryName
+     *
+     * @return Country
+     */
+    public function getCountryWithName($countryName)
+    {
+        return $this->countries[$countryName];
+    }
+
+    /**
+     * @param $countryName
      */
     public function checkCountryWithNameExists($countryName)
     {
@@ -139,6 +163,16 @@ class CarrierFeatureContext implements BehatContext
         $state->id_country = $this->countries[$countryName]->id;
         $state->add();
         $this->states[$stateName] = $state;
+    }
+
+    /**
+     * @param $stateName
+     *
+     * @return State
+     */
+    public function getStateWithName($stateName)
+    {
+        return $this->states[$stateName];
     }
 
     /**
@@ -172,6 +206,17 @@ class CarrierFeatureContext implements BehatContext
     }
 
     /**
+     * @Given /^Address with name (.+) is associated to customer with name (.+)$/
+     */
+    public function setAddressCustomer($addressName, $customerName)
+    {
+        $this->checkAddressWithNameExists($addressName);
+        $this->customerFeatureContext->checkCustomerWithNameExists($customerName);
+        $this->addresses[$addressName]->id_customer = $this->customerFeatureContext->getCustomerWithName($customerName)->id;
+        $this->addresses[$addressName]->update();
+    }
+
+    /**
      * @param $addressName
      */
     public function checkAddressWithNameExists($addressName)
@@ -193,6 +238,29 @@ class CarrierFeatureContext implements BehatContext
         $carrier->active = 1;
         $carrier->add();
         $this->carriers[$carrierName] = $carrier;
+
+        $groups = Group::getGroups(Context::getContext()->language->id);
+        $groupIds = [];
+        foreach ($groups as $group) {
+            $groupIds[] = $group['id_group'];
+        }
+        $carrier->setGroups($groupIds);
+    }
+
+    /**
+     * @Given /^Carrier with name (.+) ships to all groups$/
+     */
+    public function setCarrierToAllGroups($carrierName)
+    {
+        $this->checkCarrierWithNameExists($carrierName);
+        $carrier = $this->carriers[$carrierName];
+
+        $groups = Group::getGroups(Context::getContext()->language->id);
+        $groupIds = [];
+        foreach ($groups as $group) {
+            $groupIds[] = $group['id_group'];
+        }
+        $carrier->setGroups($groupIds);
     }
 
     /**
@@ -216,12 +284,17 @@ class CarrierFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^carrier with name (.+) has a shipping fees of ([\d\.]+) in zone with name (.+) for quantities between (\d+) and (\d+)$/
+     * Be careful: this method REPLACES shipping fees for carrier
+     *
+     * @Given /^carrier with name (.+) has a shipping fees of (\d+\.\d+) in zone with name (.+) for quantities between (\d+) and (\d+)$/
      */
-    public function setCarrierFees($carrierName, $shippingPrices, $zoneName, $fromQuantity, $toQuantity)
+    public function setCarrierFees($carrierName, $shippingPrice, $zoneName, $fromQuantity, $toQuantity)
     {
         $this->checkCarrierWithNameExists($carrierName);
         $this->checkZoneWithNameExists($zoneName);
+        if (empty($this->carriers[$carrierName]->getZone((int)$this->zones[$zoneName]->id))) {
+            $this->carriers[$carrierName]->addZone((int)$this->zones[$zoneName]->id);
+        }
         $rangeId = RangePrice::rangeExist($this->carriers[$carrierName]->id, $fromQuantity, $toQuantity);
         if (!empty($rangeId)) {
             $range = new RangePrice($rangeId);
@@ -234,13 +307,13 @@ class CarrierFeatureContext implements BehatContext
             $this->priceRanges[] = $range;
         }
         $carrierPriceRange = [
-            'id_range_price' => (int) $range->id,
+            'id_range_price' => (int)$range->id,
             'id_range_weight' => null,
-            'id_carrier' => (int) $this->carriers[$carrierName]->id,
-            'id_zone' => (int) $this->zones[$zoneName]->id,
-            'price' => $shippingPrices,
+            'id_carrier' => (int)$this->carriers[$carrierName]->id,
+            'id_zone' => (int)$this->zones[$zoneName]->id,
+            'price' => $shippingPrice,
         ];
-        $this->carriers[$carrierName]->addDeliveryPrice([$carrierPriceRange]);
+        $this->carriers[$carrierName]->addDeliveryPrice([$carrierPriceRange], true);
     }
 
     /**

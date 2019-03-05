@@ -19,11 +19,11 @@ Feature: Cart calculation with carrier specific cart rules
     Given There is a carrier with name carrier2
     Given carrier with name carrier2 has a shipping fees of 5.7 in zone with name zone1 for quantities between 0 and 10000
     Given carrier with name carrier2 has a shipping fees of 6.2 in zone with name zone2 for quantities between 0 and 10000
-    Given There is a cart rule with name cartrule1 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 is restricted to carrier named carrier2
     When I select in my cart address with name address1
     When I select in my cart carrier with name carrier1
-    Then Cart shipping fees should be 0
+    Then Cart shipping fees should be 0.0
     Then Expected total of my cart tax included should be 0.0
     Then Expected total of my cart tax included should be 0.0 with previous calculation method
 
@@ -44,7 +44,7 @@ Feature: Cart calculation with carrier specific cart rules
     Given There is a carrier with name carrier2
     Given carrier with name carrier2 has a shipping fees of 5.7 in zone with name zone1 for quantities between 0 and 10000
     Given carrier with name carrier2 has a shipping fees of 6.2 in zone with name zone2 for quantities between 0 and 10000
-    Given There is a cart rule with name cartrule1 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 is restricted to carrier named carrier2
     When I add product named product1 in my cart with quantity 1
     When I select in my cart address with name address1
@@ -69,11 +69,11 @@ Feature: Cart calculation with carrier specific cart rules
     Given There is a carrier with name carrier2
     Given carrier with name carrier2 has a shipping fees of 5.7 in zone with name zone1 for quantities between 0 and 10000
     Given carrier with name carrier2 has a shipping fees of 6.2 in zone with name zone2 for quantities between 0 and 10000
-    Given There is a cart rule with name cartrule1 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 is restricted to carrier named carrier2
     When I select in my cart address with name address1
     When I select in my cart carrier with name carrier2
-    Then Cart shipping fees should be 0
+    Then Cart shipping fees should be 0.0
     Then Expected total of my cart tax included should be 0.0
     Then Expected total of my cart tax included should be 0.0 with previous calculation method
 
@@ -95,7 +95,7 @@ Feature: Cart calculation with carrier specific cart rules
     Given There is a carrier with name carrier2
     Given carrier with name carrier2 has a shipping fees of 5.7 in zone with name zone1 for quantities between 0 and 10000
     Given carrier with name carrier2 has a shipping fees of 6.2 in zone with name zone2 for quantities between 0 and 10000
-    Given There is a cart rule with name cartrule1 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 is restricted to carrier named carrier2
     When I add product named product1 in my cart with quantity 1
     When I select in my cart address with name address1

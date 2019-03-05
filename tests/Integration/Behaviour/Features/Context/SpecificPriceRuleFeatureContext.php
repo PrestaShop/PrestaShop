@@ -72,7 +72,7 @@ class SpecificPriceRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^specific price rule with name (.+) change product price to ([\d\.]+)$/
+     * @Given /^specific price rule with name (.+) change product price to (\d+\.\d+)$/
      */
     public function setPriceModifier($priceRuleName, $price)
     {
