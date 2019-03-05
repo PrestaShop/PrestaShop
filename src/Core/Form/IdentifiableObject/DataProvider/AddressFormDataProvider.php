@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,17 +22,40 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+/**
+ * Provides data for address add/edit form
+ */
+final class AddressFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    public function __construct(CommandBusInterface $queryBus)
+    {
+        $this->queryBus = $queryBus;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData($addressId)
+    {
+        // TODO: Implement getData() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultData()
+    {
+        // TODO: Implement getDefaultData() method.
+    }
+}
