@@ -127,5 +127,5 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'tax', 'action': 'index'})"
-            - "@=service('router').generate('admin_tax_index')"
+            - "@=service('router').generate('admin_taxes_index')"
         public: true

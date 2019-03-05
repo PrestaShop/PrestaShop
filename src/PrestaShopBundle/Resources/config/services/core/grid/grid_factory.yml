@@ -148,4 +148,5 @@ services:
             - '@prestashop.core.grid.definition.factory.tax'
             - '@prestashop.core.grid.data_factory.tax'
             - '@prestashop.core.grid.filter.form_factory'
-            - '@prestashop.core.hook.dispatcher'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
