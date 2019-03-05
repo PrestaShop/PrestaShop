@@ -56,7 +56,9 @@
           {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
         {% endif %}
 
-        {{ form_start(shopLogosForm, {'action': path('admin_themes_upload_logos')}) }}
+
+
+        {{ form_start(shopLogosForm.options, {'action': path('admin_themes_upload_logos')}) }}
           <div class="card">
             <div class="card-header">
               {{ 'Logo'|trans({}, 'Admin.Global') }}
@@ -71,8 +73,8 @@
               <div class="clearfix">&nbsp;</div>
             </div>
           </div>
-        {{ form_rest(shopLogosForm) }}
-        {{ form_end(shopLogosForm) }}
+        {{ form_rest(shopLogosForm.options) }}
+        {{ form_end(shopLogosForm.options) }}
 
         <div class="card">
           <div class="card-header">
