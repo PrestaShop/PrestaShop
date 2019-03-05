@@ -84,6 +84,10 @@ final class TaxOptionsConfiguration implements DataConfigurationInterface
             if ($configuration['use_eco_tax'] && isset($configuration['eco_tax_rule_group'])) {
                 $this->configuration->set('PS_ECOTAX_TAX_RULES_GROUP_ID', $configuration['eco_tax_rule_group']);
             }
+
+            if (false === $configuration['enable_tax']) {
+                $this->configuration->set('PS_TAX_DISPLAY', false);
+            }
         }
 
         return [];
@@ -96,7 +100,6 @@ final class TaxOptionsConfiguration implements DataConfigurationInterface
     {
         return isset(
             $configuration['enable_tax'],
-            $configuration['display_tax_in_cart'],
             $configuration['tax_address_type'],
             $configuration['use_eco_tax']
         );
