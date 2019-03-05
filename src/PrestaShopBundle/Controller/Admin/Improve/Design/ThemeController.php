@@ -150,6 +150,10 @@ class ThemeController extends AbstractAdminController
                     $command->setUploadedFavicon($data['favicon']);
                 }
 
+                if (isset($data['shop_restriction'])) {
+                    $command->setShopRestriction($data['shop_restriction']);
+                }
+
                 $this->getCommandBus()->handle($command);
             } catch (ShopException $e) {
                 $this->addFlash('error', $this->handleUploadLogosException($e));

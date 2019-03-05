@@ -47,7 +47,7 @@ class ShopLogosType extends AbstractType
     /**
      * @var bool
      */
-    private $isAllShopContext;
+    private $isSingleShopContext;
 
     /**
      * @var array
@@ -56,16 +56,16 @@ class ShopLogosType extends AbstractType
 
     /**
      * @param bool $isShopFeatureUsed
-     * @param bool $isAllShopsContext
+     * @param bool $isSingleShopContext
      * @param array $contextShopIds
      */
     public function __construct(
         $isShopFeatureUsed,
-        $isAllShopsContext,
+        $isSingleShopContext,
         array $contextShopIds
     ) {
         $this->isShopFeatureUsed = $isShopFeatureUsed;
-        $this->isAllShopContext = $isAllShopsContext;
+        $this->isSingleShopContext = $isSingleShopContext;
         $this->contextShopIds = $contextShopIds;
     }
 
@@ -92,9 +92,17 @@ class ShopLogosType extends AbstractType
         $this->appendWithMultiShopFormFields($builder);
     }
 
+    /**
+     * It created additional ShopRestrictionType fields for all existing form fields
+     * which are used to restrict certain configuration for specific shop only. It also has data transformer
+     * which helps to map all the fields so the post is aware of the fields which are being modified for specific shop.
+     *
+     * @param FormBuilderInterface $builder
+     */
     private function appendWithMultiShopFormFields(FormBuilderInterface $builder)
     {
-        $isAllowedToDisplay = $this->isShopFeatureUsed && !$this->isAllShopContext;
+        // usually checkboxes should be visible in shop group but on this page it only works for single shop context.
+        $isAllowedToDisplay = $this->isShopFeatureUsed && $this->isSingleShopContext;
         $suffix = '_is_restricted_to_shop';
 
         /** @var FormBuilderInterface $form */

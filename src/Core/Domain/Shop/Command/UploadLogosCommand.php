@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
+use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -53,6 +54,11 @@ class UploadLogosCommand
      * @var UploadedFile|null
      */
     private $uploadedFavicon;
+
+    /**
+     * @var ShopRestriction|null
+     */
+    private $shopRestriction;
 
     /**
      * @return UploadedFile|null
@@ -125,5 +131,21 @@ class UploadLogosCommand
         }
 
         $this->uploadedFavicon = $uploadedFavicon;
+    }
+
+    /**
+     * @return ShopRestriction|null
+     */
+    public function getShopRestriction()
+    {
+        return $this->shopRestriction;
+    }
+
+    /**
+     * @param ShopRestriction $shopRestriction
+     */
+    public function setShopRestriction(ShopRestriction $shopRestriction)
+    {
+        $this->shopRestriction = $shopRestriction;
     }
 }
