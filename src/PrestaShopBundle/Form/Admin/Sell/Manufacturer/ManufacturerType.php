@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Manufacturer;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Validator\Constraint\LegacyConstraint;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -88,7 +88,7 @@ class ManufacturerType extends AbstractType
                             'Admin.Notifications.Error'
                         ),
                     ]),
-                    new LegacyConstraint([
+                    new TypedRegexConstraint([
                         'type' => 'catalog_name',
                     ]),
                 ],
@@ -111,7 +111,7 @@ class ManufacturerType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new LegacyConstraint([
+                        new TypedRegexConstraint([
                             'type' => 'generic_name',
                         ]),
                     ],
@@ -123,7 +123,7 @@ class ManufacturerType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new LegacyConstraint([
+                        new TypedRegexConstraint([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -146,7 +146,7 @@ class ManufacturerType extends AbstractType
                         'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
                     ],
                     'constraints' => [
-                        new LegacyConstraint([
+                        new TypedRegexConstraint([
                             'type' => 'generic_name',
                         ]),
                     ],

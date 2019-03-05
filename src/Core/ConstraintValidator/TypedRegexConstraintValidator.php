@@ -24,25 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Validator\Constraint;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Replicates legacy validation
+ * Validates specific regex pattern for provided type
  */
-class LegacyConstraintValidator extends ConstraintValidator
+class TypedRegexConstraintValidator extends ConstraintValidator
 {
     /**
      * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof LegacyConstraint) {
-            throw new UnexpectedTypeException($constraint, LegacyConstraint::class);
+        if (!$constraint instanceof TypedRegexConstraint) {
+            throw new UnexpectedTypeException($constraint, TypedRegexConstraint::class);
         }
 
         if (null === $value || '' === $value) {

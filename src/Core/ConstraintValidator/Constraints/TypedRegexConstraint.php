@@ -24,14 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Validator\Constraint;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexConstraintValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Encapsulates ValidateCore constraints for legacy object models
+ * Provides regex validation by type
  */
-class LegacyConstraint extends Constraint
+class TypedRegexConstraint extends Constraint
 {
     /**
      * @var string
@@ -49,5 +50,13 @@ class LegacyConstraint extends Constraint
     public function getRequiredOptions()
     {
         return ['type'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validatedBy()
+    {
+        return TypedRegexConstraintValidator::class;
     }
 }
