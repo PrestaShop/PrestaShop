@@ -25,29 +25,23 @@
 
 const $ = window.$;
 
-class DisplayInCartOptionHandler {
+/**
+ * Responsible for 'display tax in cart' option presentation.
+ */
+export default class DisplayInCartOptionHandler {
   constructor() {
-    DisplayInCartOptionHandler.handle();
-
-    $('input[name="form[options][enable_tax]"]').on('change', () => DisplayInCartOptionHandler.handle());
-  }
-
-  static handle() {
-    const enabledVal = $('input[name="form[options][enable_tax]"]:checked').val();
-    const isTaxEnabled = parseInt(enabledVal);
-
-    DisplayInCartOptionHandler.handleDisplayInCartOption(isTaxEnabled);
+    $('.js-enable-tax').on('change', () => this._handle());
   }
 
   /**
-   * If tax is disabled, then display tax in shopping cart
-   * option must be disabled.
+   * If tax is disabled, then display tax in shopping cart option must be disabled.
    *
-   * @param {int} isTaxEnabled
+   * @private
    */
-  static handleDisplayInCartOption(isTaxEnabled) {
-    $('input[name="form[options][display_tax_in_cart]"]').prop('disabled', !isTaxEnabled);
+  _handle() {
+    const enabledVal = $('.js-enable-tax:checked').val();
+    const isTaxEnabled = parseInt(enabledVal, 10);
+
+    $('.js-display-in-cart').prop('disabled', !isTaxEnabled);
   }
 }
-
-export default DisplayInCartOptionHandler;
