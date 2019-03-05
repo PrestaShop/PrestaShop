@@ -30,6 +30,8 @@ const $ = window.$;
  */
 export default class DisplayInCartOptionHandler {
   constructor() {
+    this._handle();
+
     $('.js-enable-tax').on('change', () => this._handle());
   }
 
