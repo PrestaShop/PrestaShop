@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\BulkDeleteTaxHandlerInt
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\DeleteTaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShopException;
-use Tax;
 
 /**
  * Handles command which deletes Taxes on bulk action using legacy object model
@@ -46,8 +45,7 @@ final class BulkDeleteTaxHandler extends AbstractTaxHandler implements BulkDelet
     {
         foreach ($command->getTaxIds() as $taxId) {
             $taxIdValue = $taxId->getValue();
-            $tax = new Tax($taxIdValue);
-            $this->assertTaxWasFound($taxId, $tax);
+            $tax = $this->getTax($taxId);
 
             try {
                 if (!$tax->delete()) {

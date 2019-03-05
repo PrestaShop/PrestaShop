@@ -26,8 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tax;
 
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
+use PrestaShopException;
 use Tax;
 
 /**
@@ -36,17 +38,26 @@ use Tax;
 abstract class AbstractTaxHandler
 {
     /**
-     * @param TaxId $taxId
-     * @param Tax $tax
+     * Gets legacy Tax
      *
-     * @throws TaxNotFoundException
+     * @param TaxId $taxId
+     *
+     * @return Tax
      */
-    protected function assertTaxWasFound(TaxId $taxId, Tax $tax)
+    protected function getTax(TaxId $taxId)
     {
+        try {
+            $tax = new Tax($taxId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new TaxException('Failed to create new tax', 0, $e);
+        }
+
         if ($tax->id !== $taxId->getValue()) {
             throw new TaxNotFoundException(
                 sprintf('Tax with id "%s" was not found.', $taxId->getValue())
             );
         }
+
+        return $tax;
     }
 }

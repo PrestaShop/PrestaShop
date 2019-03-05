@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\BulkToggleTaxStatusHand
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShopException;
-use Tax;
 
 /**
  * Handles command which toggles taxes status on bulk action using legacy object model
@@ -45,8 +44,7 @@ final class BulkToggleTaxStatusHandler extends AbstractTaxHandler implements Bul
     public function handle(BulkToggleTaxStatusCommand $command)
     {
         foreach ($command->getTaxIds() as $taxId) {
-            $tax = new Tax($taxId->getValue());
-            $this->assertTaxWasFound($taxId, $tax);
+            $tax = $this->getTax($taxId);
             $tax->active = $command->getExpectedStatus();
 
             try {

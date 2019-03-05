@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
-use Tax;
 
 final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTaxForEditingHandlerInterface
 {
@@ -39,8 +38,7 @@ final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTax
      */
     public function handle(GetTaxForEditing $query)
     {
-        $tax = new Tax($query->getTaxId()->getValue());
-        $this->assertTaxWasFound($query->getTaxId(), $tax);
+        $tax = $this->getTax($query->getTaxId());
 
         return new EditableTax(
             $query->getTaxId(),
