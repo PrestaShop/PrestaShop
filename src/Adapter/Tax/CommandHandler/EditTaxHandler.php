@@ -46,8 +46,7 @@ final class EditTaxHandler extends AbstractTaxHandler implements EditTaxHandlerI
      */
     public function handle(EditTaxCommand $command)
     {
-        $tax = new Tax($command->getTaxId()->getValue());
-        $this->assertTaxWasFound($command->getTaxId(), $tax);
+        $tax = $this->getTax($command->getTaxId());
 
         if (null !== $command->getLocalizedNames()) {
             $tax->name = $command->getLocalizedNames();
