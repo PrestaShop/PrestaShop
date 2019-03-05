@@ -27,44 +27,44 @@
 namespace PrestaShop\PrestaShop\Core\Form\ValueObject;
 
 /**
- * Holds the field name for which the multi-store restriction checkbox has been checked or unchecked and the status if it
- * was restricted or not.
+ * Shop restriction object holds the shop ids for which restriction is being applied and the fields which are impacted
+ * by the certain shop restriction.
  */
-class ShopRestrictionField
+class ShopRestriction
 {
     /**
-     * @var string
+     * @var int[]
      */
-    private $fieldName;
+    private $shopIds;
 
     /**
-     * @var bool
+     * @var ShopRestrictionField[]
      */
-    private $isRestrictedToContextShop;
+    private $shopRestrictionFields;
 
     /**
-     * @param string $fieldName
-     * @param bool $isRestrictedToContextShop
+     * @param int[] $shopIds
+     * @param ShopRestrictionField[] $shopRestrictionFields
      */
-    public function __construct($fieldName, $isRestrictedToContextShop)
+    public function __construct(array $shopIds, array $shopRestrictionFields)
     {
-        $this->fieldName = $fieldName;
-        $this->isRestrictedToContextShop = $isRestrictedToContextShop;
+        $this->shopIds = $shopIds;
+        $this->shopRestrictionFields = $shopRestrictionFields;
     }
 
     /**
-     * @return string
+     * @return int[]
      */
-    public function getFieldName()
+    public function getShopIds()
     {
-        return $this->fieldName;
+        return $this->shopIds;
     }
 
     /**
-     * @return bool
+     * @return ShopRestrictionField[]
      */
-    public function isRestrictedToContextShop()
+    public function getShopRestrictionFields()
     {
-        return $this->isRestrictedToContextShop;
+        return $this->shopRestrictionFields;
     }
 }

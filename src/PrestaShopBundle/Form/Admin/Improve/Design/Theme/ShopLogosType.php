@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
+use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestrictionField;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -45,11 +45,28 @@ class ShopLogosType extends AbstractType
     private $isShopFeatureUsed;
 
     /**
-     * @param bool $isShopFeatureUsed
+     * @var bool
      */
-    public function __construct($isShopFeatureUsed)
-    {
+    private $isAllShopContext;
+
+    /**
+     * @var array
+     */
+    private $contextShopIds;
+
+    /**
+     * @param bool $isShopFeatureUsed
+     * @param bool $isAllShopsContext
+     * @param array $contextShopIds
+     */
+    public function __construct(
+        $isShopFeatureUsed,
+        $isAllShopsContext,
+        array $contextShopIds
+    ) {
         $this->isShopFeatureUsed = $isShopFeatureUsed;
+        $this->isAllShopContext = $isAllShopsContext;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -77,10 +94,9 @@ class ShopLogosType extends AbstractType
 
     private function appendWithMultiShopFormFields(FormBuilderInterface $builder)
     {
+        $isAllowedToDisplay = $this->isShopFeatureUsed && !$this->isAllShopContext;
         $suffix = '_is_restricted_to_shop';
 
-        //todo: and not is all shop context
-        $isAllowedToDisplay = $this->isShopFeatureUsed;
         /** @var FormBuilderInterface $form */
         foreach ($builder as $form) {
             $builder->add($form->getName() . $suffix, ShopRestrictionType::class, [
@@ -95,7 +111,12 @@ class ShopLogosType extends AbstractType
 
                 return $form;
             },
-            function ($form) use ($suffix) {
+            function ($form) use ($suffix, $isAllowedToDisplay) {
+                if (!$isAllowedToDisplay) {
+
+                    return $form;
+                }
+
                 $restrictedToShopFields = [];
                 foreach ($form as $fieldName => $value) {
                     $isShopRestrictionField = $this->stringEndsWith($fieldName, $suffix);
@@ -108,7 +129,10 @@ class ShopLogosType extends AbstractType
                     }
                 }
 
-                $form['shop_restriction_fields'] = $restrictedToShopFields;
+                $form['shop_restriction'] = new ShopRestriction(
+                    $this->contextShopIds,
+                    $restrictedToShopFields
+                );
 
                 return $form;
             }
