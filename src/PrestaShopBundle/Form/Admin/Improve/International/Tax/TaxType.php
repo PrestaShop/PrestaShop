@@ -62,7 +62,6 @@ class TaxType extends AbstractType
             ->add('name', TranslatableType::class, [
                 'options' => [
                     'constraints' => [
-                        new DefaultLanguage(),
                         new Length([
                             'max' => 32,
                             'maxMessage' => $this->translator->trans(
@@ -72,7 +71,7 @@ class TaxType extends AbstractType
                             ),
                         ]),
                         new Regex([
-                            //@todo: isGenericName Constraint istead
+                            //@todo: specific Constraint instead (is in another PR)
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->translator->trans(
                                 '%s is invalid.',
@@ -83,6 +82,9 @@ class TaxType extends AbstractType
                             ),
                         ]),
                     ],
+                ],
+                'constraints' => [
+                    new DefaultLanguage(),
                 ],
             ])
             ->add('rate', TextType::class, [
