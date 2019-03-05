@@ -163,10 +163,10 @@ scenario('Create order in the Back Office', () => {
     });
   }, 'onboarding');
   commonCurrency.accessToCurrencies();
-  commonCurrency.createCurrency('×\nSuccessful creation.', firstCurrencyData, false, true, true);
+  commonCurrency.createCurrency('close\nSuccessful creation.', firstCurrencyData, false, true, true);
   commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
   scenario('Enable currency', client => {
-    test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1).replace('%ICON', "icon-remove")));
+    test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1).replace('%ICON', "not-valid")));
   }, 'common_client');
   orderScenarios.createCustomerFromOrder(secondCustomerData);
   scenario('Display then check details of the created customer', client => {
@@ -402,7 +402,7 @@ scenario('Create order in the Back Office', () => {
   }, 'common_client');
   commonCurrency.accessToCurrencies();
   commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
-  commonCurrency.deleteCurrency(true, '×\nSuccessful deletion.');
+  commonCurrency.deleteCurrency(true, 'close\nSuccessful deletion.');
   scenario('Click on "Reset" button', client => {
     test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
   }, 'common_client');

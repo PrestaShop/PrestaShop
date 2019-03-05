@@ -21,3 +21,26 @@ services:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
+  prestashop.core.form.identifiable_object.data_provider.currency_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CurrencyFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+
+  prestashop.core.form.identifiable_object.data_provider.webservice_key_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\WebserviceKeyFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
+  prestashop.core.form.identifiable_object.data_provider.meta_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MetaFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.category_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CategoryFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'

@@ -45,15 +45,12 @@ services:
         arguments:
             - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'webservice', 'action': 'index'})"
-            - "@=service('router').generate('admin_webservice')"
+            - "@=service('router').generate('admin_webservice_keys_index')"
         public: true
 
     prestashop.core.grid.definition.factory.meta:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'meta', 'action': 'index'})"
-            - "@=service('router').generate('admin_metas_index')"
         public: true
 
     prestashop.core.grid.definition.factory.category:
@@ -61,7 +58,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'category', 'action': 'index'})"
-            - "@=service('router').generate('admin_category_listing')"
+            - "@=service('router').generate('admin_categories_index')"
             - '@prestashop.adapter.shop.context'
             - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
         public: true
@@ -107,4 +104,20 @@ services:
     prestashop.core.grid.definition.factory.supplier:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.profiles:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfilesGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'profiles', 'action': 'index'})"
+            - "@=service('router').generate('admin_profiles_index')"
+            - '@prestashop.core.grid.action.row.accessibility_checker.delete_profile'
+        public: true
+
+    prestashop.core.grid.definition.factory.cms_page_category:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@request_stack'
         public: true

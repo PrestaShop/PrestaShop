@@ -69,12 +69,9 @@ let categoryData = {
 };
 
 /**
- * This scenario is based on the bug described in this ticket
- * http://forge.prestashop.com/browse/BOOM-4293 => https://github.com/PrestaShop/PrestaShop/issues/9811
- * https://github.com/PrestaShop/PrestaShop/issues/10747
+ * This script should be moved to the campaign full when this issues will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/9811 && https://github.com/PrestaShop/PrestaShop/issues/10747
  **/
-
-
 scenario('Create, edit, check and delete "Category" with the "linkanddisable" mode', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());

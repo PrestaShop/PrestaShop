@@ -20,6 +20,7 @@ module.exports = {
     install_chronopost_button: '//div[contains(@class,"modules_list_container_tab")]//td//a[contains(@href,"install=chronopost")]',
     over_to_you_modal: '#onboarding-welcome',
     welcomeSteps: {
+      continue_button: '//*[@id="main-div"]//button[contains(@class,"onboarding-button-next")]',
       next_button: '//div[contains(@class, "onboarding-tooltip")]//button[contains(@class, "onboarding-button-next")]',
       message_value: '//div[contains(@class, "onboarding-tooltip")]/div[@class="content"]',
       onboarding_tooltip: '//div[contains(@class, "onboarding-tooltip ")]',

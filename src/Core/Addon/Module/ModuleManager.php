@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -307,7 +307,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
-        $this->clearCache();
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
 
         return $result;
@@ -348,7 +348,7 @@ class ModuleManager implements AddonManagerInterface
             $result &= $this->removeModuleFromDisk($name);
         }
 
-        $this->clearCache();
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
 
         return $result;
@@ -395,7 +395,7 @@ class ModuleManager implements AddonManagerInterface
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name) && $module->onUpgrade($version);
 
-        $this->clearCache();
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
         return $result;
@@ -444,7 +444,7 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
-        $this->clearCache();
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::DISABLE, $module);
 
         return $result;
@@ -492,7 +492,7 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
-        $this->clearCache();
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::ENABLE, $module);
 
         return $result;
@@ -556,7 +556,7 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
-        $this->clearCache();
+        $this->checkAndClearCache($result);
 
         return $result;
     }
@@ -619,7 +619,7 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
-        $this->clearCache();
+        $this->checkAndClearCache($result);
 
         return $result;
     }
@@ -798,6 +798,16 @@ class ModuleManager implements AddonManagerInterface
                     ->setAction($action)
                     ->setSubject('PrestaTrust');
             }
+        }
+    }
+
+    /**
+     * @param bool $result
+     */
+    private function checkAndClearCache($result)
+    {
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
         }
     }
 

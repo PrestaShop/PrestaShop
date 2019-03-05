@@ -26,3 +26,6 @@ services:
 
   prestashop.adapter.form.choice_provider.risk_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\RiskByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.resources_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ResourcesChoiceProvider'

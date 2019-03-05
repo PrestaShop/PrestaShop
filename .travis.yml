@@ -27,6 +27,7 @@ env:
   matrix:
     - PRESTASHOP_TEST_TYPE=lint
     - PRESTASHOP_TEST_TYPE=unit
+    - PRESTASHOP_TEST_TYPE=integration
     - PRESTASHOP_TEST_TYPE=e2e
 
 matrix:
@@ -58,10 +59,13 @@ matrix:
   exclude:
     - php: 7.2 # Replaced with additional tests
       env: PRESTASHOP_TEST_TYPE=e2e
+  allow_failures:
+    - php: 7.2
+      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
 
 before_install:
   # Avoid Composer authentication issues
-  - if [[ $TRAVIS_REPO_SLUG = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
+  - if [[ "$TRAVIS_REPO_SLUG" = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
@@ -73,27 +77,35 @@ before_install:
 notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
-script:
-  - if [ $EXTRA_DEPS = "phpHigh" ]; then
-        composer update --ignore-platform-reqs;
+before_script:
+  - if [ "$EXTRA_DEPS" = "phpHigh" ]; then
+        composer update --ignore-platform-reqs --no-suggest --ansi --no-interaction --no-progress --quiet;
     else
-        composer install --prefer-dist --no-interaction --no-progress;
+        composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
     fi
 
-  - bash travis-scripts/install-prestashop
-  - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
+  - if [ "$PRESTASHOP_TEST_TYPE" != "lint" ]; then
+        bash travis-scripts/install-prestashop;
+    fi
+
+script:
+  - if [ "$PRESTASHOP_TEST_TYPE" = "lint" ]; then
         bash tests-legacy/check_file_syntax.sh;
     fi
 
-  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
+  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests-legacy/check_phpunit.sh;
     fi
 
-  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
+  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests/check_unit.sh;
     fi
 
-  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
+  - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
+        bash tests/check_integration.sh;
+    fi
+
+  - if [ "$PRESTASHOP_TEST_TYPE" = "e2e" ]; then
         bash tests-legacy/check_e2e.sh;
     fi
 

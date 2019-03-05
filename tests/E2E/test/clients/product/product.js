@@ -40,9 +40,9 @@ class Product extends CommonClient {
       .waitForExistAndClick(AddProductPage.catalog_second_element_radio);
   }
 
-  associatedFile() {
+  associatedFile(id) {
     return this.client
-      .waitForExistAndClick(AddProductPage.virtual_associated_file)
+      .waitForExistAndClick(AddProductPage.virtual_associated_file.replace('%ID', id), 1000)
       .pause(2000);
   }
 
@@ -52,13 +52,13 @@ class Product extends CommonClient {
       .waitAndSetValue(AddProductPage.pack_label_out_stock, data.common.qty_msg_unstock);
   }
 
-  selectPricingPriorities() {
+  selectPricingPriorities(firstPriority = 'id_shop', secondPriority = 'id_currency', thirdPriority = 'id_country', fourthPriority = 'id_group') {
     return this.client
       .scrollTo(AddProductPage.pricing_first_priorities_select, 50)
-      .waitAndSelectByValue(AddProductPage.pricing_first_priorities_select, 'id_shop')
-      .waitAndSelectByValue(AddProductPage.pricing_second_priorities_select, 'id_currency')
-      .waitAndSelectByValue(AddProductPage.pricing_third_priorities_select, 'id_country')
-      .waitAndSelectByValue(AddProductPage.pricing_fourth_priorities_select, 'id_group');
+      .waitAndSelectByValue(AddProductPage.pricing_first_priorities_select, firstPriority)
+      .waitAndSelectByValue(AddProductPage.pricing_second_priorities_select, secondPriority)
+      .waitAndSelectByValue(AddProductPage.pricing_third_priorities_select, thirdPriority)
+      .waitAndSelectByValue(AddProductPage.pricing_fourth_priorities_select, fourthPriority);
   }
 
   selectCondition() {
@@ -94,9 +94,9 @@ class Product extends CommonClient {
     return this.client
       .scrollTo(AddProductPage.search_add_related_product_input)
       .waitAndSetValue(AddProductPage.search_add_related_product_input, search_products[0])
-      .waitForVisibleAndClick(AddProductPage.related_product_item)
+      .waitForVisibleAndClick(AddProductPage.related_product_item.replace('%I', 1))
       .waitAndSetValue(AddProductPage.search_add_related_product_input, search_products[1])
-      .waitForVisibleAndClick(AddProductPage.related_product_item);
+      .waitForVisibleAndClick(AddProductPage.related_product_item.replace('%I', 1));
   }
 
   addFeature(type, id = '0') {
@@ -341,6 +341,17 @@ class Product extends CommonClient {
       }, selector)
       .then((count) => {
         global.categoriesPageNumber = count.value;
+      });
+  }
+
+  checkTitleValue(selector, value, pause = 0) {
+    return this.client
+      .pause(pause)
+      .execute(function (selector) {
+        return document.querySelector(selector).textContent;
+      }, selector)
+      .then((values) => {
+        expect(values.value).to.contain(value)
       });
   }
 

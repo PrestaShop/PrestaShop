@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -439,6 +439,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
+            'product_title' => $product['title'],
         )));
     }
 
@@ -825,8 +826,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $this->errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Shop.Notifications.Error');
                 } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', $product_picture_width, $product_picture_height)) {
                     $this->errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Shop.Notifications.Error');
-                } elseif (!chmod(_PS_UPLOAD_DIR_ . $file_name, 0777) || !chmod(_PS_UPLOAD_DIR_ . $file_name . '_small', 0777)) {
-                    $this->errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Shop.Notifications.Error');
                 } else {
                     $this->context->cart->addPictureToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_FILE, $file_name);
                 }
@@ -1084,6 +1083,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $group_reduction = Group::getReduction((int) $this->context->cookie->id_customer) / 100;
         }
         $product_full['customer_group_discount'] = $group_reduction;
+        $product_full['title'] = $this->getProductPageTitle();
 
         $presenter = $this->getProductPresenter();
 
@@ -1288,18 +1288,39 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $page['body_classes']['product-customizable'] = true;
         }
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
+        $page['meta']['title'] = $this->getProductPageTitle($page['meta']);
 
-        $idProductAttribute = $this->getIdProductAttributeByRequest();
+        return $page;
+    }
+
+    /**
+     * @param array|null $meta
+     *
+     * @return string
+     */
+    private function getProductPageTitle(array $meta = null)
+    {
+        $title = $this->product->name;
+        if (isset($meta['title'])) {
+            $title = $meta['title'];
+        } elseif (isset($meta['meta_title'])) {
+            $title = $meta['meta_title'];
+        }
+        if (!Configuration::get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
+            return $title;
+        }
+
+        $idProductAttribute = $this->getIdProductAttributeByRequestOrGroup();
         if ($idProductAttribute) {
             $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
             if (is_array($attributes) && count($attributes) > 0) {
                 foreach ($attributes as $attribute) {
-                    $page['meta']['title'] .= ' ' . $attribute['group_name'] . ' ' . $attribute['attribute_name'];
+                    $title .= ' ' . $attribute['group_name'] . ' ' . $attribute['attribute_name'];
                 }
             }
         }
 
-        return $page;
+        return $title;
     }
 
     /**

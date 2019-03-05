@@ -44,7 +44,10 @@ let pageWithCategory = {
   meta_keyword: ["keyword", "page"],
   page_content: 'page content'
 };
-
+/**
+ * This script should be moved to the campaign full when this issue will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/9711
+ **/
 scenario('Create, edit, delete "CMS page"', () => {
 
   scenario('Login in the Back Office and go to "Design > Pages" page', client => {

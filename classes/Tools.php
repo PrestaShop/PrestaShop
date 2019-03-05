@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use Composer\CaBundle\CaBundle;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PHPSQLParser\PHPSQLParser;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 
 class ToolsCore
 {
     const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
+    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
 
     protected static $file_exists_cache = array();
     protected static $_forceCompile;
@@ -38,6 +44,7 @@ class ToolsCore
     protected static $_user_plateform;
     protected static $_user_browser;
     protected static $request;
+    protected static $cldr_cache = [];
 
     public static $round_mode = null;
 
@@ -46,6 +53,14 @@ class ToolsCore
         if ($request) {
             self::$request = $request;
         }
+    }
+
+    /**
+     * Properly clean static cache
+     */
+    public static function resetStaticCache()
+    {
+        static::$cldr_cache = [];
     }
 
     /**
@@ -639,7 +654,7 @@ class ToolsCore
         ) {
             $context->cookie->id_lang = $newLanguageId;
             $language = new Language($newLanguageId);
-            if (Validate::isLoadedObject($language) && $language->active) {
+            if (Validate::isLoadedObject($language) && $language->active && $language->isAssociatedToShop()) {
                 $context->language = $language;
             }
         }
@@ -716,16 +731,15 @@ class ToolsCore
      */
     public static function getCldr(Context $context = null, $language_code = null)
     {
-        static $cldr_cache;
         if ($context && $context->language instanceof Language) {
             $language_code = $context->language->locale;
         }
 
-        if (!empty($cldr_cache[$language_code])) {
-            $cldr = $cldr_cache[$language_code];
+        if (!empty(static::$cldr_cache[$language_code])) {
+            $cldr = static::$cldr_cache[$language_code];
         } else {
             $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
-            $cldr_cache[$language_code] = $cldr;
+            static::$cldr_cache[$language_code] = $cldr;
         }
 
         return $cldr;
@@ -734,42 +748,98 @@ class ToolsCore
     /**
      * Return price with currency sign for a given product.
      *
+     * @deprecated Since 1.7.6.0. Please use Locale::formatPrice() instead
+     * @see PrestaShop\PrestaShop\Core\Localization\Locale
+     *
      * @param float $price Product price
      * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
+     * @param bool $no_utf8 Not used anymore
+     * @param Context|null $context
      *
-     * @return string Price correctly formated (sign, decimal separator...)
+     * @return string Price correctly formatted (sign, decimal separator...)
      *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+     *
+     * @throws LocalizationException
      */
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
+        @trigger_error(
+            'Tools::displayPrice() is deprecated since version 1.7.6.0. '
+            . 'Use ' . Locale::class . '::formatPrice() instead.',
+            E_USER_DEPRECATED
+        );
+
         if (!is_numeric($price)) {
             return $price;
         }
-        if (!$context) {
-            $context = Context::getContext();
-        }
-        if ($currency === null) {
-            $currency = $context->currency;
-        } elseif (is_int($currency)) {
-            $currency = Currency::getCurrencyInstance((int) $currency);
+
+        $context = $context ?: Context::getContext();
+        $currency = $currency ?: $context->currency;
+
+        if (is_int($currency)) {
+            $currency = Currency::getCurrencyInstance($currency);
         }
 
-        $cldr = self::getCldr($context);
+        $locale = static::getContextLocale($context);
+        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
 
-        return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
+        return $locale->formatPrice($price, $currencyCode);
     }
 
     /**
-     * Return a number well formatted
+     * Return current locale
      *
-     * @param float $number A number
-     * @param nullable $currency / not used anymaore
+     * @param Context $context
+     *
+     * @return Locale
+     *
+     * @throws Exception
+     */
+    protected static function getContextLocale(Context $context)
+    {
+        $locale = $context->currentLocale;
+        if (null !== $locale) {
+            return $locale;
+        }
+
+        $container = isset($context->controller) ? $context->controller->getContainer() : null;
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
+        }
+
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+        $locale = $localeRepository->getLocale((string) $context->language->locale);
+
+        return $locale;
+    }
+
+    /**
+     * Returns a well formatted number.
+     *
+     * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
+     * @see Locale
+     *
+     * @param float $number The number to format
+     * @param null $currency not used anymore
+     *
+     * @return string The formatted number
+     *
+     * @throws Exception
+     * @throws LocalizationException
      */
     public static function displayNumber($number, $currency = null)
     {
-        $cldr = self::getCldr(Context::getContext());
+        @trigger_error(
+            'Tools::displayNumber() is deprecated since version 1.7.5.0. '
+            . 'Use ' . Locale::class . ' instead.',
+            E_USER_DEPRECATED
+        );
 
-        return $cldr->getNumber($number);
+        $context = Context::getContext();
+        $locale = static::getContextLocale($context);
+
+        return $locale->formatNumber($number);
     }
 
     public static function displayPriceSmarty($params, &$smarty)
@@ -1033,14 +1103,13 @@ class ToolsCore
                         if (is_dir($dirname . $file)) {
                             Tools::deleteDirectory($dirname . $file);
                         } elseif (file_exists($dirname . $file)) {
-                            @chmod($dirname . $file, 0777); // NT ?
                             unlink($dirname . $file);
                         }
                     }
                 }
+
                 if ($delete_self && file_exists($dirname)) {
                     if (!rmdir($dirname)) {
-                        @chmod($dirname, 0777); // NT ?
                         return false;
                     }
                 }
@@ -1065,7 +1134,6 @@ class ToolsCore
         }
 
         if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false) {
-            @chmod($file, 0777); // NT ?
             unlink($file);
         }
     }
@@ -2326,6 +2394,52 @@ class ToolsCore
         return Tools::usingSecureMode() ? Tools::getShopDomainSsl() : Tools::getShopDomain();
     }
 
+    /**
+     * Get domains information with physical and virtual paths
+     *
+     * e.g: [
+     *  prestashop.localhost => [
+     *    physical => "/",
+     *    virtual => "",
+     *    id_shop => "1",
+     *  ]
+     * ]
+     *
+     * @return array
+     */
+    public static function getDomains()
+    {
+        $domains = [];
+        foreach (ShopUrl::getShopUrls() as $shop_url) {
+            /** @var ShopUrl $shop_url */
+            if (!isset($domains[$shop_url->domain])) {
+                $domains[$shop_url->domain] = [];
+            }
+
+            $domains[$shop_url->domain][] = [
+                'physical' => $shop_url->physical_uri,
+                'virtual' => $shop_url->virtual_uri,
+                'id_shop' => $shop_url->id_shop,
+            ];
+
+            if ($shop_url->domain == $shop_url->domain_ssl) {
+                continue;
+            }
+
+            if (!isset($domains[$shop_url->domain_ssl])) {
+                $domains[$shop_url->domain_ssl] = [];
+            }
+
+            $domains[$shop_url->domain_ssl][] = [
+                'physical' => $shop_url->physical_uri,
+                'virtual' => $shop_url->virtual_uri,
+                'id_shop' => $shop_url->id_shop,
+            ];
+        }
+
+        return $domains;
+    }
+
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
         if (defined('_PS_IN_TEST_')
@@ -2375,33 +2489,7 @@ class ToolsCore
             fwrite($write_fd, trim($specific_before) . "\n\n");
         }
 
-        $domains = array();
-        foreach (ShopUrl::getShopUrls() as $shop_url) {
-            /** @var ShopUrl $shop_url */
-            if (!isset($domains[$shop_url->domain])) {
-                $domains[$shop_url->domain] = array();
-            }
-
-            $domains[$shop_url->domain][] = array(
-                'physical' => $shop_url->physical_uri,
-                'virtual' => $shop_url->virtual_uri,
-                'id_shop' => $shop_url->id_shop,
-            );
-
-            if ($shop_url->domain == $shop_url->domain_ssl) {
-                continue;
-            }
-
-            if (!isset($domains[$shop_url->domain_ssl])) {
-                $domains[$shop_url->domain_ssl] = array();
-            }
-
-            $domains[$shop_url->domain_ssl][] = array(
-                'physical' => $shop_url->physical_uri,
-                'virtual' => $shop_url->virtual_uri,
-                'id_shop' => $shop_url->id_shop,
-            );
-        }
+        $domains = self::getDomains();
 
         // Write data in .htaccess file
         fwrite($write_fd, "# ~~start~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again\n");
@@ -2442,7 +2530,7 @@ class ToolsCore
         foreach ($medias as $media) {
             foreach ($media as $media_url) {
                 if ($media_url) {
-                    $media_domains .= 'RewriteCond %{HTTP_HOST} ^' . $media_url . '$ [OR]' . "\n";
+                    $media_domains .= 'RewriteCond %{HTTP_HOST} ^' . $media_url . '$ [OR]' . PHP_EOL;
                 }
             }
         }
@@ -2452,13 +2540,15 @@ class ToolsCore
         }
 
         foreach ($domains as $domain => $list_uri) {
-            $physicals = array();
+            // As we use regex in the htaccess, ipv6 surrounded by brackets must be escaped
+            $domain = str_replace(['[', ']'], ['\[', '\]'], $domain);
+
             foreach ($list_uri as $uri) {
                 fwrite($write_fd, PHP_EOL . PHP_EOL . '#Domain: ' . $domain . PHP_EOL);
                 if (Shop::isFeatureActive()) {
-                    fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . "\n");
+                    fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . PHP_EOL);
                 }
-                fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:' . $uri['physical'] . ']' . "\n");
+                fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:' . $uri['physical'] . ']' . PHP_EOL);
 
                 // Webservice
                 fwrite($write_fd, 'RewriteRule ^api(?:/(.*))?$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]' . "\n\n");
@@ -2467,7 +2557,7 @@ class ToolsCore
                     $rewrite_settings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, (int) $uri['id_shop']);
                 }
 
-                $domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . "\n";
+                $domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . PHP_EOL;
                 // Rewrite virtual multishop uri
                 if ($uri['virtual']) {
                     if (!$rewrite_settings) {
@@ -2490,10 +2580,10 @@ class ToolsCore
                     if (Configuration::get('PS_LEGACY_IMAGES')) {
                         fwrite($write_fd, $media_domains);
                         fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]' . "\n");
+                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]' . PHP_EOL);
                         fwrite($write_fd, $media_domains);
                         fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]' . "\n");
+                        fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]' . PHP_EOL);
                     }
 
                     // Rewrite product images < 100 millions
@@ -2510,17 +2600,17 @@ class ToolsCore
                     }
                     fwrite($write_fd, $media_domains);
                     fwrite($write_fd, $domain_rewrite_cond);
-                    fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]' . "\n");
+                    fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]' . PHP_EOL);
                     fwrite($write_fd, $media_domains);
                     fwrite($write_fd, $domain_rewrite_cond);
-                    fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]' . "\n");
+                    fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]' . PHP_EOL);
                 }
 
                 fwrite($write_fd, "# AlphaImageLoader for IE and fancybox\n");
                 if (Shop::isFeatureActive()) {
                     fwrite($write_fd, $domain_rewrite_cond);
                 }
-                fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]' . "\n");
+                fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]' . PHP_EOL);
             }
             // Redirections to dispatcher
             if ($rewrite_settings) {
@@ -2619,6 +2709,7 @@ FileETag none
         }
 
         $robots_content = static::getRobotsContent();
+        $languagesIsoIds = Language::getIsoIds();
 
         if (true === $executeHook) {
             Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
@@ -2643,7 +2734,7 @@ FileETag none
         if (count($robots_content['Allow'])) {
             fwrite($write_fd, "# Allow Directives\n");
             foreach ($robots_content['Allow'] as $allow) {
-                fwrite($write_fd, 'Allow: ' . $allow . "\n");
+                fwrite($write_fd, 'Allow: ' . $allow . PHP_EOL);
             }
         }
 
@@ -2651,28 +2742,56 @@ FileETag none
         if (count($robots_content['GB'])) {
             fwrite($write_fd, "# Private pages\n");
             foreach ($robots_content['GB'] as $gb) {
-                fwrite($write_fd, 'Disallow: /*' . $gb . "\n");
+                fwrite($write_fd, 'Disallow: /*' . $gb . PHP_EOL);
             }
         }
 
         // Directories
         if (count($robots_content['Directories'])) {
-            fwrite($write_fd, "# Directories\n");
-            foreach ($robots_content['Directories'] as $dir) {
-                fwrite($write_fd, 'Disallow: /' . $dir . "\n");
+            foreach (self::getDomains() as $domain => $uriList) {
+                fwrite(
+                    $write_fd,
+                    sprintf(
+                        '# Directories for %s%s',
+                        $domain,
+                        PHP_EOL
+                    )
+                );
+                // Disallow multishop directories
+                foreach ($uriList as $uri) {
+                    foreach ($robots_content['Directories'] as $dir) {
+                        fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $dir . PHP_EOL);
+                    }
+                }
+
+                // Disallow multilang directories
+                if (!empty($languagesIsoIds)) {
+                    foreach ($languagesIsoIds as $language) {
+                        foreach ($robots_content['Directories'] as $dir) {
+                            fwrite(
+                                $write_fd,
+                                sprintf(
+                                    'Disallow: /%s/%s%s',
+                                    $language['iso_code'],
+                                    $dir,
+                                    PHP_EOL
+                                )
+                            );
+                        }
+                    }
+                }
             }
         }
 
         // Files
         if (count($robots_content['Files'])) {
-            $language_ids = Language::getIDs();
             fwrite($write_fd, "# Files\n");
             foreach ($robots_content['Files'] as $iso_code => $files) {
                 foreach ($files as $file) {
-                    if (!empty($language_ids) && count($language_ids) > 1) {
-                        fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . "\n");
+                    if (!empty($languagesIsoIds)) {
+                        fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
                     } else {
-                        fwrite($write_fd, 'Disallow: /' . $file . "\n");
+                        fwrite($write_fd, 'Disallow: /' . $file . PHP_EOL);
                     }
                 }
             }
@@ -2689,7 +2808,7 @@ FileETag none
             fwrite($write_fd, "# Sitemap\n");
             $sitemap_filename = basename($sitemap_file);
             fwrite($write_fd, 'Sitemap: ' . (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . $_SERVER['SERVER_NAME']
-                . __PS_BASE_URI__ . $sitemap_filename . "\n");
+                . __PS_BASE_URI__ . $sitemap_filename . PHP_EOL);
         }
 
         if (true === $executeHook) {
@@ -3063,7 +3182,7 @@ exit;
     public static function ZipExtract($from_file, $to_dir)
     {
         if (!file_exists($to_dir)) {
-            mkdir($to_dir, 0777);
+            mkdir($to_dir, PsFileSystem::DEFAULT_MODE_FOLDER);
         }
 
         $zip = new ZipArchive();

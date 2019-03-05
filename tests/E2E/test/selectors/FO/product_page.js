@@ -53,6 +53,25 @@ module.exports = {
     product_value_text: '#product-details > section dd:%B-of-type',
     product_feature_text: '#product-details > section dt:%B-of-type',
     product_tax_label: '//*[@id="main"]//div[@class="tax-shipping-delivery-label" and (contains(text(),"Tax excluded") or contains(text(),"Tax included") )] ',
-    file_description: '//*[@id="attachments"]/section/div/p'
+    file_description: '//*[@id="attachments"]/section/div/p',
+    pagination_number_link: '//*[@id="js-product-list"]//nav//a[contains(text(), "%NUM")]',
+    product_pictures: '//*[@id="content"]//ul[contains(@class,"product-images")]/li[%ID]/img[@title="%LEGEND"]',
+    unit_price_text: '//*[@id="main"]//p[contains(@class,"product-unit-price")]',
+    product_on_sale_flag: '//li[contains(@class, "on-sale")]',
+    quick_view_product_price: '//div[@class="current-price"]//span[@itemprop="price"]',
+    quick_view_product_discount: '//div[@class="current-price"]//span[contains(@class,"discount")]',
+    page_meta_title: 'head > title',
+    page_meta_description: '//meta[@name="description"]',
+    page_link: '/html/head/link[1]',
+    alert_bloc: '//*[@id="notifications"]//article',
+    product_online_only_flag: '//*[@id="content"]//li[contains(@class, "online-only")]',
+    product_name_link: '//*[@id="js-product-list"]//a[contains(text(),"%S")]',
+    product_condition: '//*[@id="product-details"]/div[@class="product-condition"]/span',
+    product_customization_message: '#main li:nth-of-type(%I) textarea.product-message',
+    save_customization_button: '//*[@id="main"]//button[@name="submitCustomizedData"]',
+    product_customization_file: '(//*[contains(@class, "file-input")])[%I]',
+    attachment_title: '//*[@id="attachments"]//div[@class="attachment"]//a',
+    attachment_description: '//*[@id="attachments"]//div[@class="attachment"]//p',
+    delete_shopping_cart_item: '//*[@id="main"]//a[@class="remove-from-cart"]'
   }
 };

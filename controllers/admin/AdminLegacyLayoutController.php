@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -127,5 +127,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
         ob_end_clean();
 
         $this->outPutHtml;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addJquery($version = null, $folder = null, $minifier = true)
+    {
+        // jQuery is already included, so do nothing
+        @trigger_error(__FUNCTION__ . 'is deprecated and has no effect in the New Theme since version 1.7.6.0.', E_USER_DEPRECATED);
     }
 }

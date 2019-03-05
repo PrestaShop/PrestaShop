@@ -1,0 +1,54 @@
+.sidebar.sidebar-right {
+  -webkit-transform: translate(-100%, 0);
+  -moz-transform: translate(-100%, 0);
+  -ms-transform: translate(-100%, 0);
+  -o-transform: translate(-100%, 0);
+  transform: translate(-100%, 0);
+}
+
+/* fix logo position */
+.main-header > .logo {
+  background-position: right;
+}
+
+/* fix profile menu position */
+.employee-dropdown .dropdown-menu {
+  right: auto !important;
+  left: .3em !important;
+}
+
+/* fix select dropdown */
+.select2-container--open .select2-dropdown {
+  right: auto;
+  left: 0;
+}
+
+/* fix notification dropdown */
+.notification-center .dropdown-menu {
+  right: auto;
+  left: 85px !important;
+}
+
+/* fix popover */
+.popover {
+  right: auto;
+  left: 5px;
+  margin-right: 0;
+  margin-left: 8px;
+}
+.popover .arrow {
+  left: -8px;
+  right: auto;
+  transform: scaleX(-1);
+}
+
+/* fix stock quantity arrow direction */
+.stock-app .stock-overview .table .qty-update .material-icons {
+  transform: scaleX(-1);
+}
+
+/* Fixes image flipping for RTL language */
+.img-rtl {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}

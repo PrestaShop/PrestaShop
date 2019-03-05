@@ -1,0 +1,39 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="text-center showcase-list-card">
+  <img class="img-responsive mt-3 img-rtl" src="{{ asset('themes/new-theme/img/empty_state/supplier.svg') }}">
+
+  <p class="mt-4 showcase-list-card__header">{{ 'Keep in touch with your suppliers'|trans({}, 'Admin.Catalog.Feature') }}</p>
+
+  <p class="mx-auto showcase-list-card__message">
+    {{ 'Having suppliers is optional if brands supply you directly. Make sure you don\'t confuse product suppliers and product brands to facilitate stock management.'|trans({}, 'Admin.Catalog.Feature') }}
+  </p>
+
+  <div class="mt-4">
+    <a href="{{ documentation_link('supplier') }}" target="_blank" class="btn btn-outline-secondary mr-1">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
+    <a href="{{ path('admin_suppliers_create') }}" class="btn btn-primary ml-1">{{ 'Add new supplier'|trans({}, 'Admin.Catalog.Feature') }}</a>
+  </div>
+</div>

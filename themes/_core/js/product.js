@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -123,6 +123,13 @@ function updateProduct(event, eventType, updateUrl) {
     clearTimeout(currentRequestDelayedId);
   }
 
+  // Most update need to occur (almost) instantly, but in some cases (like keyboard actions)
+  // we need to delay the update a bit more
+  let updateDelay = 30;
+  if ('updatedProductQuantity' === eventType) {
+    updateDelay = 750;
+  }
+
   currentRequestDelayedId = setTimeout(function updateProductRequest() {
 
     if (formSerialized === '') {
@@ -182,7 +189,7 @@ function updateProduct(event, eventType, updateUrl) {
         currentRequestDelayedId = null;
       }
     });
-  }.bind(currentRequest, currentRequestDelayedId), 1500);
+  }.bind(currentRequest, currentRequestDelayedId), updateDelay);
 }
 
 /**
@@ -320,11 +327,27 @@ $(document).ready(() => {
     if (!args.product_url || !args.id_product_attribute) {
       return;
     }
+
+    /*
+     * If quickview modal is present we are not on product page, so
+     * we don't change the url nor title
+     */
+    const quickView = $('.modal.quickview');
+    if (quickView.length) {
+      return;
+    }
+
+    let pageTitle = document.title;
+    if (args.product_title) {
+      pageTitle = args.product_title;
+      $(document).attr('title', pageTitle);
+    }
+
     window.history.replaceState(
       {
         id_product_attribute: args.id_product_attribute
       },
-      document.title,
+      pageTitle,
       args.product_url
     );
   });

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,28 +29,98 @@ class CurrencyCore extends ObjectModel
 {
     public $id;
 
-    /** @var string Name */
+    /**
+     * Name of the currency.
+     *
+     * @var string
+     */
     public $name;
 
-    /** @var string Iso code */
+    /**
+     * Alphabetic ISO 4217 code of this currency.
+     *
+     * @var string
+     */
     public $iso_code;
 
-    /** @var string numeric Iso code */
+    /**
+     * Numeric ISO 4217 code of this currency
+     *
+     * @var string
+     */
     public $iso_code_num;
 
-    /** @var string exchange rate from euros */
+    /**
+     * Numeric ISO 4217 code of this currency.
+     *
+     * @var string
+     */
+    public $numeric_iso_code;
+
+    /**
+     * Exchange rate from default currency.
+     *
+     * @var float
+     */
     public $conversion_rate;
 
-    /** @var bool True if currency has been deleted (staying in database as deleted) */
+    /**
+     * Is this currency deleted ?
+     * If currency is deleted, it stays in database. This is just a state (soft delete).
+     *
+     * @var bool
+     */
     public $deleted = 0;
 
-    /** @var int bool active */
+    /**
+     * Is this currency active ?
+     *
+     * @var int|bool active
+     */
     public $active;
 
+    /**
+     * Currency's symbol
+     *
+     * @var string
+     */
     public $sign;
+
+    /**
+     * Currency's symbol.
+     *
+     * @var string
+     */
+    public $symbol;
+
+    /**
+     * CLDR price formatting pattern
+     * e.g.: In french (fr-FR), price formatting pattern is : #,##0.00 ¤.
+     *
+     * @var string
+     */
     public $format;
+
+    /**
+     * @var int
+     */
     public $blank;
+
+    /**
+     * Use decimals when displaying a price in this currency
+     *
+     * @deprecated since 1.7.0
+     *
+     * @var int
+     */
     public $decimals;
+
+    /**
+     * Number of decimal digits to use when displaying a price in this currency.
+     *
+     * @var int
+     */
+    public $precision;
 
     /**
      * @see ObjectModel::$definition
@@ -58,13 +128,18 @@ class CurrencyCore extends ObjectModel
     public static $definition = array(
         'table' => 'currency',
         'primary' => 'id_currency',
-        'multilang_shop' => true,
+        'multilang' => true,
         'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
             'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+            'numeric_iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3),
+            'precision' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+
+            /* Lang fields */
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
         ),
     );
 
@@ -106,7 +181,9 @@ class CurrencyCore extends ObjectModel
             $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
 
             $this->sign = $cldrCurrency['symbol'];
+            $this->symbol = $cldrCurrency['symbol'];
             $this->iso_code_num = $cldrCurrency['iso_code'];
+            $this->numeric_iso_code = $cldrCurrency['iso_code'];
             $this->name = $cldrCurrency['name'];
             $this->format = $this->cldr->getCurrencyFormatPattern();
             $this->blank = 1;

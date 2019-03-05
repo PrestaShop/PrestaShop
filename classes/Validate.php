@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -361,7 +361,7 @@ class ValidateCore
     public static function isLinkRewrite($link)
     {
         if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
-            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\pL\pS-]+$/u'), $link);
+            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u'), $link);
         }
 
         return preg_match('/^[_a-zA-Z0-9\-]+$/', $link);
@@ -377,7 +377,7 @@ class ValidateCore
     public static function isRoutePattern($pattern)
     {
         if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
-            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
+            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\x{0600}-\x{06FF}\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
         }
 
         return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-]+$/', $pattern);
@@ -593,27 +593,22 @@ class ValidateCore
      * Check for birthDate validity.
      *
      * @param string $date birthdate to validate
+     * @param string $format optional format
      *
      * @return bool Validity is ok or not
      */
-    public static function isBirthDate($date)
+    public static function isBirthDate($date, $format = 'Y-m-d')
     {
         if (empty($date) || $date == '0000-00-00') {
             return true;
         }
-        if (preg_match('/^([0-9]{4})-((?:0?[1-9])|(?:1[0-2]))-((?:0?[1-9])|(?:[1-2][0-9])|(?:3[01]))([0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date)) {
-            if ($birth_date[1] > date('Y')
-                || ($birth_date[1] > date('Y') && $birth_date[2] > date('m'))
-                || ($birth_date[1] > date('Y') && $birth_date[2] > date('m') && $birth_date[3] > date('d'))
-                || ($birth_date[1] == date('Y') && $birth_date[2] == date('m') && $birth_date[3] > date('d'))
-                || ($birth_date[1] == date('Y') && $birth_date[2] > date('m'))) {
-                return false;
-            }
 
-            return true;
+        $d = DateTime::createFromFormat($format, $date);
+        if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
+            return false;
         }
 
-        return false;
+        return $d->getTimestamp() <= time();
     }
 
     /**

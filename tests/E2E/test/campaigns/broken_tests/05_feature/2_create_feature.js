@@ -34,7 +34,10 @@ let productData = {
   ]
 };
 
-
+/**
+ * This script should be moved to the campaign full when this issue will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/11217
+ **/
 scenario('Create, edit, delete, delete with bulk actions "Feature" in the Back Office', () => {
 
   scenario('Test 1: Create "Feature"', () => {

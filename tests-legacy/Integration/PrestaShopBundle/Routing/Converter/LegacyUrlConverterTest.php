@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -151,17 +151,6 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_emails_delete_bulk' => ['/configure/advanced/emails/delete-bulk', 'AdminEmails', 'submitBulkdeletemail'],
             'admin_emails_delete_all' => ['/configure/advanced/emails/delete-all', 'AdminEmails', 'deleteAll'],
             'admin_emails_delete' => ['/configure/advanced/emails/delete/42', 'AdminEmails', 'deletemail', ['id_mail' => 42]],
-
-            'admin_metas_index' => ['/configure/shop/seo-urls/', 'AdminMeta'],
-            'admin_metas_search' => ['/configure/shop/seo-urls/', 'AdminMeta', 'search'],
-            'admin_metas_delete' => ['/configure/shop/seo-urls/42/delete', 'AdminMeta', 'deletemeta', ['id_meta' => 42]],
-            'admin_metas_delete_bulk' => ['/configure/shop/seo-urls/delete-bulk', 'AdminMeta', 'submitBulkdeletmeta'],
-            'admin_metas_save_options' => ['/configure/shop/seo-urls/options', 'AdminMeta', 'update'],
-            'admin_metas_generate_robots_file' => ['/configure/shop/seo-urls/generate-robots-file', 'AdminMeta', 'submitRobots'],
-
-            //This url is not ready to be migrated yet, the SF controller redirects to the legacy url
-            // 'admin_meta_list_create' => ['/configure/shop/seo-urls/create', 'AdminMeta', 'addmeta'],
-            // 'admin_meta_list_edit' => ['/configure/shop/seo-urls/edit/42', 'AdminMeta', 'updatemeta', ['id_meta' => 42]],
 
             //'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
             //'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],

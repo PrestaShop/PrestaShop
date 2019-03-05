@@ -4,6 +4,7 @@ admin_currencies_index:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:index'
         _legacy_controller: AdminCurrencies
+        _legacy_link: AdminCurrencies
 
 admin_currencies_search:
     path: /
@@ -13,7 +14,7 @@ admin_currencies_search:
         _legacy_controller: AdminCurrencies
 
 admin_currencies_create:
-    path: /create
+    path: /new
     methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:create'
@@ -45,3 +46,18 @@ admin_currencies_toggle_status:
         _legacy_controller: AdminCurrencies
     requirements:
         currencyId: \d+
+
+admin_currencies_update_live_exchange_rates:
+    path: /update-live-exchange-rates
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:updateLiveExchangeRates'
+        _legacy_controller: AdminCurrencies
+
+admin_currencies_refresh_exchange_rates:
+    path: /refresh-exchange-rates
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:refreshExchangeRates'
+        _legacy_controller: AdminCurrencies
+

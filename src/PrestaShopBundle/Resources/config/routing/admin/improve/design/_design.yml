@@ -9,3 +9,7 @@ _positions:
 _theme:
     resource: "theme.yml"
     prefix: /themes
+
+_cms_page:
+    resource: "cms_pages.yml"
+    prefix: /cms-pages

@@ -16,6 +16,10 @@ const welcomeScenarios = require('../../common_scenarios/welcome');
 require('../../../globals.webdriverio.js');
 require('../../install_upgrade/01_install.js');
 
+/**
+ * This script should be moved to the campaign installation when this issues will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/12168 && https://github.com/PrestaShop/PrestaShop/issues/10744
+ **/
 scenario('Check language, country and currency', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -95,6 +99,7 @@ scenario('Check language, country and currency', () => {
         await client.pause(0);
       }
     });
+    test('should go back to the "Back Office"', () => client.switchWindow(0));
     test('should go to "International > Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
     test('should set language from browser: "Yes"', () => client.waitForExistAndClick(Localization.Localization.language_browser_yes_label));
     test('should set default country from browser: "Yes"', () => client.waitForExistAndClick(Localization.Localization.country_browser_yes_label));

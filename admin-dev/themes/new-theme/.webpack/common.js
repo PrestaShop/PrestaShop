@@ -1,7 +1,9 @@
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const cssExtractedFileName = 'theme';
 
 module.exports = {
   externals: {
@@ -40,6 +42,9 @@ module.exports = {
     currency: './js/pages/currency',
     supplier: './js/pages/supplier',
     themes: './js/pages/themes',
+    profiles: './js/pages/profiles',
+    cms_page: './js/pages/cms-page',
+    form_popover_error: './js/components/form/form-popover-error.js',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
@@ -60,8 +65,10 @@ module.exports = {
         use: [{
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
-          }
+            presets: [
+              ['es2015', {modules: false}],
+            ],
+          },
         }],
       },
       {
@@ -107,7 +114,47 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
+            css: 'postcss-loader',
+            scss: 'style-loader!css-loader!sass-loader',
+          },
+        },
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader'],
+        }),
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true,
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
+          ],
+        }),
       },
       // FILES
       {
@@ -117,10 +164,11 @@ module.exports = {
     ],
   },
   plugins: [
+    new ExtractTextPlugin('theme.css'),
     new CleanWebpackPlugin(['public'], {
-      root: path.resolve(__dirname, '../')
+      root: path.resolve(__dirname, '../'),
+      exclude: ['theme.rtlfix']
     }),
-    new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui

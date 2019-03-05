@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -88,10 +88,36 @@
     </a>
 {% endmacro %}
 
-{# Show form widget with errors rendered below it #}
+{#
+  Show form widget with errors rendered below it. It displays all nested errors for any form type.
+  If form type has error_by_locale parameter set then the error is being displayed with the specific locale assigned to it.
+  If form type has errors_by_locale parameter set then the errors are being assigned to the locales and are displayed
+  in the popover template.
+  If there are more then one error it also assigns all errors in the pop-up to appear.
+  On page load, user sees only the errors count but then user hovers over the element the popover
+  appears with the errors combined by language.
+#}
 {% macro form_widget_with_error(form, vars, extraVars) %}
   {% set vars = vars|default({}) %}
   {% set extraVars = extraVars|default({}) %}
+  {% set attr = vars.attr|default({}) %}
+  {% set errors = [] %}
+
+  {% if not form.vars.valid  %}
+    {% for parentError in form.vars.errors %}
+      {% set errors = errors|merge([parentError.message]) %}
+    {% endfor %}
+
+    {#iterating over child errors because errors can be nested#}
+    {% for child in form.children %}
+      {% for error in child.vars.errors %}
+        {% set errors = errors|merge([error.message]) %}
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+
+  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '')} ) %}
+  {% set vars = vars|merge({'attr': attr}) %}
 
   {{ form_widget(form, vars) }}
 
@@ -99,11 +125,83 @@
     <small class="form-text">{{ extraVars.help }}</small>
   {% endif %}
 
-  {% for error in form.vars.errors %}
-    <div class="text-danger">
-      {{ error.message }}
+  {% if errors|length > 0 %}
+    {# for form types which has locales and there are more then 1 error , additional errors are displaying inside popover #}
+    {% set errorPopover = null %}
+
+    {% if errors|length > 1 %}
+      {% set popoverContainer = 'popover-error-container-'~form.vars.id %}
+      <div class="{{ popoverContainer }}"></div>
+
+      {% if form.vars.errors_by_locale is defined %}
+          {% set popoverErrors = form.vars.errors_by_locale %}
+
+          {% set popoverErrorContent %}
+            <div class="popover-error-list">
+              <ul>
+                {% for popoverError in popoverErrors %}
+                  <li class="text-danger">
+                    {{ '%error_message% - Language: %language_name%'|trans({'%error_message%': popoverError.error_message, '%language_name%': popoverError.locale_name}, 'Admin.Notifications.Error') }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endset %}
+        {% else %}
+          {% set popoverErrors = errors %}
+
+          {% set popoverErrorContent %}
+            <div class="popover-error-list">
+              <ul>
+                {% for popoverError in popoverErrors %}
+                  <li class="text-danger">
+                    {{ popoverError }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endset %}
+      {% endif %}
+
+      {% set errorPopover %}
+        <span
+          data-toggle="form-popover-error"
+          data-placement="bottom"
+          data-html="true"
+          data-template='<div class="popover form-popover-error" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+          data-content='{{ popoverErrorContent }}'
+          data-trigger="hover"
+          data-container=".{{ popoverContainer }}"
+        >
+          <i class="material-icons form-error-icon">error_outline</i> <u>{{ '%count% errors'|transchoice(popoverErrors|length, {}, 'Admin.Global') }}</u>
+        </span>
+      {% endset %}
+
+      {% elseif form.vars.error_by_locale is defined %}
+        {% set errorByLocale = '%error_message% - Language: %language_name%'|trans({'%error_message%': form.vars.error_by_locale.error_message, '%language_name%': form.vars.error_by_locale.locale_name}, 'Admin.Notifications.Error') %}
+        {% set errors = [errorByLocale] %}
+    {% endif %}
+
+    <div class="invalid-feedback-container">
+      {% if errorPopover is not null %}
+          <div class="text-danger">
+            {{ errorPopover }}
+          </div>
+        {% else %}
+          <div class="d-inline-block text-danger align-top">
+            <i class="material-icons form-error-icon">error_outline</i>
+          </div>
+          <div class="d-inline-block">
+            {% for error in errors %}
+              <div class="text-danger">
+                {{ error }}
+              </div>
+            {% endfor %}
+          </div>
+      {% endif %}
+
     </div>
-  {% endfor %}
+  {% endif %}
 {% endmacro %}
 
  {#

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,14 +34,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class SearchParameters implements SearchParametersInterface
 {
-    const FILTER_TYPES = array(
-        'limit',
-        'offset',
-        'orderBy',
-        'sortOrder',
-        'filters',
-    );
-
     /**
      * @var AdminFilterRepository
      */
@@ -58,10 +50,13 @@ final class SearchParameters implements SearchParametersInterface
     public function getFiltersFromRequest(Request $request, $filterClass)
     {
         $filters = [];
-        $defaultValues = $filterClass::getDefaults();
 
         foreach (self::FILTER_TYPES as $type) {
-            $filters[$type] = $request->get($type, $defaultValues[$type]);
+            if ($request->request->has($type)) {
+                $filters[$type] = $request->request->get($type);
+            } elseif ($request->query->has($type)) {
+                $filters[$type] = $request->query->get($type);
+            }
         }
 
         return new $filterClass($filters);
@@ -75,19 +70,7 @@ final class SearchParameters implements SearchParametersInterface
         $adminFilter = $this->adminFilterRepository
             ->findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
 
-        $savedFilters = [];
-
-        if ($adminFilter !== null) {
-            $savedFilters = json_decode($adminFilter->getFilter(), true);
-        }
-
-        $filters = [];
-
-        $defaultValues = $filterClass::getDefaults();
-
-        foreach (self::FILTER_TYPES as $type) {
-            $filters[$type] = isset($savedFilters[$type]) ? $savedFilters[$type] : $defaultValues[$type];
-        }
+        $filters = null !== $adminFilter ? json_decode($adminFilter->getFilter(), true) : [];
 
         return new $filterClass($filters);
     }
