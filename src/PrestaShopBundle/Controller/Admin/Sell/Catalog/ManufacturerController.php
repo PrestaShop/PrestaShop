@@ -340,22 +340,47 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function exportManufacturerAction()
+    public function exportAction()
     {
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function createManufacturerAddressAction()
+    /**
+     * Show & process address creation.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAddressAction(Request $request)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        $addressForm = $this->getAddressFormBuilder()->getForm();
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig', [
+            'addressForm' => $addressForm->createView(),
+        ]);
     }
 
-    public function editManufacturerAddressAction()
+    /**
+     * Show & process address editing.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param int $addressId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAddressAction(Request $request, $addressId)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig');
     }
 
     /**
@@ -383,7 +408,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function exportManufacturerAddressAction()
+    public function exportAddressAction()
     {
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
@@ -530,7 +555,6 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-<<<<<<< HEAD
      * @return FormHandlerInterface
      */
     private function getFormHandler()
@@ -547,35 +571,10 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show & process address creation.
-     *
-     * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return Response
+     * @return FormBuilderInterface
      */
-    public function createAddressAction(Request $request)
+    private function getAddressFormBuilder()
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig');
-    }
-
-    /**
-     * Show & process address editing.
-     *
-     * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))"
-     * )
-     *
-     * @param int $addressId
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function editAddressAction(Request $request, $addressId)
-    {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig');
+        return $this->get('prestashop.core.form.identifiable_object.builder.address_form_builder');
     }
 }

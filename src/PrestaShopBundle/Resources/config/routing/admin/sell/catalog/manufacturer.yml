@@ -84,7 +84,7 @@ admin_manufacturers_export:
   path: /export
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:exportManufacturer'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:export'
     _legacy_controller: AdminManufacturers
 
 #
@@ -126,5 +126,5 @@ admin_manufacturers_addresses_export:
   path: addresses/export
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:exportManufacturerAddress'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:exportAddress'
     _legacy_controller: AdminManufacturers
