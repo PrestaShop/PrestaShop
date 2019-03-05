@@ -57,20 +57,23 @@ class ProfilesController extends FrameworkBundleAdminController
     public function indexAction(ProfilesFilters $filters)
     {
         $profilesGridFactory = $this->get('prestashop.core.grid.factory.profiles');
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/profiles.html.twig', [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->getAdminLink('AdminProfiles', ['addprofile' => '']),
-                    'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
-                    'icon' => 'add_circle_outline',
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/index.html.twig',
+            [
+                'layoutHeaderToolbarBtn' => [
+                    'add' => [
+                        'href' => $this->generateUrl('admin_profiles_create'),
+                        'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
+                        'icon' => 'add_circle_outline',
+                  ],
                 ],
-            ],
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminProfiles'),
-            'grid' => $gridPresenter->present($profilesGridFactory->getGrid($filters)),
-        ]);
+                'help_link' => $this->generateSidebarLink('AdminProfiles'),
+                'enableSidebar' => true,
+                'layoutTitle' => $this->trans('Profiles', 'Admin.Navigation.Menu'),
+                'grid' => $this->presentGrid($profilesGridFactory->getGrid($filters)),
+            ]
+        );
     }
 
     /**
@@ -96,6 +99,20 @@ class ProfilesController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_profiles_index', ['filters' => $filters]);
+    }
+
+    /**
+     * Show profile's create page
+     *
+     * @return Response
+     */
+    public function createAction()
+    {
+        $legacyLink = $this->getAdminLink('AdminProfiles', [
+            'addprofile' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
     }
 
     /**
@@ -142,7 +159,7 @@ class ProfilesController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (ProfileException $e) {
-            $this->addFlash('error', $this->handleDeleteException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_profiles_index');
@@ -172,7 +189,7 @@ class ProfilesController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (ProfileException $e) {
-            $this->addFlash('error', $this->handleDeleteException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_profiles_index');
@@ -181,24 +198,23 @@ class ProfilesController extends FrameworkBundleAdminController
     /**
      * Get human readable error for exception.
      *
-     * @param ProfileException $e
-     *
-     * @return string Error message
+     * @return array
      */
-    protected function handleDeleteException(ProfileException $e)
+    protected function getErrorMessages()
     {
-        $type = get_class($e);
-
-        $exceptionMessages = [
-            ProfileNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-            CannotDeleteSuperAdminProfileException::class => $this->trans('For security reasons, you cannot delete the Administrator\'s profile.', 'Admin.Advparameters.Notification'),
-            ProfileException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+        return [
+            ProfileNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotDeleteSuperAdminProfileException::class => $this->trans(
+                'For security reasons, you cannot delete the Administrator\'s profile.',
+                'Admin.Advparameters.Notification'
+            ),
+            ProfileException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
         ];
-
-        if (isset($exceptionMessages[$type])) {
-            return $exceptionMessages[$type];
-        }
-
-        return $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error');
     }
 }
