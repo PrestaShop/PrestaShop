@@ -35,7 +35,7 @@
           {{ 'Enable tax'|trans({}, 'Admin.International.Feature') }}
         </label>
         <div class="col-sm">
-          {{ form_widget(taxOptionsForm.options.enable_tax) }}
+          {{ form_widget(taxOptionsForm.options.enable_tax, {'attr': {'class': 'js-enable-tax'}}) }}
             <small class="form-text">
               {{ 'Select whether or not to include tax on purchases.'|trans({}, 'Admin.International.Help') }}
             </small>
@@ -46,7 +46,7 @@
           {{ 'Display tax in the shopping cart'|trans({}, 'Admin.International.Feature') }}
         </label>
         <div class="col-sm">
-          {{ form_widget(taxOptionsForm.options.display_tax_in_cart) }}
+          {{ form_widget(taxOptionsForm.options.display_tax_in_cart, {'attr': {'class': 'js-display-in-cart'}}) }}
           <small class="form-text">
             {{ 'Select whether or not to display tax on a distinct line in the cart.'|trans({}, 'Admin.International.Help') }}
           </small>
