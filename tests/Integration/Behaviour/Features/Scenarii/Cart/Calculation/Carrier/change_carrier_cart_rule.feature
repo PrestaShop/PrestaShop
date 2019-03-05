@@ -23,13 +23,13 @@ Feature: Cart calculation with carriers specific cart rules: carrier changes
     Given There is a carrier with name carrier3
     Given carrier with name carrier3 has a shipping fees of 5.7 in zone with name zone1 for quantities between 0 and 10000
     Given carrier with name carrier3 has a shipping fees of 6.2 in zone with name zone2 for quantities between 0 and 10000
-    Given There is a cart rule with name cartrule1 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo
     Given Cart rule named cartrule1 is restricted to carrier named carrier2
-    Given There is a cart rule with name cartrule2 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule2 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: bar
     Given Cart rule named cartrule2 is restricted to carrier named carrier1
-    Given There is a cart rule with name cartrule3 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule3 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule3 is restricted to carrier named carrier3
     When I add product named product1 in my cart with quantity 1
     When I select in my cart address with name address1
@@ -56,13 +56,13 @@ Feature: Cart calculation with carriers specific cart rules: carrier changes
     Given There is a carrier with name carrier3
     Given carrier with name carrier3 has a shipping fees of 5.7 in zone with name zone1 for quantities between 0 and 10000
     Given carrier with name carrier3 has a shipping fees of 6.2 in zone with name zone2 for quantities between 0 and 10000
-    Given There is a cart rule with name cartrule1 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo
     Given Cart rule named cartrule1 is restricted to carrier named carrier2
-    Given There is a cart rule with name cartrule2 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule2 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: bar
     Given Cart rule named cartrule2 is restricted to carrier named carrier1
-    Given There is a cart rule with name cartrule3 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule3 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule3 is restricted to carrier named carrier3
     When I add product named product1 in my cart with quantity 1
     When I select in my cart address with name address1
@@ -94,13 +94,13 @@ Feature: Cart calculation with carriers specific cart rules: carrier changes
     Given There is a carrier with name carrier3
     Given carrier with name carrier3 has a shipping fees of 5.7 in zone with name zone1 for quantities between 0 and 10000
     Given carrier with name carrier3 has a shipping fees of 6.2 in zone with name zone2 for quantities between 0 and 10000
-    Given There is a cart rule with name cartrule1 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo
     Given Cart rule named cartrule1 is restricted to carrier named carrier2
-    Given There is a cart rule with name cartrule2 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule2 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: bar
     Given Cart rule named cartrule2 is restricted to carrier named carrier1
-    Given There is a cart rule with name cartrule3 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule3 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule3 is restricted to carrier named carrier3
     When I add product named product1 in my cart with quantity 1
     When I select in my cart address with name address1
@@ -133,13 +133,13 @@ Feature: Cart calculation with carriers specific cart rules: carrier changes
     Given There is a carrier with name carrier3
     Given carrier with name carrier3 has a shipping fees of 5.7 in zone with name zone1 for quantities between 0 and 10000
     Given carrier with name carrier3 has a shipping fees of 6.2 in zone with name zone2 for quantities between 0 and 10000
-    Given There is a cart rule with name cartrule1 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo
     Given Cart rule named cartrule1 is restricted to carrier named carrier2
-    Given There is a cart rule with name cartrule2 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule2 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: bar
     Given Cart rule named cartrule2 is restricted to carrier named carrier1
-    Given There is a cart rule with name cartrule3 and percent discount of 55% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule3 and percent discount of 55.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule3 is restricted to carrier named carrier3
     When I add product named product1 in my cart with quantity 1
     When I select in my cart address with name address1

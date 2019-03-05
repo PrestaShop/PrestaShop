@@ -9,8 +9,8 @@ Feature: Cart rule (percent) calculation with multiple cart rules without code
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given there is a product with name product2 and price 32.388 and quantity 1000
     Given there is a product with name product3 and price 31.188 and quantity 1000
-    Given There is a cart rule with name cartrule14 and percent discount of 10% and priority of 12 and quantity of 1000 and quantity per user of 1000
-    Given There is a cart rule with name cartrule15 and percent discount of 10% and priority of 13 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule14 and percent discount of 10.0% and priority of 12 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule15 and percent discount of 10.0% and priority of 13 and quantity of 1000 and quantity per user of 1000
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
     When I add product named product3 in my cart with quantity 1

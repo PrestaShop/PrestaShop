@@ -83,7 +83,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^there is a product with name (.+) and price ([\d\.]+) and quantity (\d+)$/
+     * @Given /^there is a product with name (.+) and price (\d+\.\d+) and quantity (\d+)$/
      */
     public function thereIsAProductWithNameAndPriceAndQuantity($productName, $price, $productQuantity)
     {

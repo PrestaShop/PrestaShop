@@ -7,10 +7,10 @@ Feature: Cart rule (percent) calculation with multiple cart rules restricted to 
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a cart rule with name cartrule10 and percent discount of 50% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule10 and percent discount of 50.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule10 is restricted to product named product2
     Given Cart rule named cartrule10 has a code: foo10
-    Given There is a cart rule with name cartrule11 and percent discount of 10% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule11 and percent discount of 10.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule11 is restricted to product named product2
     Given Cart rule named cartrule11 has a code: foo11
     Then Distinct product count in my cart should be 0
@@ -24,10 +24,10 @@ Feature: Cart rule (percent) calculation with multiple cart rules restricted to 
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a cart rule with name cartrule10 and percent discount of 50% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule10 and percent discount of 50.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule10 is restricted to product named product2
     Given Cart rule named cartrule10 has a code: foo10
-    Given There is a cart rule with name cartrule11 and percent discount of 10% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule11 and percent discount of 10.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule11 is restricted to product named product2
     Given Cart rule named cartrule11 has a code: foo11
     When I add product named product1 in my cart with quantity 1
@@ -41,10 +41,10 @@ Feature: Cart rule (percent) calculation with multiple cart rules restricted to 
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a cart rule with name cartrule10 and percent discount of 50% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule10 and percent discount of 50.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule10 is restricted to product named product2
     Given Cart rule named cartrule10 has a code: foo10
-    Given There is a cart rule with name cartrule11 and percent discount of 10% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule11 and percent discount of 10.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule11 is restricted to product named product2
     Given Cart rule named cartrule11 has a code: foo11
     When I add product named product1 in my cart with quantity 3
@@ -57,10 +57,10 @@ Feature: Cart rule (percent) calculation with multiple cart rules restricted to 
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a cart rule with name cartrule10 and percent discount of 50% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule10 and percent discount of 50.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule10 is restricted to product named product2
     Given Cart rule named cartrule10 has a code: foo10
-    Given There is a cart rule with name cartrule11 and percent discount of 10% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule11 and percent discount of 10.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule11 is restricted to product named product2
     Given Cart rule named cartrule11 has a code: foo11
     When I add product named product2 in my cart with quantity 3
@@ -76,10 +76,10 @@ Feature: Cart rule (percent) calculation with multiple cart rules restricted to 
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given there is a product with name product2 and price 32.388 and quantity 1000
     Given there is a product with name product3 and price 31.188 and quantity 1000
-    Given There is a cart rule with name cartrule10 and percent discount of 50% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule10 and percent discount of 50.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule10 is restricted to product named product2
     Given Cart rule named cartrule10 has a code: foo10
-    Given There is a cart rule with name cartrule11 and percent discount of 10% and priority of 10 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule11 and percent discount of 10.0% and priority of 10 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule11 is restricted to product named product2
     Given Cart rule named cartrule11 has a code: foo11
     When I add product named product1 in my cart with quantity 3

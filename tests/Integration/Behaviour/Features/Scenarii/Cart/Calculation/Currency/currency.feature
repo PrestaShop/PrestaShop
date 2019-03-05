@@ -106,8 +106,8 @@ Feature: Cart calculation with currencies
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
     When I add product named product3 in my cart with quantity 1
-    Then Expected total of my cart tax included should be 203
-    Then Expected total of my cart tax included should be 203 with previous calculation method
+    Then Expected total of my cart tax included should be 203.0
+    Then Expected total of my cart tax included should be 203.0 with previous calculation method
 
   # CHF / USD
 

@@ -32,8 +32,8 @@ Feature: Cart rule (amount) calculation with one cart rule
     Given Cart rule named cartrule5 has a code: foo5
     When I add product named product1 in my cart with quantity 1
     When I add cart rule named cartrule5 to my cart
-    Then Expected total of my cart tax included should be 7
-    Then Expected total of my cart tax included should be 7 with previous calculation method
+    Then Expected total of my cart tax included should be 7.0
+    Then Expected total of my cart tax included should be 7.0 with previous calculation method
 
   Scenario: one product in cart, quantity 3, one 5€ global voucher
     Given I have an empty default cart
@@ -88,5 +88,5 @@ Feature: Cart rule (amount) calculation with one cart rule
     When I add product named product2 in my cart with quantity 2
     When I add product named product3 in my cart with quantity 1
     When I add cart rule named cartrule5 to my cart
-    Then Expected total of my cart tax included should be 7
-    Then Expected total of my cart tax included should be 7 with previous calculation method
+    Then Expected total of my cart tax included should be 7.0
+    Then Expected total of my cart tax included should be 7.0 with previous calculation method

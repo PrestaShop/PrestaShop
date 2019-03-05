@@ -55,6 +55,11 @@ class CartRuleFeatureContext implements BehatContext
     protected $carrierFeatureContext;
 
     /**
+     * @var CustomerFeatureContext
+     */
+    protected $customerFeatureContext;
+
+    /**
      * This hook can be used to perform a database cleaning of added objects
      *
      * @AfterScenario
@@ -72,10 +77,11 @@ class CartRuleFeatureContext implements BehatContext
     {
         $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
         $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
+        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
     }
 
     /**
-     * @Given /^There is a cart rule with name (.+) and percent discount of ([\d\.]+)% and priority of (\d+) and quantity of (\d+) and quantity per user of (\d+)$/
+     * @Given /^There is a cart rule with name (.+) and percent discount of (\d+\.\d+)% and priority of (\d+) and quantity of (\d+) and quantity per user of (\d+)$/
      */
     public function thereIsACartRuleWithNameAndPercentDiscountOf50AndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $percent, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
     {
@@ -145,8 +151,8 @@ class CartRuleFeatureContext implements BehatContext
         $this->cartRules[$cartRuleName]->save();
         Db::getInstance()->execute('
           INSERT INTO ' . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
-          VALUES('" . (int) $this->cartRules[$cartRuleName]->id . "',
-          '" . (int) $this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
+          VALUES('" . (int)$this->cartRules[$cartRuleName]->id . "',
+          '" . (int)$this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
         ");
         Cache::clear();
     }
@@ -249,6 +255,50 @@ class CartRuleFeatureContext implements BehatContext
     {
         if (!isset($this->cartRules[$cartRuleName])) {
             throw new \Exception('Cart rule with name "' . $cartRuleName . '" was not added in fixtures');
+        }
+    }
+
+    /**
+     * @Then /^Voucher count for customer with name (.+) should be (.+)$/
+     */
+    public function checkVoucherCountForCustomer($customerName, $expectedCount)
+    {
+        $this->customerFeatureContext->checkCustomerWithNameExists($customerName);
+        $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
+        $vouchers = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
+        if ($expectedCount != count($vouchers)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $expectedCount,
+                    count($vouchers)
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then /^Voucher on position (\d+) for customer with name (.+) should have reduction value (.+)$/
+     */
+    public function checkVoucherValueForCustomer($position, $customerName, $expectedValue)
+    {
+        $this->customerFeatureContext->checkCustomerWithNameExists($customerName);
+        $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
+        $vouchers = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
+        if (!isset($vouchers[$position - 1]['id_cart_rule'])) {
+            throw new \Exception(
+                sprintf('Undefined voucher on position #%s', $position - 1)
+            );
+        }
+        $voucher = new CartRule($vouchers[$position - 1]['id_cart_rule']);
+        if ($expectedValue != $voucher->reduction_amount) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $expectedValue,
+                    $voucher->reduction_amount
+                )
+            );
         }
     }
 }

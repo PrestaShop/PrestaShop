@@ -65,7 +65,7 @@ class CurrencyFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^There is a currency with name (.+) and iso code (.+) and change rate of ([\d\.]+)$/
+     * @Given /^There is a currency with name (.+) and iso code (.+) and change rate of (\d+\.\d+)$/
      */
     public function thereIsACurrency($currencyName, $currencyIsoCode, $changeRate)
     {

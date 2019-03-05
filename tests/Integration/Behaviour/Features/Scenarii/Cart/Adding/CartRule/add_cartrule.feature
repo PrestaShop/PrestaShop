@@ -6,7 +6,7 @@ Feature: Add cart rule in cart
   Scenario: No product in cart should give a not valid cart rule insertion
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given There is a cart rule with name cartrule1 and percent discount of 50% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
     Then Distinct product count in my cart should be 0
     Then Cart rule named cartrule1 cannot be applied to my cart
@@ -18,7 +18,7 @@ Feature: Add cart rule in cart
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule1 and percent discount of 50% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
     When I add product named product1 in my cart with quantity 1
     Then Distinct product count in my cart should be 1
@@ -31,9 +31,9 @@ Feature: Add cart rule in cart
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule1 and percent discount of 50% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
-    Given There is a cart rule with name cartrule2 and percent discount of 50% and priority of 2 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: foo2
     When I add product named product1 in my cart with quantity 1
     Then Distinct product count in my cart should be 1
@@ -48,7 +48,7 @@ Feature: Add cart rule in cart
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule1 and percent discount of 50% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
     When I add product named product1 in my cart with quantity 1
     Then Distinct product count in my cart should be 1
@@ -64,9 +64,9 @@ Feature: Add cart rule in cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given there is a product with name product3 and price 31.188 and quantity 1000
-    Given There is a cart rule with name cartrule1 and percent discount of 50% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
-    Given There is a cart rule with name cartrule12 and percent discount of 10% and priority of 12 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule12 and percent discount of 10.0% and priority of 12 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule12 has a code: foo12
     Given Cart rule named cartrule12 has a gift product named product3
     When I add product named product1 in my cart with quantity 1
@@ -84,9 +84,9 @@ Feature: Add cart rule in cart
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given there is a product with name product4 and price 35.567 and quantity 1000
     Given product with name product4 is out of stock
-    Given There is a cart rule with name cartrule1 and percent discount of 50% and priority of 1 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
-    Given There is a cart rule with name cartrule13 and percent discount of 10% and priority of 13 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule13 and percent discount of 10.0% and priority of 13 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule13 has a code: foo13
     Given Cart rule named cartrule13 has a gift product named product4
     When I add product named product1 in my cart with quantity 1

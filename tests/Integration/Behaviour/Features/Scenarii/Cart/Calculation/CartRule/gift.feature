@@ -8,7 +8,7 @@ Feature: Cart calculation with cart rules giving gift
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product4 and price 35.567 and quantity 1000
     Given product with name product4 is out of stock
-    Given There is a cart rule with name cartrule13 and percent discount of 10% and priority of 13 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule13 and percent discount of 10.0% and priority of 13 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule13 has a code: foo13
     Given Cart rule named cartrule13 has a gift product named product4
     When I am not able to add product named product4 in my cart with quantity 1
@@ -23,7 +23,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given there is a product with name product4 and price 35.567 and quantity 1000
     Given product with name product4 is out of stock
-    Given There is a cart rule with name cartrule13 and percent discount of 10% and priority of 13 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule13 and percent discount of 10.0% and priority of 13 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule13 has a code: foo13
     Given Cart rule named cartrule13 has a gift product named product4
     When I add product named product1 in my cart with quantity 3
@@ -39,7 +39,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product with name product3 and price 31.188 and quantity 1000
     Given there is a product with name product4 and price 35.567 and quantity 1000
     Given product with name product4 is out of stock
-    Given There is a cart rule with name cartrule12 and percent discount of 10% and priority of 13 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule12 and percent discount of 10.0% and priority of 13 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule12 has a code: foo12
     Given Cart rule named cartrule12 has a gift product named product3
     When I add product named product1 in my cart with quantity 2

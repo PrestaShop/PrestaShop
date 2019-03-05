@@ -27,10 +27,127 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Context;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Tax;
+use TaxRule;
+use TaxRulesGroup;
 
 class TaxFeatureContext implements BehatContext
 {
     use CartAwareTrait;
+
+    /**
+     * @var Tax[]
+     */
+    protected $taxes = [];
+
+    /**
+     * @var TaxRule[]
+     */
+    protected $taxRules = [];
+
+    /**
+     * @var TaxRulesGroup[]
+     */
+    protected $taxRuleGroups = [];
+
+    /**
+     * @var CarrierFeatureContext
+     */
+    protected $carrierFeatureContext;
+
+    /**
+     * @var ProductFeatureContext
+     */
+    protected $productFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
+        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+    }
+
+    /**
+     * @Given /^There is a tax with name (.+) and rate (\d+\.\d+)%$/
+     */
+    public function setTax($name, $rate)
+    {
+        $tax = new Tax();
+        $tax->name = [(int)Context::getContext()->language->id => 'fake'];
+        $tax->rate = $rate;
+        $tax->active = 1;
+        $tax->add();
+        $this->taxes[$name] = $tax;
+    }
+
+    /**
+     * @Given /^There is a tax rule with name (.+) in country with name (.+) and state with name (.+) with tax with name (.+)$/
+     */
+    public function setTaxRule($taxRuleName, $countryName, $stateName, $taxName)
+    {
+        $this->carrierFeatureContext->checkCountryWithNameExists($countryName);
+        $this->carrierFeatureContext->checkStateWithNameExists($stateName);
+        $this->checkTaxWithNameExists($taxName);
+
+        $taxRuleGroup = new TaxRulesGroup();
+        $taxRuleGroup->active = 1;
+        $taxRuleGroup->name = 'fake';
+        $taxRuleGroup->add();
+        $this->taxRuleGroups[$taxRuleName] = $taxRuleGroup;
+
+        $taxRule = new TaxRule();
+        $taxRule->id_country = $this->carrierFeatureContext->getCountryWithName($countryName)->id;
+        $taxRule->id_state = $this->carrierFeatureContext->getStateWithName($stateName)->id;
+        $taxRule->id_tax_rules_group = $taxRuleGroup->id;
+        $taxRule->id_tax = $this->taxes[$taxName]->id;
+        $taxRule->zipcode_from = 0;
+        $taxRule->zipcode_to = 0;
+        $taxRule->behavior = 1;
+        $taxRule->add();
+        $this->taxRules[$taxRuleName] = $taxRule;
+    }
+
+    /**
+     * @param $name
+     */
+    public function checkTaxWithNameExists($name)
+    {
+        if (!isset($this->taxes[$name])) {
+            throw new \Exception('Tax with name "' . $name . '" was not added in fixtures');
+        }
+    }
+
+    /**
+     * @param $name
+     */
+    public function checkTaxRuleWithNameExists($name)
+    {
+        if (!isset($this->taxRules[$name])) {
+            throw new \Exception('Tax rule with name "' . $name . '" was not added in fixtures');
+        }
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function cleanData()
+    {
+        foreach ($this->taxRules as $taxRule) {
+            $taxRule->delete();
+        }
+        $this->taxRules = [];
+        foreach ($this->taxRuleGroups as $taxRuleGroup) {
+            $taxRuleGroup->delete();
+        }
+        $this->taxRuleGroups = [];
+        foreach ($this->taxes as $tax) {
+            $tax->delete();
+        }
+        $this->taxes = [];
+    }
 
     /**
      * @When /^I set delivery address id to (\d+)$/
@@ -38,5 +155,28 @@ class TaxFeatureContext implements BehatContext
     public function setIdAddress($addressId)
     {
         $this->getCurrentCart()->id_address_delivery = $addressId;
+    }
+
+    /**
+     * @Given /^Product with name (.+) belongs to tax group with name (.+)$/
+     */
+    public function setProductTaxRuleGroup($productName, $taxName)
+    {
+        $this->productFeatureContext->checkProductWithNameExists($productName);
+        $this->checkTaxRuleWithNameExists($taxName);
+        $product = $this->productFeatureContext->getProductWithName($productName);
+        $product->id_tax_rules_group = $this->taxRuleGroups[$taxName]->id;
+        $product->save();
+    }
+
+    /**
+     * @Given /^Carrier with name (.+) belongs to tax group with name (.+)$/
+     */
+    public function setCarrierTaxRuleGroup($carrierName, $taxName)
+    {
+        $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
+        $this->checkTaxRuleWithNameExists($taxName);
+        $carrier = $this->carrierFeatureContext->getCarrierWithName($carrierName);
+        $carrier->setTaxRulesGroup($this->taxRuleGroups[$taxName]->id);
     }
 }

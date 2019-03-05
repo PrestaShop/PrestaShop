@@ -6,7 +6,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
   Scenario: Empty cart, 2 mixed voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given There is a cart rule with name cartrule2 and percent discount of 50% and priority of 2 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: foo2
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
@@ -20,7 +20,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule2 and percent discount of 50% and priority of 2 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: foo2
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
@@ -34,15 +34,15 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
     Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule2 and percent discount of 50% and priority of 2 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: foo2
     Given There is a cart rule with name cartrule5 and amount discount of 500 and priority of 5 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule5 has a code: foo5
     When I add product named product1 in my cart with quantity 3
     When I add cart rule named cartrule2 to my cart
     When I add cart rule named cartrule5 to my cart
-    Then Expected total of my cart tax included should be 7
-    Then Expected total of my cart tax included should be 7 with previous calculation method
+    Then Expected total of my cart tax included should be 7.0
+    Then Expected total of my cart tax included should be 7.0 with previous calculation method
 
   Scenario: one product in cart, quantity 3, one 5€ global voucher, one 50% global voucher
     Given I have an empty default cart
@@ -50,7 +50,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
-    Given There is a cart rule with name cartrule7 and percent discount of 50% and priority of 7 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule7 has a code: foo7
     When I add product named product1 in my cart with quantity 3
     When I add cart rule named cartrule4 to my cart
@@ -65,13 +65,13 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     Given there is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule5 and amount discount of 500 and priority of 5 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule5 has a code: foo5
-    Given There is a cart rule with name cartrule7 and percent discount of 50% and priority of 7 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule7 has a code: foo7
     When I add product named product1 in my cart with quantity 3
     When I add cart rule named cartrule5 to my cart
     When I add cart rule named cartrule7 to my cart
-    Then Expected total of my cart tax included should be 7
-    Then Expected total of my cart tax included should be 7 with previous calculation method
+    Then Expected total of my cart tax included should be 7.0
+    Then Expected total of my cart tax included should be 7.0 with previous calculation method
 
   Scenario: 3 products with several quantities in cart, one 5€ global voucher, one 50% global voucher
     Given I have an empty default cart
@@ -81,7 +81,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     Given there is a product with name product3 and price 31.188 and quantity 1000
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
-    Given There is a cart rule with name cartrule7 and percent discount of 50% and priority of 7 and quantity of 1000 and quantity per user of 1000
+    Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule7 has a code: foo7
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
