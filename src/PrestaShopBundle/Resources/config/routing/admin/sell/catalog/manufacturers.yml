@@ -1,0 +1,23 @@
+admin_manufacturers_index:
+  path: /
+  methods: GET
+  defaults:
+    ##todo: implement index action
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createAddress'
+    _legacy_controller: AdminManufacturers
+
+admin_manufacturers_addresses_create:
+  path: addresses/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createAddress'
+    _legacy_controller: AdminManufacturers
+
+admin_manufacturers_addresses_edit:
+  path: addresses/{addressId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:editAddress'
+    _legacy_controller: AdminManufacturers
+  requirements:
+    addressId: \d+
