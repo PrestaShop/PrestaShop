@@ -39,7 +39,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Category\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DraggableColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -116,16 +117,12 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $columns = (new ColumnCollection())
             ->add(
-                (new BulkActionColumn('bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_category',
-                ])
-            )
-            ->add(
-                (new DataColumn('id_category'))
+                (new IdentifierColumn('id_category'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_category',
+                    'identifier_field' => 'id_category',
+                    'bulk_field' => 'id_category',
+                    'with_bulk_field' => true,
                 ])
             )
             ->add(
@@ -133,8 +130,8 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
-                    'route' => 'admin_categories_edit',
-                    'route_param_name' => 'categoryId',
+                    'route' => 'admin_category_listing',
+                    'route_param_name' => 'id_category',
                     'route_param_field' => 'id_category',
                 ])
             )
@@ -164,17 +161,20 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $columns->addAfter(
-                'description',
-                (new CategoryPositionColumn('position'))
-                ->setName($this->trans('Position', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'position',
-                    'id_field' => 'id_category',
-                    'id_parent_field' => 'id_parent',
-                    'update_route' => 'AdminCategories',
-                ])
-            );
+            $columns
+                ->addAfter(
+                    'description',
+                    (new CategoryPositionColumn('position'))
+                        ->setName($this->trans('Position', [], 'Admin.Global'))
+                        ->setOptions([
+                            'field' => 'position',
+                            'id_field' => 'id_category',
+                            'id_parent_field' => 'id_parent',
+                            'update_route' => 'AdminCategories',
+                        ])
+                )
+                ->addBefore('id_category', new DraggableColumn('position_drag'))
+            ;
         }
 
         return $columns;
@@ -191,6 +191,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('id_category')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -198,6 +201,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('name')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -205,6 +211,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('description')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search description', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -228,6 +237,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('position')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
+                    ],
                 ])
             );
         }
