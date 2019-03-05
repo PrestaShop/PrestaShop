@@ -38,6 +38,22 @@ use Symfony\Component\Finder\Finder;
 class LoadServicesFromModulesPass implements CompilerPassInterface
 {
     /**
+     * @var string
+     */
+    private $configPath;
+
+    /**
+     * Used to identify which scope of services need to be loaded (front services, admin
+     * services or generic ones)
+     *
+     * @param string $containerName
+     */
+    public function __construct($containerName = '')
+    {
+        $this->configPath = '/config/' . (empty($containerName) ? '' : trim($containerName, '/') . '/');
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
@@ -55,11 +71,12 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
         $installedModules = $container->getParameter('kernel.active_modules');
 
         foreach ($this->getModulesPaths() as $modulePath) {
-            if (in_array($modulePath->getFilename(), $installedModules)
-                && file_exists($modulePath . '/config/services.yml')
-            ) {
-                $loader = new YamlFileLoader($container, new FileLocator($modulePath . '/config/'));
-                $loader->load('services.yml');
+            if (in_array($modulePath->getFilename(), $installedModules)) {
+                $moduleConfigPath = $modulePath . $this->configPath;
+                if (file_exists($moduleConfigPath . 'services.yml')) {
+                    $loader = new YamlFileLoader($container, new FileLocator($moduleConfigPath));
+                    $loader->load('services.yml');
+                }
             }
         }
     }
