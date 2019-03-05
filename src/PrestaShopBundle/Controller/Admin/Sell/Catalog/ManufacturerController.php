@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +50,11 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function createAddressAction(Request $request)
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig');
+        $addressForm = $this->getAddressFormBuilder()->getForm();
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig', [
+            'addressForm' => $addressForm->createView(),
+        ]);
     }
 
     /**
@@ -67,5 +72,13 @@ class ManufacturerController extends FrameworkBundleAdminController
     public function editAddressAction(Request $request, $addressId)
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getAddressFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.address_form_builder');
     }
 }

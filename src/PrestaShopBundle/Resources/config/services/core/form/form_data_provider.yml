@@ -44,3 +44,8 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+  prestashop.core.form.identifiable_object.data_provider.address_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AddressFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
