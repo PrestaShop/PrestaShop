@@ -2,7 +2,7 @@ admin_manufacturers_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Manufacturer:index'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index'
     _legacy_controller: AdminManufacturers
 #   @todo:Implement legacy links at the end of whole page migration
 
@@ -13,7 +13,7 @@ admin_manufacturers_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Manufacturer:search'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:search'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_create:
@@ -90,21 +90,21 @@ admin_manufacturers_export:
 #
 # Address routes
 #
-admin_manufacturers_addresses_create:
-  path: addresses/add
+admin_manufacturer_addresses_create:
+  path: addresses/new
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createManufacturerAddress'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createAddress'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_addresses_edit:
-  path: addresses/{manufacturerAddressId}/edit
+  path: addresses/{addressId}/edit
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:editManufacturerAddress'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:editAddress'
     _legacy_controller: AdminManufacturers
   requirements:
-    manufacturerAddressId: \d+
+    addressId: \d+
 
 admin_manufacturers_addresses_delete:
   path: addresses/{addressId}/delete
