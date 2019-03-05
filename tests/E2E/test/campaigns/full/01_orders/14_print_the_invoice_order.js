@@ -97,7 +97,7 @@ scenario('Print the invoice of an order', () => {
     scenario('Create order in the Front Office', client => {
       test('should set the language of shop to "English"', () => client.changeLanguage());
       for (let i = 0; i < productData.length; i++) {
-        test('should search for a product ' + productData[i].name + '', () => {
+        test('should search for a product ' + productData[i].name + global.date_time + '', () => {
           return promise
             .then(() => client.waitAndSetValue(HomePage.search_input, productData[i].name + date_time))
             .then(() => client.waitForExistAndClick(HomePage.search_icon, 2000))
@@ -111,7 +111,7 @@ scenario('Print the invoice of an order', () => {
         });
         test('should click on "ADD TO CART" button', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
         if (productData.length - 1 !== i) {
-          test('should click on "CONTINUE SHOPPING" button 1 :', () => client.waitForVisibleAndClick(CheckoutOrderPage.continue_shopping_button));
+          test('should click on "CONTINUE SHOPPING" button', () => client.waitForVisibleAndClick(CheckoutOrderPage.continue_shopping_button));
         }
         else {
           test('should click on "PROCEED TO CHECKOUT" button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
@@ -147,7 +147,7 @@ scenario('Print the invoice of an order', () => {
         });
       }
       for (let i = 0; i < productData.length; i++) {
-        test('should check that the basic price for product ' + productData[i].name + '', () => client.checkTextValue(CheckoutOrderPage.basic_price_product.replace('%I', i + 1), global.tab["basic_price_" + i], 'contain'));
+        test('should check the basic price for product ' + productData[i].name + '', () => client.checkTextValue(CheckoutOrderPage.basic_price_product.replace('%I', i + 1), global.tab["basic_price_" + i], 'contain'));
       }
     }, 'common_client');
 
@@ -163,7 +163,7 @@ scenario('Print the invoice of an order', () => {
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
     }, 'order');
 
-    scenario('Change the status to "Payment Accepted', client => {
+    scenario('Change the status to "Payment Accepted"', client => {
       test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       test('should search for the created order by reference', () => client.waitAndSetValue(OrderPage.search_by_reference_input, global.tab['reference']));
       test('should click on "Search" button', () => client.waitForExistAndClick(OrderPage.search_order_button));
@@ -188,7 +188,7 @@ scenario('Print the invoice of an order', () => {
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName)
         }
       });
-      test('should check that the "invoice customer" is : Johan DOE', async () => {
+      test('should check that the "invoice customer" is : John DOE', async () => {
         await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + '.pdf');
         if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');

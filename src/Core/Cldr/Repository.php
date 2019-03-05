@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use ICanBoogie\CLDR\Currency;
 use ICanBoogie\CLDR\FileProvider;
 use ICanBoogie\CLDR\NumberFormatter;
@@ -41,7 +42,6 @@ class Repository
     protected $region;
     protected $locale;
     protected $contextLanguage;
-    protected $oldUmask;
     protected $non_iso_relational_language = array(
         'an-es' => 'en-GB',
         'az-az' => 'az-Cyrl-AZ',
@@ -71,11 +71,9 @@ class Repository
         $this->contextLanguage = $contextLanguage;
         $this->cldrCacheFolder = _PS_TRANSLATIONS_DIR_ . 'cldr';
 
-        $this->oldUmask = umask(0000);
-
         if (!is_dir($this->cldrCacheFolder)) {
             try {
-                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', 0777, true);
+                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', FileSystem::DEFAULT_MODE_FOLDER, true);
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
@@ -116,11 +114,6 @@ class Repository
                 $this->region = strtoupper($this->locale);
             }
         }
-    }
-
-    public function __destruct()
-    {
-        umask($this->oldUmask);
     }
 
     /*
@@ -253,7 +246,15 @@ class Repository
         $locale = $this->repository->locales[$this->getCulture()];
         $currency = $locale['currencies'][$code];
 
-        return !empty($currency['symbol-alt-narrow']) ? $currency['symbol-alt-narrow'] : $currency['symbol'];
+        if (!empty($currency['symbol-alt-narrow'])) {
+            return $currency['symbol-alt-narrow'];
+        }
+
+        if (!empty($currency['symbol-alt-variant'])) {
+            return $currency['symbol-alt-variant'];
+        }
+
+        return $currency['symbol'];
     }
 
     /**

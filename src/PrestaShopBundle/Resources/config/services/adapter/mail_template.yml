@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.mail_template.twig_renderer:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer'
+    arguments:
+      - '@templating.engine.twig'
+      - '@prestashop.core.mail_template.variables_builder'
+      - '@prestashop.core.hook.dispatcher'
+    calls:
+      - method: 'addTransformation'
+        arguments:
+          - '@prestashop.core.mail_template.transformation.css_inline'
+      - method: 'addTransformation'
+        arguments:
+          - '@prestashop.core.mail_template.transformation.html_textify'

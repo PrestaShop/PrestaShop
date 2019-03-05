@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
 use Curl\Curl;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use Tools as ToolsLegacy;
 use ZipArchive;
 
@@ -38,7 +39,6 @@ class Update extends Repository
     const ZIP_CORE_URL = 'http://i18n.prestashop.com/cldr/json-full.zip';
 
     protected $newDatasFile = [];
-    protected $oldUmask;
 
     /**
      * Constructor.
@@ -47,24 +47,15 @@ class Update extends Repository
      */
     public function __construct($psCacheDir)
     {
-        $this->oldUmask = umask(0000);
         $this->cldrCacheFolder = $psCacheDir . 'cldr';
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
-                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', 0777, true);
+                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', FileSystem::DEFAULT_MODE_FOLDER, true);
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __destruct()
-    {
-        umask($this->oldUmask);
     }
 
     /**
@@ -96,7 +87,7 @@ class Update extends Repository
                 $filename = $archive->getNameIndex($i);
                 if (preg_match('%^supplemental\/(.*).json$%', $filename)) {
                     if (!is_dir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename))) {
-                        mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), 0777, true);
+                        mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), FileSystem::DEFAULT_MODE_FOLDER, true);
                     }
 
                     if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename)) {
@@ -137,7 +128,7 @@ class Update extends Repository
 
             if (preg_match('%^main\/' . $locale . '\/(.*).json$%', $filename)) {
                 if (!is_dir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename))) {
-                    mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), 0777, true);
+                    mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), FileSystem::DEFAULT_MODE_FOLDER, true);
                 }
 
                 if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename)) {

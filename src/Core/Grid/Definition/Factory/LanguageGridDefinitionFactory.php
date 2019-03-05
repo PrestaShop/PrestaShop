@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -158,7 +158,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_lang',
-                    'route' => 'admin_languages_index',
+                    'route' => 'admin_languages_toggle_status',
                     'route_param_name' => 'languageId',
                 ])
             )
@@ -187,7 +187,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
-                                'route' => 'admin_languages_index',
+                                'route' => 'admin_languages_delete',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
                             ])
@@ -319,21 +319,27 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_languages_index',
+                    'submit_route' => 'admin_languages_bulk_toggle_status',
+                    'route_params' => [
+                        'status' => 'enable',
+                    ],
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_languages_index',
+                    'submit_route' => 'admin_languages_bulk_toggle_status',
+                    'route_params' => [
+                        'status' => 'disable',
+                    ],
                 ])
             )
             ->add(
                 (new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_languages_index',
+                    'submit_route' => 'admin_languages_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             );

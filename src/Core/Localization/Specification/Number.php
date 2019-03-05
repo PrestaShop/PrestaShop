@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -72,8 +72,13 @@ class Number implements NumberInterface
         $this->positivePattern = $positivePattern;
         $this->negativePattern = $negativePattern;
         $this->symbols = $symbols;
+
+        if ($maxFractionDigits < $minFractionDigits) {
+            $minFractionDigits = $maxFractionDigits;
+        }
         $this->maxFractionDigits = $maxFractionDigits;
         $this->minFractionDigits = $minFractionDigits;
+
         $this->groupingUsed = $groupingUsed;
         $this->primaryGroupSize = $primaryGroupSize;
         $this->secondaryGroupSize = $secondaryGroupSize;
@@ -137,7 +142,7 @@ class Number implements NumberInterface
 
     /**
      * Size of primary digits group in the number
-     * eg: 999 is the primary group in this number : 1 234 999.567.
+     * e.g.: 999 is the primary group in this number: 1 234 999.567.
      *
      * @var int
      */
@@ -145,8 +150,8 @@ class Number implements NumberInterface
 
     /**
      * Size of secondary digits groups in the number
-     * eg: 999 is a secondary group in this number : 123 999 456.789
-     * eg: another secondary group (still 999) : 999 123 456.789.
+     * eg: 999 is a secondary group in this number: 123 999 456.789
+     * eg: another secondary group (still 999): 999 123 456.789.
      *
      * @var int
      */

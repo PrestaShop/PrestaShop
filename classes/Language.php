@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 
 class LanguageCore extends ObjectModel
 {
@@ -520,9 +521,11 @@ class LanguageCore extends ObjectModel
 
             // Database translations deletion
             $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
+            $tableNameKey = 'Tables_in_' . _DB_NAME_;
+
             foreach ($result as $row) {
-                if (isset($row['Tables_in_' . _DB_NAME_]) && !empty($row['Tables_in_' . _DB_NAME_]) && preg_match('/' . preg_quote(_DB_PREFIX_) . '_lang/', $row['Tables_in_' . _DB_NAME_])) {
-                    if (!Db::getInstance()->execute('DELETE FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $this->id)) {
+                if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey]) && preg_match('/_lang$/', $row[$tableNameKey])) {
+                    if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id)) {
                         return false;
                     }
                 }
@@ -545,7 +548,7 @@ class LanguageCore extends ObjectModel
             foreach ($modList as $mod) {
                 Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod . '/mails/' . $this->iso_code);
                 $files = @scandir(_PS_MODULE_DIR_ . $mod . '/mails/', SCANDIR_SORT_NONE);
-                if (count($files) <= 2) {
+                if (is_array($files) && count($files) <= 2) {
                     Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod . '/mails/');
                 }
 
@@ -1127,7 +1130,7 @@ class LanguageCore extends ObjectModel
             $zipArchive->close();
 
             $coreDestPath = _PS_ROOT_DIR_ . '/mails/' . $lang_pack['iso_code'];
-            $fileSystem->mkdir($coreDestPath, 0755);
+            $fileSystem->mkdir($coreDestPath, PsFileSystem::DEFAULT_MODE_FOLDER);
 
             if ($fileSystem->exists($folder . '/core')) {
                 foreach ($finder->files()->in($folder . '/core') as $coreEmail) {
@@ -1142,7 +1145,7 @@ class LanguageCore extends ObjectModel
             if ($fileSystem->exists($folder . '/modules')) {
                 foreach ($finder->directories()->in($folder . '/modules') as $moduleDirectory) {
                     $moduleDestPath = _PS_ROOT_DIR_ . '/modules/' . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
-                    $fileSystem->mkdir($moduleDestPath, 0755);
+                    $fileSystem->mkdir($moduleDestPath, PsFileSystem::DEFAULT_MODE_FOLDER);
 
                     $findEmails = new \Symfony\Component\Finder\Finder();
                     foreach ($findEmails->files()->in($moduleDirectory->getRealPath()) as $moduleEmail) {

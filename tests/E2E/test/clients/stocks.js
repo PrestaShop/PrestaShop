@@ -1,6 +1,7 @@
 var CommonClient = require('./common_client');
 let promise = Promise.resolve();
 global.tab = [];
+let dateFormat = require('dateformat');
 
 class ModifyQuantity extends CommonClient {
 
@@ -18,7 +19,7 @@ class ModifyQuantity extends CommonClient {
       });
   }
 
-  modifyProductQuantity(Stock, order, quantity) {
+  modifyProductQuantity(Stock, order, quantity, comma = 'false') {
     return this.client
       .pause(1000)
       .waitForExist(Stock.product_quantity.replace('%O', order), 90000)
@@ -26,7 +27,12 @@ class ModifyQuantity extends CommonClient {
       .then((text) => global.tab["productQuantity"] = text)
       .waitAndSetValue(Stock.product_quantity_input.replace('%O', order), quantity)
       .then(() => this.client.getText(Stock.product_quantity_modified.replace('%O', order)))
-      .then((text) => expect(text.substring(14)).to.be.equal((Number(global.tab["productQuantity"]) + quantity).toString()));
+      .then((text) => {
+        if (comma === true)
+          expect(text.substring(14)).to.be.equal((Number(global.tab["productQuantity"]) + parseFloat(quantity.replace(',', '.'))).toString());
+        else
+          expect(text.substring(14)).to.be.equal((Number(global.tab["productQuantity"]) + quantity).toString());
+      });
   }
 
   checkMovement(selector, order, quantity, variation, type, reference = "", dateAndTime = "", employee = "", productName = "") {
@@ -48,13 +54,13 @@ class ModifyQuantity extends CommonClient {
       })
       .then(() => this.client.getText(selector.employee_value.replace('%P', order)))
       .then((text) => {
-        if(employee !== '') {
+        if (employee !== '') {
           expect(text).to.be.equal(employee)
         }
       })
       .then(() => this.client.getText(selector.product_value.replace('%P', order)))
       .then((text) => {
-        if(productName !== '') {
+        if (productName !== '') {
           expect(text).to.be.equal(productName)
         }
       });

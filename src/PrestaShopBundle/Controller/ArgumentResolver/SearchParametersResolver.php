@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -112,35 +112,49 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         $filtersClass = $argument->getType();
         list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
 
+        /** @var Filters $filters */
+        $filters = new $filtersClass($filtersClass::getDefaults());
+
+        //Override with saved filters if present
+        if ($request->isMethod('GET')) {
+            /** @var Filters $savedFilters */
+            $savedFilters = $this->searchParameters->getFiltersFromRepository(
+                $this->employee->getId(),
+                $this->shopId,
+                $controller,
+                $action,
+                $filtersClass
+            );
+
+            if ($savedFilters) {
+                $filters->add($savedFilters->all());
+            }
+        }
+
+        //Then override with query filters if present
         $query = $request->query;
-        $doesTheUrlContainsFilters = ($query->has('filters') || $query->has('limit') || $query->has('sortOrder'));
+        $queryHasFilters = false;
+        foreach (SearchParametersInterface::FILTER_TYPES as $filterType) {
+            if ($query->has($filterType)) {
+                $queryHasFilters = true;
+                break;
+            }
+        }
+        if ($queryHasFilters) {
+            /** @var Filters $queryFilters */
+            $queryFilters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
+            $filters->add($queryFilters->all());
 
-        if ($doesTheUrlContainsFilters) {
-            $filters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
-
+            //Update the saved filters (which have been modified by the query)
+            $filtersToSave = $filters->all();
+            unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
             $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
                 $this->employee->getId(),
                 $this->shopId,
-                $filters->all(),
+                $filtersToSave,
                 $controller,
                 $action
             );
-        } else {
-            // do we have a saved search in DB?
-            if ($request->isMethod('GET')) {
-                $filters = $this->searchParameters->getFiltersFromRepository(
-                    $this->employee->getId(),
-                    $this->shopId,
-                    $controller,
-                    $action,
-                    $filtersClass
-                );
-            }
-
-            if (empty($filters)) {
-                $defaultFilters = $filtersClass::getDefaults();
-                $filters = new $filtersClass($defaultFilters);
-            }
         }
 
         $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);

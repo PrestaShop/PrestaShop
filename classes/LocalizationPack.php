@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class LocalizationPackCore
 {
@@ -337,15 +337,26 @@ class LocalizationPackCore
                 if (Currency::exists($attributes['iso_code'])) {
                     continue;
                 }
-                $currency = new Currency();
+
+                $defaultLang = (int) Configuration::get('PS_LANG_DEFAULT');
+
+                $currency = new Currency(null, $defaultLang);
                 $currency->name = (string) $attributes['name'];
                 $currency->iso_code = (string) $attributes['iso_code'];
                 $currency->iso_code_num = (int) $attributes['iso_code_num'];
+                $currency->numeric_iso_code = (string) $attributes['iso_code_num'];
+                // @todo retrieve sign/symbol from CLDR reference
                 $currency->sign = (string) $attributes['sign'];
+                $currency->symbol = (string) $attributes['sign'];
                 $currency->blank = (int) $attributes['blank'];
                 $currency->conversion_rate = 1; // This value will be updated if the store is online
                 $currency->format = (int) $attributes['format'];
                 $currency->decimals = (int) $attributes['decimals'];
+                // @todo retrieve precision from CLDR reference
+                // needs to be tested against installation process, currency adding, and automated tests
+                // following does not work properly since CLDR service is not initialized at install
+                // $currency->precision = (int) Tools::getContextLocale(Context::getContext())->getPriceSpecifications()->get($currency->iso_code)->getMaxFractionDigits();
+                $currency->precision = (int) $attributes['decimals'] > 0 ? 2 : 0;
                 $currency->active = true;
                 if (!$currency->validateFields()) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid currency properties.', array(), 'Admin.International.Notification');

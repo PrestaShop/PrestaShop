@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,7 +39,7 @@ import DeleteCategoriesBulkActionExtension from "../../components/grid/extension
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
 import TextWithLengthCounter from "../../components/form/text-with-length-counter";
-import NameToLinkRewriteCopier from "./name-to-link-rewrite-copier";
+import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copier";
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
 
@@ -64,7 +64,17 @@ $(() => {
   new TranslatableInput();
   new ChoiceTable();
   new TextWithLengthCounter();
-  new NameToLinkRewriteCopier();
+
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input[name^="category[name]"]',
+    destinationElementSelector: 'input[name^="category[link_rewrite]"]',
+  });
+
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input[name^="root_category[name]"]',
+    destinationElementSelector: 'input[name^="root_category[link_rewrite]"]',
+  });
+
   new FormSubmitButton();
 
   new ChoiceTree('#category_id_parent');

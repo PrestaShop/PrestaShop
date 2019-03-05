@@ -1,77 +1,77 @@
-admin_category_listing:
+admin_categories_index:
     path: /
     methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:index
         _legacy_controller: AdminCategories
 
-admin_category_listing_search:
+admin_categories_search:
     path: /search
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Common:searchGrid
         gridDefinitionFactoryService: prestashop.core.grid.definition.factory.category
-        redirectRoute: admin_category_listing
+        redirectRoute: admin_categories_index
         redirectQueryParamsToKeep:
             - 'id_category'
 
-admin_category_process_bulk_status_enable:
+admin_categories_bulk_enable_status:
     path: /bulk-status-enable
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkStatusEnable
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkEnableStatus
         _legacy_controller: AdminCategories
 
-admin_category_process_bulk_status_disable:
+admin_categories_bulk_disable_status:
     path: /bulk-status-disable
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkStatusDisable
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkDisableStatus
         _legacy_controller: AdminCategories
 
-admin_category_process_status_toggle:
-    path: /toggle-status/{categoryId}
+admin_categories_toggle_status:
+    path: /{categoryId}/toggle-status
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processStatusToggle
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:toggleStatus
         _legacy_controller: AdminCategories
 
-admin_category_process_bulk_delete:
+admin_categories_bulk_delete:
     path: /bulk-delete
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkDelete
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkDelete
         _legacy_controller: AdminCategories
 
-admin_category_process_delete:
+admin_categories_delete:
     path: /delete
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processDelete
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:delete
         _legacy_controller: AdminCategories
 
-admin_category_export:
+admin_categories_export:
     path: /export
     methods: [GET]
     defaults:
       _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:export
       _legacy_controller: AdminCategories
 
-admin_category_add:
+admin_categories_add:
     path: /new
     methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:add
         _legacy_controller: AdminCategories
 
-admin_category_add_root:
+admin_categories_add_root:
     path: /new-root
     methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:addRoot
         _legacy_controller: AdminCategories
 
-admin_category_edit:
+admin_categories_edit:
     path: /{categoryId}/edit
     methods: [GET, POST]
     defaults:
@@ -80,7 +80,7 @@ admin_category_edit:
     requirements:
         categoryId: \d+
 
-admin_category_edit_root:
+admin_categories_edit_root:
     path: /{categoryId}/edit-root
     methods: [GET, POST]
     defaults:

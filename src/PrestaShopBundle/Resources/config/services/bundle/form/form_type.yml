@@ -1,3 +1,6 @@
+imports:
+  - { resource: 'form_type/*' }
+
 services:
     _defaults:
         public: true
@@ -548,6 +551,16 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.shop.traffic_seo.meta:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.default_meta_page_name").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.module_meta_page_name").getChoices()'
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
     form.type.catalog.abstract_category:
         class: 'PrestaShopBundle\Form\Admin\Catalog\Category\AbstractCategoryType'
         abstract: true
@@ -671,6 +684,16 @@ services:
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
+           - { name: form.type }
+
+    form.type.currency:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.currency_name_by_iso_code").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
             - { name: form.type }
 
     form.type.customer.delete_customer:
@@ -700,5 +723,12 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.currency_exchange_rate:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.module").isInstalled("cronjobs")'
         tags:
             - { name: form.type }

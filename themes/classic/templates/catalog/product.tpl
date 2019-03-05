@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -35,10 +35,12 @@
   <meta property="og:site_name" content="{$shop.name}">
   <meta property="og:description" content="{$page.meta.description}">
   <meta property="og:image" content="{$product.cover.large.url}">
-  <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
-  <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
-  <meta property="product:price:amount" content="{$product.price_amount}">
-  <meta property="product:price:currency" content="{$currency.iso_code}">
+  {if $product.show_price}
+    <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
+    <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
+    <meta property="product:price:amount" content="{$product.price_amount}">
+    <meta property="product:price:currency" content="{$currency.iso_code}">
+  {/if}
   {if isset($product.weight) && ($product.weight != 0)}
   <meta property="product:weight:value" content="{$product.weight}">
   <meta property="product:weight:units" content="{$product.weight_unit}">

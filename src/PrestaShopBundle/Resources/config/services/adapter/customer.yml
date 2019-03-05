@@ -81,3 +81,9 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\BulkDeleteCustomerHandler'
     tags:
       - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand' }
+
+  prestashop.adapter.customer.query_handler.search_customers:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\SearchCustomersHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers'

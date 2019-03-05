@@ -19,8 +19,8 @@ module.exports = {
   },
   TrafficAndSeo: {
     SeoAndUrls: {
-      friendly_url_button: '//*[@id="conf_id_PS_REWRITING_SETTINGS"]//label[contains(@for, "%s")]',
-      save_button: '//*[@id="meta_form"]//button[text()=" Save"]'
+      friendly_url_button: '//*[@id="main-div"]//label[contains(@for, "meta_settings_form_set_up_urls_friendly_url_%s")]',
+      save_button: '(//*[@id="main-div"]//form[@name="meta_settings_form"]//button)[1]'
     }
   },
   Contact: {

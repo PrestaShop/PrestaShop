@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -35,11 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
 class AddonsStoreController extends FrameworkBundleAdminController
 {
     /**
-     * @var string the controller name for routing
-     */
-    const CONTROLLER_NAME = 'AdminAddonsCatalog';
-
-    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -54,9 +52,9 @@ class AddonsStoreController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminAddonsCatalog'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
+            'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
         ));
     }
 
@@ -75,6 +73,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
         $countryCode = $context->country->iso_code;
         $activity = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_ACTIVITY');
 
+        // GET parameters are concatenated this way in order to ensure they are not encoded
         return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain";
     }
 }

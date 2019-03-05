@@ -13,18 +13,18 @@ module.exports = {
       },
     },
     variations: [{
-        ref: "variation_1",
-        ean13: "1313131313131",
-        isbn: "121212121212",
-        upc: "012345678901",
-        wholesale: "5",
-        priceTI: "15",
-        weight: "2",
-        unity: "10",
-        minimal_quantity: "1",
-        available_date: common.getCustomDate(30),
-        quantity: "20",
-      },
+      ref: "variation_1",
+      ean13: "1313131313131",
+      isbn: "121212121212",
+      upc: "012345678901",
+      wholesale: "5",
+      priceTI: "15",
+      weight: "2",
+      unity: "10",
+      minimal_quantity: "1",
+      available_date: common.getCustomDate(30),
+      quantity: "20",
+    },
       {
         ref: "variation_2",
         ean13: "3131313131313",
@@ -38,7 +38,7 @@ module.exports = {
         available_date: common.getCustomDate(30),
         quantity: "10",
       }]
-    },
+  },
 
   pack: {
     name: "PK",
@@ -67,9 +67,25 @@ module.exports = {
       quantity: "3"
     },
     attached_file_name: "File to download",
-    allowed_number_to_download: "10",
+    allowed_number_to_download: "3",
     expiration_date: common.getCustomDate(30),
-    number_of_days: '10'
+    number_of_days: '3',
+
+  },
+
+  virtualWithCombination: {
+    name: 'PCombinationVirtual',
+    quantity: "10",
+    price: '5',
+    image_name: 'image_test.jpg',
+    reference: 'test_1',
+    type: 'combination',
+    attribute: {
+      1: {
+        name: 'color',
+        variation_quantity: '10'
+      }
+    }
   },
 
   common: {
@@ -112,5 +128,9 @@ module.exports = {
       }
     },
     search_related_products: "Hummingbird printed t-shirt (ref: demo_1)//The best is yet to come' Framed poster (ref: demo_6)",
+    picture_1: '1.png',
+    first_picture_legend: 'FirstPicture',
+    second_picture_legend: 'Second picture',
+
   }
 };

@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -590,14 +590,14 @@
 
 {% block material_multiple_choice_table_widget %}
   {% spaceless %}
-    <div class="choice-table table-responsive">
+    <div class="{% if scrollable %}choice-table{% endif %} table-responsive">
       <table class="table">
         <thead>
           <tr>
             <th>{{ label }}</th>
             {% for child_choice in form %}
               <th class="text-center">
-                {% if child_choice.vars.multiple %}
+                {% if child_choice.vars.multiple and child_choice.vars.name not in headers_to_disable %}
                   <a href="#"
                      class="js-multiple-choice-table-select-column"
                      data-column-num="{{ loop.index + 1 }}"
@@ -642,16 +642,16 @@
 {% endblock material_multiple_choice_table_widget %}
 
 {% block translatable_widget -%}
-  {{ form_errors(form) }}
   <div class="input-group locale-input-group js-locale-input-group d-flex">
+    {% set classes = attr.class|default('') %}
     {% for translateField in form %}
-      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
-      {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
+      {% set innerClasses = classes ~ translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+      {% set innerClasses = innerClasses ~ ' js-locale-' ~ translateField.vars.label %}
       {% if default_locale.id_lang != translateField.vars.name %}
-        {% set classes = classes ~ ' d-none' %}
+        {% set innerClasses = innerClasses ~ ' d-none' %}
       {% endif %}
-      <div class="{{ classes }}" style="flex-grow: 1;">
-        {{ form_widget(translateField) }}
+      <div class="{{ innerClasses }}" style="flex-grow: 1;">
+        {{ form_widget(translateField, {attr: {'data-lang-id': translateField.vars.name }}) }}
       </div>
     {% endfor %}
     {% if not hide_locales %}
@@ -699,3 +699,18 @@
     {%- endif -%}
   {% endif %}
 {% endblock birthday_widget %}
+
+{% block generatable_text_widget %}
+  <div class="input-group">
+    {{- block('form_widget') -}}
+    <span class="input-group-btn ml-1">
+      <button class="btn btn-outline-secondary js-generator-btn"
+              type="button"
+              data-target-input-id="{{ id }}"
+              data-generated-value-length="{{ generated_value_length }}"
+      >
+        {{ 'Generate'|trans({}, 'Admin.Actions') }}
+      </button>
+   </span>
+  </div>
+{% endblock generatable_text_widget %}

@@ -22,6 +22,7 @@ let productData = {
   image_name: 'image_test.jpg',
 };
 
+
 scenario('The shop installation', () => {
 
   scenario('Open the browser and download the RC', client => {
@@ -48,11 +49,6 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   welcomeScenarios.findAndCloseWelcomeModal('installation');
-
-  /**
-   * This scenario is based on the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-3195
-   **/
 
   scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
@@ -110,7 +106,8 @@ scenario('The shop installation', () => {
 
   /**
    * This scenario is based on the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-3195
+   * This scenario block should be moved to the autoupgrade script when this issue will be fixed
+   * https://github.com/PrestaShop/PrestaShop/issues/11873
    **/
 
   scenario('Check the existence of "Top sellers block" and "New products block"', client => {
