@@ -59,6 +59,9 @@ matrix:
   exclude:
     - php: 7.2 # Replaced with additional tests
       env: PRESTASHOP_TEST_TYPE=e2e
+  allow_failures:
+    - php: 7.2
+      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
 
 before_install:
   # Avoid Composer authentication issues
