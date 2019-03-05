@@ -29,9 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler\UploadLogosHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
+use Shop;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Validate;
 
 /**
  * Class UploadLogosHandler
@@ -75,19 +78,27 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     {
         $this->configuration->set('PS_IMG_UPDATE_TIME', time());
 
-        if (null !== $command->getUploadedHeaderLogo()) {
+        if (null !== $command->getUploadedHeaderLogo() &&
+            $this->isAllowedByShopRestriction('header_logo', $command->getShopRestriction())
+        ) {
             $this->uploadHeaderLogo($command->getUploadedHeaderLogo());
         }
 
-        if (null !== $command->getUploadedMailLogo()) {
+        if (null !== $command->getUploadedMailLogo() &&
+            $this->isAllowedByShopRestriction('mail_logo', $command->getShopRestriction())
+        ) {
             $this->uploadMailLogo($command->getUploadedMailLogo());
         }
 
-        if (null !== $command->getUploadedInvoiceLogo()) {
+        if (null !== $command->getUploadedInvoiceLogo() &&
+            $this->isAllowedByShopRestriction('invoice_logo', $command->getShopRestriction())
+        ) {
             $this->uploadInvoiceLogo($command->getUploadedInvoiceLogo());
         }
 
-        if (null !== $command->getUploadedFavicon()) {
+        if (null !== $command->getUploadedFavicon() &&
+            $this->isAllowedByShopRestriction('favicon', $command->getShopRestriction())
+        ) {
             $this->uploadFavicon($command->getUploadedFavicon());
         }
 
@@ -100,7 +111,6 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     private function uploadHeaderLogo(UploadedFile $uploadedFile)
     {
         $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO', $uploadedFile);
-
         $this->logoUploader->updateHeader();
     }
 
@@ -147,5 +157,31 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
             'error' => $uploadedFile->getError(),
             'size' => $uploadedFile->getSize(),
         ];
+    }
+
+    /**
+     * @param string $formFieldName
+     *
+     * @param ShopRestriction|null $shopRestriction
+     *
+     * @return bool
+     */
+    private function isAllowedByShopRestriction($formFieldName, $shopRestriction)
+    {
+        if (null === $shopRestriction) {
+            return true;
+        }
+
+        $shopRestrictionFields = $shopRestriction->getShopRestrictionFields();
+
+        foreach ($shopRestrictionFields as $shopRestrictionField) {
+            if ($formFieldName === $shopRestrictionField->getFieldName() &&
+                $shopRestrictionField->isRestrictedToContextShop()
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
