@@ -607,6 +607,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 } else {
                     $this->objOutput->setStatus(404);
                     $this->wsObject->setOutputEnabled(false);
+                    
                     return true;
                 }
             }
