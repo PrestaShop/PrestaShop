@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 
@@ -50,7 +50,6 @@ class ToggleTaxStatusCommand
      * @param int $taxId
      *
      * @throws TaxException
-     * @throws DomainConstraintException
      */
     public function __construct($taxId, $expectedStatus)
     {
@@ -80,14 +79,14 @@ class ToggleTaxStatusCommand
      *
      * @param $value
      *
-     * @throws DomainConstraintException
+     * @throws TaxConstraintException
      */
     private function assertIsBool($value)
     {
         if (!is_bool($value)) {
-            throw new DomainConstraintException(
+            throw new TaxConstraintException(
                 sprintf('Status must be of type bool, but given %s', var_export($value, true)),
-                DomainConstraintException::INVALID_STATUS_TYPE
+                TaxConstraintException::INVALID_STATUS
             );
         }
     }
