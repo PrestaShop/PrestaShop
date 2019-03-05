@@ -79,7 +79,7 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb
             ->select('m.`id_manufacturer`, m.`name`, m.`active`')
             ->addSelect('COUNT(p.`id_product`) AS `products_count`')
-            ->addSelect('('.$addressesQb->getSQL().') AS addresses_count')
+            ->addSelect('(' . $addressesQb->getSQL() . ') AS addresses_count')
             ->groupBy('m.`id_manufacturer`')
         ;
 
