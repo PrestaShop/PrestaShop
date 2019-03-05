@@ -124,23 +124,28 @@
 </div>
 {% endblock switch_widget %}
 
-{% block text_with_counter_widget %}
-  <div class="input-group js-text-with-counter-input-group">
+{% block text_with_length_counter_widget %}
+  <div class="input-group js-text-with-length-counter">
     {% set current_length = form.vars.max_length - form.vars.value|length %}
 
     {% if form.vars.position == 'before' %}
       <div class="input-group-prepend">
-        <span class="input-group-text js-counter-text">{{ current_length }}</span>
+        <span class="input-group-text js-countable-text">{{ current_length }}</span>
       </div>
     {% endif %}
 
-    {% set attr = attr|merge({'data-max-length': form.vars.max_length, 'maxlength': form.vars.max_length}) -%}
-    {{- block('form_widget_simple') -}}
+    {% set attr = attr|merge({'data-max-length': form.vars.max_length, 'maxlength': form.vars.max_length, 'class': 'js-countable-input'}) -%}
+
+    {% if form.vars.input == 'textarea' %}
+      {{- block('textarea_widget') -}}
+    {% else %}
+      {{- block('form_widget_simple') -}}
+    {% endif %}
 
     {% if form.vars.position == 'after' %}
       <div class="input-group-append">
-        <span class="input-group-text js-counter-text">{{ current_length }}</span>
+        <span class="input-group-text js-countable-text">{{ current_length }}</span>
       </div>
     {% endif %}
   </div>
-{% endblock text_with_counter_widget %}
+{% endblock text_with_length_counter_widget %}

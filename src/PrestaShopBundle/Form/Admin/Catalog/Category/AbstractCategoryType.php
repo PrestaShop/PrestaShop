@@ -125,9 +125,11 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('meta_description', TranslatableType::class, [
                 'required' => false,
-                'type' => TextareaType::class,
+                'type' => TextWithLengthCounterType::class,
                 'options' => [
                     'required' => false,
+                    'input' => 'textarea',
+                    'max_length' => 512,
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
