@@ -58,6 +58,7 @@ class TextWithLengthCounterType extends AbstractType
             ->setDefaults([
                 'position' => 'before',
                 'input' => 'text',
+                'compound' => false,
             ])
             ->setAllowedTypes('max_length', 'int')
             ->setAllowedValues('position', ['before', 'after'])
