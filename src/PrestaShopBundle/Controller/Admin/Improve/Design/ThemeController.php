@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
@@ -434,10 +435,14 @@ class ThemeController extends AbstractAdminController
 
     /**
      * @return FormInterface
+     *
+     * @throws Exception
      */
     protected function getLogosUploadForm()
     {
-        return $this->createForm(ShopLogosType::class);
+        $form = $this->get('prestashop.admin.shop_logos_settings.form_handler');
+
+        return $form->getForm();
     }
 
     /**

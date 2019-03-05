@@ -160,6 +160,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     }
 
     /**
+     * @todo: move to form handler
+     *
      * @param string $formFieldName
      *
      * @param ShopRestriction|null $shopRestriction
