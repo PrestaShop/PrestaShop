@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ShopRestrictionType extends AbstractType
@@ -40,5 +41,13 @@ class ShopRestrictionType extends AbstractType
         $resolver->setDefaults([
             'required' => false,
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return CheckboxType::class;
     }
 }

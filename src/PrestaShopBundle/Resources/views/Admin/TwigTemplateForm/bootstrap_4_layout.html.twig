@@ -718,8 +718,15 @@
 {% block shop_restriction_widget %}
   {% if form.vars.attr.is_allowed_to_display %}
     <div class="md-checkbox md-checkbox-inline">
-      <label for="{{ form.vars.id }}">
-        <input id="{{ form.vars.id }}" type="checkbox" name="{{ form.vars.full_name }}" {{ form.vars.value ? 'checked' : '' }}>
+      <label>
+        {#<input#}
+          {#id="{{ form.vars.id }}"#}
+          {#type="checkbox"#}
+          {#name="{{ form.vars.name }}"#}
+          {#value="{{ form.vars.value }}"#}
+        {#>#}
+        {% set type = type|default('checkbox') %}
+        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}>
         <i class="md-checkbox-control"></i>
       </label>
     </div>
