@@ -23,16 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ModulePermissionsConfigurator from "./module-permissions-configurator";
-import TabPermissionsConfigurator from "./tab-permissions-configurator";
+import PermissionApp from '../../app/pages/permission/index';
 
 const $ = window.$;
 
 $(document).ready(() => {
-  // create new configurator for every table
-  $('.js-permissions-table').each((i, element) => {
-    new TabPermissionsConfigurator(`#${$(element).attr('id')}`);
-  });
+  $('.js-permissions-content').each((i, element) => {
+    new PermissionApp(
+      $(element).data('profile-id'),
+      `#profile-content-${$(element).data('profile-id')}`,
+      $(element).data('profile-permissions'),
+      'tab_id'
+    );
 
-  new ModulePermissionsConfigurator();
+    new PermissionApp(
+      $(element).data('profile-id'),
+      `#module-content-${$(element).data('profile-id')}`,
+      $(element).data('modules-permissions'),
+      'id_module'
+    );
+  });
 });
