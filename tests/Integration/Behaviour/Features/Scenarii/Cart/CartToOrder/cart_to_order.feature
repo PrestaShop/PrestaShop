@@ -1,3 +1,4 @@
+@current
 @database-feature
 Feature: Check cart to order data copy
   As a customer

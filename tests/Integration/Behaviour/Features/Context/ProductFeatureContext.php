@@ -234,7 +234,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^product with name (.+) has following tax rule group id: (\d+)$/
+     * @When /^Product with name (.+) has following tax rule group id: (\d+)$/
      */
     public function setProductTaxRuleGroupId($productName, $taxRuleGroupId)
     {
