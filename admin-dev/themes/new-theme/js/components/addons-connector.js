@@ -43,6 +43,8 @@ export default class AddonsConnector {
 
   /**
    * Initialize events related to connection to addons.
+   *
+   * @private
    */
   _initEvents() {
     $('body').on('submit', this.addonsConnectFormSelector, (event) => {
@@ -56,6 +58,9 @@ export default class AddonsConnector {
 
   /**
    * Do a POST request to connect to addons.
+   *
+   * @param {String} addonsConnectUrl
+   * @param {Object} formData
    *
    * @private
    */

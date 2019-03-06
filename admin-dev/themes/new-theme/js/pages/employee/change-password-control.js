@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ChangePasswordHandler from "../change-password-handler";
-import PasswordValidator from "../password-validator";
+import ChangePasswordHandler from "../../components/change-password-handler";
+import PasswordValidator from "../../components/password-validator";
 
 const $ = window.$;
 
@@ -68,13 +68,17 @@ export default class ChangePasswordControl {
     );
 
     this._hideInputsBlock();
-    this.initEvents();
+    this._initEvents();
+
+    return {};
   }
 
   /**
    * Initialize events.
+   *
+   * @private
    */
-  initEvents() {
+  _initEvents() {
     $(document).on('click', this.showButtonSelector, (e) => {
       this._hide($(e.currentTarget));
       this._showInputsBlock();
@@ -137,6 +141,7 @@ export default class ChangePasswordControl {
    * Get password confirmation validation message.
    *
    * @returns {String}
+   *
    * @private
    */
   _getPasswordConfirmationValidationMessage() {
@@ -151,6 +156,7 @@ export default class ChangePasswordControl {
    * Get password length validation message.
    *
    * @returns {String}
+   *
    * @private
    */
   _getPasswordLengthValidationMessage() {
@@ -167,6 +173,8 @@ export default class ChangePasswordControl {
 
   /**
    * Show the password inputs block.
+   *
+   * @private
    */
   _showInputsBlock() {
     this._show(this.$inputsBlock);
@@ -176,6 +184,8 @@ export default class ChangePasswordControl {
 
   /**
    * Hide the password inputs block.
+   *
+   * @private
    */
   _hideInputsBlock() {
     this._hide(this.$inputsBlock);
@@ -187,6 +197,10 @@ export default class ChangePasswordControl {
 
   /**
    * Hide an element.
+   *
+   * @param {jQuery} $el
+   *
+   * @private
    */
   _hide($el) {
     $el.addClass('d-none');
@@ -194,6 +208,10 @@ export default class ChangePasswordControl {
 
   /**
    * Show hidden element.
+   *
+   * @param {jQuery} $el
+   *
+   * @private
    */
   _show($el) {
     $el.removeClass('d-none');
