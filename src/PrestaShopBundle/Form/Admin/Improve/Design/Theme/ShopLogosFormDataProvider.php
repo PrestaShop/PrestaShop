@@ -51,7 +51,10 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [];
+        return [
+            'options' => [
+            ],
+        ];
     }
 
     /**
