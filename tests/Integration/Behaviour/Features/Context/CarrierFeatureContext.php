@@ -292,8 +292,8 @@ class CarrierFeatureContext implements BehatContext
     {
         $this->checkCarrierWithNameExists($carrierName);
         $this->checkZoneWithNameExists($zoneName);
-        if (empty($this->carriers[$carrierName]->getZone((int)$this->zones[$zoneName]->id))) {
-            $this->carriers[$carrierName]->addZone((int)$this->zones[$zoneName]->id);
+        if (empty($this->carriers[$carrierName]->getZone((int) $this->zones[$zoneName]->id))) {
+            $this->carriers[$carrierName]->addZone((int) $this->zones[$zoneName]->id);
         }
         $rangeId = RangePrice::rangeExist($this->carriers[$carrierName]->id, $fromQuantity, $toQuantity);
         if (!empty($rangeId)) {
@@ -307,10 +307,10 @@ class CarrierFeatureContext implements BehatContext
             $this->priceRanges[] = $range;
         }
         $carrierPriceRange = [
-            'id_range_price' => (int)$range->id,
+            'id_range_price' => (int) $range->id,
             'id_range_weight' => null,
-            'id_carrier' => (int)$this->carriers[$carrierName]->id,
-            'id_zone' => (int)$this->zones[$zoneName]->id,
+            'id_carrier' => (int) $this->carriers[$carrierName]->id,
+            'id_zone' => (int) $this->zones[$zoneName]->id,
             'price' => $shippingPrice,
         ];
         $this->carriers[$carrierName]->addDeliveryPrice([$carrierPriceRange], true);

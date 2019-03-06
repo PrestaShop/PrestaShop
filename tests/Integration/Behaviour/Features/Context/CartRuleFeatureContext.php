@@ -151,8 +151,8 @@ class CartRuleFeatureContext implements BehatContext
         $this->cartRules[$cartRuleName]->save();
         Db::getInstance()->execute('
           INSERT INTO ' . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
-          VALUES('" . (int)$this->cartRules[$cartRuleName]->id . "',
-          '" . (int)$this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
+          VALUES('" . (int) $this->cartRules[$cartRuleName]->id . "',
+          '" . (int) $this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
         ");
         Cache::clear();
     }

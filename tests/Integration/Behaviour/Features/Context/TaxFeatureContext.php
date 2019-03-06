@@ -29,7 +29,6 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Behat\Behat\Context\Context as BehatContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Context;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Tax;
 use TaxRule;
 use TaxRulesGroup;
@@ -76,7 +75,7 @@ class TaxFeatureContext implements BehatContext
     public function setTax($name, $rate)
     {
         $tax = new Tax();
-        $tax->name = [(int)Context::getContext()->language->id => 'fake'];
+        $tax->name = [(int) Context::getContext()->language->id => 'fake'];
         $tax->rate = $rate;
         $tax->active = 1;
         $tax->add();

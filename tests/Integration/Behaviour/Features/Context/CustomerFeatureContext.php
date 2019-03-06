@@ -60,7 +60,7 @@ class CustomerFeatureContext implements BehatContext
     {
         $this->checkCustomerWithNameExists($customerName);
         Context::getContext()->updateCustomer($this->customers[$customerName]);
-   }
+    }
 
     /**
      * @param $customerName
