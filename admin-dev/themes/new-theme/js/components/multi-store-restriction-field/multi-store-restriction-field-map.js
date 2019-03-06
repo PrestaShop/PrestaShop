@@ -23,19 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+/**
+ * Encapsulates selectors for multi store restriction component
+ */
+export default {
+  multiStoreRestrictionCheckbox: '.js-multi-store-restriction-checkbox',
 
-export default class MultiStoreRestrictionField {
-  constructor() {
-    $(document).on('change', '.js-multi-store-restriction-checkbox', (e) => {
-      this._multiStoreRestrictionFieldChangeEvent(e)
-    })
-  }
-
-  _multiStoreRestrictionFieldChangeEvent(e) {
-    const $currentItem = $(e.currentTarget);
-    const targetValue = $currentItem.data('shopRestrictionTarget');
-
-    $(`[data-shop-restriction-source="${targetValue}"]`).attr('disabled', !$currentItem.is(':checked'));
-  }
 }
