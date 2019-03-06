@@ -35,12 +35,17 @@ export default class ChangePasswordHandler {
 
     // Feedback container holds messages representing password strength.
     this.$feedbackContainer = $('.js-password-strength-feedback');
+
+    return {
+      watchPasswordStrength: ($input) => this.watchPasswordStrength($input),
+      generatePassword: ($input) => this.generatePassword($input),
+    };
   }
 
   /**
    * Watch password, which is entered in the input, strength and inform about it.
    *
-   * @param $input
+   * @param {jQuery} $input the input to watch.
    */
   watchPasswordStrength($input) {
     $.passy.requirements.length.min = this.minLength;
@@ -60,7 +65,7 @@ export default class ChangePasswordHandler {
   /**
    * Generates a password and fills it to given input.
    *
-   * @param $input the input to fill the password into.
+   * @param {jQuery} $input the input to fill the password into.
    */
   generatePassword($input) {
     $input.passy('generate', this.minLength);
@@ -72,6 +77,8 @@ export default class ChangePasswordHandler {
    * @param {jQuery} $outputContainer a container to put feedback output into.
    * @param {number} passwordStrength
    * @param {boolean} isPasswordValid
+   *
+   * @private
    */
   _displayFeedback($outputContainer, passwordStrength, isPasswordValid) {
     const feedback = this._getPasswordStrengthFeedback(passwordStrength);
@@ -86,6 +93,8 @@ export default class ChangePasswordHandler {
    * Response contains text message and element class.
    *
    * @param {number} strength
+   *
+   * @private
    */
   _getPasswordStrengthFeedback(strength) {
     switch (strength) {

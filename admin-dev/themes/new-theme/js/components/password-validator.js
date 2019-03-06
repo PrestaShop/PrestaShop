@@ -27,15 +27,15 @@
  * Class responsible for checking password's validity.
  */
 export default class PasswordValidator {
-  constructor(newPasswordInputSelector, confirmPasswordInputSelector = null) {
+  constructor(newPasswordInputSelector, confirmPasswordInputSelector = null, options = {}) {
     this.newPasswordInput = document.querySelector(newPasswordInputSelector);
     this.confirmPasswordInput = document.querySelector(confirmPasswordInputSelector);
 
     // Minimum allowed length for entered password
-    this.minPasswordLength = 8;
+    this.minPasswordLength = options.minPasswordLength || 8;
 
     // Maximum allowed length for entered password
-    this.maxPasswordLength = 255;
+    this.maxPasswordLength = options.maxPasswordLength || 255;
   }
 
   /**

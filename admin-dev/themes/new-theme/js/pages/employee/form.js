@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import EmployeeEditPage from "./EmployeeEditPage";
+import EmployeeForm from "./EmployeeForm";
 
 $(() => {
-  new EmployeeEditPage();
+  new EmployeeForm();
 });

@@ -25,12 +25,12 @@
 
 import ChoiceTree from "../../components/form/choice-tree";
 import AddonsConnector from "../../components/addons-connector";
-import ChangePasswordControl from "../../components/form/change-password-control";
+import ChangePasswordControl from "./change-password-control";
 
 /**
- * Class responsible for javascript actions in employee edit page.
+ * Class responsible for javascript actions in employee add/edit page.
  */
-export default class EmployeeEditPage {
+export default class EmployeeForm {
   constructor() {
     this.shopChoiceTreeSelector = '#employee_shop_association';
     this.shopChoiceTree = new ChoiceTree(this.shopChoiceTreeSelector);
@@ -41,29 +41,32 @@ export default class EmployeeEditPage {
     new AddonsConnector('#addons-connect-form', '#addons_login_btn');
     new ChangePasswordControl();
 
-    this.initEvents();
+    this._initEvents();
     this._toggleShopTree();
+
+    return {};
   }
 
   /**
    * Initialize page's events.
+   *
+   * @private
    */
-  initEvents() {
+  _initEvents() {
     const $employeeProfilesDropdown = $(this.employeeProfileSelector);
     const getTabsUrl = $employeeProfilesDropdown.data('get-tabs-url');
-    const t = this;
 
     $(document).on('change', this.employeeProfileSelector, () => this._toggleShopTree());
 
     // Reload tabs dropdown when employee profile is changed.
-    $(document).on('change', this.employeeProfileSelector, function () {
+    $(document).on('change', this.employeeProfileSelector, (event) => {
       $.get(
         getTabsUrl,
         {
-          profileId: $(this).val()
+          profileId: $(event.currentTarget).val()
         },
         (tabs) => {
-          t.reloadTabsDropdown(tabs);
+          this._reloadTabsDropdown(tabs);
         },
         'json'
       );
@@ -74,8 +77,10 @@ export default class EmployeeEditPage {
    * Reload tabs dropdown with new content.
    *
    * @param {Object} accessibleTabs
+   *
+   * @private
    */
-  reloadTabsDropdown(accessibleTabs) {
+  _reloadTabsDropdown(accessibleTabs) {
     const $tabsDropdown = $(this.tabsDropdownSelector);
 
     $tabsDropdown.empty();
@@ -128,6 +133,8 @@ export default class EmployeeEditPage {
    * @param {String} name
    *
    * @returns {jQuery}
+   *
+   * @private
    */
   _createOptionGroup(name) {
     return $(`<optgroup label="${name}">`);
@@ -140,6 +147,8 @@ export default class EmployeeEditPage {
    * @param {String} value
    *
    * @returns {jQuery}
+   *
+   * @private
    */
   _createOption(name, value) {
     return $(`<option value="${value}">${name}</option>`);
