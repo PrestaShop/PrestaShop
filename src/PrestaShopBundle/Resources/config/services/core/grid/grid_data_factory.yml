@@ -138,13 +138,13 @@ services:
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'manufacturer'
 
-    prestashop.core.grid.data.factory.manufacturer_grid_data_factory:
+    prestashop.core.grid.data.factory.manufacturer_decorator:
       class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\ManufacturerGridDataFactory'
       arguments:
         - '@prestashop.core.grid.data.factory.manufacturer'
         - '@prestashop.adapter.manufacturer.manufacturer_logo_thumbnail_provider'
 
-    prestashop.core.grid.data.factory.manufacturer_address_grid_data_factory:
+    prestashop.core.grid.data.factory.manufacturer_address:
       class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
       arguments:
         - '@prestashop.core.grid.query_builder.manufacturer_address'
