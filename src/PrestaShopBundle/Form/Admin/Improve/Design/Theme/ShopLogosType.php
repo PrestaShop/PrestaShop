@@ -33,6 +33,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 /**
  * Class ThemeLogosType is used to configure theme's logos.
@@ -131,7 +133,7 @@ class ShopLogosType extends AbstractType
 
                     if ($isShopRestrictionField) {
                         $restrictedToShopFields[] = new ShopRestrictionField(
-                            str_replace($suffix, '', $fieldName),
+                            $this->getOriginalFieldNameFromSuffix($fieldName, $suffix),
                             $value
                         );
                     }
@@ -145,12 +147,53 @@ class ShopLogosType extends AbstractType
                 return $form;
             }
         ));
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($suffix) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            foreach ($data as $fieldName => $value) {
+                if ($value || !$this->stringEndsWith($fieldName, $suffix)) {
+                    continue;
+                }
+
+                $originalFieldName = $this->getOriginalFieldNameFromSuffix($fieldName, $suffix);
+
+                $formField = $form->get($originalFieldName);
+                $formType = $formField->getConfig()->getType()->getInnerType();
+                $options = $formField->getConfig()->getOptions();
+                $options['disabled'] = true;
+                $form->add($originalFieldName, get_class($formType), $options);
+            }
+        });
     }
 
+    /**
+     * Checks if string ends with certain string.
+     *
+     * @param string $haystack - the string in which search operation will be performed
+     * @param string $needle - the string which is being searched if exists at the end of the string
+     *
+     * @return bool
+     */
     private function stringEndsWith($haystack, $needle)
     {
         $diff = \strlen($haystack) - \strlen($needle);
 
         return $diff >= 0 && strpos($haystack, $needle, $diff) !== false;
+    }
+
+    /**
+     * Gets the original field name. E.g if $shopRestrictionFieldName is header_logo_is_restricted_to_shop and
+     *  suffix is _is_restricted_to_shop then it will return header_logo
+     *
+     * @param string $shopRestrictionFieldName
+     * @param string $suffix
+     *
+     * @return string
+     */
+    private function getOriginalFieldNameFromSuffix($shopRestrictionFieldName, $suffix)
+    {
+        return str_replace($suffix, '', $shopRestrictionFieldName);
     }
 }
