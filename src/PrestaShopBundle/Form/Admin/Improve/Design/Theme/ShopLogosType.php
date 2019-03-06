@@ -98,6 +98,7 @@ class ShopLogosType extends AbstractType
      * It created additional ShopRestrictionType fields for all existing form fields
      * which are used to restrict certain configuration for specific shop only. It also has data transformer
      * which helps to map all the fields so the post is aware of the fields which are being modified for specific shop.
+     * And it also disabled the fields which are not checked.
      *
      * @param FormBuilderInterface $builder
      */
@@ -116,17 +117,27 @@ class ShopLogosType extends AbstractType
             ]);
         }
 
+        if ($isAllowedToDisplay) {
+            $this->transformMultiStoreFields($builder, $suffix);
+            $this->disableAllShopContextFields($builder, $suffix);
+        }
+    }
+
+    /**
+     * When form is submitted it adds extra form field called shop_restriction which is an object which holds
+     * for which fields the checkbox has been clicked.
+     *
+     * @param FormBuilderInterface $builder
+     * @param string $suffix - helps to find multi shop checkbox field.
+     */
+    private function transformMultiStoreFields(FormBuilderInterface $builder, $suffix)
+    {
         $builder->addModelTransformer(new CallbackTransformer(
             function ($form) {
 
                 return $form;
             },
-            function ($form) use ($suffix, $isAllowedToDisplay) {
-                if (!$isAllowedToDisplay) {
-
-                    return $form;
-                }
-
+            function ($form) use ($suffix) {
                 $restrictedToShopFields = [];
                 foreach ($form as $fieldName => $value) {
                     $isShopRestrictionField = $this->stringEndsWith($fieldName, $suffix);
@@ -147,7 +158,16 @@ class ShopLogosType extends AbstractType
                 return $form;
             }
         ));
+    }
 
+    /**
+     * The fields which does not have checked checkbox are being disabled by default
+     *
+     * @param FormBuilderInterface $builder
+     * @param string $suffix - helps to find multi shop checkbox field.
+     */
+    private function disableAllShopContextFields(FormBuilderInterface $builder, $suffix)
+    {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($suffix) {
             $form = $event->getForm();
             $data = $event->getData();
