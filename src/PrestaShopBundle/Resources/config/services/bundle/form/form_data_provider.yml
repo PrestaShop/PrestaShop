@@ -174,3 +174,5 @@ services:
 
     prestashop.admin.improve.design.theme.shop_logos.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'

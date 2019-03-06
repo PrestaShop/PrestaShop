@@ -26,10 +26,26 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 final class ShopLogosFormDataProvider implements FormDataProviderInterface
 {
+    /**
+     * @var CommandBusInterface
+     */
+    private $commandBus;
+
+    /**
+     * @param CommandBusInterface $commandBus
+     */
+    public function __construct(CommandBusInterface $commandBus)
+    {
+        $this->commandBus = $commandBus;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,9 +56,33 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws ShopException
      */
     public function setData(array $data)
     {
-        // TODO: Implement setData() method.
+        $command = new UploadLogosCommand();
+
+        if ($data['header_logo']) {
+            $command->setUploadedHeaderLogo($data['header_logo']);
+        }
+
+        if ($data['mail_logo']) {
+            $command->setUploadedMailLogo($data['mail_logo']);
+        }
+
+        if ($data['invoice_logo']) {
+            $command->setUploadedInvoiceLogo($data['invoice_logo']);
+        }
+
+        if ($data['favicon']) {
+            $command->setUploadedFavicon($data['favicon']);
+        }
+
+        if (isset($data['shop_restriction'])) {
+            $command->setShopRestriction($data['shop_restriction']);
+        }
+
+        $this->commandBus->handle($command);
     }
 }
