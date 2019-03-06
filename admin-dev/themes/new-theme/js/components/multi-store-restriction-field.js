@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,19 +15,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import ResetThemeLayoutsHandler from './reset-theme-layouts-handler';
-import MultiStoreRestrictionField from '../../components/multi-store-restriction-field';
 
 const $ = window.$;
 
-$(() => {
-  new ResetThemeLayoutsHandler();
-  new MultiStoreRestrictionField();
-});
+export default class MultiStoreRestrictionField {
+  constructor() {
+    $(document).on('change', '.js-multi-store-restriction-checkbox', (e) => {
+      this._multiStoreRestrictionFieldChangeEvent(e)
+    })
+  }
+
+  _multiStoreRestrictionFieldChangeEvent(e) {
+    const $currentItem = $(e.currentTarget);
+    const targetValue = $currentItem.data('shopRestrictionTarget');
+
+    $(`[data-shop-restriction-source="${targetValue}"]`).attr('disabled', !$currentItem.is(':checked'));
+  }
+}
