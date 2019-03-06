@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import ResetThemeLayoutsHandler from './reset-theme-layouts-handler';
-import MultiStoreRestrictionField from '../../components/multi-store-restriction-field';
+import MultiStoreRestrictionField from '../../components/multi-store-restriction-field/multi-store-restriction-field';
 
 const $ = window.$;
 
