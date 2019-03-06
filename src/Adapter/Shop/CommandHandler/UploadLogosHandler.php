@@ -78,27 +78,19 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     {
         $this->configuration->set('PS_IMG_UPDATE_TIME', time());
 
-        if (null !== $command->getUploadedHeaderLogo() &&
-            $this->isAllowedByShopRestriction('header_logo', $command->getShopRestriction())
-        ) {
+        if (null !== $command->getUploadedHeaderLogo()) {
             $this->uploadHeaderLogo($command->getUploadedHeaderLogo());
         }
 
-        if (null !== $command->getUploadedMailLogo() &&
-            $this->isAllowedByShopRestriction('mail_logo', $command->getShopRestriction())
-        ) {
+        if (null !== $command->getUploadedMailLogo()) {
             $this->uploadMailLogo($command->getUploadedMailLogo());
         }
 
-        if (null !== $command->getUploadedInvoiceLogo() &&
-            $this->isAllowedByShopRestriction('invoice_logo', $command->getShopRestriction())
-        ) {
+        if (null !== $command->getUploadedInvoiceLogo()) {
             $this->uploadInvoiceLogo($command->getUploadedInvoiceLogo());
         }
 
-        if (null !== $command->getUploadedFavicon() &&
-            $this->isAllowedByShopRestriction('favicon', $command->getShopRestriction())
-        ) {
+        if (null !== $command->getUploadedFavicon()) {
             $this->uploadFavicon($command->getUploadedFavicon());
         }
 
@@ -157,33 +149,5 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
             'error' => $uploadedFile->getError(),
             'size' => $uploadedFile->getSize(),
         ];
-    }
-
-    /**
-     * @todo: move to form handler
-     *
-     * @param string $formFieldName
-     *
-     * @param ShopRestriction|null $shopRestriction
-     *
-     * @return bool
-     */
-    private function isAllowedByShopRestriction($formFieldName, $shopRestriction)
-    {
-        if (null === $shopRestriction) {
-            return true;
-        }
-
-        $shopRestrictionFields = $shopRestriction->getShopRestrictionFields();
-
-        foreach ($shopRestrictionFields as $shopRestrictionField) {
-            if ($formFieldName === $shopRestrictionField->getFieldName() &&
-                $shopRestrictionField->isRestrictedToContextShop()
-            ) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

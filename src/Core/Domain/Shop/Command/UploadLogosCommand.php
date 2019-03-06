@@ -56,11 +56,6 @@ class UploadLogosCommand
     private $uploadedFavicon;
 
     /**
-     * @var ShopRestriction|null
-     */
-    private $shopRestriction;
-
-    /**
      * @return UploadedFile|null
      */
     public function getUploadedHeaderLogo()
@@ -131,21 +126,5 @@ class UploadLogosCommand
         }
 
         $this->uploadedFavicon = $uploadedFavicon;
-    }
-
-    /**
-     * @return ShopRestriction|null
-     */
-    public function getShopRestriction()
-    {
-        return $this->shopRestriction;
-    }
-
-    /**
-     * @param ShopRestriction $shopRestriction
-     */
-    public function setShopRestriction(ShopRestriction $shopRestriction)
-    {
-        $this->shopRestriction = $shopRestriction;
     }
 }
