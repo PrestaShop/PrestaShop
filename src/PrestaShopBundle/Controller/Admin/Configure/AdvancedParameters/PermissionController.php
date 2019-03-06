@@ -107,7 +107,7 @@ class PermissionController extends FrameworkBundleAdminController
         try {
             $this->getQueryBus()->handle(new UpdateModulePermissionsCommand(
                 $request->request->getInt('profile_id'),
-                $request->request->getInt('module_id'),
+                $request->request->getInt('id_module'),
                 $request->request->get('permission'),
                 $request->request->getBoolean('expected_status')
             ));
