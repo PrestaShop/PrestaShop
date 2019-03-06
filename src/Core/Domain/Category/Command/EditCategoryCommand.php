@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class EditCategoryCommand edits given category.
@@ -89,21 +88,6 @@ class EditCategoryCommand
      * @var int[]
      */
     private $associatedShopIds;
-
-    /**
-     * @var UploadedFile|null
-     */
-    private $coverImage;
-
-    /**
-     * @var UploadedFile|null
-     */
-    private $thumbnailImage;
-
-    /**
-     * @var UploadedFile[]
-     */
-    private $menuThumbnailImages = [];
 
     /**
      * @param int $categoryId
@@ -357,66 +341,6 @@ class EditCategoryCommand
     public function setAssociatedShopIds(array $associatedShopIds)
     {
         $this->associatedShopIds = $associatedShopIds;
-
-        return $this;
-    }
-
-    /**
-     * @return UploadedFile
-     */
-    public function getCoverImage()
-    {
-        return $this->coverImage;
-    }
-
-    /**
-     * @param UploadedFile $coverImage
-     *
-     * @return $this
-     */
-    public function setCoverImage(UploadedFile $coverImage)
-    {
-        $this->coverImage = $coverImage;
-
-        return $this;
-    }
-
-    /**
-     * @return UploadedFile
-     */
-    public function getThumbnailImage()
-    {
-        return $this->thumbnailImage;
-    }
-
-    /**
-     * @param UploadedFile $thumbnailImage
-     *
-     * @return $this
-     */
-    public function setThumbnailImage(UploadedFile $thumbnailImage)
-    {
-        $this->thumbnailImage = $thumbnailImage;
-
-        return $this;
-    }
-
-    /**
-     * @return UploadedFile[]
-     */
-    public function getMenuThumbnailImages()
-    {
-        return $this->menuThumbnailImages;
-    }
-
-    /**
-     * @param UploadedFile[] $menuThumbnailImages
-     *
-     * @return $this
-     */
-    public function setMenuThumbnailImages(array $menuThumbnailImages)
-    {
-        $this->menuThumbnailImages = $menuThumbnailImages;
 
         return $this;
     }
