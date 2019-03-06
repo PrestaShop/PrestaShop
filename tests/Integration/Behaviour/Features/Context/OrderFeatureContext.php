@@ -28,12 +28,9 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
 use Configuration;
-use Context;
-use Customer;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
-use function PHPSTORM_META\type;
 
 class OrderFeatureContext implements BehatContext
 {
@@ -51,7 +48,7 @@ class OrderFeatureContext implements BehatContext
     {
         switch ($paymentModuleName) {
             case 'fake':
-                $paymentModule = new PaymentModuleFake;
+                $paymentModule = new PaymentModuleFake();
                 break;
             default:
                 throw new \Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
@@ -84,7 +81,7 @@ class OrderFeatureContext implements BehatContext
         $order = $this->getCurrentCartOrder();
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_products_wt : $order->total_products;
-        if ((float)$expectedTotal != (float)$total) {
+        if ((float) $expectedTotal != (float) $total) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
@@ -103,7 +100,7 @@ class OrderFeatureContext implements BehatContext
         $order = $this->getCurrentCartOrder();
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
-        if ((float)$expectedTotal != (float)$total) {
+        if ((float) $expectedTotal != (float) $total) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
@@ -122,7 +119,7 @@ class OrderFeatureContext implements BehatContext
         $order = $this->getCurrentCartOrder();
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
-        if ((float)$expectedTotal != (float)$total) {
+        if ((float) $expectedTotal != (float) $total) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
@@ -164,7 +161,7 @@ class OrderFeatureContext implements BehatContext
             );
         }
         $orderCartRule = new OrderCartRule($orderCartRulesData[$position - 1]['id_order_cart_rule']);
-        if ((float)$discountTaxIncluded != (float)$orderCartRule->value) {
+        if ((float) $discountTaxIncluded != (float) $orderCartRule->value) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
@@ -173,7 +170,7 @@ class OrderFeatureContext implements BehatContext
                 )
             );
         }
-        if ((float)$discountTaxExcluded != (float)$orderCartRule->value_tax_excl) {
+        if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
@@ -191,6 +188,7 @@ class OrderFeatureContext implements BehatContext
             throw new \Exception('Current cart was not initialized');
         }
         $order = Order::getByCartId($cart->id);
+
         return $order;
     }
 
