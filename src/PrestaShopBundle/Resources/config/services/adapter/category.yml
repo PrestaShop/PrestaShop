@@ -49,14 +49,6 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
 
-  prestashop.adapter.category.command_handler.abstract_category_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AbstractCategoryHandler
-    abstract: true
-    arguments:
-      - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
-
   prestashop.adapter.category.command_handler.add_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler
     public: true
@@ -65,7 +57,6 @@ services:
 
   prestashop.adapter.category.command_handler.add_root_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddRootCategoryHandler
-    parent: prestashop.adapter.category.command_handler.abstract_category_handler
     arguments:
       - '@prestashop.adapter.legacy.configuration'
     public: true
@@ -75,7 +66,6 @@ services:
 
   prestashop.adapter.category.command_handler.edit_root_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditRootCategoryHandler
-    parent: prestashop.adapter.category.command_handler.abstract_category_handler
     public: true
     tags:
       - name: tactician.handler

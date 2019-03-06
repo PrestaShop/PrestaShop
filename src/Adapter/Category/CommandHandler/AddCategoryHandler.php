@@ -49,14 +49,6 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
     {
         $category = $this->createCategoryFromCommand($command);
 
-        if (false === $category->validateFields(false)) {
-            throw new CategoryConstraintException('Invalid category data');
-        }
-
-        if (false === $category->add()) {
-            throw new CannotAddCategoryException('Failed to add new category.');
-        }
-
         return new CategoryId((int) $category->id);
     }
 
@@ -102,6 +94,14 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
         // Inside Category::add() & Category::update() method it checks if shop association is submitted
         // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
         $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
+
+        if (false === $category->validateFields(false)) {
+            throw new CategoryConstraintException('Invalid category data');
+        }
+
+        if (false === $category->add()) {
+            throw new CannotAddCategoryException('Failed to add new category.');
+        }
 
         return $category;
     }
