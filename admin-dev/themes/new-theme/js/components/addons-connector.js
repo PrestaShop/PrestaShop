@@ -36,13 +36,15 @@ export default class AddonsConnector {
     this.addonsConnectFormSelector = addonsConnectFormSelector;
     this.$addonsLoginButton = $(addonsLoginButtonSelector);
 
-    this.initEvents();
+    this._initEvents();
+
+    return {};
   }
 
   /**
    * Initialize events related to connection to addons.
    */
-  initEvents() {
+  _initEvents() {
     $('body').on('submit', this.addonsConnectFormSelector, (event) => {
       const $form = $(event.currentTarget);
       event.preventDefault();
