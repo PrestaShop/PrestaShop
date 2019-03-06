@@ -27,12 +27,73 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AddRootCategoryCommand adds new root category.
  */
-class AddRootCategoryCommand extends AbstractCategoryCommand
+class AddRootCategoryCommand
 {
+    /**
+     * @var string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @var string[]
+     */
+    private $localizedLinkRewrites;
+
+    /**
+     * @var string[]
+     */
+    private $localizedDescriptions;
+
+    /**
+     * @var bool
+     */
+    private $isActive;
+
+    /**
+     * @var string[]
+     */
+    private $localizedMetaTitles;
+
+    /**
+     * @var string[]
+     */
+    private $localizedMetaDescriptions;
+
+    /**
+     * @var string[]
+     */
+    private $localizedMetaKeywords;
+
+    /**
+     * @var int[]
+     */
+    private $associatedGroupIds;
+
+    /**
+     * @var int[]
+     */
+    private $associatedShopIds;
+
+    /**
+     * @var UploadedFile|null
+     */
+    private $coverImage;
+
+    /**
+     * @var UploadedFile|null
+     */
+    private $thumbnailImage;
+
+    /**
+     * @var UploadedFile[]
+     */
+    private $menuThumbnailImages = [];
+
     /**
      * @param string[] $name
      * @param string[] $linkRewrite
@@ -46,5 +107,272 @@ class AddRootCategoryCommand extends AbstractCategoryCommand
             ->setLocalizedNames($name)
             ->setLocalizedLinkRewrites($linkRewrite)
             ->setIsActive($isActive);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames()
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     *
+     * @return $this
+     *
+     * @throws CategoryConstraintException
+     */
+    public function setLocalizedNames(array $localizedNames)
+    {
+        if (empty($localizedNames)) {
+            throw new CategoryConstraintException(
+                'Category name cannot be empty',
+                CategoryConstraintException::EMPTY_NAME
+            );
+        }
+
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedLinkRewrites()
+    {
+        return $this->localizedLinkRewrites;
+    }
+
+    /**
+     * @param string[] $localizedLinkRewrites
+     *
+     * @return $this
+     *
+     * @throws CategoryConstraintException
+     */
+    public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
+    {
+        if (empty($localizedLinkRewrites)) {
+            throw new CategoryConstraintException(
+                'Category link rewrite cannot be empty',
+                CategoryConstraintException::EMPTY_LINK_REWRITE
+            );
+        }
+
+        $this->localizedLinkRewrites = $localizedLinkRewrites;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedDescriptions()
+    {
+        return $this->localizedDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedDescriptions
+     *
+     * @return $this
+     */
+    public function setLocalizedDescriptions(array $localizedDescriptions)
+    {
+        $this->localizedDescriptions = $localizedDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     *
+     * @return $this
+     *
+     * @throws CategoryConstraintException
+     */
+    public function setIsActive($isActive)
+    {
+        if (!is_bool($isActive)) {
+            throw new CategoryConstraintException(
+                'Invalid Category status supplied',
+                CategoryConstraintException::INVALID_STATUS
+            );
+        }
+
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedMetaTitles()
+    {
+        return $this->localizedMetaTitles;
+    }
+
+    /**
+     * @param string[] $localizedMetaTitles
+     *
+     * @return $this
+     */
+    public function setLocalizedMetaTitles(array $localizedMetaTitles)
+    {
+        $this->localizedMetaTitles = $localizedMetaTitles;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedMetaDescriptions()
+    {
+        return $this->localizedMetaDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedMetaDescriptions
+     *
+     * @return $this
+     */
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions)
+    {
+        $this->localizedMetaDescriptions = $localizedMetaDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedMetaKeywords()
+    {
+        return $this->localizedMetaKeywords;
+    }
+
+    /**
+     * @param string[] $localizedMetaKeywords
+     *
+     * @return $this
+     */
+    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
+    {
+        $this->localizedMetaKeywords = $localizedMetaKeywords;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedGroupIds()
+    {
+        return $this->associatedGroupIds;
+    }
+
+    /**
+     * @param int[] $associatedGroupIds
+     *
+     * @return $this
+     */
+    public function setAssociatedGroupIds(array $associatedGroupIds)
+    {
+        $this->associatedGroupIds = $associatedGroupIds;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedShopIds()
+    {
+        return $this->associatedShopIds;
+    }
+
+    /**
+     * @param int[] $associatedShopIds
+     *
+     * @return $this
+     */
+    public function setAssociatedShopIds(array $associatedShopIds)
+    {
+        $this->associatedShopIds = $associatedShopIds;
+
+        return $this;
+    }
+
+    /**
+     * @return UploadedFile
+     */
+    public function getCoverImage()
+    {
+        return $this->coverImage;
+    }
+
+    /**
+     * @param UploadedFile $coverImage
+     *
+     * @return $this
+     */
+    public function setCoverImage(UploadedFile $coverImage)
+    {
+        $this->coverImage = $coverImage;
+
+        return $this;
+    }
+
+    /**
+     * @return UploadedFile
+     */
+    public function getThumbnailImage()
+    {
+        return $this->thumbnailImage;
+    }
+
+    /**
+     * @param UploadedFile $thumbnailImage
+     *
+     * @return $this
+     */
+    public function setThumbnailImage(UploadedFile $thumbnailImage)
+    {
+        $this->thumbnailImage = $thumbnailImage;
+
+        return $this;
+    }
+
+    /**
+     * @return UploadedFile[]
+     */
+    public function getMenuThumbnailImages()
+    {
+        return $this->menuThumbnailImages;
+    }
+
+    /**
+     * @param UploadedFile[] $menuThumbnailImages
+     *
+     * @return $this
+     */
+    public function setMenuThumbnailImages(array $menuThumbnailImages)
+    {
+        $this->menuThumbnailImages = $menuThumbnailImages;
+
+        return $this;
     }
 }
