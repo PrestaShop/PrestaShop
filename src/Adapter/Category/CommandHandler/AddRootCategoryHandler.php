@@ -31,13 +31,13 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddRootCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
  * Class AddRootCategoryHandler.
  */
-final class AddRootCategoryHandler extends AbstractCategoryHandler implements AddRootCategoryHandlerInterface
+final class AddRootCategoryHandler implements AddRootCategoryHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -45,23 +45,10 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
     private $configuration;
 
     /**
-     * @param ImageUploaderInterface $categoryCoverUploader
-     * @param ImageUploaderInterface $categoryThumbnailUploader
-     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
      * @param ConfigurationInterface $configuration
      */
-    public function __construct(
-        ImageUploaderInterface $categoryCoverUploader,
-        ImageUploaderInterface $categoryThumbnailUploader,
-        ImageUploaderInterface $categoryMenuThumbnailUploader,
-        ConfigurationInterface $configuration
-    ) {
-        parent::__construct(
-            $categoryCoverUploader,
-            $categoryThumbnailUploader,
-            $categoryMenuThumbnailUploader
-        );
-
+    public function __construct(ConfigurationInterface $configuration)
+    {
         $this->configuration = $configuration;
     }
 
@@ -72,21 +59,60 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
      */
     public function handle(AddRootCategoryCommand $command)
     {
+        $category = $this->createRootCategoryFromCommand($command);
+
+        return new CategoryId((int) $category->id);
+    }
+
+    /**
+     * Creates legacy root category
+     *
+     * @param AddRootCategoryCommand $command
+     *
+     * @return Category
+     */
+    private function createRootCategoryFromCommand(AddRootCategoryCommand $command)
+    {
         $category = new Category();
         $category->is_root_category = true;
         $category->level_depth = 1;
         $category->id_parent = $this->configuration->get('PS_ROOT_CATEGORY');
+        $category->name = $command->getLocalizedNames();
+        $category->link_rewrite = $command->getLocalizedLinkRewrites();
 
-        $this->populateCategoryWithCommandData($category, $command);
-
-        $category->add();
-
-        if (!$category->id) {
-            throw new CannotAddCategoryException('Failed to add new category.');
+        if (null !== $command->getLocalizedDescriptions()) {
+            $category->description = $command->getLocalizedDescriptions();
         }
 
-        $this->uploadImages($category, $command);
+        if (null !== $command->getLocalizedMetaTitles()) {
+            $category->meta_title = $command->getLocalizedMetaTitles();
+        }
 
-        return new CategoryId((int) $category->id);
+        if (null !== $command->getLocalizedMetaDescriptions()) {
+            $category->meta_description = $command->getLocalizedMetaDescriptions();
+        }
+
+        if (null !== $command->getLocalizedMetaKeywords()) {
+            $category->meta_keywords = $command->getLocalizedMetaKeywords();
+        }
+
+        if (null !== $command->getAssociatedGroupIds()) {
+            $category->groupBox = $command->getAssociatedGroupIds();
+        }
+
+        // This is a workaround to make Category's object model work.
+        // Inside Category::add() & Category::update() method it checks if shop association is submitted
+        // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
+        $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
+
+        if (false === $category->validateFields(false)) {
+            throw new CategoryException('Invalid data for root category creation');
+        }
+
+        if (false === $category->save()) {
+            throw new CannotAddCategoryException('Failed to create root category');
+        }
+
+        return $category;
     }
 }

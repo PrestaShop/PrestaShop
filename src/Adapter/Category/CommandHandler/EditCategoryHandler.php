@@ -60,16 +60,6 @@ final class EditCategoryHandler implements EditCategoryHandlerInterface
 
         $this->updateCategoryFromCommandData($category, $command);
 
-        if (false === $category->validateFields(false)) {
-            throw new CategoryException('Invalid data when updating category');
-        }
-
-        if (false === $category->update()) {
-            throw new CannotEditCategoryException(
-                sprintf('Failed to edit Category with id "%s".', $category->id)
-            );
-        }
-
         return new CategoryId((int) $category->id);
     }
 
@@ -113,9 +103,21 @@ final class EditCategoryHandler implements EditCategoryHandlerInterface
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        // This is a workaround to make Category's object model work.
-        // Inside Category::add() & Category::update() method it checks if shop association is submitted
-        // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
-        $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
+        if (!empty($command->getAssociatedShopIds())) {
+            // This is a workaround to make Category's object model work.
+            // Inside Category::add() & Category::update() method it checks if shop association is submitted
+            // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
+            $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
+        }
+
+        if (false === $category->validateFields(false)) {
+            throw new CategoryException('Invalid data when updating category');
+        }
+
+        if (false === $category->update()) {
+            throw new CannotEditCategoryException(
+                sprintf('Failed to edit Category with id "%s".', $category->id)
+            );
+        }
     }
 }

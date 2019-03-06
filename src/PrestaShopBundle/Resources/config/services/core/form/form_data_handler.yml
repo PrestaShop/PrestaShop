@@ -47,3 +47,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\RootCategoryFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
+      - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
+      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'

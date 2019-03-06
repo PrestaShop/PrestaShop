@@ -284,7 +284,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
 
         try {
-            $rootCategoryForm = $rootCategoryFormBuilder->getForm();
+            $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
             $rootCategoryForm->handleRequest($request);
 
             $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
