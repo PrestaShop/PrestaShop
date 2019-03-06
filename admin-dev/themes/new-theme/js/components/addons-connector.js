@@ -25,6 +25,9 @@
 
 const $ = window.$;
 
+/**
+ * Responsible for connecting to addons marketplace.
+ */
 export default class AddonsConnector {
   constructor(
     addonsConnectFormSelector,
@@ -40,13 +43,12 @@ export default class AddonsConnector {
    * Initialize events related to connection to addons.
    */
   initEvents() {
-    const t = this;
-
-    $('body').on('submit', this.addonsConnectFormSelector, function (event) {
+    $('body').on('submit', this.addonsConnectFormSelector, (event) => {
+      const $form = $(event.currentTarget);
       event.preventDefault();
       event.stopPropagation();
 
-      t._connect($(this).attr('action'), $(this).serialize());
+      this._connect($form.attr('action'), $form.serialize());
     });
   }
 
@@ -65,7 +67,7 @@ export default class AddonsConnector {
         this.$addonsLoginButton.show();
         $('button.btn[type="submit"]', this.addonsConnectFormSelector).hide();
       }
-    }).done((response) => {
+    }).then((response) => {
       if (response.success === 1) {
         location.reload();
       } else {
