@@ -16,7 +16,7 @@ Feature: Cart calculation with only products and gift wrapping
     Given Shop configuration of PS_GIFT_WRAPPING is set to 1
     Given Shop configuration of PS_GIFT_WRAPPING_PRICE is set to 5.3
     Given I have an empty default cart
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 1
     When I select gift wrapping
     Then Expected total of my cart tax included should be 32.112
@@ -26,7 +26,7 @@ Feature: Cart calculation with only products and gift wrapping
     Given Shop configuration of PS_GIFT_WRAPPING is set to 1
     Given Shop configuration of PS_GIFT_WRAPPING_PRICE is set to 5.3
     Given I have an empty default cart
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 3
     When I select gift wrapping
     Then Expected total of my cart tax included should be 71.736
@@ -36,9 +36,9 @@ Feature: Cart calculation with only products and gift wrapping
     Given Shop configuration of PS_GIFT_WRAPPING is set to 1
     Given Shop configuration of PS_GIFT_WRAPPING_PRICE is set to 5.3
     Given I have an empty default cart
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
     When I add product named product3 in my cart with quantity 1

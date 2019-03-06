@@ -20,8 +20,8 @@ Feature: Cart calculation with tax
 
   Scenario: tax #1: one product in cart, quantity 1
     Given I have an empty default cart
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given product with name product1 has following tax rule group id: 32
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given Product with name product1 has following tax rule group id: 32
     When I set delivery address id to 2
     When I add product named product1 in my cart with quantity 1
     Then Expected total of my cart tax included should be 27.60448
@@ -36,8 +36,8 @@ Feature: Cart calculation with tax
 
   Scenario: tax #2: one product in cart, quantity 1
     Given I have an empty default cart
-    Given there is a product with name product5 and price 19.812 and quantity 1000
-    Given product with name product5 has following tax rule group id: 9
+    Given There is a product with name product5 and price 19.812 and quantity 1000
+    Given Product with name product5 has following tax rule group id: 9
     When I set delivery address id to 4
     When I add product named product5 in my cart with quantity 1
     Then Expected total of my cart tax included should be 28.00072
@@ -52,8 +52,8 @@ Feature: Cart calculation with tax
 
   Scenario: tax #3: one product in cart, quantity 1
     Given I have an empty default cart
-    Given there is a product with name product5 and price 19.812 and quantity 1000
-    Given product with name product5 has following tax rule group id: 9
+    Given There is a product with name product5 and price 19.812 and quantity 1000
+    Given Product with name product5 has following tax rule group id: 9
     When I set delivery address id to 1
     When I add product named product5 in my cart with quantity 1
     Then Expected total of my cart tax included should be 19.812
@@ -68,8 +68,8 @@ Feature: Cart calculation with tax
 
   Scenario: tax #1: one product in cart, quantity 3
     Given I have an empty default cart
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given product with name product1 has following tax rule group id: 32
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given Product with name product1 has following tax rule group id: 32
     When I set delivery address id to 2
     When I add product named product1 in my cart with quantity 3
     Then Expected total of my cart tax included should be 68.81344
@@ -84,8 +84,8 @@ Feature: Cart calculation with tax
 
   Scenario: tax #2: one product in cart, quantity 3
     Given I have an empty default cart
-    Given there is a product with name product5 and price 19.812 and quantity 1000
-    Given product with name product5 has following tax rule group id: 9
+    Given There is a product with name product5 and price 19.812 and quantity 1000
+    Given Product with name product5 has following tax rule group id: 9
     When I set delivery address id to 4
     When I add product named product5 in my cart with quantity 3
     Then Expected total of my cart tax included should be 70.00216
@@ -100,8 +100,8 @@ Feature: Cart calculation with tax
 
   Scenario: tax #3: one product in cart, quantity 3
     Given I have an empty default cart
-    Given there is a product with name product5 and price 19.812 and quantity 1000
-    Given product with name product5 has following tax rule group id: 9
+    Given There is a product with name product5 and price 19.812 and quantity 1000
+    Given Product with name product5 has following tax rule group id: 9
     When I set delivery address id to 1
     When I add product named product5 in my cart with quantity 3
     Then Expected total of my cart tax included should be 59.436
@@ -116,12 +116,12 @@ Feature: Cart calculation with tax
 
   Scenario: tax #1: 3 products in cart, several quantities
     Given I have an empty default cart
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given product with name product1 has following tax rule group id: 32
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given product with name product2 has following tax rule group id: 32
-    Given there is a product with name product3 and price 31.188 and quantity 1000
-    Given product with name product3 has following tax rule group id: 32
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given Product with name product1 has following tax rule group id: 32
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given Product with name product2 has following tax rule group id: 32
+    Given There is a product with name product3 and price 31.188 and quantity 1000
+    Given Product with name product3 has following tax rule group id: 32
     When I set delivery address id to 2
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
@@ -138,12 +138,12 @@ Feature: Cart calculation with tax
 
   Scenario: tax #2: 3 products in cart, several quantities
     Given I have an empty default cart
-    Given there is a product with name product5 and price 19.812 and quantity 1000
-    Given product with name product5 has following tax rule group id: 9
-    Given there is a product with name product6 and price 32.388 and quantity 1000
-    Given product with name product6 has following tax rule group id: 9
-    Given there is a product with name product7 and price 31.188 and quantity 1000
-    Given product with name product7 has following tax rule group id: 9
+    Given There is a product with name product5 and price 19.812 and quantity 1000
+    Given Product with name product5 has following tax rule group id: 9
+    Given There is a product with name product6 and price 32.388 and quantity 1000
+    Given Product with name product6 has following tax rule group id: 9
+    Given There is a product with name product7 and price 31.188 and quantity 1000
+    Given Product with name product7 has following tax rule group id: 9
     When I set delivery address id to 4
     When I add product named product5 in my cart with quantity 3
     When I add product named product6 in my cart with quantity 2
@@ -160,12 +160,12 @@ Feature: Cart calculation with tax
 
   Scenario: tax #3: 3 products in cart, several quantities
     Given I have an empty default cart
-    Given there is a product with name product5 and price 19.812 and quantity 1000
-    Given product with name product5 has following tax rule group id: 9
-    Given there is a product with name product6 and price 32.388 and quantity 1000
-    Given product with name product6 has following tax rule group id: 9
-    Given there is a product with name product7 and price 31.188 and quantity 1000
-    Given product with name product7 has following tax rule group id: 9
+    Given There is a product with name product5 and price 19.812 and quantity 1000
+    Given Product with name product5 has following tax rule group id: 9
+    Given There is a product with name product6 and price 32.388 and quantity 1000
+    Given Product with name product6 has following tax rule group id: 9
+    Given There is a product with name product7 and price 31.188 and quantity 1000
+    Given Product with name product7 has following tax rule group id: 9
     When I set delivery address id to 1
     When I add product named product5 in my cart with quantity 3
     When I add product named product6 in my cart with quantity 2

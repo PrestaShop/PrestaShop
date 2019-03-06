@@ -23,7 +23,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 1
     Then Expected total of my cart tax included should be 26.812
     Then Expected total of my cart tax included should be 26.812 with previous calculation method
@@ -35,7 +35,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 3
     Then Expected total of my cart tax included should be 66.44
     Then Expected total of my cart tax included should be 66.44 with previous calculation method
@@ -47,9 +47,9 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
     When I add product named product3 in my cart with quantity 1
@@ -76,7 +76,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency2 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 1
     Then Expected total of my cart tax included should be 33.515
     Then Expected total of my cart tax included should be 33.515 with previous calculation method
@@ -88,7 +88,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency2 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 3
     Then Expected total of my cart tax included should be 83.05
     Then Expected total of my cart tax included should be 83.05 with previous calculation method
@@ -100,9 +100,9 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency2 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
     When I add product named product3 in my cart with quantity 1
@@ -129,7 +129,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency2 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 1
     Then Expected total of my cart tax included should be 24.66704
     Then Expected total of my cart tax included should be 24.66704 with previous calculation method
@@ -141,7 +141,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency2 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 3
     Then Expected total of my cart tax included should be 61.12
     Then Expected total of my cart tax included should be 61.12 with previous calculation method
@@ -153,9 +153,9 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency2 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
     When I add product named product3 in my cart with quantity 1
@@ -182,7 +182,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency3 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 1
     Then Expected total of my cart tax included should be 16.89156
     Then Expected total of my cart tax included should be 16.89156 with previous calculation method
@@ -194,7 +194,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency3 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 3
     Then Expected total of my cart tax included should be 41.85
     Then Expected total of my cart tax included should be 41.85 with previous calculation method
@@ -206,9 +206,9 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency1 is the default one
     Given Currency with name currency3 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
     When I add product named product3 in my cart with quantity 1
@@ -235,7 +235,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency3 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 1
     Then Expected total of my cart tax included should be 24.66704
     Then Expected total of my cart tax included should be 24.66704 with previous calculation method
@@ -247,7 +247,7 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency3 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     When I add product named product1 in my cart with quantity 3
     Then Expected total of my cart tax included should be 61.12
     Then Expected total of my cart tax included should be 61.12 with previous calculation method
@@ -259,9 +259,9 @@ Feature: Cart calculation with currencies
     Given There is a currency with name currency3 and iso code EUR and change rate of 0.63
     Given Currency with name currency3 is the default one
     Given Currency with name currency1 is the current one
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     When I add product named product2 in my cart with quantity 2
     When I add product named product1 in my cart with quantity 3
     When I add product named product3 in my cart with quantity 1

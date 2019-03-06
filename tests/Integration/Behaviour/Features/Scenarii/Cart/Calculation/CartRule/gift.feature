@@ -6,8 +6,8 @@ Feature: Cart calculation with cart rules giving gift
   Scenario: 1 product in cart (out of stock), 1 cart rule give it as a gift, offering a gift (out of stock) and a global 10% discount
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product4 and price 35.567 and quantity 1000
-    Given product with name product4 is out of stock
+    Given There is a product with name product4 and price 35.567 and quantity 1000
+    Given Product with name product4 is out of stock
     Given There is a cart rule with name cartrule13 and percent discount of 10.0% and priority of 13 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule13 has a code: foo13
     Given Cart rule named cartrule13 has a gift product named product4
@@ -20,9 +20,9 @@ Feature: Cart calculation with cart rules giving gift
   Scenario: 2 products in cart, one cart rule offering a gift (out of stock) and a global 10% discount
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product4 and price 35.567 and quantity 1000
-    Given product with name product4 is out of stock
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product4 and price 35.567 and quantity 1000
+    Given Product with name product4 is out of stock
     Given There is a cart rule with name cartrule13 and percent discount of 10.0% and priority of 13 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule13 has a code: foo13
     Given Cart rule named cartrule13 has a gift product named product4
@@ -35,10 +35,10 @@ Feature: Cart calculation with cart rules giving gift
   Scenario: 2 products in cart, one cart rule offering a gift (in stock) and a global 10% discount
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
-    Given there is a product with name product4 and price 35.567 and quantity 1000
-    Given product with name product4 is out of stock
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product4 and price 35.567 and quantity 1000
+    Given Product with name product4 is out of stock
     Given There is a cart rule with name cartrule12 and percent discount of 10.0% and priority of 13 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule12 has a code: foo12
     Given Cart rule named cartrule12 has a gift product named product3

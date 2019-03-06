@@ -6,7 +6,7 @@ Feature: Check cart to order data copy
   Scenario: 1 product in cart, 1 cart rule
     Given I have an empty default cart
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
     Given There is a zone with name zone1
@@ -20,7 +20,7 @@ Feature: Check cart to order data copy
     Given Address with name address1 is associated to customer with name customer1
     Given There is a carrier with name carrier1
     Given Carrier with name carrier1 ships to all groups
-    Given carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
+    Given Carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
     When Current customer is customer with name customer1
     When I add product named product1 in my cart with quantity 1
     When I add cart rule named cartrule1 to my cart
@@ -39,7 +39,7 @@ Feature: Check cart to order data copy
   Scenario: 1 product in cart, 2 cart rules
     Given I have an empty default cart
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
     Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
@@ -55,7 +55,7 @@ Feature: Check cart to order data copy
     Given Address with name address1 is associated to customer with name customer1
     Given There is a carrier with name carrier1
     Given Carrier with name carrier1 ships to all groups
-    Given carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
+    Given Carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
     When Current customer is customer with name customer1
     When I add product named product1 in my cart with quantity 1
     When I add cart rule named cartrule1 to my cart
@@ -76,9 +76,9 @@ Feature: Check cart to order data copy
   Scenario: 3 product in cart, 1 cart rule
     Given I have an empty default cart
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
     Given There is a zone with name zone1
@@ -94,7 +94,7 @@ Feature: Check cart to order data copy
     Given Address with name address1 is associated to customer with name customer1
     Given There is a carrier with name carrier1
     Given Carrier with name carrier1 ships to all groups
-    Given carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
+    Given Carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
     When Current customer is customer with name customer1
     When I add product named product2 in my cart with quantity 1
     When I add product named product1 in my cart with quantity 1
@@ -115,9 +115,9 @@ Feature: Check cart to order data copy
   Scenario: 3 product in cart, 3 cart rules
     Given I have an empty default cart
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule1 has a code: foo1
     Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
@@ -135,7 +135,7 @@ Feature: Check cart to order data copy
     Given Address with name address1 is associated to customer with name customer1
     Given There is a carrier with name carrier1
     Given Carrier with name carrier1 ships to all groups
-    Given carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
+    Given Carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
     When Current customer is customer with name customer1
     When I add product named product2 in my cart with quantity 1
     When I add product named product1 in my cart with quantity 1
@@ -158,7 +158,7 @@ Feature: Check cart to order data copy
   Scenario: 1 product in cart, 1 cart rule with too-much amount
     Given I have an empty default cart
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule5 and amount discount of 500 and priority of 5 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule5 has a code: foo5
     Given There is a zone with name zone1
@@ -172,7 +172,7 @@ Feature: Check cart to order data copy
     Given Address with name address1 is associated to customer with name customer1
     Given There is a carrier with name carrier1
     Given Carrier with name carrier1 ships to all groups
-    Given carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
+    Given Carrier with name carrier1 has a shipping fees of 5.0 in zone with name zone1 for quantities between 0 and 10000
     When Current customer is customer with name customer1
     When I add product named product1 in my cart with quantity 1
     When I add cart rule named cartrule5 to my cart
