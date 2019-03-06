@@ -12,6 +12,7 @@ admin_metas_search:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:search'
     _legacy_controller: AdminMeta
+    _legacy_link: AdminMeta:submitFiltermeta
 
 admin_metas_create:
   path: /new
@@ -19,6 +20,7 @@ admin_metas_create:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:create'
     _legacy_controller: AdminMeta
+    _legacy_link: AdminMeta:addmeta
 
 admin_metas_edit:
   path: /edit/{metaId}
@@ -26,6 +28,9 @@ admin_metas_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:edit'
     _legacy_controller: AdminMeta
+    _legacy_link: AdminMeta:updatemeta
+    _legacy_parameters:
+      id_meta: metaId
 
 admin_metas_delete:
   path: /delete/{metaId}
@@ -33,6 +38,9 @@ admin_metas_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:delete'
     _legacy_controller: AdminMeta
+    _legacy_link: AdminMeta:deletemeta
+    _legacy_parameters:
+      id_meta: metaId
 
 admin_metas_delete_bulk:
   path: /delete
@@ -40,6 +48,7 @@ admin_metas_delete_bulk:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:deleteBulk'
     _legacy_controller: AdminMeta
+    _legacy_link: AdminMeta:submitBulkdeletemeta
 
 admin_metas_save_options:
   path: /options
@@ -47,6 +56,7 @@ admin_metas_save_options:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:saveOptions'
     _legacy_controller: AdminMeta
+    _legacy_link: AdminMeta:submitOptionsmeta
 
 admin_metas_generate_robots_text_file:
   path: /generate/robots
@@ -54,3 +64,4 @@ admin_metas_generate_robots_text_file:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:generateRobotsFile'
     _legacy_controller: AdminMeta
+    _legacy_link: AdminMeta:submitRobots
