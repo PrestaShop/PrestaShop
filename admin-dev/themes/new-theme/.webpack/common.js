@@ -36,7 +36,7 @@ module.exports = {
     meta: './js/pages/meta',
     contacts: './js/pages/contacts',
     employee: './js/pages/employee/index',
-    employee_form: './js/pages/employee/edit_form',
+    employee_form: './js/pages/employee/form',
     customer: './js/pages/customer',
     language: './js/pages/language',
     product_page: './js/product-page/index',
