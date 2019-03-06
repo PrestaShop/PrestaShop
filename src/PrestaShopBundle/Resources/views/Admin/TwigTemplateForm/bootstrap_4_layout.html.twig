@@ -720,7 +720,12 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         {% set type = type|default('checkbox') %}
-        <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}">
+        <input
+          class="js-multi-store-restriction-checkbox"
+          type="{{ type }}"
+          {{ block('widget_attributes') }}
+          value="{{ value }}"
+        >
         <i class="md-checkbox-control"></i>
       </label>
     </div>

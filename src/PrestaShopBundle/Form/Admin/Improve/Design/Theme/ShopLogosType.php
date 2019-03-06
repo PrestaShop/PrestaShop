@@ -79,6 +79,9 @@ class ShopLogosType extends AbstractType
         $builder
             ->add('header_logo', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'data-test' => 1,
+                ],
             ])
             ->add('mail_logo', FileType::class, [
                 'required' => false,
@@ -113,6 +116,7 @@ class ShopLogosType extends AbstractType
             $builder->add($form->getName() . $suffix, ShopRestrictionType::class, [
                 'attr' => [
                     'is_allowed_to_display' => $isAllowedToDisplay,
+                    'data-shop-restriction-target' => $form->getName(),
                 ],
             ]);
         }
@@ -120,6 +124,7 @@ class ShopLogosType extends AbstractType
         if ($isAllowedToDisplay) {
             $this->transformMultiStoreFields($builder, $suffix);
             $this->disableAllShopContextFields($builder, $suffix);
+            $this->setShopRestrictionSource($builder, $suffix);
         }
     }
 
@@ -184,6 +189,32 @@ class ShopLogosType extends AbstractType
                 $options = $formField->getConfig()->getOptions();
                 $options['disabled'] = true;
                 $form->add($originalFieldName, get_class($formType), $options);
+            }
+        });
+    }
+
+    /**
+     * Sets the source attribute fields so they can be mapped with the shop restriction checkbox fields later on in
+     * javascript events.
+     *
+     * @param FormBuilderInterface $builder
+     * @param string $suffix - helps to find multi shop checkbox field.
+     */
+    private function setShopRestrictionSource(FormBuilderInterface $builder, $suffix)
+    {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($suffix) {
+            $form = $event->getForm();
+
+            foreach ($form as $formField) {
+                $fieldName = $formField->getName();
+
+                if (!$this->stringEndsWith($fieldName, $suffix)) {
+                    $formType = $formField->getConfig()->getType()->getInnerType();
+                    $options = $formField->getConfig()->getOptions();
+                    $options['attr']['data-shop-restriction-source'] = $fieldName;
+
+                    $form->add($fieldName, get_class($formType), $options);
+                }
             }
         });
     }
