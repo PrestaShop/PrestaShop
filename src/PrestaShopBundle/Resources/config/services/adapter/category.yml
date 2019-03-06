@@ -59,7 +59,6 @@ services:
 
   prestashop.adapter.category.command_handler.add_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler
-    parent: prestashop.adapter.category.command_handler.abstract_category_handler
     public: true
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand }
@@ -84,7 +83,6 @@ services:
 
   prestashop.adapter.category.command_handler.edit_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditCategoryHandler
-    parent: prestashop.adapter.category.command_handler.abstract_category_handler
     public: true
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand }

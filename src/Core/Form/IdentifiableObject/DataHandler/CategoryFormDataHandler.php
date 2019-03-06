@@ -30,11 +30,13 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Creates/updates category from data submitted in category form
  */
-final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
+final class CategoryFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
@@ -42,11 +44,36 @@ final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
     private $commandBus;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @var ImageUploaderInterface
      */
-    public function __construct(CommandBusInterface $commandBus)
-    {
+    private $categoryCoverUploader;
+
+    /**
+     * @var ImageUploaderInterface
+     */
+    private $categoryThumbnailUploader;
+
+    /**
+     * @var ImageUploaderInterface
+     */
+    private $categoryMenuThumbnailUploader;
+
+    /**
+     * @param CommandBusInterface $commandBus
+     * @param ImageUploaderInterface $categoryCoverUploader
+     * @param ImageUploaderInterface $categoryThumbnailUploader
+     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
+     */
+    public function __construct(
+        CommandBusInterface $commandBus,
+        ImageUploaderInterface $categoryCoverUploader,
+        ImageUploaderInterface $categoryThumbnailUploader,
+        ImageUploaderInterface $categoryMenuThumbnailUploader
+    ) {
         $this->commandBus = $commandBus;
+        $this->categoryCoverUploader = $categoryCoverUploader;
+        $this->categoryThumbnailUploader = $categoryThumbnailUploader;
+        $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
     }
 
     /**
@@ -54,17 +81,17 @@ final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
      */
     public function create(array $data)
     {
-        $command = new AddCategoryCommand(
-            $data['name'],
-            $data['link_rewrite'],
-            (bool) $data['active'],
-            (int) $data['id_parent']
-        );
-
-        $this->populateCommandWithData($command, $data);
+        $command = $this->createAddCategoryCommand($data);
 
         /** @var CategoryId $categoryId */
         $categoryId = $this->commandBus->handle($command);
+
+        $this->uploadImages(
+            $categoryId,
+            $data['cover_image'],
+            $data['thumbnail_image'],
+            $data['menu_thumbnail_images']
+        );
 
         return $categoryId->getValue();
     }
@@ -74,17 +101,131 @@ final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
      */
     public function update($categoryId, array $data)
     {
-        $command = new EditCategoryCommand($categoryId);
+        $command = $this->createEditCategoryCommand($categoryId, $data);
 
-        $this->populateCommandWithData($command, $data);
+        /** @var CategoryId $categoryId */
+        $categoryId = $this->commandBus->handle($command);
+
+        $this->uploadImages(
+            $categoryId,
+            $data['cover_image'],
+            $data['thumbnail_image'],
+            $data['menu_thumbnail_images']
+        );
+
+        return $categoryId->getValue();
+    }
+
+    /**
+     * Creates add category command from form data
+     *
+     * @param array $data
+     *
+     * @return AddCategoryCommand
+     */
+    private function createAddCategoryCommand(array $data)
+    {
+        $command = new AddCategoryCommand(
+            $data['name'],
+            $data['link_rewrite'],
+            (bool) $data['active'],
+            (int) $data['id_parent']
+        );
+
+        if (null !== $data['description']) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+
+        if (null !== $data['meta_title']) {
+            $command->setLocalizedMetaTitles($data['meta_title']);
+        }
+
+        if (null !== $data['meta_description']) {
+            $command->setLocalizedMetaDescriptions($data['meta_description']);
+        }
+
+        if (null !== $data['meta_keyword']) {
+            $command->setLocalizedMetaKeywords($data['meta_keyword']);
+        }
+
+        if (null !== $data['group_association']) {
+            $command->setAssociatedGroupIds($data['group_association']);
+        }
+
+        if (null !== $data['shop_association']) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
+
+        return $command;
+    }
+
+    /**
+     * Creates edit category command from
+     *
+     * @param int $categoryId
+     * @param array $data
+     *
+     * @return EditCategoryCommand
+     */
+    private function createEditCategoryCommand($categoryId, array $data)
+    {
+        $command = new EditCategoryCommand($categoryId);
 
         if (null !== $data['id_parent']) {
             $command->setParentCategoryId($data['id_parent']);
         }
 
-        /** @var CategoryId $categoryId */
-        $categoryId = $this->commandBus->handle($command);
+        if (null !== $data['description']) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
 
-        return $categoryId->getValue();
+        if (null !== $data['meta_title']) {
+            $command->setLocalizedMetaTitles($data['meta_title']);
+        }
+
+        if (null !== $data['meta_description']) {
+            $command->setLocalizedMetaDescriptions($data['meta_description']);
+        }
+
+        if (null !== $data['meta_keyword']) {
+            $command->setLocalizedMetaKeywords($data['meta_keyword']);
+        }
+
+        if (null !== $data['group_association']) {
+            $command->setAssociatedGroupIds($data['group_association']);
+        }
+
+        if (null !== $data['shop_association']) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
+
+        return $command;
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     * @param UploadedFile $coverImage
+     * @param UploadedFile $thumbnailImage
+     * @param UploadedFile[] $menuThumbnailImages
+     */
+    private function uploadImages(
+        CategoryId $categoryId,
+        UploadedFile $coverImage = null,
+        UploadedFile $thumbnailImage = null,
+        array $menuThumbnailImages = []
+    ) {
+        if (null !== $coverImage) {
+            $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);
+        }
+
+        if (null !== $thumbnailImage) {
+            $this->categoryThumbnailUploader->upload($categoryId->getValue(), $thumbnailImage);
+        }
+
+        if (!empty($menuThumbnailImages)) {
+            foreach ($menuThumbnailImages as $menuThumbnail) {
+                $this->categoryMenuThumbnailUploader->upload($categoryId->getValue(), $menuThumbnail);
+            }
+        }
     }
 }

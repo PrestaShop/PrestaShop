@@ -30,6 +30,7 @@ use Category;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
@@ -38,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
  *
  * @internal
  */
-final class EditCategoryHandler extends AbstractCategoryHandler implements EditCategoryHandlerInterface
+final class EditCategoryHandler implements EditCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -57,11 +58,11 @@ final class EditCategoryHandler extends AbstractCategoryHandler implements EditC
             );
         }
 
-        if (null !== $command->getParentCategoryId()) {
-            $category->id_parent = $command->getParentCategoryId();
-        }
+        $this->updateCategoryFromCommandData($category, $command);
 
-        $this->populateCategoryWithCommandData($category, $command);
+        if (false === $category->validateFields(false)) {
+            throw new CategoryException('Invalid data when updating category');
+        }
 
         if (false === $category->update()) {
             throw new CannotEditCategoryException(
@@ -69,8 +70,52 @@ final class EditCategoryHandler extends AbstractCategoryHandler implements EditC
             );
         }
 
-        $this->uploadImages($category, $command);
-
         return new CategoryId((int) $category->id);
+    }
+
+    /**
+     * Updates legacy object model with data from command
+     *
+     * @param Category $category
+     * @param EditCategoryCommand $command
+     */
+    private function updateCategoryFromCommandData(Category $category, EditCategoryCommand $command)
+    {
+        if (null !== $command->getParentCategoryId()) {
+            $category->id_parent = $command->getParentCategoryId();
+        }
+
+        if (null !== $command->getLocalizedNames()) {
+            $category->name = $command->getLocalizedNames();
+        }
+
+        if (null !== $command->getLocalizedLinkRewrites()) {
+            $category->link_rewrite = $command->getLocalizedLinkRewrites();
+        }
+
+        if (null !== $command->getLocalizedDescriptions()) {
+            $category->description = $command->getLocalizedDescriptions();
+        }
+
+        if (null !== $command->getLocalizedMetaTitles()) {
+            $category->meta_title = $command->getLocalizedMetaTitles();
+        }
+
+        if (null !== $command->getLocalizedMetaDescriptions()) {
+            $category->meta_description = $command->getLocalizedMetaDescriptions();
+        }
+
+        if (null !== $command->getLocalizedMetaKeywords()) {
+            $category->meta_keywords = $command->getLocalizedMetaKeywords();
+        }
+
+        if (null !== $command->getAssociatedGroupIds()) {
+            $category->groupBox = $command->getAssociatedGroupIds();
+        }
+
+        // This is a workaround to make Category's object model work.
+        // Inside Category::add() & Category::update() method it checks if shop association is submitted
+        // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
+        $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
     }
 }
