@@ -81,10 +81,13 @@ abstract class AbstractObjectModelHandler
 
         $insert = [];
         foreach ($shopAssociation as $shopId) {
-            $insert[] = [
-                $primaryKeyName => $primaryKeyValue,
-                'id_shop' => (int) $shopId,
-            ];
+            // Check if context employee has access to the shop before inserting shop association.
+            if (Context::getContext()->employee->hasAuthOnShop($shopId)) {
+                $insert[] = [
+                    $primaryKeyName => $primaryKeyValue,
+                    'id_shop' => (int) $shopId,
+                ];
+            }
         }
 
         Db::getInstance()->insert(

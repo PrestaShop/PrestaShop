@@ -27,21 +27,20 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
 use Context;
-use Db;
 use ImageManager;
 use ImageType;
 use Language;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use Shop;
 
 /**
  * Encapsulates common legacy behavior for adding/editing language
  */
-abstract class AbstractLanguageHandler
+abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
 {
     /**
      * Copies "No picture" image for specific language
@@ -152,57 +151,6 @@ abstract class AbstractLanguageHandler
         }
 
         unlink($temporaryImage);
-    }
-
-    /**
-     * @param int $languageId
-     * @param int[] $shopAssociation
-     */
-    protected function associateWithShops($languageId, array $shopAssociation)
-    {
-        if (!Shop::isFeatureActive()) {
-            return;
-        }
-
-        $languageTable = Language::$definition['table'];
-
-        if (!Shop::isTableAssociated($languageTable)) {
-            return;
-        }
-
-        // Get list of shop id we want to exclude from asso deletion
-        $excludeIds = $shopAssociation;
-        foreach (Db::getInstance()->executeS('SELECT id_shop FROM ' . _DB_PREFIX_ . 'shop') as $row) {
-            if (!Context::getContext()->employee->hasAuthOnShop($row['id_shop'])) {
-                $excludeIds[] = $row['id_shop'];
-            }
-        }
-
-        $excludeShopsCondtion = $excludeIds ?
-            ' AND id_shop NOT IN (' . implode(', ', array_map('intval', $excludeIds)) . ')' :
-            ''
-        ;
-
-        Db::getInstance()->delete(
-            $languageTable . '_shop',
-            '`id_lang` = ' . (int) $languageId . $excludeShopsCondtion
-        );
-
-        $insert = [];
-        foreach ($shopAssociation as $shopId) {
-            $insert[] = [
-                'id_lang' => (int) $languageId,
-                'id_shop' => (int) $shopId,
-            ];
-        }
-
-        Db::getInstance()->insert(
-            $languageTable . '_shop',
-            $insert,
-            false,
-            true,
-            Db::INSERT_IGNORE
-        );
     }
 
     /**
