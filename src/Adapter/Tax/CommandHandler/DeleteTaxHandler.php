@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\DeleteTaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShopException;
-use Tax;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\DeleteTaxHandlerInterface;
 

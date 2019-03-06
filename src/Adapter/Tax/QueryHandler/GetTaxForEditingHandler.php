@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 
+/**
+ * Handles query which gets tax for editing
+ */
 final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTaxForEditingHandlerInterface
 {
     /**

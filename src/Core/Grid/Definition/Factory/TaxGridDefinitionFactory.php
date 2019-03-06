@@ -117,7 +117,8 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_taxes_edit',
+                                //@todo: route admin_taxes_edit after implementation in another PR
+                                'route' => 'admin_taxes_index',
                                 'route_param_name' => 'taxId',
                                 'route_param_field' => 'id_tax',
                             ])

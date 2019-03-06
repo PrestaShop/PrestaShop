@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\ToggleTaxStatusHandlerI
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShopException;
-use Tax;
 
 /**
  * Handles command which toggles Tax status using legacy object model

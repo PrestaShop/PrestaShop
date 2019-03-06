@@ -36,5 +36,8 @@ class TaxConstraintException extends TaxException
      */
     const INVALID_ID = 10;
 
+    /**
+     * Thrown when provided tax status value is not valid
+     */
     const INVALID_STATUS = 20;
 }
