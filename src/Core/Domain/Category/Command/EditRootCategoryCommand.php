@@ -100,7 +100,6 @@ class EditRootCategoryCommand
         return $this->categoryId;
     }
 
-
     /**
      * @return string[]
      */

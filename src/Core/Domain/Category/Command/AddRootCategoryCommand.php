@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AddRootCategoryCommand adds new root category.
