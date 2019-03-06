@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\AdaptThemeToRTLLanguagesType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
@@ -131,31 +132,8 @@ class ThemeController extends AbstractAdminController
 
         if ($logosUploadForm->isSubmitted()) {
             $data = $logosUploadForm->getData();
-
             try {
-                $command = new UploadLogosCommand();
-
-                if ($data['header_logo']) {
-                    $command->setUploadedHeaderLogo($data['header_logo']);
-                }
-
-                if ($data['mail_logo']) {
-                    $command->setUploadedMailLogo($data['mail_logo']);
-                }
-
-                if ($data['invoice_logo']) {
-                    $command->setUploadedInvoiceLogo($data['invoice_logo']);
-                }
-
-                if ($data['favicon']) {
-                    $command->setUploadedFavicon($data['favicon']);
-                }
-
-                if (isset($data['shop_restriction'])) {
-                    $command->setShopRestriction($data['shop_restriction']);
-                }
-
-                $this->getCommandBus()->handle($command);
+                $this->getShopLogosFormHandler()->save($data['options']);
             } catch (ShopException $e) {
                 $this->addFlash('error', $this->handleUploadLogosException($e));
             }
@@ -440,9 +418,7 @@ class ThemeController extends AbstractAdminController
      */
     protected function getLogosUploadForm()
     {
-        $form = $this->get('prestashop.admin.shop_logos_settings.form_handler');
-
-        return $form->getForm();
+        return $this->getShopLogosFormHandler()->getForm();
     }
 
     /**
@@ -451,6 +427,14 @@ class ThemeController extends AbstractAdminController
     protected function getAdaptThemeToRtlLanguageForm()
     {
         return $this->createForm(AdaptThemeToRTLLanguagesType::class);
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getShopLogosFormHandler()
+    {
+        return $this->get('prestashop.admin.shop_logos_settings.form_handler');
     }
 
     /**
