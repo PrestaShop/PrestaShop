@@ -19,7 +19,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
   Scenario: one product in cart, quantity 1, one 50% global voucher, one 5€ global voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: foo2
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
@@ -33,7 +33,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
   Scenario: one product in cart, quantity 1, one 50% global voucher, one 500€ global voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule2 has a code: foo2
     Given There is a cart rule with name cartrule5 and amount discount of 500 and priority of 5 and quantity of 1000 and quantity per user of 1000
@@ -47,7 +47,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
   Scenario: one product in cart, quantity 3, one 5€ global voucher, one 50% global voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
     Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000
@@ -62,7 +62,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
   Scenario: one product in cart, quantity 3, one 500€ global voucher, one 50% global voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule5 and amount discount of 500 and priority of 5 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule5 has a code: foo5
     Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000
@@ -76,9 +76,9 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
   Scenario: 3 products with several quantities in cart, one 5€ global voucher, one 50% global voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
     Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000

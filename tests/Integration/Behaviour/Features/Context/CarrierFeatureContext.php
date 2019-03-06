@@ -286,7 +286,7 @@ class CarrierFeatureContext implements BehatContext
     /**
      * Be careful: this method REPLACES shipping fees for carrier
      *
-     * @Given /^carrier with name (.+) has a shipping fees of (\d+\.\d+) in zone with name (.+) for quantities between (\d+) and (\d+)$/
+     * @Given /^Carrier with name (.+) has a shipping fees of (\d+\.\d+) in zone with name (.+) for quantities between (\d+) and (\d+)$/
      */
     public function setCarrierFees($carrierName, $shippingPrice, $zoneName, $fromQuantity, $toQuantity)
     {

@@ -6,7 +6,7 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
   Scenario: Empty cart, one voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
     Given There is a cart rule with name cartrule8 and amount discount of 5 and priority of 8 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule8 is restricted to product named product2
     Given Cart rule named cartrule8 has a code: foo8
@@ -18,8 +18,8 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
   Scenario: one product in cart, quantity 1, one specific 5€ voucher on product2
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
     Given There is a cart rule with name cartrule8 and amount discount of 5 and priority of 8 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule8 is restricted to product named product2
     Given Cart rule named cartrule8 has a code: foo8
@@ -31,8 +31,8 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
   Scenario: one product in cart, quantity 3, one specific 5€ voucher on product #2
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
     Given There is a cart rule with name cartrule8 and amount discount of 5 and priority of 8 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule8 is restricted to product named product2
     Given Cart rule named cartrule8 has a code: foo8
@@ -44,9 +44,9 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
   Scenario: 3 products in cart, several quantities, one specific 5€ voucher on product #2
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     Given There is a cart rule with name cartrule8 and amount discount of 5 and priority of 8 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule8 is restricted to product named product2
     Given Cart rule named cartrule8 has a code: foo8
@@ -60,9 +60,9 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
   Scenario: 3 products in cart, several quantities, one specific 500€ voucher on product #2
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     Given There is a cart rule with name cartrule9 and amount discount of 500 and priority of 9 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule9 is restricted to product named product2
     Given Cart rule named cartrule9 has a code: foo9

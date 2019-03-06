@@ -19,7 +19,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
   Scenario: one product in cart, quantity 1, one 5€ global voucher, one 10€ global voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
     Given There is a cart rule with name cartrule6 and amount discount of 10 and priority of 6 and quantity of 1000 and quantity per user of 1000
@@ -33,7 +33,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
   Scenario: one product in cart, quantity 3, one 5€ global voucher, one 10€ global voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
     Given There is a cart rule with name cartrule6 and amount discount of 10 and priority of 6 and quantity of 1000 and quantity per user of 1000
@@ -47,9 +47,9 @@ Feature: Cart rule (amount) calculation with multiple cart rules
   Scenario: 3 products in cart, several quantities, one 5€ global voucher (reduced product at first place)
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given there is a product with name product1 and price 19.812 and quantity 1000
-    Given there is a product with name product2 and price 32.388 and quantity 1000
-    Given there is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
     Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
     Given Cart rule named cartrule4 has a code: foo4
     Given There is a cart rule with name cartrule6 and amount discount of 10 and priority of 6 and quantity of 1000 and quantity per user of 1000

@@ -83,7 +83,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^there is a product with name (.+) and price (\d+\.\d+) and quantity (\d+)$/
+     * @Given /^There is a product with name (.+) and price (\d+\.\d+) and quantity (\d+)$/
      */
     public function thereIsAProductWithNameAndPriceAndQuantity($productName, $price, $productQuantity)
     {
@@ -209,7 +209,7 @@ class ProductFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^product with name (.+) is out of stock$/
+     * @Given /^Product with name (.+) is out of stock$/
      *
      * @param string $productName
      */
@@ -246,7 +246,7 @@ class ProductFeatureContext implements BehatContext
     /* COMBINATION */
 
     /**
-     * @Given /^product with name (.+) has a combination with name (.+) and quantity (\d+)$/
+     * @Given /^Product with name (.+) has a combination with name (.+) and quantity (\d+)$/
      */
     public function productWithNameHasACombinationWithNameAndQuantity($productName, $combinationName, $combinationQuantity)
     {
@@ -365,7 +365,7 @@ class ProductFeatureContext implements BehatContext
     /* CUSTOMIZATION */
 
     /**
-     * @Given /^product with name (.+) has a customization field with name (.+)$/
+     * @Given /^Product with name (.+) has a customization field with name (.+)$/
      */
     public function productWithNameHasACustomizationWithName($productName, $customizationFieldName)
     {
@@ -524,7 +524,7 @@ class ProductFeatureContext implements BehatContext
     /* PACK */
 
     /**
-     * @Given /^product with name (.+) is a pack containing quantity (\d+) of product named (.+)$/
+     * @Given /^Product with name (.+) is a pack containing quantity (\d+) of product named (.+)$/
      */
     public function productWithNameIsAPackContainingQuantityOfProductNamed($packName, $containedQuantity, $containedProductName)
     {
