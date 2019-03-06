@@ -809,7 +809,10 @@ class ToolsCore
 
         /** @var LocaleRepository $localeRepository */
         $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-        $locale = $localeRepository->getLocale((string) $context->language->locale);
+        $locale = !empty($context->language->locale) ?
+            $context->language->locale :
+            $context->language->language_code;
+        $locale = $localeRepository->getLocale((string) $locale);
 
         return $locale;
     }
