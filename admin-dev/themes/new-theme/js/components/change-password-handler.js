@@ -29,9 +29,9 @@ const $ = window.$;
  * Generates a password and informs about it's strength.
  */
 export default class ChangePasswordHandler {
-  constructor() {
+  constructor(options = {}) {
     // Minimum length of the generated password.
-    this.minLength = 8;
+    this.minLength = options.minLength || 8;
 
     // Feedback container holds messages representing password strength.
     this.$feedbackContainer = $('.js-password-strength-feedback');
