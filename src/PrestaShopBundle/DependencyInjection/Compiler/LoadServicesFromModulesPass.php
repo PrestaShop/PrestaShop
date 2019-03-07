@@ -86,6 +86,6 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
      */
     private function getModulesPaths()
     {
-        return Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
+        return Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
     }
 }

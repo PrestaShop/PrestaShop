@@ -29,6 +29,8 @@ namespace Tests\Integration\Adapter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Module\Banner\Repository\AdminRepository;
+use PrestaShop\Module\Banner\Repository\FrontRepository;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -78,5 +80,39 @@ class ContainerBuilderTest extends TestCase
         /** @var ClassMetadata $classMetadata */
         $classMetadata = $entityManager->getClassMetadata('\PrestaShop\Module\Banner\Entity\Banner');
         $this->assertNotNull($classMetadata);
+    }
+
+    public function testFrontModuleServices()
+    {
+        $container = ContainerBuilder::getContainer('front', true);
+        $frontRepository = $container->get('ps_banner.front_repository');
+        $this->assertNotNull($frontRepository);
+        $this->assertInstanceOf(FrontRepository::class, $frontRepository);
+    }
+
+    public function testAdminModuleServices()
+    {
+        $container = ContainerBuilder::getContainer('admin', true);
+        $adminRepository = $container->get('ps_banner.admin_repository');
+        $this->assertNotNull($adminRepository);
+        $this->assertInstanceOf(AdminRepository::class, $adminRepository);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
+    public function testNoAdminServicesInFront()
+    {
+        $container = ContainerBuilder::getContainer('front', true);
+        $container->get('ps_banner.admin_repository');
+    }
+
+    /**
+     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
+    public function testNoFrontServicesInAdmin()
+    {
+        $container = ContainerBuilder::getContainer('admin', true);
+        $container->get('ps_banner.front_repository');
     }
 }
