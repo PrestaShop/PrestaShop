@@ -33,7 +33,7 @@
   <div class="card-block row">
     <div class="card-text">
 
-      {{ ps.form_group_row(addressForm.manufacturer, {}, {
+      {{ ps.form_group_row(addressForm.id_manufacturer, {}, {
         'label': 'Brand'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
 
@@ -67,11 +67,11 @@
         'label': 'City'|trans({}, 'Admin.Global'),
       }) }}
 
-      {{ ps.form_group_row(addressForm.country, {}, {
+      {{ ps.form_group_row(addressForm.id_country, {}, {
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
-      {{ ps.form_group_row(addressForm.state, {}, {
+      {{ ps.form_group_row(addressForm.id_state, {}, {
         'label': 'State'|trans({}, 'Admin.Global'),
       }) }}
 

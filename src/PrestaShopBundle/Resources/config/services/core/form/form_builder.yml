@@ -69,4 +69,4 @@ services:
     factory: 'prestashop.core.form.builder.form_builder_factory:create'
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Address\AddressType'
-      - '@prestashop.core.form.identifiable_object.data_provider.address_form_data_provider'
+      - '@prestashop.core.form.identifiable_object.data_provider.manufacturer_address_form_data_provider'
