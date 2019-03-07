@@ -3252,6 +3252,7 @@ class CartCore extends ObjectModel
                 $_total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
             }
         }
+
         return $_total_shipping;
     }
 
