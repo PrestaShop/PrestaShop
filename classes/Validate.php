@@ -35,8 +35,8 @@ use Symfony\Component\Validator\Validation;
 
 class ValidateCore
 {
-    const ADMIN_PASSWORD_LENGTH = 8;
-    const PASSWORD_LENGTH = 8;
+    const ADMIN_PASSWORD_LENGTH = 10;
+    const PASSWORD_LENGTH = 10;
 
     public static function isIp2Long($ip)
     {
@@ -521,7 +521,7 @@ class ValidateCore
      */
     public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
     {
-        return self::isPlaintextPassword($passwd, $size);
+        return static::isPlaintextPassword($passwd, $size);
     }
 
     /**
@@ -537,8 +537,18 @@ class ValidateCore
      */
     public static function isPlaintextPassword($plaintextPasswd, $size = Validate::PASSWORD_LENGTH)
     {
-        // The password lenght is limited by `password_hash()`
-        return preg_match('/^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^\w])\S{' . $size . ',72}$/', $plaintextPasswd);
+        /*
+         * The password length is limited by `password_hash()`
+         * Ensure the password has at least:
+         * - 1 digit
+         * - 1 lowercase
+         * - 1 uppercase
+         * - 1 symbol
+         */
+        return preg_match(
+            '/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])\S{' . $size . ',72}$/',
+            $plaintextPasswd
+        );
     }
 
     /**
