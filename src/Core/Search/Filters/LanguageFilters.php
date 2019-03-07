@@ -33,6 +33,11 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class LanguageFilters extends Filters
 {
+    public static function getKey()
+    {
+        return 'language';
+    }
+
     /**
      * {@inheritdoc}
      */

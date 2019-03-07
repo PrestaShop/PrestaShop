@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
@@ -313,7 +314,7 @@ class CommonController extends FrameworkBundleAdminController
         $filtersForm = $gridFilterFormFactory->create($definition);
         $filtersForm->handleRequest($request);
 
-        $redirectParams = [];
+        $redirectParams = ['grid_id' => $definition->getId()];
 
         if ($filtersForm->isSubmitted()) {
             $redirectParams['filters'] = [

@@ -56,6 +56,12 @@
         {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': languageGrid } %}
       </div>
     </div>
+
+    <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': currencyGrid } %}
+    </div>
+    </div>
   {% endblock %}
 {% endblock %}
 

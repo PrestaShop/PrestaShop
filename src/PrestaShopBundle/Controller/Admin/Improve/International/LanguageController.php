@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
+use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -46,6 +47,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class LanguageController manages "Improve > International > Localization > Languages".
@@ -62,13 +64,20 @@ class LanguageController extends AbstractAdminController
      *
      * @return Response
      */
-    public function indexAction(Request $request, LanguageFilters $filters)
+    public function indexAction(Request $request, LanguageFilters $filters, CurrencyFilters $currencyFilters)
     {
+        VarDumper::dump($filters);
+        VarDumper::dump($currencyFilters);
+
         $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
         $languageGrid = $languageGridFactory->getGrid($filters);
 
+        $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency');
+        $currencyGrid = $currencyGridFactory->getGrid($currencyFilters);
+
         return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
             'languageGrid' => $this->presentGrid($languageGrid),
+            'currencyGrid' => $this->presentGrid($currencyGrid),
             'isHtaccessFileWriter' => $this->get('prestashop.core.util.url.url_file_checker')->isHtaccessFileWritable(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
