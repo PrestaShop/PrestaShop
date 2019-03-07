@@ -23,28 +23,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ChangePasswordHandler from "../../components/change-password-handler";
-import PasswordValidator from "../../components/password-validator";
+import ChangePasswordHandler from "../change-password-handler";
+import PasswordValidator from "../password-validator";
 
 const $ = window.$;
 
 /**
  * Class responsible for actions related to "change password" form type.
+ * Generates random passwords, validates new password and it's confirmation,
+ * displays error messages related to validation.
  */
 export default class ChangePasswordControl {
-  constructor() {
-    this.$inputsBlock = $('.js-change-password-block');
+  constructor(
+    inputsBlockSelector,
+    showButtonSelector,
+    hideButtonSelector,
+    generatePasswordButtonSelector,
+    oldPasswordInputSelector,
+    newPasswordInputSelector,
+    confirmNewPasswordInputSelector,
+    generatedPasswordDisplaySelector,
+    passwordStrengthFeedbackContainerSelector
+  ) {
+    // Block that contains password inputs
+    this.$inputsBlock = $(inputsBlockSelector);
 
-    // Action buttons selectors
-    this.showButtonSelector = '.js-change-password';
-    this.hideButtonSelector = '.js-change-password-cancel';
-    this.generatePasswordButtonSelector = '#employee_change_password_generate_password_button';
+    // Button that shows the password inputs block
+    this.showButtonSelector = showButtonSelector;
 
-    // Password inputs selectors
-    this.oldPasswordInputSelector = '#employee_change_password_old_password';
-    this.newPasswordInputSelector = '#employee_change_password_new_password_first';
-    this.confirmNewPasswordInputSelector = '#employee_change_password_new_password_second';
-    this.generatedPasswordDisplaySelector = '#employee_change_password_generated_password';
+    // Button that hides the password inputs block
+    this.hideButtonSelector = hideButtonSelector;
+
+    // Button that generates a random password
+    this.generatePasswordButtonSelector = generatePasswordButtonSelector;
+
+    // Input to enter old password
+    this.oldPasswordInputSelector = oldPasswordInputSelector;
+
+    // Input to enter new password
+    this.newPasswordInputSelector = newPasswordInputSelector;
+
+    // Input to confirm the new password
+    this.confirmNewPasswordInputSelector = confirmNewPasswordInputSelector;
+
+    // Input that displays generated random password
+    this.generatedPasswordDisplaySelector = generatedPasswordDisplaySelector;
 
     // Main input for password generation
     this.$newPasswordInputs = this.$inputsBlock
@@ -61,7 +84,10 @@ export default class ChangePasswordControl {
       .add(this.newPasswordInputSelector)
       .add(this.confirmNewPasswordInputSelector);
 
-    this.passwordHandler = new ChangePasswordHandler();
+    this.passwordHandler = new ChangePasswordHandler(
+      passwordStrengthFeedbackContainerSelector
+    );
+
     this.passwordValidator = new PasswordValidator(
       this.newPasswordInputSelector,
       this.confirmNewPasswordInputSelector
@@ -79,6 +105,7 @@ export default class ChangePasswordControl {
    * @private
    */
   _initEvents() {
+    // Show the inputs block when show button is clicked
     $(document).on('click', this.showButtonSelector, (e) => {
       this._hide($(e.currentTarget));
       this._showInputsBlock();
@@ -89,6 +116,7 @@ export default class ChangePasswordControl {
       this._show($(this.showButtonSelector));
     });
 
+    // Watch and display feedback about password's strength
     this.passwordHandler.watchPasswordStrength(this.$newPasswordInputs);
 
     $(document).on('click', this.generatePasswordButtonSelector, () => {
@@ -100,6 +128,7 @@ export default class ChangePasswordControl {
       this._checkPasswordValidity();
     });
 
+    // Validate new password and it's confirmation when any of the inputs is changed
     $(document).on('keyup', `${this.newPasswordInputSelector},${this.confirmNewPasswordInputSelector}`, () => {
       this._checkPasswordValidity();
     });

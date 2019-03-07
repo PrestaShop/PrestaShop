@@ -25,21 +25,37 @@
 
 import ChoiceTree from "../../components/form/choice-tree";
 import AddonsConnector from "../../components/addons-connector";
-import ChangePasswordControl from "./change-password-control";
+import ChangePasswordControl from "../../components/form/change-password-control";
+import employeeFormMap from "./employee-form-map";
 
 /**
  * Class responsible for javascript actions in employee add/edit page.
  */
 export default class EmployeeForm {
   constructor() {
-    this.shopChoiceTreeSelector = '#employee_shop_association';
+    this.shopChoiceTreeSelector = employeeFormMap.shopChoiceTree;
     this.shopChoiceTree = new ChoiceTree(this.shopChoiceTreeSelector);
-    this.employeeProfileSelector = '#employee_profile';
-    this.tabsDropdownSelector = '#employee_default_page';
+    this.employeeProfileSelector = employeeFormMap.profileSelect;
+    this.tabsDropdownSelector = employeeFormMap.defaultPageSelect;
 
     this.shopChoiceTree.enableAutoCheckChildren();
-    new AddonsConnector('#addons-connect-form', '#addons_login_btn');
-    new ChangePasswordControl();
+
+    new AddonsConnector(
+      employeeFormMap.addonsConnectForm,
+      employeeFormMap.addonsLoginButton
+    );
+
+    new ChangePasswordControl(
+      employeeFormMap.changePasswordInputsBlock,
+      employeeFormMap.showChangePasswordBlockButton,
+      employeeFormMap.hideChangePasswordBlockButton,
+      employeeFormMap.generatePasswordButton,
+      employeeFormMap.oldPasswordInput,
+      employeeFormMap.newPasswordInput,
+      employeeFormMap.confirmNewPasswordInput,
+      employeeFormMap.generatedPasswordDisplayInput,
+      employeeFormMap.passwordStrengthFeedbackContainer
+    );
 
     this._initEvents();
     this._toggleShopTree();
