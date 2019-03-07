@@ -32,13 +32,13 @@ namespace PrestaShop\PrestaShop\Core\Employee;
 interface EmployeeDataProviderInterface
 {
     /**
-     * Get employee's hashed password by ID.
+     * Get employee's hashed password by employee's ID.
      *
      * @param int $employeeId
      *
      * @return string
      */
-    public function getHashedPasswordById($employeeId);
+    public function getEmployeeHashedPassword($employeeId);
 
     /**
      * Checks if employee is a super admin.
