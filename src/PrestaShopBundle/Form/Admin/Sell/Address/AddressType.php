@@ -100,7 +100,7 @@ class AddressType extends AbstractType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => false,
-                'choices' => $this->statesChoiceProvider->getChoices(['country_id' => $this->defaultCountryId]),
+                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $this->defaultCountryId]),
             ])
             ->add('home_phone', TextType::class, [
                 'required' => false,

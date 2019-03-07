@@ -44,7 +44,7 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
         $this->configureOptions($resolver);
         $resolvedOptions = $resolver->resolve($options);
 
-        $states = State::getStatesByIdCountry($resolvedOptions['country_id'], $resolvedOptions['only_active']);
+        $states = State::getStatesByIdCountry($resolvedOptions['id_country'], $resolvedOptions['only_active']);
         $choices = [];
 
         foreach ($states as $state) {
@@ -61,12 +61,10 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
      */
     private function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefined(['country_id', 'only_active']);
-        $resolver->setRequired('country_id');
-
-        $resolver->setAllowedTypes('country_id', 'int');
-        $resolver->setAllowedTypes('only_active', 'bool');
-
         $resolver->setDefaults(['only_active' => false]);
+        $resolver->setRequired('id_country');
+
+        $resolver->setAllowedTypes('id_country', 'int');
+        $resolver->setAllowedTypes('only_active', 'bool');
     }
 }
