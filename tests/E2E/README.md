@@ -60,7 +60,7 @@ php install/index_cli.php --language=en \
                           --firstname=Foo \
                           --lastname=Bar \
                           --email=demo@prestashop.com \
-                          --password=prestashop_demo \
+                          --password=Prestashop_1_Demo \
                           --db_create=1 \
 ```
 
@@ -118,7 +118,7 @@ npm run sanity-check
 | TEST_ADDONS          | Boolean option: set it to **true** if you want disable check with Addons API (default to **false**) |
 | HEADLESS             | Boolean option:Set it to true to run tests in headless mode (default to false)
 | ADMIN_EMAIL          | Set admin email (default: "demo@prestashop.com")
-| ADMIN_PASSWORD       | Set admin password (default: "prestashop_demo")
+| ADMIN_PASSWORD       | Set admin password (default: "Prestashop_1_Demo")
 
 #### Regular tests
 

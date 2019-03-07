@@ -36,7 +36,7 @@ global.filename = argv.FILENAME || ''; // RC file name
 global.headless = argv.HEADLESS || false;
 
 global.adminEmail = argv.ADMIN_EMAIL || 'demo@prestashop.com';
-global.adminPassword = argv.ADMIN_PASSWORD || 'prestashop_demo';
+global.adminPassword = argv.ADMIN_PASSWORD || 'Prestashop_1_Demo';
 
 global._projectdir = path.join(__dirname, '..', '..');
 global.debugFile = argv.DEBUG_FILE || _projectdir + '/../config/defines.inc.php';

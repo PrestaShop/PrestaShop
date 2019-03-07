@@ -22,7 +22,7 @@ module.exports = {
       });
     }, 'installation');
     scenario('Step 4 : Inserting the shop information', client => {
-      test('should set the "Shop name" input', () => client.setNameInput(selector.shop_name_input, "prestashop_demo"));
+      test('should set the "Shop name" input', () => client.setNameInput(selector.shop_name_input, "Prestashop_1_Demo"));
       test('should set the "Country" input', () => {
         return promise
           .then(() => client.waitForExistAndClick(selector.country_select))
