@@ -109,9 +109,26 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         return $this->wsObject->getOutputEnabled();
     }
 
+    /**
+     * That part was inherited from WebserviceSpecificManagementImages (which uses deeper api path).
+     * Looping for 6 segments is excessive as only the [1] and [2] indices is used for attachments.
+     *
+     * The explanation for the mapping can be seen further down "Available cases api/...".
+     * If urlSegment[1] is set to 'file', binary operations are done (file upload/download)
+     * Otherwise default webservice operations are done (read/write Model information using XML/json).
+     *
+     * Examples:
+     * [POST] https://domain.tld/api/attachments/ only creates model information (similar to any other default api), no file information.
+     * [POST] https://domain.tld/api/attachments/file creates an attachment AND uploads a file for it.
+     *
+     * [PUT] https://domain.tld/api/attachments/$id_attachment here urlSegment[1] is id_attachment, updates model information only.
+     * [PUT] https://domain.tld/api/attachments/file/$id_attachment here urlSegment[1] is 'file' and urlSegment[2] is id_attachment, updates file (binary) only.
+     *
+     * [GET] https://domain.tld/api/attachments/$id_attachment gives a response in XML/json for the attachment model information.
+     * [GET] https://domain.tld/api/attachments/file/$id_attachment downloads the id_attachment file
+     */
     public function manageAttachments()
     {
-        // Pre configuration...
         if (isset($this->wsObject->urlSegment)) {
             for ($i = 1; $i < 6; ++$i) {
                 if (count($this->wsObject->urlSegment) == $i) {
@@ -148,7 +165,6 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
          *      PUT     (bin) (upload/update file)
          *      DELETE
          */
-
         if ($this->wsObject->urlSegment[1] == 'file') {
             // File handling (upload/download)
             switch ($this->wsObject->method) {
@@ -267,20 +283,20 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                 );
             } else {
                 // Assign unique id
-                do {
-                    $uniqid = sha1(uniqid()); // must be a sha1
-                } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqid));
+                if (!$attachment->id) {
+                    do {
+                        $uniqid = sha1(uniqid()); // must be a sha1
+                    } while (file_exists(PS_DOWNLOAD_DIR . $uniqid));
+                    $attachment->file = $uniqid;
+                }
 
                 $attachment->file_name = $_FILES['file']['name'];
-                $attachment->file = $uniqid;
                 $attachment->mime = $_FILES['file']['type'];
                 $attachment->name[Configuration::get('PS_LANG_DEFAULT')] = $_POST['name'];
 
                 // Move file to download dir
-                if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $uniqid)) {
+                if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $attachment->file)) {
                     $this->wsObject->errors[] = $this->l('Failed to copy the file.');
-                    unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
-                    $attachment->delete();
                 } else {
                     // Create/update attachment
                     if ($attachment->id) {
