@@ -24,33 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Employee;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use Employee;
-use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class EmployeeDataProvider provides employee data using legacy logic.
+ * Class LanguageChoiceProvider provides languages choices with ID values.
  */
-final class EmployeeDataProvider implements EmployeeDataProviderInterface
+final class LanguageChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @var array
      */
-    public function getEmployeeHashedPassword($employeeId)
-    {
-        $employee = new Employee($employeeId);
+    private $languages;
 
-        return (string) $employee->passwd;
+    /**
+     * @param array $languages
+     */
+    public function __construct(array $languages)
+    {
+        $this->languages = $languages;
     }
 
     /**
-     * {@inheritdoc}
+     * Get active language choices for form.
+     *
+     * @return array
      */
-    public function isSuperAdmin($employeeId)
+    public function getChoices()
     {
-        $employee = new Employee($employeeId);
+        $choices = [];
 
-        return $employee->isSuperAdmin();
+        foreach ($this->languages as $language) {
+            $choices[$language['name']] = $language['id_lang'];
+        }
+
+        return $choices;
     }
 }

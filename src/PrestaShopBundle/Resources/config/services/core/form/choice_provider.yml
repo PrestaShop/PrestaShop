@@ -2,13 +2,13 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.form.choice_provider.active_language_by_id:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
-    arguments:
-      - '@=service("prestashop.adapter.data_provider.language").getLanguages()'
-
   prestashop.core.form.choice_provider.language_by_id:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.language")'
+
+  prestashop.core.form.choice_provider.all_languages:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider'
     arguments:
       - '@=service("prestashop.adapter.data_provider.language").getLanguages(false)'
 
