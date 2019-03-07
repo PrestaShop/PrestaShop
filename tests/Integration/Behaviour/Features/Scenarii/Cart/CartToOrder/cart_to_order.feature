@@ -1,11 +1,11 @@
-@current
-@database-feature
+@reset-database-before-feature
 Feature: Check cart to order data copy
   As a customer
   I must be able to have a correct order when validating payment step
 
   Scenario: 1 product in cart, 1 cart rule
     Given I have an empty default cart
+    Given Email sending is disabled
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
     Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
@@ -39,6 +39,7 @@ Feature: Check cart to order data copy
 
   Scenario: 1 product in cart, 2 cart rules
     Given I have an empty default cart
+    Given Email sending is disabled
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
     Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule1 and percent discount of 50.0% and priority of 1 and quantity of 1000 and quantity per user of 1000
@@ -76,6 +77,7 @@ Feature: Check cart to order data copy
 
   Scenario: 3 product in cart, 1 cart rule
     Given I have an empty default cart
+    Given Email sending is disabled
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
     Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a product with name product2 and price 32.388 and quantity 1000
@@ -115,6 +117,7 @@ Feature: Check cart to order data copy
 
   Scenario: 3 product in cart, 3 cart rules
     Given I have an empty default cart
+    Given Email sending is disabled
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
     Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a product with name product2 and price 32.388 and quantity 1000
@@ -158,6 +161,7 @@ Feature: Check cart to order data copy
 
   Scenario: 1 product in cart, 1 cart rule with too-much amount
     Given I have an empty default cart
+    Given Email sending is disabled
     Given Shop configuration of PS_SHIPPING_HANDLING is set to 2.0
     Given There is a product with name product1 and price 19.812 and quantity 1000
     Given There is a cart rule with name cartrule5 and amount discount of 500 and priority of 5 and quantity of 1000 and quantity per user of 1000

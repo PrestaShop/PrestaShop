@@ -1,4 +1,4 @@
-@database-feature
+@reset-database-before-feature
 Feature: Cart rule (amount) calculation with one cart rule
   As a customer
   I must be able to have correct cart total when adding cart rules

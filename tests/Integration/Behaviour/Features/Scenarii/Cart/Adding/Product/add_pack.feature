@@ -1,4 +1,4 @@
-@database-feature
+@reset-database-before-feature
 Feature: Add product pack in cart
   As a customer
   I must be able to correctly add product packs in my cart

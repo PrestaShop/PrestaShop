@@ -1,4 +1,4 @@
-@database-feature
+@reset-database-before-feature
 Feature: Cart calculation with specific price rule (percent)
   As a customer
   I must be able to have correct cart total when adding specific price rule
