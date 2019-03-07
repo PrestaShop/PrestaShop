@@ -32,9 +32,9 @@ namespace PrestaShop\PrestaShop\Core\Employee;
 interface FormLanguageChangerInterface
 {
     /**
-     * Change employee form language to given one.
+     * Change employee form language to given one and save the selection in the cookies.
      *
      * @param string $languageIsoCode two letter iso code of the language
      */
-    public function changeLanguage($languageIsoCode);
+    public function changeLanguageInCookies($languageIsoCode);
 }

@@ -76,7 +76,7 @@ admin_employees_toggle_navigation:
   path: /toggle-navigation
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleNavigation'
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleNavigationMenu'
 
 admin_employees_change_form_language:
   path: /change-form-language

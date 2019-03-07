@@ -31,7 +31,10 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Employee\FormLanguageChangerInterface;
 
 /**
- * Class FormLanguageChanger responsible for changing employee form language.
+ * Class FormLanguageChanger is responsible for changing the language,
+ * which is used in forms by the employee.
+ * It is not the language in which form texts are translated, but rather
+ * the language, which is selected by default in the translatable fields.
  */
 final class FormLanguageChanger implements FormLanguageChangerInterface
 {
@@ -51,7 +54,7 @@ final class FormLanguageChanger implements FormLanguageChangerInterface
     /**
      * {@inheritdoc}
      */
-    public function changeLanguage($languageIsoCode)
+    public function changeLanguageInCookies($languageIsoCode)
     {
         $this->legacyContext->getContext()->cookie->employee_form_lang = (int) Language::getIdByIso($languageIsoCode);
         $this->legacyContext->getContext()->cookie->write();

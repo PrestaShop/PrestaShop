@@ -39,4 +39,13 @@ interface EmployeeDataProviderInterface
      * @return string
      */
     public function getHashedPasswordById($employeeId);
+
+    /**
+     * Checks if employee is a super admin.
+     *
+     * @param int $employeeId
+     *
+     * @return bool
+     */
+    public function isSuperAdmin($employeeId);
 }

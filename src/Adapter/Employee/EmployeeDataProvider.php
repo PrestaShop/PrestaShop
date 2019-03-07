@@ -43,4 +43,14 @@ final class EmployeeDataProvider implements EmployeeDataProviderInterface
 
         return (string) $employee->passwd;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSuperAdmin($employeeId)
+    {
+        $employee = new Employee($employeeId);
+
+        return $employee->isSuperAdmin();
+    }
 }
