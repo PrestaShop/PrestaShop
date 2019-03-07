@@ -138,8 +138,8 @@ class Version
             $version = substr($version, strpos($version, '.') + 1);
         } else {
             $major = (int) $matches[1];
-            $minor = (int) $matches[2];
-            $patch = (int) $matches[3];
+            $minor = isset($matches[2]) ? (int) $matches[2] : 0;
+            $patch = isset($matches[3]) ? (int) $matches[3] : 0;
         }
 
         return new self(
@@ -148,8 +148,8 @@ class Version
             $major,
             $minor,
             $patch,
-            $matches['prerelease'] ?: '',
-            $matches['build'] ?: ''
+            isset($matches['prerelease']) ? $matches['prerelease'] : '',
+            isset($matches['build']) ? $matches['build'] : ''
         );
     }
 
