@@ -54,6 +54,12 @@ class OrderFeatureContext implements BehatContext
                 throw new \Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
         }
 
+        // need to boot kernel in $paymentModule->validateOrder()
+        global $kernel;
+        $previousKernel = $kernel;
+        $kernel = new \AppKernel('test', true);
+        $kernel->boot();
+
         // need to update secret_key in order to get payment working
         $cart = $this->getCurrentCart();
         $cart->secure_key = md5('xxx');
@@ -71,6 +77,8 @@ class OrderFeatureContext implements BehatContext
         );
         $order = Order::getByCartId($cart->id);
         $this->orders[] = $order;
+
+        $kernel = $previousKernel;
     }
 
     /**

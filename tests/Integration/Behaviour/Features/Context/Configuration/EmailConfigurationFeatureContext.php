@@ -26,18 +26,16 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
-use Tools;
+use Mail;
 
-class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
+class EmailConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^Shop configuration of (.+) is set to (.+)$/
+     * @Given /^Email sending is disabled$/
      */
-    public function shopConfigurationOfIsSetTo($index, $value)
+    public function disableEmail()
     {
-        if ($index == 'PS_PRICE_ROUND_MODE') {
-            Tools::$round_mode = null;
-        }
-        $this->setConfiguration($index, $value);
+        $this->setConfiguration('PS_MAIL_METHOD', Mail::METHOD_DISABLE);
     }
+
 }

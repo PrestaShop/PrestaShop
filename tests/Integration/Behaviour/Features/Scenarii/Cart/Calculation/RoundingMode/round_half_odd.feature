@@ -1,4 +1,4 @@
-@database-feature
+@reset-database-before-feature
 Feature: Cart calculation with rounding mode HALF_ODD
   As a customer
   I must be able to have correct cart total when configuration is set to different rounding modes

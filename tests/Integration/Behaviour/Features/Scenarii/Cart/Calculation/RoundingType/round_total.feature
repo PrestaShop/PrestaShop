@@ -1,4 +1,4 @@
-@database-feature
+@reset-database-before-feature
 Feature: Cart calculation with rounding type TOTAL
   As a customer
   I must be able to have correct cart total when configuration is set to different rounding types

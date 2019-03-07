@@ -1,6 +1,6 @@
 # here we need to implement correct fixtures for taxrulegroup/taxrate/address
 
-@database-feature
+@reset-database-before-feature
 Feature: Cart calculation with tax
   As a customer
   I must be able to have correct cart total when using taxes

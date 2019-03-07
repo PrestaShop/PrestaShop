@@ -73,11 +73,12 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
     /**
      * This hook can be used to flag a feature for database hard reset
      *
-     * @BeforeFeature @database-feature
+     * @BeforeFeature @reset-database-before-feature
      */
     public static function cleanDatabaseHardPrepareFeature()
     {
         DatabaseCreator::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
     /**

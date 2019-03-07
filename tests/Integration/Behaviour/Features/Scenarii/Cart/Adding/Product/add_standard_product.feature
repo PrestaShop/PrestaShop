@@ -1,4 +1,4 @@
-@database-feature
+@reset-database-before-feature
 Feature: Add product in cart
   As a customer
   I must be able to correctly add products in my cart

@@ -1,4 +1,4 @@
-@database-feature
+@reset-database-before-feature
 Feature: Cart rule (percent) calculation with one cart rule restricted to one product
   As a customer
   I must be able to have correct cart total when adding cart rules
