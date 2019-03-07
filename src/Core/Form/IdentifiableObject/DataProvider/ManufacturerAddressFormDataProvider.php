@@ -31,16 +31,24 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 /**
  * Provides data for address add/edit form
  */
-final class AddressFormDataProvider implements FormDataProviderInterface
+final class ManufacturerAddressFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface
      */
     private $queryBus;
 
-    public function __construct(CommandBusInterface $queryBus)
-    {
+    /**
+     * @var int
+     */
+    private $defaultCountryId;
+
+    public function __construct(
+        CommandBusInterface $queryBus,
+        $defaultCountryId
+    ) {
         $this->queryBus = $queryBus;
+        $this->defaultCountryId = $defaultCountryId;
     }
 
     /**
@@ -56,6 +64,8 @@ final class AddressFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        // TODO: Implement getDefaultData() method.
+        return [
+            'id_country' => $this->defaultCountryId,
+        ];
     }
 }

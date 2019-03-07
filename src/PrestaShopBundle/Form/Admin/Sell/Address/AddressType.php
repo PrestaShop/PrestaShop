@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -36,23 +37,80 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class AddressType extends AbstractType
 {
+    /**
+     * @var array
+     */
+    private $manufacturers;
+
+    /**
+     * @var array
+     */
+    private $countries;
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $statesChoiceProvider;
+
+    /**
+     * @var int
+     */
+    private $defaultCountryId;
+
+    /**
+     * @param array $manufacturers
+     * @param array $countries
+     * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
+     * @param int $defaultCountryId
+     */
+    public function __construct(
+        array $manufacturers,
+        array $countries,
+        ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
+        $defaultCountryId
+    ) {
+        $this->manufacturers = $manufacturers;
+        $this->countries = $countries;
+        $this->statesChoiceProvider = $statesChoiceProvider;
+        $this->defaultCountryId = $defaultCountryId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('manufacturer', ChoiceType::class, [
-                'choices' => [],
+            ->add('id_manufacturer', ChoiceType::class, [
+                'required' => false,
+                'choices' => $this->manufacturers,
             ])
             ->add('last_name', TextType::class)
             ->add('first_name', TextType::class)
             ->add('address', TextType::class)
-            ->add('address2', TextType::class)
-            ->add('post_code', TextType::class)
+            ->add('address2', TextType::class, [
+                'required' => false,
+            ])
+            ->add('post_code', TextType::class, [
+                'required' => false,
+            ])
             ->add('city', TextType::class)
-            ->add('country', ChoiceType::class)
-            ->add('state', ChoiceType::class)
-            ->add('home_phone', TextType::class)
-            ->add('mobile_phone', TextType::class)
-            ->add('other', TextType::class)
+            ->add('id_country', ChoiceType::class, [
+                'required' => false,
+                'choices' => $this->countries,
+            ])
+            ->add('id_state', ChoiceType::class, [
+                'required' => false,
+                'choices' => $this->statesChoiceProvider->getChoices(['country_id' => $this->defaultCountryId]),
+            ])
+            ->add('home_phone', TextType::class, [
+                'required' => false,
+            ])
+            ->add('mobile_phone', TextType::class, [
+                'required' => false,
+            ])
+            ->add('other', TextType::class, [
+                'required' => false,
+            ])
         ;
     }
 }
