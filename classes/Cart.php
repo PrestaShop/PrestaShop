@@ -3290,7 +3290,6 @@ class CartCore extends ObjectModel
             }
         }
 
-        
         return $total_shipping;
     }
 
