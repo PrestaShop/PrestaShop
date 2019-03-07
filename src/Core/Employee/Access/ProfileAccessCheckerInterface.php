@@ -32,11 +32,12 @@ namespace PrestaShop\PrestaShop\Core\Employee\Access;
 interface ProfileAccessCheckerInterface
 {
     /**
-     * Checks if context employee can access given profile.
+     * Checks if given employee can access given profile.
      *
+     * @param int $employeeId
      * @param int $profileId
      *
      * @return bool
      */
-    public function canAccessProfile($profileId);
+    public function canEmployeeAccessProfile($employeeId, $profileId);
 }

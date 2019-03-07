@@ -33,21 +33,15 @@ interface EmployeeFormAccessCheckerInterface
 {
     /**
      * Checks if employee has restricted access to the employee form.
+     * Restricted access means that the employee is restricted from some of
+     * the fields in the edit form, which would modify his account's accessibility.
+     * E.g. active status, profile, shop association.
      *
      * @param int $employeeId
      *
      * @return bool
      */
     public function isRestrictedAccess($employeeId);
-
-    /**
-     * Checks if employee is a super admin.
-     *
-     * @param int $employeeId
-     *
-     * @return bool
-     */
-    public function isSuperAdmin($employeeId);
 
     /**
      * Check if context employee can access edit form for given employee.

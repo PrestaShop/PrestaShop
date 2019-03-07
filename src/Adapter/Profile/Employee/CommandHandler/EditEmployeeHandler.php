@@ -90,17 +90,22 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      */
     public function handle(EditEmployeeCommand $command)
     {
-        if (!$this->profileAccessChecker->canAccessProfile((int) $command->getProfileId())) {
-            throw new InvalidProfileException('The provided profile is invalid');
+        $canAccessProfile = $this->profileAccessChecker->canEmployeeAccessProfile(
+            $this->contextEmployeeProvider->getId(),
+            (int) $command->getProfileId()
+        );
+
+        if (!$canAccessProfile) {
+            throw new InvalidProfileException('You cannot access the provided profile.');
         }
 
         $employee = new Employee($command->getEmployeeId()->getValue());
 
-        $this->assertEmailIsUsed($employee, $command->getEmail()->getValue());
+        $this->assertEmailIsNotAlreadyUsed($employee, $command->getEmail()->getValue());
 
         $this->updateEmployeeWithCommandData($employee, $command);
 
-        if (null !== $command->getPlainPassword()) {
+        if (null !== $command->getPlainPassword() && $employee->id == $this->contextEmployeeProvider->getId()) {
             $this->updatePasswordInCookie($employee);
         }
 
@@ -167,7 +172,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      *
      * @throws EmailAlreadyUsedException
      */
-    private function assertEmailIsUsed(Employee $employee, $email)
+    private function assertEmailIsNotAlreadyUsed(Employee $employee, $email)
     {
         // Don't count own email as usage.
         if ($employee->email === $email) {
@@ -189,10 +194,8 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      */
     private function updatePasswordInCookie(Employee $employee)
     {
-        if ($employee->id == $this->contextEmployeeProvider->getId()) {
-            $this->legacyContext->getContext()->cookie->passwd = $employee->passwd;
-            $this->legacyContext->getContext()->employee->passwd = $employee->passwd;
-            $this->legacyContext->getContext()->cookie->write();
-        }
+        $this->legacyContext->getContext()->cookie->passwd = $employee->passwd;
+        $this->legacyContext->getContext()->employee->passwd = $employee->passwd;
+        $this->legacyContext->getContext()->cookie->write();
     }
 }

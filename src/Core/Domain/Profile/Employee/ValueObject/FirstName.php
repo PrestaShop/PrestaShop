@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
 
 /**
- * Stores employee's first name
+ * Carries employee's first name
  */
 class FirstName
 {

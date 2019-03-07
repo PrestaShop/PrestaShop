@@ -24,35 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Employee;
-
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Employee\NavigationHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Employee;
 
 /**
- * Class NavigationHandler handles collapsing/expanding the navigation for context employee.
+ * Interface NavigationMenuTogglerInterface describes an employee navigation menu toggler.
  */
-final class NavigationHandler implements NavigationHandlerInterface
+interface NavigationMenuTogglerInterface
 {
     /**
-     * @var LegacyContext
+     * Toggle the navigation for employee (collapse/expand)
+     *
+     * @param bool $shouldCollapse if true - collapse the navigation, expand it otherwise
      */
-    private $legacyContext;
-
-    /**
-     * @param LegacyContext $legacyContext
-     */
-    public function __construct(LegacyContext $legacyContext)
-    {
-        $this->legacyContext = $legacyContext;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toggleNavigation($shouldCollapse)
-    {
-        $this->legacyContext->getContext()->cookie->collapse_menu = (int) $shouldCollapse;
-        $this->legacyContext->getContext()->cookie->write();
-    }
+    public function toggleNavigationMenuInCookies($shouldCollapse);
 }

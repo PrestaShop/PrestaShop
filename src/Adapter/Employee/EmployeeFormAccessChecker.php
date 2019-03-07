@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Employee;
 
-use Employee;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Tab;
 
@@ -48,14 +48,22 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
     private $tabRepository;
 
     /**
+     * @var EmployeeDataProviderInterface
+     */
+    private $employeeDataProvider;
+
+    /**
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
+     * @param EmployeeDataProviderInterface $employeeDataProvider
      * @param TabRepository $tabRepository
      */
     public function __construct(
         ContextEmployeeProviderInterface $contextEmployeeProvider,
+        EmployeeDataProviderInterface $employeeDataProvider,
         TabRepository $tabRepository
     ) {
         $this->contextEmployeeProvider = $contextEmployeeProvider;
+        $this->employeeDataProvider = $employeeDataProvider;
         $this->tabRepository = $tabRepository;
     }
 
@@ -77,20 +85,10 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
     /**
      * {@inheritdoc}
      */
-    public function isSuperAdmin($employeeId)
-    {
-        $employee = new Employee($employeeId);
-
-        return $employee->isSuperAdmin();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function canAccessEditFormFor($employeeId)
     {
         // To access super admin edit form you must be a super admin.
-        if ($this->isSuperAdmin($employeeId)) {
+        if ($this->employeeDataProvider->isSuperAdmin($employeeId)) {
             return $this->contextEmployeeProvider->isSuperAdmin();
         }
 
