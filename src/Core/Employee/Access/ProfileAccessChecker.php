@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Employee\Access;
 
-use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
 
 /**
  * Class ProfileAccessChecker checks profile access for employee.
@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 final class ProfileAccessChecker implements ProfileAccessCheckerInterface
 {
     /**
-     * @var ContextEmployeeProviderInterface
+     * @var EmployeeDataProviderInterface
      */
-    private $contextEmployeeProvider;
+    private $employeeDataProvider;
 
     /**
      * @var int
@@ -44,23 +44,23 @@ final class ProfileAccessChecker implements ProfileAccessCheckerInterface
     private $superAdminProfileId;
 
     /**
-     * @param ContextEmployeeProviderInterface $contextEmployeeProvider
+     * @param EmployeeDataProviderInterface $employeeDataProvider
      * @param int $superAdminProfileId
      */
     public function __construct(
-        ContextEmployeeProviderInterface $contextEmployeeProvider,
+        EmployeeDataProviderInterface $employeeDataProvider,
         $superAdminProfileId
     ) {
-        $this->contextEmployeeProvider = $contextEmployeeProvider;
+        $this->employeeDataProvider = $employeeDataProvider;
         $this->superAdminProfileId = $superAdminProfileId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function canAccessProfile($profileId)
+    public function canEmployeeAccessProfile($employeeId, $profileId)
     {
-        if ($this->contextEmployeeProvider->isSuperAdmin()) {
+        if ($this->employeeDataProvider->isSuperAdmin($employeeId)) {
             return true;
         }
 

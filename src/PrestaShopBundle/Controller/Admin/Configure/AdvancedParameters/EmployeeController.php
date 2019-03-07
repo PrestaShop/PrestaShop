@@ -333,16 +333,16 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Change navigation status for employee.
+     * Change navigation menu status for employee.
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function toggleNavigationAction(Request $request)
+    public function toggleNavigationMenuAction(Request $request)
     {
-        $navigationHandler = $this->get('prestashop.adapter.employee.navigation_handler');
-        $navigationHandler->toggleNavigation($request->request->getBoolean('shouldCollapse'));
+        $navigationToggler = $this->get('prestashop.adapter.employee.navigation_menu_toggler');
+        $navigationToggler->toggleNavigationMenuInCookies($request->request->getBoolean('shouldCollapse'));
 
         return new Response('', Response::HTTP_NO_CONTENT);
     }
@@ -360,7 +360,7 @@ class EmployeeController extends FrameworkBundleAdminController
 
         if ($configuration->getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')) {
             $languageChanger = $this->get('prestashop.adapter.employee.form_language_changer');
-            $languageChanger->changeLanguage($request->request->get('language_iso_code'));
+            $languageChanger->changeLanguageInCookies($request->request->get('language_iso_code'));
         }
 
         return new Response('', Response::HTTP_NO_CONTENT);

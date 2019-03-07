@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeExcepti
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 
 /**
  * Handles command which adds new employee using legacy object model
@@ -54,15 +55,23 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
     private $profileAccessChecker;
 
     /**
+     * @var ContextEmployeeProviderInterface
+     */
+    private $contextEmployeeProvider;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
+     * @param ContextEmployeeProviderInterface $contextEmployeeProvider
      */
     public function __construct(
         Hashing $hashing,
-        ProfileAccessCheckerInterface $profileAccessChecker
+        ProfileAccessCheckerInterface $profileAccessChecker,
+        ContextEmployeeProviderInterface $contextEmployeeProvider
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
+        $this->contextEmployeeProvider = $contextEmployeeProvider;
     }
 
     /**
@@ -70,11 +79,16 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
      */
     public function handle(AddEmployeeCommand $command)
     {
-        if (!$this->profileAccessChecker->canAccessProfile((int) $command->getProfileId())) {
-            throw new InvalidProfileException('The provided profile is invalid');
+        $canAccessProfile = $this->profileAccessChecker->canEmployeeAccessProfile(
+            $this->contextEmployeeProvider->getId(),
+            (int) $command->getProfileId()
+        );
+
+        if (!$canAccessProfile) {
+            throw new InvalidProfileException('You cannot access the provided profile.');
         }
 
-        $this->assertEmailIsUsed($command->getEmail()->getValue());
+        $this->assertEmailIsNotAlreadyUsed($command->getEmail()->getValue());
 
         $employee = $this->createLegacyEmployeeObjectFromCommand($command);
 
@@ -120,7 +134,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
      *
      * @throws EmailAlreadyUsedException
      */
-    private function assertEmailIsUsed($email)
+    private function assertEmailIsNotAlreadyUsed($email)
     {
         if (Employee::employeeExists($email)) {
             throw new EmailAlreadyUsedException(

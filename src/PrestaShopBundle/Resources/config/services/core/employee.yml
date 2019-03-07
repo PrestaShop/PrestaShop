@@ -11,5 +11,5 @@ services:
   prestashop.core.employee.profile_access_checker:
     class: 'PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessChecker'
     arguments:
-      - '@prestashop.adapter.data_provider.employee'
+      - '@prestashop.adapter.employee.data_provider'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
