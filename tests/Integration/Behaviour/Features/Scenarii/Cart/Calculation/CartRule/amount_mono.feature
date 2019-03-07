@@ -90,3 +90,35 @@ Feature: Cart rule (amount) calculation with one cart rule
     When I add cart rule named cartrule5 to my cart
     Then Expected total of my cart tax included should be 7.0
     Then Expected total of my cart tax included should be 7.0 with previous calculation method
+
+  Scenario: 4 products in cart, one is virtual, several quantities, one 5€ global voucher
+    Given I have an empty default cart
+    Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
+    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given There is a product with name product2 and price 32.388 and quantity 1000
+    Given There is a product with name product3 and price 31.188 and quantity 1000
+    Given There is a product with name product8 and price 12.345 and quantity 1000
+    Given Product with name product8 is virtual
+    Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
+    Given Cart rule named cartrule4 has a code: foo4
+    When I add product named product1 in my cart with quantity 3
+    When I add product named product2 in my cart with quantity 2
+    When I add product named product3 in my cart with quantity 1
+    When I add product named product8 in my cart with quantity 2
+    Then Cart rule named cartrule4 can be applied to my cart
+    When I add cart rule named cartrule4 to my cart
+    Then Expected total of my cart tax included should be 182.09
+    Then Expected total of my cart tax included should be 182.09 with previous calculation method
+
+  Scenario: Only virtual product in my cart, one 5€ global voucher
+    Given I have an empty default cart
+    Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
+    Given There is a product with name product8 and price 12.345 and quantity 1000
+    Given Product with name product8 is virtual
+    Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
+    Given Cart rule named cartrule4 has a code: foo4
+    When I add product named product8 in my cart with quantity 2
+    Then Cart rule named cartrule4 can be applied to my cart
+    When I add cart rule named cartrule4 to my cart
+    Then Expected total of my cart tax included should be 19.69
+    Then Expected total of my cart tax included should be 19.69 with previous calculation method

@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
+use Behat\Behat\Tester\Exception\PendingException;
 use Cart;
 use Combination;
 use Configuration;
@@ -597,5 +598,15 @@ class ProductFeatureContext implements BehatContext
                 )
             );
         }
+    }
+
+    /**
+     * @Given /^Product with name (.+) is virtual$/
+     */
+    public function productWithNameProductisVirtual($productName)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->is_virtual = 1;
+        $this->products[$productName]->save();
     }
 }
