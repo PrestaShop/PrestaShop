@@ -27,7 +27,6 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
-use Behat\Behat\Tester\Exception\PendingException;
 use Cart;
 use Combination;
 use Configuration;
