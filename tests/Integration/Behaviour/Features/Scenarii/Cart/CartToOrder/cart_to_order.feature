@@ -3,7 +3,6 @@ Feature: Check cart to order data copy
   As a customer
   I must be able to have a correct order when validating payment step
 
-  @current
   Scenario: 1 product in cart, 1 cart rule
     Given I have an empty default cart
     Given Email sending is disabled
