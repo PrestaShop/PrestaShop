@@ -189,12 +189,11 @@ class CustomerPersisterCore
         }
         
         /**
-        * Database optimization
-        * We check if the email has been assigned to guest account
+         * Database optimization
+         * We check if the email has been assigned to guest account
         */
         $check = Customer::customerExists($customer->email, true, false);
-        if ($check)
-        {
+        if ($check) {
             $customer = new Customer($check);
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
