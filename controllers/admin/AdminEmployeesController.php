@@ -506,7 +506,7 @@ class AdminEmployeesControllerCore extends AdminController
         // If the employee is editing its own account
         if ($this->restrict_edition) {
             $current_password = trim(Tools::getValue('old_passwd'));
-            if (Tools::getValue('passwd') && (empty($current_password) || !Validate::isPasswdAdmin($current_password) || !$employee->getByEmail($employee->email, $current_password))) {
+            if (Tools::getValue('passwd') && (empty($current_password) || !$employee->getByEmail($employee->email, $current_password))) {
                 $this->errors[] = $this->trans('Your current password is invalid.', array(), 'Admin.Advparameters.Notification');
             } elseif (Tools::getValue('passwd') && (!Tools::getValue('passwd2') || Tools::getValue('passwd') !== Tools::getValue('passwd2'))) {
                 $this->errors[] = $this->trans('The confirmation password does not match.', array(), 'Admin.Advparameters.Notification');

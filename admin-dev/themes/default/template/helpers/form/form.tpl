@@ -604,15 +604,14 @@
 												{ badge: 'text-success', text: '{l s="Fabulous" js=1}' }
 											];
 											$.passy.requirements.length.min = 8;
-											$.passy.requirements.characters = 'DIGIT';
+											$.passy.requirements.characters = 15 // DIGIT:1,LOWERCASE:2,UPPERCASE:4,PUNCTUATION:8
 											$passwordField.passy(function(strength, valid) {
 												$output.text(feedback[strength].text);
 												$output.removeClass('text-danger').removeClass('text-warning').removeClass('text-success');
 												$output.addClass(feedback[strength].badge);
 												if (valid){
 													$output.show();
-												}
-												else {
+												} else {
 													$output.hide();
 												}
 											});

@@ -56,7 +56,7 @@ class CustomerLoginFormCore extends AbstractForm
 
     public function submit()
     {
-        if ($this->validate()) {
+        if ($this->getValue('email') && $this->getValue('password')) {
             Hook::exec('actionAuthenticationBefore');
 
             $customer = new Customer();

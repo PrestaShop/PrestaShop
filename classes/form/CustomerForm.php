@@ -127,6 +127,19 @@ class CustomerFormCore extends AbstractForm
             $birthdayField->setValue($dateBuilt->format('Y-m-d'));
         }
 
+        // password check
+        $passwordValue = $this->getValue('password');
+        if (!empty($passwordValue) && !Validate::isPasswd($passwordValue)) {
+            $passwordField = $this->getField('password');
+            $passwordField->addError(
+                $this->translator->trans(
+                    'At least 8 characters long, 1 lowercase letter, 1 uppercase letter, 1 digit and 1 special char',
+                    [],
+                    'Shop.Notifications.Error'
+                )
+            );
+        }
+
         $this->validateFieldsLengths();
         $this->validateByModules();
 

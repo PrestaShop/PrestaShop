@@ -375,7 +375,7 @@ class CustomerCore extends ObjectModel
      */
     public function getByEmail($email, $plaintextPassword = null, $ignoreGuest = true)
     {
-        if (!Validate::isEmail($email) || ($plaintextPassword && !Validate::isPasswd($plaintextPassword))) {
+        if (!Validate::isEmail($email)) {
             die(Tools::displayError());
         }
 

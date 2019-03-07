@@ -187,8 +187,6 @@ class AdminLoginControllerCore extends AdminController
 
         if (empty($passwd)) {
             $this->errors[] = $this->trans('The password field is blank.', array(), 'Admin.Notifications.Error');
-        } elseif (!Validate::isPasswd($passwd)) {
-            $this->errors[] = $this->trans('Invalid password.', array(), 'Admin.Notifications.Error');
         }
 
         if (!count($this->errors)) {

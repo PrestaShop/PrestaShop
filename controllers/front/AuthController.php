@@ -57,6 +57,7 @@ class AuthControllerCore extends FrontController
                     },
                     true
                 );
+
                 if ($hookResult && $register_form->submit()) {
                     $should_redirect = true;
                 }
