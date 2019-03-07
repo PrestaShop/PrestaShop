@@ -27,6 +27,7 @@ const $ = window.$;
 
 /**
  * Responsible for connecting to addons marketplace.
+ * Makes an addons connect request to the server, displays error messages if it fails.
  */
 export default class AddonsConnector {
   constructor(
