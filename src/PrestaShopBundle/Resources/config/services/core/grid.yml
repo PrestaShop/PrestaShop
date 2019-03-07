@@ -13,6 +13,9 @@ services:
     arguments:
       - '@prestashop.core.hook.dispatcher'
 
+  prestashop.core.grid.presenter.array_grid_presenter:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\ArrayGridPresenter'
+
   prestashop.core.grid.query.doctrine_query_parser:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser'
 
