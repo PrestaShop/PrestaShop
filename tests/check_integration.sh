@@ -3,14 +3,14 @@
 composer run-script integration-tests --timeout=0;
 INTEGRATION=$?
 
+composer run-script integration-behaviour-tests --timeout=0;
+BEHAVIOUR=$?
+
 if [[ "$INTEGRATION" == "0" ]]; then
   echo -e "\e[92mINTEGRATION TESTS OK\e[0m"
 else
   echo -e "\e[91mINTEGRATION TESTS FAILED\e[0m"
 fi
-
-composer run-script integration-behaviour-tests --timeout=0;
-BEHAVIOUR=$?
 
 if [[ "$BEHAVIOUR" == "0" ]]; then
   echo -e "\e[92mBEHAVIOUR TESTS OK\e[0m"
