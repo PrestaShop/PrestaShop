@@ -110,8 +110,10 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         if ($this->session->admin_password) {
             if (!Validate::isPasswdAdmin($this->session->admin_password)) {
                 $this->errors['admin_password'] = $this->translator->trans(
-                    'The password is incorrect (must be alphanumeric string with at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special char)',
-                    [],
+                    'The password is incorrect (must be alphanumeric string with at least %number% characters long, 1 lowercase letter, 1 uppercase letter, 1 digit and 1 symbol (eg. @!?^&))',
+                    [
+                        '%number%' => Validate::ADMIN_PASSWORD_LENGTH
+                    ],
                     'Install'
                 );
             } elseif ($this->session->admin_password != $this->session->admin_password_confirm) {

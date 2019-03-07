@@ -133,8 +133,10 @@ class CustomerFormCore extends AbstractForm
             $passwordField = $this->getField('password');
             $passwordField->addError(
                 $this->translator->trans(
-                    'At least 8 characters long, 1 lowercase letter, 1 uppercase letter, 1 digit and 1 special char',
-                    [],
+                    'At least %number% characters long, 1 lowercase letter, 1 uppercase letter, 1 digit and 1 symbol (eg. @!?^&)',
+                    [
+                        '%number%' => Validate::PASSWORD_LENGTH,
+                    ],
                     'Shop.Notifications.Error'
                 )
             );
