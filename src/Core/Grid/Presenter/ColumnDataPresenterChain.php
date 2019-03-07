@@ -26,21 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
-use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 
-/**
- * Wraps grid into array which is ready for displaying in templates
- */
-final class ArrayGridPresenter implements GridPresenterInterface
+final class ColumnDataPresenterChain implements ColumnDataPresenterChainInterface
 {
     /**
-     * {@inheritdoc}
+     * @var ColumnDataPresenterInterface[]
      */
-    public function present(GridInterface $grid)
+    private $columnDataPresenters = [];
+
+    public function present(ColumnInterface $column, array $record, $gridId)
     {
-        return [
-            'id' => $grid->getDefinition()->getId(),
-            'name' => $grid->getDefinition()->getName(),
-        ];
+        foreach ($this->columnDataPresenters as $columnDataPresenter) {
+            if ($columnDataPresenter->supports($column)) {
+                return $columnDataPresenter->present($column, $record, $gridId);
+            }
+        }
+
+        throw new \Exception(sprintf('Presenter for column "%s" does not exist', get_class($column)));
     }
 }
