@@ -25,10 +25,18 @@
 
 /**
  * Class responsible for checking password's validity.
+ * Can validate entered password's length against min/max values.
+ * If password confirmation input is provided, can validate if entered password is matching confirmation.
  */
 export default class PasswordValidator {
-  constructor(newPasswordInputSelector, confirmPasswordInputSelector = null, options = {}) {
-    this.newPasswordInput = document.querySelector(newPasswordInputSelector);
+
+  /**
+   * @param {String} passwordInputSelector selector of the password input.
+   * @param {String|null} confirmPasswordInputSelector (optional) selector for the password confirmation input.
+   * @param {Object} options allows overriding default options.
+   */
+  constructor(passwordInputSelector, confirmPasswordInputSelector = null, options = {}) {
+    this.newPasswordInput = document.querySelector(passwordInputSelector);
     this.confirmPasswordInput = document.querySelector(confirmPasswordInputSelector);
 
     // Minimum allowed length for entered password
@@ -44,7 +52,11 @@ export default class PasswordValidator {
    * @returns {boolean}
    */
   isPasswordValid() {
-    return this.isPasswordMatchingConfirmation() && this.isPasswordLengthValid();
+    if (this.confirmPasswordInput && !this.isPasswordMatchingConfirmation()) {
+      return false;
+    }
+
+    return this.isPasswordLengthValid();
   }
 
   /**
@@ -62,6 +74,10 @@ export default class PasswordValidator {
    * @returns {boolean}
    */
   isPasswordMatchingConfirmation() {
+    if (!this.confirmPasswordInput) {
+      throw 'Confirm password input is not provided for the password validator.';
+    }
+
     if (this.confirmPasswordInput.value === '') {
       return true;
     }

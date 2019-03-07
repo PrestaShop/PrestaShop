@@ -27,14 +27,16 @@ const $ = window.$;
 
 /**
  * Generates a password and informs about it's strength.
+ * You can pass a password input to watch the password strength and display feedback messages.
+ * You can also generate a random password into an input.
  */
 export default class ChangePasswordHandler {
-  constructor(options = {}) {
+  constructor(passwordStrengthFeedbackContainerSelector, options = {}) {
     // Minimum length of the generated password.
     this.minLength = options.minLength || 8;
 
     // Feedback container holds messages representing password strength.
-    this.$feedbackContainer = $('.js-password-strength-feedback');
+    this.$feedbackContainer = $(passwordStrengthFeedbackContainerSelector);
 
     return {
       watchPasswordStrength: ($input) => this.watchPasswordStrength($input),
