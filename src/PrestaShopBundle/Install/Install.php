@@ -902,6 +902,7 @@ class Install extends AbstractInstall
                 'ps_customtext',
                 'ps_emailsubscription',
                 'ps_facetedsearch',
+                'ps_faviconnotificationbo',
                 'ps_featuredproducts',
                 'ps_imageslider',
                 'ps_languageselector',
