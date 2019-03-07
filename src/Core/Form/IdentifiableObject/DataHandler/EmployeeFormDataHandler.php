@@ -177,11 +177,11 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
      */
     private function assertPasswordIsSameAsOldPassword($plainPassword, $employeeId)
     {
-        $oldPassword = $this->employeeDataProvider->getHashedPasswordById($employeeId);
+        $oldPassword = $this->employeeDataProvider->getEmployeeHashedPassword($employeeId);
 
         if (!$this->hashing->checkHash($plainPassword, $oldPassword)) {
             throw new EmployeeConstraintException(
-                'Old password is invalid.',
+                'Old and new passwords do not match.',
                 EmployeeConstraintException::INCORRECT_PASSWORD
             );
         }

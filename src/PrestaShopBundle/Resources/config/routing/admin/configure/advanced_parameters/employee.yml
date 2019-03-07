@@ -71,7 +71,6 @@ admin_employees_edit:
   requirements:
     employeeId: \d+
 
-
 admin_employees_toggle_navigation:
   path: /toggle-navigation
   methods: [POST]

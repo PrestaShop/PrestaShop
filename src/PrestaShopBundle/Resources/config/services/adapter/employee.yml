@@ -53,8 +53,8 @@ services:
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand }
 
-  prestashop.adapter.employee.default_avatar_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Employee\DefaultAvatarProvider'
+  prestashop.adapter.employee.avatar_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\AvatarProvider'
     arguments:
       - '@prestashop.adapter.tools'
 

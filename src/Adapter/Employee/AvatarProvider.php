@@ -24,17 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Employee;
+namespace PrestaShop\PrestaShop\Adapter\Employee;
+
+use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Employee\AvatarProviderInterface;
 
 /**
- * Interface DefaultAvatarProviderInterface describes employee default avatar provider.
+ * Class AvatarProvider provides employee avatar data.
  */
-interface DefaultAvatarProviderInterface
+final class AvatarProvider implements AvatarProviderInterface
 {
     /**
-     * Get default employee avatar URL.
-     *
-     * @return string
+     * @var Tools
      */
-    public function getDefaultAvatarUrl();
+    private $tools;
+
+    /**
+     * @param Tools $tools
+     */
+    public function __construct(Tools $tools)
+    {
+        $this->tools = $tools;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultAvatarUrl()
+    {
+        return $this->tools->getAdminImageUrl('prestashop-avatar.png');
+    }
 }

@@ -26,28 +26,29 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class LanguageByIdChoiceProvider provides language choices with ID values.
+ * Class LanguageByIdChoiceProvider provides active language choices with ID values.
  */
 final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var array
+     * @var LanguageDataProvider
      */
-    private $languages;
+    private $languageDataProvider;
 
     /**
-     * @param array $languages
+     * @param LanguageDataProvider $languageDataProvider
      */
-    public function __construct(array $languages)
+    public function __construct(LanguageDataProvider $languageDataProvider)
     {
-        $this->languages = $languages;
+        $this->languageDataProvider = $languageDataProvider;
     }
 
     /**
-     * Get language choices for form.
+     * Get active language choices for form.
      *
      * @return array
      */
@@ -55,7 +56,7 @@ final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
     {
         $choices = [];
 
-        foreach ($this->languages as $language) {
+        foreach ($this->languageDataProvider->getLanguages() as $language) {
             $choices[$language['name']] = $language['id_lang'];
         }
 
