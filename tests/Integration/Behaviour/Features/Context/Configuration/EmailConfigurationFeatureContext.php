@@ -37,5 +37,4 @@ class EmailConfigurationFeatureContext extends AbstractConfigurationFeatureConte
     {
         $this->setConfiguration('PS_MAIL_METHOD', Mail::METHOD_DISABLE);
     }
-
 }

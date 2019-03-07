@@ -41,7 +41,7 @@ class CartFeatureContext implements BehatContext
     protected $cart;
 
     /**
-     * @Given I have an empty default cart
+     * @Given /^I have an empty default cart$/
      */
     public function iHaveAnEmptyDefaultCart()
     {
