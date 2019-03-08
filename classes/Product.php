@@ -589,7 +589,7 @@ class ProductCore extends ObjectModel
     public function getFieldsShop()
     {
         $fields = parent::getFieldsShop();
-        if (isset($this->unit_price) && (null === $this->update_fields || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price'])))) {
+        if (isset($this->unit_price) && null === $this->update_fields || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price']))) {
             $fields['unit_price_ratio'] = (float) $this->unit_price > 0 ? $this->price / $this->unit_price : 0;
         }
         $fields['unity'] = pSQL($this->unity);
