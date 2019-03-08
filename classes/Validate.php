@@ -483,6 +483,11 @@ class ValidateCore
      */
     public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
     {
+        // Password is already a hashed no need to check
+        if (static::isHashedPassword($passwd)) {
+            return true;
+        }
+
         return static::isPlaintextPassword($passwd, $size);
     }
 
@@ -533,6 +538,11 @@ class ValidateCore
 
     public static function isPasswdAdmin($passwd)
     {
+        // Password is already a hashed no need to check
+        if (static::isHashedPassword($passwd)) {
+            return true;
+        }
+
         return self::isPlaintextPassword($passwd, Validate::ADMIN_PASSWORD_LENGTH);
     }
 

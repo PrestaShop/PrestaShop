@@ -105,7 +105,7 @@ class CartToOrderTest extends CartTaxesTest
         $customer = new Customer();
         $customer->firstname = 'fake';
         $customer->lastname = 'fake';
-        $customer->passwd = 'fakefake';
+        $customer->passwd = 'ThisIsAFake1337$';
         $customer->email = 'fake@prestashop.com';
         $customer->add();
         $address = new Address($addressId);
