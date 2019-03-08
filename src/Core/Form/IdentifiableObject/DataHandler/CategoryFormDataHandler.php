@@ -171,6 +171,10 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
     {
         $command = new EditCategoryCommand($categoryId);
 
+        if (null !== $data['name']) {
+            $command->setLocalizedNames($data['name']);
+        }
+
         if (null !== $data['id_parent']) {
             $command->setParentCategoryId($data['id_parent']);
         }

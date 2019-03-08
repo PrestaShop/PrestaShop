@@ -163,6 +163,10 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
     {
         $command = new EditRootCategoryCommand($rootCategoryId);
 
+        if (null !== $data['name']) {
+            $command->setLocalizedNames($data['name']);
+        }
+
         if (null !== $data['meta_title']) {
             $command->setLocalizedMetaTitles($data['meta_title']);
         }
