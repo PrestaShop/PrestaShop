@@ -101,9 +101,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
                 $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
                 $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
             ],
-            'shop_association' => [
-                $this->contextShopId,
-            ],
+            'shop_association' => $this->contextShopId,
             'active' => true,
         ];
     }

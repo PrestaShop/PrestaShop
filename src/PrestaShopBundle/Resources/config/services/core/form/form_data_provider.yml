@@ -43,5 +43,5 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CategoryFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.getCategory()'
