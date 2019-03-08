@@ -21,7 +21,7 @@ scenario('Create employee', client => {
   test('should set "First name" input', () => client.waitAndSetValue(Employee.first_name_input, 'Demo'));
   test('should set "Last name" input', () => client.waitAndSetValue(Employee.last_name_input, 'Prestashop'));
   test('should set "Email" input', () => client.waitAndSetValue(Employee.email_input, 'demo' + date_time + '@prestashop.com'));
-  test('should set "Password" input', () => client.waitAndSetValue(Employee.password_input, '123456789'));
+  test('should set "Password" input', () => client.waitAndSetValue(Employee.password_input, global.test_password));
   test('should choose "Permission profile" option', () => client.waitAndSelectByValue(Employee.profile_select, '4'));
   test('should click on "Save" button', () => client.waitForExistAndClick(Employee.save_button));
 }, 'common_client');
@@ -41,7 +41,7 @@ scenario('Check the employee creation', client => {
 }, 'common_client');
 
 scenario('Login with the new employee account', client => {
-  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO, URL, 'demo' + date_time + '@prestashop.com', '123456789'));
+  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO, URL, 'demo' + date_time + '@prestashop.com', 'P4$$W0rd!!'));
   test('should go to orders page', () => client.waitForExistAndClick(Employee.orders_page));
   test('should click on "employee info" icon', () => client.waitForExistAndClick(AccessPageBO.info_employee));
   test('should click on "Sign out" icon', () => client.waitForVisibleAndClick(AccessPageBO.sign_out));

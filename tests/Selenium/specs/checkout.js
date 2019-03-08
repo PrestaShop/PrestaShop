@@ -88,7 +88,7 @@ function runScenario (scenario) {
                 .setValue('#customer-form [name=email]'    , user.email)
                 .then(() => {
                   if (!scenario.customerOrdersAsGuest) {
-                    return browser.setValue('#customer-form [name=password]', '123456789');
+                    return browser.setValue('#customer-form [name=password]', fixtures.customer.password);
                   }
                 })
                 .click('#customer-form button[data-link-action="register-new-customer"]')

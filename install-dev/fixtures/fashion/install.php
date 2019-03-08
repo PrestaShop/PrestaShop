@@ -37,7 +37,7 @@ class InstallFixturesFashion extends XmlLoader
     public function createEntityCustomer($identifier, array $data, array $data_lang)
     {
         if ($identifier == 'John') {
-            $data['passwd'] = Tools::hash('123456789');
+            $data['passwd'] = Tools::hash('P4$$w0rd!!');
         }
 
         return $this->createEntity('customer', $identifier, 'Customer', $data, $data_lang);

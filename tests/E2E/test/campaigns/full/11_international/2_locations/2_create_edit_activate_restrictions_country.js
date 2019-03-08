@@ -17,40 +17,40 @@ const commonAddress = require('../../../common_scenarios/address');
 let promise = Promise.resolve();
 
 let customerData = {
-    first_name: 'test',
-    last_name: 'test',
-    email_address: 'test@prestashop.com',
-    password: 'test123456',
-    birthday: {
-      day: '18',
-      month: '12',
-      year: '1991'
-    }
-  },
-  firstCustomerData = {
-    first_name: 'test',
-    last_name: 'test',
-    email: 'test@gmail.com',
-    password: 'test123',
-  },
-  secondCustomerData = {
-    first_name: 'test',
-    last_name: 'test',
-    email: 'testprestashop@gmail.com',
-    password: 'test123',
-  },
-  thirdCustomerData = {
-    first_name: 'test',
-    last_name: 'test',
-    email: 'prestaTest@gmail.com',
-    password: 'test123',
-  },
-  forthCustomerData = {
-    first_name: 'test',
-    last_name: 'test',
-    email: 'prestatest@prestashop.com',
-    password: 'test123',
-  };
+  first_name: 'test',
+  last_name: 'test',
+  email_address: 'test@prestashop.com',
+  password: global.adminPassword,
+  birthday: {
+    day: '18',
+    month: '12',
+    year: '1991'
+  }
+};
+let firstCustomerData = {
+  first_name: 'test',
+  last_name: 'test',
+  email: 'test@gmail.com',
+  password: global.adminPassword,
+};
+let secondCustomerData = {
+  first_name: 'test',
+  last_name: 'test',
+  email: 'testprestashop@gmail.com',
+  password: global.adminPassword,
+};
+let thirdCustomerData = {
+  first_name: 'test',
+  last_name: 'test',
+  email: 'prestaTest@gmail.com',
+  password: global.adminPassword,
+};
+let forthCustomerData = {
+  first_name: 'test',
+  last_name: 'test',
+  email: 'prestatest@prestashop.com',
+  password: global.adminPassword,
+};
 
 scenario('Create, edit a country and activate country restrictions in the Back Office ', () => {
   scenario('Login in the Back Office', client => {

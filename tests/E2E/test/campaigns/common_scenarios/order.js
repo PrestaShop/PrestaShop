@@ -17,7 +17,7 @@ let promise = Promise.resolve();
 global.orderInformation = [];
 
 module.exports = {
-  createOrderFO: function (authentication = "connected", login = 'pub@prestashop.com', password = '123456789', checkAvailableQuantity = false) {
+  createOrderFO: function (authentication = "connected", login = 'pub@prestashop.com', password = global.test_password, checkAvailableQuantity = false) {
     scenario('Create order in the Front Office', client => {
       test('should set the language of shop to "English"', () => client.changeLanguage());
       test('should get the first product name', () => client.getTextInVar(productPage.first_product, 'first_product_name'));

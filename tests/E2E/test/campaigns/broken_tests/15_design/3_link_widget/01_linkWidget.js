@@ -67,7 +67,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
         return promise
           .then(() => client.waitForExistAndClick(AccessPageFO.sign_in_button))
           .then(() => client.waitAndSetValue(AccessPageFO.login_input, 'pub@prestashop.com'))
-          .then(() => client.waitAndSetValue(AccessPageFO.password_inputFO, '123456789'))
+          .then(() => client.waitAndSetValue(AccessPageFO.password_inputFO, global.test_password))
           .then(() => client.waitForExistAndClick(AccessPageFO.login_button))
           .then(() => client.waitForExistAndClick(AccessPageFO.logo_home_page));
       });
@@ -107,7 +107,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
         return promise
           .then(() => client.waitForExistAndClick(AccessPageFO.sign_in_button))
           .then(() => client.waitAndSetValue(AccessPageFO.login_input, 'pub@prestashop.com'))
-          .then(() => client.waitAndSetValue(AccessPageFO.password_inputFO, '123456789'))
+          .then(() => client.waitAndSetValue(AccessPageFO.password_inputFO, global.test_password))
           .then(() => client.waitForExistAndClick(AccessPageFO.login_button))
           .then(() => client.waitForExistAndClick(AccessPageFO.logo_home_page));
       });
@@ -467,5 +467,3 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
   }, 'common_client');
 
 }, 'common_client', true);
-
-

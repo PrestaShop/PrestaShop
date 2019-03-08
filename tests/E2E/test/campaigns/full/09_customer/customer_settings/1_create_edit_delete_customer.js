@@ -20,7 +20,7 @@ let customerData = {
   first_name: 'demo',
   last_name: 'demo',
   email_address: 'demo' + global.adminEmail,
-  password: '123456789',
+  password: global.adminPassword,
   birthday: {
     day: '18',
     month: '12',
@@ -32,7 +32,7 @@ let editCustomerData = {
   first_name: 'customerFirstName',
   last_name: 'customerLastName',
   email_address: 'customeremail@prestashop.com',
-  password: '123456789',
+  password: 'P4$$W0rd!!!!',
   birthday: {
     day: '31',
     month: '10',

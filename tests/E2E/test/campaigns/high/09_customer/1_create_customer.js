@@ -5,7 +5,7 @@ let customerData = {
   first_name: 'demo',
   last_name: 'demo',
   email_address: global.adminEmail,
-  password: '123456789',
+  password: global.adminPassword,
   birthday: {
     day: '18',
     month: '12',

@@ -15,7 +15,7 @@ scenario('Customer Identity', () => {
       return promise
         .then(() => client.scrollWaitForExistAndClick(AccessPageFO.personal_info, 150, 2000))
         .then(() => client.waitAndSetValue(accountPage.signin_email_input, "pub@prestashop.com"))
-        .then(() => client.waitAndSetValue(accountPage.signin_password_input, "123456789"))
+        .then(() => client.waitAndSetValue(accountPage.signin_password_input, global.test_password))
         .then(() => client.waitForExistAndClick(AccessPageFO.login_button))
         .then(() => client.isVisible(accountPage.customer_form))
         .then(() => expect(global.isVisible).to.be.true);
@@ -28,14 +28,14 @@ scenario('Customer Identity', () => {
     });
     test('should save the customer if the correct password is provided', () => {
       return promise
-        .then(() => client.waitAndSetValue(accountPage.password_account_input, "123456789"))
+        .then(() => client.waitAndSetValue(accountPage.password_account_input, global.test_password))
         .then(() => client.waitForExistAndClick(accountPage.save_account_button))
         .then(() => client.waitForVisible(accountPage.success_alert));
     });
     test('should allow the customer to change their password', () => {
       return promise
-        .then(() => client.waitAndSetValue(accountPage.password_account_input, "123456789"))
-        .then(() => client.waitAndSetValue(accountPage.new_password_input, "newPassword"))
+        .then(() => client.waitAndSetValue(accountPage.password_account_input, global.test_password))
+        .then(() => client.waitAndSetValue(accountPage.new_password_input, 'P4$$w0rd!!'))
         .then(() => client.waitForExistAndClick(accountPage.save_account_button))
         .then(() => client.waitForVisible(accountPage.success_alert));
     });
@@ -43,10 +43,10 @@ scenario('Customer Identity', () => {
       return promise
         .then(() => client.waitForExistAndClick(AccessPageFO.sign_out_button))
         .then(() => client.waitAndSetValue(accountPage.signin_email_input, "pub@prestashop.com"))
-        .then(() => client.waitAndSetValue(accountPage.signin_password_input, "newPassword"))
+        .then(() => client.waitAndSetValue(accountPage.signin_password_input, 'P4$$w0rd!!'))
         .then(() => client.waitForExistAndClick(AccessPageFO.login_button))
-        .then(() => client.waitAndSetValue(accountPage.password_account_input, "newPassword"))
-        .then(() => client.waitAndSetValue(accountPage.new_password_input, "123456789"))
+        .then(() => client.waitAndSetValue(accountPage.password_account_input, 'P4$$w0rd!!'))
+        .then(() => client.waitAndSetValue(accountPage.new_password_input, global.test_password))
         .then(() => client.waitForExistAndClick(accountPage.save_account_button))
         .then(() => client.waitForVisible(accountPage.success_alert));
     });
@@ -105,7 +105,7 @@ scenario('Customer Identity', () => {
         return promise
           .then(() => client.waitForExistAndClick(accountPage.checkout_step))
           .then(() => client.waitAndSetValue(accountPage.email_input, "test" + date_time + "@example.com"))
-          .then(() => client.waitAndSetValue(accountPage.password_account_input, "123456789"))
+          .then(() => client.waitAndSetValue(accountPage.password_account_input, global.test_password))
           .then(() => client.waitForExistAndClick(accountPage.customer_form_continue_button))
           .then(() => client.waitForVisible(accountPage.checkout_step_complete))
           .then(() => client.waitForExistAndClick(accountPage.checkout_step))

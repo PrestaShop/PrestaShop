@@ -27,7 +27,7 @@ describe('Customer Identity', function () {
 
     it('should save the customer if the correct password is provided', function () {
       return browser
-        .setValue('[name="password"]', '123456789')
+        .setValue('[name="password"]', fixtures.customer.password)
         .click('#customer-form button[data-link-action="save-customer"]')
         .waitForVisible('article[role="alert"][data-alert="success"]')
       ;
@@ -35,23 +35,23 @@ describe('Customer Identity', function () {
 
     it('should allow the customer to change their password', function () {
       return browser
-        // change the password
-        .setValue('[name="password"]', '123456789')
-        .setValue('[name="new_password"]', 'new password')
+      // change the password
+        .setValue('[name="password"]', fixtures.customer.password)
+        .setValue('[name="new_password"]', 'N3wP4$$W0rd!')
         .click('#customer-form button[data-link-action="save-customer"]')
         .waitForVisible('article[role="alert"][data-alert="success"]')
-        ;
+      ;
     });
 
     it('should allow the customer to use the new password', function () {
       return browser
-        // try to login with the new password
+      // try to login with the new password
         .logout()
-        .loginDefaultCustomer({password: 'new password'})
-        // change it back to initial password
+        .loginDefaultCustomer({password: 'N3wP4$$W0rd!'})
+      // change it back to initial password
         .url(fixtures.urls.identity)
-        .setValue('[name="password"]', 'new password')
-        .setValue('[name="new_password"]', '123456789')
+        .setValue('[name="password"]', 'N3wP4$$W0rd!')
+        .setValue('[name="new_password"]', fixtures.customer.password)
         .click('#customer-form button[data-link-action="save-customer"]')
         .waitForVisible('article[role="alert"][data-alert="success"]')
       ;
@@ -130,7 +130,7 @@ describe('Customer Identity', function () {
           return browser
             .click("#checkout-personal-information-step h1")
             .setValue("#customer-form [name=email]", user.email)
-            .setValue("#customer-form [name=password]", "123456789")
+            .setValue("#customer-form [name=password]", fixtures.customer.password)
             .click("#checkout-personal-information-step button[name='continue']")
             .waitForVisible("#checkout-personal-information-step.-complete")
             .click("#checkout-personal-information-step h1")

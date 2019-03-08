@@ -24,32 +24,35 @@ let common = require('../../../common.webdriverio');
 let promise = Promise.resolve();
 
 let currencyData = {
-    name: 'DZD',
-    exchangeRate: '1'
-  },
-  customerData = {
-    firstname: 'Presto',
-    lastname: 'Test',
-    email: 'test.presto@gmail.com',
-    password: '123456789',
-    country: 'United States'
-  },
-  addressData = {
-    postalCode: '88901',
-    address: 'State Route 602',
-    state: 'Nevada',
-    city: 'The Lakes',
-    country: 'United States'
-  },
-  supplierData = {
-    name: 'First Supplier',
-    description: 'description',
-    address: 'address',
-    city: 'city',
-    picture: 'image_test.jpg',
-    metaTitle: 'meta title',
-    metaDescription: 'meta description',
-  };
+  name: 'DZD',
+  exchangeRate: '1'
+};
+
+let customerData = {
+  firstname: 'Presto',
+  lastname: 'Test',
+  email: 'test.presto@gmail.com',
+  password: global.adminPassword,
+  country: 'United States'
+};
+
+let addressData = {
+  postalCode: '88901',
+  address: 'State Route 602',
+  state: 'Nevada',
+  city: 'The Lakes',
+  country: 'United States'
+};
+
+let supplierData = {
+  name: 'First Supplier',
+  description: 'description',
+  address: 'address',
+  city: 'city',
+  picture: 'image_test.jpg',
+  metaTitle: 'meta title',
+  metaDescription: 'meta description',
+};
 
 scenario('Create virtual Product in the Back Office', () => {
   scenario('Open the browser then log in the Back Office', client => {
@@ -187,7 +190,7 @@ scenario('Create virtual Product in the Back Office', () => {
             test('should set the "First name" input', () => client.waitAndSetValue(accountPage.firstname_input, 'test'));
             test('should set the "Last name" input', () => client.waitAndSetValue(accountPage.lastname_input, 'test'));
             test('should set the "Email" input', () => client.waitAndSetValue(accountPage.new_email_input, global.date_time + 'pub@prestashop.com'));
-            test('should set the "Password" input', () => client.waitAndSetValue(accountPage.password_account_input, '123456789'));
+            test('should set the "Password" input', () => client.waitAndSetValue(accountPage.password_account_input, global.test_password));
             test('should click on "CONTINUE" button', () => client.waitForExistAndClick(accountPage.new_customer_btn));
           }, 'common_client');
           scenario('Add new address', client => {

@@ -45,6 +45,7 @@ global.categoryImage = path.join(__dirname, '', 'datas', 'category_image.png');
 global.categoryThumb = path.join(__dirname, '', 'datas', 'category_miniature.png');
 global.brandsImage = path.join(__dirname, '', 'datas', 'prestashop.png');
 
+global.test_password = 'ThisIsA1337Pa$$';
 global.onboarding = false;
 global.invoiceFileName = '';
 global.basic_price = '';

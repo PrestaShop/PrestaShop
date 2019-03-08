@@ -17,7 +17,7 @@ let customerData = {
   first_name: 'John',
   last_name: 'DOE',
   email_address: 'test@prestashop.com',
-  password: '123456789',
+  password: global.adminPassword,
   birthday: {
     day: '18',
     month: '12',
