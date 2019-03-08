@@ -15,3 +15,7 @@ CREATE TABLE `PREFIX_currency_lang` (
   ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 /* PHP:ps_1760_copy_data_from_currency_to_currency_lang(); */;
+
+/* Module Manager tab should be the first tab in Modules Tab */
+UPDATE `PREFIX__tab` SET `position` = 0 WHERE `class_name` = 'AdminModulesSf' AND `position`= 1;
+UPDATE `PREFIX__tab` SET `position` = 1 WHERE `class_name` = 'AdminParentModulesCatalog' AND `position`= 0;
