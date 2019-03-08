@@ -77,7 +77,6 @@ class SurvivalTest extends WebTestCase
      */
     public function testPagesAreAvailable($pageName, $route)
     {
-        die('praejo');
         $this->logIn();
 
         $this->client->catchExceptions(false);
