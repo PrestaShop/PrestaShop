@@ -99,6 +99,7 @@ services:
       - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType'
       - '@prestashop.core.form.identifiable_object.data_provider.employee_form_data_provider'
 
+<<<<<<< HEAD
   prestashop.core.form.identifiable_object.builder.profile_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: 'prestashop.core.form.builder.form_builder_factory:create'
@@ -114,8 +115,11 @@ services:
       - '@prestashop.core.form.identifiable_object.data_provider.cms_page_form_data_provider'
 
   prestashop.core.form.identifiable_object.builder.address_form_builder:
+=======
+  prestashop.core.form.identifiable_object.builder.manufacturer_address_form_builder:
+>>>>>>> db4a5fa103... Some services renaming
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: 'prestashop.core.form.builder.form_builder_factory:create'
     arguments:
-      - 'PrestaShopBundle\Form\Admin\Sell\Address\AddressType'
+      - 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
       - '@prestashop.core.form.identifiable_object.data_provider.manufacturer_address_form_data_provider'

@@ -548,7 +548,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         foreach ($addressIds as $i => $addressId) {
-            $addressIds[$i] = (int)$addressId;
+            $addressIds[$i] = (int) $addressId;
         }
 
         return $addressIds;
@@ -575,6 +575,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     private function getAddressFormBuilder()
     {
-        return $this->get('prestashop.core.form.identifiable_object.builder.address_form_builder');
+        return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_address_form_builder');
     }
 }
