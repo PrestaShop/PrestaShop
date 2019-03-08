@@ -74,16 +74,16 @@ class ModuleRepositoryFactory
     }
 
     /**
-     * @param string|null $environment
      * @param array|null $parameters
+     * @param string|null $environment
      */
-    public function __construct($environment = null, array $parameters = null)
+    public function __construct(array $parameters = null, $environment = null)
     {
+        $this->parameters = $parameters;
         $this->environment = $environment;
         if (null === $environment) {
             $this->environment = (new Environment())->getName();
         }
-        $this->parameters = $parameters;
     }
 
     /**
@@ -93,10 +93,11 @@ class ModuleRepositoryFactory
      */
     public function getRepository()
     {
-        if (null !== $this->getParameters() && null === $this->moduleRepository) {
-            $databasePrefix = $this->getParameters()['database_prefix'];
+        $parameters = $this->getParameters();
+        if (null !== $parameters && null === $this->moduleRepository) {
+            $databasePrefix = $parameters['database_prefix'];
             $this->moduleRepository = new ModuleRepository(
-                $this->getConnection(),
+                $this->getConnection($parameters),
                 $databasePrefix
             );
         }
@@ -105,14 +106,14 @@ class ModuleRepositoryFactory
     }
 
     /**
+     * @param array $parameters
+     *
      * @return \Doctrine\DBAL\Connection
      *
      * @throws \Doctrine\DBAL\DBALException
      */
-    private function getConnection()
+    private function getConnection(array $parameters)
     {
-        $parameters = $this->getParameters();
-
         return DriverManager::getConnection(array(
             'dbname' => $parameters['database_name'],
             'user' => $parameters['database_user'],
@@ -143,10 +144,6 @@ class ModuleRepositoryFactory
     {
         if (null === $this->parameters && !empty($this->getParametersFile())) {
             $config = require $this->getParametersFile();
-            if ('test' === $this->environment) {
-                $config['parameters']['database_name'] = 'test_' . $config['parameters']['database_name'];
-            }
-
             $this->parameters = $config['parameters'];
         }
 

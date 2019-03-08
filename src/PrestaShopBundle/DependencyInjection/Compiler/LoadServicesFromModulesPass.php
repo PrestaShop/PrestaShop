@@ -58,20 +58,13 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $this->registerServicesFromModules($container);
-    }
+        if (!$container->hasParameter('kernel.active_modules')) {
+            return;
+        }
 
-    /**
-     * Load all services registered in every module.
-     *
-     * @param ContainerBuilder $container
-     */
-    private function registerServicesFromModules(ContainerBuilder $container)
-    {
-        $installedModules = $container->getParameter('kernel.active_modules');
-
+        $activeModules = $container->getParameter('kernel.active_modules');
         foreach ($this->getModulesPaths() as $modulePath) {
-            if (in_array($modulePath->getFilename(), $installedModules)) {
+            if (in_array($modulePath->getFilename(), $activeModules)) {
                 $moduleConfigPath = $modulePath . $this->configPath;
                 if (file_exists($moduleConfigPath . 'services.yml')) {
                     $loader = new YamlFileLoader($container, new FileLocator($moduleConfigPath));
@@ -82,7 +75,7 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
     }
 
     /**
-     * @return \Iterator
+     * @return Finder
      */
     private function getModulesPaths()
     {

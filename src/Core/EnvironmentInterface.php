@@ -45,4 +45,11 @@ interface EnvironmentInterface
      * @return bool
      */
     public function isDebug();
+
+    /**
+     * Indicates the path to the cache directory
+     *
+     * @return string
+     */
+    public function getCacheDir();
 }

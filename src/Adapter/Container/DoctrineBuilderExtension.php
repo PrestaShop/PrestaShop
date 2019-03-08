@@ -27,31 +27,16 @@
 namespace PrestaShop\PrestaShop\Adapter\Container;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
-use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
-use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Class DoctrineBuilderExtension is used to init the doctrine service in the ContainerBuilder.
  * This is a manual initialisation of Doctrine because we are not in a symfony context, so we need
- * to init a few container's parameters to make the DoctrineExtension work correctly.
+ * add the extension manually (required parameters are managed by ContainerParametersExtension).
  */
 class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
 {
-    /**
-     * @var EnvironmentInterface
-     */
-    private $environment;
-
-    /**
-     * @param EnvironmentInterface $environment
-     */
-    public function __construct(EnvironmentInterface $environment)
-    {
-        $this->environment = $environment;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -63,39 +48,9 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
             return;
         }
         $config = require $configFile;
-        $this->initParameters($container);
 
         $container->registerExtension(new DoctrineExtension());
         $container->loadFromExtension('doctrine', $config['doctrine']);
-
-        //List of active modules necessary to load their config, during install the repository might no be available
-        //if the parameters file has not been generated yet, so we skip this part of the build
-        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
-        if (null === $moduleRepository) {
-            return;
-        }
-        $activeModules = $moduleRepository->getActiveModules();
-        $container->setParameter('kernel.active_modules', $activeModules);
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     */
-    private function initParameters(ContainerBuilder $container)
-    {
-        //We include those parameters mainly for database configuration
-        $parameters = require _PS_ROOT_DIR_ . '/app/config/parameters.php';
-        foreach ($parameters['parameters'] as $parameter => $value) {
-            $container->setParameter($parameter, $value);
-        }
-
-        //Most of these parameters are just necessary fro doctrine services definitions
-        $container->setParameter('kernel.bundles', []);
-        $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app/');
-        $container->setParameter('kernel.name', 'app');
-        $container->setParameter('kernel.debug', $this->environment->isDebug());
-        $container->setParameter('kernel.environment', $this->environment->getName());
-        $container->setParameter('kernel.cache_dir', _PS_CACHE_DIR_);
     }
 }

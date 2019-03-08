@@ -158,6 +158,9 @@ class AppKernel extends Kernel
      * Enable auto loading of module Composer autoloader if needed.
      * Need to be done as earlier as possible in application lifecycle.
      *
+     * Note: this feature is also manage in PrestaShop\PrestaShop\Adapter\ContainerBuilder
+     * for non Symfony environments.
+     *
      * @param array $modules the list of modules
      */
     private function enableComposerAutoloaderOnModules($modules)

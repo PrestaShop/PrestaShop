@@ -85,4 +85,12 @@ class Environment implements EnvironmentInterface
     {
         return $this->isDebug;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCacheDir()
+    {
+        return _PS_ROOT_DIR_.'/var/cache/'.$this->getName(). DIRECTORY_SEPARATOR;
+    }
 }

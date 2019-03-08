@@ -29,15 +29,16 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Doctrine\ORM\Tools\Setup;
 use LegacyCompilerPass;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerBuilderExtensionInterface;
+use PrestaShop\PrestaShop\Adapter\Container\ContainerParametersExtension;
 use PrestaShop\PrestaShop\Adapter\Container\DoctrineBuilderExtension;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
-use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
@@ -86,7 +87,7 @@ class ContainerBuilder
      */
     public static function getContainer($containerName, $isDebug)
     {
-        if (!isset(self::$containers[$containerName]) || null === self::$containers[$containerName]) {
+        if (!isset(self::$containers[$containerName])) {
             $builder = new ContainerBuilder(new Environment($isDebug));
             self::$containers[$containerName] = $builder->buildContainer($containerName);
         }
@@ -107,25 +108,24 @@ class ContainerBuilder
      *
      * @return ContainerInterface|SfContainerBuilder
      *
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
     public function buildContainer($containerName)
     {
         $this->containerName = $containerName;
         $this->containerClassName = ucfirst($this->containerName) . 'Container';
-        $this->dumpFile = _PS_CACHE_DIR_ . $this->containerClassName . '.php';
+        $this->dumpFile = $this->environment->getCacheDir() . $this->containerClassName . '.php';
         $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->environment->isDebug());
 
         //These methods load required files like autoload or annotation metadata so we need to load
         //them at each container creation, this can't be compiled.
         $this->loadDoctrineAnnotationMetadata();
-        $this->loadModulesAutoloader();
 
         $container = $this->loadDumpedContainer();
         if (null === $container) {
             $container = $this->compileContainer();
         }
+        $this->loadModulesAutoloader($container);
 
         return $container;
     }
@@ -152,20 +152,23 @@ class ContainerBuilder
     private function compileContainer()
     {
         $container = new SfContainerBuilder();
+        //If the container builder is modified the container logically should be rebuilt
+        $container->addResource(new FileResource(__FILE__));
 
         $container->addCompilerPass(new LegacyCompilerPass());
         $container->addCompilerPass(new LoadServicesFromModulesPass($this->containerName), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
-        $this->loadServices($container);
 
         //Build extensions
         $builderExtensions = [
-            new DoctrineBuilderExtension($this->environment),
+            new ContainerParametersExtension($this->environment),
+            new DoctrineBuilderExtension(),
         ];
         /** @var ContainerBuilderExtensionInterface $builderExtension */
         foreach ($builderExtensions as $builderExtension) {
             $builderExtension->build($container);
         }
 
+        $this->loadServicesFromConfig($container);
         $container->compile();
 
         //Dump the container file
@@ -194,12 +197,12 @@ class ContainerBuilder
      *
      * @throws \Exception
      */
-    private function loadServices(SfContainerBuilder $container)
+    private function loadServicesFromConfig(SfContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $servicesPath = sprintf(
             '%sservices/%s/services_%s.yml',
-                _PS_CONFIG_DIR_,
+            _PS_CONFIG_DIR_,
             $this->containerName,
             $this->environment->getName()
         );
@@ -208,21 +211,25 @@ class ContainerBuilder
 
     /**
      * Loops through all active modules and automatically include their autoload (if present).
-     * Needs to be done as earlier as possible in application lifecycle.
-     *
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    private function loadModulesAutoloader()
-    {
-        $moduleRepository = ModuleRepositoryFactory::getInstance()->getRepository();
-        if (null !== $moduleRepository) {
-            $activeModules = $moduleRepository->getActiveModules();
-            foreach ($activeModules as $module) {
-                $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';
+     * Needs to be done as earlier as possible in application lifecycle. Unfortunately this can't
+     * be done in a compiler pass because they are only executed on compilation and this needs to
+     * be done at each container instanciation.
 
-                if (file_exists($autoloader)) {
-                    include_once $autoloader;
-                }
+     * @param ContainerInterface $container
+     * @throws \Exception
+     */
+    private function loadModulesAutoloader(ContainerInterface $container)
+    {
+        if (!$container->hasParameter('kernel.active_modules')) {
+            return;
+        }
+
+        $activeModules = $container->getParameter('kernel.active_modules');
+        foreach ($activeModules as $module) {
+            $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';
+
+            if (file_exists($autoloader)) {
+                include_once $autoloader;
             }
         }
     }
