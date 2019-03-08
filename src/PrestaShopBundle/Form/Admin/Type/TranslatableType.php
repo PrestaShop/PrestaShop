@@ -61,21 +61,29 @@ class TranslatableType extends AbstractType
     private $defaultFormLanguageId;
 
     /**
+     * @var int default language of the shop, used as a fallback when default form language is not set
+     */
+    private $defaultShopLanguageId;
+
+    /**
      * @param array $locales
      * @param UrlGeneratorInterface $urlGenerator
      * @param bool $saveFormLocaleChoice
      * @param int $defaultFormLanguageId
+     * @param int $defaultShopLanguageId
      */
     public function __construct(
         array $locales,
         UrlGeneratorInterface $urlGenerator,
         $saveFormLocaleChoice,
-        $defaultFormLanguageId
+        $defaultFormLanguageId,
+        $defaultShopLanguageId
     ) {
         $this->locales = $locales;
         $this->urlGenerator = $urlGenerator;
         $this->saveFormLocaleChoice = $saveFormLocaleChoice;
         $this->defaultFormLanguageId = $defaultFormLanguageId;
+        $this->defaultShopLanguageId = $defaultShopLanguageId;
     }
 
     /**
@@ -288,10 +296,18 @@ class TranslatableType extends AbstractType
     private function getDefaultLocale(array $locales)
     {
         if ($this->defaultFormLanguageId) {
+            // Searching for a locale that matches default form language
             foreach ($locales as $locale) {
                 if ($locale['id_lang'] == $this->defaultFormLanguageId) {
                     return $locale;
                 }
+            }
+        }
+
+        // Searching for locale that matches default shop language
+        foreach ($locales as $locale) {
+            if ($locale['id_lang'] == $this->defaultShopLanguageId) {
+                return $locale;
             }
         }
 
