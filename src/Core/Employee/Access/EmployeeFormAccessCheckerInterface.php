@@ -33,6 +33,7 @@ interface EmployeeFormAccessCheckerInterface
 {
     /**
      * Checks if employee has restricted access to the employee form.
+     * Restricted access usually is used when an employee edits their own account.
      * Restricted access means that the employee is restricted from some of
      * the fields in the edit form, which would modify his account's accessibility.
      * E.g. active status, profile, shop association.
