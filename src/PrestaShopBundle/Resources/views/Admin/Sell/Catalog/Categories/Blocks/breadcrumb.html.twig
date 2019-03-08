@@ -31,7 +31,7 @@
           <li class="breadcrumb-item">
             {% if category.id_category == currentCategoryView.id %}
               <span>{{ category.name }}</span>
-              <a href="{{ getAdminLink('AdminCategories', true, {'id_category': category.id_category, 'updatecategory': 1}) }}">
+              <a href="{{ path('admin_categories_edit', {'categoryId': category.id_category}) }}">
                 <i style="font-size: 16px;" class="material-icons">edit</i>
                 {{ 'Edit'|trans({}, 'Admin.Actions') }}
               </a>
