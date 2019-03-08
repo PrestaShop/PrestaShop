@@ -30,6 +30,10 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class LanguageChoiceProvider provides languages choices with ID values.
+ *
+ * @todo this class could be merged with \PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider
+ *       as this class can fully achieve the same behavior as the LanguageByIdChoiceProvider.
+ *       It would break BC though, so couldn't be done at the moment.
  */
 final class LanguageChoiceProvider implements FormChoiceProviderInterface
 {
