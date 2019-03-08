@@ -254,7 +254,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 [
                     'label' => $this->translator->trans('Reduction type', [], 'Admin.Catalog.Feature'),
                     'choices' => [
-                        '€' => 'amount',
+                        $this->currency->getSign() => 'amount',
                         $this->translator->trans('%', [], 'Admin.Global') => 'percentage',
                     ],
                     'required' => true,
