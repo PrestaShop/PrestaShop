@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 /**
  * Class AddRootCategoryHandler.
  */
-final class AddRootCategoryHandler implements AddRootCategoryHandlerInterface
+final class AddRootCategoryHandler extends AbstractCategoryHandler implements AddRootCategoryHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -100,10 +100,9 @@ final class AddRootCategoryHandler implements AddRootCategoryHandlerInterface
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        // This is a workaround to make Category's object model work.
-        // Inside Category::add() & Category::update() method it checks if shop association is submitted
-        // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
-        $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
+        if ($command->getAssociatedShopIds()) {
+            $this->addShopAssociation($command->getAssociatedShopIds());
+        }
 
         if (false === $category->validateFields(false)) {
             throw new CategoryException('Invalid data for root category creation');
