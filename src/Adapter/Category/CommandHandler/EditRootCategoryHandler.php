@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 /**
  * Class EditRootCategoryHandler.
  */
-final class EditRootCategoryHandler implements EditRootCategoryHandlerInterface
+final class EditRootCategoryHandler extends AbstractCategoryHandler implements EditRootCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -92,11 +92,8 @@ final class EditRootCategoryHandler implements EditRootCategoryHandlerInterface
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        if (!empty($command->getAssociatedShopIds())) {
-            // This is a workaround to make Category's object model work.
-            // Inside Category::add() & Category::update() method it checks if shop association is submitted
-            // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
-            $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
+        if ($command->getAssociatedShopIds()) {
+            $this->addShopAssociation($command->getAssociatedShopIds());
         }
 
         if (false === $category->validateFields(false)) {
