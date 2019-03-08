@@ -32,10 +32,10 @@ const $ = window.$;
 export default class AddonsConnector {
   constructor(
     addonsConnectFormSelector,
-    addonsLoginButtonSelector
+    loadingSpinnerSelector
   ) {
     this.addonsConnectFormSelector = addonsConnectFormSelector;
-    this.$addonsLoginButton = $(addonsLoginButtonSelector);
+    this.$loadingSpinner = $(loadingSpinnerSelector);
 
     this._initEvents();
 
@@ -72,17 +72,27 @@ export default class AddonsConnector {
       dataType: 'json',
       data: formData,
       beforeSend: () => {
-        this.$addonsLoginButton.show();
+        this.$loadingSpinner.show();
         $('button.btn[type="submit"]', this.addonsConnectFormSelector).hide();
       }
     }).then((response) => {
       if (response.success === 1) {
         location.reload();
       } else {
-        $.growl.error({message: response.message});
-        this.$addonsLoginButton.hide();
+        $.growl.error({
+          message: response.message
+        });
+
+        this.$loadingSpinner.hide();
         $('button.btn[type="submit"]', this.addonsConnectFormSelector).fadeIn();
       }
+    }, () => {
+      $.growl.error({
+        message: $(this.addonsConnectFormSelector).data('error-message'),
+      });
+
+      this.$loadingSpinner.hide();
+      $('button.btn[type="submit"]', this.addonsConnectFormSelector).show();
     });
   }
 }

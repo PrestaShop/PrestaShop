@@ -48,7 +48,11 @@
                       {{ "Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?"|trans({}, 'Admin.Modules.Feature') }}
                       <a href="https://addons.prestashop.com/authentication.php" target="_blank">{{ 'Sign up now'|trans({}, 'Admin.Modules.Feature') }}</a>
                   </p>
-                  <form id="addons-connect-form"  action="{{ path('admin_addons_login') }}" method="POST">
+                  <form id="addons-connect-form"
+                        action="{{ path('admin_addons_login') }}"
+                        method="POST"
+                        data-error-message="{{ 'An error occurred while processing your request.'|trans({}, 'Admin.Notifications.Error') }}"
+                  >
                   <div class="form-group">
                     <label for="module-addons-connect-email">{{ 'Email address'|trans({}, 'Admin.Global') }}</label>
                     <input name="username_addons" type="email" class="form-control" id="module-addons-connect-email" placeholder="Email">
