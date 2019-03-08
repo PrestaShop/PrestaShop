@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CountryStateOptionHandler from './country-state-option-handler';
+import CountryStateOptionHandler from '../../../components/country-state-selection-toggler';
 
 const $ = window.$;
 
