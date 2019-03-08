@@ -101,6 +101,9 @@ class HookCore extends ObjectModel
         // Product page
         'displayProductTabContent' => array('from' => '1.7.0.0'),
         'displayProductTab' => array('from' => '1.7.0.0'),
+
+        // Controller
+        'actionAjaxDieBefore' => array('from' => '1.6.1.1'),
     );
 
     const MODULE_LIST_BY_HOOK_KEY = 'hook_module_exec_list_';
