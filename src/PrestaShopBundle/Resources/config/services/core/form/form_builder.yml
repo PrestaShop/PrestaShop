@@ -64,9 +64,9 @@ services:
       - 'PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType'
       - '@prestashop.core.form.identifiable_object.data_provider.category_form_data_provider'
 
-  prestashop.core.form.identifiable_object.builder.address_form_builder:
+  prestashop.core.form.identifiable_object.builder.manufacturer_address_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: 'prestashop.core.form.builder.form_builder_factory:create'
     arguments:
-      - 'PrestaShopBundle\Form\Admin\Sell\Address\AddressType'
+      - 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
       - '@prestashop.core.form.identifiable_object.data_provider.manufacturer_address_form_data_provider'

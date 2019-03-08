@@ -31,11 +31,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 /**
  * Defines form for address create/edit actions (Sell > Catalog > Brands & Suppliers)
  */
-class AddressType extends AbstractType
+class ManufacturerAddressType extends AbstractType
 {
     /**
      * @var array
@@ -55,23 +57,30 @@ class AddressType extends AbstractType
      * @var int
      */
     private $defaultCountryId;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @param array $manufacturers
      * @param array $countries
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param int $defaultCountryId
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         array $manufacturers,
         array $countries,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
-        $defaultCountryId
+        $defaultCountryId,
+        TranslatorInterface $translator
     ) {
         $this->manufacturers = $manufacturers;
         $this->countries = $countries;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->defaultCountryId = $defaultCountryId;
+        $this->translator = $translator;
     }
 
     /**
@@ -83,6 +92,11 @@ class AddressType extends AbstractType
             ->add('id_manufacturer', ChoiceType::class, [
                 'required' => false,
                 'choices' => $this->manufacturers,
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                    ])
+                ]
             ])
             ->add('last_name', TextType::class)
             ->add('first_name', TextType::class)
@@ -95,12 +109,14 @@ class AddressType extends AbstractType
             ])
             ->add('city', TextType::class)
             ->add('id_country', ChoiceType::class, [
-                'required' => false,
+                'required' => true,
                 'choices' => $this->countries,
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => false,
-                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $this->defaultCountryId]),
+                'choices' => $this->statesChoiceProvider->getChoices([
+                    'id_country' => $this->defaultCountryId
+                ]),
             ])
             ->add('home_phone', TextType::class, [
                 'required' => false,
