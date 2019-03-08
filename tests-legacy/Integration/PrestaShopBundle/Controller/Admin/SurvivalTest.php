@@ -77,6 +77,7 @@ class SurvivalTest extends WebTestCase
      */
     public function testPagesAreAvailable($pageName, $route)
     {
+        die('praejo');
         $this->logIn();
 
         $this->client->catchExceptions(false);
@@ -148,6 +149,8 @@ class SurvivalTest extends WebTestCase
             'admin_languages_create' => ['Add new language', 'admin_languages_create'],
             'admin_metas_index' => ['Meta', 'admin_metas_index'],
             'admin_metas_create' => ['Add new meta', 'admin_metas_create'],
+            'admin_employees_index' => ['Employees', 'admin_employees_index'],
+            'admin_employees_create' => ['Add new employee', 'admin_employees_create'],
         ];
     }
 
