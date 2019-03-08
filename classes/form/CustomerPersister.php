@@ -194,8 +194,8 @@ class CustomerPersisterCore
          */
         $customer_id = Customer::customerExists($customer->email, true, false);
 
-        if ($check) {
-            $customer = new Customer($check);
+        if ($customer_id) {
+            $customer = new Customer($customer_id);
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
 
