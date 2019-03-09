@@ -494,6 +494,10 @@ class SearchCore
                             $sql .= ', pa.upc AS pa_upc';
 
                             break;
+                        case 'pa_mpn':
+                            $sql .= ', pa.mpn AS pa_mpn';
+
+                            break;
                     }
                 }
             }
@@ -546,6 +550,10 @@ class SearchCore
                             break;
                         case 'upc':
                             $sql .= ', p.upc';
+
+                            break;
+                        case 'mpn':
+                            $sql .= ', p.mpn';
 
                             break;
                         case 'description_short':
@@ -679,6 +687,8 @@ class SearchCore
             'pa_ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'pa_upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'mpn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'pa_mpn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'description_short' => Configuration::get('PS_SEARCH_WEIGHT_SHORTDESC'),
             'description' => Configuration::get('PS_SEARCH_WEIGHT_DESC'),
             'cname' => Configuration::get('PS_SEARCH_WEIGHT_CNAME'),

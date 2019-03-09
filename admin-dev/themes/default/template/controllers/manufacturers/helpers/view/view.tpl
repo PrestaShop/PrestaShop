@@ -88,6 +88,7 @@
 							{if !empty($product->reference)}<th><span class="title_box">{l s='Ref:' d='Admin.Catalog.Feature'}</span> {$product->reference}</th>{/if}
 							{if !empty($product->ean13)}<th><span class="title_box">{l s='EAN13:' d='Admin.Catalog.Feature'}</span> {$product->ean13}</th>{/if}
 							{if !empty($product->upc)}<th><span class="title_box">{l s='UPC:' d='Admin.Catalog.Feature'}</span> {$product->upc}</th>{/if}
+							{if !empty($product->mpn)}<th><span class="title_box">{l s='MPN:' d='Admin.Catalog.Feature'}</span> {$product->mpn}</th>{/if}
 							{if $stock_management}<th><span class="title_box">{l s='Qty:' d='Admin.Catalog.Feature'}</span> {$product->quantity}</th>{/if}
 						</tr>
 					</thead>
@@ -120,6 +121,7 @@
 							<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='EAN13' d='Admin.Catalog.Feature'}</span></th>
 							<th><span class="title_box">{l s='UPC' d='Admin.Catalog.Feature'}</span></th>
+							<th><span class="title_box">{l s='MPN' d='Admin.Catalog.Feature'}</span></th>
 							{if $stock_management && $shopContext != Shop::CONTEXT_ALL}
 								<th><span class="title_box">{l s='Available quantity' d='Admin.Catalog.Feature'}</span></th>
 							{/if}
@@ -132,6 +134,7 @@
 							<td>{$product_attribute.reference}</td>
 							<td>{$product_attribute.ean13}</td>
 							<td>{$product_attribute.upc}</td>
+							<td>{$product_attribute.mpn}</td>
 							{if $stock_management && $shopContext != Shop::CONTEXT_ALL}
 								<td class="right">{$product_attribute.quantity}</td>
 							{/if}

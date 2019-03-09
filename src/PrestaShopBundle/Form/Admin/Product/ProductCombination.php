@@ -104,6 +104,14 @@ class ProductCombination extends CommonAbstractType
                 ],
                 'empty_data' => '',
             ])
+            ->add('attribute_mpn', TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('MPN', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Length(['max' => 32]),
+                ],
+                'empty_data' => '',
+            ])
             ->add('attribute_wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
