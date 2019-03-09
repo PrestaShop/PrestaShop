@@ -56,7 +56,7 @@ class ContainerParametersExtension implements ContainerBuilderExtensionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function build(ContainerBuilder $container)
     {

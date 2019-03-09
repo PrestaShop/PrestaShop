@@ -215,7 +215,9 @@ class ContainerBuilder
      * be done in a compiler pass because they are only executed on compilation and this needs to
      * be done at each container instanciation.
 
+     *
      * @param ContainerInterface $container
+     *
      * @throws \Exception
      */
     private function loadModulesAutoloader(ContainerInterface $container)
