@@ -702,6 +702,17 @@ class ValidateCore
     }
 
     /**
+     * Check for MPN validity.
+     *
+     * @param string $mpn to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isMpn($mpn)
+    {
+        return Tools::strlen($mpn) <= 32;
+    }
+    /**
      * Check for postal code validity.
      *
      * @param string $postcode Postal code to validate
