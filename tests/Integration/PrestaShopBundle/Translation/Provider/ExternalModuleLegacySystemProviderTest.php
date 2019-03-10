@@ -73,7 +73,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 
     public function testGetTranslationDomains()
     {
-        $this->assertSame(['#^ModulesSomeModule*#i'], $this->provider->getTranslationDomains());
+        $this->assertSame(['^ModulesSomeModule*'], $this->provider->getTranslationDomains());
     }
 
     public function testGetFilters()
