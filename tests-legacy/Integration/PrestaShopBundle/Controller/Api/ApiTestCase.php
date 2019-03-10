@@ -30,6 +30,7 @@ use Context;
 use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 // bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
@@ -187,6 +188,15 @@ abstract class ApiTestCase extends WebTestCase
         $shopMock->method('getCategory')->willReturn(1);
         $shopMock->method('getContextType')->willReturn(Shop::CONTEXT_SHOP);
         $shopMock->id = 1;
+
+        $themeMock = $this->getMockBuilder(Theme::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getName'])
+            ->getMock()
+        ;
+        $themeMock->method('getName')->willReturn('classic');
+
+        $shopMock->theme = $themeMock;
 
         $shopGroupMock = $this->getMockBuilder('\ShopGroup')->getMock();
 
