@@ -77,7 +77,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function getTranslationDomains()
     {
-        return ['#^' . $this->getModuleDomain() . '*#i'];
+        return ['^' . $this->getModuleDomain() . '*'];
     }
 
     /**

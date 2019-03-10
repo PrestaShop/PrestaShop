@@ -94,6 +94,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         }
 
         return array(
+            'theme' => $this->context->getContext()->shop->theme,
             'default_currency' => $defaultCurrency,
             'root_url' => $rootUrl,
             'js_translatable' => array(),
