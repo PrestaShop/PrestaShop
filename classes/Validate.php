@@ -682,6 +682,7 @@ class ValidateCore
     {
         return Tools::strlen($mpn) <= 32;
     }
+
     /**
      * Check for postal code validity.
      *
