@@ -68,14 +68,14 @@ class ThemeProvider extends AbstractProvider
     /**
      * Get domain.
      *
-     * @deprecated since 1.7.6, to be removed in 1.8.x
+     * @deprecated since 1.7.6, to be removed in the next major
      *
      * @return mixed
      */
     public function getDomain()
     {
         @trigger_error(
-            'getDomain function is deprecated and will be removed in 1.8.x',
+            'getDomain function is deprecated and will be removed in the next major',
             E_USER_DEPRECATED
         );
 
