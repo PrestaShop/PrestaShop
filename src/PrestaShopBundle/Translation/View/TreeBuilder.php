@@ -61,7 +61,7 @@ class TreeBuilder
          * @todo: refactor this part to use a Factory and hide provider specifics
          */
         $xliffCatalog = method_exists($provider, 'getLegacyCatalogue') ?
-            $provider->getDefaultCatalogue(false)->all() :
+            $provider->getLegacyCatalogue()->all() :
             $provider->getXliffCatalogue()->all()
         ;
 

@@ -167,17 +167,17 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
             $catalogueFromLegacyTranslationFiles = $this->legacyFileLoader->load(
                 $this->getDefaultResourceDirectory(),
                 $this->locale,
-                $this->domain
+                $this->getModuleDomain()
             );
 
-            foreach (array_keys($catalogueFromPhpAndSmartyFiles->all($this->domain)) as $translationKey) {
+            foreach (array_keys($catalogueFromPhpAndSmartyFiles->all($this->getModuleDomain())) as $translationKey) {
                 $legacyKey = md5($translationKey);
 
-                if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $this->domain)) {
+                if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $this->getModuleDomain())) {
                     $legacyFilesCatalogue->set(
                         $translationKey,
-                        $catalogueFromLegacyTranslationFiles->get($legacyKey, $this->domain),
-                        $this->domain
+                        $catalogueFromLegacyTranslationFiles->get($legacyKey, $this->getModuleDomain()),
+                        $this->getModuleDomain()
                     );
                 }
             }
