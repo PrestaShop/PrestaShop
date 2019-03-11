@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Translation\Provider;
  * Translation provider for a specific native module (maintained by the core team)
  * Used mainly for the display in the Translations Manager of the Back Office.
  */
-class ModuleProvider extends AbstractProvider implements SearchProviderInterface
+class ModuleProvider extends AbstractProvider implements SearchProviderInterface, UseModuleInterface
 {
     /**
      * @var string the module name
@@ -62,9 +62,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
     }
 
     /**
-     * @param string $moduleName the module name
-     *
-     * @return self
+     * {@inheritdoc}
      */
     public function setModuleName($moduleName)
     {

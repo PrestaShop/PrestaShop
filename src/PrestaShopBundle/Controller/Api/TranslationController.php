@@ -342,8 +342,6 @@ class TranslationController extends ApiController
      */
     private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null, $module = null)
     {
-        $selected = ('mails' === $type && 'subject' === $selected ? false : $selected);
-
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
         $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $this->getSelectedTheme(), $search, $module);
 

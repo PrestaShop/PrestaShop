@@ -57,37 +57,25 @@ class TreeBuilder
             $translations = $provider->getDefaultCatalogue()->all();
         }
 
-        /**
-         * @todo: refactor this part to use a Factory and hide provider specifics
-         */
-        $xliffCatalog = method_exists($provider, 'getLegacyCatalogue') ?
-            $provider->getLegacyCatalogue()->all() :
-            $provider->getXliffCatalogue()->all()
-        ;
-
+        $xliffCatalog = $provider->getXliffCatalogue()->all();
         $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme)->all();
 
         foreach ($translations as $domain => $messages) {
             $missingTranslations = 0;
             $domainDatabase = str_replace('.' . $provider->getLocale(), '', $domain);
 
-            foreach (array_keys($messages) as $translationKey) {
-                $data = [
-                    'xlf' => array_key_exists($domain, $xliffCatalog) &&
+            foreach ($messages as $translationKey => $translationValue) {
+                $data = array(
+                    'xlf' => (array_key_exists($domain, $xliffCatalog) &&
                     array_key_exists($translationKey, $xliffCatalog[$domain]) ?
-                        $xliffCatalog[$domain][$translationKey] : null,
-                    'db' => array_key_exists($domainDatabase, $databaseCatalogue) &&
+                        $xliffCatalog[$domain][$translationKey] : null),
+                    'db' => (array_key_exists($domainDatabase, $databaseCatalogue) &&
                     array_key_exists($translationKey, $databaseCatalogue[$domainDatabase]) ?
-                        $databaseCatalogue[$domainDatabase][$translationKey] : null,
-                ];
+                        $databaseCatalogue[$domainDatabase][$translationKey] : null),
+                );
 
                 // if search is empty or is in catalog default|xlf|database
-                if (
-                    empty($search) ||
-                    $this->dataContainsSearchWord(
-                        $search,
-                        array_merge(['default' => $translationKey], $data)
-                    )) {
+                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(array('default' => $translationKey), $data))) {
                     $translations[$domain][$translationKey] = $data;
 
                     if (
@@ -101,7 +89,7 @@ class TreeBuilder
                 }
             }
 
-            $translations[$domain]['__metadata'] = ['missing_translations' => $missingTranslations];
+            $translations[$domain]['__metadata'] = array('missing_translations' => $missingTranslations);
         }
 
         ksort($translations);

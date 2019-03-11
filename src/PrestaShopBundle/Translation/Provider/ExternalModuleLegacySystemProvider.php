@@ -36,7 +36,7 @@ use Exception;
 /**
  * Be able to retrieve information from legacy translation files
  */
-class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface
+class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface, UseModuleInterface
 {
     /**
      * @var SearchProviderInterface the module provider
@@ -129,9 +129,22 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         return $defaultCatalogue;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getXliffCatalogue()
     {
-        return new MessageCatalogue($this->locale);
+        try {
+            $xliffCatalogue = $this->moduleProvider
+                ->setModuleName($this->moduleName)
+                ->setLocale($this->locale)
+                ->getXliffCatalogue()
+            ;
+        } catch (Exception $exception) {
+            $xliffCatalogue = $this->getLegacyCatalogue();
+        }
+
+        return $xliffCatalogue;
     }
 
     /**
@@ -158,10 +171,10 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      *
      * @throws \Exception
      */
-    public function getLegacyCatalogue()
+    private function getLegacyCatalogue()
     {
         $legacyFilesCatalogue = new MessageCatalogue($this->locale);
-        $catalogueFromPhpAndSmartyFiles = $this->getDefaultCatalogue();
+        $catalogueFromPhpAndSmartyFiles = $this->getDefaultCatalogue(false);
 
         try {
             $catalogueFromLegacyTranslationFiles = $this->legacyFileLoader->load(
@@ -195,7 +208,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     {
         $messageCatalogue = $this->getDefaultCatalogue();
 
-        $legacyFileCatalogue = $this->getLegacyCatalogue($this->getDefaultResourceDirectory(), $this->locale);
+        $legacyFileCatalogue = $this->getLegacyCatalogue();
         $messageCatalogue->add($legacyFileCatalogue);
 
         $databaseCatalogue = $this->getDatabaseCatalogue();

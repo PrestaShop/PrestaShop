@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Service;
 use Exception;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
-use Symfony\Component\DependencyInjection\Container;
+use PrestaShopBundle\Translation\Provider\UseModuleInterface;
 use Symfony\Component\Validator\Validation;
 
 class TranslationService
@@ -155,44 +155,35 @@ class TranslationService
      */
     public function listDomainTranslation($locale, $domain, $theme = null, $search = null, $module = null)
     {
-        /*
-         * @todo: needs refacto to call the right provider according to the parameters
-         */
         if (!empty($theme) && 'classic' !== $theme) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
-        } elseif ($module !== null) {
-            $translationProvider = $this->container->get('prestashop.translation.external_module_provider');
-            $translationProvider->setModuleName($module);
         } else {
             $translationProvider = $this->container->get('prestashop.translation.search_provider');
+            if ($module !== null && $translationProvider instanceof UseModuleInterface) {
+                $translationProvider->setModuleName($module);
+            }
         }
-
         if ('Messages' === $domain) {
             $domain = 'messages';
         }
-
         $translationProvider->setDomain($domain);
         $translationProvider->setLocale($locale);
-
         $router = $this->container->get('router');
-        $domains = [
-            'info' => [
+        $domains = array(
+            'info' => array(
                 'edit_url' => $router->generate('api_translation_value_edit'),
                 'reset_url' => $router->generate('api_translation_value_reset'),
-            ],
-            'data' => [],
-        ];
+            ),
+            'data' => array(),
+        );
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
-
         if (!empty($theme) && 'classic' !== $theme) {
             $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
         } else {
             $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
         }
-
-        $xliffCatalog = method_exists($translationProvider, 'getLegacyCatalogue') ? $translationProvider->getLegacyCatalogue()->all($domain) : $translationProvider->getXliffCatalogue()->all();
-
+        $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
         if ('EmailsSubject' === $domain) {
             $theme = 'subject';
         }
@@ -205,7 +196,6 @@ class TranslationService
                 'database' => (array_key_exists($key, (array) $dbCatalog) ? $dbCatalog[$key] : null),
                 'tree_domain' => $treeDomain,
             );
-
             // if search is empty or is in catalog default|xlf|database
             if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
                 if (empty($data['xliff']) && empty($data['database'])) {
@@ -215,7 +205,6 @@ class TranslationService
                 }
             }
         }
-
         return $domains;
     }
 

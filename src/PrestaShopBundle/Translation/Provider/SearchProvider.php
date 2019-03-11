@@ -32,16 +32,22 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
  * Able to search translations for a specific translation domains across
  * multiple sources
  */
-class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface, UseModuleInterface
 {
     /**
      * @var string the "modules" directory path
      */
     private $modulesDirectory;
 
-    public function __construct(LoaderInterface $databaseLoader, $resourceDirectory, $modulesDirectory)
+    /**
+     * @var ExternalModuleLegacySystemProvider
+     */
+    private $externalModuleLegacySystemProvider;
+
+    public function __construct(LoaderInterface $databaseLoader, ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider, $resourceDirectory, $modulesDirectory)
     {
         $this->modulesDirectory = $modulesDirectory;
+        $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
 
         parent::__construct($databaseLoader, $resourceDirectory);
     }
@@ -95,6 +101,31 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 
+    public function getDefaultCatalogue($empty = true)
+    {
+        try {
+            $defaultCatalogue = parent::getDefaultCatalogue($empty);
+        } catch (\Exception $e) {
+            $defaultCatalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty);
+        }
+
+        return $defaultCatalogue;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getXliffCatalogue()
+    {
+        try  {
+            $xliffCatalogue = parent::getXliffCatalogue();
+        } catch (\Exception $e) {
+            $xliffCatalogue = $this->externalModuleLegacySystemProvider->getXliffCatalogue();
+        }
+
+        return $xliffCatalogue;
+    }
+
     /**
      * @deprecated since 1.7.6, to be removed in the next major
      *
@@ -108,5 +139,23 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
         );
 
         return $this->modulesDirectory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocale($locale)
+    {
+        $this->externalModuleLegacySystemProvider->setLocale($locale);
+
+        return parent::setLocale($locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setModuleName($moduleName)
+    {
+        $this->externalModuleLegacySystemProvider->setModuleName($moduleName);
     }
 }
