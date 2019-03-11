@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -16,29 +16,30 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Product\Search;
+namespace PrestaShop\PrestaShop\Core\Product\Search\Exception;
 
-/**
- * Will define the query to execute in order to retrieve the list of products.
- */
-interface ProductSearchProviderInterface
+use Exception;
+
+class InvalidSortOrderDirectionException extends Exception
 {
     /**
-     * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
-     *
-     * @return ProductSearchResult
+     * @param string $direction the invalid direction
      */
-    public function runQuery(
-        ProductSearchContext $context,
-        ProductSearchQuery $query
-    );
+    public function __construct($direction)
+    {
+        $message = sprintf(
+            'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',
+            $direction
+        );
+
+        parent::__construct($message, 0, null);
+    }
 }
