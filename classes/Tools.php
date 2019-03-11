@@ -809,7 +809,10 @@ class ToolsCore
 
         /** @var LocaleRepository $localeRepository */
         $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-        $locale = $localeRepository->getLocale((string) $context->language->locale);
+        $locale = !empty($context->language->locale) ?
+            $context->language->locale :
+            $context->language->language_code;
+        $locale = $localeRepository->getLocale($locale);
 
         return $locale;
     }
@@ -2540,6 +2543,9 @@ class ToolsCore
         }
 
         foreach ($domains as $domain => $list_uri) {
+            // As we use regex in the htaccess, ipv6 surrounded by brackets must be escaped
+            $domain = str_replace(['[', ']'], ['\[', '\]'], $domain);
+
             foreach ($list_uri as $uri) {
                 fwrite($write_fd, PHP_EOL . PHP_EOL . '#Domain: ' . $domain . PHP_EOL);
                 if (Shop::isFeatureActive()) {

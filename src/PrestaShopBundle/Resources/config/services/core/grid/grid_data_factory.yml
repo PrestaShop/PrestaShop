@@ -83,7 +83,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerGridDataFactoryDecorator'
         arguments:
             - '@prestashop.core.grid.data_provider.customer'
-            - '@prestashop.core.localization.cldr.repository'
+            - '@prestashop.core.cldr.repository'
             - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
 
     prestashop.core.grid.data.factory.language:

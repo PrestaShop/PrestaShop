@@ -318,3 +318,13 @@ services:
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.core.query_bus'
+
+    prestashop.admin.tax_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.tax_options.form_data_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
+            - 'Tax'

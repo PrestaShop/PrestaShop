@@ -82,3 +82,65 @@ table .column-filters td:last-child .grid-search-button,
 table .column-filters td:last-child .grid-reset-button {
   float: right;
 }
+
+.grid {
+  table.grid-table {
+    tbody {
+      tr {
+        $tr: &;
+
+        &:hover {
+          background: #fafbfc;
+        }
+
+        // styling for row that is being dragged
+        &.dragging-row {
+          background: #fafbfc;
+          cursor: move;
+
+          td {
+            background: #67868e;
+            color: white;
+            -webkit-transform: translate(5px, 10px);
+            transform: translate(5px, 10px);
+
+            // make all icons and links white
+            i.grid-toggler-icon-valid,
+            i.grid-toggler-icon-not-valid,
+            i.material-icons,
+            a,
+            a:after {
+              color: white;
+            }
+          }
+        }
+
+        // ---------------------------------
+        // Styling for specific column types
+        // ---------------------------------
+        td {
+          &.draggable-type {
+            .draggable-column {
+              color: transparent;
+              cursor: move;
+            }
+
+            @at-root {
+              #{$tr}:hover .draggable-column {
+                color: #15b7d7 !important;
+              }
+            }
+          }
+
+          &.action-type {
+            .dropdown-item:focus,
+            .dropdown-item:hover {
+              background-color: transparent;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -651,7 +651,7 @@
         {% set innerClasses = innerClasses ~ ' d-none' %}
       {% endif %}
       <div class="{{ innerClasses }}" style="flex-grow: 1;">
-        {{ form_widget(translateField) }}
+        {{ form_widget(translateField, {attr: {'data-lang-id': translateField.vars.name }}) }}
       </div>
     {% endfor %}
     {% if not hide_locales %}

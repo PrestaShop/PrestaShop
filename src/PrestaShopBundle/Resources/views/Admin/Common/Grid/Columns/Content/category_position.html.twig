@@ -23,22 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if grid.sorting.order_by == 'position' and grid.sorting.order_way == 'asc' %}
-  <div class="js-drag-handle js-{{ grid.id }}-position"
-       style="cursor: move;"
-       data-id="{{ record[column.options.id_field] }}"
-       data-id-parent="{{ record[column.options.id_parent_field] }}"
-       data-position="{{ record[column.options.field] }}"
-       data-position-update-url="{{ getAdminLink(column.options.update_route) }}"
-       data-pagination-offset="{{ grid.pagination.offset }}"
-  >
-    <i class="material-icons">swap_vert</i>
-    <span class="js-position">
+<div class="category-position-column">
+  {% if grid.sorting.order_by == 'position' and grid.sorting.order_way == 'asc' %}
+    <div class="js-drag-handle js-{{ grid.id }}-position text-center"
+         data-id="{{ record[column.options.id_field] }}"
+         data-id-parent="{{ record[column.options.id_parent_field] }}"
+         data-position="{{ record[column.options.field] }}"
+         data-position-update-url="{{ getAdminLink(column.options.update_route) }}"
+         data-pagination-offset="{{ grid.pagination.offset }}"
+    >
+    <span class="js-position position">
       {{ record[column.options.field] + 1 }}
     </span>
-  </div>
-{% else %}
-  <div class="text-center">
-    {{ record[column.options.field] + 1 }}
-  </div>
-{% endif %}
+    </div>
+  {% else %}
+    <div class="text-center">
+    <span class="position">
+      {{ record[column.options.field] + 1 }}
+    </span>
+    </div>
+  {% endif %}
+</div>

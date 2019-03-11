@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,26 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
+
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use TaxRulesGroup;
+
 /**
- * Copies name of category to link rewrite input.
+ * Provides tax rule group choices with tax rule name as key and id as value
  */
-export default class NameToLinkRewriteCopier {
-  constructor() {
-    ['category', 'root_category'].forEach((categoryType) => {
-      const $categoryForm = $(`form[name="${categoryType}"]`);
+final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        $rules = TaxRulesGroup::getTaxRulesGroupsForOptions();
 
-      if (0 ===  $categoryForm.length) {
-        return;
-      }
+        $choices = [];
+        foreach ($rules as $rule) {
+            $choices[$rule['name']] = $rule['id_tax_rules_group'];
+        }
 
-      $categoryForm.on('input', `input[name^="${categoryType}[name]"]`, (event) => {
-        const $nameInput = $(event.currentTarget);
-        const langId = $nameInput.closest('.js-locale-input').data('lang-id');
-
-        $categoryForm
-          .find(`input[name="${categoryType}[link_rewrite][${langId}]"]`)
-          .val(str2url($nameInput.val(), 'UTF-8'));
-      });
-    });
-  }
+        return $choices;
+    }
 }

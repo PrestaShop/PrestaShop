@@ -232,3 +232,15 @@ UPDATE `PREFIX_access_old` ao SET `id_tab` = (
 DROP TABLE IF EXISTS `PREFIX_access_old`;
 DROP TABLE IF EXISTS `PREFIX_module_access_old`;
 DROP TABLE IF EXISTS `PREFIX_tab_transit`;
+
+/* Inserts PS_DELIVERY_PREFIX in the languages config table when key is not already in table */
+INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`) VALUES
+(
+    SELECT
+        `id_configuration`,
+        (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_LANG_DEFAULT'),
+        `value`
+    FROM `PREFIX_configuration` c WHERE `name` = 'PS_DELIVERY_PREFIX'
+    AND NOT EXISTS (SELECT 1 FROM `PREFIX_configuration_lang` WHERE `id_configuration` = c.`id_configuration`)
+);
+
