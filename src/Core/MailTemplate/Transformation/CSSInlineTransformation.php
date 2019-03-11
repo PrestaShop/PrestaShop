@@ -51,6 +51,10 @@ class CSSInlineTransformation extends AbstractTransformation
      */
     public function apply($templateContent, array $templateVariables)
     {
+        if (MailTemplateInterface::HTML_TYPE != $this->type) {
+            return $templateContent;
+        }
+
         /**
          * For unknown reason Emogrifier modifies href attribute with variables written
          * like this {shop_url} so we temporarily change them to @shop_url@

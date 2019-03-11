@@ -1,0 +1,11 @@
+admin_mail_layout_preview:
+  path: /preview/{theme}/{layout}.{type}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\MailLayout:preview
+
+admin_mail_layout_raw:
+  path: /raw/{theme}/{layout}.{type}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\MailLayout:raw
