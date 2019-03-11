@@ -17,7 +17,6 @@ function devConfig() {
       },
     }
   );
-
   return dev;
 }
 
