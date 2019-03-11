@@ -34,7 +34,6 @@ module.exports = {
         }
         await client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 1));
       });
-
       /**
        * This scenario is based on the bug described in this ticket
        * https://github.com/PrestaShop/PrestaShop/issues/12387
@@ -43,14 +42,11 @@ module.exports = {
         return promise
           .then(() => client.waitForVisible(Stock.success_hidden_panel))
           .then(() => {
-            if (productRef) {
-              client.checkTextValue(Stock.success_hidden_panel, productRef + ': Stock successfully updated', 'contain');
-            } else {
-              client.checkTextValue(Stock.success_hidden_panel, 'Stock successfully updated', 'contain');
-            }
+            client.checkTextValue(Stock.success_hidden_panel, 'Stock successfully updated', 'contain');
           });
       });
     }
+
   },
   changeStockQuantityWithKeyboard: function (client, Stock, orderProduct, itemNumber, saveBtn = '') {
     test('should change quantity to "-5" using the keyboard', async () => {
@@ -97,14 +93,14 @@ module.exports = {
         await client.waitForExistAndClick(Movement.advanced_filters_button, 2000);
       });
       test('should sort the movement by date', async () => {
-        await client.isVisible(Movement.sort_desc_data_time_icon, 2000);
+        await client.isVisible(Movement.sort_data_time_icon_desc, 2000);
         if (!global.isVisible) {
           await client.waitForExistAndClick(Movement.sort_data_time_icon_asc, 2000);
-          await client.waitForExistAndClick(Movement.sort_desc_data_time_icon, 2000);
+          await client.waitForExistAndClick(Movement.sort_data_time_icon_desc, 2000);
           await client.pause(4000);
         }
         else {
-          await client.waitForExistAndClick(Movement.sort_desc_data_time_icon, 2000);
+          await client.waitForExistAndClick(Movement.sort_data_time_icon_desc, 2000);
           await client.waitForExistAndClick(Movement.sort_data_time_icon_asc, 2000);
           await client.pause(4000);
         }

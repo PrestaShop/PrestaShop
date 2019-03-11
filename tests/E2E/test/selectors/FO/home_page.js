@@ -13,5 +13,6 @@ module.exports = {
     store_information_block: '//*[@id="footer"]/div[2]/div/div[1]/div[3]',
     search_input: '//*[@id="search_widget"]//input[2]',
     search_icon: '//*[@id="search_widget"]//i',
+    your_account_link:'//*[@id="block_myaccount_infos"]/p/a'
   }
 };

@@ -159,3 +159,15 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PermissionsChoiceProvider'
     arguments:
       - '@translator'
+
+  prestashop.core.form.choice_provider.default_meta_page_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DefaultMetaPageNameChoiceProvider'
+    arguments:
+      - '@request_stack'
+      - '@prestashop.adapter.meta.data_provider'
+
+  prestashop.core.form.choice_provider.module_meta_page_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleMetaPageNameChoiceProvider'
+    arguments:
+      - '@request_stack'
+      - '@prestashop.adapter.meta.data_provider'
