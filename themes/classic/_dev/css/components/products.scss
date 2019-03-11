@@ -495,8 +495,9 @@ li.product-flag {
     z-index: 2;
     @include box-shadow-light;
     &.online-only{
-      top: 25rem;
-      right: 0;
+      top: 21.3rem;
+      right: -.7rem;
+      z-index: 1;
       font-size: $font-size-xs;
       &::before{
         content:"\E30A";

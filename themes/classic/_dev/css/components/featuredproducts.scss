@@ -85,7 +85,7 @@ $product-description-height: 70px;
     position: absolute;
     bottom: 1.25rem;
     padding-top: 0.625rem;
-    z-index: 0;
+    z-index: 2;
     background: white;
     text-align: center;
     width: $thumbnail-size;
@@ -103,7 +103,7 @@ $product-description-height: 70px;
 
   .product-description {
     position: absolute;
-    z-index: 1;
+    z-index: 3;
     background: white;
     width: $thumbnail-size;
     bottom: 0;
