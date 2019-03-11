@@ -34,7 +34,7 @@
 
 use ToolsCore as Tools;
 
-@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated. Use a controller instead.', E_USER_DEPRECATED);
+@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
 
 require_once dirname(__FILE__) . '/../classes/Tools.php';
 
@@ -116,14 +116,15 @@ elseif (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
 }
 
 if (1 === Tools::getValue('ajax')) {
-    require_once dirname(__FILE__).'/index.php';
+    require_once __DIR__ . '/index.php';
+    return;
 }
 
 /**
  * From this line, the code could not be moved outside this file. It still requires the core to work.
  */
 
-require_once dirname(__FILE__).'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 $context = Context::getContext();
 
@@ -134,7 +135,7 @@ if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.co
 
 /**
  * Import controller: Fields available for a given entity
- * -> Moved in Symfony
+ * -> Duplicated in Symfony
  */
 elseif (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
@@ -149,7 +150,7 @@ elseif (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
  * List notifications for an employee
  * i.e: recent orders, new customers...
  *
- * -> Duplicated (NOT MOVED) in Symfony
+ * -> Duplicated in Symfony
  */
 elseif (Tools::isSubmit('getNotifications')) {
     $notification = new Notification;
@@ -159,9 +160,9 @@ elseif (Tools::isSubmit('getNotifications')) {
 /**
  * Updates the last time a notification has been seen
  *
- * -> Duplicated (NOT MOVED) in Symfony
+ * -> Duplicated in Symfony
  */
 elseif (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
-    $notification = new Notification;
+    $notification = new Notification();
     echo $notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType'));
 }

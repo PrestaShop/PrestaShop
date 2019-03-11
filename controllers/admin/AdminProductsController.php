@@ -3329,11 +3329,11 @@ class AdminProductsControllerCore extends AdminController
             }
 
             if (!$forceJson) {
-                $this->ajaxRender(implode(PHP_EOL, $results));
-            } else {
-                $this->ajaxRender(json_encode($results));
+                return $this->ajaxRender(implode(PHP_EOL, $results));
             }
-        } elseif ($items) {
+            return $this->ajaxRender(json_encode($results));
+        }
+        if ($items) {
             // packs
             $results = array();
             foreach ($items as $item) {
@@ -3386,9 +3386,8 @@ class AdminProductsControllerCore extends AdminController
                     );
                 }
             }
-            $this->ajaxRender(json_encode(array_values($results)));
-        } else {
-            $this->ajaxRender(json_encode([]));
+            return $this->ajaxRender(json_encode(array_values($results)));
         }
+        return $this->ajaxRender(json_encode([]));
     }
 }
