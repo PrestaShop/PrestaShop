@@ -27,18 +27,15 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use Currency;
-use Exception;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * This class will provide data from DB / ORM about Currency.
  */
-class CurrencyDataProvider implements CurrencyDataProviderInterface
+class CurrencyDataProvider
 {
     /**
-     * @var ConfigurationInterface
+     * @var \PrestaShop\PrestaShop\Adapter\Configuration
      */
     private $configuration;
 
@@ -47,10 +44,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     private $shopId;
 
-    /** @var Currency */
-    private $defaultCurrency;
-
-    public function __construct(ConfigurationInterface $configuration, $shopId)
+    public function __construct(Configuration $configuration, $shopId)
     {
         $this->configuration = $configuration;
         $this->shopId = $shopId;
@@ -155,20 +149,8 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getDefaultCurrencyIsoCode()
     {
-        return $this->getDefaultCurrency()->iso_code;
-    }
+        $defaultCurrencyId = $this->configuration->get('PS_CURRENCY_DEFAULT');
 
-    /**
-     * Returns default Currency set in Configuration
-     *
-     * @return Currency
-     */
-    public function getDefaultCurrency()
-    {
-        if (null === $this->defaultCurrency) {
-            $this->defaultCurrency = new Currency((int) $this->configuration->get('PS_CURRENCY_DEFAULT'), null, $this->shopId);
-        }
-
-        return $this->defaultCurrency;
+        return (new Currency($defaultCurrencyId, null, $this->shopId))->iso_code;
     }
 }

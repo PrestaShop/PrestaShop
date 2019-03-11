@@ -20,10 +20,6 @@ let contactData = {
   message: 'Test send message'
 };
 
-/**
- * This script should be moved to the campaign full when this issue will be fixed
- * https://github.com/PrestaShop/PrestaShop/issues/9646
- **/
 scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
   scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());

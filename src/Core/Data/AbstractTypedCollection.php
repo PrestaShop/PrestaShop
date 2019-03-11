@@ -163,7 +163,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
         if (!($element instanceof $expectedType)) {
             throw new TypeException(sprintf(
                 'Invalid element type %s, expected %s',
-                is_object($element) ? get_class($element) : gettype($element),
+                get_class($element),
                 $expectedType
             ));
         }

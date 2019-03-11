@@ -98,7 +98,6 @@ class ContextMocker
         Customer::resetAddressCache();
         Address::resetStaticCache();
         ObjectModel::resetStaticCache();
-        Tools::resetStaticCache();
 
         $this->contextBackup = Context::getContext();
         $context             = clone $this->contextBackup;

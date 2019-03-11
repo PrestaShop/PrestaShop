@@ -39,7 +39,7 @@ scenario('Generate a PDF by date', () => {
       test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
     }, 'order');
     scenario('Get all Order information', client => {
-      test('should go to "Order settings" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
+      test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       for (let i = 1; i <= 2; i++) {
         test('should go the order n°' + i, () => client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i)));
         test('should change order state to "payment accepted"', () => client.changeOrderState(OrderPage, 'Payment accepted'));

@@ -18,16 +18,7 @@ scenario('Check the addons theme in the Back Office', () => {
   }, 'common_client');
   welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Check the addons theme', client => {
-    test('should go to "Theme & logo" page', () => {
-      return promise
-        .then(() => client.waitForVisibleAndClick(Menu.Improve.Design.design_menu, 1000))
-        .then(() => client.waitForExistAndClick(Menu.Improve.Design.theme_logo_submenu, 1000));
-    });
-    test('should check then close the "Symfony" toolbar', () => {
-      return promise
-        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
-        .then(() => client.pause(1000));
-    });
+    test('should go to "Theme catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.theme_catalog_submenu));
     test('should click on "Discover all of the themes" button', () => client.waitForExistAndClick(ThemeCatalog.discover_all_of_the_theme_button, 1000));
     test('should check that the page is well opened', () => {
       return promise

@@ -64,7 +64,7 @@ scenario('Create "Product"', () => {
         return promise
           .then(() => client.waitForExistAndClick(AddProductPage.pricing_tax_rule_select))
           .then(() => client.waitAndSetValue(AddProductPage.pricing_tax_rule_input, taxData.name + date_time))
-          .then(() => client.waitForExistAndClick(AddProductPage.pricing_tax_rule_option.replace('%T', '23%')));
+          .then(() => client.waitForExistAndClick(AddProductPage.pricing_tax_rule_option));
       });
       test('should click on "Add specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
       test('should set the "Starting at" input', () => client.waitAndSetValue(AddProductPage.specific_price_starting_at_input, productData.pricing[0].starting_at, 3000));

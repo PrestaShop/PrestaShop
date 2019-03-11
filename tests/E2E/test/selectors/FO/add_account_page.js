@@ -63,7 +63,6 @@ module.exports = {
     city_input: '//*[@id="content"]//input[@name="city"]',
     phone_input: '//*[@id="content"]//input[@name="phone"]',
     date_birthday_input: '//*[@id="content"]//input[@name="birthday"]',
-    personal_information_tab: '//*[@id="checkout-personal-information-step"]/h1',
-    address_country_list: '//*[@id="content"]//select[@name="id_country"]',
+    personal_information_tab: '//*[@id="checkout-personal-information-step"]/h1'
   }
 };

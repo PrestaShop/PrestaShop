@@ -128,7 +128,6 @@ php-cs-fixer
 translations/*
 mails/*
 !mails/en/
-!mails/themes/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
 themes/default-bootstrap/mails/*

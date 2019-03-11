@@ -48,6 +48,30 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
+     * @var string
+     */
+    private $resetActionUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectionUrl;
+
+    /**
+     * MetaGridDefinitionFactory constructor.
+     *
+     * @param string $resetActionUrl
+     * @param string $redirectionUrl
+     */
+    public function __construct(
+        $resetActionUrl,
+        $redirectionUrl
+    ) {
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectionUrl = $redirectionUrl;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getId()
@@ -173,14 +197,12 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                    ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search',
-                        'reset_route_params' => [
-                            'controller' => 'meta',
-                            'action' => 'index',
-                        ],
-                        'redirect_route' => 'admin_metas_index',
-                    ])
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectionUrl,
+                    ],
+                ])
                 ->setAssociatedColumn('actions')
             );
     }

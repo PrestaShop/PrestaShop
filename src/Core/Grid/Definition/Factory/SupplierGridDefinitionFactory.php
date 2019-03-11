@@ -57,7 +57,7 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'supplier';
+        return 'suppliers';
     }
 
     /**

@@ -27,6 +27,7 @@
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
 {% block content %}
+  {% set isGridDisplayed = not (isShopFeatureActive and not isShopContext) %}
   <div class="row">
     <div class="col-sm">
       {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig' %}
@@ -54,19 +55,19 @@
       <div class="col">
         {{ form_start(metaForm, {'action': path('admin_metas_save_options')}) }}
 
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/domain_name_management.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/url_schema_configuration.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/seo_options_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/domain_name_management.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/url_schema_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/seo_options_configuration.html.twig' %}
 
-          {% block meta_form_rest %}
-            {{ form_rest(metaForm) }}
-          {% endblock %}
+        {% block meta_form_rest %}
+          {{ form_rest(metaForm) }}
+        {% endblock %}
 
         {{ form_end(metaForm) }}
 
-        {{ form_start(robotsForm, {'action': path('admin_metas_generate_robots_text_file')}) }}
+        {{ form_start(robotsForm, {'action': path('admin_metas_generate_robots_file')}) }}
           {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig' %}
           {{ form_rest(robotsForm) }}
         {{ form_end(robotsForm) }}

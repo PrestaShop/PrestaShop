@@ -48,14 +48,14 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
         arguments: ['%kernel.root_dir%/config/parameters.php']
 
+    prestashop.adapter.legacy.configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration
+
     prestashop.adapter.legacy.kpi_configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
 
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
-        arguments:
-            - "%mail_themes_uri%"
-            - '@prestashop.adapter.tools'
 
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger

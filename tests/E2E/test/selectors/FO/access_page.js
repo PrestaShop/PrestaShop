@@ -22,6 +22,7 @@ module.exports = {
     create_account_button: '//*[@id="content"]/div[contains(@class,"no-account")]/a',
     page_category: '//*[@id="wrapper"]//a/span[contains(text(),"%CATEGORY")]',
     review_page_link: '//*[@id="content"]//a[contains(text(),"%PAGENAME")]',
+    not_found_erreur_message: '//*[@id="main"]//h1',
     footer_block: '//*[@id="footer"]//p[contains(text(),"%FOOTERBLOCKNAME")]',
     second_footer_block: '//*[@id="footer"]//div[@class="col-md-6 wrapper"][2]/p',
     footer_block_link_widget: '//*[@class="footer-container"]//p[contains(text(),"%FOOTERBLOCKNAME")]',
@@ -56,7 +57,6 @@ module.exports = {
     selected_language_by_isocode_option: '//*[@id="_desktop_language_selector"]//select/option[@selected="selected" and @data-iso-code="%ID"]',
     language_bloc: '//*[@id="_desktop_language_selector"]',
     popular_products_block:'//*[@id="content-hook-order-confirmation-footer"]/section',
-    category_title:'//*[@id="js-product-list-header"]//h1',
-    product_name_title: '//*[@id="main"]//h1',
+    category_title:'//*[@id="js-product-list-header"]//h1'
   }
 };

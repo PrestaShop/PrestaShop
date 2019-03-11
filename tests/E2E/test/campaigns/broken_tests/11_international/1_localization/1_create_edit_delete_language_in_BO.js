@@ -51,10 +51,6 @@ let languageData = [{
   status: 'off'
 }];
 
-/**
- * This script should be moved to the campaign full when this issue will be fixed
- * https://github.com/PrestaShop/PrestaShop/issues/9719
- **/
 scenario('Create, edit, delete and check "Languages" in the Back Office', () => {
   scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());

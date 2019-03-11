@@ -28,13 +28,12 @@ namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\LangRepository")
  */
-class Lang implements LanguageInterface
+class Lang
 {
     /**
      * @var int
@@ -299,14 +298,6 @@ class Lang implements LanguageInterface
     public function getIsRtl()
     {
         return $this->isRtl;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isRTL()
-    {
-        return $this->getIsRtl();
     }
 
     /**

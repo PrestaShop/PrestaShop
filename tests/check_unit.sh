@@ -4,8 +4,8 @@ composer run-script unit-tests --timeout=0;
 UNIT=$?
 
 if [[ "$UNIT" == "0" ]]; then
-  echo -e "\e[92mUNIT TESTS OK\e[0m"
+  echo -e "\e[UNIT TESTS OK"
 else
-  echo -e "\e[91mUNIT TESTS FAILED\e[0m"
+  echo -e "\e[91mUNIT TESTS FAILED"
 fi
 exit $UNIT;

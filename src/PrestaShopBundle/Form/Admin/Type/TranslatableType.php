@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -77,8 +76,6 @@ class TranslatableType extends AbstractType
         $view->vars['locales'] = $options['locales'];
         $view->vars['default_locale'] = reset($options['locales']);
         $view->vars['hide_locales'] = 1 >= count($options['locales']);
-
-        $this->setErrorsByLocale($view, $form, $options['locales']);
     }
 
     /**
@@ -95,7 +92,6 @@ class TranslatableType extends AbstractType
         $resolver->setAllowedTypes('locales', 'array');
         $resolver->setAllowedTypes('options', 'array');
         $resolver->setAllowedTypes('type', 'string');
-        $resolver->setAllowedTypes('error_bubbling', 'bool');
     }
 
     /**
@@ -104,145 +100,5 @@ class TranslatableType extends AbstractType
     public function getBlockPrefix()
     {
         return 'translatable';
-    }
-
-    /**
-     * If there are more then one locale it gets nested errors and if found prepares the errors for usage in twig.
-     * If there are only one error which is not assigned to the default language then the error is being localised.
-     *
-     * @param FormView $view
-     * @param FormInterface $form
-     * @param array $locales
-     */
-    private function setErrorsByLocale(FormView $view, FormInterface $form, array $locales)
-    {
-        if (count($locales) <= 1) {
-            return;
-        }
-
-        $formErrors = $form->getErrors(true);
-
-        if (empty($formErrors)) {
-            return;
-        }
-
-        if (1 === count($formErrors)) {
-            $errorByLocale = $this->getSingleTranslatableErrorExcludingDefaultLocale(
-                $formErrors,
-                $form,
-                $locales
-            );
-
-            if (null !== $errorByLocale) {
-                $view->vars['error_by_locale'] = $errorByLocale;
-            }
-
-            return;
-        }
-
-        $errorsByLocale = $this->getTranslatableErrors(
-            $formErrors,
-            $form,
-            $locales
-        );
-
-        if (null !== $errorsByLocale) {
-            $view->vars['errors_by_locale'] = $errorsByLocale;
-        }
-    }
-
-    /**
-     * Gets single error excluding the default locales error since for default locale a language name prefix is not
-     * required.
-     *
-     * @param FormErrorIterator $formErrors
-     * @param FormInterface $form
-     * @param array $locales
-     *
-     * @return array|null
-     */
-    private function getSingleTranslatableErrorExcludingDefaultLocale(
-        FormErrorIterator $formErrors,
-        FormInterface $form,
-        array $locales
-    ) {
-        $errorByLocale = null;
-        $formError = $formErrors[0];
-        $nonDefaultLanguageFormKey = null;
-        $iteration = 0;
-
-        foreach ($form as $formItem) {
-            if (0 === $iteration) {
-                ++$iteration;
-
-                continue;
-            }
-
-            if ($this->doesErrorFormAndCurrentFormMatches($formError->getOrigin(), $formItem)) {
-                $nonDefaultLanguageFormKey = $iteration;
-
-                break;
-            }
-
-            ++$iteration;
-        }
-
-        if (isset($locales[$nonDefaultLanguageFormKey])) {
-            $errorByLocale = [
-                'locale_name' => $locales[$nonDefaultLanguageFormKey]['name'],
-                'error_message' => $formError->getMessage(),
-            ];
-        }
-
-        return $errorByLocale;
-    }
-
-    /**
-     * Gets translatable errors ready for popover display and assigned to each language
-     *
-     * @param FormErrorIterator $formErrors
-     * @param FormInterface $form
-     * @param array $locales
-     *
-     * @return array|null
-     */
-    private function getTranslatableErrors(
-        FormErrorIterator $formErrors,
-        FormInterface $form,
-        array $locales
-    ) {
-        $errorsByLocale = null;
-        $iteration = 0;
-        foreach ($form as $formItem) {
-            $doesLocaleExistForInvalidForm = isset($locales[$iteration]) && !$formItem->isValid();
-
-            if ($doesLocaleExistForInvalidForm) {
-                foreach ($formErrors as $formError) {
-                    if ($this->doesErrorFormAndCurrentFormMatches($formError->getOrigin(), $formItem)) {
-                        $errorsByLocale[$locales[$iteration]['iso_code']] = [
-                            'locale_name' => $locales[$iteration]['name'],
-                            'error_message' => $formError->getMessage(),
-                        ];
-                    }
-                }
-            }
-
-            ++$iteration;
-        }
-
-        return $errorsByLocale;
-    }
-
-    /**
-     * Determines if the error form matches the given form. Used for mapping the locales for the form fields.
-     *
-     * @param FormInterface $errorForm
-     * @param FormInterface $currentForm
-     *
-     * @return bool
-     */
-    private function doesErrorFormAndCurrentFormMatches(FormInterface $errorForm, FormInterface $currentForm)
-    {
-        return $errorForm === $currentForm;
     }
 }

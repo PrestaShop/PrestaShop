@@ -375,8 +375,8 @@ class CommonClient {
     return this.client.waitAndSelectByAttribute(selector, attribute, value, pause, timeout);
   }
 
-  switchWindow(id, pause = 0) {
-    return this.client.switchWindow(id, pause);
+  switchWindow(id) {
+    return this.client.switchWindow(id);
   }
 
   switchTab(id) {
@@ -780,40 +780,6 @@ class CommonClient {
         }
       });
   }
-
-  closeOtherWindow(id) {
-    return this.client.close(id);
-  }
-
-  checkIsVisible(selector) {
-    return this.client
-      .pause(2000)
-      .isVisible(selector)
-      .then((isVisible) => expect(isVisible).to.be.true);
-  }
-
-  checkCheckboxStatus(selector, checkedValue) {
-    return this.client
-      .pause(2000)
-      .execute(function (selector) {
-        return (document.querySelector(selector).checked);
-      }, selector)
-      .then((status) => {
-        expect(status.value).to.equal(checkedValue)
-      });
-  }
-
-  getOptionNumber(selector, attribute, value, wait = 0) {
-    return this.client
-      .pause(wait)
-      .execute(function (selector, attribute) {
-        return document.getElementById(selector).getElementsByTagName(attribute).length;
-      }, selector, attribute)
-      .then((count) => {
-        global.tab[value] = count.value;
-      });
-  }
-
 }
 
 module.exports = CommonClient;

@@ -551,16 +551,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.shop.traffic_seo.meta:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
-        arguments:
-            - '@=service("prestashop.core.form.choice_provider.default_meta_page_name").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.module_meta_page_name").getChoices()'
-        calls:
-          - { method: setTranslator, arguments: ['@translator'] }
-        tags:
-            - { name: form.type }
-
     form.type.catalog.abstract_category:
         class: 'PrestaShopBundle\Form\Admin\Catalog\Category\AbstractCategoryType'
         abstract: true

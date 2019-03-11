@@ -95,7 +95,6 @@ module.exports = {
     view_delivery_slip: '//*[@id="content"]//div[contains(@class, "hidden-print")]/a[contains(@href, "generateDeliverySlipPDF")]',
     date_delivery_slip:'//*[@id="documents_table"]//tr[3]/td[1]',
     page_title:'//*[@id="content"]//h1[@class="page-title"]',
-    id_order:'//*[@id="table-order"]//tr[1]/td[2]',
   },
 
   CreateOrder: {

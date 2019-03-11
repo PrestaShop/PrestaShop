@@ -27,72 +27,23 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
-use PrestaShopBundle\Entity\Lang;
 
-class LangRepository extends EntityRepository implements LanguageRepositoryInterface
+class LangRepository extends EntityRepository
 {
-    const ISO_CODE = 'isoCode';
-    const LOCALE = 'locale';
-
     /**
-     * Stores language instances in different arrays to match them quickly
-     * via a criteria and avoid multiple database queries.
+     * @param $isoCode
      *
-     * @var array
-     */
-    private $matches = [
-        self::ISO_CODE => [],
-        self::LOCALE => [],
-    ];
-
-    /**
-     * @param string $isoCode
-     *
-     * @return string
+     * @return array
      */
     public function getLocaleByIsoCode($isoCode)
     {
-        $language = $this->searchLanguage(self::ISO_CODE, $isoCode);
+        static $isoCodes = array();
 
-        return $language->getLocale();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByLocale($locale)
-    {
-        return $this->searchLanguage(self::LOCALE, $locale);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByIsoCode($isoCode)
-    {
-        return $this->searchLanguage(self::ISO_CODE, $isoCode);
-    }
-
-    /**
-     * @param string $key
-     * @param string $value
-     *
-     * @return Lang
-     */
-    private function searchLanguage($key, $value)
-    {
-        if (isset($this->matches[$key][$value])) {
-            return $this->matches[$key][$value];
+        if (!array_key_exists($isoCode, $isoCodes)) {
+            return $isoCodes[$isoCode] = $this->findOneBy(array('isoCode' => $isoCode))
+                ->getLocale();
         }
 
-        /** @var Lang $language */
-        $language = $this->findOneBy([$key => $value]);
-        if ($language) {
-            $this->matches[self::ISO_CODE][$language->getIsoCode()] = $language;
-            $this->matches[self::LOCALE][$language->getLocale()] = $language;
-        }
-
-        return $language;
+        return $isoCodes[$isoCode];
     }
 }

@@ -23,21 +23,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
-import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import ShowcaseCard from '../../components/showcase-card/showcase-card';
-import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
-import TaggableField from '../../components/taggable-field';
-import TranslatableInput from '../../components/translatable-input';
-import MetaPageNameOptionHandler from './meta-page-name-option-handler';
+import Grid from "../../components/grid/grid";
+import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
+import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
+import LinkRowActionExtension from "../../components/grid/extension/link-row-action-extension";
+import SubmitGridExtension from "../../components/grid/extension/submit-grid-action-extension";
+import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
+import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
+import ShowcaseCard from "../../components/showcase-card/showcase-card";
+import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
 
 const $ = window.$;
 
@@ -55,14 +52,4 @@ $(() => {
 
   const helperBlock = new ShowcaseCard('seo-urls-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
-
-  new TaggableField({
-    tokenFieldSelector: 'input.js-taggable-field',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
-
-  new TranslatableInput();
-  new MetaPageNameOptionHandler();
 });

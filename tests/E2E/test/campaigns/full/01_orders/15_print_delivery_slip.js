@@ -53,7 +53,7 @@ scenario('Print the delivery slips of an order', () => {
         await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName)
       }
     });
-    test('should check that the "delivery slip customer" is : John DOE', async () => {
+    test('should check that the "delivery slip customer" is : Johan DOE', async () => {
       await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + '.pdf');
       if (global.existingFile) {
         await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
@@ -71,6 +71,7 @@ scenario('Print the delivery slips of an order', () => {
     test('should check the "delivery slips information"', async () => {
       await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + '.pdf');
       if (global.existingFile) {
+        await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName);
         await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.tab['date_delivery_slip']);
         await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].OrderRef);
         await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].Method);

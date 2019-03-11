@@ -27,13 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 use PrestaShop\PrestaShop\Core\Localization\Currency;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataRepositoryInterface as CurrencyDataRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Localization\Currency\DataSourceInterface as CurrencyDataSourceInterface;
 
 /**
  * Currency repository class.
  *
- * Used to get Localization/Currency instances (by currency code for example)
+ * Used to get Currency instances (by currency code for example)
  */
 class Repository implements CurrencyRepositoryInterface
 {
@@ -46,33 +46,31 @@ class Repository implements CurrencyRepositoryInterface
     protected $currencies;
 
     /**
-     * @var CurrencyDataSourceInterface
+     * @var CurrencyDataRepositoryInterface
      */
-    protected $dataSource;
+    protected $dataRepository;
 
-    public function __construct(CurrencyDataSourceInterface $dataSource)
+    public function __construct(CurrencyDataRepositoryInterface $dataRepository)
     {
-        $this->dataSource = $dataSource;
+        $this->dataRepository = $dataRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCurrency($currencyCode, $localeCode)
+    public function getCurrency($currencyCode)
     {
         if (!isset($this->currencies[$currencyCode])) {
-            $data = $this->dataSource->getLocalizedCurrencyData(
-                new LocalizedCurrencyId($currencyCode, $localeCode)
-            );
+            $data = $this->dataRepository->getDataByCurrencyCode($currencyCode);
 
             $this->currencies[$currencyCode] = new Currency(
-                $data->isActive(),
-                $data->getConversionRate(),
-                $data->getIsoCode(),
-                $data->getNumericIsoCode(),
-                $data->getSymbols(),
-                $data->getPrecision(),
-                $data->getNames()
+                $data['isActive'],
+                $data['conversionRate'],
+                $data['isoCode'],
+                $data['numericIsoCode'],
+                $data['symbols'],
+                $data['precision'],
+                $data['names']
             );
         }
 
@@ -80,31 +78,10 @@ class Repository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Get all the available currencies (installed + active).
-     *
-     * @param string $localeCode
-     *                           IETF tag. Data will be translated in this language
-     *
      * @return CurrencyCollection
-     *                            The available currencies
      */
-    public function getAvailableCurrencies($localeCode)
+    public function getInstalledCurrencies()
     {
-        $currencies = new CurrencyCollection();
-        $currenciesData = $this->dataSource->getAvailableCurrenciesData($localeCode);
-
-        foreach ($currenciesData as $currencyDatum) {
-            $currencies->add(new Currency(
-                $currencyDatum->isActive(),
-                $currencyDatum->getConversionRate(),
-                $currencyDatum->getIsoCode(),
-                $currencyDatum->getNumericIsoCode(),
-                $currencyDatum->getSymbols(),
-                $currencyDatum->getPrecision(),
-                $currencyDatum->getNames()
-            ));
-        }
-
-        return $currencies;
+        // TODO : implement this method
     }
 }

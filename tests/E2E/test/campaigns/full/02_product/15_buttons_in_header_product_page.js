@@ -56,7 +56,7 @@ scenario('Check that the buttons in header product page works successfully', () 
     test('should change the product type to "Virtual"', () => client.waitAndSelectByValue(AddProductPage.product_type, 2));
     test('should check that the "Virtual product" tab does exist', () => client.isExisting(AddProductPage.product_quantities_tab));
     test('should click on "Virtual product" tab', () => client.waitForExistAndClick(AddProductPage.product_quantities_tab, 3000));
-    test('should check that "Does this product have an associated file?" question exists', () => client.isExisting(AddProductPage.virtual_associated_file.replace('%ID', '0')));
+    test('should check that "Does this product have an associated file?" question exists', () => client.isExisting(AddProductPage.virtual_associated_file));
   }, 'product/check_product');
 
   scenario('Check that "Language" button works successfully in the Back Office and the Front Office', client => {
@@ -69,7 +69,6 @@ scenario('Check that the buttons in header product page works successfully', () 
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
         .then(() => client.switchWindow(1));
     });
-    test('should switch the front office language to French', () => client.changeLanguage('fr'));
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'produit' + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the "Product name" is in french language', () => client.checkTextValue(productPage.product_name, ('produit' + date_time).toUpperCase()));

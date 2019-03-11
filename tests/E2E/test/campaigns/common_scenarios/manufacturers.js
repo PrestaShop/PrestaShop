@@ -61,7 +61,7 @@ module.exports = {
   createBrandAddress: function (brandAddressData) {
     scenario('Create a new "Brand address"', client => {
       test('should click on "Add new brand address" button', () => client.waitForExistAndClick(BrandAddress.new_brand_address_button));
-      test('should Choose the brand name', () => client.waitAndSelectByVisibleText(BrandAddress.brand_select, brandAddressData.brand + date_time));
+      test('should Choose the brand name', () => client.waitAndSelectByVisibleText(BrandAddress.branch_select, brandAddressData.brand + date_time));
       test('should set the "Last name" input', () => client.waitAndSetValue(BrandAddress.last_name_input, brandAddressData.lastName));
       test('should set the "First name" input', () => client.waitAndSetValue(BrandAddress.first_name_input, brandAddressData.firstName));
       test('should set the "Address" input', () => client.waitAndSetValue(BrandAddress.address_input, brandAddressData.address));

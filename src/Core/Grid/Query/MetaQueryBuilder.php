@@ -105,13 +105,6 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
-        $availableFilters = [
-            'id_meta',
-            'page',
-            'title',
-            'url_rewrite',
-        ];
-
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'meta', 'm')
@@ -122,21 +115,11 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
                 'm.`id_meta` = l.`id_meta`'
             );
 
-        $qb->andWhere('l.`id_lang` = :id_lang');
-        $qb->andWhere('l.`id_shop` = :id_shop');
-
-        $qb->setParameters([
-            'id_lang' => $this->contextIdLang,
-            'id_shop' => $this->contextIdShop,
-        ]);
-
+        $qb->andWhere('l.`id_lang`=' . $this->contextIdLang);
+        $qb->andWhere('l.`id_shop`=' . $this->contextIdShop);
         $qb->andWhere('m.`configurable`=1');
 
         foreach ($filters as $name => $value) {
-            if (!in_array($name, $availableFilters, true)) {
-                continue;
-            }
-
             if ('id_meta' === $name) {
                 $qb->andWhere('m.`id_meta` = :' . $name);
                 $qb->setParameter($name, $value);

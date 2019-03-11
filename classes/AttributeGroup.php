@@ -219,7 +219,7 @@ class AttributeGroupCore extends ObjectModel
      * Get all attributes for a given language / group.
      *
      * @param int $idLang Language ID
-     * @param int $idAttributeGroup AttributeGroup ID
+     * @param bool $idAttributeGroup AttributeGroup ID
      *
      * @return array Attributes
      */

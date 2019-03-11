@@ -51,6 +51,9 @@ services:
     prestashop.core.grid.definition.factory.meta:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'meta', 'action': 'index'})"
+            - "@=service('router').generate('admin_metas_index')"
         public: true
 
     prestashop.core.grid.definition.factory.category:

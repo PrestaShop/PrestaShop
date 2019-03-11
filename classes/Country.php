@@ -448,6 +448,8 @@ class CountryCore extends ObjectModel
         }
 
         $zipRegexp = '/^' . $this->zip_code_format . '$/ui';
+        $zipRegexp = str_replace(' ', '( |)', $zipRegexp);
+        $zipRegexp = str_replace('-', '(-|)', $zipRegexp);
         $zipRegexp = str_replace('N', '[0-9]', $zipRegexp);
         $zipRegexp = str_replace('L', '[a-zA-Z]', $zipRegexp);
         $zipRegexp = str_replace('C', $this->iso_code, $zipRegexp);

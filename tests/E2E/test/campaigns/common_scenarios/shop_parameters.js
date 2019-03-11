@@ -64,7 +64,7 @@ module.exports = {
       await client.isExisting(OnBoarding.paypal_conf_page, 1000);
       await client.waitForVisibleAndClick(OnBoarding.resume_button, 2000);
       await client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button, 1000);
-      await client.waitForExistAndClick(OnBoarding.welcomeSteps.continue_button, 2000);
+      await client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button, 2000);
     } else {
       await client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '2'), 'class', 'id -done', 'equal');
       await client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/1', 'contain', 4000);
@@ -106,14 +106,11 @@ module.exports = {
     }
   },
   enablePrestashopDebugMode: function (Menu, Performance) {
-    if (global.ps_mode_dev === false) {
+    if (!global.ps_mode_dev) {
       scenario('Enable the debug mode', client => {
         test('should go to "Performance" page', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.performance_submenu));
         test('should switch the "Debug mode" to "Yes"', () => client.waitForExistAndClick(Performance.enableDebugMode));
-        test('should click on "Save" button', async () => {
-          await client.waitForSymfonyToolbar(AddProductPage, 2000);
-          await client.waitForExistAndClick(Performance.save_button.replace('%I', 2));
-        });
+        test('should click on "Save" button', () => client.waitForExistAndClick(Performance.save_button.replace('%I', 2)));
         test('should verify the appearance of the green validation', () => client.checkTextValue(Performance.success_box, "Successful update."));
       }, 'common_client');
     }
@@ -121,11 +118,11 @@ module.exports = {
   async verifyWelcomingModule(client) {
     await client.isVisible(OnBoarding.start_button, 1000);
     if (global.isVisible) {
-      await client.waitForExistAndClick(OnBoarding.later_button, 2000);
+      await client.waitForExistAndClick(OnBoarding.later_button, 1000);
       await client.isNotExisting(OnBoarding.welcome_modal, 1000);
       await client.waitForExistAndClick(OnBoarding.resume_button, 2000);
       await client.isExisting(OnBoarding.welcome_modal, 1000);
-      await client.waitForExistAndClick(OnBoarding.start_button, 5000)
+      await client.waitForExistAndClick(OnBoarding.start_button, 4000)
     } else {
       await client.waitForExistAndClick(Menu.dashboard_menu, 3000);
       await client.waitForExistAndClick(OnBoarding.resume_button, 2000);
@@ -134,7 +131,7 @@ module.exports = {
       await client.isNotExisting(OnBoarding.welcome_modal, 1000);
       await client.waitForExistAndClick(OnBoarding.resume_button, 1000);
       await client.isExisting(OnBoarding.welcome_modal, 1000);
-      await client.waitForExistAndClick(OnBoarding.start_button, 4000);
+      await client.waitForExistAndClick(OnBoarding.start_button, 1000);
     }
   },
   firstStep(ProductList) {
@@ -184,22 +181,20 @@ module.exports = {
       test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'common_client');
   },
-
-
   async secondStep() {
     scenario('Step 1/2', client => {
-      /**
-       * Related issue Here
-       * https://github.com/PrestaShop/PrestaShop/issues/12560
-       */
       test('should check that the current step has started', () => client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '1'), 'class', 'id -done', 'equal', 2000));
       test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button, 2000));
-      test('should close the symfony toolbar', () => client.waitForSymfonyToolbar(AddProductPage, 2000));
-      test('should click on "Continue" button not on "Next Button" because of issue here #12560', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.continue_button, 6000));
+      test('should check that the step number is equal to "1" ', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/2', 'contain', 4000));
+      test('should check the first onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'A good way to start is to add your own logo here!'));
+      test('should check that the current page is "Theme catalog page"', () => client.isExisting(PagesForm.Design.configuration_fieldset));
+      test('should upload the header logo', () => client.uploadPicture('image_test.jpg', OnBoarding.welcomeSteps.header_logo));
+      test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button));
     }, 'common_client');
 
     scenario('Step 2/2', client => {
-      test('should check the second onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'If you want something really special, have a look at the theme catalog!', 'equal', 3000));
+      test('should check that the step number is equal to "2"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '2/2', 'contain', 4000));
+      test('should check the second onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'If you want something really special, have a look at the theme catalog!'));
       test('should check that the current page is "Theme catalog page"', () => client.isExisting(OnBoarding.welcomeSteps.discover_button, 2000));
       test('should click on "Discover" button', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.discover_button));
       test('should check that the  page is well opened', async () => {

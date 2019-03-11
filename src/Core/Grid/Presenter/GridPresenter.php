@@ -53,15 +53,13 @@ final class GridPresenter implements GridPresenterInterface
      */
     public function present(GridInterface $grid)
     {
-        $filterForm = $grid->getFilterForm();
-
         $definition = $grid->getDefinition();
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
         $presentedGrid = [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
-            'filter_form' => $filterForm->createView(),
+            'filter_form' => $grid->getFilterForm()->createView(),
             'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),
             'actions' => [
@@ -82,9 +80,6 @@ final class GridPresenter implements GridPresenterInterface
                 'order_way' => $searchCriteria->getOrderWay(),
             ],
             'filters' => $searchCriteria->getFilters(),
-            'attributes' => [
-                'is_empty_state' => empty($filterForm->getData()) && $data->getRecords()->count() === 0,
-            ],
         ];
 
         $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', [

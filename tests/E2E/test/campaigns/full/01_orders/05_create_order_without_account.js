@@ -29,7 +29,7 @@ const {Employee} = require('../../../selectors/BO/employee_page');
 
 let productData = [{
   name: 'ProductA',
-  quantity: '350',
+  quantity: "350",
   price: '11.90',
   priceTTC: '€14.28',
   image_name: 'image_test.jpg',
@@ -39,7 +39,7 @@ let productData = [{
   }
 }, {
   name: 'ProductB',
-  quantity: '350',
+  quantity: "350",
   price: '17.50',
   priceTTC: '€21.00',
   image_name: 'image_test.jpg',
@@ -155,11 +155,11 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.checkAttributeValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 2), 'value', '300');
     });
     test('should check the price of 300 products', async () => {
-      await client.checkTextValue(CheckoutOrderPage.product_total_price.replace('%NUMBER', 1), '€4,284.00');
-      await client.checkTextValue(CheckoutOrderPage.product_total_price.replace('%NUMBER', 2), '€6,300.00');
+      await client.checkTextValue(CheckoutOrderPage.product_total_price.replace('%NUMBER', 1), "€4,284.00");
+      await client.checkTextValue(CheckoutOrderPage.product_total_price.replace('%NUMBER', 2), "€6,300.00");
     });
-    test('should check the shipping is "free"', () => client.checkTextValue(CheckoutOrderPage.shipping_value, 'Free'));
-    test('should check that the total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.cart_total, '€10,584.00'));
+    test('should check the shipping is "free"', () => client.checkTextValue(CheckoutOrderPage.shipping_value, "Free"));
+    test('should check that the total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.cart_total, "€10,584.00"));
     test('should click on "PROCEED TO CHECKOUT"', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
     test('should set the "First name" input', () => client.waitAndSetValue(accountPage.firstname_input, data.customer.firstname, 1000));
     test('should set the "Last name" input', () => client.waitAndSetValue(accountPage.lastname_input, data.customer.lastname));
@@ -171,11 +171,11 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
     test('should check the email existence in the "Customers list"', async () => {
       await client.isVisible(Customer.customer_filter_by_email_input);
-      await client.search(Customer.customer_filter_by_email_input, data.customer.email.replace('%ID', 'account' + date_time));
-      await client.checkExistence(Customer.email_address_value, data.customer.email.replace('%ID', 'account' + date_time), 6);
+      await client.search(Customer.customer_filter_by_email_input, data.customer.email.replace("%ID", 'account' + date_time));
+      await client.checkExistence(Customer.email_address_value, data.customer.email.replace("%ID", 'account' + date_time), 6);
     });
-    test('should check the "First name" of the created customer', () => client.checkTextValue(Customer.first_name_value.replace('%ID', 1), data.customer.firstname));
-    test('should check the "Last name" of the created customer', () => client.checkTextValue(Customer.last_name_value.replace('%ID', 1), data.customer.lastname));
+    test('should check the "First name" of the created customer', () => client.checkTextValue(Customer.first_name_value.replace("%ID", 1), data.customer.firstname));
+    test('should check the "Last name" of the created customer', () => client.checkTextValue(Customer.last_name_value.replace("%ID", 1), data.customer.lastname));
   }, 'common_client');
 
   scenario('Go back to the Front Office  and create the address', () => {
@@ -193,17 +193,17 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.search(Addresses.filter_by_address_input, data.address.address + " " + date_time);
       await client.checkExistence(Addresses.address_value, data.address.address + " " + date_time, 5);
     });
-    test('should check the "First name"', () => client.checkTextValue(Addresses.first_name_value.replace('%ID', 1), data.customer.firstname));
-    test('should check the "Last name"', () => client.checkTextValue(Addresses.last_name_value.replace('%ID', 1), data.customer.lastname));
-    test('should check the "Zip/Postal Code"', () => client.checkTextValue(Addresses.zip_code_value.replace('%ID', 1), data.address.postalCode));
-    test('should check the "City"', () => client.checkTextValue(Addresses.city_value.replace('%ID', 1), data.address.city));
-    test('should check the "Country"', () => client.checkTextValue(Addresses.country_value.replace('%ID', 1), data.address.country));
+    test('should check the "First name"', () => client.checkTextValue(Addresses.first_name_value.replace("%ID", 1), data.customer.firstname));
+    test('should check the "Last name"', () => client.checkTextValue(Addresses.last_name_value.replace("%ID", 1), data.customer.lastname));
+    test('should check the "Zip/Postal Code"', () => client.checkTextValue(Addresses.zip_code_value.replace("%ID", 1), data.address.postalCode));
+    test('should check the "City"', () => client.checkTextValue(Addresses.city_value.replace("%ID", 1), data.address.city));
+    test('should check the "Country"', () => client.checkTextValue(Addresses.country_value.replace("%ID", 1), data.address.country));
   }, 'common_client');
   scenario('Go back to the Front Office  and complete the missing steps for creating the order', () => {
     test('should go back to the Front Office', () => client.switchWindow(1));
     test('should choose shipping method my carrier', () => client.waitForExistAndClick(CheckoutOrderPage.shipping_method_option, 2000));
     test('should check the amount of shipping', () => client.checkTextValue(CheckoutOrderPage.shipping_value, '€8.40', 'equal', 1000));
-    test('should check the total (tax incl.)', () => client.checkTextValue(CheckoutOrderPage.checkout_total_price, '€10,592.40'));
+    test('should check the total (tax incl.)', () => client.checkTextValue(CheckoutOrderPage.checkout_total_price, "€10,592.40"));
     test('should click on "confirm delivery" button', () => client.waitForExistAndClick(CheckoutOrderPage.checkout_step3_continue_button));
     test('should set the payment type "Payment by bank wire"', () => client.waitForExistAndClick(CheckoutOrderPage.checkout_step4_payment_radio));
     test('should set "the condition to approve"', () => client.waitForExistAndClick(CheckoutOrderPage.condition_check_box));
@@ -226,10 +226,10 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.checkTextValue(CheckoutOrderPage.confirmation_product_quantity.replace('%ID', 2), '300');
     });
     test('should check the price of 300 products', async () => {
-      await client.checkTextValue(CheckoutOrderPage.confirmation_product_total_price.replace('%ID', 1), '€4,284.00');
-      await client.checkTextValue(CheckoutOrderPage.confirmation_product_total_price.replace('%ID', 2), '€6,300.00');
+      await client.checkTextValue(CheckoutOrderPage.confirmation_product_total_price.replace('%ID', 1), "€4,284.00");
+      await client.checkTextValue(CheckoutOrderPage.confirmation_product_total_price.replace('%ID', 2), "€6,300.00");
     });
-    test('should check the shipping price', () => client.checkTextValue(CheckoutOrderPage.confirmation_shipping_price, '€8.40'));
+    test('should check the shipping price', () => client.checkTextValue(CheckoutOrderPage.confirmation_shipping_price, "€8.40"));
     test('should check that the sub total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.confirmation_sub_total_price, "€10,584.00"));
     test('should check that the total is equal to "10,592.40€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.confirmation_total_price, "€10,592.40"));
     test('should get the order reference', () => client.getTextInVar(CheckoutOrderPage.order_reference, 'orderReference'));
@@ -266,16 +266,16 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.checkTextValue(OrderPage.order_quantity.replace('%NUMBER', 2), global.tab['secondProductQuantity']);
     });
     test('should check the price of 300 products', async () => {
-      await client.checkTextValue(OrderPage.total_price_tax_included.replace('%NUMBER', 1), global.tab['firstProductTotalPrice']);
-      await client.checkTextValue(OrderPage.total_price_tax_included.replace('%NUMBER', 2), global.tab['secondProductTotalPrice']);
+      await client.checkTextValue(OrderPage.total_price_tax_included.replace('%NUMBER', 1), global.tab["firstProductTotalPrice"]);
+      await client.checkTextValue(OrderPage.total_price_tax_included.replace('%NUMBER', 2), global.tab["secondProductTotalPrice"]);
     });
     test('should check the shipping price', () => client.checkTextValue(OrderPage.shipping_cost_price, global.tab['shippingPrice']));
     test('should check that the sub total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(OrderPage.total_price, global.tab['subTotal']));
     test('should check that the total is equal to "10,592.40€ (tax incl.)"', () => client.checkTextValue(OrderPage.total_order, global.tab['totalPrice']));
     test('should Check if the status is "Awaiting bank wire payment" payment method name', () => client.checkTextValue(OrderPage.status.replace("%STATUS", "bank wire"), "Awaiting bank wire payment"));
   }, 'common_client');
-  stockCommonScenarios.checkStockProduct(client, productData[0].name + date_time, Menu, Stock, '50', '300', '350');
-  stockCommonScenarios.checkStockProduct(client, productData[1].name + date_time, Menu, Stock, '50', '300', '350');
+  stockCommonScenarios.checkStockProduct(client, productData[0].name + date_time, Menu, Stock, "50", "300", "350");
+  stockCommonScenarios.checkStockProduct(client, productData[1].name + date_time, Menu, Stock, "50", "300", "350");
   scenario('Change the status of the order', client => {
     test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
     test('should search for the created order by reference', () => client.waitAndSetValue(OrderPage.search_by_reference_input, (global.tab['orderReference']).split(" ")[2]));
@@ -291,22 +291,22 @@ scenario('Create order by a guest from the Front Office', client => {
   }, 'order');
   commonProductScenarios.checkProductQuantity(Menu, AddProductPage, productData[0].name + date_time, '50');
   commonProductScenarios.checkProductQuantity(Menu, AddProductPage, productData[1].name + date_time, '50');
-  stockCommonScenarios.checkStockProduct(client, productData[0].name + date_time, Menu, Stock, '50', '0', '50');
-  stockCommonScenarios.checkStockProduct(client, productData[1].name + date_time, Menu, Stock, '50', '0', '50');
+  stockCommonScenarios.checkStockProduct(client, productData[0].name + date_time, Menu, Stock, "50", "0", "50");
+  stockCommonScenarios.checkStockProduct(client, productData[1].name + date_time, Menu, Stock, "50", "0", "50");
   scenario('Check the movement of the "' + productData[0].name + date_time + '"', client => {
     test('should go to "Employee" page', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
     test('should get  the Employee "Name" and "Last Name"', async () => {
-      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 3), 'employee_last_name');
-      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 2), 'employee_first_name');
+      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 3), "employee_last_name");
+      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 2), "employee_first_name");
     });
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
-    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, '300', '-', 'Customer Order', productData[0].reference, dateSystem, productData[0].name + date_time, true);
+    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[0].reference, dateSystem, productData[0].name + date_time, true);
   }, 'stocks');
   scenario('Check the movement of the "' + productData[1].name + date_time + '"', client => {
-    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, '300', '-', 'Customer Order', productData[1].reference, dateSystem,  productData[1].name + date_time, true);
+    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "300", "-", "Customer Order", productData[1].reference, dateSystem,  productData[1].name + date_time, true);
   }, 'stocks');
   scenario('Check that the created order is opened in a new window', client => {
-    test('should click on "Customer Order" link  ', () => client.waitForExistAndClick(Movement.type_value.replace('%P', 1)));
+    test('should click on "Customer Order" link  ', () => client.waitForExistAndClick(Movement.type_value.replace("%P", 1)));
     test('should check that the created order is opened in a new window', async () => {
       await client.switchWindow(2);
       await client.checkTextValue(OrderPage.page_title, global.tab['orderReference'].split(" ")[2], 'contain');

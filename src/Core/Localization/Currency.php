@@ -47,7 +47,7 @@ class Currency implements CurrencyInterface
      *
      * Price in currency A * currency A's conversion rate = price in default currency
      *
-     * Example:
+     * Example :
      * Given the Euro as default shop's currency,
      * If 1 dollar = 1.31 euros,
      * Then conversion rate for Dollar will be 1.31
@@ -101,13 +101,20 @@ class Currency implements CurrencyInterface
     protected $names;
 
     /**
-     * @param bool $isActive Is this currency active ?
-     * @param float $conversionRate Conversion rate of this currency against the default shop's currency
-     * @param string $isoCode Currency's alphabetic ISO code (ISO 4217)
-     * @param int $numericIsoCode Currency's numeric ISO code (ISO 4217)
-     * @param string[] $symbols Currency's symbols, by locale code
-     * @param int $precision Number of decimal digits to use with this currency
-     * @param string [] $names the currency's name, by locale code
+     * @param bool $isActive
+     *                       Is this currency active ?
+     * @param float $conversionRate
+     *                              Conversion rate of this currency against the default shop's currency
+     * @param string $isoCode
+     *                        Currency's alphabetic ISO code (ISO 4217)
+     * @param int $numericIsoCode
+     *                            Currency's numeric ISO code (ISO 4217)
+     * @param string[] $symbols
+     *                          Currency's symbols, by locale code
+     * @param int $precision
+     *                       Number of decimal digits to use with this currency
+     * @param string [] $names
+     *                         the currency's name, by locale code
      */
     public function __construct(
         $isActive,
@@ -167,7 +174,7 @@ class Currency implements CurrencyInterface
     public function getSymbol($localeCode)
     {
         if (!isset($this->symbols[$localeCode])) {
-            throw new LocalizationException('Unknown locale code: ' . $localeCode);
+            throw new LocalizationException('Unknown locale code');
         }
 
         return $this->symbols[$localeCode];
@@ -189,7 +196,7 @@ class Currency implements CurrencyInterface
     public function getName($localeCode)
     {
         if (!isset($this->names[$localeCode])) {
-            throw new LocalizationException('Unknown locale code: ' . $localeCode);
+            throw new LocalizationException('Unknown locale code');
         }
 
         return $this->names[$localeCode];

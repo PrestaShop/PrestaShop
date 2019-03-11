@@ -130,7 +130,7 @@ scenario('Create "Attributes" in the Back Office', () => {
         .then(() => client.scrollWaitForExistAndClick(productPage.see_all_products))
 
     });
-    test('should check all attribute type in the "Front Office"', () => commonAttribute.checkAllAttributeTypeInFO(client, productPage, productData.name));
+    test('should check all attribute type in the "Front Office"', () => commonAttribute.checkAllAttributeTypeInFO(AccessPageBO, productPage, productData.name, attributeData, client));
 
     test('should go to the product page', () => client.switchWindow(2));
     test('should check all attributes name of the product', () => client.checkTextValue(SearchProductPage.attribute_name, Object.keys(attributeData).map((k) => attributeData[k].name + date_time), 'deepequal'));
@@ -148,4 +148,4 @@ scenario('Create "Attributes" in the Back Office', () => {
   commonAttribute.deleteAttribute(attributeData[0]);
   commonAttribute.deleteAttribute(attributeData[1]);
   commonAttribute.deleteAttribute(attributeData[2]);
-}, 'common_client', true);
+}, 'attribute_and_feature', true);

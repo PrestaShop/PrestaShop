@@ -37,7 +37,7 @@ import ExportToSqlManagerExtension from "../../components/grid/extension/export-
 const $ = window.$;
 
 $(() => {
-  const supplierGrid =  new Grid('supplier');
+  const supplierGrid =  new Grid('suppliers');
   supplierGrid.addExtension(new SortingExtension());
   supplierGrid.addExtension(new SubmitGridActionExtension());
   supplierGrid.addExtension(new FiltersResetExtension());

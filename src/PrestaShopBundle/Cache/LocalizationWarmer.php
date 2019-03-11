@@ -26,9 +26,10 @@
 
 namespace PrestaShopBundle\Cache;
 
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Tools;
 
 class LocalizationWarmer implements CacheWarmerInterface
 {
@@ -58,13 +59,19 @@ class LocalizationWarmer implements CacheWarmerInterface
         if (is_file($path_cache_file)) {
             $localization_file_content = file_get_contents($path_cache_file);
         } else {
-            $localization_file = _PS_ROOT_DIR_ . '/localization/default.xml';
-
-            if (file_exists(_PS_ROOT_DIR_ . '/localization/' . $this->country . '.xml')) {
-                $localization_file = _PS_ROOT_DIR_ . '/localization/' . $this->country . '.xml';
+            $localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/' . $this->version . '/' . $this->country . '.xml');
+            if (!@simplexml_load_string($localization_file_content)) {
+                $localization_file_content = false;
             }
+            if (!$localization_file_content) {
+                $localization_file = _PS_ROOT_DIR_ . '/localization/default.xml';
 
-            $localization_file_content = file_get_contents($localization_file);
+                if (file_exists(_PS_ROOT_DIR_ . '/localization/' . $this->country . '.xml')) {
+                    $localization_file = _PS_ROOT_DIR_ . '/localization/' . $this->country . '.xml';
+                }
+
+                $localization_file_content = file_get_contents($localization_file);
+            }
 
             try {
                 $fs->dumpFile($path_cache_file, $localization_file_content);
