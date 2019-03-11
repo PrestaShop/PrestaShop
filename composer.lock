@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "906d9dcc5334c296a5c569df20bd7657",
+    "content-hash": "4f02af8a9f6f167e0057c24886f8f5c0",
     "packages": [
         {
             "name": "analog/analog",
@@ -4097,38 +4097,6 @@
             "time": "2017-03-27T15:19:45+00:00"
         },
         {
-            "name": "prestashop/ps_legalcompliance",
-            "version": "v3.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/ps_legalcompliance.git",
-                "reference": "711fd54ca281c2e5924e5b028204a71209cc124b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_legalcompliance/zipball/711fd54ca281c2e5924e5b028204a71209cc124b",
-                "reference": "711fd54ca281c2e5924e5b028204a71209cc124b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL - Academic Free License (AFL 3.0)"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module ps_legalcompliance",
-            "homepage": "https://github.com/PrestaShop/advancedeucompliance",
-            "time": "2018-09-19T08:24:31+00:00"
-        },
-        {
             "name": "prestashop/ps_linklist",
             "version": "v2.1.6",
             "source": {
@@ -7767,6 +7735,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2017-06-30T09:13:00+00:00"
         },
         {
