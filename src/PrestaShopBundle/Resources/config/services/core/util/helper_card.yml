@@ -5,7 +5,7 @@ services:
   prestashop.core.util.helper_card.documentation_link_provider:
     class: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().iso_code'
       -
         'team':
           'en': 'http://doc.prestashop.com/display/PS17/Team'

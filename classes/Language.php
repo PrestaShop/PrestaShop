@@ -103,9 +103,16 @@ class LanguageCore extends ObjectModel
         'tabs' => 'tabs',
     );
 
-    public function __construct($id = null, $id_lang = null)
+    /**
+     * @param int|null $id
+     * @param int|null $id_lang
+     * @param int|null $id_shop
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
-        parent::__construct($id);
+        parent::__construct($id, $id_lang, $id_shop);
     }
 
     public static function resetCache()

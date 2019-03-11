@@ -32,6 +32,7 @@ use Context;
 use Currency;
 use Employee;
 use Language;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
@@ -53,16 +54,22 @@ class LegacyContext
     /** @var Tools */
     private $tools;
 
+    /** @var Tools */
+    private $configuration;
+
     /**
      * @param string|null $mailThemesUri
      * @param Tools|null $tools
+     * @param ConfigurationInterface|null $configuration
      */
     public function __construct(
         $mailThemesUri = null,
-        Tools $tools = null
+        Tools $tools = null,
+        ConfigurationInterface $configuration = null
     ) {
         $this->mailThemesUri = $mailThemesUri;
         $this->tools = null !== $tools ? $tools : new Tools();
+        $this->configuration = null !== $configuration ? $configuration : new Configuration();
     }
 
     /**
@@ -284,7 +291,10 @@ class LegacyContext
             return $context->language;
         }
 
-        return new Language();
+        $idLangDefault = $this->configuration->get('PS_LANG_DEFAULT');
+        $idShopDefault = $this->configuration->get('PS_SHOP_DEFAULT');
+
+        return new Language($idLangDefault, $idLangDefault, $idShopDefault);
     }
 
     /**
