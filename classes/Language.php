@@ -103,11 +103,6 @@ class LanguageCore extends ObjectModel
         'tabs' => 'tabs',
     );
 
-    public function __construct($id = null, $id_lang = null)
-    {
-        parent::__construct($id);
-    }
-
     public static function resetCache()
     {
         self::$_checkedLangs = null;
