@@ -479,8 +479,6 @@
   }
 }
 .product-flags {
-  position: absolute;
-  top: 0;
   width: 100%;
 }
 li.product-flag {
@@ -493,10 +491,12 @@ li.product-flag {
     color: white;
     margin-top: $small-space;
     z-index: 2;
+    top: 0;
     @include box-shadow-light;
-    &.online-only{
-      top: 25rem;
-      right: 0;
+    &.online-only {
+      top: 21.3rem;
+      right: -.7rem;
+      z-index: 1;
       font-size: $font-size-xs;
       &::before{
         content:"\E30A";
@@ -519,6 +519,15 @@ li.product-flag {
     &:not(.discount):not(.on-sale)~li.product-flag {
         margin-top: 3.75rem;
     }
+}
+#product {
+  li.product-flag {
+    &.online-only {
+      top: inherit;
+      bottom: 9.8rem;
+      right: 0;
+    }
+  }
 }
 
 .product-customization {
