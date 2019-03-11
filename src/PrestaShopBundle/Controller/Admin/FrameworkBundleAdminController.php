@@ -198,6 +198,8 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Get the old but still useful context.
+     *
+     * @return \Context
      */
     protected function getContext()
     {

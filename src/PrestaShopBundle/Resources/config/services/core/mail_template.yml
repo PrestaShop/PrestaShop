@@ -30,3 +30,6 @@ services:
 
   prestashop.core.mail_template.transformation.html_textify:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation'
+
+  prestashop.core.mail_template.transformation.mjml_converter:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MjmlTransformation'

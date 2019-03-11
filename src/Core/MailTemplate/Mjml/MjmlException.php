@@ -24,45 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Mjml;
 
-/**
- * Interface LayoutInterface is used to contain the basic info about a mail layout.
- */
-interface LayoutInterface
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Throwable;
+
+class MjmlException extends CoreException
 {
-    /**
-     * Name of the layout to describe its purpose
-     *
-     * @return string
-     */
-    public function getName();
+    /** @var string */
+    private $mjmlMessage;
+
+    public function __construct($message = "", $mjmlMessage = "", $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->mjmlMessage = $mjmlMessage;
+    }
 
     /**
-     * Absolute path of the html layout file
-     *
      * @return string
      */
-    public function getHtmlPath();
-
-    /**
-     * Absolute path of the mjml layout file
-     *
-     * @return string
-     */
-    public function getMjmlPath();
-
-    /**
-     * Absolute path of the html layout file
-     *
-     * @return string
-     */
-    public function getTxtPath();
-
-    /**
-     * Which module this layout is associated to (if any)
-     *
-     * @return string|null
-     */
-    public function getModuleName();
+    public function getMjmlMessage()
+    {
+        return $this->mjmlMessage;
+    }
 }

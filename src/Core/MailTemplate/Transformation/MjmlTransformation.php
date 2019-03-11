@@ -24,45 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate\Layout;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
-/**
- * Interface LayoutInterface is used to contain the basic info about a mail layout.
- */
-interface LayoutInterface
+
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Mjml\MjmlConverter;
+
+class MjmlTransformation extends AbstractTransformation
 {
-    /**
-     * Name of the layout to describe its purpose
-     *
-     * @return string
-     */
-    public function getName();
+    public function __construct()
+    {
+        parent::__construct(MailTemplateInterface::MJML_TYPE);
+    }
 
-    /**
-     * Absolute path of the html layout file
-     *
-     * @return string
-     */
-    public function getHtmlPath();
+    public function apply($templateContent, array $templateVariables)
+    {
+        if (MailTemplateInterface::MJML_TYPE != $this->type) {
+            return $templateContent;
+        }
 
-    /**
-     * Absolute path of the mjml layout file
-     *
-     * @return string
-     */
-    public function getMjmlPath();
+        $converter = new MjmlConverter();
 
-    /**
-     * Absolute path of the html layout file
-     *
-     * @return string
-     */
-    public function getTxtPath();
-
-    /**
-     * Which module this layout is associated to (if any)
-     *
-     * @return string|null
-     */
-    public function getModuleName();
+        return $converter->convert($templateContent);
+    }
 }

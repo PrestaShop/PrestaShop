@@ -219,6 +219,7 @@ class FolderThemeCatalog implements ThemeCatalogInterface
             if (!isset($layoutFiles[$layoutName])) {
                 $layoutFiles[$layoutName] = [
                     MailTemplateInterface::HTML_TYPE => '',
+                    MailTemplateInterface::MJML_TYPE => '',
                     MailTemplateInterface::TXT_TYPE => '',
                 ];
             }
@@ -231,7 +232,8 @@ class FolderThemeCatalog implements ThemeCatalogInterface
                 $layoutName,
                 $layouts[MailTemplateInterface::HTML_TYPE],
                 $layouts[MailTemplateInterface::TXT_TYPE],
-                $moduleName
+                $moduleName,
+                $layouts[MailTemplateInterface::MJML_TYPE]
             ));
         }
     }
@@ -247,6 +249,11 @@ class FolderThemeCatalog implements ThemeCatalogInterface
         $htmlTypeRegexp = sprintf('/.+\.%s%s/', MailTemplateInterface::HTML_TYPE, $ext);
         if (preg_match($htmlTypeRegexp, $fileInfo->getFilename())) {
             return MailTemplateInterface::HTML_TYPE;
+        }
+
+        $mjmlTypeRegexp = sprintf('/.+\.%s%s/', MailTemplateInterface::MJML_TYPE, $ext);
+        if (preg_match($mjmlTypeRegexp, $fileInfo->getFilename())) {
+            return MailTemplateInterface::MJML_TYPE;
         }
 
         return MailTemplateInterface::TXT_TYPE;

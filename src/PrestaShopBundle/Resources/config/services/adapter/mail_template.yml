@@ -11,6 +11,9 @@ services:
     calls:
       - method: 'addTransformation'
         arguments:
+          - '@prestashop.core.mail_template.transformation.mjml_converter'
+      - method: 'addTransformation'
+        arguments:
           - '@prestashop.core.mail_template.transformation.css_inline'
       - method: 'addTransformation'
         arguments:
