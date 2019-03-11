@@ -852,7 +852,7 @@ class AdminCartsControllerCore extends AdminController
         if (Validate::isMd5($img) && Validate::isGenericName($path)) {
             header('Content-type: image/jpeg');
             header('Content-Disposition: attachment; filename="' . $name . '.jpg"');
-            echo file_get_contents($path);
+            readfile($path);
         }
     }
 
