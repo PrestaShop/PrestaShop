@@ -32,9 +32,18 @@ const $ = window.$;
  */
 export default class MultiStoreRestrictionField {
   constructor() {
-    $(document).on('change', multiStoreRestrictionFieldMap.multiStoreRestrictionCheckbox, (e) => {
-      this._multiStoreRestrictionCheckboxFieldChangeEvent(e)
-    })
+
+    $(document).on(
+      'change',
+      multiStoreRestrictionFieldMap.multiStoreRestrictionCheckbox,
+      (e) => this._multiStoreRestrictionCheckboxFieldChangeEvent(e)
+    );
+
+    $(document).on(
+      'change',
+      multiStoreRestrictionFieldMap.multiStoreRestrictionSwitch,
+      (e) => this._multiStoreRestrictionSwitchFieldChangeEvent(e)
+    )
   }
 
   /**
@@ -45,8 +54,36 @@ export default class MultiStoreRestrictionField {
    */
   _multiStoreRestrictionCheckboxFieldChangeEvent(e) {
     const $currentItem = $(e.currentTarget);
-    const targetValue = $currentItem.data('shopRestrictionTarget');
 
-    $(`[data-shop-restriction-source="${targetValue}"]`).attr('disabled', !$currentItem.is(':checked'));
+    this._toggleSourceFieldByTargetElement($currentItem, !$currentItem.is(':checked'));
+  }
+
+  /**
+   * Mass updates multi-store checkbox fields - it enables or disabled the switch and after that it calls the function
+   * which handles the toggle update related form field by its current state.
+   * @param e
+   * @private
+   */
+  _multiStoreRestrictionSwitchFieldChangeEvent(e) {
+    const $currentItem = $(e.currentTarget);
+    const isSelected = 1 === parseInt($currentItem.val());
+    const targetFormName = $currentItem.data('targetFormName');
+
+    $(`form[name="${targetFormName}"]`).find(multiStoreRestrictionFieldMap.multiStoreRestrictionCheckbox).each((index, el) => {
+      const $el = $(el);
+      $el.prop('checked', isSelected);
+      this._toggleSourceFieldByTargetElement($el, !isSelected);
+    });
+  }
+
+  /**
+   * Changes related form fields state to disabled or enabled.
+   * @param {jquery} $targetElement
+   * @param {boolean} isDisabled
+   * @private
+   */
+  _toggleSourceFieldByTargetElement($targetElement, isDisabled) {
+    const targetValue = $targetElement.data('shopRestrictionTarget');
+    $(`[data-shop-restriction-source="${targetValue}"]`).prop('disabled', isDisabled);
   }
 }
