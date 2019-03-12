@@ -45,11 +45,18 @@
       {{ ps.form_group_row(adaptThemeToRtlLanguagesForm.generate_rtl_css, {}, {
         'label': 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature')
       }) }}
+    </div>
+  </div>
 
+  {% if isMultiShopFeatureUsed and isSingleShopContext %}
+    <hr>
+  {% endif %}
+
+  <div class="card-block row">
+    <div class="card-text">
       {{ ps.multistore_switch(shopLogosForm.options, {}, {
         'label': 'Multistore'|trans({}, 'messages'),
       }) }}
-
     </div>
   </div>
   <div class="card-footer">
