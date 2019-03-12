@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Defines form for address create/edit actions (Sell > Catalog > Brands & Suppliers)
@@ -90,16 +90,28 @@ class ManufacturerAddressType extends AbstractType
     {
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
-                'required' => false,
                 'choices' => $this->manufacturers,
                 'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
+                    new NotBlank([
+                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
-            ->add('last_name', TextType::class)
-            ->add('first_name', TextType::class)
+            ->add('last_name', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+                //@todo: TypedRegexConstraint from another PR
+            ])
+            ->add('first_name', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
             ->add('address', TextType::class)
             ->add('address2', TextType::class, [
                 'required' => false,
@@ -107,10 +119,21 @@ class ManufacturerAddressType extends AbstractType
             ->add('post_code', TextType::class, [
                 'required' => false,
             ])
-            ->add('city', TextType::class)
+            ->add('city', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
             ->add('id_country', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->countries,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => false,
