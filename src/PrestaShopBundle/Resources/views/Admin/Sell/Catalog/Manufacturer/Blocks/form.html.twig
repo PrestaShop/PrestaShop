@@ -25,92 +25,94 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{{ form_start(manufacturerForm) }}
-<div class="card">
-  <h3 class="card-header">
-    <i class="material-icons">Brand</i>
-    {{ 'Brands'|trans({}, 'Admin.Catalog.Feature') }}
-  </h3>
-  <div class="card-block row">
-    <div class="card-text">
-      {% set invalidCatalogNameHint %}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
-      {% endset %}
+{% block manufacturer_form %}
+  {{ form_start(manufacturerForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">Brand</i>
+      {{ 'Brands'|trans({}, 'Admin.Catalog.Feature') }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        {% set invalidCatalogNameHint %}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+        {% endset %}
 
-      {{ ps.form_group_row(manufacturerForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Global'),
-        'help': invalidCatalogNameHint
-      }) }}
-
-      {% set invalidGenericNameHint %}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
-      {% endset %}
-
-      {{ ps.form_group_row(manufacturerForm.short_description, {}, {
-        'label': 'Short description'|trans({}, 'Admin.Global'),
-        'help': invalidGenericNameHint
-      }) }}
-
-      {{ ps.form_group_row(manufacturerForm.description, {}, {
-        'label': 'Description'|trans({}, 'Admin.Global')
-      }) }}
-
-      {% set logoHint %}
-        {{ 'Upload a brand logo from your computer.'|trans({}, 'Admin.Catalog.Help') }}
-      {% endset %}
-
-      {{ ps.form_group_row(manufacturerForm.logo, {}, {
-        'label': 'Logo'|trans({}, 'Admin.Global'),
-        'help': logoHint
-      }) }}
-
-      {% if logoImage is defined and logoImage is not null %}
-        <div class="form-group row">
-          <label for="" class="form-control-label"></label>
-          <div class="col-sm">
-            {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/logo_image.html.twig' %}
-          </div>
-        </div>
-      {% endif %}
-
-      {{ ps.form_group_row(manufacturerForm.meta_title, {}, {
-        'label': 'Meta title'|trans({}, 'Admin.Global'),
-        'help': invalidGenericNameHint
-      }) }}
-
-      {{ ps.form_group_row(manufacturerForm.meta_description, {}, {
-        'label': 'Meta description'|trans({}, 'Admin.Global'),
-        'help': invalidGenericNameHint
-      }) }}
-
-      {% set keywordHint %}
-        {{ 'To add "tags," click inside the field, write something, and then press "Enter."'|trans({}, 'Admin.Catalog.Help') }}
-        {{ invalidGenericNameHint }}
-      {% endset %}
-
-      {{ ps.form_group_row(manufacturerForm.meta_keyword, {}, {
-        'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-        'help': keywordHint
-      }) }}
-
-      {{ ps.form_group_row(manufacturerForm.is_enabled, {}, {
-        'label': 'Enabled'|trans({}, 'Admin.Global')
-      }) }}
-
-      {% if manufacturerForm.shop_association is defined %}
-        {{ ps.form_group_row(manufacturerForm.shop_association, {}, {
-          'label': 'Shop association'|trans({}, 'Admin.Global')
+        {{ ps.form_group_row(manufacturerForm.name, {}, {
+          'label': 'Name'|trans({}, 'Admin.Global'),
+          'help': invalidCatalogNameHint
         }) }}
-      {% endif %}
+
+        {% set invalidGenericNameHint %}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
+        {% endset %}
+
+        {{ ps.form_group_row(manufacturerForm.short_description, {}, {
+          'label': 'Short description'|trans({}, 'Admin.Global'),
+          'help': invalidGenericNameHint
+        }) }}
+
+        {{ ps.form_group_row(manufacturerForm.description, {}, {
+          'label': 'Description'|trans({}, 'Admin.Global')
+        }) }}
+
+        {% set logoHint %}
+          {{ 'Upload a brand logo from your computer.'|trans({}, 'Admin.Catalog.Help') }}
+        {% endset %}
+
+        {{ ps.form_group_row(manufacturerForm.logo, {}, {
+          'label': 'Logo'|trans({}, 'Admin.Global'),
+          'help': logoHint
+        }) }}
+
+        {% if logoImage is defined and logoImage is not null %}
+          <div class="form-group row">
+            <label for="" class="form-control-label"></label>
+            <div class="col-sm">
+              {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/logo_image.html.twig' %}
+            </div>
+          </div>
+        {% endif %}
+
+        {{ ps.form_group_row(manufacturerForm.meta_title, {}, {
+          'label': 'Meta title'|trans({}, 'Admin.Global'),
+          'help': invalidGenericNameHint
+        }) }}
+
+        {{ ps.form_group_row(manufacturerForm.meta_description, {}, {
+          'label': 'Meta description'|trans({}, 'Admin.Global'),
+          'help': invalidGenericNameHint
+        }) }}
+
+        {% set keywordHint %}
+          {{ 'To add "tags," click inside the field, write something, and then press "Enter."'|trans({}, 'Admin.Catalog.Help') }}
+          {{ invalidGenericNameHint }}
+        {% endset %}
+
+        {{ ps.form_group_row(manufacturerForm.meta_keyword, {}, {
+          'label': 'Meta keywords'|trans({}, 'Admin.Global'),
+          'help': keywordHint
+        }) }}
+
+        {{ ps.form_group_row(manufacturerForm.is_enabled, {}, {
+          'label': 'Enabled'|trans({}, 'Admin.Global')
+        }) }}
+
+        {% if manufacturerForm.shop_association is defined %}
+          {{ ps.form_group_row(manufacturerForm.shop_association, {}, {
+            'label': 'Shop association'|trans({}, 'Admin.Global')
+          }) }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="{{ path('admin_manufacturers_index') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary float-right">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
     </div>
   </div>
-  <div class="card-footer">
-    <a href="{{ path('admin_manufacturers_index') }}" class="btn btn-outline-secondary">
-      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-    </a>
-    <button class="btn btn-primary float-right">
-      {{ 'Save'|trans({}, 'Admin.Actions') }}
-    </button>
-  </div>
-</div>
-{{ form_end(manufacturerForm) }}
+  {{ form_end(manufacturerForm) }}
+{% endblock %}

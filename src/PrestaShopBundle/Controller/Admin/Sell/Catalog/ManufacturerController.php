@@ -121,7 +121,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process manufacturer creation.
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     *     "is_granted(['create'], request.get('_legacy_controller'))"
      * )
      *
      * @param Request $request
