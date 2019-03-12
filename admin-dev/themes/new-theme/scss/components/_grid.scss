@@ -133,9 +133,11 @@ table .column-filters td:last-child .grid-reset-button {
           }
 
           &.action-type {
-            .dropdown-item:focus,
-            .dropdown-item:hover {
-              background-color: transparent;
+            .btn-group > .dropdown-item {
+              &:hover,
+              &:focus {
+                background-color: transparent;
+              }
             }
           }
         }
