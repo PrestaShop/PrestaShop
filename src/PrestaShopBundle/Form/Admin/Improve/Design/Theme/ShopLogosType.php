@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestrictionField;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionCheckboxType;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionSwitchType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -122,13 +123,10 @@ class ShopLogosType extends AbstractType
             ]);
         }
 
-        $builder->add('shop_restriction_switch', ShopRestrictionSwitchType::class, [
-            'attr' => [
-                'is_allowed_to_display' => $isAllowedToDisplay,
-            ],
-        ]);
-
         if ($isAllowedToDisplay) {
+            $builder->add('shop_restriction_switch', SwitchType::class, [
+                'required' => false,
+            ]);
             $this->transformMultiStoreFields($builder, $suffix);
             $this->disableAllShopContextFields($builder, $suffix);
             $this->setShopRestrictionSource($builder, $suffix);
