@@ -46,8 +46,9 @@
         'label': 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature')
       }) }}
 
-
-      {{ form_widget(shopLogosForm.options.shop_restriction_switch) }}
+      {{ ps.multistore_switch(shopLogosForm.options, {}, {
+        'label': 'Multistore'|trans({}, 'messages'),
+      }) }}
 
     </div>
   </div>
