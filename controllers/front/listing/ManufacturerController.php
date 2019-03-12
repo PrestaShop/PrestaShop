@@ -214,4 +214,23 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
         return $breadcrumb;
     }
+    
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('All brands', array(), 'Shop.Theme.Catalog'),
+            'url' => $this->context->link->getPageLink('manufacturer', true),
+        ];
+
+        if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
+            $breadcrumb['links'][] = [
+                'title' => $this->manufacturer->name,
+                'url' => $this->context->link->getManufacturerLink($this->manufacturer),
+            ];
+        }
+
+        return $breadcrumb;
+    }
 }
