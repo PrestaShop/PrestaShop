@@ -292,5 +292,3 @@ nb-configuration.xml
 ### Release creation ###
 tools/build/releases/*
 !tools/build/releases/.gitkeep
-admin-dev/themes/new-theme/public/module.bundle.js
-admin-dev/themes/new-theme/public/module.bundle.js

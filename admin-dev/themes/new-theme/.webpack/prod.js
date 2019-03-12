@@ -31,6 +31,7 @@ function prodConfig(analyze) {
   );
 
   return prod;
+  
 }
 
 module.exports = prodConfig;
