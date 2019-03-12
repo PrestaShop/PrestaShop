@@ -49,6 +49,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
+        $this->className = 'LegacyLayout';
 
         // Compatibility with legacy behavior.
         // Languages can only be used in "All shops" context.
