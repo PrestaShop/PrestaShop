@@ -32,43 +32,28 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 {
-    /**
-     * @dataProvider getValuesWithScriptTags
-     */
-    public function testItFailsWhenScriptTagsAreGiven($incorrectValue)
+    public function testItFailsWhenScriptTagsAreGiven()
     {
-        $this->validator->validate($incorrectValue, new CleanHtml());
+        $scriptTag = '<script></script>';
+
+        $this->validator->validate($scriptTag, new CleanHtml());
 
         $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $incorrectValue . '"')
+            ->setParameter('%s', '"' . $scriptTag . '"')
             ->assertRaised()
         ;
     }
 
-    public function getValuesWithScriptTags()
+    public function testItFailsWhenJavascriptEventsAreGiven()
     {
-        yield ['<script></script>'];
-        yield ['<script>'];
-        yield ['<script'];
-    }
+        $htmlTag = '<a href="#" onchange="evilJavascriptIsCalled()"></a>';
 
-    /**
-     * @dataProvider getValuesWithJavascriptEvents
-     */
-    public function testItFailsWhenJavascriptEventsAreGiven($incorrectValue)
-    {
-        $this->validator->validate($incorrectValue, new CleanHtml());
+        $this->validator->validate($htmlTag, new CleanHtml());
 
         $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $incorrectValue . '"')
+            ->setParameter('%s', '"' . $htmlTag . '"')
             ->assertRaised()
         ;
-    }
-
-    public function getValuesWithJavascriptEvents()
-    {
-        yield ['<a href="#" onchange="evilJavascriptIsCalled()"></a>'];
-        yield ['onmousedown='];
     }
 
     protected function createValidator()
