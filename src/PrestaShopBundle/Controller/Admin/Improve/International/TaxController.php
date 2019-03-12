@@ -67,11 +67,13 @@ class TaxController extends FrameworkBundleAdminController
         $taxGridFactory = $this->get('prestashop.core.grid.factory.tax');
         $taxGrid = $taxGridFactory->getGrid($filters);
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $taxOptionsForm = $this->getTaxOptionsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/index.html.twig', [
             'taxGrid' => $gridPresenter->present($taxGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
+            'taxOptionsForm' => $taxOptionsForm->createView(),
         ]);
     }
 
