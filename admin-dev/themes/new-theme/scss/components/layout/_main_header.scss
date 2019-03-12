@@ -506,35 +506,35 @@ $header-text-color: #4e6167;
     hr {
       border-top-width: 2px;
     }
-      .divider{
-        border: 1px solid $gray-dark-divider;
-        clear: both;
-        margin: 5px auto;
-        width: 90%;
+    .divider {
+      border: 1px solid $gray-dark-divider;
+      clear: both;
+      margin: 5px auto;
+      width: 90%;
+    }
+    a {
+      &.dropdown-item {
+        margin: 10px 0;
       }
-      a{
-        &.dropdown-item{
-          margin: 10px 0;
-        }
-        &.admin-link{
-          border: 1px solid #899EA5;
-          border-radius: 1px;
-          color: #576C72;
-          background-color: inherit;
-          &:hover{
-            border-color: $primary;
-                color: $primary;
-                .material-icons{
-                  color: $primary;
-                }
-          }
-        }
-        &:hover{
-          .material-icons{
-            color: $dropdown-link-hover-bg;
+      &.admin-link {
+        border: 1px solid #899EA5;
+        border-radius: 1px;
+        color: #576C72;
+        background-color: inherit;
+        &:hover {
+          border-color: $primary;
+          color: $primary;
+          .material-icons {
+            color: $primary;
           }
         }
       }
+      &:hover {
+        .material-icons {
+          color: $dropdown-link-hover-bg;
+        }
+      }
+    }
     
     .employee_avatar {
       text-align: center;
