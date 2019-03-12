@@ -30,7 +30,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Interface ContainerBuilderExtensionInterface is used to externalize some container
- * action from the ContainerBuilder.
+ * building actions from the PrestaShop\PrestaShop\Adapter\ContainerBuilder (register
+ * an extension, init some parameters).
+ *
+ * This builder extension system needs to be used for actions that can't be performed in a
+ * CompilerPassInterface due to the compilation workflow (some actions MUST be done before
+ * the compilation stars, this is where this system comes in handy).
  */
 interface ContainerBuilderExtensionInterface
 {

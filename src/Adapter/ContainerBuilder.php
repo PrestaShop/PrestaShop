@@ -155,8 +155,8 @@ class ContainerBuilder
         //If the container builder is modified the container logically should be rebuilt
         $container->addResource(new FileResource(__FILE__));
 
-        $container->addCompilerPass(new LegacyCompilerPass());
         $container->addCompilerPass(new LoadServicesFromModulesPass($this->containerName), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
+        $container->addCompilerPass(new LegacyCompilerPass());
 
         //Build extensions
         $builderExtensions = [
