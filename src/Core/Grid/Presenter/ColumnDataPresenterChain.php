@@ -43,6 +43,13 @@ final class ColumnDataPresenterChain implements ColumnDataPresenterChainInterfac
             }
         }
 
-        throw new \Exception(sprintf('Presenter for column "%s" does not exist', get_class($column)));
+        return ['NOT IMPLEMENTED'];
+    }
+
+    public function addColumnDataPresenter(ColumnDataPresenterInterface $columnDataPresenter)
+    {
+        $type = get_class($columnDataPresenter);
+
+        $this->columnDataPresenters[$type] = $columnDataPresenter;
     }
 }

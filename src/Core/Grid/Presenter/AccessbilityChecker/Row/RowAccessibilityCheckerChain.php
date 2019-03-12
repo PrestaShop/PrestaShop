@@ -27,8 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionInterface;
+use RuntimeException;
 
-class RowAccessibilityCheckerChain
+final class RowAccessibilityCheckerChain
 {
     /**
      * @var RowAccessibilityCheckerInterface[]
@@ -44,5 +45,23 @@ class RowAccessibilityCheckerChain
         }
 
         return true;
+    }
+
+    /**
+     * Adds accessibility checkers to the chain
+     *
+     * @param RowAccessibilityCheckerInterface $checker
+     */
+    public function addChecker(RowAccessibilityCheckerInterface $checker)
+    {
+        $type = get_class($checker);
+
+        if (isset($this->accessibilityCheckers[$type])) {
+            throw new RuntimeException(
+                sprintf('Row accessibility checker "%s" already exists in the chain', $type)
+            );
+        }
+
+        $this->accessibilityCheckers[$type] = $checker;
     }
 }

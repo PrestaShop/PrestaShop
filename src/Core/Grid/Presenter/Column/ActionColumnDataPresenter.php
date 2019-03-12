@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row\RowAccessi
 use PrestaShop\PrestaShop\Core\Grid\Presenter\ColumnDataPresenterInterface;
 
 /**
- * Prepares data for action column ready for rendering
+ * Prepares data for action column rendering
  */
 final class ActionColumnDataPresenter implements ColumnDataPresenterInterface
 {
@@ -62,9 +62,11 @@ final class ActionColumnDataPresenter implements ColumnDataPresenterInterface
                     continue;
                 }
 
-                // @todo: present action
                 $presentedActions[] = [
-                    // ...
+                    'options' => $action->getOptions(),
+                    'data' => [
+                        'id_employee' => $record['id_employee'],
+                    ],
                 ];
             }
         }

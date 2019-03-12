@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionInterface;
 /**
  * Checks if "Delete" action can be performed on employee
  */
-final class EmployeeDeleteAccessibilityChecker
+final class EmployeeDeleteAccessibilityChecker implements RowAccessibilityCheckerInterface
 {
     /**
      * @var int

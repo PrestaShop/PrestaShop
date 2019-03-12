@@ -1,0 +1,7 @@
+services:
+  prestashop.core.grid.presenter.accessibility_checker.row.employee_delete_accessibility_checker:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row\EmployeeDeleteAccessibilityChecker'
+    arguments:
+      - 1
+    tags:
+      - { name: grid.row_accessibility_checker }

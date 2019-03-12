@@ -27,6 +27,7 @@
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
+use PrestaShopBundle\DependencyInjection\Compiler\GridPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTwigServiceCompilerPass;
@@ -60,5 +61,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
         $container->addCompilerPass(new OverrideTwigServiceCompilerPass());
+        $container->addCompilerPass(new GridPass());
     }
 }

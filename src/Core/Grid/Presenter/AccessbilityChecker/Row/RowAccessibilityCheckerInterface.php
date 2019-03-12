@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionInterface;
 
+/**
+ * Interface for service that checks if row actions in accessible for employee
+ */
 interface RowAccessibilityCheckerInterface
 {
     public function isGranted(array $record);
