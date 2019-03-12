@@ -60,4 +60,25 @@ abstract class AbstractAddressHandler
 
         return $address;
     }
+
+    /**
+     * Deletes legacy Address
+     *
+     * @param Address $address
+     *
+     * @return bool
+     *
+     * @throws AddressException
+     */
+    protected function deleteAddress(Address $address)
+    {
+        try {
+            return $address->delete();
+        } catch (PrestaShopException $e) {
+            throw new AddressException(sprintf(
+                'An error occurred when deleting Address object with id "%s".',
+                $address->id
+            ));
+        }
+    }
 }
