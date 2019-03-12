@@ -1,3 +1,6 @@
+parameters:
+    mail_themes_uri: "/mails/themes"
+
 imports:
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/cldr.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/data_provider_common.yml }

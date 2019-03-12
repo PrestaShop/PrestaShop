@@ -88,9 +88,6 @@ services:
     prestashop.adapter.shop.context:
         class: PrestaShop\PrestaShop\Adapter\Shop\Context
 
-    prestashop.adapter.tools:
-        class: PrestaShop\PrestaShop\Adapter\Tools
-
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
         arguments: ["@prestashop.adapter.legacy.context"]
