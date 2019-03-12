@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+import multiStoreRestrictionFieldMap from "./multi-store-restriction-field-map";
 
-import multiStoreRestrictionFieldMap from 'multi-store-restriction-field-map';
+const $ = window.$;
 
 /**
  * Enables multi store functionality for the page. It includes switch functionality and checkboxes
