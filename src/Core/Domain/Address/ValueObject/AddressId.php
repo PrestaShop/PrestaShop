@@ -50,6 +50,14 @@ class AddressId
     }
 
     /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->addressId;
+    }
+
+    /**
      * Validates that the value is integer and is greater than zero
      *
      * @param $value
@@ -63,13 +71,5 @@ class AddressId
                 sprintf('Invalid address id "%s".', var_export($value, true))
             );
         }
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->addressId;
     }
 }
