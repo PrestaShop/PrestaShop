@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
+use FormInterface;
 use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestrictionField;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionCheckboxType;
@@ -96,7 +97,8 @@ class ShopLogosType extends AbstractType
             ])
         ;
 
-        $this->appendWithMultiShopFormFields($builder);
+        $this->appendWithMultiShopCheckboxFormFields($builder);
+        $this->appendWithMultiShopSwitchField($builder);
     }
 
     /**
@@ -107,10 +109,11 @@ class ShopLogosType extends AbstractType
      *
      * @param FormBuilderInterface $builder
      */
-    private function appendWithMultiShopFormFields(FormBuilderInterface $builder)
+    private function appendWithMultiShopCheckboxFormFields(FormBuilderInterface $builder)
     {
         // usually checkboxes should be visible in shop group but on this page it only works for single shop context.
         $isAllowedToDisplay = $this->isShopFeatureUsed && $this->isSingleShopContext;
+
         $suffix = '_is_restricted_to_shop';
 
         /** @var FormBuilderInterface $form */
@@ -124,12 +127,29 @@ class ShopLogosType extends AbstractType
         }
 
         if ($isAllowedToDisplay) {
-            $builder->add('shop_restriction_switch', SwitchType::class, [
-                'required' => false,
-            ]);
             $this->transformMultiStoreFields($builder, $suffix);
             $this->disableAllShopContextFields($builder, $suffix);
             $this->setShopRestrictionSource($builder, $suffix);
+        }
+    }
+
+    /**
+     * adds switch field to current form which toggles all multi-shop checkboxes on or off.
+     *
+     * @param FormBuilderInterface $builder
+     */
+    private function appendWithMultiShopSwitchField(FormBuilderInterface $builder)
+    {
+        $isAllowedToDisplay = $this->isShopFeatureUsed && $this->isSingleShopContext;
+
+        if ($isAllowedToDisplay) {
+            $builder->add('shop_restriction_switch', SwitchType::class, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'js-multi-store-restriction-checkbox',
+                    'data-target-form-name' => $builder->getName(),
+                ],
+            ]);
         }
     }
 
@@ -210,18 +230,39 @@ class ShopLogosType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($suffix) {
             $form = $event->getForm();
 
-            foreach ($form as $formField) {
+            $sourceFields = $this->getShopRestrictionSourceFormFields($form, $suffix);
+
+            foreach ($sourceFields as $formField) {
                 $fieldName = $formField->getName();
 
-                if (!$this->stringEndsWith($fieldName, $suffix)) {
-                    $formType = $formField->getConfig()->getType()->getInnerType();
-                    $options = $formField->getConfig()->getOptions();
-                    $options['attr']['data-shop-restriction-source'] = $fieldName;
+                $formType = $formField->getConfig()->getType()->getInnerType();
+                $options = $formField->getConfig()->getOptions();
+                $options['attr']['data-shop-restriction-source'] = $fieldName;
 
-                    $form->add($fieldName, get_class($formType), $options);
-                }
+                $form->add($fieldName, get_class($formType), $options);
             }
         });
+    }
+
+    /**
+     * Gets the checkbox form fields which are the source of multi-store behavior.
+     *
+     * @param $form
+     * @param $suffix
+     *
+     * @return array
+     */
+    private function getShopRestrictionSourceFormFields($form, $suffix)
+    {
+        $formFields = [];
+
+        foreach ($form as $formField) {
+            if (!$this->stringEndsWith($formField->getName(), $suffix)) {
+                $formFields[] = $formField;
+            }
+        }
+
+        return $formFields;
     }
 
     /**
