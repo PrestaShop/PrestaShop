@@ -717,7 +717,7 @@
   </div>
 {% endblock file_widget %}
 
-{% block shop_restriction_widget %}
+{% block shop_restriction_checkbox_widget %}
   {% if form.vars.attr.is_allowed_to_display %}
     <div class="md-checkbox md-checkbox-inline">
       <label>
@@ -731,5 +731,16 @@
         <i class="md-checkbox-control"></i>
       </label>
     </div>
+  {% endif %}
+{% endblock %}
+
+{% block shop_restriction_switch_widget %}
+  {% if form.vars.attr.is_allowed_to_display %}
+    {{ form_widget(form) }}
+    <small class="form-text">
+      <strong>{{ 'Check / Uncheck all'|trans({}, 'Admin.Actions') }}</strong> <br>
+      {{ 'You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.'|trans({}, 'messages') }} <br>
+      {{ 'If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.'|trans({}, 'messages') }}
+    </small>
   {% endif %}
 {% endblock %}

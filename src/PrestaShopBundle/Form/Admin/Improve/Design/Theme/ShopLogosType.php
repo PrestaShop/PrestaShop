@@ -28,7 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
 use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestrictionField;
-use PrestaShopBundle\Form\Admin\Type\ShopRestrictionType;
+use PrestaShopBundle\Form\Admin\Type\ShopRestrictionCheckboxType;
+use PrestaShopBundle\Form\Admin\Type\ShopRestrictionSwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -113,13 +114,19 @@ class ShopLogosType extends AbstractType
 
         /** @var FormBuilderInterface $form */
         foreach ($builder as $form) {
-            $builder->add($form->getName() . $suffix, ShopRestrictionType::class, [
+            $builder->add($form->getName() . $suffix, ShopRestrictionCheckboxType::class, [
                 'attr' => [
                     'is_allowed_to_display' => $isAllowedToDisplay,
                     'data-shop-restriction-target' => $form->getName(),
                 ],
             ]);
         }
+
+        $builder->add($builder->getName() . '_shop_restriction_switch', ShopRestrictionSwitchType::class, [
+            'attr' => [
+                'is_allowed_to_display' => $isAllowedToDisplay,
+            ],
+        ]);
 
         if ($isAllowedToDisplay) {
             $this->transformMultiStoreFields($builder, $suffix);
