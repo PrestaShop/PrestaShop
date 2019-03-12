@@ -95,8 +95,8 @@ class ManufacturerAddressType extends AbstractType
                 'constraints' => [
                     new GreaterThanOrEqual([
                         'value' => 0,
-                    ])
-                ]
+                    ]),
+                ],
             ])
             ->add('last_name', TextType::class)
             ->add('first_name', TextType::class)
@@ -115,7 +115,7 @@ class ManufacturerAddressType extends AbstractType
             ->add('id_state', ChoiceType::class, [
                 'required' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $this->defaultCountryId
+                    'id_country' => $this->defaultCountryId,
                 ]),
             ])
             ->add('home_phone', TextType::class, [

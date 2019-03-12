@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.address.command_handler.add_manufacturer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\AddManufacturerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand'
