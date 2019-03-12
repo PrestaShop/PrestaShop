@@ -43,8 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
-use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
-use PrestaShop\PrestaShop\Core\Domain\Group\QueryResult\DefaultGroups;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -131,8 +129,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        /** @var DefaultGroups $defaultGroups */
-        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+        $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
             'allowMenuThumbnailsUpload' => true,
@@ -175,8 +172,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        /** @var DefaultGroups $defaultGroups */
-        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+        $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
             'allowMenuThumbnailsUpload' => true,
@@ -237,8 +233,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        /** @var DefaultGroups $defaultGroups */
-        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+        $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
             'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
@@ -298,8 +293,7 @@ class CategoryController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        /** @var DefaultGroups $defaultGroups */
-        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+        $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig', [
             'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
