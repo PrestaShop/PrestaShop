@@ -199,4 +199,23 @@ class SupplierControllerCore extends ProductListingFrontController
     {
         return $this->label;
     }
+    
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('All suppliers', array(), 'Shop.Theme.Catalog'),
+            'url' => $this->context->link->getPageLink('supplier', true),
+        ];
+
+        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
+            $breadcrumb['links'][] = [
+                'title' => $this->supplier->name,
+                'url' => $this->context->link->getSupplierLink($this->supplier),
+            ];
+        }
+
+        return $breadcrumb;
+    }
 }
