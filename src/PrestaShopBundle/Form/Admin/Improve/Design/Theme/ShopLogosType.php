@@ -122,7 +122,7 @@ class ShopLogosType extends AbstractType
             ]);
         }
 
-        $builder->add($builder->getName() . '_shop_restriction_switch', ShopRestrictionSwitchType::class, [
+        $builder->add('shop_restriction_switch', ShopRestrictionSwitchType::class, [
             'attr' => [
                 'is_allowed_to_display' => $isAllowedToDisplay,
             ],
