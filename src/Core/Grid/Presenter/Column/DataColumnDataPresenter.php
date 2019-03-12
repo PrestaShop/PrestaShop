@@ -24,32 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
+namespace PrestaShop\PrestaShop\Core\Grid\Presenter\Column;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
-final class ColumnDataPresenterChain implements ColumnDataPresenterChainInterface
+final class DataColumnDataPresenter implements ColumnDataPresenterInterface
 {
     /**
-     * @var ColumnDataPresenterInterface[]
+     * {@inheritdoc}
      */
-    private $columnDataPresenters = [];
-
-    public function present(ColumnInterface $column, array $record, $gridId)
+    public function present(ColumnInterface $column, array $data, $gridId)
     {
-        foreach ($this->columnDataPresenters as $columnDataPresenter) {
-            if ($columnDataPresenter->supports($column)) {
-                return $columnDataPresenter->present($column, $record, $gridId);
-            }
-        }
+        $options = $column->getOptions();
 
-        return ['NOT IMPLEMENTED'];
+        return [
+            'data' => $data[$options['field']],
+        ];
     }
 
-    public function addColumnDataPresenter(ColumnDataPresenterInterface $columnDataPresenter)
+    /**
+     * {@inheritdoc}
+     */
+    public function supports(ColumnInterface $column)
     {
-        $type = get_class($columnDataPresenter);
-
-        $this->columnDataPresenters[$type] = $columnDataPresenter;
+        return $column instanceof DataColumn;
     }
 }

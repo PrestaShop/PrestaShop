@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Grid\Presenter\Column\ColumnDataPresenterChainInterface;
 
 /**
  * Wraps grid into array which is ready for displaying in Twig templates
@@ -52,15 +53,13 @@ final class TwigGridPresenter implements GridPresenterInterface
         return [
             'id' => $grid->getDefinition()->getId(),
             'name' => $grid->getDefinition()->getName(),
-            'data' => [
-                'records' => $this->presentRecords($grid),
-                'records_total' => $grid->getData()->getRecordsTotal(),
-                'query' => $grid->getData()->getQuery(),
+            'table' => [
+                'data' => $this->getPresentedColumnData($grid),
             ],
         ];
     }
 
-    private function presentRecords(GridInterface $grid)
+    private function getPresentedColumnData(GridInterface $grid)
     {
         $presentedRecords = [];
 
@@ -74,6 +73,8 @@ final class TwigGridPresenter implements GridPresenterInterface
                 );
             }
         }
+
+
 
         return $presentedRecords;
     }

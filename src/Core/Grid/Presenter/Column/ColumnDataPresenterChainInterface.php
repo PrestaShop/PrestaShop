@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
+namespace PrestaShop\PrestaShop\Core\Grid\Presenter\Column;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 

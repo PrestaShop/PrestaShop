@@ -54,5 +54,13 @@ services:
       - '@prestashop.adapter.feature.multistore'
     public: true
 
-  prestashop.core.grid.accessibility_checker.row.row_accessibility_checker_chain:
+  prestashop.core.grid.presenter.accessibility_checker.row.row_accessibility_checker_chain:
     class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row\RowAccessibilityCheckerChain'
+
+  prestashop.core.grid.presenter.column.column_data_presenter_chain:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\Column\ColumnDataPresenterChain'
+
+  prestashop.core.grid.presenter.twig_grid_presenter:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\TwigGridPresenter'
+    arguments:
+      - '@prestashop.core.grid.presenter.column.column_data_presenter_chain'

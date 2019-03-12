@@ -1,0 +1,12 @@
+services:
+  prestashop.core.grid.presenter.column.action_column_data_presenter:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\Column\ActionColumnDataPresenter'
+    arguments:
+      - '@prestashop.core.grid.presenter.accessibility_checker.row.row_accessibility_checker_chain'
+    tags:
+      - { name: grid.column_data_presenter }
+
+  prestashop.core.grid.presenter.column.data_column_data_presenter:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\Column\DataColumnDataPresenter'
+    tags:
+      - { name: grid.column_data_presenter }

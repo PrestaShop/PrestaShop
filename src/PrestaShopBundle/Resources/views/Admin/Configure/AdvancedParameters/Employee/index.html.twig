@@ -51,6 +51,12 @@
     </div>
   {% endblock %}
 
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Common/Grid/template.html.twig' with { 'grid': newGrid } %}
+    </div>
+  </div>
+
   {% block employee_options %}
     {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
   {% endblock %}

@@ -24,20 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
+namespace PrestaShop\PrestaShop\Core\Grid\Presenter\Column;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 
+/**
+ * Interface for service that prepares colum data for rendering
+ */
 interface ColumnDataPresenterInterface
 {
     /**
+     * Prepares data for rendering by combining column definition & row data from data provider
+     *
      * @param ColumnInterface $column
-     * @param array $record
+     * @param array $data
      * @param string $gridId
      *
      * @return array
      */
-    public function present(ColumnInterface $column, array $record, $gridId);
+    public function present(ColumnInterface $column, array $data, $gridId);
 
+    /**
+     * Check if presenter supports column
+     *
+     * @param ColumnInterface $column
+     *
+     * @return true
+     */
     public function supports(ColumnInterface $column);
 }

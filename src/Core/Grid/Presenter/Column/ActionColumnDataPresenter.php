@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row\RowAccessibilityCheckerChain;
-use PrestaShop\PrestaShop\Core\Grid\Presenter\ColumnDataPresenterInterface;
 
 /**
  * Prepares data for action column rendering

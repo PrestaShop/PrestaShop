@@ -32,12 +32,16 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class GridPass implements CompilerPassInterface
 {
+    const ROW_ACTION_ACCESSIBILITY_CHECKER_TAG_NAME = 'grid.row_accessibility_checker';
+    const COLUMN_DATA_PRESENTER_TAG_NAME = 'grid.column_data_presenter';
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
         $this->processGridRowAccessibilityCheckers($container);
+        $this->processGridColumnDataPresenter($container);
     }
 
     /**
@@ -47,15 +51,34 @@ class GridPass implements CompilerPassInterface
      */
     private function processGridRowAccessibilityCheckers(ContainerBuilder $container)
     {
-        if (!$container->has('prestashop.core.grid.accessibility_checker.row.row_accessibility_checker_chain')) {
+        if (!$container->has('prestashop.core.grid.presenter.accessibility_checker.row.row_accessibility_checker_chain')) {
             return;
         }
 
-        $chain = $container->findDefinition('prestashop.core.grid.accessibility_checker.row.row_accessibility_checker_chain');
-        $checkers = $container->findTaggedServiceIds('grid.row_accessibility_checker');
+        $chain = $container->findDefinition('prestashop.core.grid.presenter.accessibility_checker.row.row_accessibility_checker_chain');
+        $checkers = $container->findTaggedServiceIds(self::ROW_ACTION_ACCESSIBILITY_CHECKER_TAG_NAME);
 
-        foreach ($checkers as $id => $checker) {
+        foreach ($checkers as $id => $tags) {
             $chain->addMethodCall('addChecker', [new Reference($id)]);
+        }
+    }
+
+    /**
+     * Collects column data presenters into chain
+     *
+     * @param ContainerBuilder $container
+     */
+    private function processGridColumnDataPresenter(ContainerBuilder $container)
+    {
+        if (!$container->has('prestashop.core.grid.presenter.column.column_data_presenter_chain')) {
+            return;
+        }
+
+        $chain = $container->findDefinition('prestashop.core.grid.presenter.column.column_data_presenter_chain');
+        $columnPresenters = $container->findTaggedServiceIds(self::COLUMN_DATA_PRESENTER_TAG_NAME);
+
+        foreach ($columnPresenters as $id => $tags) {
+            $chain->addMethodCall('addColumnDataPresenter', [new Reference($id)]);
         }
     }
 }
