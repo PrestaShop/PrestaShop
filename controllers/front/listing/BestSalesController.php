@@ -78,4 +78,16 @@ class BestSalesControllerCore extends ProductListingFrontController
     {
         return $this->getTranslator()->trans('Best sellers', array(), 'Shop.Theme.Catalog');
     }
+    
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Best sellers', array(), 'Shop.Theme.Catalog'),
+            'url' => $this->context->link->getPageLink('best-sales', true),
+        ];
+
+        return $breadcrumb;
+    }
 }
