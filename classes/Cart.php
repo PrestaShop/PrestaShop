@@ -1939,7 +1939,7 @@ class CartCore extends ObjectModel
 
         // CART CALCULATION
         $cartRules = array();
-        if (in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS])) {
+        if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getCartRules();
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
@@ -1963,6 +1963,12 @@ class CartCore extends ObjectModel
 
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
+                $calculator->processCalculation($computePrecision);
+                $amount = $calculator->getTotal();
+                $amount->sub($calculator->getFees()->getFinalShippingFees());
+                $amount->sub($calculator->getFees()->getFinalWrappingFees());
+
+                break;
             case Cart::ONLY_PRODUCTS:
                 $calculator->calculateRows();
                 $amount = $calculator->getRowTotal();

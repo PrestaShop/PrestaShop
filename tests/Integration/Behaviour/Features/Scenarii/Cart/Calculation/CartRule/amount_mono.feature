@@ -110,6 +110,7 @@ Feature: Cart rule (amount) calculation with one cart rule
     Then Expected total of my cart tax included should be 182.09
     Then Expected total of my cart tax included should be 182.09 with previous calculation method
 
+  @current
   Scenario: Only virtual product in my cart, one 5€ global voucher
     Given I have an empty default cart
     Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
@@ -120,5 +121,5 @@ Feature: Cart rule (amount) calculation with one cart rule
     When I add product named product8 in my cart with quantity 2
     Then Cart rule named cartrule4 can be applied to my cart
     When I add cart rule named cartrule4 to my cart
-    Then Expected total of my cart tax included should be 19.69
     Then Expected total of my cart tax included should be 19.69 with previous calculation method
+    Then Expected total of my cart tax included should be 19.69
