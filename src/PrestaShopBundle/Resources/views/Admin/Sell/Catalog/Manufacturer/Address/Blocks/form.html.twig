@@ -25,93 +25,95 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{{ form_start(addressForm) }}
-<div class="card">
-  <div class="card-header">
-    {{ 'Addresses'|trans({}, 'Admin.Catalog.Feature') }}
-  </div>
-  <div class="card-block row">
-    <div class="card-text">
+{% block manufacturer_address_form %}
+  {{ form_start(addressForm) }}
+  <div class="card">
+    <div class="card-header">
+      {{ 'Addresses'|trans({}, 'Admin.Catalog.Feature') }}
+    </div>
+    <div class="card-block row">
+      <div class="card-text">
 
-      {{ ps.form_group_row(addressForm.id_manufacturer, {}, {
-        'label': 'Brand'|trans({}, 'Admin.Catalog.Feature'),
-      }) }}
-
-      {% set nameHint %}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:' }}
-      {% endset %}
-
-      {{ ps.form_group_row(addressForm.last_name, {}, {
-        'label': 'Last name'|trans({}, 'Admin.Global'),
-        'help': nameHint
-      }) }}
-
-      {{ ps.form_group_row(addressForm.first_name, {}, {
-        'label': 'First name'|trans({}, 'Admin.Global'),
-        'help': nameHint
-      }) }}
-
-      {{ ps.form_group_row(addressForm.address, {}, {
-        'label': 'Address'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {{ ps.form_group_row(addressForm.address2, {}, {
-        'label': 'Address (2)'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {{ ps.form_group_row(addressForm.post_code, {}, {
-        'label': 'Zip/postal code'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {{ ps.form_group_row(addressForm.city, {}, {
-        'label': 'City'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {{ ps.form_group_row(addressForm.id_country, {'attr': {
-          'class': 'js-country',
-          'data-states-url': path('admin_country_states') }}, {
-          'label': 'Country'|trans({}, 'Admin.Global'),
-      }) }}
-
-      <div class="js-country-state">
-        {{ ps.form_group_row(addressForm.id_state, {}, {
-          'label': 'State'|trans({}, 'Admin.Global'),
+        {{ ps.form_group_row(addressForm.id_manufacturer, {}, {
+          'label': 'Brand'|trans({}, 'Admin.Catalog.Feature'),
         }) }}
+
+        {% set nameHint %}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:' }}
+        {% endset %}
+
+        {{ ps.form_group_row(addressForm.last_name, {}, {
+          'label': 'Last name'|trans({}, 'Admin.Global'),
+          'help': nameHint
+        }) }}
+
+        {{ ps.form_group_row(addressForm.first_name, {}, {
+          'label': 'First name'|trans({}, 'Admin.Global'),
+          'help': nameHint
+        }) }}
+
+        {{ ps.form_group_row(addressForm.address, {}, {
+          'label': 'Address'|trans({}, 'Admin.Global'),
+        }) }}
+
+        {{ ps.form_group_row(addressForm.address2, {}, {
+          'label': 'Address (2)'|trans({}, 'Admin.Global'),
+        }) }}
+
+        {{ ps.form_group_row(addressForm.post_code, {}, {
+          'label': 'Zip/postal code'|trans({}, 'Admin.Global'),
+        }) }}
+
+        {{ ps.form_group_row(addressForm.city, {}, {
+          'label': 'City'|trans({}, 'Admin.Global'),
+        }) }}
+
+        {{ ps.form_group_row(addressForm.id_country, {'attr': {
+            'class': 'js-country',
+            'data-states-url': path('admin_country_states') }}, {
+            'label': 'Country'|trans({}, 'Admin.Global'),
+        }) }}
+
+        <div class="js-country-state">
+          {{ ps.form_group_row(addressForm.id_state, {}, {
+            'label': 'State'|trans({}, 'Admin.Global'),
+          }) }}
+        </div>
+
+        {{ ps.form_group_row(addressForm.home_phone, {}, {
+          'label': 'Home phone'|trans({}, 'Admin.Global'),
+        }) }}
+
+        {{ ps.form_group_row(addressForm.mobile_phone, {}, {
+          'label': 'Mobile phone'|trans({}, 'Admin.Global'),
+        }) }}
+
+        {% set otherHint %}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' &lt;&gt;;=#{}' }}
+        {% endset %}
+
+        {{ ps.form_group_row(addressForm.other, {}, {
+          'label': 'Other'|trans({}, 'Admin.Global'),
+          'hint': otherHint
+        }) }}
+
       </div>
-
-      {{ ps.form_group_row(addressForm.home_phone, {}, {
-        'label': 'Home phone'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {{ ps.form_group_row(addressForm.mobile_phone, {}, {
-        'label': 'Mobile phone'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {% set otherHint %}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' &lt;&gt;;=#{}' }}
-      {% endset %}
-
-      {{ ps.form_group_row(addressForm.other, {}, {
-        'label': 'Mobile phone'|trans({}, 'Admin.Global'),
-        'hint': otherHint
-      }) }}
-
     </div>
+
+    <div class="card-footer">
+      <div class="d-inline-flex">
+        <a href="{{ path('admin_manufacturers_index') }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+      </div>
+      <div class="d-inline-flex float-right">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+
   </div>
-
-  <div class="card-footer">
-    <div class="d-inline-flex">
-      <a href="{{ path('admin_manufacturers_index') }}" class="btn btn-outline-secondary">
-        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-      </a>
-    </div>
-    <div class="d-inline-flex float-right">
-      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-    </div>
-  </div>
-
-</div>
-{{ form_end(addressForm) }}
+  {{ form_end(addressForm) }}
+{% endblock %}
 
 {% block javascripts %}
 
