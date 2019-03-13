@@ -58,6 +58,7 @@ final class UpdateCategoriesStatusHandler implements UpdateCategoriesStatusHandl
 
             if (!$entity->id) {
                 throw new CategoryNotFoundException(
+                    $categoryId,
                     sprintf('Category with id "%s" was not found', $categoryId->getValue())
                 );
             }
