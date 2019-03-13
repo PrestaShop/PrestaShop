@@ -10,3 +10,10 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\Column\DataColumnDataPresenter'
     tags:
       - { name: grid.column_data_presenter }
+
+  prestashop.core.grid.presenter.column.bulk_action_column_data_presenter:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\Column\BulkActionColumnDataPresenter'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
+    tags:
+      - { name: grid.column_data_presenter }
