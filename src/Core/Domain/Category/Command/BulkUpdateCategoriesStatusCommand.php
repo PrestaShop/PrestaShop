@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 /**
  * Updates provided categories to new status
  */
-class UpdateCategoriesStatusCommand
+class BulkUpdateCategoriesStatusCommand
 {
     /**
      * @var CategoryId[]
