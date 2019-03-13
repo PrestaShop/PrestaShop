@@ -2849,7 +2849,7 @@ FileETag none
             '*/themes/*.gif',
             '*/themes/*.woff',
             '*/themes/*.woff2',
-            '*/themes/*.ttf'
+            '*/themes/*.ttf',
         );
 
         // Directories
