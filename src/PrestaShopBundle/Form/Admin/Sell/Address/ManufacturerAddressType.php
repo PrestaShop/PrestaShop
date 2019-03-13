@@ -141,9 +141,12 @@ class ManufacturerAddressType extends AbstractType
                     'id_country' => $this->defaultCountryId,
                 ]),
             ])
+            //@todo: TypedRegexConstraint from another PR
             ->add('home_phone', TextType::class, [
                 'required' => false,
             ])
+
+            //@todo: TypedRegexConstraint from another PR
             ->add('mobile_phone', TextType::class, [
                 'required' => false,
             ])

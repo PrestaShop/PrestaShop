@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Address\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
  * Transfers manufacturer address data for editing
@@ -39,68 +40,68 @@ class EditableManufacturerAddress
     private $addressId;
 
     /**
-     * @var int|null
+     * @var ManufacturerId
      */
     private $manufacturerId;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $lastName;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $firstName;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $address;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $city;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $address2;
 
     /**
-     * @var int|null
+     * @var int
      */
     private $countryId;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $postCode;
 
     /**
-     * @var int|null
+     * @var int
      */
     private $stateId;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $homePhone;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $mobilePhone;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $other;
 
     /**
      * @param AddressId $addressId
-     * @param int $manufacturerId
+     * @param ManufacturerId $manufacturerId
      * @param string $lastName
      * @param string $firstName
      * @param string $address
@@ -115,7 +116,7 @@ class EditableManufacturerAddress
      */
     public function __construct(
         AddressId $addressId,
-        $manufacturerId,
+        ManufacturerId $manufacturerId,
         $lastName,
         $firstName,
         $address,
@@ -152,7 +153,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return int|null
+     * @return ManufacturerId
      */
     public function getManufacturerId()
     {
@@ -160,7 +161,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getLastName()
     {
@@ -168,7 +169,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getFirstName()
     {
@@ -176,7 +177,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getAddress()
     {
@@ -184,7 +185,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getCity()
     {
@@ -192,7 +193,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getAddress2()
     {
@@ -200,7 +201,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getCountryId()
     {
@@ -208,7 +209,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getPostCode()
     {
@@ -216,7 +217,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getStateId()
     {
@@ -224,7 +225,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getHomePhone()
     {
@@ -232,7 +233,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getMobilePhone()
     {
@@ -240,7 +241,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getOther()
     {

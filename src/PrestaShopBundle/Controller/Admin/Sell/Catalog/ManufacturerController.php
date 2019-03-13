@@ -97,19 +97,18 @@ class ManufacturerController extends FrameworkBundleAdminController
             $addressForm->handleRequest($request);
             $result = $this->getAddressFormHandler()->handleFor((int) $addressId, $addressForm);
 
-            /** @var EditableManufacturerAddress $editableAddress */
-            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing((int) $addressId));
-
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             }
-        } catch (AddressException $e) {
+        } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             if ($e instanceof AddressNotFoundException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
         }
+        /** @var EditableManufacturerAddress $editableAddress */
+        $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing((int) $addressId));
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
             'addressForm' => $addressForm->createView(),
