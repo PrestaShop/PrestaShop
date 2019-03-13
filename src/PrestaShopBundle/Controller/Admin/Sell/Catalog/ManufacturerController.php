@@ -29,7 +29,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
@@ -348,43 +350,6 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show & process address creation.
-     *
-     * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function createAddressAction(Request $request)
-    {
-        $addressForm = $this->getAddressFormBuilder()->getForm();
-
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig', [
-            'addressForm' => $addressForm->createView(),
-        ]);
-    }
-
-    /**
-     * Show & process address editing.
-     *
-     * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))"
-     * )
-     *
-     * @param int $addressId
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function editAddressAction(Request $request, $addressId)
-    {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig');
-    }
-
-    /**
      * Deletes address
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
@@ -440,6 +405,80 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_manufacturers_index');
+    }
+
+    /**
+     * Show & process address creation.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAddressAction(Request $request)
+    {
+        $addressFormBuilder = $this->getAddressFormBuilder();
+        $addressFormHandler = $this->getAddressFormHandler();
+        $addressForm = $addressFormBuilder->getForm();
+        $addressForm->handleRequest($request);
+
+        try {
+            $result = $addressFormHandler->handle($addressForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig', [
+            'addressForm' => $addressForm->createView(),
+        ]);
+    }
+
+    /**
+     * Show & process address editing.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param int $addressId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAddressAction(Request $request, $addressId)
+    {
+        try {
+            $addressForm = $this->getAddressFormBuilder()->getFormFor((int) $addressId);
+            $addressForm->handleRequest($request);
+            $result = $this->getAddressFormHandler()->handleFor((int) $addressId, $addressForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            }
+
+            /** @var EditableManufacturerAddress $editableAddress */
+            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing((int) $addressId));
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
+            'addressForm' => $addressForm->createView(),
+            'address' => $editableAddress->getAddress(),
+        ]);
     }
 
     /**
@@ -512,6 +551,10 @@ class ManufacturerController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            AddressNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 
