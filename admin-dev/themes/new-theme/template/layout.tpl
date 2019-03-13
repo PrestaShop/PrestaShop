@@ -5,23 +5,11 @@
 </head>
 <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
 
-{* TODO: REPLACE THIS CLASSS SOMEWHERE
-{if $collapse_menu} page-sidebar-closed{/if}
-*}
-
 {if $display_header}
   <header id="header">
 
     <nav id="header_infos" class="main-header">
-
       <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
-
-      {* TODO: BUTTON USED FOR THE MOBILE VERSION TO REACTIVATE *}
-      {* TODO: TO REPLACE
-      <button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
-        <i class="icon-reorder"></i>
-      </button>
-      *}
 
       {* Logo *}
       <i class="material-icons js-mobile-menu">menu</i>
@@ -50,6 +38,7 @@
           </a>
         </div>
       {/if}
+
       {if isset($maintenance_mode) && $maintenance_mode == true}
         <div class="component hide-mobile-sm" id="header-maintenance-mode-container">
           <a class="link shop-state"
@@ -64,27 +53,24 @@
           </a>
         </div>
       {/if}
+
       <div class="component" id="header-shop-list-container">
         {include file="components/layout/shop_list.tpl"}
       </div>
+
       {if $show_new_orders || $show_new_customers || $show_new_messages}
         <div class="component header-right-component" id="header-notifications-container">
           {include file="components/layout/notifications_center.tpl"}
         </div>
       {/if}
+
       <div class="component" id="header-employee-container">
         {include file="components/layout/employee_dropdown.tpl"}
       </div>
-
-      {* TODO: REPLACE THE AJAX RUNNING SPINNER WITH THE ONE FROM THE UI KIT
-      <span id="ajax_running">
-        <i class="icon-refresh icon-spin icon-fw"></i>
-      </span>
-      *}
     </nav>
+
     {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
   </header>
-
 
   {include file='components/layout/nav_bar.tpl'}
 
@@ -104,17 +90,6 @@
       <div class="content-div {if !isset($page_header_toolbar)}-notoolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
 
         {hook h='displayAdminAfterHeader'}
-
-        {* TODO: REPLACE THIS ELEMENT
-        {if isset($conf)}
-          <div class="bootstrap">
-            <div class="alert alert-success">
-              <button type="button" class="close" data-dismiss="alert">&times;</button>
-              {$conf}
-            </div>
-          </div>
-        {/if}
-        *}
 
         {include file='components/layout/error_messages.tpl'}
         {include file='components/layout/information_messages.tpl'}
@@ -150,7 +125,6 @@
 {include file='components/layout/non-responsive.tpl'}
 <div class="mobile-layer"></div>
 
-{* TODO: THIS FOOTER WILL BE REMOVED *}
 {if $display_footer}
   {include file='footer.tpl'}
 {/if}
