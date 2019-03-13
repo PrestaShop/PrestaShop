@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand;
 
 /**
  * Interface UpdateCategoriesStatusHandlerInterface.
  */
-interface UpdateCategoriesStatusHandlerInterface
+interface BulkUpdateCategoriesStatusHandlerInterface
 {
     /**
-     * @param UpdateCategoriesStatusCommand $command
+     * @param BulkUpdateCategoriesStatusCommand $command
      */
-    public function handle(UpdateCategoriesStatusCommand $command);
+    public function handle(BulkUpdateCategoriesStatusCommand $command);
 }
