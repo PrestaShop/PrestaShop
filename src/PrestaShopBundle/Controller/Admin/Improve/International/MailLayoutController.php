@@ -44,12 +44,13 @@ class MailLayoutController extends FrameworkBundleAdminController
      * @param string $theme
      * @param string $layout
      * @param string $type
+     * @param string $locale
      *
      * @return Response
      */
-    public function previewAction($theme, $layout, $type)
+    public function previewAction($theme, $layout, $type, $locale = '')
     {
-        $renderedLayout = $this->renderLayout($theme, $layout, $type);
+        $renderedLayout = $this->renderLayout($theme, $layout, $type, $locale);
 
         return new Response($renderedLayout);
     }
@@ -58,12 +59,13 @@ class MailLayoutController extends FrameworkBundleAdminController
      * @param string $theme
      * @param string $layout
      * @param string $type
+     * @param string $locale
      *
      * @return Response
      */
-    public function rawAction($theme, $layout, $type)
+    public function rawAction($theme, $layout, $type, $locale = '')
     {
-        $renderedLayout = $this->renderLayout($theme, $layout, $type);
+        $renderedLayout = $this->renderLayout($theme, $layout, $type, $locale);
 
         $response = new Response($renderedLayout, 200, [
             'Content-Type' => 'text/plain'
@@ -76,10 +78,11 @@ class MailLayoutController extends FrameworkBundleAdminController
      * @param string $themeName
      * @param string $layoutName
      * @param string $type
+     * @param string $locale
      *
      * @return string
      */
-    private function renderLayout($themeName, $layoutName, $type)
+    private function renderLayout($themeName, $layoutName, $type, $locale)
     {
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get(ThemeCatalogInterface::class);
@@ -107,7 +110,16 @@ class MailLayoutController extends FrameworkBundleAdminController
             ));
         }
 
-        $language = $this->getContextLanguage();
+        /** @var LanguageRepositoryInterface $languageRepository */
+        $languageRepository = $this->get('prestashop.core.admin.lang.repository');
+        if (empty($locale)) {
+            $locale = $this->getContext()->language->locale;
+        }
+        $language = $languageRepository->getByLocale($locale);
+        if (null === $language) {
+            throw new InvalidArgumentException(sprintf('Could not find Language with locale %s', $locale));
+        }
+
         /** @var MailTemplateRendererInterface $renderer */
         $renderer = $this->get(MailTemplateRendererInterface::class);
 
@@ -131,16 +143,5 @@ class MailLayoutController extends FrameworkBundleAdminController
         }
 
         return $renderedLayout;
-    }
-
-    /**
-     * @return LanguageInterface
-     */
-    private function getContextLanguage()
-    {
-        /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = $this->get('prestashop.core.admin.lang.repository');
-
-        return $languageRepository->getByLocale($this->getContext()->language->locale);
     }
 }

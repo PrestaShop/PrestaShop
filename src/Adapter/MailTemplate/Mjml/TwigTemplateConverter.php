@@ -96,7 +96,7 @@ class TwigTemplateConverter
 
         //Transform back title block
         $twigLayout = preg_replace('#%%title (.*)%%#', '{% block title %}\1{% endblock %}', $twigLayout);
-var_dump($twigLayout);
+
         //Add the styles block in the header
         $dom = new \DOMDocument();
         $dom->loadHTML($twigLayout);
@@ -183,8 +183,15 @@ $layoutStyles
             $this->fileSystem->mkdir($this->tempDir);
         }
 
+        //Transform {{ }} statements so that they are not executed
+        $this->templateContent = preg_replace('#{{ (.*?) }}#', '%% \1 %%', $this->templateContent);
+
         file_put_contents($conversionTemplatePath, $this->templateContent);
+
         $renderedLayout = $this->engine->render($conversionTemplatePath);
+        //Transform back {{ }} statements
+        $renderedLayout = preg_replace('#%% (.*?) %%#', '{{ \1 }}', $renderedLayout);
+
         file_put_contents($conversionTemplatePath.'.mjml', $renderedLayout);
 
         //Convert the conversion template (MJML code is compiled and the template contains mj-raw tags to include the twig tags)

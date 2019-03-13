@@ -123,9 +123,16 @@ class MjmlConverter
             throw new MjmlException('Could not convert mjml file', $convertProcess->getErrorOutput());
         }
 
-        return $convertProcess->getOutput();
+        //Remove file annotation
+        $mjmlOutput = $convertProcess->getOutput();
+        $mjmlOutput = preg_replace('/<!-- FILE: .*\.mjml -->/', '', $mjmlOutput);
+
+        return trim($mjmlOutput)."\n";
     }
 
+    /**
+     * @return string
+     */
     private function getMjmlBinaryPath()
     {
         $process = new Process('which mjml');

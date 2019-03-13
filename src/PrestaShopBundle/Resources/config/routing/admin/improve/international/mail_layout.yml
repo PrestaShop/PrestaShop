@@ -1,8 +1,20 @@
+admin_mail_layout_preview_localized:
+  path: /preview/{theme}/{locale}/{layout}.{type}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\MailLayout:preview
+
 admin_mail_layout_preview:
   path: /preview/{theme}/{layout}.{type}
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\MailLayout:preview
+
+admin_mail_layout_raw_localized:
+  path: /raw/{theme}/{locale}/{layout}.{type}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\MailLayout:raw
 
 admin_mail_layout_raw:
   path: /raw/{theme}/{layout}.{type}
