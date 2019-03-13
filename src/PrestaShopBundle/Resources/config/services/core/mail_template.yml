@@ -31,5 +31,8 @@ services:
   prestashop.core.mail_template.transformation.html_textify:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation'
 
-  prestashop.core.mail_template.transformation.mjml_converter:
+  prestashop.core.mail_template.transformation.mjml:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MjmlTransformation'
+
+  prestashop.core.mail_template.mjml.mjml_converter:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Mjml\MjmlConverter'

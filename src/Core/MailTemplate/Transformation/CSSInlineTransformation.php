@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use DOMElement;
 use DOMAttr;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**
  * Class CSSInlineTransformation applies a transformation on html templates, it downloads
@@ -62,8 +63,9 @@ class CSSInlineTransformation extends AbstractTransformation
         $templateContent = preg_replace('/\{(\w+)\}/', '@\1@', $templateContent);
 
         $cssContent = $this->getCssContent($templateContent);
-        $inliner = new Emogrifier($templateContent, $cssContent);
-        $templateContent = $inliner->emogrify();
+
+        $cssToInlineStyles = new CssToInlineStyles();
+        $templateContent = $cssToInlineStyles->convert($templateContent, $cssContent);
 
         $converter = new CssToAttributeConverter($templateContent);
         $templateContent = $converter->convertCssToVisualAttributes()->render();
