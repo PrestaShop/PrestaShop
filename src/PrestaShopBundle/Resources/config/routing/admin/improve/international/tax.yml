@@ -2,8 +2,7 @@ admin_taxes_index:
   path: /
   methods: [GET]
   defaults:
-    ##todo: implement index action
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:create'
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:index'
     _legacy_controller: AdminTaxes
 
 admin_taxes_save_options:

@@ -23,12 +23,9 @@
 * International Registered Trademark & Property of PrestaShop SA
 *#}
 
-{#
-@todo: path admin_taxes_create after route implementation on another PR
-#}
 {% set layoutHeaderToolbarBtn = {
     'add' : {
-    'href': path('admin_taxes_index'),
+    'href': path('admin_taxes_create'),
     'desc': 'Add new tax'|trans({}, 'Admin.International.Feature'),
     'icon': 'add_circle_outline'
   }

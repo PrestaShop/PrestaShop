@@ -733,11 +733,18 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.international.tax:
+    form.type.international.tax_options:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
       arguments:
         - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_USE_ECOTAX")'
         - '@=service("prestashop.core.form.choice_provider.tax_address_type_choice_provider")'
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
+      tags:
+        - { name: form.type }
+
+    form.type.international.tax:
+      class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType'
+      arguments:
+        - '@translator'
       tags:
         - { name: form.type }
