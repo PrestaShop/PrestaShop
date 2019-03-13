@@ -197,24 +197,6 @@ class ProfilesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get tabs which are accessible for given profile.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getAccessibleTabsAction(Request $request)
-    {
-        $profileId = $request->query->get('profileId');
-        $tabsDataProvider = $this->get('prestashop.adapter.data_provider.tab');
-        $contextEmployeeProvider = $this->get('prestashop.adapter.data_provider.employee');
-
-        return $this->json(
-            $tabsDataProvider->getViewableTabs($profileId, $contextEmployeeProvider->getLanguageId())
-        );
-    }
-
-    /**
      * Get human readable error for exception.
      *
      * @return array

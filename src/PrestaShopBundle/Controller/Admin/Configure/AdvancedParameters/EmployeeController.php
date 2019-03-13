@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeStatu
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -367,6 +368,24 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Get tabs which are accessible for given profile.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getAccessibleTabsAction(Request $request)
+    {
+        $profileId = $request->query->get('profileId');
+        $tabsDataProvider = $this->get('prestashop.adapter.data_provider.tab');
+        $contextEmployeeProvider = $this->get('prestashop.adapter.data_provider.employee');
+
+        return $this->json(
+            $tabsDataProvider->getViewableTabs($profileId, $contextEmployeeProvider->getLanguageId())
+        );
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     protected function getEmployeeFormBuilder()
@@ -475,7 +494,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
-            'getTabsUrl' => $this->generateUrl('admin_profiles_get_tabs'),
+            'getTabsUrl' => $this->generateUrl('admin_employees_get_tabs'),
             'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
         ];
     }

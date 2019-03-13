@@ -82,3 +82,10 @@ admin_employees_change_form_language:
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:changeFormLanguage'
+
+admin_employees_get_tabs:
+  path: /tabs
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:getAccessibleTabs'
+    _legacy_controller: AdminEmployees
