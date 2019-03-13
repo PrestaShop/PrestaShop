@@ -20,6 +20,12 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand'
 
+  prestashop.adapter.address.command_handler.edit_manufacturer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditManufacturerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand'
+
   prestashop.adapter.address.query_handler.get_manufacturer_address_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetManufacturerAddressForEditingHandler'
     tags:

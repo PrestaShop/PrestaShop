@@ -78,6 +78,33 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
     public function update($addressId, array $data)
     {
         $command = new EditManufacturerAddressCommand((int) $addressId);
+        $this->fillCommandWithData($command, $data);
+
+        /** @var AddressId $addressId */
         $addressId = $this->commandBus->handle($command);
+
+        return $addressId->getValue();
+    }
+
+    /**
+     * Fills EditManufacturerAddressCommand with form data
+     *
+     * @param EditManufacturerAddressCommand $command
+     * @param array $data
+     */
+    private function fillCommandWithData(EditManufacturerAddressCommand $command, array $data)
+    {
+        $command->setManufacturerId($data['id_manufacturer']);
+        $command->setLastName($data['last_name']);
+        $command->setFirstName($data['first_name']);
+        $command->setAddress($data['address']);
+        $command->setCountryId($data['id_country']);
+        $command->setCity($data['city']);
+        $command->setAddress2($data['address2']);
+        $command->setPostCode($data['post_code']);
+        $command->setStateId($data['id_state']);
+        $command->setHomePhone($data['home_phone']);
+        $command->setMobilePhone($data['mobile_phone']);
+        $command->setOther($data['other']);
     }
 }
