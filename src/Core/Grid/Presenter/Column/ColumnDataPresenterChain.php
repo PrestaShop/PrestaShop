@@ -36,6 +36,9 @@ final class ColumnDataPresenterChain implements ColumnDataPresenterChainInterfac
      */
     private $columnDataPresenters = [];
 
+    /**
+     * {@inheritdoc}
+     */
     public function present(ColumnInterface $column, array $record, $gridId)
     {
         foreach ($this->columnDataPresenters as $columnDataPresenter) {
@@ -44,10 +47,12 @@ final class ColumnDataPresenterChain implements ColumnDataPresenterChainInterfac
             }
         }
 
-        return ['NOT IMPLEMENTED'];
         throw new RuntimeException(sprintf('Data presenter for column "%s" does not exist.', get_class($column)));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addColumnDataPresenter(ColumnDataPresenterInterface $columnDataPresenter)
     {
         $type = get_class($columnDataPresenter);

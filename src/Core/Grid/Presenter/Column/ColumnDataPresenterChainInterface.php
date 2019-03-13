@@ -28,7 +28,26 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter\Column;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 
+/**
+ * Interface for service that prepares columns for rendering
+ */
 interface ColumnDataPresenterChainInterface
 {
+    /**
+     * Prepares column for rendering
+     *
+     * @param ColumnInterface $column
+     * @param array $record
+     * @param string $gridId
+     *
+     * @return array
+     */
     public function present(ColumnInterface $column, array $record, $gridId);
+
+    /**
+     * Add new column data presenter to the chain
+     *
+     * @param ColumnDataPresenterInterface $columnDataPresenter
+     */
+    public function addColumnDataPresenter(ColumnDataPresenterInterface $columnDataPresenter);
 }
