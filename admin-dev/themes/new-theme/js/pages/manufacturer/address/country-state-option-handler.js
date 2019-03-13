@@ -60,10 +60,10 @@ export default class CountryStateOptionHandler {
    */
   _handleCountryState(states) {
     const stateRow = $('.js-country-state');
-    stateRow.show();
+    stateRow.fadeIn();
 
     if (states.length === 0) {
-      stateRow.hide();
+      stateRow.fadeOut();
     }
   }
 }

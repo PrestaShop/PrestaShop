@@ -24,20 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
 /**
- * Interface for services that handles command which adds new manufacturer address
+ * Is thrown when address is not found
  */
-interface AddManufacturerAddressHandlerInterface
+class AddressNotFoundException extends AddressException
 {
-    /**
-     * @param AddManufacturerAddressCommand $command
-     *
-     * @return AddressId
-     */
-    public function handle(AddManufacturerAddressCommand $command);
 }

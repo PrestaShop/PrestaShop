@@ -24,20 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditManufacturerAddressHandlerInterface;
 
 /**
- * Interface for services that handles command which adds new manufacturer address
+ * Handles command which edits manufacturer address
  */
-interface AddManufacturerAddressHandlerInterface
+final class EditManufacturerAddressHandler implements EditManufacturerAddressHandlerInterface
 {
-    /**
-     * @param AddManufacturerAddressCommand $command
-     *
-     * @return AddressId
-     */
-    public function handle(AddManufacturerAddressCommand $command);
+    public function handle(EditManufacturerAddressCommand $command)
+    {
+        // TODO: Implement handle() method.
+    }
 }

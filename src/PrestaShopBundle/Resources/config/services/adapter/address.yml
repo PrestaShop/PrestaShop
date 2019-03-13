@@ -7,3 +7,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand'
+
+  prestashop.adapter.address.query_handler.get_manufacturer_address_for_editing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetManufacturerAddressForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing'
