@@ -44,7 +44,7 @@ class MaterialChoiceTreeType extends AbstractType
         }
 
         $view->vars['multiple'] = $options['multiple'];
-        $view->vars['choices_tree'] = $options['choices_tree'];
+        $view->vars['choices_tree'] =  $this->getFormattedChoicesTree($options, $selectedData);
         $view->vars['choice_label'] = $options['choice_label'];
         $view->vars['choice_value'] = $options['choice_value'];
         $view->vars['choice_children'] = $options['choice_children'];
@@ -82,5 +82,70 @@ class MaterialChoiceTreeType extends AbstractType
     public function getBlockPrefix()
     {
         return 'material_choice_tree';
+    }
+
+    /**
+     * @param array $options
+     * @param array $selectedData
+     *
+     * @return array
+     */
+    private function getFormattedChoicesTree(array $options, array $selectedData)
+    {
+        $tree = $options['choices_tree'];
+
+        foreach ($tree as &$choice) {
+            $this->fillChoiceWithChildrenSelection(
+                $choice,
+                $options['choice_value'],
+                $options['choice_children'],
+                $selectedData
+            );
+        }
+
+        return $tree;
+    }
+
+    /**
+     * @param array $choice
+     * @param string $choiceValueName
+     * @param string $choiceChildrenName
+     * @param array $selectedValues
+     *
+     * @return bool
+     */
+    private function fillChoiceWithChildrenSelection(
+        array &$choice,
+        $choiceValueName,
+        $choiceChildrenName,
+        array $selectedValues
+    ) {
+        $isSelected = false;
+        $isChildrenSelected = false;
+
+        if (in_array($choice[$choiceValueName], $selectedValues)) {
+            $isSelected = true;
+        }
+
+        if (isset($choice[$choiceChildrenName])) {
+            foreach ($choice[$choiceChildrenName] as &$child) {
+                $selected = $this->fillChoiceWithChildrenSelection(
+                    $child,
+                    $choiceValueName,
+                    $choiceChildrenName,
+                    $selectedValues
+                );
+
+                if ($selected) {
+                    $isChildrenSelected = true;
+                }
+            }
+
+            unset($child);
+        }
+
+        $choice['has_selected_children'] = $isChildrenSelected;
+
+        return $isSelected || $isChildrenSelected;
     }
 }
