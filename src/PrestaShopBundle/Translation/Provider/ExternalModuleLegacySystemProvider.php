@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
+use PrestaShopBundle\Translation\Exception\UnsupportedModuleException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -89,10 +90,16 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     }
 
     /**
-     * is/should module name be part of the API?
+     * {@inheritdoc}
      */
     public function setModuleName($moduleName)
     {
+        if (
+            null === $this->moduleName || empty($this->moduleName)
+        ) {
+            UnsupportedModuleException::moduleNotProvided(self::getIdentifier());
+        }
+
         $this->moduleName = $moduleName;
 
         return $this;

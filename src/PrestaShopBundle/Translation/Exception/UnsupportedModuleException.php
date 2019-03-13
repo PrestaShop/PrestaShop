@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -25,21 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Exception;
 
-use PrestaShopBundle\Translation\Exception\UnsupportedModuleException;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 /**
- * Defines that this provider may need information from module.
+ * Will be thrown if a module name is required by a provider and not set.
  */
-interface UseModuleInterface
+final class UnsupportedModuleException extends NotFoundResourceException
 {
     /**
-     * Set the module name
+     * @param string $providerIdentifier the provider identifier
      *
-     * @param string $moduleName the name of the module
-     *
-     * @throws UnsupportedModuleException if the module is not supported or invalid
+     * @return self
      */
-    public function setModuleName($moduleName);
+    public static function moduleNotProvided($providerIdentifier)
+    {
+        $exceptionMessage = sprintf(
+            'The translation provider with the identifier "%s" require a module to be set.',
+            $providerIdentifier
+        );
+
+        return new self($exceptionMessage);
+    }
 }

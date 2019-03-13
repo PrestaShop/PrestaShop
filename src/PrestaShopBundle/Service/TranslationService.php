@@ -167,8 +167,10 @@ class TranslationService
         if ('Messages' === $domain) {
             $domain = 'messages';
         }
+
         $translationProvider->setDomain($domain);
         $translationProvider->setLocale($locale);
+
         $router = $this->container->get('router');
         $domains = array(
             'info' => array(
@@ -183,6 +185,7 @@ class TranslationService
         } else {
             $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
         }
+
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
         if ('EmailsSubject' === $domain) {
             $theme = 'subject';
@@ -205,6 +208,7 @@ class TranslationService
                 }
             }
         }
+
         return $domains;
     }
 

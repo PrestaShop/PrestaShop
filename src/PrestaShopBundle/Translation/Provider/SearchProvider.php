@@ -117,7 +117,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getXliffCatalogue()
     {
-        try  {
+        try {
             $xliffCatalogue = parent::getXliffCatalogue();
         } catch (\Exception $e) {
             $xliffCatalogue = $this->externalModuleLegacySystemProvider->getXliffCatalogue();

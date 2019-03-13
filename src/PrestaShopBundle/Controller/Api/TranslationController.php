@@ -33,6 +33,8 @@ use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
+use Symfony\Component\Validator\Constraints\Locale;
 
 class TranslationController extends ApiController
 {
@@ -66,8 +68,17 @@ class TranslationController extends ApiController
             $domain = $request->attributes->get('domain');
             $theme = $request->attributes->get('theme', $this->getSelectedTheme());
             $module = $request->query->get('module');
-
             $search = $request->query->get('search');
+
+            // If the locale is invalid, no need to call the translation provider.
+            if (
+                $locale !== 'default' &&
+                !$this->container->get('validator')->validate($locale, [
+                    new Locale(),
+                ])
+            ) {
+                throw UnsupportedLocaleException::invalidLocale($locale);
+            }
 
             $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
             $info = array(

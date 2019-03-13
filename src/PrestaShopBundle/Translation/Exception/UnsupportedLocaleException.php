@@ -50,4 +50,19 @@ final class UnsupportedLocaleException extends NotFoundResourceException
 
         return new self($exceptionMessage);
     }
+
+    /**
+     * @param string $locale the translation locale
+     *
+     * @return self
+     */
+    public static function invalidLocale($locale)
+    {
+        $exceptionMessage = sprintf(
+            'The provided locale `%s` is invalid.',
+            $locale
+        );
+
+        return new self($exceptionMessage);
+    }
 }

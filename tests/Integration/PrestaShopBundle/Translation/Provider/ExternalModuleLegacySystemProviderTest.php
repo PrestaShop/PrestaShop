@@ -92,10 +92,10 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
      * 4 translations in Smarty files
      * and 88 unique translations in the translations folder for the locale fr-FR
      */
-    public function testGetLegacyCatalogueWithDefinedLocale()
+    public function testGetXliffCatalogueWithDefinedLocale()
     {
         $this->provider->setLocale('fr-FR');
-        $legacyCatalogue = $this->provider->getLegacyCatalogue();
+        $legacyCatalogue = $this->provider->getXliffCatalogue();
         $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 
         $this->assertCount(5, $legacyCatalogue->all('ModulesSomeModule'));
