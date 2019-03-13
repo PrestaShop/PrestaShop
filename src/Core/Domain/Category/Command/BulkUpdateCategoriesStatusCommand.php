@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
  * Updates provided categories to new status
@@ -42,13 +41,13 @@ class BulkUpdateCategoriesStatusCommand
     private $categoryIds;
 
     /**
-     * @var CategoryStatus
+     * @var bool
      */
     private $newStatus;
 
     /**
      * @param int[] $categoryIds
-     * @param string $newStatus
+     * @param bool $newStatus
      *
      * @throws CategoryConstraintException
      * @throws CategoryException
@@ -70,7 +69,7 @@ class BulkUpdateCategoriesStatusCommand
     }
 
     /**
-     * @return CategoryStatus
+     * @return bool
      */
     public function getNewStatus()
     {
@@ -99,13 +98,20 @@ class BulkUpdateCategoriesStatusCommand
     }
 
     /**
-     * @param string $newStatus
+     * @param bool $newStatus
      *
      * @return self
      */
     private function setNewStatus($newStatus)
     {
-        $this->newStatus = new CategoryStatus($newStatus);
+        if (!is_bool($newStatus)) {
+            throw new CategoryConstraintException(
+                sprintf('Category status %s is invalid. Status must be of type "bool".', var_export($newStatus, true)),
+                CategoryConstraintException::INVALID_STATUS
+            );
+        }
+
+        $this->newStatus = $newStatus;
 
         return $this;
     }
