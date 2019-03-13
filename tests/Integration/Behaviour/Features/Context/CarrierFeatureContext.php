@@ -27,7 +27,6 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Address;
-use Behat\Behat\Context\Context as BehatContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Carrier;
 use CartRule;

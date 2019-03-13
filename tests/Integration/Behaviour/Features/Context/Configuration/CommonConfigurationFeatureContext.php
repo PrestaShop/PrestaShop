@@ -52,7 +52,7 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     /**
      * @Given /^shipping handling fees are set to (\d+\.\d+)$/
      */
-    public function setShippingHandlingFees( $value)
+    public function setShippingHandlingFees($value)
     {
         $this->setConfiguration('PS_SHIPPING_HANDLING', $value);
     }

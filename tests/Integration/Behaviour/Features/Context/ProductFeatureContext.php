@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Context\Context as BehatContext;
 use Cart;
 use Combination;
 use Configuration;
@@ -143,7 +142,6 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
                     )
                 );
             }
-
         }
     }
 

@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Context\Context as BehatContext;
 use LegacyTests\Unit\ContextMocker;
 
 class ContextFeatureContext extends AbstractPrestaShopFeatureContext
