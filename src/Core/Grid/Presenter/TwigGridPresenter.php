@@ -74,8 +74,6 @@ final class TwigGridPresenter implements GridPresenterInterface
             }
         }
 
-
-
         return $presentedRecords;
     }
 }
