@@ -2836,7 +2836,16 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
-            '/js/jquery/*',
+            '*/js/*.css',
+            '*/js/*.js',
+            '*/themes/*.js',
+            '*/themes/*.css',
+            '*/themes/*.jpg',
+            '*/themes/*.png',
+            '*/themes/*.gif',
+            '*/themes/*.woff',
+            '*/themes/*.woff2',
+            '*/themes/*.ttf'
         );
 
         // Directories
