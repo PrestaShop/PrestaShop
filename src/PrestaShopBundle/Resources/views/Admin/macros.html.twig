@@ -233,11 +233,9 @@
   </div>
 {% endmacro %}
 
-{% macro multistore_switch(form, vars, extraVars) %}
+{% macro multistore_switch(form, extraVars) %}
   {% import '@PrestaShop/Admin/macros.html.twig' as self %}
-
   {% if form.shop_restriction_switch is defined %}
-
     {% set defaultLabel %}
       <strong>{{ 'Check / Uncheck all'|trans({}, 'Admin.Actions') }}</strong> <br>
       {{ 'You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.'|trans({}, 'messages') }} <br>
@@ -247,6 +245,8 @@
     {% if extraVars.help is not defined %}
       {% set extraVars = extraVars|merge({'help': defaultLabel}) %}
     {% endif %}
+
+    {% set vars = { 'attr': { 'class': 'js-multi-store-restriction-switch'}} %}
 
     {{ self.form_group_row(form.shop_restriction_switch, vars, extraVars) }}
   {% endif %}

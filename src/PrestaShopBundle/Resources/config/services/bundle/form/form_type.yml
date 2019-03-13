@@ -747,7 +747,7 @@ services:
       class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
       arguments:
         - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-        - '@=service("prestashop.adapter.shop.context").isAllContext()'
+        - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
         - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
       tags:
         - { name: form.type }

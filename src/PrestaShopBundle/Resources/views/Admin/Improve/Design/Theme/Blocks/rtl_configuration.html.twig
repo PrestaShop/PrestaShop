@@ -50,15 +50,14 @@
 
   {% if isMultiShopFeatureUsed and isSingleShopContext %}
     <hr>
-  {% endif %}
-
-  <div class="card-block row">
-    <div class="card-text">
-      {{ ps.multistore_switch(shopLogosForm.options, {}, {
-        'label': 'Multistore'|trans({}, 'messages'),
-      }) }}
+    <div class="card-block row">
+      <div class="card-text">
+        {{ ps.multistore_switch(shopLogosForm.options, {
+          'label': 'Multistore'|trans({}, 'messages'),
+        }) }}
+      </div>
     </div>
-  </div>
+  {% endif %}
   <div class="card-footer">
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary">

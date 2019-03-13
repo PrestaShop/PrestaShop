@@ -146,7 +146,6 @@ class ShopLogosType extends AbstractType
             $builder->add('shop_restriction_switch', SwitchType::class, [
                 'required' => false,
                 'attr' => [
-                    'class' => 'js-multi-store-restriction-checkbox',
                     'data-target-form-name' => $builder->getName(),
                 ],
             ]);
