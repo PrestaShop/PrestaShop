@@ -26,33 +26,40 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+
 /**
- * Adds new address
+ * Edits manufacturer address
  */
-class AddManufacturerAddressCommand
+class EditManufacturerAddressCommand
 {
+    /**
+     * @var AddressId
+     */
+    private $addressId;
+
     /**
      * @var int|null
      */
     private $manufacturerId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $lastName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $firstName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $address;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $city;
 
@@ -92,49 +99,31 @@ class AddManufacturerAddressCommand
     private $other;
 
     /**
-     * @param string $lastName
-     * @param string $firstName
-     * @param string $address
-     * @param string $city
-     * @param int $manufacturerId
-     * @param string|null $address2
-     * @param int|null $countryId
-     * @param string|null $postCode
-     * @param int|null $stateId
-     * @param string|null $homePhone
-     * @param string $mobilePhone
-     * @param string|null $other
+     * @param AddressId $addressId
      */
-    public function __construct(
-        $manufacturerId,
-        $lastName,
-        $firstName,
-        $address,
-        $countryId,
-        $city,
-        $address2 = null,
-        $postCode = null,
-        $stateId = null,
-        $homePhone = null,
-        $mobilePhone = null,
-        $other = null
-    ) {
-        $this->manufacturerId = $manufacturerId;
-        $this->lastName = $lastName;
-        $this->firstName = $firstName;
-        $this->address = $address;
-        $this->countryId = $countryId;
-        $this->city = $city;
-        $this->address2 = $address2;
-        $this->postCode = $postCode;
-        $this->stateId = $stateId;
-        $this->homePhone = $homePhone;
-        $this->mobilePhone = $mobilePhone;
-        $this->other = $other;
+    public function __construct(AddressId $addressId)
+    {
+        $this->addressId = $addressId;
     }
 
     /**
-     * @return int
+     * @return AddressId
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
+
+    /**
+     * @param AddressId $addressId
+     */
+    public function setAddressId($addressId)
+    {
+        $this->addressId = $addressId;
+    }
+
+    /**
+     * @return int|null
      */
     public function getManufacturerId()
     {
@@ -142,7 +131,15 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return string
+     * @param int|null $manufacturerId
+     */
+    public function setManufacturerId($manufacturerId)
+    {
+        $this->manufacturerId = $manufacturerId;
+    }
+
+    /**
+     * @return string|null
      */
     public function getLastName()
     {
@@ -150,7 +147,15 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return string
+     * @param string|null $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return string|null
      */
     public function getFirstName()
     {
@@ -158,7 +163,15 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return string
+     * @param string|null $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return string|null
      */
     public function getAddress()
     {
@@ -166,11 +179,27 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return string
+     * @param string|null $address
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+    }
+
+    /**
+     * @return string|null
      */
     public function getCity()
     {
         return $this->city;
+    }
+
+    /**
+     * @param string|null $city
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
     }
 
     /**
@@ -182,11 +211,27 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return int
+     * @param string|null $address2
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+    }
+
+    /**
+     * @return int|null
      */
     public function getCountryId()
     {
         return $this->countryId;
+    }
+
+    /**
+     * @param int|null $countryId
+     */
+    public function setCountryId($countryId)
+    {
+        $this->countryId = $countryId;
     }
 
     /**
@@ -198,11 +243,27 @@ class AddManufacturerAddressCommand
     }
 
     /**
+     * @param string|null $postCode
+     */
+    public function setPostCode($postCode)
+    {
+        $this->postCode = $postCode;
+    }
+
+    /**
      * @return int|null
      */
     public function getStateId()
     {
         return $this->stateId;
+    }
+
+    /**
+     * @param int|null $stateId
+     */
+    public function setStateId($stateId)
+    {
+        $this->stateId = $stateId;
     }
 
     /**
@@ -214,6 +275,14 @@ class AddManufacturerAddressCommand
     }
 
     /**
+     * @param string|null $homePhone
+     */
+    public function setHomePhone($homePhone)
+    {
+        $this->homePhone = $homePhone;
+    }
+
+    /**
      * @return string|null
      */
     public function getMobilePhone()
@@ -222,10 +291,26 @@ class AddManufacturerAddressCommand
     }
 
     /**
+     * @param string|null $mobilePhone
+     */
+    public function setMobilePhone($mobilePhone)
+    {
+        $this->mobilePhone = $mobilePhone;
+    }
+
+    /**
      * @return string|null
      */
     public function getOther()
     {
         return $this->other;
+    }
+
+    /**
+     * @param string|null $other
+     */
+    public function setOther($other)
+    {
+        $this->other = $other;
     }
 }

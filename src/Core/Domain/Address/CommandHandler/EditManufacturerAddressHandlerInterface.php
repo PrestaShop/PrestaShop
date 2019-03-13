@@ -26,18 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 
 /**
- * Interface for services that handles command which adds new manufacturer address
+ * Interface for services that handles command which edits manufacturer address
  */
-interface AddManufacturerAddressHandlerInterface
+interface EditManufacturerAddressHandlerInterface
 {
-    /**
-     * @param AddManufacturerAddressCommand $command
-     *
-     * @return AddressId
-     */
-    public function handle(AddManufacturerAddressCommand $command);
+    public function handle(EditManufacturerAddressCommand $command);
 }

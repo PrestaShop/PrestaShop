@@ -24,14 +24,14 @@
  *#}
 
 {% set enableSidebar = true %}
-{#{% set layoutTitle = 'Edit: %name%'|trans({'%name%': manufacturerName}, 'Admin.Actions') %}#}
+{% set layoutTitle = 'Edit: %name%'|trans({'%name%': address}, 'Admin.Actions') %}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
   <div class="row justify-content-center">
     <div class="col">
-      {#{% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/Blocks/form.html.twig' %}#}
+      {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/Blocks/form.html.twig' %}
     </div>
   </div>
 {% endblock %}
