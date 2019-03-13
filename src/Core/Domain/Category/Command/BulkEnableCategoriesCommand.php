@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
  * Enables given categories
@@ -43,6 +42,6 @@ class BulkEnableCategoriesCommand extends BulkUpdateCategoriesStatusCommand
      */
     public function __construct(array $categoryIds)
     {
-        parent::__construct($categoryIds, CategoryStatus::ENABLED);
+        parent::__construct($categoryIds, true);
     }
 }
