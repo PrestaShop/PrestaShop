@@ -1275,7 +1275,7 @@ class AdminTranslationsControllerCore extends AdminController
             case 'modules':
                 // Parsing modules file
                 if ($type_file == 'php') {
-                    $regex = '/->l\(\s*(\')' . _PS_TRANS_PATTERN_ . '\'(\s*,\s*?\'(.+)\')?(\s*,\s*?(.+))?\s*\)/U';
+                    $regex = '/->l\(\s*(\')' . _PS_TRANS_PATTERN_ . '\'(\s*,\s*?\'(.+)\')?(\s*,\s*?(.+))?\s*\)/Ums';
                 } else {
                     // In tpl file look for something that should contain mod='module_name' according to the documentation
                     $regex = '/\{l\s*s=([\'\"])' . _PS_TRANS_PATTERN_ . '\1.*\s+mod=\'' . $module_name . '\'.*\}/U';
