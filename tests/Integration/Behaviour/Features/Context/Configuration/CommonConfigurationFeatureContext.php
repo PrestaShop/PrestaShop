@@ -31,7 +31,7 @@ use Tools;
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^Shop configuration of (.+) is set to (.+)$/
+     * @Given /^shop configuration for (.+) is set to (.+)$/
      */
     public function shopConfigurationOfIsSetTo($index, $value)
     {
@@ -39,5 +39,21 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
             Tools::$round_mode = null;
         }
         $this->setConfiguration($index, $value);
+    }
+
+    /**
+     * @Given /^order out of stock products is allowed$/
+     */
+    public function allowOrderOutOfStock()
+    {
+        $this->setConfiguration('PS_ORDER_OUT_OF_STOCK', 1);
+    }
+
+    /**
+     * @Given /^shipping handling fees are set to (\d+\.\d+)$/
+     */
+    public function setShippingHandlingFees( $value)
+    {
+        $this->setConfiguration('PS_SHIPPING_HANDLING', $value);
     }
 }

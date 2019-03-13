@@ -5,25 +5,25 @@ Feature: Add product customization in cart
 
   Scenario: Add customization in cart
     Given I have an empty default cart
-    Given There is a product with name product8 and price 26.364 and quantity 30
-    Given Product with name product8 has a customization field with name custo1
-    When I add customization named custo1 of product named product8 in my cart with quantity 11
-    Then Quantity of customization named custo1 of product named product8 in my cart should be 11
-    Then Remaining quantity of customization named custo1 for product named product8 should be 19
+    Given there is a product in the catalog named product8 with a price of 26.364 and 30 items in stock
+    Given product named product8 has a customization field named custo1
+    When I add 11 items of customization custo1 of product product8
+    Then I should have 11 items of customization custo1 of product product8 in my cart
+    Then the remaining available stock for customization custo1 of product product8 should be 19
 
   Scenario: Cannot add customization in cart with quantity exceeding availability
     Given I have an empty default cart
-    Given There is a product with name product8 and price 26.364 and quantity 30
-    Given Product with name product8 has a customization field with name custo1
-    Then I am not able to add customization named custo1 of product named product8 in my cart with quantity 41
-    Then Quantity of customization named custo1 of product named product8 in my cart should be 0
-    Then Remaining quantity of customization named custo1 for product named product8 should be 30
+    Given there is a product in the catalog named product8 with a price of 26.364 and 30 items in stock
+    Given product named product8 has a customization field named custo1
+    Then I am not able to add 41 items of customization custo1 of product product8 to my cart
+    Then I should have 0 items of customization custo1 of product product8 in my cart
+    Then the remaining available stock for customization custo1 of product product8 should be 30
 
   Scenario: Be able to add out of stock customization if configuration allows it
-    Given Shop configuration of PS_ORDER_OUT_OF_STOCK is set to 1
+    Given order out of stock products is allowed
     Given I have an empty default cart
-    Given There is a product with name product8 and price 26.364 and quantity 30
-    Given Product with name product8 has a customization field with name custo1
-    When I add customization named custo1 of product named product8 in my cart with quantity 41
-    Then Quantity of customization named custo1 of product named product8 in my cart should be 41
-    Then Remaining quantity of customization named custo1 for product named product8 should be -11
+    Given there is a product in the catalog named product8 with a price of 26.364 and 30 items in stock
+    Given product named product8 has a customization field named custo1
+    When I add 41 items of customization custo1 of product product8
+    Then I should have 41 items of customization custo1 of product product8 in my cart
+    Then the remaining available stock for customization custo1 of product product8 should be -11

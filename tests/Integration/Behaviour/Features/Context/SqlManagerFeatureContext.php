@@ -53,7 +53,7 @@ class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then I should get a set of database fields that contain values:
+     * @Then i should get a set of database fields that contain values:
      */
     public function assertSetOfDatabaseFieldsContain(TableNode $table)
     {
@@ -97,7 +97,7 @@ class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When I add the SQL request :sqlRequest with name :name
+     * @When I add the SQL request :sqlRequest named :name
      */
     public function addSqlRequest($sqlRequest, $name)
     {

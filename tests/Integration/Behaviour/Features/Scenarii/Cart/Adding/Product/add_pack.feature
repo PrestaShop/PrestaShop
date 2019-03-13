@@ -4,103 +4,103 @@ Feature: Add product pack in cart
   I must be able to correctly add product packs in my cart
 
   Scenario: Check remaining quantity of pack when config is set to STOCK_TYPE_PACK_ONLY
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PACK_ONLY
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    Then Remaining quantity of product named product6 should be 10
-    Then Remaining quantity of product named product5 should be 50
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PACK_ONLY
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    Then the remaining available stock for product product6 should be 10
+    Then the remaining available stock for product product5 should be 50
 
   Scenario: Check remaining quantity of pack when config is set to STOCK_TYPE_PRODUCTS_ONLY
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PRODUCTS_ONLY
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    Then Remaining quantity of product named product6 should be 5
-    Then Remaining quantity of product named product5 should be 50
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PRODUCTS_ONLY
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    Then the remaining available stock for product product6 should be 5
+    Then the remaining available stock for product product5 should be 50
 
   Scenario: Check remaining quantity of pack when config is set to STOCK_TYPE_PACK_BOTH
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PACK_BOTH
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    Then Remaining quantity of product named product6 should be 5
-    Then Remaining quantity of product named product5 should be 50
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PACK_BOTH
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    Then the remaining available stock for product product6 should be 5
+    Then the remaining available stock for product product5 should be 50
 
   Scenario: Check pack if is in stock when config is set to STOCK_TYPE_PACK_ONLY
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PACK_ONLY
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    Then pack with name product6 is in stock for quantity 10
-    Then pack with name product6 is not in stock for quantity 11
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PACK_ONLY
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    Then pack named product6 has enough stock for an order of 10 items
+    Then pack named product6 has not enough stock for an order of 11 items
 
   Scenario: Check pack if is in stock when config is set to STOCK_TYPE_PRODUCTS_ONLY
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PRODUCTS_ONLY
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    Then pack with name product6 is in stock for quantity 5
-    Then pack with name product6 is not in stock for quantity 6
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PRODUCTS_ONLY
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    Then pack named product6 has enough stock for an order of 5 items
+    Then pack named product6 has not enough stock for an order of 6 items
 
   Scenario: Check pack if is in stock when config is set to STOCK_TYPE_PACK_BOTH
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PACK_BOTH
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    Then pack with name product6 is in stock for quantity 5
-    Then pack with name product6 is not in stock for quantity 6
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PACK_BOTH
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    Then pack named product6 has enough stock for an order of 5 items
+    Then pack named product6 has not enough stock for an order of 6 items
 
   Scenario: Check product is correctly considered as a pack
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
     Then product product6 is considered as a pack
 
   Scenario: Check pack/product count is correct when adding in pack if configuration is set to STOCK_TYPE_PACK_ONLY
     Given I have an empty default cart
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PACK_ONLY
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    When I add product named product6 in my cart with quantity 2
-    When I add product named product5 in my cart with quantity 30
-    Then Quantity of product named product6 in my cart should be 2
-    Then Quantity of product named product5 in my cart should be 30
-    Then Deep quantity of product named product6 in my cart should be 2
-    Then Deep quantity of product named product5 in my cart should be 30
-    Then Distinct product count in my cart should be 2
-    Then Remaining quantity of product named product6 should be 8
-    Then Remaining quantity of product named product5 should be 20
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PACK_ONLY
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    When I add 2 items of product product6 in my cart
+    When I add 30 items of product product5 in my cart
+    Then my cart should contain 2 units of product product6, including items in pack
+    Then my cart should contain 30 units of product product5, including items in pack
+    Then my cart should contain 2 units of product product6, excluding items in pack
+    Then my cart should contain 30 units of product product5, excluding items in pack
+    Then I should have 2 different products in my cart
+    Then the remaining available stock for product product6 should be 8
+    Then the remaining available stock for product product5 should be 20
 
   Scenario: Check pack/product count is correct when adding in pack if configuration is set to STOCK_TYPE_PRODUCTS_ONLY
     Given I have an empty default cart
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PRODUCTS_ONLY
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    When I add product named product6 in my cart with quantity 2
-    When I add product named product5 in my cart with quantity 30
-    Then Quantity of product named product6 in my cart should be 2
-    Then Quantity of product named product5 in my cart should be 30
-    Then Deep quantity of product named product6 in my cart should be 2
-    Then Deep quantity of product named product5 in my cart should be 50
-    Then Distinct product count in my cart should be 2
-    Then Remaining quantity of product named product6 should be 0
-    Then Remaining quantity of product named product5 should be 0
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PRODUCTS_ONLY
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    When I add 2 items of product product6 in my cart
+    When I add 30 items of product product5 in my cart
+    Then my cart should contain 2 units of product product6, excluding items in pack
+    Then my cart should contain 30 units of product product5, excluding items in pack
+    Then my cart should contain 2 units of product product6, including items in pack
+    Then my cart should contain 50 units of product product5, including items in pack
+    Then I should have 2 different products in my cart
+    Then the remaining available stock for product product6 should be 0
+    Then the remaining available stock for product product5 should be 0
 
   Scenario: Check pack/product count is correct when adding in pack if configuration is set to STOCK_TYPE_PACK_BOTH
     Given I have an empty default cart
-    Given Specific shop configuration of "pack stock type" is set to STOCK_TYPE_PACK_BOTH
-    Given There is a product with name product5 and price 23.86 and quantity 50
-    Given There is a product with name product6 and price 12.34 and quantity 10
-    Given Product with name product6 is a pack containing quantity 10 of product named product5
-    When I add product named product6 in my cart with quantity 2
-    When I add product named product5 in my cart with quantity 30
-    Then Quantity of product named product6 in my cart should be 2
-    Then Quantity of product named product5 in my cart should be 30
-    Then Deep quantity of product named product6 in my cart should be 2
-    Then Deep quantity of product named product5 in my cart should be 50
-    Then Distinct product count in my cart should be 2
-    Then Remaining quantity of product named product6 should be 0
-    Then Remaining quantity of product named product5 should be 0
+    Given specific shop configuration for "pack stock type" is set to STOCK_TYPE_PACK_BOTH
+    Given there is a product in the catalog named product5 with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named product6 with a price of 12.34 and 10 items in stock
+    Given product named product6 is a pack containing 10 items of product product5
+    When I add 2 items of product product6 in my cart
+    When I add 30 items of product product5 in my cart
+    Then my cart should contain 2 units of product product6, excluding items in pack
+    Then my cart should contain 30 units of product product5, excluding items in pack
+    Then my cart should contain 2 units of product product6, including items in pack
+    Then my cart should contain 50 units of product product5, including items in pack
+    Then I should have 2 different products in my cart
+    Then the remaining available stock for product product6 should be 0
+    Then the remaining available stock for product product5 should be 0

@@ -39,7 +39,7 @@ use RangePrice;
 use State;
 use Zone;
 
-class CarrierFeatureContext implements BehatContext
+class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 
@@ -90,9 +90,9 @@ class CarrierFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^There is a zone with name (.+)$/
+     * @Given /^there is a zone named (.+)$/
      */
-    public function setZone($zoneName)
+    public function createZone($zoneName)
     {
         $zone = new Zone();
         $zone->name = $zoneName;
@@ -105,15 +105,13 @@ class CarrierFeatureContext implements BehatContext
      */
     public function checkZoneWithNameExists($zoneName)
     {
-        if (!isset($this->zones[$zoneName])) {
-            throw new \Exception('Zone with name "' . $zoneName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->zones, 'Zone', $zoneName);
     }
 
     /**
-     * @Given /^There is a country with name (.+) and iso code (.+) in zone named (.+)$/
+     * @Given /^there is a country named (.+) and iso code (.+) in zone (.+)$/
      */
-    public function setCountry($countryName, $isoCode, $zoneName)
+    public function createCountry($countryName, $isoCode, $zoneName)
     {
         $this->checkZoneWithNameExists($zoneName);
         $countryId = Country::getByIso($isoCode, false);
@@ -144,15 +142,13 @@ class CarrierFeatureContext implements BehatContext
      */
     public function checkCountryWithNameExists($countryName)
     {
-        if (!isset($this->countries[$countryName])) {
-            throw new \Exception('Country with name "' . $countryName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->countries, 'Country', $countryName);
     }
 
     /**
-     * @Given /^There is a state with name (.+) and iso code (.+) in country named (.+) and zone named (.+)$/
+     * @Given /^there is a state named (.+) with iso code (.+) in country (.+) and zone (.+)$/
      */
-    public function setState($stateName, $stateIsoCode, $countryName, $zoneName)
+    public function createState($stateName, $stateIsoCode, $countryName, $zoneName)
     {
         $this->checkZoneWithNameExists($zoneName);
         $this->checkCountryWithNameExists($countryName);
@@ -180,21 +176,18 @@ class CarrierFeatureContext implements BehatContext
      */
     public function checkStateWithNameExists($stateName)
     {
-        if (!isset($this->states[$stateName])) {
-            throw new \Exception('State with name "' . $stateName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->states, 'State', $stateName);
     }
 
     /**
-     * @Given /^There is an address with name (.+) and post code (.+) in country named (.+) and state named (.+)$/
+     * @Given /^there is an address named (.+) with postcode (.+) in state (.+)$/
      */
-    public function setAddress($addressName, $postCode, $countryName, $stateName)
+    public function createAddress($addressName, $postCode, $stateName)
     {
-        $this->checkCountryWithNameExists($countryName);
         $this->checkStateWithNameExists($stateName);
         $address = new Address();
-        $address->id_country = $this->countries[$countryName]->id;
         $address->id_state = $this->states[$stateName]->id;
+        $address->id_country = $this->states[$stateName]->id_country;
         $address->postcode = $postCode;
         $address->lastname = 'lastname';
         $address->firstname = 'firstname';
@@ -206,7 +199,7 @@ class CarrierFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Address with name (.+) is associated to customer with name (.+)$/
+     * @Given /^address named (.+) is associated to customer named (.+)$/
      */
     public function setAddressCustomer($addressName, $customerName)
     {
@@ -221,15 +214,13 @@ class CarrierFeatureContext implements BehatContext
      */
     public function checkAddressWithNameExists($addressName)
     {
-        if (!isset($this->addresses[$addressName])) {
-            throw new \Exception('Address with name "' . $addressName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->addresses, 'Address', $addressName);
     }
 
     /**
-     * @Given /^There is a carrier with name (.+)$/
+     * @Given /^there is a carrier named (.+)$/
      */
-    public function setCarrier($carrierName)
+    public function createCarrier($carrierName)
     {
         $carrier = new Carrier(null, Configuration::get('PS_LANG_DEFAULT'));
         $carrier->name = $carrierName;
@@ -248,9 +239,9 @@ class CarrierFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Carrier with name (.+) ships to all groups$/
+     * @Given /^carrier named (.+) ships to all groups$/
      */
-    public function setCarrierToAllGroups($carrierName)
+    public function setCarrierShipsToAllGroups($carrierName)
     {
         $this->checkCarrierWithNameExists($carrierName);
         $carrier = $this->carriers[$carrierName];
@@ -268,9 +259,7 @@ class CarrierFeatureContext implements BehatContext
      */
     public function checkCarrierWithNameExists($carrierName)
     {
-        if (!isset($this->carriers[$carrierName])) {
-            throw new \Exception('Carrier with name "' . $carrierName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->carriers, 'Carrier', $carrierName);
     }
 
     /**
@@ -286,7 +275,7 @@ class CarrierFeatureContext implements BehatContext
     /**
      * Be careful: this method REPLACES shipping fees for carrier
      *
-     * @Given /^Carrier with name (.+) has a shipping fees of (\d+\.\d+) in zone with name (.+) for quantities between (\d+) and (\d+)$/
+     * @Given /^carrier named (.+) applies shipping fees of (\d+\.\d+) in zone (.+) for quantities between (\d+) and (\d+)$/
      */
     public function setCarrierFees($carrierName, $shippingPrice, $zoneName, $fromQuantity, $toQuantity)
     {
@@ -319,7 +308,7 @@ class CarrierFeatureContext implements BehatContext
     /**
      * @AfterScenario
      */
-    public function cleanData()
+    public function cleanFixtures()
     {
         foreach ($this->priceRanges as $priceRange) {
             $priceRange->delete();
@@ -351,7 +340,7 @@ class CarrierFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^I select in my cart carrier with name (.+)$/
+     * @When /^I select carrier (.+) in my cart$/
      */
     public function setCartCarrier($carrierName)
     {
@@ -365,7 +354,7 @@ class CarrierFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^I select in my cart address with name (.+)$/
+     * @When /^I select address named (.+) in my cart$/
      */
     public function setCartAddress($addresssName)
     {

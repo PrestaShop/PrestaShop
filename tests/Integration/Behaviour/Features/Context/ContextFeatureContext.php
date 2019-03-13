@@ -29,7 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Behat\Behat\Context\Context as BehatContext;
 use LegacyTests\Unit\ContextMocker;
 
-class ContextFeatureContext implements BehatContext
+class ContextFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
      * @var ContextMocker

@@ -33,7 +33,7 @@ use Tax;
 use TaxRule;
 use TaxRulesGroup;
 
-class TaxFeatureContext implements BehatContext
+class TaxFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 
@@ -70,9 +70,9 @@ class TaxFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^There is a tax with name (.+) and rate (\d+\.\d+)%$/
+     * @Given /^there is a tax named (.+) and rate (\d+\.\d+)%$/
      */
-    public function setTax($name, $rate)
+    public function createTax($name, $rate)
     {
         $tax = new Tax();
         $tax->name = [(int) Context::getContext()->language->id => 'fake'];
@@ -83,9 +83,9 @@ class TaxFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^There is a tax rule with name (.+) in country with name (.+) and state with name (.+) with tax with name (.+)$/
+     * @Given /^there is a tax rule named (.+) in country (.+) and state (.+) where tax (.+) is applied$/
      */
-    public function setTaxRule($taxRuleName, $countryName, $stateName, $taxName)
+    public function createTaxRule($taxRuleName, $countryName, $stateName, $taxName)
     {
         $this->carrierFeatureContext->checkCountryWithNameExists($countryName);
         $this->carrierFeatureContext->checkStateWithNameExists($stateName);
@@ -114,9 +114,7 @@ class TaxFeatureContext implements BehatContext
      */
     public function checkTaxWithNameExists($name)
     {
-        if (!isset($this->taxes[$name])) {
-            throw new \Exception('Tax with name "' . $name . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->taxes, 'Tax', $name);
     }
 
     /**
@@ -124,15 +122,13 @@ class TaxFeatureContext implements BehatContext
      */
     public function checkTaxRuleWithNameExists($name)
     {
-        if (!isset($this->taxRules[$name])) {
-            throw new \Exception('Tax rule with name "' . $name . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->taxRules, 'Tax rule', $name);
     }
 
     /**
      * @AfterScenario
      */
-    public function cleanData()
+    public function cleanFixtures()
     {
         foreach ($this->taxRules as $taxRule) {
             $taxRule->delete();
@@ -149,7 +145,7 @@ class TaxFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^I set delivery address id to (\d+)$/
+     * @When /^I set the delivery address in my cart to address id (\d+)$/
      */
     public function setIdAddress($addressId)
     {
@@ -157,7 +153,7 @@ class TaxFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Product with name (.+) belongs to tax group with name (.+)$/
+     * @Given /^product named (.+) belongs to tax group named (.+)$/
      */
     public function setProductTaxRuleGroup($productName, $taxName)
     {
@@ -169,7 +165,7 @@ class TaxFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Carrier with name (.+) belongs to tax group with name (.+)$/
+     * @Given /^carrier named (.+) belongs to tax group named (.+)$/
      */
     public function setCarrierTaxRuleGroup($carrierName, $taxName)
     {

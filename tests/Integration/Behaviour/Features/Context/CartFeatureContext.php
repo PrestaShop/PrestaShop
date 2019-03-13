@@ -31,7 +31,7 @@ use Cart;
 use Context;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
 
-class CartFeatureContext implements BehatContext
+class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 
@@ -72,7 +72,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Distinct product count in my cart should be (\d+)$/
+     * @Then /^I should have (\d+) different products in my cart$/
      */
     public function productCountInMyCartShouldBe($productCount)
     {
@@ -89,7 +89,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Total product count in my cart should be (\d+)$/
+     * @Then /^I should have (\d+) products in my cart$/
      */
     public function totalProductCountInMyCartShouldBe($productCount)
     {
@@ -106,7 +106,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Expected total of my cart tax included should be (precisely )?(\d+\.\d+)$/
+     * @Then /^my cart total should be (precisely )?(\d+\.\d+) tax included$/
      */
     public function totalCartWithTaxtShouldBe($precisely, $expectedTotal)
     {
@@ -114,7 +114,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Expected total of my cart tax included should be (precisely )?(\d+\.\d+) with previous calculation method$/
+     * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax included$/
      */
     public function totalCartWithTaxtOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
@@ -122,7 +122,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Expected total of my cart tax excluded should be (precisely )?(\d+\.\d+)$/
+     * @Then /^my cart total should be (precisely )?(\d+\.\d+) tax excluded$/
      */
     public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal)
     {
@@ -130,7 +130,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Expected total of my cart tax excluded should be (precisely )?(\d+\.\d+) with previous calculation method$/
+     * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax excluded$/
      */
     public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
@@ -171,7 +171,7 @@ class CartFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Cart shipping fees should be (\d+\.\d+)( tax excluded| tax included)?$/
+     * @Then /^cart shipping fees should be (\d+\.\d+)( tax excluded| tax included)?$/
      */
     public function calculateCartShippingFees($expectedShippingFees, $taxes = null)
     {

@@ -32,7 +32,7 @@ use Pack;
 class PackConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^Specific shop configuration of "pack stock type" is set to (STOCK_TYPE_PACK_ONLY|STOCK_TYPE_PRODUCTS_ONLY|STOCK_TYPE_PACK_BOTH)$/
+     * @Given /^specific shop configuration for "pack stock type" is set to (STOCK_TYPE_PACK_ONLY|STOCK_TYPE_PRODUCTS_ONLY|STOCK_TYPE_PACK_BOTH)$/
      */
     public function specificShopConfigurationPackStockTypeOfIsSetTo($value)
     {
@@ -48,7 +48,7 @@ class PackConfigurationFeatureContext extends AbstractConfigurationFeatureContex
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_BOTH);
                 break;
             default:
-                throw new \Exception('Unknown config value for specific shop configuration of "pack stock type": ' . $value);
+                throw new \Exception('Unknown config value for specific shop configuration for "pack stock type": ' . $value);
                 break;
         }
     }

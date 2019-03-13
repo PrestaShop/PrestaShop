@@ -110,4 +110,14 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
     {
         return static::$kernel->getContainer();
     }
+
+    protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
+    {
+        if (!isset($fixtures[$fixtureIndex])) {
+            $fixtureNames = array_keys($fixtures);
+            $firstFixtureNames = array_splice($fixtureNames, 0, 5);
+            $firstFixtureNamesStr = implode(',', $firstFixtureNames);
+            throw new \Exception($fixtureName . ' named "' . $fixtureIndex . '" was not added in fixtures. First 5 added are: ' . $firstFixtureNamesStr);
+        }
+    }
 }

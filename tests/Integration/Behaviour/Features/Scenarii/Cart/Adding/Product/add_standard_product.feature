@@ -5,45 +5,45 @@ Feature: Add product in cart
 
   Scenario: Add product(s) in cart
     Given I have an empty default cart
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Then Remaining quantity of product named product1 should be 1000
-    When I add product named product1 in my cart with quantity 11
-    Then Quantity of product named product1 in my cart should be 11
-    Then Remaining quantity of product named product1 should be 989
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Then the remaining available stock for product product1 should be 1000
+    When I add 11 items of product product1 in my cart
+    Then my cart should contain 11 units of product product1, excluding items in pack
+    Then the remaining available stock for product product1 should be 989
 
   Scenario: Cannot add product in cart with quantity exceeding availability
     Given I have an empty default cart
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Then I am not able to add product named product1 in my cart with quantity 1100
-    Then Quantity of product named product1 in my cart should be 0
-    Then Remaining quantity of product named product1 should be 1000
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Then I am not allowed to add 1100 items of product product1 in my cart
+    Then my cart should contain 0 units of product product1, excluding items in pack
+    Then the remaining available stock for product product1 should be 1000
 
   Scenario: Be able to add out of stock product if configuration allows it
-    Given Shop configuration of PS_ORDER_OUT_OF_STOCK is set to 1
+    Given order out of stock products is allowed
     Given I have an empty default cart
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    When I add product named product1 in my cart with quantity 1100
-    Then Quantity of product named product1 in my cart should be 1100
-    Then Remaining quantity of product named product1 should be -100
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    When I add 1100 items of product product1 in my cart
+    Then my cart should contain 1100 units of product product1, excluding items in pack
+    Then the remaining available stock for product product1 should be -100
 
   Scenario: change product quantity
     Given I have an empty default cart
-    Given There is a product with name product1 and price 19.812 and quantity 1000
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
     When I change quantity of product named product1 in my cart with quantity 1 and operator up, result of change is OK
-    Then Quantity of product named product1 in my cart should be 1
+    Then my cart should contain 1 units of product product1, excluding items in pack
     When I change quantity of product named product1 in my cart with quantity 1 and operator up, result of change is OK
-    Then Quantity of product named product1 in my cart should be 2
+    Then my cart should contain 2 units of product product1, excluding items in pack
     When I change quantity of product named product1 in my cart with quantity 2 and operator up, result of change is OK
-    Then Quantity of product named product1 in my cart should be 4
+    Then my cart should contain 4 units of product product1, excluding items in pack
     When I change quantity of product named product1 in my cart with quantity 2 and operator nothing, result of change is KO
-    Then Quantity of product named product1 in my cart should be 4
+    Then my cart should contain 4 units of product product1, excluding items in pack
     When I change quantity of product named product1 in my cart with quantity 2 and operator down, result of change is OK
-    Then Quantity of product named product1 in my cart should be 2
+    Then my cart should contain 2 units of product product1, excluding items in pack
     When I change quantity of product named product1 in my cart with quantity 1 and operator down, result of change is OK
-    Then Quantity of product named product1 in my cart should be 1
+    Then my cart should contain 1 units of product product1, excluding items in pack
     When I change quantity of product named product1 in my cart with quantity 1 and operator down, result of change is OK
-    Then Quantity of product named product1 in my cart should be 0
+    Then my cart should contain 0 units of product product1, excluding items in pack
     When I change quantity of product named product1 in my cart with quantity 1 and operator down, result of change is OK
-    Then Quantity of product named product1 in my cart should be 0
+    Then my cart should contain 0 units of product product1, excluding items in pack
     When I change quantity of product named product1 in my cart with quantity 1 and operator nothing, result of change is OK
-    Then Quantity of product named product1 in my cart should be 0
+    Then my cart should contain 0 units of product product1, excluding items in pack

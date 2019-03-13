@@ -5,26 +5,26 @@ Feature: Add product combination in cart
 
   Scenario: Add combination in cart
     Given I have an empty default cart
-    Given There is a product with name product7 and price 24.324 and quantity 1000
-    Given Product with name product7 has a combination with name combi1 and quantity 500
-    Then Remaining quantity of combination named combi1 for product named product7 should be 500
-    When I add combination named combi1 of product named product7 in my cart with quantity 11
-    Then Quantity of combination named combi1 of product named product7 in my cart should be 11
-    Then Remaining quantity of combination named combi1 for product named product7 should be 489
+    Given there is a product in the catalog named product7 with a price of 24.324 and 1000 items in stock
+    Given product named product7 has a combination named combi1 with 500 items in stock
+    Then the remaining available stock for combination combi1 of product product7 should be 500
+    When I add 11 items of combination combi1 of product product7
+    Then I should have 11 items of combination combi1 of product product7 in my cart
+    Then the remaining available stock for combination combi1 of product product7 should be 489
 
   Scenario: Cannot add combination in cart with quantity exceeding availability
     Given I have an empty default cart
-    Given There is a product with name product7 and price 19.812 and quantity 1000
-    Given Product with name product7 has a combination with name combi1 and quantity 500
-    Then I am not able to add combination named combi1 of product named product7 in my cart with quantity 600
-    Then Quantity of combination named combi1 of product named product7 in my cart should be 0
-    Then Remaining quantity of combination named combi1 for product named product7 should be 500
+    Given there is a product in the catalog named product7 with a price of 19.812 and 1000 items in stock
+    Given product named product7 has a combination named combi1 with 500 items in stock
+    Then I am not able to add 600 items of combination combi1 of product product7 in my cart
+    Then I should have 0 items of combination combi1 of product product7 in my cart
+    Then the remaining available stock for combination combi1 of product product7 should be 500
 
   Scenario: Be able to add out of stock combination if configuration allows it
-    Given Shop configuration of PS_ORDER_OUT_OF_STOCK is set to 1
+    Given order out of stock products is allowed
     Given I have an empty default cart
-    Given There is a product with name product7 and price 19.812 and quantity 1000
-    Given Product with name product7 has a combination with name combi1 and quantity 500
-    When I add combination named combi1 of product named product7 in my cart with quantity 600
-    Then Quantity of combination named combi1 of product named product7 in my cart should be 600
-    Then Remaining quantity of combination named combi1 for product named product7 should be -100
+    Given there is a product in the catalog named product7 with a price of 19.812 and 1000 items in stock
+    Given product named product7 has a combination named combi1 with 500 items in stock
+    When I add 600 items of combination combi1 of product product7
+    Then I should have 600 items of combination combi1 of product product7 in my cart
+    Then the remaining available stock for combination combi1 of product product7 should be -100

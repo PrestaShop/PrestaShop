@@ -31,7 +31,7 @@ use Configuration;
 class RoundingModeConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^Specific shop configuration of "rounding mode" is set to (PS_ROUND_UP|PS_ROUND_DOWN|PS_ROUND_HALF_UP|PS_ROUND_HALF_DOWN|PS_ROUND_HALF_EVEN|PS_ROUND_HALF_ODD)$/
+     * @Given /^specific shop configuration for "rounding mode" is set to (PS_ROUND_UP|PS_ROUND_DOWN|PS_ROUND_HALF_UP|PS_ROUND_HALF_DOWN|PS_ROUND_HALF_EVEN|PS_ROUND_HALF_ODD)$/
      */
     public function setRoundingMode($value)
     {
@@ -56,7 +56,7 @@ class RoundingModeConfigurationFeatureContext extends AbstractConfigurationFeatu
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_ODD);
                 break;
             default:
-                throw new \Exception('Unknown config value for specific shop configuration of "rounding mode": ' . $value);
+                throw new \Exception('Unknown config value for specific shop configuration for "rounding mode": ' . $value);
                 break;
         }
     }

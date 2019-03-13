@@ -31,7 +31,7 @@ use Context;
 use Currency;
 use Configuration;
 
-class CurrencyFeatureContext implements BehatContext
+class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 
@@ -55,7 +55,7 @@ class CurrencyFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function cleanCurrencies()
+    public function cleanCurrencyFixtures()
     {
         Configuration::set('PS_CURRENCY_DEFAULT', $this->previousDefaultCurrencyId);
         foreach ($this->currencies as $currency) {
@@ -65,7 +65,7 @@ class CurrencyFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^There is a currency with name (.+) and iso code (.+) and change rate of (\d+\.\d+)$/
+     * @Given /^there is a currency named (.+) with iso code (.+) and exchange rate of (\d+\.\d+)$/
      */
     public function thereIsACurrency($currencyName, $currencyIsoCode, $changeRate)
     {
@@ -89,7 +89,7 @@ class CurrencyFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Currency with name (.+) is the default one$/
+     * @Given /^currency (.+) is the default one$/
      */
     public function setDefaultCurrency($currencyName)
     {
@@ -98,7 +98,7 @@ class CurrencyFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^No currency is set as the current one$/
+     * @Given /^no currency is set as the current one$/
      */
     public function setNoCurrentCurrency()
     {
@@ -106,7 +106,7 @@ class CurrencyFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Currency with name (.+) is the current one$/
+     * @Given /^currency named (.+) is the current one$/
      */
     public function setCurrentCurrency($currencyName)
     {
@@ -120,8 +120,6 @@ class CurrencyFeatureContext implements BehatContext
      */
     public function checkCurrencyWithNameExists($currencyName)
     {
-        if (!isset($this->currencies[$currencyName])) {
-            throw new \Exception('Currency with name "' . $currencyName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->currencies, 'Currency', $currencyName);
     }
 }

@@ -30,7 +30,7 @@ use Behat\Behat\Context\Context as BehatContext;
 use Context;
 use Customer;
 
-class CustomerFeatureContext implements BehatContext
+class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 
@@ -40,9 +40,9 @@ class CustomerFeatureContext implements BehatContext
     protected $customers = [];
 
     /**
-     * @Given /^There is a customer with name (.+) and email (.+)$/
+     * @Given /^there is a customer named (.+) whose email is (.+)$/
      */
-    public function setCustomer($customerName, $customerEmail)
+    public function createCustomer($customerName, $customerEmail)
     {
         $customer = new Customer();
         $customer->firstname = 'fake';
@@ -54,7 +54,7 @@ class CustomerFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^Current customer is customer with name (.+)$/
+     * @When /^I am logged in as (.+)$/
      */
     public function setCurrentCustomer($customerName)
     {
@@ -67,9 +67,7 @@ class CustomerFeatureContext implements BehatContext
      */
     public function checkCustomerWithNameExists($customerName)
     {
-        if (!isset($this->customers[$customerName])) {
-            throw new \Exception('Customer with name "' . $customerName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->customers, 'Customer', $customerName);
     }
 
     /**
@@ -85,7 +83,7 @@ class CustomerFeatureContext implements BehatContext
     /**
      * @AfterScenario
      */
-    public function cleanData()
+    public function cleanCustomerFixtures()
     {
         foreach ($this->customers as $customer) {
             $customer->delete();

@@ -32,7 +32,7 @@ use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
 
-class OrderFeatureContext implements BehatContext
+class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 
@@ -42,7 +42,7 @@ class OrderFeatureContext implements BehatContext
     protected $orders = [];
 
     /**
-     * @When /^I validate my cart with payment module (fake)$/
+     * @When /^I validate my cart using payment module (fake)$/
      */
     public function validateCartWithPaymentModule($paymentModuleName)
     {
@@ -54,7 +54,7 @@ class OrderFeatureContext implements BehatContext
                 throw new \Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
         }
 
-        // need to boot kernel in $paymentModule->validateOrder()
+        // need to boot kernel for usage in $paymentModule->validateOrder()
         global $kernel;
         $previousKernel = $kernel;
         $kernel = new \AppKernel('test', true);
@@ -82,7 +82,7 @@ class OrderFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Current cart order total for products should be (\d+\.\d+)( tax included| tax excluded)?$/
+     * @Then /^current cart order total for products should be (\d+\.\d+)( tax included| tax excluded)?$/
      */
     public function checkOrderProductTotal($expectedTotal, $taxes = null)
     {
@@ -101,7 +101,7 @@ class OrderFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Current cart order total discount should be (\d+\.\d+)( tax included| tax excluded)?$/
+     * @Then /^current cart order total discount should be (\d+\.\d+)( tax included| tax excluded)?$/
      */
     public function checkOrderTotalDiscount($expectedTotal, $taxes = null)
     {
@@ -120,7 +120,7 @@ class OrderFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Current cart order shipping fees should be (\d+\.\d+)( tax included| tax excluded)?$/
+     * @Then /^current cart order shipping fees should be (\d+\.\d+)( tax included| tax excluded)?$/
      */
     public function checkOrderShippingFees($expectedTotal, $taxes = null)
     {
@@ -139,7 +139,7 @@ class OrderFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Current cart order cart rules count should be (\d+)$/
+     * @Then /^current cart order cart rules count should be (\d+)$/
      */
     public function checkOrderCartRulesCount($expectedCount)
     {
@@ -157,7 +157,7 @@ class OrderFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Current cart order should have a discount in position (\d+) with value (.+) tax included and (.+) tax excluded$/
+     * @Then /^current cart order should have a discount in position (\d+) with an amount of (.+) tax included and (.+) tax excluded$/
      */
     public function checkOrderDiscount($position, $discountTaxIncluded, $discountTaxExcluded)
     {
@@ -203,7 +203,7 @@ class OrderFeatureContext implements BehatContext
     /**
      * @AfterScenario
      */
-    public function cleanData()
+    public function cleanOrderFixtures()
     {
         foreach ($this->orders as $order) {
             $order->delete();

@@ -5,12 +5,12 @@ Feature: SQL Manager
 
   Scenario: Get required database fields
     When I request the database fields from table carrier
-    Then I should get a set of database fields that contain values:
+    Then i should get a set of database fields that contain values:
       | id_carrier      |
       | name            |
       | shipping_method |
 
   Scenario: Save a SQL request
     Given there is 0 stored SQL requests
-    When I add the SQL request "SELECT * FROM carrier" with name "select_carriers_count_1"
+    When I add the SQL request "SELECT * FROM carrier" named "select_carriers_count_1"
     Then there should be 1 stored SQL request

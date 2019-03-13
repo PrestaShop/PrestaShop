@@ -29,7 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Behat\Behat\Context\Context as BehatContext;
 use SpecificPriceRule;
 
-class SpecificPriceRuleFeatureContext implements BehatContext
+class SpecificPriceRuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
      * @var SpecificPriceRule[]
@@ -41,7 +41,7 @@ class SpecificPriceRuleFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function cleanCartRules()
+    public function cleanCartRuleFixtures()
     {
         foreach ($this->specificPriceRules as $specificPriceRule) {
             $specificPriceRule->delete();
@@ -50,9 +50,22 @@ class SpecificPriceRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^There is a specific price rule with name (.+) and reduction in (percentage|amount) and reduction value of (\d+) and minimal quantity of (\d+)$/
+     * @Given /^there is a specific price rule named (.+) with a percent discount of (\d+)% and minimum quantity of (\d+)$/
      */
-    public function insertSpecificPriceRule($priceRuleName, $type, $value, $minimalQuantity)
+    public function insertSpecificPriceRulePercent($priceRuleName, $value, $minimalQuantity)
+    {
+        $this->createSpecificPriceRule($priceRuleName, 'percentage', $value, $minimalQuantity);
+    }
+
+    /**
+     * @Given /^there is a specific price rule named (.+) with an amount discount of (\d+) and minimum quantity of (\d+)$/
+     */
+    public function insertSpecificPriceRuleAmount($priceRuleName, $value, $minimalQuantity)
+    {
+        $this->createSpecificPriceRule($priceRuleName, 'amount', $value, $minimalQuantity);
+    }
+
+    protected function createSpecificPriceRule($priceRuleName, $type, $value, $minimalQuantity)
     {
         $rule = new SpecificPriceRule();
         $rule->id_shop = \Context::getContext()->shop->id;
@@ -72,7 +85,7 @@ class SpecificPriceRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^specific price rule with name (.+) change product price to (\d+\.\d+)$/
+     * @Given /^specific price rule (.+) changes product price to (\d+\.\d+)$/
      */
     public function setPriceModifier($priceRuleName, $price)
     {
@@ -86,8 +99,6 @@ class SpecificPriceRuleFeatureContext implements BehatContext
      */
     public function checkCartRuleWithNameExists($priceRuleName)
     {
-        if (!isset($this->specificPriceRules[$priceRuleName])) {
-            throw new \Exception('Price rule with name "' . $priceRuleName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->specificPriceRules, 'Price rule', $priceRuleName);
     }
 }

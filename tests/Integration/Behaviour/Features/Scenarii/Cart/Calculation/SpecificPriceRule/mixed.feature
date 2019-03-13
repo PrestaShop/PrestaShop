@@ -5,52 +5,52 @@ Feature: Cart calculation with specific price rule (mixed)
 
   Scenario: 3 products in cart, several quantities, one rule percent with price set from quantity 1
     Given I have an empty default cart
-    Given There is a specific price rule with name priceRule1 and reduction in percentage and reduction value of 10 and minimal quantity of 1
-    Given specific price rule with name priceRule1 change product price to 2.0
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a product with name product3 and price 31.188 and quantity 1000
-    When I add product named product2 in my cart with quantity 2
-    When I add product named product1 in my cart with quantity 3
-    When I add product named product3 in my cart with quantity 1
-    Then Expected total of my cart tax included should be 17.8
-    Then Expected total of my cart tax included should be 17.8 with previous calculation method
+    Given there is a specific price rule named priceRule1 with a percent discount of 10% and minimum quantity of 1
+    Given specific price rule priceRule1 changes product price to 2.0
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a product in the catalog named product2 with a price of 32.388 and 1000 items in stock
+    Given there is a product in the catalog named product3 with a price of 31.188 and 1000 items in stock
+    When I add 2 items of product product2 in my cart
+    When I add 3 items of product product1 in my cart
+    When I add 1 items of product product3 in my cart
+    Then my cart total should be 17.8 tax included
+    Then my cart total using previous calculation method should be 17.8 tax included
 
   Scenario: 3 products in cart, several quantities, one rule amount with price set from quantity 1
     Given I have an empty default cart
-    Given There is a specific price rule with name priceRule2 and reduction in amount and reduction value of 3 and minimal quantity of 1
-    Given specific price rule with name priceRule2 change product price to 2.0
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a product with name product3 and price 31.188 and quantity 1000
-    When I add product named product2 in my cart with quantity 2
-    When I add product named product1 in my cart with quantity 3
-    When I add product named product3 in my cart with quantity 1
-    Then Expected total of my cart tax included should be 7.0
-    Then Expected total of my cart tax included should be 7.0 with previous calculation method
+    Given there is a specific price rule named priceRule2 with an amount discount of 3 and minimum quantity of 1
+    Given specific price rule priceRule2 changes product price to 2.0
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a product in the catalog named product2 with a price of 32.388 and 1000 items in stock
+    Given there is a product in the catalog named product3 with a price of 31.188 and 1000 items in stock
+    When I add 2 items of product product2 in my cart
+    When I add 3 items of product product1 in my cart
+    When I add 1 items of product product3 in my cart
+    Then my cart total should be 7.0 tax included
+    Then my cart total using previous calculation method should be 7.0 tax included
 
   Scenario: 3 products in cart, several quantities, one rule percent with price set from quantity 2
     Given I have an empty default cart
-    Given There is a specific price rule with name priceRule3 and reduction in percentage and reduction value of 10 and minimal quantity of 2
-    Given specific price rule with name priceRule3 change product price to 2.0
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a product with name product3 and price 31.188 and quantity 1000
-    When I add product named product2 in my cart with quantity 2
-    When I add product named product1 in my cart with quantity 3
-    When I add product named product3 in my cart with quantity 1
-    Then Expected total of my cart tax included should be 47.188
-    Then Expected total of my cart tax included should be 47.188 with previous calculation method
+    Given there is a specific price rule named priceRule3 with a percent discount of 10% and minimum quantity of 2
+    Given specific price rule priceRule3 changes product price to 2.0
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a product in the catalog named product2 with a price of 32.388 and 1000 items in stock
+    Given there is a product in the catalog named product3 with a price of 31.188 and 1000 items in stock
+    When I add 2 items of product product2 in my cart
+    When I add 3 items of product product1 in my cart
+    When I add 1 items of product product3 in my cart
+    Then my cart total should be 47.188 tax included
+    Then my cart total using previous calculation method should be 47.188 tax included
 
   Scenario: 3 products in cart, several quantities, one rule amount with price set from quantity 2
     Given I have an empty default cart
-    Given There is a specific price rule with name priceRule4 and reduction in amount and reduction value of 3 and minimal quantity of 2
-    Given specific price rule with name priceRule4 change product price to 2.0
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a product with name product3 and price 31.188 and quantity 1000
-    When I add product named product2 in my cart with quantity 2
-    When I add product named product1 in my cart with quantity 3
-    When I add product named product3 in my cart with quantity 1
-    Then Expected total of my cart tax included should be 38.188
-    Then Expected total of my cart tax included should be 38.188 with previous calculation method
+    Given there is a specific price rule named priceRule4 with an amount discount of 3 and minimum quantity of 2
+    Given specific price rule priceRule4 changes product price to 2.0
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a product in the catalog named product2 with a price of 32.388 and 1000 items in stock
+    Given there is a product in the catalog named product3 with a price of 31.188 and 1000 items in stock
+    When I add 2 items of product product2 in my cart
+    When I add 3 items of product product1 in my cart
+    When I add 1 items of product product3 in my cart
+    Then my cart total should be 38.188 tax included
+    Then my cart total using previous calculation method should be 38.188 tax included

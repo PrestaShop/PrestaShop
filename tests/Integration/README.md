@@ -26,7 +26,7 @@ You can add a new test in one of the feature files or create a new feature file.
 
 If you create new steps, you can add them to one of the available FeatureContext if the step belongs
 to it or create a new FeatureContext if you think it should be a dedicated file. In this case, update the
- behat.yml` file to include your new Context.
+`behat.yml` file to include your new Context.
 
 FeatureContexts are split by features: cart steps should go into CartFeatureContext.
 

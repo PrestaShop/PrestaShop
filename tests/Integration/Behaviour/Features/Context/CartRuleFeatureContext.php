@@ -35,7 +35,7 @@ use DateTime;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Db;
 
-class CartRuleFeatureContext implements BehatContext
+class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 
@@ -64,7 +64,7 @@ class CartRuleFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function cleanCartRules()
+    public function cleanCartRuleFixtures()
     {
         foreach ($this->cartRules as $cartRule) {
             $cartRule->delete();
@@ -81,7 +81,7 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^There is a cart rule with name (.+) and percent discount of (\d+\.\d+)% and priority of (\d+) and quantity of (\d+) and quantity per user of (\d+)$/
+     * @Given /^there is a cart rule named (.+) that applies a percent discount of (\d+\.\d+)% with priority (\d+), quantity of (.*) and quantity per user (.*)$/
      */
     public function thereIsACartRuleWithNameAndPercentDiscountOf50AndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $percent, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
     {
@@ -89,7 +89,7 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^There is a cart rule with name (.+) and amount discount of (\d+) and priority of (\d+) and quantity of (\d+) and quantity per user of (\d+)$/
+     * @Given /^there is a cart rule named (.+) that applies an amount discount of (\d+\.\d+) with priority (\d+), quantity of (.*) and quantity per user (.*)$/
      */
     public function thereIsACartRuleWithNameAndAmountDiscountOfAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
     {
@@ -117,7 +117,7 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Cart rule named (.+) has a code: (.+)$/
+     * @Given /^cart rule named (.+) has a discount code (.+)$/
      */
     public function cartRuleNamedHasACode($cartRuleName, $cartRuleCode)
     {
@@ -127,21 +127,19 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Cart rule named (.+) is restricted to product named (.+)$/
+     * @Given /^cart rule (.+) is restricted to product (.+)$/
      */
     public function cartRuleNamedIsRestrictedToProductNamed($cartRuleName, $productName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
-        if (!$this->productFeatureContext->productWithNameExists($productName)) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->productFeatureContext->checkProductWithNameExists($productName);
         $this->cartRules[$cartRuleName]->product_restriction = true;
         $this->cartRules[$cartRuleName]->reduction_product = $this->productFeatureContext->getProductWithName($productName)->id;
         $this->cartRules[$cartRuleName]->save();
     }
 
     /**
-     * @Given /^Cart rule named (.+) is restricted to carrier named (.+)$/
+     * @Given /^cart rule (.+) is restricted to carrier (.+)$/
      */
     public function cartRuleNamedIsRestrictedToCarrierNamed($cartRuleName, $carrierName)
     {
@@ -158,20 +156,18 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Given /^Cart rule named (.+) has a gift product named (.+)$/
+     * @Given /^cart rule (.+) offers a gift product (.+)$/
      */
     public function cartRuleNamedHasAGiftProductNamed($cartRuleName, $productName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
-        if (!$this->productFeatureContext->productWithNameExists($productName)) {
-            throw new \Exception('Product with name "' . $productName . '" was not added in fixtures');
-        }
+        $this->productFeatureContext->checkProductWithNameExists($productName);
         $this->cartRules[$cartRuleName]->gift_product = $this->productFeatureContext->getProductWithName($productName)->id;
         $this->cartRules[$cartRuleName]->save();
     }
 
     /**
-     * @Then /^Cart rule named (.+) cannot be applied to my cart$/
+     * @Then /^cart rule (.+) cannot be applied to my cart$/
      */
     public function cartRuleNamedCannotBeAppliedToMyCart($cartRuleName)
     {
@@ -188,7 +184,7 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @Then /^Cart rule named (.+) can be applied to my cart$/
+     * @Then /^cart rule (.+) can be applied to my cart$/
      */
     public function cartRuleNamedCanBeAppliedToMyCart($cartRuleName)
     {
@@ -205,7 +201,7 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^I add cart rule named (.+) to my cart$/
+     * @When /^I use the discount named (.+)$/
      *
      * @param $cartRuleName
      */
@@ -216,7 +212,7 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^Some cart rules exist today for customer with id (\d+)$/
+     * @When /^at least one cart rule applies today for customer with id (\d+)$/
      */
     public function someCartRulesExistTodayForCustomerWithId($customerId)
     {
@@ -232,7 +228,7 @@ class CartRuleFeatureContext implements BehatContext
     }
 
     /**
-     * @When /^Cart rule count in my cart should be (\d+)$/
+     * @When /^cart rule count in my cart should be (\d+)$/
      */
     public function cartRuleInCartCount($cartRuleCount)
     {
@@ -253,50 +249,48 @@ class CartRuleFeatureContext implements BehatContext
      */
     public function checkCartRuleWithNameExists($cartRuleName)
     {
-        if (!isset($this->cartRules[$cartRuleName])) {
-            throw new \Exception('Cart rule with name "' . $cartRuleName . '" was not added in fixtures');
-        }
+        $this->checkFixtureExists($this->cartRules, 'Cart rule', $cartRuleName);
     }
 
     /**
-     * @Then /^Voucher count for customer with name (.+) should be (.+)$/
+     * @Then /^customer (.+) should have (\d+) cart rule(?:s)? that apply to (?:him|her)$/
      */
-    public function checkVoucherCountForCustomer($customerName, $expectedCount)
+    public function checkCartRuleCountForCustomer($customerName, $expectedCount)
     {
         $this->customerFeatureContext->checkCustomerWithNameExists($customerName);
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
-        $vouchers = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
-        if ($expectedCount != count($vouchers)) {
+        $cartRules = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
+        if ($expectedCount != count($cartRules)) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
                     $expectedCount,
-                    count($vouchers)
+                    count($cartRules)
                 )
             );
         }
     }
 
     /**
-     * @Then /^Voucher on position (\d+) for customer with name (.+) should have reduction value (.+)$/
+     * @Then /^cart rule for customer (.+) in position (\d+) should apply a discount of (\d+.\d+)$/
      */
-    public function checkVoucherValueForCustomer($position, $customerName, $expectedValue)
+    public function checkCartRuleValueForCustomer($customerName, $position, $expectedValue)
     {
         $this->customerFeatureContext->checkCustomerWithNameExists($customerName);
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
-        $vouchers = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
-        if (!isset($vouchers[$position - 1]['id_cart_rule'])) {
+        $cartRules = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
+        if (!isset($cartRules[$position - 1]['id_cart_rule'])) {
             throw new \Exception(
-                sprintf('Undefined voucher on position #%s', $position - 1)
+                sprintf('Undefined cartRule on position #%s', $position - 1)
             );
         }
-        $voucher = new CartRule($vouchers[$position - 1]['id_cart_rule']);
-        if ($expectedValue != $voucher->reduction_amount) {
+        $cartRule = new CartRule($cartRules[$position - 1]['id_cart_rule']);
+        if ($expectedValue != $cartRule->reduction_amount) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
                     $expectedValue,
-                    $voucher->reduction_amount
+                    $cartRule->reduction_amount
                 )
             );
         }

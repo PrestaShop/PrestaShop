@@ -44,7 +44,7 @@ abstract class AbstractConfigurationFeatureContext implements BehatContext
      *
      * @AfterScenario
      */
-    public function cleanConfiguration()
+    public function restoreConfigurationValues()
     {
         // delete products
         foreach ($this->previousConfiguration as $index => $value) {

@@ -3,91 +3,91 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
   As a customer
   I must be able to have correct cart total when adding cart rules
 
-  Scenario: Empty cart, 2 mixed voucher
+  Scenario: Empty cart, 2 mixed cartRule
     Given I have an empty default cart
-    Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule2 has a code: foo2
-    Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule4 has a code: foo4
-    Then Distinct product count in my cart should be 0
-    When I add cart rule named cartrule2 to my cart
-    When I add cart rule named cartrule4 to my cart
-    Then Expected total of my cart tax included should be 0.0
-    Then Expected total of my cart tax included should be 0.0 with previous calculation method
+    Given shop configuration for PS_CART_RULE_FEATURE_ACTIVE is set to 1
+    Given there is a cart rule named cartrule2 that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule2 has a discount code foo2
+    Given there is a cart rule named cartrule4 that applies an amount discount of 5.0 with priority 4, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule4 has a discount code foo4
+    Then I should have 0 different products in my cart
+    When I use the discount named cartrule2
+    When I use the discount named cartrule4
+    Then my cart total should be 0.0 tax included
+    Then my cart total using previous calculation method should be 0.0 tax included
 
-  Scenario: one product in cart, quantity 1, one 50% global voucher, one 5€ global voucher
+  Scenario: one product in cart, quantity 1, one 50% global cartRule, one 5€ global cartRule
     Given I have an empty default cart
-    Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule2 has a code: foo2
-    Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule4 has a code: foo4
-    When I add product named product1 in my cart with quantity 1
-    When I add cart rule named cartrule2 to my cart
-    When I add cart rule named cartrule4 to my cart
-    Then Expected total of my cart tax included should be 11.906
-    Then Expected total of my cart tax included should be 11.906 with previous calculation method
+    Given shop configuration for PS_CART_RULE_FEATURE_ACTIVE is set to 1
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a cart rule named cartrule2 that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule2 has a discount code foo2
+    Given there is a cart rule named cartrule4 that applies an amount discount of 5.0 with priority 4, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule4 has a discount code foo4
+    When I add 1 items of product product1 in my cart
+    When I use the discount named cartrule2
+    When I use the discount named cartrule4
+    Then my cart total should be 11.906 tax included
+    Then my cart total using previous calculation method should be 11.906 tax included
 
-  Scenario: one product in cart, quantity 1, one 50% global voucher, one 500€ global voucher
+  Scenario: one product in cart, quantity 1, one 50% global cartRule, one 500€ global cartRule
     Given I have an empty default cart
-    Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule2 and percent discount of 50.0% and priority of 2 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule2 has a code: foo2
-    Given There is a cart rule with name cartrule5 and amount discount of 500 and priority of 5 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule5 has a code: foo5
-    When I add product named product1 in my cart with quantity 3
-    When I add cart rule named cartrule2 to my cart
-    When I add cart rule named cartrule5 to my cart
-    Then Expected total of my cart tax included should be 7.0
-    Then Expected total of my cart tax included should be 7.0 with previous calculation method
+    Given shop configuration for PS_CART_RULE_FEATURE_ACTIVE is set to 1
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a cart rule named cartrule2 that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule2 has a discount code foo2
+    Given there is a cart rule named cartrule5 that applies an amount discount of 500.0 with priority 5, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule5 has a discount code foo5
+    When I add 3 items of product product1 in my cart
+    When I use the discount named cartrule2
+    When I use the discount named cartrule5
+    Then my cart total should be 7.0 tax included
+    Then my cart total using previous calculation method should be 7.0 tax included
 
-  Scenario: one product in cart, quantity 3, one 5€ global voucher, one 50% global voucher
+  Scenario: one product in cart, quantity 3, one 5€ global cartRule, one 50% global cartRule
     Given I have an empty default cart
-    Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule4 has a code: foo4
-    Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule7 has a code: foo7
-    When I add product named product1 in my cart with quantity 3
-    When I add cart rule named cartrule4 to my cart
-    When I add cart rule named cartrule7 to my cart
-    Then Expected total of my cart tax included should be 34.218
+    Given shop configuration for PS_CART_RULE_FEATURE_ACTIVE is set to 1
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a cart rule named cartrule4 that applies an amount discount of 5.0 with priority 4, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule4 has a discount code foo4
+    Given there is a cart rule named cartrule7 that applies a percent discount of 50.0% with priority 7, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule7 has a discount code foo7
+    When I add 3 items of product product1 in my cart
+    When I use the discount named cartrule4
+    When I use the discount named cartrule7
+    Then my cart total should be 34.218 tax included
     #known to fail on previous
-    #Then Expected total of my cart tax included should be 34.218 with previous calculation method
+    #Then my cart total using previous calculation method should be 34.218 tax included
 
-  Scenario: one product in cart, quantity 3, one 500€ global voucher, one 50% global voucher
+  Scenario: one product in cart, quantity 3, one 500€ global cartRule, one 50% global cartRule
     Given I have an empty default cart
-    Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a cart rule with name cartrule5 and amount discount of 500 and priority of 5 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule5 has a code: foo5
-    Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule7 has a code: foo7
-    When I add product named product1 in my cart with quantity 3
-    When I add cart rule named cartrule5 to my cart
-    When I add cart rule named cartrule7 to my cart
-    Then Expected total of my cart tax included should be 7.0
-    Then Expected total of my cart tax included should be 7.0 with previous calculation method
+    Given shop configuration for PS_CART_RULE_FEATURE_ACTIVE is set to 1
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a cart rule named cartrule5 that applies an amount discount of 500.0 with priority 5, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule5 has a discount code foo5
+    Given there is a cart rule named cartrule7 that applies a percent discount of 50.0% with priority 7, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule7 has a discount code foo7
+    When I add 3 items of product product1 in my cart
+    When I use the discount named cartrule5
+    When I use the discount named cartrule7
+    Then my cart total should be 7.0 tax included
+    Then my cart total using previous calculation method should be 7.0 tax included
 
-  Scenario: 3 products with several quantities in cart, one 5€ global voucher, one 50% global voucher
+  Scenario: 3 products with several quantities in cart, one 5€ global cartRule, one 50% global cartRule
     Given I have an empty default cart
-    Given Shop configuration of PS_CART_RULE_FEATURE_ACTIVE is set to 1
-    Given There is a product with name product1 and price 19.812 and quantity 1000
-    Given There is a product with name product2 and price 32.388 and quantity 1000
-    Given There is a product with name product3 and price 31.188 and quantity 1000
-    Given There is a cart rule with name cartrule4 and amount discount of 5 and priority of 4 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule4 has a code: foo4
-    Given There is a cart rule with name cartrule7 and percent discount of 50.0% and priority of 7 and quantity of 1000 and quantity per user of 1000
-    Given Cart rule named cartrule7 has a code: foo7
-    When I add product named product2 in my cart with quantity 2
-    When I add product named product1 in my cart with quantity 3
-    When I add product named product3 in my cart with quantity 1
-    When I add cart rule named cartrule4 to my cart
-    When I add cart rule named cartrule7 to my cart
-    Then Expected total of my cart tax included should be 82.205
+    Given shop configuration for PS_CART_RULE_FEATURE_ACTIVE is set to 1
+    Given there is a product in the catalog named product1 with a price of 19.812 and 1000 items in stock
+    Given there is a product in the catalog named product2 with a price of 32.388 and 1000 items in stock
+    Given there is a product in the catalog named product3 with a price of 31.188 and 1000 items in stock
+    Given there is a cart rule named cartrule4 that applies an amount discount of 5.0 with priority 4, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule4 has a discount code foo4
+    Given there is a cart rule named cartrule7 that applies a percent discount of 50.0% with priority 7, quantity of 1000 and quantity per user 1000
+    Given cart rule named cartrule7 has a discount code foo7
+    When I add 2 items of product product2 in my cart
+    When I add 3 items of product product1 in my cart
+    When I add 1 items of product product3 in my cart
+    When I use the discount named cartrule4
+    When I use the discount named cartrule7
+    Then my cart total should be 82.205 tax included
     #known to fail on previous
-    #Then Expected total of my cart tax included should be 82.205 with previous calculation method
+    #Then my cart total using previous calculation method should be 82.205 tax included

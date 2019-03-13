@@ -32,7 +32,7 @@ use Order;
 class RoundingTypeConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^Specific shop configuration of "rounding type" is set to (ROUND_ITEM|ROUND_LINE|ROUND_TOTAL)$/
+     * @Given /^specific shop configuration for "rounding type" is set to (ROUND_ITEM|ROUND_LINE|ROUND_TOTAL)$/
      */
     public function setRoundingMode($value)
     {
@@ -48,7 +48,7 @@ class RoundingTypeConfigurationFeatureContext extends AbstractConfigurationFeatu
                 $this->setConfiguration('PS_ROUND_TYPE', Order::ROUND_TOTAL);
                 break;
             default:
-                throw new \Exception('Unknown config value for specific shop configuration of "rounding type": ' . $value);
+                throw new \Exception('Unknown config value for specific shop configuration for "rounding type": ' . $value);
                 break;
         }
     }

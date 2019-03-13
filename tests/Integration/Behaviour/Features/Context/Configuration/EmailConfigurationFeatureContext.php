@@ -31,7 +31,7 @@ use Mail;
 class EmailConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^Email sending is disabled$/
+     * @Given /^email sending is disabled$/
      */
     public function disableEmail()
     {
