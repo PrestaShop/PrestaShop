@@ -39,7 +39,7 @@
         }) }}
 
         {% set nameHint %}
-          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:' }}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:' }}
         {% endset %}
 
         {{ ps.form_group_row(addressForm.last_name, {}, {
@@ -89,7 +89,7 @@
         }) }}
 
         {% set otherHint %}
-          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' &lt;&gt;;=#{}' }}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
         {% endset %}
 
         {{ ps.form_group_row(addressForm.other, {}, {
