@@ -29,26 +29,21 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionInterface;
 
 /**
- * Interface for service that checks if row actions in accessible for employee
+ * Interface service that handles accessibility checking for grid row actions
  */
-interface RowAccessibilityCheckerInterface
+interface RowAccessibilityCheckerChainInterface
 {
     /**
-     * Check if row action is granted for row data
-     *
-     * @param array $row
-     *
-     * @return bool
-     */
-    public function isGranted(array $row);
-
-    /**
-     * Determine if checker supports row action for grid
-     *
      * @param RowActionInterface $action
+     * @param array $record
      * @param string $gridId
      *
      * @return bool
      */
-    public function supports(RowActionInterface $action, $gridId);
+    public function check(RowActionInterface $action, array $record, $gridId);
+
+    /**
+     * @param RowAccessibilityCheckerInterface $checker
+     */
+    public function addChecker(RowAccessibilityCheckerInterface $checker);
 }

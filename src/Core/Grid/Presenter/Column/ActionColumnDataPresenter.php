@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row\RowAccessibilityCheckerChain;
+use PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row\RowAccessibilityCheckerChainInterface;
 
 /**
  * Prepares data for action column rendering
@@ -37,11 +37,11 @@ use PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row\RowAccessi
 final class ActionColumnDataPresenter implements ColumnDataPresenterInterface
 {
     /**
-     * @var RowAccessibilityCheckerChain
+     * @var RowAccessibilityCheckerChainInterface
      */
     private $accessibilityCheckerChain;
 
-    public function __construct(RowAccessibilityCheckerChain $accessibilityCheckerChain)
+    public function __construct(RowAccessibilityCheckerChainInterface $accessibilityCheckerChain)
     {
         $this->accessibilityCheckerChain = $accessibilityCheckerChain;
     }

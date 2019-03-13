@@ -29,13 +29,16 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionInterface;
 use RuntimeException;
 
-final class RowAccessibilityCheckerChain
+final class RowAccessibilityCheckerChain implements RowAccessibilityCheckerChainInterface
 {
     /**
      * @var RowAccessibilityCheckerInterface[]
      */
     private $accessibilityCheckers = [];
 
+    /**
+     * {@inheritdoc}
+     */
     public function check(RowActionInterface $action, array $record, $gridId)
     {
         foreach ($this->accessibilityCheckers as $accessibilityChecker) {
@@ -48,9 +51,7 @@ final class RowAccessibilityCheckerChain
     }
 
     /**
-     * Adds accessibility checkers to the chain
-     *
-     * @param RowAccessibilityCheckerInterface $checker
+     * {@inheritdoc}
      */
     public function addChecker(RowAccessibilityCheckerInterface $checker)
     {
