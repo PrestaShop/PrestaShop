@@ -27,20 +27,22 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
- * Class DisableCategoriesCommand disables provided categories.
+ * Enables given categories
  */
-class DisableCategoriesCommand extends UpdateCategoriesStatusCommand
+class BulkEnableCategoriesCommand extends BulkUpdateCategoriesStatusCommand
 {
     /**
      * @param int[] $categoryIds
      *
      * @throws CategoryConstraintException
+     * @throws CategoryException
      */
     public function __construct(array $categoryIds)
     {
-        parent::__construct($categoryIds, CategoryStatus::DISABLED);
+        parent::__construct($categoryIds, CategoryStatus::ENABLED);
     }
 }

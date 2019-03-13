@@ -28,10 +28,10 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\DisableCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\EnableCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
@@ -453,7 +453,7 @@ class CategoryController extends FrameworkBundleAdminController
                 return (int) $categoryId;
             }, $request->request->get('categories_bulk'));
 
-            $command = new EnableCategoriesCommand($categoryIds);
+            $command = new BulkEnableCategoriesCommand($categoryIds);
 
             $this->getCommandBus()->handle($command);
 
@@ -489,7 +489,7 @@ class CategoryController extends FrameworkBundleAdminController
                 return (int) $categoryId;
             }, $request->request->get('categories_bulk'));
 
-            $command = new DisableCategoriesCommand($categoryIds);
+            $command = new BulkDisableCategoriesCommand($categoryIds);
 
             $this->getCommandBus()->handle($command);
 
