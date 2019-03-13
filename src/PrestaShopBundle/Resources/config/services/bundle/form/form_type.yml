@@ -739,7 +739,7 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.international.tax:
+    form.type.international.tax_options:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
       arguments:
         - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_USE_ECOTAX")'
@@ -765,5 +765,12 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.international.tax:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType'
+        arguments:
+            - '@translator'
         tags:
             - { name: form.type }
