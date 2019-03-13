@@ -52,6 +52,7 @@ final class BulkDeleteCategoriesHandler extends AbstractDeleteCategoryHandler im
 
             if (!$category->id) {
                 throw new CategoryNotFoundException(
+                    $categoryId,
                     sprintf('Category with id %s cannot be found.', var_export($categoryId->getValue(), true))
                 );
             }
