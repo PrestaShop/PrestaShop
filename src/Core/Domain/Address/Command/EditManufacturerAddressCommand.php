@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
@@ -100,10 +101,12 @@ class EditManufacturerAddressCommand
 
     /**
      * @param int $addressId
+     *
+     * @throws AddressConstraintException
      */
     public function __construct($addressId)
     {
-        $this->addressId = $addressId;
+        $this->addressId = new AddressId($addressId);
     }
 
     /**

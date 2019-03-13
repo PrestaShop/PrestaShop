@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Defines form for address create/edit actions (Sell > Catalog > Brands & Suppliers)
@@ -102,27 +103,55 @@ class ManufacturerAddressType extends AbstractType
                     new NotBlank([
                         'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
+                    new Regex([
+                        //@todo: TypedRegexConstraint isName from another PR
+                        'pattern' => '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u',
+                    ]),
                 ],
-                //@todo: TypedRegexConstraint from another PR
             ])
             ->add('first_name', TextType::class, [
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
+                    new Regex([
+                        //@todo: TypedRegexConstraint isName from another PR
+                        'pattern' => '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u',
+                    ]),
                 ],
             ])
-            ->add('address', TextType::class)
+            ->add('address', TextType::class, [
+                'constraints' => [
+                    new Regex([
+                        //@todo: TypedRegexConstraint isAddress
+                        'pattern' => '/^[^!<>?=+@{}_$%]*$/u',
+                    ]),
+                ],
+            ])
             ->add('address2', TextType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Regex([
+                        //@todo: TypedRegexConstraint isAddress another PR
+                        'pattern' => '/^[^!<>?=+@{}_$%]*$/u',
+                    ]),
+                ],
             ])
             ->add('post_code', TextType::class, [
                 'required' => false,
+                'constraints' => [
+                    //@todo: TypedRegexConstraint isPostcode another PR
+                    'pattern' => '/^[a-zA-Z 0-9-]+$/',
+                ],
             ])
+            //@todo: TypedRegexConstraint isCityName another PR
             ->add('city', TextType::class, [
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[^!<>;?=+@#"°{}_$%]*$/u',
                     ]),
                 ],
             ])
@@ -141,17 +170,32 @@ class ManufacturerAddressType extends AbstractType
                     'id_country' => $this->defaultCountryId,
                 ]),
             ])
-            //@todo: TypedRegexConstraint from another PR
             ->add('home_phone', TextType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Regex([
+                        //@todo: TypedRegexConstraint isPhoneNumber another PR
+                        'pattern' => '/^[+0-9. ()\/-]*$/',
+                    ]),
+                ],
             ])
-
-            //@todo: TypedRegexConstraint from another PR
             ->add('mobile_phone', TextType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Regex([
+                        //@todo: TypedRegexConstraint isPhoneNumber another PR
+                        'pattern' => '/^[+0-9. ()\/-]*$/',
+                    ]),
+                ],
             ])
             ->add('other', TextType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Regex([
+                        //@todo: TypedRegexConstraint isMessage another PR
+                        'pattern' => '/[<>{}]/i',
+                    ]),
+                ],
             ])
         ;
     }
