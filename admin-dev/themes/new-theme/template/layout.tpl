@@ -3,6 +3,7 @@
 <head>
   {$header}
 </head>
+
 <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
 
 {if $display_header}
@@ -71,30 +72,31 @@
 
     {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
   </header>
+{/if}
 
+{if $display_header}
   {include file='components/layout/nav_bar.tpl'}
+{/if}
 
-  <div id="main-div">
-
+<div id="main-div">
     {if $install_dir_exists}
-
       <div class="alert alert-warning">
         {l s='For security reasons, you must also delete the /install folder.'}
       </div>
-
     {else}
-
       {if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
       {if isset($modal_module_list)}{$modal_module_list}{/if}
 
-      <div class="content-div {if !isset($page_header_toolbar)}-notoolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
+      <div class="{if $display_header}content-div{/if} {if !isset($page_header_toolbar)}-notoolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
 
         {hook h='displayAdminAfterHeader'}
 
-        {include file='components/layout/error_messages.tpl'}
-        {include file='components/layout/information_messages.tpl'}
-        {include file='components/layout/confirmation_messages.tpl'}
-        {include file='components/layout/warning_messages.tpl'}
+        {if $display_header}
+          {include file='components/layout/error_messages.tpl'}
+          {include file='components/layout/information_messages.tpl'}
+          {include file='components/layout/confirmation_messages.tpl'}
+          {include file='components/layout/warning_messages.tpl'}
+        {/if}
 
         <div class="row ">
           <div class="col-sm-12">
@@ -104,39 +106,28 @@
         </div>
 
       </div>
-
     {/if}
-{else}
-  <div id="main-div">
-    <div class="-notoolbar">
-
-    {hook h='displayAdminAfterHeader'}
-    <div class="row ">
-      <div class="col-sm-12">
-        {$page}
-        {hook h='displayAdminEndContent'}
-      </div>
-    </div>
-  </div>
-{/if}
-
 </div>
 
-{include file='components/layout/non-responsive.tpl'}
-<div class="mobile-layer"></div>
+{if (!isset($lite_display) || (isset($lite_display) && !$lite_display))}
+  {include file='components/layout/non-responsive.tpl'}
+  <div class="mobile-layer"></div>
 
-{if $display_footer}
-  {include file='footer.tpl'}
+  {if $display_footer}
+    {include file='footer.tpl'}
+  {/if}
 {/if}
 
 {if isset($php_errors)}
   {include file="error.tpl"}
 {/if}
 
-{if isset($modals)}
-  <div class="bootstrap">
-    {$modals}
-  </div>
+{if (!isset($lite_display) || (isset($lite_display) && !$lite_display))}
+  {if isset($modals)}
+    <div class="bootstrap">
+      {$modals}
+    </div>
+  {/if}
 {/if}
 
 </body>
