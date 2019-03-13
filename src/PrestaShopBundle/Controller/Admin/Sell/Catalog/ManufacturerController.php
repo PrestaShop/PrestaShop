@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
@@ -100,15 +101,16 @@ class ManufacturerController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             }
+
+            /** @var EditableManufacturerAddress $editableAddress */
+            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing((int) $addressId));
         } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            if ($e instanceof AddressNotFoundException) {
+            if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
         }
-        /** @var EditableManufacturerAddress $editableAddress */
-        $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing((int) $addressId));
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
             'addressForm' => $addressForm->createView(),
@@ -141,6 +143,11 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(DomainException $e)
     {
-        return [];
+        return [
+            AddressNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }
