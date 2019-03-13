@@ -24,20 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Address;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
+use Address;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Interface for services that handles command which adds new manufacturer address
+ * Provides reusable methods for manufacturer address address command/query handlers
  */
-interface AddManufacturerAddressHandlerInterface
+abstract class AbstractManufacturerAddressHandler
 {
     /**
-     * @param AddManufacturerAddressCommand $command
+     * Gets legacy Address
      *
-     * @return AddressId
+     * @param AddressId $addressId
+     *
+     * @return Address
+     *
+     * @throws AddressNotFoundException
      */
-    public function handle(AddManufacturerAddressCommand $command);
+    protected function getAddress(AddressId $addressId)
+    {
+        $address = new Address($addressId->getValue());
+
+        if ($address->id !== $addressId->getValue()) {
+            throw new AddressNotFoundException(
+                sprintf('Address with id "%s" was not found.', $addressId->getValue())
+            );
+        }
+
+        return $address;
+    }
 }

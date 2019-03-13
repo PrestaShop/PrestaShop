@@ -27,6 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAddress;
 
 /**
  * Provides data for address add/edit form
@@ -53,10 +56,30 @@ final class ManufacturerAddressFormDataProvider implements FormDataProviderInter
 
     /**
      * {@inheritdoc}
+     *
+     * @throws AddressConstraintException
      */
     public function getData($addressId)
     {
-        // TODO: Implement getData() method.
+        /**
+         * @var EditableManufacturerAddress
+         */
+        $editableAddress = $this->queryBus->handle(new GetManufacturerAddressForEditing((int) $addressId));
+
+        return [
+            'id_manufacturer' => $editableAddress->getManufacturerId(),
+            'last_name' => $editableAddress->getLastName(),
+            'first_name' => $editableAddress->getFirstName(),
+            'address' => $editableAddress->getAddress(),
+            'city' => $editableAddress->getCity(),
+            'address2' => $editableAddress->getAddress2(),
+            'id_country' => $editableAddress->getCountryId(),
+            'post_code' => $editableAddress->getPostCode(),
+            'id_state' => $editableAddress->getStateId(),
+            'home_phone' => $editableAddress->getHomePhone(),
+            'mobile_phone' => $editableAddress->getMobilePhone(),
+            'other' => $editableAddress->getOther(),
+        ];
     }
 
     /**

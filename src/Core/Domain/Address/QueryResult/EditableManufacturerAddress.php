@@ -24,35 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\QueryResult;
+
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Adds new address
+ * Transfers manufacturer address data for editing
  */
-class AddManufacturerAddressCommand
+class EditableManufacturerAddress
 {
+    /**
+     * @var AddressId
+     */
+    private $addressId;
+
     /**
      * @var int|null
      */
     private $manufacturerId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $lastName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $firstName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $address;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $city;
 
@@ -92,39 +99,42 @@ class AddManufacturerAddressCommand
     private $other;
 
     /**
+     * @param AddressId $addressId
+     * @param int $manufacturerId
      * @param string $lastName
      * @param string $firstName
      * @param string $address
      * @param string $city
-     * @param int $manufacturerId
-     * @param string|null $address2
-     * @param int|null $countryId
-     * @param string|null $postCode
-     * @param int|null $stateId
-     * @param string|null $homePhone
+     * @param int $countryId
+     * @param string $address2
+     * @param string $postCode
+     * @param int $stateId
+     * @param string $homePhone
      * @param string $mobilePhone
-     * @param string|null $other
+     * @param string $other
      */
     public function __construct(
+        AddressId $addressId,
         $manufacturerId,
         $lastName,
         $firstName,
         $address,
-        $countryId,
         $city,
-        $address2 = null,
-        $postCode = null,
-        $stateId = null,
-        $homePhone = null,
-        $mobilePhone = null,
-        $other = null
+        $countryId,
+        $address2,
+        $postCode,
+        $stateId,
+        $homePhone,
+        $mobilePhone,
+        $other
     ) {
+        $this->addressId = $addressId;
         $this->manufacturerId = $manufacturerId;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
         $this->address = $address;
-        $this->countryId = $countryId;
         $this->city = $city;
+        $this->countryId = $countryId;
         $this->address2 = $address2;
         $this->postCode = $postCode;
         $this->stateId = $stateId;
@@ -134,7 +144,15 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return int
+     * @return AddressId
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
+
+    /**
+     * @return int|null
      */
     public function getManufacturerId()
     {
@@ -142,7 +160,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getLastName()
     {
@@ -150,7 +168,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFirstName()
     {
@@ -158,7 +176,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAddress()
     {
@@ -166,7 +184,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getCity()
     {
@@ -182,7 +200,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getCountryId()
     {

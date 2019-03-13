@@ -24,20 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Interface for services that handles command which adds new manufacturer address
+ * Gets manufacturer address for editing
  */
-interface AddManufacturerAddressHandlerInterface
+class GetManufacturerAddressForEditing
 {
     /**
-     * @param AddManufacturerAddressCommand $command
+     * @var AddressId
+     */
+    private $addressId;
+
+    /**
+     * @param int $addressId
      *
+     * @throws AddressConstraintException
+     */
+    public function __construct($addressId)
+    {
+        $this->addressId = new AddressId($addressId);
+    }
+
+    /**
      * @return AddressId
      */
-    public function handle(AddManufacturerAddressCommand $command);
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
 }

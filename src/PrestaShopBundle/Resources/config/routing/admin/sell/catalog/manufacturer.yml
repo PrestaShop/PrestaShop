@@ -97,7 +97,7 @@ admin_manufacturer_addresses_create:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createAddress'
     _legacy_controller: AdminManufacturers
 
-admin_manufacturers_addresses_edit:
+admin_manufacturer_addresses_edit:
   path: addresses/{addressId}/edit
   methods: [GET, POST]
   defaults:
@@ -106,7 +106,7 @@ admin_manufacturers_addresses_edit:
   requirements:
     addressId: \d+
 
-admin_manufacturers_addresses_delete:
+admin_manufacturer_addresses_delete:
   path: addresses/{addressId}/delete
   methods: POST
   defaults:
@@ -115,14 +115,14 @@ admin_manufacturers_addresses_delete:
   requirements:
     addressId: \d+
 
-admin_manufacturers_addresses_bulk_delete:
+admin_manufacturer_addresses_bulk_delete:
   path: addresses/bulk-delete
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDeleteAddress'
     _legacy_controller: AdminManufacturers
 
-admin_manufacturers_addresses_export:
+admin_manufacturer_addresses_export:
   path: addresses/export
   methods: GET
   defaults:
