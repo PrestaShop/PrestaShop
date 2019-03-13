@@ -2836,6 +2836,10 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '*/modules/*.gif',
+            '*/modules/*.woff',
+            '*/modules/*.woff2',
+            '*/modules/*.ttf'
             '*/js/*.css',
             '*/js/*.js',
             '*/themes/*.js',
