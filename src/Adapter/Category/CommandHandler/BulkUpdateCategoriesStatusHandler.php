@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatu
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\BulkUpdateCategoriesStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
  * Class ChangeCategoriesStatusHandler.
@@ -48,13 +47,9 @@ final class BulkUpdateCategoriesStatusHandler implements BulkUpdateCategoriesSta
      */
     public function handle(BulkUpdateCategoriesStatusCommand $command)
     {
-        $isActive = $command->getNewStatus()->isEqualTo(
-            new CategoryStatus(CategoryStatus::ENABLED)
-        );
-
         foreach ($command->getCategoryIds() as $categoryId) {
             $entity = new Category($categoryId->getValue());
-            $entity->active = $isActive;
+            $entity->active = $command->getNewStatus();
 
             if (!$entity->id) {
                 throw new CategoryNotFoundException(

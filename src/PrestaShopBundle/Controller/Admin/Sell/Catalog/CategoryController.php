@@ -449,9 +449,7 @@ class CategoryController extends FrameworkBundleAdminController
     public function bulkEnableStatusAction(Request $request)
     {
         try {
-            $categoryIds = array_map(function ($categoryId) {
-                return (int) $categoryId;
-            }, $request->request->get('categories_bulk'));
+            $categoryIds = $this->getBulkCategoriesFromRequest($request);
 
             $command = new BulkEnableCategoriesCommand($categoryIds);
 
@@ -485,9 +483,7 @@ class CategoryController extends FrameworkBundleAdminController
     public function bulkDisableStatusAction(Request $request)
     {
         try {
-            $categoryIds = array_map(function ($categoryId) {
-                return (int) $categoryId;
-            }, $request->request->get('categories_bulk'));
+            $categoryIds = $this->getBulkCategoriesFromRequest($request);
 
             $command = new BulkDisableCategoriesCommand($categoryIds);
 
@@ -690,5 +686,25 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
             ),
         ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkCategoriesFromRequest(Request $request)
+    {
+        $categoryIds = $request->request->get('categories_id_category');
+
+        if (!is_array($categoryIds)) {
+            return [];
+        }
+
+        foreach ($categoryIds as $i => $categoryId) {
+            $categoryIds[$i] = (int) $categoryId;
+        }
+
+        return $categoryIds;
     }
 }
