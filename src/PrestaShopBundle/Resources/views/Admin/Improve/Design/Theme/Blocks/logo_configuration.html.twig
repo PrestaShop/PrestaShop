@@ -130,14 +130,12 @@
       </p>
 
       <div class="text-center logo-image-container">
-        <div class="favicon-container d-inline-block">
           <img
-            class="favicon-logo"
+            class="rounded-circle img-thumbnail favicon-logo"
             src="{{ faviconPath }}"
             alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
             title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
           >
-        </div>
       </div>
 
       {{ ps.form_group_row(shopLogosForm.options.favicon, {}, {'help': 'Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!'|trans({'[1]': '<a href="https://addons.prestashop.com/create-favicon.php?pab=1" target="_blank">', '[/1]': '</a>'}, 'Admin.Design.Help')|raw }) }}

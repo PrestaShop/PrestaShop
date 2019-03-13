@@ -42,11 +42,6 @@
     }
 
     .logo-card-description {
-      &.description-in-tab {
-        padding-top: 1.0625rem;
-      }
-
-      padding-top: 1.25rem;
       font-family: OpenSans;
       font-size: 0.75rem;
       font-weight: normal;
@@ -55,34 +50,31 @@
       line-height: normal;
       letter-spacing: -0.0125rem;
       color: #6c868e;
+      margin-top: 20px;
+      height: 34px;
     }
 
     .logo-image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 6.625rem;
-      padding-top: 2rem;
-      padding-bottom: 1.6875rem;
+      margin-top: 2rem;
+      margin-bottom: 1.6875rem;
 
-      .header-logo {
-        max-width: 6.25rem;
-        max-height: 6.625rem;
-      }
+      .header-logo,
       .email-logo,
       .invoice-logo
       {
-        max-width: 4.6125rem;
-        max-height: 3.25rem;
+        max-width: 6.25rem;
+        max-height: 6.625rem;
       }
 
-      .favicon-container {
-        width: 3.375rem;
-        height: 3.375rem;
-        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
-        border-radius: 1.3125rem;
-        background-color: #ffffff;
-      }
       .favicon-logo {
-        max-width: 2.41875rem;
-        max-height: 2.19375rem;
+        width: 2.41875rem;
+        height: 2.19375rem;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+        border: 1px solid transparent;
       }
     }
   }
