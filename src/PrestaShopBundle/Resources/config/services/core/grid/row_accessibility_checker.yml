@@ -2,6 +2,6 @@ services:
   prestashop.core.grid.presenter.accessibility_checker.row.employee_delete_accessibility_checker:
     class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\AccessbilityChecker\Row\EmployeeDeleteAccessibilityChecker'
     arguments:
-      - 1
+      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
     tags:
       - { name: grid.row_accessibility_checker }
