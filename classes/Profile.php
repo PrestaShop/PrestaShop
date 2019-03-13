@@ -29,6 +29,8 @@
  */
 class ProfileCore extends ObjectModel
 {
+    const ALLOWED_PROFILE_TYPE_CHECK = array('id_tab', 'class_name');
+
     /** @var string Name */
     public $name;
 
@@ -127,7 +129,7 @@ class ProfileCore extends ObjectModel
      */
     public static function getProfileAccesses($idProfile, $type = 'id_tab')
     {
-        if (!in_array($type, array('id_tab', 'class_name'))) {
+        if (!in_array($type, self::ALLOWED_PROFILE_TYPE_CHECK)) {
             return false;
         }
 
@@ -146,7 +148,7 @@ class ProfileCore extends ObjectModel
                     'edit' => '1',
                     'delete' => '1',
                 ];
-                $slugs = [];
+                $roles = [];
             } else {
                 $defaultPermission = [
                     'id_profile' => $idProfile,
@@ -169,7 +171,6 @@ class ProfileCore extends ObjectModel
             }
             self::fillCacheAccesses(
                 $idProfile,
-                $type,
                 $defaultPermission,
                 $roles
             );
@@ -185,11 +186,10 @@ class ProfileCore extends ObjectModel
 
     /**
      * @param int $idProfile Profile ID
-     * @param string $type Type
      * @param array $defaultData Cached data
      * @param array $accesses Data loaded from the database
      */
-    private static function fillCacheAccesses($idProfile, $type, $defaultData = [], $accesses = [])
+    private static function fillCacheAccesses($idProfile, $defaultData = [], $accesses = [])
     {
         foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
             $accessData = [];
@@ -197,14 +197,16 @@ class ProfileCore extends ObjectModel
                 $accessData = $accesses[strtoupper($tab['class_name'])];
             }
 
-            self::$_cache_accesses[$idProfile][$type][$tab[$type]] = array_merge(
-                array(
-                    'id_tab' => $tab['id_tab'],
-                    'class_name' => $tab['class_name'],
-                ),
-                $defaultData,
-                $accessData
-            );
+            foreach (self::ALLOWED_PROFILE_TYPE_CHECK as $type) {
+                self::$_cache_accesses[$idProfile][$type][$tab[$type]] = array_merge(
+                    array(
+                        'id_tab' => $tab['id_tab'],
+                        'class_name' => $tab['class_name'],
+                    ),
+                    $defaultData,
+                    $accessData
+                );
+            }
         }
     }
 
