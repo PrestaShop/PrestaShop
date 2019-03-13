@@ -53,10 +53,10 @@
         {% endif %}
 
         {% if isInstalledRtlLanguage %}
-          {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
+            {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
+          {% elseif isSingleShopContext and isMultiShopFeatureUsed %}
+            {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/multishop_switch.html.twig' %}
         {% endif %}
-
-
 
         {{ form_start(shopLogosForm.options, {'action': path('admin_themes_upload_logos')}) }}
           <div class="card">
