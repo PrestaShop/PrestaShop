@@ -144,6 +144,7 @@ class ShopLogosType extends AbstractType
 
         if ($isAllowedToDisplay) {
             $builder->add('shop_restriction_switch', SwitchType::class, [
+                'data' => false,
                 'required' => false,
                 'attr' => [
                     'data-target-form-name' => $builder->getName(),
@@ -199,6 +200,11 @@ class ShopLogosType extends AbstractType
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($suffix) {
             $form = $event->getForm();
+
+            if ($form->isSubmitted()) {
+                return;
+            }
+
             $data = $event->getData();
 
             foreach ($data as $fieldName => $value) {
@@ -211,7 +217,7 @@ class ShopLogosType extends AbstractType
                 $formField = $form->get($originalFieldName);
                 $formType = $formField->getConfig()->getType()->getInnerType();
                 $options = $formField->getConfig()->getOptions();
-                $options['disabled'] = true;
+                $options['attr']['disabled'] = true;
                 $form->add($originalFieldName, get_class($formType), $options);
             }
         });
@@ -228,6 +234,10 @@ class ShopLogosType extends AbstractType
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($suffix) {
             $form = $event->getForm();
+
+            if ($form->isSubmitted()) {
+                return;
+            }
 
             $sourceFields = $this->getShopRestrictionSourceFormFields($form, $suffix);
 
