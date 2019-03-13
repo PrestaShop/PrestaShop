@@ -23,6 +23,17 @@
 * International Registered Trademark & Property of PrestaShop SA
 *#}
 
+{#
+@todo: path admin_taxes_create after route implementation on another PR
+#}
+{% set layoutHeaderToolbarBtn = {
+    'add' : {
+    'href': path('admin_taxes_index'),
+    'desc': 'Add new tax'|trans({}, 'Admin.International.Feature'),
+    'icon': 'add_circle_outline'
+  }
+} %}
+
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% trans_default_domain 'Admin.International.Feature' %}
@@ -30,6 +41,7 @@
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-lg-12">
+      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxGrid} %}
       {% include '@PrestaShop/Admin/Improve/International/Tax/Blocks/tax_options.html.twig' %}
     </div>
   </div>
@@ -39,4 +51,5 @@
   {{ parent() }}
 
   <script src="{{ asset('themes/new-theme/public/tax.bundle.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}

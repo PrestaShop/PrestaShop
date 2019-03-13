@@ -121,3 +121,8 @@ services:
         arguments:
           - '@request_stack'
         public: true
+
+    prestashop.core.grid.definition.factory.tax:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
