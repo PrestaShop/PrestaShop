@@ -11,10 +11,17 @@ services:
     calls:
       - method: 'addTransformation'
         arguments:
-          - '@prestashop.core.mail_template.transformation.mjml_converter'
+          - '@prestashop.core.mail_template.transformation.mjml'
       - method: 'addTransformation'
         arguments:
           - '@prestashop.core.mail_template.transformation.css_inline'
       - method: 'addTransformation'
         arguments:
           - '@prestashop.core.mail_template.transformation.html_textify'
+
+  prestashop.adapter.mail_template.mjml.twig_template_converter:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\Mjml\TwigTemplateConverter'
+    arguments:
+      - '@templating.engine.twig'
+      - '@prestashop.core.mail_template.mjml.mjml_converter'
+

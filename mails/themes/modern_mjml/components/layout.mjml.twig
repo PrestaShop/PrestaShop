@@ -1,9 +1,11 @@
 <mjml>
   <mj-head>
-    <mj-title>Account</mj-title>
+    <mj-title>
+      {% block title %}Title{% endblock %}
+    </mj-title>
     <mj-font name="Open sans" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" />
     <mj-attributes>
-      <mj-wrapper css-class="shadow" background-color="#fff" padding="0 0 30px" border-radius="4px" />
+      <mj-wrapper css-class="shadow wrapper-container" background-color="#fff" padding="0 0 30px" border-radius="4px" />
       <mj-text align="left" color="#363A41" font-family="Open sans, arial, sans-serif" font-size="14px" line-height="25px" />
       <mj-section />
     </mj-attributes>
@@ -31,14 +33,14 @@
     <mj-wrapper>
       {% block header %}
         {% include '@MailThemes/modern_mjml/components/header.mjml.twig' %}
-      {% endblock header %}
+      {% endblock %}
 
       {% block content %}
       {% endblock %}
-
-      {% block footer %}
-        {% include '@MailThemes/modern_mjml/components/footer.mjml.twig' %}
-      {% endblock footer %}
     </mj-wrapper>
+
+    {% block footer %}
+      {% include '@MailThemes/modern_mjml/components/footer.mjml.twig' %}
+    {% endblock %}
   </mj-body>
 </mjml>

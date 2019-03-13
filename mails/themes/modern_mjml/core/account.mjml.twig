@@ -1,5 +1,7 @@
 {% extends '@MailThemes/modern_mjml/components/layout.mjml.twig' %}
 
+{% block title %}Account{% endblock %}
+
 {% block content %}
 <mj-section padding="0 25px">
   <mj-column padding="0">
@@ -34,7 +36,6 @@
 <mj-section text-align="left" padding="0 50px 40px">
   <mj-column width="25px">
     <mj-divider width="25px" css-class="left" padding-top="0" padding-left="0" padding-right="0" border-width="3px" border-color="#505050" border-style="solid"></mj-divider>
-
   </mj-column>
 </mj-section>
 <mj-raw>
@@ -109,5 +110,19 @@ notify us immediately.</span>
 </mj-section>
 <mj-raw>
   <!-- MESSAGE BOX ENDING -->
+</mj-raw>
+
+<mj-raw>
+  <!-- CENTER TEXT BEGINING -->
+</mj-raw>
+<mj-section padding="0 25px 20px">
+  <mj-column>
+    <mj-text align="center">
+      You can now place orders on our shop: <a href="[{shop_url}]" target="_blank" style="text-decoration:none;color:#25B9D7; display:block">{shop name}</a>
+    </mj-text>
+  </mj-column>
+</mj-section>
+<mj-raw>
+  <!-- CENTER TEXT ENDING -->
 </mj-raw>
 {% endblock %}
