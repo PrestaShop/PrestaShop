@@ -67,7 +67,7 @@ final class ManufacturerAddressFormDataProvider implements FormDataProviderInter
         $editableAddress = $this->queryBus->handle(new GetManufacturerAddressForEditing((int) $addressId));
 
         return [
-            'id_manufacturer' => $editableAddress->getManufacturerId(),
+            'id_manufacturer' => $editableAddress->getManufacturerId()->getValue(),
             'last_name' => $editableAddress->getLastName(),
             'first_name' => $editableAddress->getFirstName(),
             'address' => $editableAddress->getAddress(),

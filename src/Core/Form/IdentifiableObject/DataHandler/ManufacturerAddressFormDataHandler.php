@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
@@ -74,8 +75,9 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
     /**
      * {@inheritdoc}
      */
-    public function update($id, array $data)
+    public function update($addressId, array $data)
     {
-        // TODO: Implement update() method.
+        $command = new EditManufacturerAddressCommand((int) $addressId);
+        $addressId = $this->commandBus->handle($command);
     }
 }

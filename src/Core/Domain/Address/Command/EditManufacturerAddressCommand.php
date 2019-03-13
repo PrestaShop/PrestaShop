@@ -99,9 +99,9 @@ class EditManufacturerAddressCommand
     private $other;
 
     /**
-     * @param AddressId $addressId
+     * @param int $addressId
      */
-    public function __construct(AddressId $addressId)
+    public function __construct($addressId)
     {
         $this->addressId = $addressId;
     }
