@@ -5,5 +5,11 @@ services:
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
 
+    prestashop.adapter.tools:
+      class: PrestaShop\PrestaShop\Adapter\Tools
+
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
+        arguments:
+            - "%mail_themes_uri%"
+            - '@prestashop.adapter.tools'

@@ -1,5 +1,5 @@
 imports:
-  - { resource: ../common.yml }
+    - { resource: ../common.yml }
 
 services:
     hashing:
