@@ -410,9 +410,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Show & process address creation.
      *
-     * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))"
-     * )
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -422,10 +420,11 @@ class ManufacturerController extends FrameworkBundleAdminController
     {
         $addressFormBuilder = $this->getAddressFormBuilder();
         $addressFormHandler = $this->getAddressFormHandler();
-        $addressForm = $addressFormBuilder->getForm();
-        $addressForm->handleRequest($request);
 
         try {
+            $addressForm = $addressFormBuilder->getForm();
+            $addressForm->handleRequest($request);
+
             $result = $addressFormHandler->handle($addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -445,9 +444,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Show & process address editing.
      *
-     * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))"
-     * )
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $addressId
      * @param Request $request
@@ -456,12 +453,18 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function editAddressAction(Request $request, $addressId)
     {
+        $addressId = (int) $addressId;
+
+        $addressFormBuilder = $this->getAddressFormBuilder();
+        $addressFormHandler = $this->getAddressFormHandler();
+
         try {
-            $addressForm = $this->getAddressFormBuilder()->getFormFor((int) $addressId, [], [
+            $addressForm = $addressFormBuilder->getFormFor((int) $addressId, [], [
                 'is_editing' => true,
             ]);
             $addressForm->handleRequest($request);
-            $result = $this->getAddressFormHandler()->handleFor((int) $addressId, $addressForm);
+
+            $result = $addressFormHandler->handleFor((int) $addressId, $addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
