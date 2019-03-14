@@ -371,7 +371,7 @@ class EmployeeController extends FrameworkBundleAdminController
      * Get tabs which are accessible for given profile.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_employees_index"
      * )
      *
