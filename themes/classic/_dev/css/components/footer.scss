@@ -50,7 +50,7 @@
 }
 .block-social {
   text-align: right;
-  ul{
+  ul {
     display: flex;
     @include media-breakpoint-down(sm) { 
       flex-flow: wrap;
