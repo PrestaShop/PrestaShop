@@ -103,8 +103,9 @@ function initCommands(client) {
       .url(link)
       .waitForExistAndClick(selector.sign_in_button)
       .waitAndSetValue(selector.login_input, 'pub@prestashop.com')
-      .waitAndSetValue(selector.password_inputFO, 'P4$$W0rd!!')
+      .waitAndSetValue(selector.password_inputFO, 'P4$$w0rd!!')
       .waitForExistAndClick(selector.login_button)
+      .waitForVisibleElement(selector.identity_link, 4000)
       .waitForExistAndClick(selector.logo_home_page);
   });
 

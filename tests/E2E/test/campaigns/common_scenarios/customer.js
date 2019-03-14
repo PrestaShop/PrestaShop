@@ -13,7 +13,7 @@ let promise = Promise.resolve();
  *  first_name: 'demo',
  *  last_name: 'demo',
  *  email_address: 'demo@prestashop.com',
- *  password: 'P4$$W0rd!!',
+ *  password: 'P4$$w0rd!!',
  *  birthday:{
  *      day:'18',
  *      month:'12',
