@@ -26,9 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use AppKernel;
 use Behat\Behat\Context\Context as BehatContext;
-use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 
 /**
  * PrestaShopFeatureContext provides behat hooks to perform necessary operations for testing:
@@ -39,7 +37,6 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
  */
 abstract class AbstractPrestaShopFeatureContext implements BehatContext
 {
-
     protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
     {
         if (!isset($fixtures[$fixtureIndex])) {

@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
@@ -39,7 +38,6 @@ use Behat\Gherkin\Node\TableNode;
  */
 class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
 {
-
     /**
      * "When" steps perform actions, and some of them store the latest result
      * in this variable so that "Then" action can check its content

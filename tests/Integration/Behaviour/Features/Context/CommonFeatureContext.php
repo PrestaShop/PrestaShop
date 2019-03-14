@@ -91,5 +91,4 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     {
         return static::$kernel->getContainer();
     }
-
 }
