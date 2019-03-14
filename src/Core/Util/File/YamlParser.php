@@ -67,7 +67,7 @@ final class YamlParser
 
         $phpConfigFile = $this->getCacheFile($sourceFile);
         // we set the debug flag to true to force the cache freshness check
-        $configCache = new ConfigCache($phpConfigFile, _PS_MODE_DEV_);
+        $configCache = new ConfigCache($phpConfigFile, true);
         if (!$forceRefresh && $configCache->isFresh()) {
             return require $phpConfigFile;
         }
