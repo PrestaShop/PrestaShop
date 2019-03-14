@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCom
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
@@ -71,7 +72,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         Request $request,
         ManufacturerFilters $manufacturerFilters,
         ManufacturerAddressFilters $manufacturerAddressFilters
-    ) {
+    )
+    {
         $manufacturerGridFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer');
         $manufacturerGrid = $manufacturerGridFactory->getGrid($manufacturerFilters);
 
@@ -121,10 +123,25 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function viewManufacturerAction()
+    public function viewAction($manufacturerId)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        try {
+            /** @var ViewableManufacturer $viewableManufacturer */
+            $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
+                (int)$manufacturerId,
+                (int)$this->getContextLangId()
+            ));
+        } catch (ManufacturerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            return $this->redirectToRoute('admin_manufacturers_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig', [
+            'layoutTitle' => $viewableManufacturer->getName(),
+            'viewableManufacturer' => $viewableManufacturer,
+            'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
+        ]);
     }
 
     public function editManufacturerAction()
@@ -146,7 +163,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     public function deleteAction($manufacturerId)
     {
         try {
-            $this->getCommandBus()->handle(new DeleteManufacturerCommand((int) $manufacturerId));
+            $this->getCommandBus()->handle(new DeleteManufacturerCommand((int)$manufacturerId));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
@@ -255,9 +272,9 @@ class ManufacturerController extends FrameworkBundleAdminController
     {
         try {
             /** @var EditableManufacturer $editableManufacturer */
-            $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
+            $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int)$manufacturerId));
             $this->getCommandBus()->handle(
-                new ToggleManufacturerStatusCommand((int) $manufacturerId, !$editableManufacturer->isEnabled())
+                new ToggleManufacturerStatusCommand((int)$manufacturerId, !$editableManufacturer->isEnabled())
             );
             $this->addFlash(
                 'success',
@@ -301,7 +318,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     public function deleteAddressAction($addressId)
     {
         try {
-            $this->getCommandBus()->handle(new DeleteAddressCommand((int) $addressId));
+            $this->getCommandBus()->handle(new DeleteAddressCommand((int)$addressId));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
@@ -388,6 +405,10 @@ class ManufacturerController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            ManufacturerNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 
@@ -405,7 +426,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         foreach ($manufacturerIds as $i => $manufacturerId) {
-            $manufacturerIds[$i] = (int) $manufacturerId;
+            $manufacturerIds[$i] = (int)$manufacturerId;
         }
 
         return $manufacturerIds;
@@ -425,7 +446,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         foreach ($addressIds as $i => $addressId) {
-            $addressIds[$i] = (int) $addressId;
+            $addressIds[$i] = (int)$addressId;
         }
 
         return $addressIds;
