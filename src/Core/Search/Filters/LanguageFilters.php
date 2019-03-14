@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -33,10 +34,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class LanguageFilters extends Filters
 {
-    public static function getKey()
-    {
-        return 'language';
-    }
+    /** @var string */
+    protected $gridId = LanguageGridDefinitionFactory::GRID_ID;
 
     /**
      * {@inheritdoc}

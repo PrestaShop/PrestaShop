@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -236,15 +238,15 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
      * @param string $controller
      * @param string $action
+     * @param string $uniqueKey
      *
      * @return JsonResponse
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function resetSearchAction(Request $request, $controller, $action)
+    public function resetSearchAction($controller = '', $action = '', $uniqueKey = '')
     {
         $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
 
@@ -254,11 +256,11 @@ class CommonController extends FrameworkBundleAdminController
             $shopId = $this->getContext()->shop->id;
 
             $adminFiltersRepository->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
-
-            return new JsonResponse();
         }
 
-        $adminFiltersRepository->removeByUniqueKey($request->get('key'));
+        if (!empty($uniqueKey)) {
+            $adminFiltersRepository->removeByUniqueKey($uniqueKey);
+        }
 
         return new JsonResponse();
     }
@@ -306,28 +308,6 @@ class CommonController extends FrameworkBundleAdminController
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
     ) {
-        $definitionFactory = $this->get($gridDefinitionFactoryService);
-        $definition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-
-        $filtersForm = $gridFilterFormFactory->create($definition);
-        $filtersForm->handleRequest($request);
-
-        $redirectParams = ['grid_id' => $definition->getId()];
-
-        if ($filtersForm->isSubmitted()) {
-            $redirectParams['filters'] = [
-                $filtersForm->getName() => $filtersForm->getData(),
-            ];
-        }
-
-        foreach ($redirectQueryParamsToKeep as $paramName) {
-            if ($request->query->has($paramName)) {
-                $redirectParams[$paramName] = $request->query->get($paramName);
-            }
-        }
-
-        return $this->redirectToRoute($redirectRoute, $redirectParams);
+        return $this->redirectToFilteredGrid($request, $gridDefinitionFactoryService, $redirectRoute, $redirectQueryParamsToKeep);
     }
 }

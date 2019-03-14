@@ -34,9 +34,20 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 abstract class Filters extends ParameterBag implements SearchCriteriaInterface
 {
-    public function __construct(array $filters = [])
+    /** @var string */
+    private $uniqueKey;
+
+    /** @var string */
+    protected $gridId = '';
+
+    /**
+     * @param array $filters
+     * @param string $uniqueKey
+     */
+    public function __construct(array $filters = [], $uniqueKey = '')
     {
         parent::__construct($filters);
+        $this->uniqueKey = !empty($uniqueKey) ? $uniqueKey : $this->gridId;
     }
 
     /**
@@ -45,22 +56,6 @@ abstract class Filters extends ParameterBag implements SearchCriteriaInterface
     public static function getDefaults()
     {
         return [];
-    }
-
-    /**
-     * Unique filters key.
-     *
-     * By default it's fully qualified class name,
-     * but can be overridden to anything.
-     * If you decide to override it,
-     * it's recommended to prefix it with your vendor name
-     * to avoid name collisions.
-     *
-     * @return string
-     */
-    public static function getKey()
-    {
-        return static::class;
     }
 
     /**
@@ -101,5 +96,33 @@ abstract class Filters extends ParameterBag implements SearchCriteriaInterface
     public function getFilters()
     {
         return $this->get('filters');
+    }
+
+    /**
+     * @return string
+     */
+    public function getGridId()
+    {
+        return $this->gridId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUniqueKey()
+    {
+        return $this->uniqueKey;
+    }
+
+    /**
+     * @param string $uniqueKey
+     *
+     * @return $this
+     */
+    public function setUniqueKey($uniqueKey)
+    {
+        $this->uniqueKey = $uniqueKey;
+
+        return $this;
     }
 }
