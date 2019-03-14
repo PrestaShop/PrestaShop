@@ -512,14 +512,17 @@ class FrameworkBundleAdminController extends Controller
 
         $redirectParams = [];
         if ($filtersForm->isSubmitted()) {
-            $redirectParams = [
-                //For filters classes without grid id
-                'filters' => $filtersForm->getData(),
-                //For filters classes with grid id
-                $definition->getId() => [
+            if (empty($definition->getFiltersUuid())) {
+                $redirectParams = [
                     'filters' => $filtersForm->getData(),
-                ],
-            ];
+                ];
+            } else {
+                $redirectParams = [
+                    $definition->getFiltersUuid() => [
+                        'filters' => $filtersForm->getData(),
+                    ],
+                ];
+            }
         }
 
         foreach ($redirectQueryParamsToKeep as $paramName) {

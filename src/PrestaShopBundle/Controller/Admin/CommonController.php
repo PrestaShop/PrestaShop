@@ -240,13 +240,13 @@ class CommonController extends FrameworkBundleAdminController
     /**
      * @param string $controller
      * @param string $action
-     * @param string $uniqueKey
+     * @param string $uuid
      *
      * @return JsonResponse
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function resetSearchAction($controller = '', $action = '', $uniqueKey = '')
+    public function resetSearchAction($controller = '', $action = '', $uuid = '')
     {
         $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
 
@@ -258,8 +258,8 @@ class CommonController extends FrameworkBundleAdminController
             $adminFiltersRepository->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
         }
 
-        if (!empty($uniqueKey)) {
-            $adminFiltersRepository->removeByUniqueKey($uniqueKey);
+        if (!empty($uuid)) {
+            $adminFiltersRepository->removeByUuid($uuid);
         }
 
         return new JsonResponse();

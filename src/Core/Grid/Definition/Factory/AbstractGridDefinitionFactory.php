@@ -56,7 +56,8 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getColumns(),
             $this->getFilters(),
             $this->getGridActions(),
-            $this->getBulkActions()
+            $this->getBulkActions(),
+            $this->getFiltersUuid()
         );
 
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDefinitionModifier', [
@@ -64,6 +65,16 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
         ]);
 
         return $definition;
+    }
+
+    /**
+     * Specify a scope for the grid request parameters.
+     *
+     * @return string
+     */
+    protected function getFiltersUuid()
+    {
+        return '';
     }
 
     /**

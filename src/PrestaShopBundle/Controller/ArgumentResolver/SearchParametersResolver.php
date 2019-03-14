@@ -138,12 +138,12 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      */
     private function overrideWithSavedFilters(Filters $filters, $controller, $action)
     {
-        if (!empty($filters->getUniqueKey())) {
+        if (!empty($filters->getUuid())) {
             /** @var Filters $savedFilters */
-            $savedFilters = $this->searchParameters->getFiltersFromRepositoryByUniqueKey(
+            $savedFilters = $this->searchParameters->getFiltersFromRepositoryByUuid(
                 $this->employee->getId(),
                 $this->shopId,
-                $filters->getUniqueKey(),
+                $filters->getUuid(),
                 get_class($filters)
             );
         } else {
@@ -197,12 +197,12 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         $filtersToSave = $filters->all();
         unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
 
-        if (!empty($filters->getUniqueKey())) {
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndUniqueKey(
+        if (!empty($filters->getUuid())) {
+            $this->adminFilterRepository->createOrUpdateByEmployeeAndUuid(
                 $this->employee->getId(),
                 $this->shopId,
                 $filtersToSave,
-                $filters->getUniqueKey()
+                $filters->getUuid()
             );
         } else {
             $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(

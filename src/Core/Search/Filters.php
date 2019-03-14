@@ -35,19 +35,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 abstract class Filters extends ParameterBag implements SearchCriteriaInterface
 {
     /** @var string */
-    private $uniqueKey;
-
-    /** @var string */
-    protected $gridId = '';
+    protected $uuid = '';
 
     /**
      * @param array $filters
-     * @param string $uniqueKey
+     * @param string $uuid
      */
-    public function __construct(array $filters = [], $uniqueKey = '')
+    public function __construct(array $filters = [], $uuid = '')
     {
         parent::__construct($filters);
-        $this->uniqueKey = !empty($uniqueKey) ? $uniqueKey : $this->gridId;
+        $this->uuid = !empty($uuid) ? $uuid : $this->uuid;
     }
 
     /**
@@ -101,27 +98,19 @@ abstract class Filters extends ParameterBag implements SearchCriteriaInterface
     /**
      * @return string
      */
-    public function getGridId()
+    public function getUuid()
     {
-        return $this->gridId;
+        return $this->uuid;
     }
 
     /**
-     * @return string
-     */
-    public function getUniqueKey()
-    {
-        return $this->uniqueKey;
-    }
-
-    /**
-     * @param string $uniqueKey
+     * @param string $uuid
      *
      * @return $this
      */
-    public function setUniqueKey($uniqueKey)
+    public function setUuid($uuid)
     {
-        $this->uniqueKey = $uniqueKey;
+        $this->uuid = $uuid;
 
         return $this;
     }
