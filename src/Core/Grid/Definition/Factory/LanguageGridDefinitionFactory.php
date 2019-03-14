@@ -52,32 +52,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var string
-     */
-    private $resetUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectUrl;
-
-    /**
-     * @param string $resetUrl
-     * @param string $redirectUrl
-     */
-    public function __construct($resetUrl, $redirectUrl)
-    {
-        $this->resetUrl = $resetUrl;
-        $this->redirectUrl = $redirectUrl;
-    }
+    const GRID_ID = 'language';
 
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'language';
+        return self::GRID_ID;
     }
 
     /**
@@ -277,13 +259,15 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
              ->add(
                  (new Filter('actions', SearchAndResetType::class))
                  ->setTypeOptions([
-                     'attr' => [
-                         'data-url' => $this->resetUrl,
-                         'data-redirect' => $this->redirectUrl,
+                     'reset_route' => 'admin_common_reset_search_by_key',
+                     'reset_route_params' => [
+                         'uniqueKey' => self::GRID_ID,
                      ],
+                     'redirect_route' => 'admin_languages_index',
                  ])
                  ->setAssociatedColumn('actions')
-             );
+             )
+        ;
     }
 
     /**

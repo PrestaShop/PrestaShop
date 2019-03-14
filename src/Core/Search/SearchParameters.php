@@ -49,29 +49,34 @@ final class SearchParameters implements SearchParametersInterface
      */
     public function getFiltersFromRequest(Request $request, $filterClass)
     {
-        $filters = $this->formatFiltersFromRequest($request);
+        $filters = new $filterClass();
 
-        if ($this->doesFilterExistByUniqueKey($request, $filterClass::getKey())) {
-            $filters['filters'] = $filters['filters'][$filterClass::getKey()];
-        } else if (isset($filters['filters'])) {
-            foreach ($filters['filters'] as $filterKey => $filterValue) {
-                if (is_array($filterValue)) {
-                    $filters['filters'] = $filterValue;
+        $queryParams = $request->query->all();
+        $requestParams = $request->request->all();
 
-                    break;
-                }
-
-                $filters['filters'][$filterKey] = $filterValue;
-            }
+        //If filters have a grid id then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
+        if (!empty($filters->getGridId())) {
+            $queryParams = isset($queryParams[$filters->getGridId()]) ? $queryParams[$filters->getGridId()] : [];
+            $requestParams = isset($requestParams[$filters->getGridId()]) ? $requestParams[$filters->getGridId()] : [];
         }
 
-        return new $filterClass($filters);
+        $parameters = [];
+        foreach (self::FILTER_TYPES as $type) {
+            if (isset($queryParams[$type])) {
+                $parameters[$type] = $queryParams[$type];
+            } elseif (isset($requestParams[$type])) {
+                $parameters[$type] = $requestParams[$type];
+            }
+        }
+        $filters->replace($parameters);
+
+        return $filters;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filtersClass)
+    public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass)
     {
         $adminFilter = $this->adminFilterRepository->findByEmployeeAndRouteParams(
             $employeeId,
@@ -81,50 +86,27 @@ final class SearchParameters implements SearchParametersInterface
         );
 
         if (null === $adminFilter) {
-            $adminFilter = $this->adminFilterRepository->findOneBy([
-                'employee' => $employeeId,
-                'shop' => $shopId,
-                'uniqueKey' => $filtersClass::getKey(),
-            ]);
+            return new $filterClass();
         }
 
-        $savedFilters = [];
-
-        if (null !== $adminFilter) {
-            $savedFilters = json_decode($adminFilter->getFilter(), true);
-        }
-
-        return new $filtersClass($savedFilters);
+        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getUniqueKey());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function doesFilterExistByUniqueKey(Request $request, $uniqueKey)
+    public function getFiltersFromRepositoryByUniqueKey($employeeId, $shopId, $uniqueKey, $filterClass)
     {
-        $filters = $this->formatFiltersFromRequest($request);
+        $adminFilter = $this->adminFilterRepository->findOneBy([
+            'employee' => $employeeId,
+            'shop' => $shopId,
+            'uniqueKey' => $uniqueKey,
+        ]);
 
-        return isset($filters['filters'][$uniqueKey]);
-    }
-
-    /**
-     * Gets formatted filters directly from the request
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function formatFiltersFromRequest(Request $request)
-    {
-        $filters = [];
-        foreach (self::FILTER_TYPES as $type) {
-            if ($request->request->has($type)) {
-                $filters[$type] = $request->request->get($type);
-            } elseif ($request->query->has($type)) {
-                $filters[$type] = $request->query->get($type);
-            }
+        if (null === $adminFilter) {
+            return new $filterClass();
         }
 
-        return $filters;
+        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getUniqueKey());
     }
 }

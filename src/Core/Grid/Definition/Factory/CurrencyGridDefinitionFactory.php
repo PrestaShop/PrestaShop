@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class CurrencyGridDefinitionFactory is responsible for defining definition for currency list located in
@@ -48,12 +49,24 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'currency';
+
+    private $resetRedirectRoute;
+
+    /**
+     * @param string $resetRedirectRoute
+     */
+    public function __construct($resetRedirectRoute = 'admin_currencies_index')
+    {
+        $this->resetRedirectRoute = $resetRedirectRoute;
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'currency';
+        return self::GRID_ID;
     }
 
     /**
@@ -164,12 +177,11 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_key',
                     'reset_route_params' => [
-                        'controller' => 'currency',
-                        'action' => 'index',
+                        'uniqueKey' => self::GRID_ID,
                     ],
-                    'redirect_route' => 'admin_currencies_index',
+                    'redirect_route' => $this->resetRedirectRoute,
                 ])
                 ->setAssociatedColumn('actions')
             )
