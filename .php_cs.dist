@@ -39,7 +39,7 @@ return PhpCsFixer\Config::create()
         'array_indentation' => true,
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
-        'hash_to_slash_comment' => true,
+        'single_line_comment_style' => true,
         'logical_operators' => true,
         'no_short_echo_tag' => true,
         'modernize_types_casting' => true,
