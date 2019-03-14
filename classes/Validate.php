@@ -581,7 +581,7 @@ class ValidateCore
             return true;
         }
 
-        return self::isPlaintextPassword($passwd, Validate::ADMIN_PASSWORD_LENGTH);
+        return static::isPlaintextPassword($passwd, Validate::ADMIN_PASSWORD_LENGTH);
     }
 
     /**
@@ -644,7 +644,7 @@ class ValidateCore
             return true;
         }
 
-        return self::isDate($date);
+        return static::isDate($date);
     }
 
     /**
