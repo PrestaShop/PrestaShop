@@ -465,6 +465,8 @@ class ManufacturerController extends FrameworkBundleAdminController
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_manufacturers_index');
             }
 
             /** @var EditableManufacturerAddress $editableAddress */
