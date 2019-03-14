@@ -110,21 +110,121 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
+        list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
         $filtersClass = $argument->getType();
         /** @var Filters $filters */
         $filters = $this->buildDefaultFilters($filtersClass);
 
-        if ($request->query->has('grid_id') && $request->query->get('grid_id') === $filtersClass::getKey()) {
+        if ($request->isMethod('GET')) {
+            $this->overrideWithSavedFilters($filters, $controller, $action);
+        }
 
-            //$filters = $this->overrideWithSavedFiltersIfAvailable($request, $filtersClass, $filters);
-
-            $filters = $this->overrideWithRequestFiltersIfAvailableAndPersist($request, $filtersClass, $filters);
+        if ($this->overrideWithRequest($request, $filters)) {
+            $this->persistFilters($filters, $controller, $action);
         }
 
         $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
         $this->dispatcher->dispatch(FilterSearchCriteriaEvent::NAME, $filterSearchParametersEvent);
 
         yield $filterSearchParametersEvent->getSearchCriteria();
+    }
+
+    /**
+     * @param Filters $filters
+     * @param string $controller
+     * @param string $action
+     *
+     * @return bool Indicates if filters have been overridden
+     */
+    private function overrideWithSavedFilters(Filters $filters, $controller, $action)
+    {
+        if (!empty($filters->getUniqueKey())) {
+            /** @var Filters $savedFilters */
+            $savedFilters = $this->searchParameters->getFiltersFromRepositoryByUniqueKey(
+                $this->employee->getId(),
+                $this->shopId,
+                $filters->getUniqueKey(),
+                get_class($filters)
+            );
+        } else {
+            /** @var Filters $savedFilters */
+            $savedFilters = $this->searchParameters->getFiltersFromRepository(
+                $this->employee->getId(),
+                $this->shopId,
+                $controller,
+                $action,
+                get_class($filters)
+            );
+        }
+
+        if ($savedFilters) {
+            $filters->add($savedFilters->all());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Request $request
+     * @param Filters $filters
+     *
+     * @return bool Indicates if filters have been overridden
+     */
+    private function overrideWithRequest(Request $request, Filters $filters)
+    {
+        /** @var Filters $queryFilters */
+        $queryFilters = $this->searchParameters->getFiltersFromRequest($request, get_class($filters));
+        if ($queryFilters->count()) {
+            $filters->add($queryFilters->all());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Filters $filters
+     * @param string $controller
+     * @param string $action
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function persistFilters(Filters $filters, $controller, $action)
+    {
+        //Update the saved filters (which have been modified by the query)
+        $filtersToSave = $filters->all();
+        unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
+
+        if (!empty($filters->getUniqueKey())) {
+            $this->adminFilterRepository->createOrUpdateByEmployeeAndUniqueKey(
+                $this->employee->getId(),
+                $this->shopId,
+                $filtersToSave,
+                $filters->getUniqueKey()
+            );
+        } else {
+            $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
+                $this->employee->getId(),
+                $this->shopId,
+                $filtersToSave,
+                $controller,
+                $action
+            );
+        }
+    }
+
+    /**
+     * @param string $filtersClass
+     *
+     * @return mixed
+     */
+    private function buildDefaultFilters($filtersClass)
+    {
+        $filters = new $filtersClass($filtersClass::getDefaults());
+
+        return $filters;
     }
 
     /**
@@ -138,108 +238,8 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
             return null;
         }
 
-        if (!is_object($employee = $token->getUser())) {
-            return null;
-        }
+        $employee = $token->getUser();
 
-        return $employee;
-    }
-
-    /**
-     * @param Request $request
-     * @param $filtersClass
-     * @param $filters
-     *
-     * @return Filters
-     */
-    private function overrideWithSavedFiltersIfAvailable(Request $request, $filtersClass, $filters)
-    {
-        list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
-
-        if ($request->isMethod('GET')) {
-            /** @var Filters $savedFilters */
-            $savedFilters = $this->searchParameters->getFiltersFromRepository(
-                $this->employee->getId(),
-                $this->shopId,
-                $controller,
-                $action,
-                $filtersClass
-            );
-            if ($savedFilters) {
-                $filters->add($savedFilters->all());
-            }
-        }
-
-        return $filters;
-    }
-
-    /**
-     * @param Request $request
-     * @param $filtersClass
-     * @param $filters
-     *
-     * @return Filters
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    private function overrideWithRequestFiltersIfAvailableAndPersist(Request $request, $filtersClass, $filters)
-    {
-        list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
-
-        $query = $request->query;
-        $queryHasFilters = false;
-        foreach (SearchParametersInterface::FILTER_TYPES as $filterType) {
-            if ($query->has($filterType)) {
-                $queryHasFilters = true;
-                break;
-            }
-        }
-
-        if (!$queryHasFilters) {
-            return $filters;
-        }
-
-        /** @var Filters $queryFilters */
-        $queryFilters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
-        $filters->add($queryFilters->all());
-        //Update the saved filters (which have been modified by the query)
-        $filtersToSave = $filters->all();
-        unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
-
-        $doesFiltersFoundByUniqueKey = $this->searchParameters->doesFilterExistByUniqueKey(
-            $request,
-            $filtersClass::getKey()
-        );
-
-        if ($doesFiltersFoundByUniqueKey) {
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndUniqueKey(
-                $this->employee->getId(),
-                $this->shopId,
-                $filtersToSave,
-                $filtersClass::getKey()
-            );
-        }
-
-        if (!$doesFiltersFoundByUniqueKey) {
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
-                $this->employee->getId(),
-                $this->shopId,
-                $filtersToSave,
-                $controller,
-                $action
-            );
-        }
-
-        return $filters;
-    }
-
-    /**
-     * @param $filtersClass
-     * @return mixed
-     */
-    private function buildDefaultFilters($filtersClass)
-    {
-        $filters = new $filtersClass($filtersClass::getDefaults());
-        return $filters;
+        return $employee instanceof Employee ? $employee : null;
     }
 }

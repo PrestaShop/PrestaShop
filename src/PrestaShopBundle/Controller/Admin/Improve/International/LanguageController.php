@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -52,7 +52,7 @@ use Symfony\Component\VarDumper\VarDumper;
 /**
  * Class LanguageController manages "Improve > International > Localization > Languages".
  */
-class LanguageController extends AbstractAdminController
+class LanguageController extends FrameworkBundleAdminController
 {
     /**
      * Show languages listing page.
@@ -61,18 +61,16 @@ class LanguageController extends AbstractAdminController
      *
      * @param Request $request
      * @param LanguageFilters $filters
+     * @param CurrencyFilters $currencyFilters
      *
      * @return Response
      */
     public function indexAction(Request $request, LanguageFilters $filters, CurrencyFilters $currencyFilters)
     {
-        VarDumper::dump($filters);
-        VarDumper::dump($currencyFilters);
-
         $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
         $languageGrid = $languageGridFactory->getGrid($filters);
 
-        $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency');
+        $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency_for_language');
         $currencyGrid = $currencyGridFactory->getGrid($currencyFilters);
 
         return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
@@ -81,6 +79,23 @@ class LanguageController extends AbstractAdminController
             'isHtaccessFileWriter' => $this->get('prestashop.core.util.url.url_file_checker')->isHtaccessFileWritable(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
+    }
+
+    /**
+     * Process Grid search.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(Request $request)
+    {
+        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.language';
+        if ($request->request->has('currency')) {
+            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.currency_for_language';
+        }
+
+        return $this->redirectToFilteredGrid($request, $gridDefinitionFactory, 'admin_languages_index');
     }
 
     /**

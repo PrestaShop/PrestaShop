@@ -48,17 +48,17 @@ interface SearchParametersInterface
      * @param string $controller the controller name
      * @param string $action the action name
      *
-     * @return Filters A collection of filters
+     * @return Filters|null A collection of filters
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass);
 
     /**
-     * Checks if the request has a key which matches with filter class key.
+     * @param int $employeeId
+     * @param int $shopId
+     * @param string $uniqueKey
+     * @param string $filterClass
      *
-     * @param Request $request
-     * @param string $uniqueKey the filterClass:getKey() method
-     *
-     * @return bool
+     * @return Filters|null A collection of filters
      */
-    public function doesFilterExistByUniqueKey(Request $request, $uniqueKey);
+    public function getFiltersFromRepositoryByUniqueKey($employeeId, $shopId, $uniqueKey, $filterClass);
 }
