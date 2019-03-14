@@ -44,7 +44,7 @@ class MaterialChoiceTreeType extends AbstractType
         }
 
         $view->vars['multiple'] = $options['multiple'];
-        $view->vars['choices_tree'] =  $this->getFormattedChoicesTree($options, $selectedData);
+        $view->vars['choices_tree'] = $this->getFormattedChoicesTree($options, $selectedData);
         $view->vars['choice_label'] = $options['choice_label'];
         $view->vars['choice_value'] = $options['choice_value'];
         $view->vars['choice_children'] = $options['choice_children'];
