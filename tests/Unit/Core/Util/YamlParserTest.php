@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -46,7 +46,7 @@ class YamlParserTest extends UnitTestCase
 
     public function getConfigDir()
     {
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
+        return _PS_ROOT_DIR_ . '/app/config';
     }
 
     /**
@@ -122,6 +122,6 @@ class YamlParserTest extends UnitTestCase
      */
     public function getYamlFilesProvider()
     {
-        return array(array($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml'));
+        return [[$this->getConfigDir() . '/config_test.yml']];
     }
 }
