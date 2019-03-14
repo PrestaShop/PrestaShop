@@ -437,6 +437,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig', [
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Add new address', 'Admin.Orderscustomers.Feature'),
             'addressForm' => $addressForm->createView(),
         ]);
     }
@@ -483,6 +485,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Brands', 'Admin.Catalog.Feature'),
             'addressForm' => $addressForm->createView(),
             'address' => $editableAddress->getAddress(),
         ]);

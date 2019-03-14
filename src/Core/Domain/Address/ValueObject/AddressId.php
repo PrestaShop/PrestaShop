@@ -68,7 +68,8 @@ class AddressId
     {
         if (!is_int($value) || 0 >= $value) {
             throw new AddressConstraintException(
-                sprintf('Invalid address id "%s".', var_export($value, true))
+                sprintf('Invalid address id "%s".', var_export($value, true)),
+                AddressConstraintException::INVALID_ID
             );
         }
     }

@@ -41,6 +41,9 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
      */
     private $commandBus;
 
+    /**
+     * @param CommandBusInterface $commandBus
+     */
     public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
@@ -51,9 +54,7 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
      */
     public function create(array $data)
     {
-        /**
-         * @var AddressId
-         */
+        /** @var AddressId $addressId */
         $addressId = $this->commandBus->handle(new AddManufacturerAddressCommand(
             $data['id_manufacturer'],
             $data['last_name'],
