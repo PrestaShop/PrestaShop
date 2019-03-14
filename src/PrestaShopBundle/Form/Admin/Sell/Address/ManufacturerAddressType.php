@@ -31,6 +31,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -93,6 +94,7 @@ class ManufacturerAddressType extends AbstractType
     {
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
+                'disabled' => $options['is_editing'],
                 'choices' => $this->manufacturerChoices,
                 'translation_domain' => false,
                 'constraints' => [
@@ -203,5 +205,15 @@ class ManufacturerAddressType extends AbstractType
                 ],
             ])
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'is_editing' => false,
+        ]);
     }
 }
