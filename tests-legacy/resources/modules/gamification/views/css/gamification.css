@@ -1,0 +1,449 @@
+#gamification_notif.open {background: none}
+#gamification_notif.open a.dropdown-toggle{background: none !important}
+
+#gamification_notif.open .material-icons {color: #6c868e; font-size: 24px}
+
+#gamification_notif_number_wrapper {
+  display: inline-block;
+  position: absolute;
+  top: 4px;
+  top: -.3rem;
+  right: .2rem;
+  color: #fff; 
+  background: #25b9d7;
+  font-size: 10px;
+  font-size: .625rem;
+  line-height: 12px;
+  line-height: .75rem;
+  padding: 0 3px;
+  padding: 0 .1875rem;
+  border-radius: 1rem;
+  border: 2px solid #fff;
+  border: .125rem solid #fff;
+}
+
+#gamification_notif .dropdown-menu {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  min-width: 22rem;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #bbcdd2;
+  top: 15px !important;
+  transform: translate3d(-324px, 20px, 0px) !important;
+}
+#gamification_notif .dropdown-menu:before, #gamification_notif .dropdown-menu:after{
+  bottom: 100%;
+  right: 5px;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.gamification-component #gamification_notif .dropdown-menu:before, 
+.gamification-component #gamification_notif .dropdown-menu:after{
+  right: 9px;
+}
+
+#gamification_notif .dropdown-menu:after{
+  border-color: transparent;
+  border-bottom-color: white;
+  border-width: 7px;
+  margin-left: 1px;
+}
+
+#gamification_notif .dropdown-menu:before{
+  border-color: transparent;
+  border-bottom-color: #bbcdd2;
+  border-width: 8px;
+  margin-right: -1px;
+}
+
+#gamification_notif_wrapper.notifs_panel .progress {
+  margin: 0 20px;
+  border-radius: 11px;
+  height: 8px;
+  background: #f0fbff;
+}
+#gamification_notif_wrapper.notifs_panel .progress .progress-bar.progress-bar-info{background: #25b9d7}
+
+#gamification_notif_wrapper.notifs_panel .nav-tabs {border-bottom: 1px solid #fff}
+#gamification_notif_wrapper.notifs_panel .nav-item {
+  margin-left: 0;
+  width: 50%;
+  padding: 0 8px;
+  text-align: center;
+  margin-bottom: -1px;
+}
+#gamification_notif_wrapper.notifs_panel .nav-item.active a {
+  border-top: 0;
+  border-bottom: 3px solid #25b9d7;
+  color: #25b9d7;
+}
+#gamification_notif_wrapper.notifs_panel .nav-item:hover a {color: #25b9d7;}
+#gamification_notif_wrapper.notifs_panel .nav-item .nav-link {
+  color: #6c868e;
+  font-weight: 400;
+  padding: .9375rem .9375rem .625rem;
+  font-family: Open Sans,sans-serif;
+  font-size: 0.9rem;
+  text-transform: none;
+  border: 0;
+}
+#gamification_notif_wrapper.notifs_panel .tab-content {
+  border-top: .125rem solid #eee;
+  padding: 0;
+  margin-top: -.0625rem;
+  background: #f2f4f5;
+}
+
+#gamification_notif_wrapper.notifs_panel .tab-content .tab-pane{
+  height: 16.5rem;
+  overflow-y: auto;
+}
+
+#gamification_notif_wrapper .panel-footer{
+  margin: 0 !important;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+#gamification_notif_wrapper .panel-footer a{
+  font-size: 13px;
+  color: #25b9d7;
+  font-weight: 600;
+}
+#gamification_notif_wrapper .panel-footer a i{
+  color: #25b9d7 !important;
+  font-size: 20px !important;
+}
+
+#gamification_notif #gamification_notif_wrapper{
+  width: 100%;
+}
+
+#gamification_notif #gamification_notif_wrapper .notifs_panel_header{
+  font-size: 14px;
+  padding: 20px 20px 10px 20px;
+}
+
+#gamification_notif_wrapper .notifs_panel_header p{font-weight: bold;}     
+#gamification_notif_wrapper .notifs_panel_header p span.notifs-level{color: #25b9d7; float: right;}     
+
+.gamification_badges_title {
+  margin-top: 10px
+}
+
+.gamification_badges_img {
+  text-align: center;
+  margin-top: 0;
+}
+
+.gamification_badges_name {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 3px;
+}
+
+ul#gamification_badges_list {
+  list-style-type: none;
+  height: 400px;
+  width: 310px;
+  margin: auto;
+  overflow: hidden;
+  padding-top: 10px;
+}
+
+ul#gamification_badges_list li {
+  display: block;
+  min-height: 140px;
+  padding: 5px;
+  width: 132px;
+  margin: 10px 10px 10px 15px;
+  position: relative;
+}
+
+ul#gamification_badges_list li span {
+  display: block;
+  text-align: center;
+}
+
+ul#gamification_badges_list li.unlocked {
+  background: #fffbe2;
+  border: 1px solid #ebdfab;
+  margin-right: 7px;
+}
+
+ul#gamification_badges_list li.unlocked span {
+  color: #a88417;
+  font-size: 11px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #fff;
+  text-transform: uppercase
+}
+
+ul#gamification_badges_list li.locked {
+  background: url(../img/bg_locked_badge.png) repeat;
+  border: 1px solid #acaeb5;
+  margin-right: 5px;
+}
+
+ul#gamification_badges_list li.locked span {
+  color: #343943;
+  font-size: 11px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #fff;
+  text-transform: uppercase
+}
+
+ul#gamification_badges_list li.locked .gamification_badges_name {
+  color: #acaeb5
+}
+
+#gamification_progressbar {
+  height: 20px;
+  margin-top: 5px;
+  position: relative;
+  width: 100%;
+}
+
+#gamification_progressbar {
+  height: 19px;
+  position: relative;
+  -moz-border-radius: 15px;
+  -o-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  background-image: url(../img/bg_bar_global.png)
+}
+
+#gamification_progressbar .gamification_progress-label {
+  top: 2px;
+  font-size: 14px
+}
+
+#gamification_progressbar .ui-progressbar-value {
+  -moz-border-radius: 15px;
+  -o-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  border: 1px solid #8aa96d
+}
+
+#gamification_progressbar .ui-widget-header {
+  background-image: url(../img/gamification-bar-bg.png);
+  margin-top: -18px;
+}
+
+#gamification_progressbar_tab {
+  -moz-border-radius: 15px;
+  -o-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  background-image: url(../img/bg_bar_global.png);
+  float: left;
+  height: 25px;
+  position: relative;
+  width: 87%;
+}
+
+#completion_gamification #gamification_progress-label_tab {
+  float: left;
+  width: 10%;
+  margin-left: 15px;
+  text-align: left;
+}
+
+#gamification_progressbar_tab .ui-progressbar-value {
+  -moz-border-radius: 15px;
+  -o-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  border: 1px solid #8aa96d;
+  position: absolute;
+  top: 0;
+}
+
+#gamification_progressbar_tab .ui-widget-header {
+  background-image: url(../img/gamification-bar-bg.png);
+}
+
+/******* intro gamification *******/
+
+#intro_gamification {
+  border-bottom: 1px solid #ccced7;
+  float: left;
+}
+
+#intro_gamification h4, #completion_gamification h4 {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #343943;
+  text-shadow: 1px 1px 1px #fff
+}
+
+#intro_gamification h4 {
+  margin-top: 0;
+}
+
+#intro_gamification #left_intro {
+  float: left;
+  width: 67%;
+  padding-right: 20px;
+  border-right: 1px solid #ccced7;
+}
+
+#intro_gamification #left_intro p {
+  text-align: justify;
+  float: left;
+  width: 100%;
+  margin-bottom: 20px
+}
+
+#intro_gamification #right_intro {
+  float: left;
+  padding-left: 20px;
+  border-left: 1px solid #ffffff;
+  width: 23%
+}
+
+#intro_gamification #right_intro a {
+  color: #268ccd;
+  font-size: 15px;
+  font-weight: bold
+
+}
+
+#intro_gamification #right_intro li {
+  color: #343943;
+  font-size: 15px;
+  font-weight: bold
+}
+
+#intro_gamification #right_intro li span, #intro_gamification #right_intro li a {
+  line-height: 22px
+}
+
+#completion_gamification {
+  border-top: 1px solid #ffffff;
+  clear: both
+}
+
+.gamification_progress-label, .gamification_progress-label_tab {
+  text-align: center;
+  display: block;
+  top: 3px;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #fff;
+  position: relative;
+  z-index: 1000;
+  color: #68737f;
+  font-size: 17px
+}
+
+#gamification_progress-label {
+  text-align: center;
+  display: block;
+}
+
+ul.badge_list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li.badge_square {
+  display: block;
+  float: left;
+  height: 110px;
+  width: 100px;
+  background-color: transparent;
+  border: none;
+  padding: 5px 10px 5px 10px;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+
+li.not_validated {
+  color: #ccc;
+}
+
+.badges_filters div {
+  float: left;
+  margin-bottom: 30px
+}
+
+.badges_filters select {
+  margin-right: 30px;
+}
+
+.icon-trophy-svg {
+  display: none;
+}
+
+/* PrestaShop 1.7 - new theme adaptation */
+.gamification-component {
+  height: 100%;
+}
+
+.gamification-component,
+.gamification-component > ul,
+.gamification-component > ul > li {
+  display: flex !important;
+  align-items: stretch;
+}
+
+.gamification-component > ul > li > a {
+  display: flex;
+  align-items: center;
+}
+
+.gamification-component .icon-trophy-svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.gamification-component #gamification_notif .gamification_notif::after {
+  display: none;
+}
+
+.gamification-component > ul {
+  padding: 0;
+  margin: 0;
+}
+
+.gamification-component #gamification_notif_value,
+#gamification_notif #gamification_notif_value {
+  color: #fff !important;
+  font-size: 0.625rem !important;
+}
+
+/* Fix on legacy page */
+
+.bootstrap #header_infos #gamification_notif {
+  margin-left: .3125rem;
+}
+.bootstrap #header_infos .gamification_notif {
+  display: flex;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  line-height: 2.5rem;
+  align-items: center;
+}
+
+.bootstrap #header_infos .gamification_notif #gamification_notif_number_wrapper{
+  top: 0.25rem;
+  right: 0.9rem;
+}
+
+.bootstrap #header_infos #gamification_notif .dropdown-menu{
+  top: 22px !important;
+  transform: translate3d(-328px, 20px, 0px) !important;
+}

@@ -1,0 +1,772 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/countries/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="708526e44bef1d8fcd0d67ddf61044d5">
+        <source>Are you sure you want to restore the default address format for this country?</source>
+        <target>Are you sure you want to restore the default address format for this country?</target>
+        <note>Line: 109</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0f4a4ca4bdfda88bb59a4ba4814a5f78">
+        <source>Please install the %module_name% module before using this feature.</source>
+        <target>Please install the %module_name% module before using this feature.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f1dd3f4aa197c3cb588dce3911e990b2">
+        <source>A language pack is available for this ISO.</source>
+        <target>A language pack is available for this ISO.</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="3ad7d3a0bcf9313e6efc3ef183b779d0">
+        <source>The Prestashop version compatible with this language and your system is:</source>
+        <target>The Prestashop version compatible with this language and your system is:</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="6b1fb1c361571071fe0f6e2055c39dcb">
+        <source>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."</source>
+        <target>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="a6669356dbb699457f5750c1b6e0ab0d">
+        <source>No language pack is available on prestashop.com for this ISO code</source>
+        <target>No language pack is available on prestashop.com for this ISO code</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="2c148c0631e11553ded2c0cb527be862">
+        <source>This language pack is NOT complete and cannot be used in the front or back office because some files are missing.</source>
+        <target>This language pack is NOT complete and cannot be used in the front or back office because some files are missing.</target>
+        <note>Line: 64</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5d27fef01a54790de11db21f1ed47892">
+        <source>%s at least, or you will have to edit the translation files manually.</source>
+        <target>%s at least, or you will have to edit the translation files manually.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
+        <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
+        <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="1f0f8b59397f34d499b181297714713a">
+        <source>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</source>
+        <target>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
+        <source>%limit% for suhosin.post.max_vars.</source>
+        <target>%limit% for suhosin.post.max_vars.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
+        <source>%limit% for suhosin.request.max_vars.</source>
+        <target>%limit% for suhosin.request.max_vars.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="308c1cf98be9973142833c9a9dbbc2ef">
+        <source>Please ask your hosting provider to increase the Suhosin limit to</source>
+        <target>Please ask your hosting provider to increase the Suhosin limit to</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="5ad040870ae5ccaeb2d57e4d052163a4">
+        <source>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</source>
+        <target>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="5607dc45ebdfc0baaab64d944aa88f47">
+        <source>for max_input_vars.</source>
+        <target>for max_input_vars.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="6e709babf4b5a0ed4194ad5240e1be2c">
+        <source>Please ask your hosting provider to increase this limit to</source>
+        <target>Please ask your hosting provider to increase this limit to</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
+        <source>%s at least, or you will have to edit the translation files.</source>
+        <target>%s at least, or you will have to edit the translation files.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
+        <source>This expression uses a special syntax:</source>
+        <target>This expression uses a special syntax:</target>
+        <note>Line: 140</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Language.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="87c6e26b4d5c8e6c145691758c25b769">
+        <source>Fatal error: IETF code %s is not correct</source>
+        <target>Fatal error: IETF code %s is not correct</target>
+        <note>Line: 803</note>
+      </trans-unit>
+      <trans-unit id="bec88b0b441e9deb3008eb5b2a57ec70">
+        <source>Sorry this language is not available</source>
+        <target>Sorry this language is not available</target>
+        <note>Line: 1065</note>
+      </trans-unit>
+      <trans-unit id="edeb9e20655b946e4bee4ac44a6c0a7f">
+        <source>Server does not have permissions for writing.</source>
+        <target>Server does not have permissions for writing.</target>
+        <note>Line: 1092
+Comment: @todo Throw exception</note>
+      </trans-unit>
+      <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
+        <source>Language pack unavailable.</source>
+        <target>Language pack unavailable.</target>
+        <note>Line: 1122
+Comment: @todo Throw exception</note>
+      </trans-unit>
+      <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
+        <source>An error occurred while creating the language: %s</source>
+        <target>An error occurred while creating the language: %s</target>
+        <note>Line: 1168</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/LocalizationPack.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dd7edad69f95c053248e9b53eab73826">
+        <source>Cannot load country: %d</source>
+        <target>Cannot load country: %d</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="5408a3468e366610d70dc31825b3ef3d">
+        <source>Cannot enable the associated country: %s</source>
+        <target>Cannot enable the associated country: %s</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="db3f419ede0b78fcf31491509e68db40">
+        <source>Invalid Zone name.</source>
+        <target>Invalid Zone name.</target>
+        <note>Line: 168</note>
+      </trans-unit>
+      <trans-unit id="be9fddade234ff9b16a1d92d62963b8e">
+        <source>Invalid state properties.</source>
+        <target>Invalid state properties.</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="b19f9ad94a42c56d4a2d89aaca63bafb">
+        <source>Cannot update the associated country: %s</source>
+        <target>Cannot update the associated country: %s</target>
+        <note>Line: 188</note>
+      </trans-unit>
+      <trans-unit id="e970d66f1c952edf7a4e5dfcf3e18958">
+        <source>An error occurred while adding the state.</source>
+        <target>An error occurred while adding the state.</target>
+        <note>Line: 193</note>
+      </trans-unit>
+      <trans-unit id="28c39342f22a394f233ec0cba0ecfa02">
+        <source>An error occurred while fetching the state.</source>
+        <target>An error occurred while fetching the state.</target>
+        <note>Line: 200</note>
+      </trans-unit>
+      <trans-unit id="37c73343e4118943bc088bb4ad94a56c">
+        <source>Invalid tax properties.</source>
+        <target>Invalid tax properties.</target>
+        <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="da2b28e84d7f376b073d2c31b0cb937b">
+        <source>An error occurred while importing the tax: %s</source>
+        <target>An error occurred while importing the tax: %s</target>
+        <note>Line: 241</note>
+      </trans-unit>
+      <trans-unit id="36f9983aadfde9d77db0d357abe6e85e">
+        <source>This tax rule cannot be saved.</source>
+        <target>This tax rule cannot be saved.</target>
+        <note>Line: 265</note>
+      </trans-unit>
+      <trans-unit id="19f29a24f0ccb9b96b37182473b27d63">
+        <source>Invalid currency properties.</source>
+        <target>Invalid currency properties.</target>
+        <note>Line: 349</note>
+      </trans-unit>
+      <trans-unit id="0e7c10cc4eabebc9bd8f1b9cb8b81bb6">
+        <source>An error occurred while importing the currency: %s</source>
+        <target>An error occurred while importing the currency: %s</target>
+        <note>Line: 355</note>
+      </trans-unit>
+      <trans-unit id="4a11be1a3905ec59ca2d35a068de6f2e">
+        <source>Localization pack corrupted: wrong unit type.</source>
+        <target>Localization pack corrupted: wrong unit type.</target>
+        <note>Line: 423</note>
+      </trans-unit>
+      <trans-unit id="28194875b1f41da98a320b0c31e658a2">
+        <source>An error occurred while setting the units.</source>
+        <target>An error occurred while setting the units.</target>
+        <note>Line: 428</note>
+      </trans-unit>
+      <trans-unit id="0964494eb4e763fd08c6004a31b4b8a7">
+        <source>An error occurred while installing the module: %s</source>
+        <target>An error occurred while installing the module: %s</target>
+        <note>Line: 462</note>
+      </trans-unit>
+      <trans-unit id="e9b1cabd191f8141419c43cc46802e35">
+        <source>An error occurred while uninstalling the module: %s</source>
+        <target>An error occurred while uninstalling the module: %s</target>
+        <note>Line: 467</note>
+      </trans-unit>
+      <trans-unit id="962f6e835582ebb404a37893f46c60f3">
+        <source>An error has occurred, this module does not exist: %s</source>
+        <target>An error has occurred, this module does not exist: %s</target>
+        <note>Line: 473</note>
+      </trans-unit>
+      <trans-unit id="e7ae5e7fbebb7b087110d07b06bd2418">
+        <source>An error occurred during the configuration setup: %1$s</source>
+        <target>An error occurred during the configuration setup: %1$s</target>
+        <note>Line: 501</note>
+      </trans-unit>
+      <trans-unit id="b34f6454b80599ab92262b1da79a9edb">
+        <source>An error occurred during the default group update</source>
+        <target>An error occurred during the default group update</target>
+        <note>Line: 539</note>
+      </trans-unit>
+      <trans-unit id="09a0fad4c9a9702b2db457f6bff88f3d">
+        <source>An error has occurred during the default group update</source>
+        <target>An error has occurred during the default group update</target>
+        <note>Line: 543</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Translate.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="753200ddd6c25c2b4875afc70bb6d4fc">
+        <source>Invalid language ISO code (%s)</source>
+        <target>Invalid language ISO code (%s)</target>
+        <note>Line: 301</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bb01c8c21884e974df8517110c92b22a">
+        <source>The translation was added successfully, but the language has not been created.</source>
+        <target>The translation was added successfully, but the language has not been created.</target>
+        <note>Line: 473</note>
+      </trans-unit>
+      <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
+        <source>Cannot add configuration %1$s for %2$s language</source>
+        <target>Cannot add configuration %1$s for %2$s language</target>
+        <note>Line: 1495</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/tax/TaxManagerModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="253356cdb3cd6af1a6028200326de711">
+        <source>Incorrect Tax Manager class [%s]</source>
+        <target>Incorrect Tax Manager class [%s]</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="20eb7f9857d85d1d0c8a1e0ddf8545b8">
+        <source>Tax Manager class not found [%s]</source>
+        <target>Tax Manager class not found [%s]</target>
+        <note>Line: 46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/tax/TaxRulesGroup.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6f3455d187a23443796efdcbe044096b">
+        <source>No tax</source>
+        <target>No tax</target>
+        <note>Line: 148</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e07a23e507642ef04f449a7a78f59d38">
+        <source>This ISO code already exists.You cannot create two countries with the same ISO code.</source>
+        <target>This ISO code already exists.You cannot create two countries with the same ISO code.</target>
+        <note>Line: 410</note>
+      </trans-unit>
+      <trans-unit id="28064049c0d480c2fdeafd456977da8d">
+        <source>Invalid address layout %s</source>
+        <target>Invalid address layout %s</target>
+        <note>Line: 445</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCurrenciesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8246d0c794e7db090587c4797b2a234f">
+        <source>You cannot delete the default currency</source>
+        <target>You cannot delete the default currency</target>
+        <note>Line: 176</note>
+      </trans-unit>
+      <trans-unit id="7c77e53206853cb381e91e037554faa3">
+        <source>You cannot disable the default currency</source>
+        <target>You cannot disable the default currency</target>
+        <note>Line: 192</note>
+      </trans-unit>
+      <trans-unit id="9289665482a13fc74be054caef49b63e">
+        <source>This currency already exists.</source>
+        <target>This currency already exists.</target>
+        <note>Line: 281</note>
+      </trans-unit>
+      <trans-unit id="1a93d2c04e8276471b3c198d1ad95098">
+        <source>The currency conversion rate cannot be equal to 0.</source>
+        <target>The currency conversion rate cannot be equal to 0.</target>
+        <note>Line: 284</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminLanguagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4749a02e87a1b69cc421bf97c5353956">
+        <source>When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?</source>
+        <target>When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?</target>
+        <note>Line: 103</note>
+      </trans-unit>
+      <trans-unit id="cc83a240095b0a0b6e1840bb7d43830c">
+        <source>When you delete a language, all related translations in the database will be deleted.</source>
+        <target>When you delete a language, all related translations in the database will be deleted.</target>
+        <note>Line: 124</note>
+      </trans-unit>
+      <trans-unit id="1214646a8e239537981e729a0f16f3e9">
+        <source>Your .htaccess file must be writable.</source>
+        <target>Your .htaccess file must be writable.</target>
+        <note>Line: 126</note>
+      </trans-unit>
+      <trans-unit id="8bd94436fa6738863292fb9823368694">
+        <source>You cannot delete the default language.</source>
+        <target>You cannot delete the default language.</target>
+        <note>Line: 339</note>
+      </trans-unit>
+      <trans-unit id="f25eedbf89efbd0cfce488fe01f9c4cb">
+        <source>You cannot delete the language currently in use. Please select a different language.</source>
+        <target>You cannot delete the language currently in use. Please select a different language.</target>
+        <note>Line: 341</note>
+      </trans-unit>
+      <trans-unit id="2f236f9450ce8714611e468181064659">
+        <source>You cannot change the status of the default language.</source>
+        <target>You cannot change the status of the default language.</target>
+        <note>Line: 363</note>
+      </trans-unit>
+      <trans-unit id="59382adebc7f0d65c42fe773d443e4c7">
+        <source>This ISO code is already linked to another language.</source>
+        <target>This ISO code is already linked to another language.</target>
+        <note>Line: 408</note>
+      </trans-unit>
+      <trans-unit id="5c61f1e9d7d492c795142ceb39900050">
+        <source>Flag and "No picture" image fields are required.</source>
+        <target>Flag and "No picture" image fields are required.</target>
+        <note>Line: 416</note>
+      </trans-unit>
+      <trans-unit id="8037670f9e6df1f09e040ff8ab047fac">
+        <source>An error occurred while copying "No Picture" image to your product folder.</source>
+        <target>An error occurred while copying "No Picture" image to your product folder.</target>
+        <note>Line: 469</note>
+      </trans-unit>
+      <trans-unit id="0773497a933e6c2b618678b02cbdf7a1">
+        <source>An error occurred while copying "No picture" image to your category folder.</source>
+        <target>An error occurred while copying "No picture" image to your category folder.</target>
+        <note>Line: 472</note>
+      </trans-unit>
+      <trans-unit id="6509c8bfa3f06725a6016e6a429dbcd9">
+        <source>An error occurred while copying "No picture" image to your brand folder.</source>
+        <target>An error occurred while copying "No picture" image to your brand folder.</target>
+        <note>Line: 475</note>
+      </trans-unit>
+      <trans-unit id="1b3a472a4556d51d2169e947280e0400">
+        <source>An error occurred while resizing "No picture" image to your product directory.</source>
+        <target>An error occurred while resizing "No picture" image to your product directory.</target>
+        <note>Line: 480</note>
+      </trans-unit>
+      <trans-unit id="2b9a5da945495f5101d57abbf2a7083c">
+        <source>An error occurred while resizing "No picture" image to your category directory.</source>
+        <target>An error occurred while resizing "No picture" image to your category directory.</target>
+        <note>Line: 483</note>
+      </trans-unit>
+      <trans-unit id="fea874a66e2e09d727c76264844ff688">
+        <source>An error occurred while resizing "No picture" image to your brand directory.</source>
+        <target>An error occurred while resizing "No picture" image to your brand directory.</target>
+        <note>Line: 486</note>
+      </trans-unit>
+      <trans-unit id="5f17acb89d2ab83c9138774bfd05ab16">
+        <source>An error occurred during image deletion process.</source>
+        <target>An error occurred during image deletion process.</target>
+        <note>Line: 518</note>
+      </trans-unit>
+      <trans-unit id="7aa19852b281887173d096f6700cdebf">
+        <source>Iso code is not valid</source>
+        <target>Iso code is not valid</target>
+        <note>Line: 545</note>
+      </trans-unit>
+      <trans-unit id="da7e8b45fda5783ed027b88cc33fdfc1">
+        <source>Technical Error: ps_version is not valid</source>
+        <target>Technical Error: ps_version is not valid</target>
+        <note>Line: 551</note>
+      </trans-unit>
+      <trans-unit id="29298b5d89d0bbdfa92fb1d6e27188bd">
+        <source>Wrong ISO code, or the selected language pack is unavailable.</source>
+        <target>Wrong ISO code, or the selected language pack is unavailable.</target>
+        <note>Line: 564</note>
+      </trans-unit>
+      <trans-unit id="dc2dde59d57d3bfd6881be1392c54280">
+        <source>Technical Error: translation server unreachable.</source>
+        <target>Technical Error: translation server unreachable.</target>
+        <note>Line: 568</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="aa28d701be690425c5518b723668f6f7">
+        <source>This ISO code already exists. You cannot create two states with the same ISO code.</source>
+        <target>This ISO code already exists. You cannot create two states with the same ISO code.</target>
+        <note>Line: 229</note>
+      </trans-unit>
+      <trans-unit id="dae008137b79aa8e5c0f2aed6d1db503">
+        <source>This state was used in at least one address. It cannot be removed.</source>
+        <target>This state was used in at least one address. It cannot be removed.</target>
+        <note>Line: 244</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="45f3b37902e09b041709484fd75cab22">
+        <source>A tax rule already exists for this country/state with tax only behavior.</source>
+        <target>A tax rule already exists for this country/state with tax only behavior.</target>
+        <note>Line: 437</note>
+      </trans-unit>
+      <trans-unit id="97d8fb4588d1efe9731fd4f82e071924">
+        <source>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</source>
+        <target>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</target>
+        <note>Line: 464</note>
+      </trans-unit>
+      <trans-unit id="2ff5095fd8289ccdaeca9c5e7d379fd2">
+        <source>An error has occurred: Cannot save the current tax rule.</source>
+        <target>An error has occurred: Cannot save the current tax rule.</target>
+        <note>Line: 490</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3311c10f0830ae7b6ad64674777c3f34">
+        <source>This tax is currently in use as a tax rule. Are you sure you'd like to continue?</source>
+        <target>This tax is currently in use as a tax rule. Are you sure you'd like to continue?</target>
+        <note>Line: 152</note>
+      </trans-unit>
+      <trans-unit id="8eeccbbbc36b19ed4e82d2eca4055d4d">
+        <source>This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you'd like to continue?</source>
+        <target>This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you'd like to continue?</target>
+        <note>Line: 177</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c4e5aa158727e2041778d545424797da">
+        <source>An error occurred while copying data.</source>
+        <target>An error occurred while copying data.</target>
+        <note>Line: 402</note>
+      </trans-unit>
+      <trans-unit id="b5f3291b6db7481e8ca0da4a00718cf9">
+        <source>Impossible to create the directory "%folder%".</source>
+        <target>Impossible to create the directory "%folder%".</target>
+        <note>Line: 427</note>
+      </trans-unit>
+      <trans-unit id="ec531fd2b656df91f11e8f94b2bd2f9b">
+        <source>An error occurred while creating archive.</source>
+        <target>An error occurred while creating archive.</target>
+        <note>Line: 546</note>
+      </trans-unit>
+      <trans-unit id="b10dfa68dec5e313508a4a55eedae7d1">
+        <source>Please select a language and a theme.</source>
+        <target>Please select a language and a theme.</target>
+        <note>Line: 548</note>
+      </trans-unit>
+      <trans-unit id="02ae08296d544eb7c674182122645631">
+        <source>Tab "%s" is not valid</source>
+        <target>Tab "%s" is not valid</target>
+        <note>Line: 708</note>
+      </trans-unit>
+      <trans-unit id="737b7d8e0108e60b272f6e5a0eaf6ef2">
+        <source>Validation failed for: %file%</source>
+        <target>Validation failed for: %file%</target>
+        <note>Line: 788</note>
+      </trans-unit>
+      <trans-unit id="e7e5ca2e62158b89d7583ac6936830a5">
+        <source>Unidentified file found: %file%</source>
+        <target>Unidentified file found: %file%</target>
+        <note>Line: 791</note>
+      </trans-unit>
+      <trans-unit id="9831c9e35b4d39d939363aa5629e00f2">
+        <source>The archive cannot be extracted.</source>
+        <target>The archive cannot be extracted.</target>
+        <note>Line: 854</note>
+      </trans-unit>
+      <trans-unit id="6f2981f3239ff532c94509a6f98e11c3">
+        <source>ISO CODE invalid "%iso_code%" for the following file: "%file%"</source>
+        <target>ISO CODE invalid "%iso_code%" for the following file: "%file%"</target>
+        <note>Line: 856</note>
+      </trans-unit>
+      <trans-unit id="299dd7d59920216689a1749def7fd939">
+        <source>Cannot write to the theme's language file (%s). Please check writing permissions.</source>
+        <target>Cannot write to the theme's language file (%s). Please check writing permissions.</target>
+        <note>Line: 970</note>
+      </trans-unit>
+      <trans-unit id="78973deca6d26ce225f6f66c6c30dd54">
+        <source>Invalid theme "%theme%"</source>
+        <target>Invalid theme "%theme%"</target>
+        <note>Line: 1811</note>
+      </trans-unit>
+      <trans-unit id="7d65d1400b9d08c5c638682170ff4d7c">
+        <source>Invalid iso code "%iso_code%"</source>
+        <target>Invalid iso code "%iso_code%"</target>
+        <note>Line: 1416</note>
+      </trans-unit>
+      <trans-unit id="b399fb01ee4e0a8ec1681fb9bcb31ce0">
+        <source>This %type_content% file extension is not accepted.</source>
+        <target>This %type_content% file extension is not accepted.</target>
+        <note>Line: 1649</note>
+      </trans-unit>
+      <trans-unit id="1e5ec3cd42b5bac1b06b99f67cba41dd">
+        <source>Invalid module name "%module%"</source>
+        <target>Invalid module name "%module%"</target>
+        <note>Line: 1658</note>
+      </trans-unit>
+      <trans-unit id="c68e9fe9015c5779289f32e2bdef0a7b">
+        <source>Invalid mail name "%mail%"</source>
+        <target>Invalid mail name "%mail%"</target>
+        <note>Line: 1662</note>
+      </trans-unit>
+      <trans-unit id="40f5c232e433d178a4f912b3092d7df1">
+        <source>Directory "%folder%" cannot be created</source>
+        <target>Directory "%folder%" cannot be created</target>
+        <note>Line: 1684</note>
+      </trans-unit>
+      <trans-unit id="ccdf1aa6f4cb029f9846e53006115905">
+        <source>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</source>
+        <target>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</target>
+        <note>Line: 1690</note>
+      </trans-unit>
+      <trans-unit id="f1c030f2fd8f1b382a4bffd04af59c2d">
+        <source>Your HTML email templates cannot contain JavaScript code.</source>
+        <target>Your HTML email templates cannot contain JavaScript code.</target>
+        <note>Line: 1696</note>
+      </trans-unit>
+      <trans-unit id="5dc4babbd10d00e89d8e46a12942d394">
+        <source>Empty string found, please edit: "%file%"</source>
+        <target>Empty string found, please edit: "%file%"</target>
+        <note>Line: 1845</note>
+      </trans-unit>
+      <trans-unit id="f2aca97fb94315864fd2fa52f3100f1e">
+        <source>There is an error in template, an empty string has been found. Please edit: "%file%"</source>
+        <target>There is an error in template, an empty string has been found. Please edit: "%file%"</target>
+        <note>Line: 2115</note>
+      </trans-unit>
+      <trans-unit id="616d8e7e6c0dc755a7e932c4db698317">
+        <source>The module directory must be writable.</source>
+        <target>The module directory must be writable.</target>
+        <note>Line: 2178</note>
+      </trans-unit>
+      <trans-unit id="1078d7e980a5a2fe78762cafd8480f0a">
+        <source>A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%</source>
+        <target>A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%</target>
+        <note>Line: 2439</note>
+      </trans-unit>
+      <trans-unit id="7cf50c9ffecf05f3befc1134eba0ef45">
+        <source>missing translation(s)</source>
+        <target>missing translation(s)</target>
+        <note>Line: 2500</note>
+      </trans-unit>
+      <trans-unit id="fda679a1f72b8a9676b6926a81c5e139">
+        <source>No Subject was found for %mail_name% in the database.</source>
+        <target>No Subject was found for %mail_name% in the database.</target>
+        <note>Line: 2539</note>
+      </trans-unit>
+      <trans-unit id="a662aa2e6538df75742383c7db8f3bd5">
+        <source>There was a problem getting the mail files.</source>
+        <target>There was a problem getting the mail files.</target>
+        <note>Line: 2576</note>
+      </trans-unit>
+      <trans-unit id="3eefb74a46023e6c9152c92803750f2b">
+        <source>English language files must exist in %folder% folder</source>
+        <target>English language files must exist in %folder% folder</target>
+        <note>Line: 2577</note>
+      </trans-unit>
+      <trans-unit id="c4c005678d26a593268006bc4a44c179">
+        <source>Cannot write language file for email subjects. Path is: %folder%</source>
+        <target>Cannot write language file for email subjects. Path is: %folder%</target>
+        <note>Line: 2974</note>
+      </trans-unit>
+      <trans-unit id="05b17ff64944116b14a3ec88f2080a5e">
+        <source>Cannot write into the "%file%"</source>
+        <target>Cannot write into the "%file%"</target>
+        <note>Line: 3176</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Language/LanguageCopier.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4d7541fb66c9fc832a20a6f48b4d5613">
+        <source>Cannot create the folder "%folder%". Please check your directory writing permissions.</source>
+        <target>Cannot create the folder "%folder%". Please check your directory writing permissions.</target>
+        <note>Line: 102</note>
+      </trans-unit>
+      <trans-unit id="102c75f83994f206179912d118b8bc3c">
+        <source>You must select two languages in order to copy data from one to another.</source>
+        <target>You must select two languages in order to copy data from one to another.</target>
+        <note>Line: 173</note>
+      </trans-unit>
+      <trans-unit id="fc15f62c244c6d8035874d556e6a7f7b">
+        <source>You must select two themes in order to copy data from one to another.</source>
+        <target>You must select two themes in order to copy data from one to another.</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="0a7402299bf78a7624da443a12cd78ab">
+        <source>There is nothing to copy (same language and theme).</source>
+        <target>There is nothing to copy (same language and theme).</target>
+        <note>Line: 188</note>
+      </trans-unit>
+      <trans-unit id="6b5324e2e711f17c4d3db1f625178e86">
+        <source>Theme(s) not found</source>
+        <target>Theme(s) not found</target>
+        <note>Line: 211</note>
+      </trans-unit>
+      <trans-unit id="434464e4353199dd20af7bd3cf8e6c64">
+        <source>Impossible to copy "%source%" to "%dest%".</source>
+        <target>Impossible to copy "%source%" to "%dest%".</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="07b33077111c506cf81b6cc5ef42a170">
+        <source>Impossible to translate "%dest%".</source>
+        <target>Impossible to translate "%dest%".</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="c7254dc1193c25493aa0a09df285b43c">
+        <source>A part of the data has been copied but some of the language files could not be found.</source>
+        <target>A part of the data has been copied but some of the language files could not be found.</target>
+        <note>Line: 146</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Language/LanguagePackInstaller.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="52326ecbfcdff77b4bc9dcf7f055c2eb">
+        <source>Fatal error: ISO code is not correct</source>
+        <target>Fatal error: ISO code is not correct</target>
+        <note>Line: 71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Localization/Pack/Import/LocalizationPackImporter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="34f9488516199cf18114f12369c71a59">
+        <source>Cannot load the localization pack.</source>
+        <target>Cannot load the localization pack.</target>
+        <note>Line: 109</note>
+      </trans-unit>
+      <trans-unit id="ecb8838ce98cd126849fc083f0070bcd">
+        <source>Please select at least one item to import.</source>
+        <target>Please select at least one item to import.</target>
+        <note>Line: 143</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9468b4bd45a165049277af6756db10e">
+        <source>Localization pack imported successfully.</source>
+        <target>Localization pack imported successfully.</target>
+        <note>Line: 138</note>
+      </trans-unit>
+      <trans-unit id="53802fa30d7e83f77eccfa376c33e6fa">
+        <source>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</source>
+        <target>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/TranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
+        <source>The translations have been successfully added.</source>
+        <target>The translations have been successfully added.</target>
+        <note>Line: 159</note>
+      </trans-unit>
+      <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
+        <source>The translation was successfully copied.</source>
+        <target>The translation was successfully copied.</target>
+        <note>Line: 241</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
+        <source>The geolocation database is unavailable.</source>
+        <target>The geolocation database is unavailable.</target>
+        <note>Line: 105</note>
+      </trans-unit>
+      <trans-unit id="493ce56d58c4880dc32df56f12585a23">
+        <source>Country selection is invalid.</source>
+        <target>Country selection is invalid.</target>
+        <note>Line: 113</note>
+      </trans-unit>
+      <trans-unit id="0861a67f819158c5690a1844d95390b4">
+        <source>Invalid whitelist</source>
+        <target>Invalid whitelist</target>
+        <note>Line: 121</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Localization/Blocks/configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7da16b055b9db528a9b4aa9c4ad674ca">
+        <source>Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.</source>
+        <target>Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.</target>
+        <note>Line: 76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/copy_language.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3c529160fd0337c151d35e7a3809d427">
+        <source>Language files must be complete to allow copying of translations.</source>
+        <target>Language files must be complete to allow copying of translations.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="41ca3d8439f6e8beab7af312714e37f0">
+        <source>Translation successfully updated</source>
+        <target>Translation successfully updated</target>
+        <note>Line: 220</note>
+      </trans-unit>
+      <trans-unit id="b3991113a051bbeb759a923bc636ad8d">
+        <source>Failed to update translation</source>
+        <target>Failed to update translation</target>
+        <note>Line: 225</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

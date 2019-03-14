@@ -1,0 +1,68 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% set url, priceRaw, priceDisplay, url_active, urls, name =
+  module.attributes.url,
+  module.attributes.price.raw,
+  module.attributes.price.displayPrice,
+  module.attributes.url_active,
+  module.attributes.urls,
+  module.attributes.name
+%}
+ <div class="btn-group module-actions"> 
+  {% if url_active == 'buy' %}
+    <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
+      {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
+    </a>
+  {% elseif urls|length %}
+    {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
+        'name': name,
+        'classes_form': 'btn-group form-action-button',
+        'classes' : 'btn btn-primary-reverse btn-outline-primary',
+        'url': urls[url_active],
+        'action': url_active}
+    %}
+    {% if (urls|length > 1) %}
+        <input type="hidden" class="btn" /> 
+        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+          <span class="caret"></span> 
+        </button>
+        <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span> 
+        <div class="dropdown-menu">
+          {% for module_action, module_url in urls %}
+            {% if module_action != url_active %}
+                <li>
+                  {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
+                      'name': name,
+                      'classes' : 'dropdown-item',
+                      'url': module_url,
+                      'action': module_action}
+                  %}
+                </li>
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endif %}
+  {% endif %}
+</div>

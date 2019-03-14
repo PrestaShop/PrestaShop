@@ -1,0 +1,15 @@
+admin_order_preferences:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\OrderPreferences:index'
+        _legacy_controller: AdminOrderPreferences
+        _legacy_link: AdminOrderPreferences
+
+admin_order_preferences_save:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\OrderPreferences:process'
+        _legacy_controller: AdminOrderPreferences
+        _legacy_link: AdminOrderPreferences:update

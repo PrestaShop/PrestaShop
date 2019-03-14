@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7bf7f18afabb5122fa68fbab617e509b">
+        <source>Newsletter subscription</source>
+        <target>Newsletter subscription</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="10ae246e682f91bb896dd1d8405514ed">
+        <source>Adds a form for newsletter subscription.</source>
+        <target>Adds a form for newsletter subscription.</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="396c88991101b5ca362932952293d291">
+        <source>Are you sure that you want to delete all of your contacts?</source>
+        <target>Are you sure that you want to delete all of your contacts?</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="808c7457c768423c5651cbf676d9f6d7">
+        <source>Subscribed</source>
+        <target>Subscribed</target>
+        <note>Line: 220</note>
+      </trans-unit>
+      <trans-unit id="ec59738d441f28011a81e62bdcea6200">
+        <source>Subscribed on</source>
+        <target>Subscribed on</target>
+        <note>Line: 226</note>
+      </trans-unit>
+      <trans-unit id="3a1205098d0a13a9c41a8d538fd6a34a">
+        <source>Newsletter registrations</source>
+        <target>Newsletter registrations</target>
+        <note>Line: 238</note>
+      </trans-unit>
+      <trans-unit id="4182c8f19d40c7ca236a5f4f83faeb6b">
+        <source>Unsubscribe</source>
+        <target>Unsubscribe</target>
+        <note>Line: 290</note>
+      </trans-unit>
+      <trans-unit id="54d2f1bab16b550e32395a7e6edb8de5">
+        <source>Would you like to send a verification email after subscription?</source>
+        <target>Would you like to send a verification email after subscription?</target>
+        <note>Line: 842</note>
+      </trans-unit>
+      <trans-unit id="b37f32d509cf5aabe806b16791588aa3">
+        <source>Would you like to send a confirmation email after subscription?</source>
+        <target>Would you like to send a confirmation email after subscription?</target>
+        <note>Line: 859</note>
+      </trans-unit>
+      <trans-unit id="506e58042922bff5bd753dc612e84f5b">
+        <source>Welcome voucher code</source>
+        <target>Welcome voucher code</target>
+        <note>Line: 876</note>
+      </trans-unit>
+      <trans-unit id="1d612b943b8f4792bff603384a46e5f1">
+        <source>Leave blank to disable by default.</source>
+        <target>Leave blank to disable by default.</target>
+        <note>Line: 893</note>
+      </trans-unit>
+      <trans-unit id="7328d85830cd590d040882106846e28d">
+        <source>Newsletter conditions</source>
+        <target>Newsletter conditions</target>
+        <note>Line: 883</note>
+      </trans-unit>
+      <trans-unit id="23467d023d8767effca98a537a6a0622">
+        <source>This text will be displayed beneath the newsletter subscribe button.</source>
+        <target>This text will be displayed beneath the newsletter subscribe button.</target>
+        <note>Line: 889</note>
+      </trans-unit>
+      <trans-unit id="f1c0e2889f04c8333beb7f4d7f87ad23">
+        <source>Export customers' addresses</source>
+        <target>Export customers' addresses</target>
+        <note>Line: 935</note>
+      </trans-unit>
+      <trans-unit id="5353d769bec6eb3977ef36a3d8021682">
+        <source>Customers' country</source>
+        <target>Customers' country</target>
+        <note>Line: 941</note>
+      </trans-unit>
+      <trans-unit id="521f7e76a7d4f9e50c50bb945559b942">
+        <source>Filter customers by country.</source>
+        <target>Filter customers by country.</target>
+        <note>Line: 942</note>
+      </trans-unit>
+      <trans-unit id="2198f293f5e1e95dddeff819fbca0975">
+        <source>Newsletter subscribers</source>
+        <target>Newsletter subscribers</target>
+        <note>Line: 954</note>
+      </trans-unit>
+      <trans-unit id="1b09c341aa487e26dac94d2467b7f7e3">
+        <source>Filter customers who have subscribed to the newsletter or not, and who have an account or not.</source>
+        <target>Filter customers who have subscribed to the newsletter or not, and who have an account or not.</target>
+        <note>Line: 955</note>
+      </trans-unit>
+      <trans-unit id="e4369fb2bfc3fea17ea362d1eb9e53c4">
+        <source>Customers can subscribe to your newsletter when registering, or by entering their email in the newsletter form.</source>
+        <target>Customers can subscribe to your newsletter when registering, or by entering their email in the newsletter form.</target>
+        <note>Line: 956</note>
+      </trans-unit>
+      <trans-unit id="847b0223c73ac0fec0d9df6539c7cad6">
+        <source>All subscribers</source>
+        <target>All subscribers</target>
+        <note>Line: 962</note>
+      </trans-unit>
+      <trans-unit id="a307579714b75082f3f8734971b125cd">
+        <source>Subscribers with account</source>
+        <target>Subscribers with account</target>
+        <note>Line: 963</note>
+      </trans-unit>
+      <trans-unit id="d0da5609e4aebc5d532de97511a5a34a">
+        <source>Subscribers without account</source>
+        <target>Subscribers without account</target>
+        <note>Line: 964</note>
+      </trans-unit>
+      <trans-unit id="011d8c5d94f729f013963d856cd78745">
+        <source>Non-subscribers</source>
+        <target>Non-subscribers</target>
+        <note>Line: 965</note>
+      </trans-unit>
+      <trans-unit id="3c094542e33d2d21a27a0f0f1be1acaf">
+        <source>Partner offers subscribers</source>
+        <target>Partner offers subscribers</target>
+        <note>Line: 982</note>
+      </trans-unit>
+      <trans-unit id="3c450a9c3b3d890e8e7ab06ed3de2c27">
+        <source>Filter customers who have agreed to receive your partners' offers or not.</source>
+        <target>Filter customers who have agreed to receive your partners' offers or not.</target>
+        <note>Line: 974</note>
+      </trans-unit>
+      <trans-unit id="511e5032ffddf444de90c630fac63567">
+        <source>Partner offers subscribers have agreed to receive your partners' offers.</source>
+        <target>Partner offers subscribers have agreed to receive your partners' offers.</target>
+        <note>Line: 975</note>
+      </trans-unit>
+      <trans-unit id="7e3a51a56ddd2846e21c33f05e0aea6f">
+        <source>All customers</source>
+        <target>All customers</target>
+        <note>Line: 981</note>
+      </trans-unit>
+      <trans-unit id="2760982525dd5028d13b0d4f6abcfa59">
+        <source>Partner offers non-subscribers</source>
+        <target>Partner offers non-subscribers</target>
+        <note>Line: 983</note>
+      </trans-unit>
+      <trans-unit id="f6df4ad6dc4798f26d1f2460eef4f2e9">
+        <source>Search for addresses</source>
+        <target>Search for addresses</target>
+        <note>Line: 1027</note>
+      </trans-unit>
+      <trans-unit id="375afa60efcc1d48300bd339cb8154b0">
+        <source>Email address to search</source>
+        <target>Email address to search</target>
+        <note>Line: 1033</note>
+      </trans-unit>
+      <trans-unit id="e347582d22a4ba3c822de504b23d4704">
+        <source>Example: contact@prestashop.com or @prestashop.com</source>
+        <target>Example: contact@prestashop.com or @prestashop.com</target>
+        <note>Line: 1036</note>
+      </trans-unit>
+      <trans-unit id="82e5e0bc0f9c776c98253d569c111c0f">
+        <source>No customers found with these filters!</source>
+        <target>No customers found with these filters!</target>
+        <note>Line: 1095</note>
+      </trans-unit>
+      <trans-unit id="644ecc2486a059ca16b001a77909bf40">
+        <source>The .CSV file has been successfully exported: %d customers found.</source>
+        <target>The .CSV file has been successfully exported: %d customers found.</target>
+        <note>Line: 1104</note>
+      </trans-unit>
+      <trans-unit id="48e3d5f66961b621c78f709afcd7d437">
+        <source>Download the file</source>
+        <target>Download the file</target>
+        <note>Line: 1106</note>
+      </trans-unit>
+      <trans-unit id="dca37b874cf34bd5ebcf1c2fdc59a8b4">
+        <source>WARNING: When opening this .csv file with Excel, choose UTF-8 encoding to avoid strange characters.</source>
+        <target>WARNING: When opening this .csv file with Excel, choose UTF-8 encoding to avoid strange characters.</target>
+        <note>Line: 1111</note>
+      </trans-unit>
+      <trans-unit id="b40866b115d74009183e06fc86b5c014">
+        <source>Error: Write access limited</source>
+        <target>Error: Write access limited</target>
+        <note>Line: 1210</note>
+      </trans-unit>
+      <trans-unit id="87b0ca57db642f4e7780174a6abdc37d">
+        <source>No result found!</source>
+        <target>No result found!</target>
+        <note>Line: 1118</note>
+      </trans-unit>
+      <trans-unit id="9896806b3fb40a73bdda4781f61052bf">
+        <source>-- Select associated page --</source>
+        <target>-- Select associated page --</target>
+        <note>Line: 1131</note>
+      </trans-unit>
+      <trans-unit id="d2bea8f0552d424dcb7180b873eb7b3a">
+        <source>Newsletter subscription: no email to delete, this customer has not registered.</source>
+        <target>Newsletter subscription: no email to delete, this customer has not registered.</target>
+        <note>Line: 1267</note>
+      </trans-unit>
+      <trans-unit id="6915ab8f41e7f6f7805fd3f94117804a">
+        <source>Newsletter subscription: no email to export, this customer has not registered.</source>
+        <target>Newsletter subscription: no email to export, this customer has not registered.</target>
+        <note>Line: 1277</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

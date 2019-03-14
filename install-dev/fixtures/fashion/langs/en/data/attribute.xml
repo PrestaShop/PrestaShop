@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<entity_attribute>
+  <attribute id="S">
+    <name>S</name>
+  </attribute>
+  <attribute id="M">
+    <name>M</name>
+  </attribute>
+  <attribute id="L">
+    <name>L</name>
+  </attribute>
+  <attribute id="XL">
+    <name>XL</name>
+  </attribute>
+  <attribute id="Grey">
+    <name>Grey</name>
+  </attribute>
+  <attribute id="Taupe">
+    <name>Taupe</name>
+  </attribute>
+  <attribute id="Beige">
+    <name>Beige</name>
+  </attribute>
+  <attribute id="White">
+    <name>White</name>
+  </attribute>
+  <attribute id="Off_White">
+    <name>Off White</name>
+  </attribute>
+  <attribute id="Red">
+    <name>Red</name>
+  </attribute>
+  <attribute id="Black">
+    <name>Black</name>
+  </attribute>
+  <attribute id="Camel">
+    <name>Camel</name>
+  </attribute>
+  <attribute id="Orange">
+    <name>Orange</name>
+  </attribute>
+  <attribute id="Blue">
+    <name>Blue</name>
+  </attribute>
+  <attribute id="Green">
+    <name>Green</name>
+  </attribute>
+  <attribute id="Yellow">
+    <name>Yellow</name>
+  </attribute>
+  <attribute id="Brown">
+    <name>Brown</name>
+  </attribute>
+  <attribute id="Pink">
+    <name>Pink</name>
+  </attribute>
+  <attribute id="40x60cm">
+    <name>40x60cm</name>
+  </attribute>
+  <attribute id="60x90cm">
+    <name>60x90cm</name>
+  </attribute>
+  <attribute id="80x120cm">
+    <name>80x120cm</name>
+  </attribute>
+  <attribute id="Ruled">
+    <name>Ruled</name>
+  </attribute>
+  <attribute id="Plain">
+    <name>Plain</name>
+  </attribute>
+  <attribute id="Squarred">
+    <name>Squarred</name>
+  </attribute>
+  <attribute id="Doted">
+    <name>Doted</name>
+  </attribute>
+</entity_attribute>

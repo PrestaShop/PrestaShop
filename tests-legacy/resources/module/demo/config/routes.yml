@@ -1,0 +1,5 @@
+demo_admin_demo:
+    path: demo/demo
+    methods: [GET]
+    defaults:
+      _controller: 'PsTest\Controller\Admin\DemoController::demoAction'

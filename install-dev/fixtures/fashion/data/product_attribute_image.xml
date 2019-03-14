@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<entity_product_attribute_image>
+  <fields primary="id_product_attribute, id_image">
+    <field name="id_product_attribute" relation="product_attribute"/>
+    <field name="id_image" relation="image"/>
+  </fields>
+  <entities>
+    <product_attribute_image id="product_attribute_image_46_1" id_product_attribute="product_attribute_46" id_image="Hummingbird_printed_t-shirt_1"/>
+    <product_attribute_image id="product_attribute_image_48_1" id_product_attribute="product_attribute_48" id_image="Hummingbird_printed_t-shirt_1"/>
+    <product_attribute_image id="product_attribute_image_50_1" id_product_attribute="product_attribute_50" id_image="Hummingbird_printed_t-shirt_1"/>
+    <product_attribute_image id="product_attribute_image_52_1" id_product_attribute="product_attribute_52" id_image="Hummingbird_printed_t-shirt_1"/>
+    <product_attribute_image id="product_attribute_image_47_2" id_product_attribute="product_attribute_47" id_image="Hummingbird_printed_t-shirt"/>
+    <product_attribute_image id="product_attribute_image_49_2" id_product_attribute="product_attribute_49" id_image="Hummingbird_printed_t-shirt"/>
+    <product_attribute_image id="product_attribute_image_51_2" id_product_attribute="product_attribute_51" id_image="Hummingbird_printed_t-shirt"/>
+    <product_attribute_image id="product_attribute_image_53_2" id_product_attribute="product_attribute_53" id_image="Hummingbird_printed_t-shirt"/>
+    <product_attribute_image id="product_attribute_image_62_3" id_product_attribute="product_attribute_62" id_image="Hummingbird_printed_sweater"/>
+    <product_attribute_image id="product_attribute_image_63_3" id_product_attribute="product_attribute_63" id_image="Hummingbird_printed_sweater"/>
+    <product_attribute_image id="product_attribute_image_64_3" id_product_attribute="product_attribute_64" id_image="Hummingbird_printed_sweater"/>
+    <product_attribute_image id="product_attribute_image_65_3" id_product_attribute="product_attribute_65" id_image="Hummingbird_printed_sweater"/>
+    <product_attribute_image id="product_attribute_image_70_4" id_product_attribute="product_attribute_70" id_image="The_best_is_yet_to_come_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_71_4" id_product_attribute="product_attribute_71" id_image="The_best_is_yet_to_come_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_72_4" id_product_attribute="product_attribute_72" id_image="The_best_is_yet_to_come_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_73_5" id_product_attribute="product_attribute_73" id_image="The_adventure_begins_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_74_5" id_product_attribute="product_attribute_74" id_image="The_adventure_begins_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_75_5" id_product_attribute="product_attribute_75" id_image="The_adventure_begins_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_76_6" id_product_attribute="product_attribute_76" id_image="Today_is_a_good_day_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_77_6" id_product_attribute="product_attribute_77" id_image="Today_is_a_good_day_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_78_6" id_product_attribute="product_attribute_78" id_image="Today_is_a_good_day_Framed_poster"/>
+    <product_attribute_image id="product_attribute_image_79_7" id_product_attribute="product_attribute_79" id_image="Mountain_fox_cushion_1"/>
+    <product_attribute_image id="product_attribute_image_80_8" id_product_attribute="product_attribute_80" id_image="Mountain_fox_cushion"/>
+    <product_attribute_image id="product_attribute_image_81_9" id_product_attribute="product_attribute_81" id_image="Brown_bear_cushion_1"/>
+    <product_attribute_image id="product_attribute_image_82_10" id_product_attribute="product_attribute_82" id_image="Brown_bear_cushion"/>
+    <product_attribute_image id="product_attribute_image_83_11" id_product_attribute="product_attribute_83" id_image="Hummingbird_cushion_1"/>
+    <product_attribute_image id="product_attribute_image_84_12" id_product_attribute="product_attribute_84" id_image="Hummingbird_cushion"/>
+    <product_attribute_image id="product_attribute_image_85_13" id_product_attribute="product_attribute_85" id_image="Mountain_fox_notebook"/>
+    <product_attribute_image id="product_attribute_image_86_13" id_product_attribute="product_attribute_86" id_image="Mountain_fox_notebook"/>
+    <product_attribute_image id="product_attribute_image_87_13" id_product_attribute="product_attribute_87" id_image="Mountain_fox_notebook"/>
+    <product_attribute_image id="product_attribute_image_88_13" id_product_attribute="product_attribute_88" id_image="Mountain_fox_notebook"/>
+    <product_attribute_image id="product_attribute_image_89_14" id_product_attribute="product_attribute_89" id_image="Mountain_fox_notebook_1"/>
+    <product_attribute_image id="product_attribute_image_90_14" id_product_attribute="product_attribute_90" id_image="Mountain_fox_notebook_1"/>
+    <product_attribute_image id="product_attribute_image_91_14" id_product_attribute="product_attribute_91" id_image="Mountain_fox_notebook_1"/>
+    <product_attribute_image id="product_attribute_image_92_14" id_product_attribute="product_attribute_92" id_image="Mountain_fox_notebook_1"/>
+    <product_attribute_image id="product_attribute_image_93_15" id_product_attribute="product_attribute_93" id_image="Mountain_fox_notebook_2"/>
+    <product_attribute_image id="product_attribute_image_94_15" id_product_attribute="product_attribute_94" id_image="Mountain_fox_notebook_2"/>
+    <product_attribute_image id="product_attribute_image_95_15" id_product_attribute="product_attribute_95" id_image="Mountain_fox_notebook_2"/>
+    <product_attribute_image id="product_attribute_image_96_15" id_product_attribute="product_attribute_96" id_image="Mountain_fox_notebook_2"/>
+  </entities>
+</entity_product_attribute_image>

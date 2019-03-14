@@ -1,0 +1,16 @@
+{
+  "name": "prestashop-common",
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "eslint -c .eslintrc.js --ext .js,.vue ."
+  },
+  "author": "PrestaShop",
+  "license": "OSL-3.0",
+  "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-html": "^4.0.5",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}

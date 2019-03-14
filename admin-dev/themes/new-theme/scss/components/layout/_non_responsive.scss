@@ -1,0 +1,18 @@
+#non-responsive {
+  display: none;
+  position: fixed;
+  background: $gray-dark;
+  width: 100%;
+  height: 100%;
+  z-index: 501;
+  top: 3.438rem;
+  left: 0.125rem;
+  color: #ffffff;
+  padding: 4.375rem 2.5rem 0 2.5rem;
+  font-size: 1.063rem;
+  h1 {
+    color: #ffffff;
+    font-size: 1.875rem;
+    font-weight: 400;
+  }
+}

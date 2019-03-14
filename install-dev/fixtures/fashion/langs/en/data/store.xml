@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_store>
+  <store id="Dade_County">
+    <name>Dade County</name>
+    <address1>3030 SW 8th St Miami</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+  <store id="E_Fort_Lauderdale" >
+    <name>E Fort Lauderdale</name>
+    <address1>1000 Northeast 4th Ave Fort Lauderdale</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+  <store id="Pembroke_Pines" >
+    <name>Pembroke Pines</name>
+    <address1>11001 Pines Blvd Pembroke Pines</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+  <store id="Coconut_Grove" >
+    <name>Coconut Grove</name>
+    <address1>2999 SW 32nd Avenue</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+  <store id="N_Miami_Biscayne">
+    <name>N Miami/Biscayne</name>
+    <address1>12055 Biscayne Blvd</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+</entity_store>

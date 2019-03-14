@@ -1,0 +1,25 @@
+# This file is a used by travis install with specific setting.
+parameters:
+    database_host:     localhost
+    database_port:     ~
+    database_name:     prestashop
+    database_user:     root
+    database_password: ~
+    database_prefix:   ps_
+    database_engine: InnoDB
+    # You should uncomment this if you want use pdo_sqlite
+    # database_path: "%kernel.root_dir%/data.db3"
+
+    mailer_transport:  smtp
+    mailer_host:       localhost
+    mailer_user:       ~
+    mailer_password:   ~
+
+    # A secret key that's used to generate certain security-related tokens
+    secret:            ThisTokenIsNotSoSecretChangeIt
+    ps_caching: CacheMemcache
+    ps_cache_enable: true
+    ps_creation_date: ~
+    locale: en-US
+    cookie_key: ThisTokenIsNotSoSecretChangeIt
+    cookie_iv: ThisTokenIsNotSoSecretChangeIt

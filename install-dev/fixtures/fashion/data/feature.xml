@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_feature>
+  <fields id="name" class="Feature">
+    <field name="position"/>
+  </fields>
+  <entities>
+    <feature id="Compositions" position="0"/>
+    <feature id="Paper_Type" position="1"/>
+    <feature id="Color" position="2"/>
+    <feature id="Size" position="3"/>
+    <feature id="Frame_Size" position="4"/>
+  </entities>
+</entity_feature>

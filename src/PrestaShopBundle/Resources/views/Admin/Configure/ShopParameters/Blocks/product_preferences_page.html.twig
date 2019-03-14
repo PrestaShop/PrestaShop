@@ -1,0 +1,97 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% block product_preferences_page %}
+<div class="col-xl-10">
+  <div class="card" id="configuration_fieldset_fo_product_page">
+    <h3 class="card-header">
+      <i class="material-icons">shopping_basket</i> {{ 'Product page'|trans }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Display available quantities on the product page'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(pageForm.display_quantities) }}
+            {{ form_widget(pageForm.display_quantities) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Display remaining quantities when the quantity is lower than'|trans), ('Set to "0" to disable this feature.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(pageForm.display_last_quantities) }}
+            {{ form_widget(pageForm.display_last_quantities) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Display unavailable product attributes on the product page'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(pageForm.display_unavailable_attributes) }}
+            {{ form_widget(pageForm.display_unavailable_attributes) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Display the "add to cart" button when a product has attributes'|trans), ('Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(pageForm.allow_add_variant_to_cart_from_listing) }}
+            {{ form_widget(pageForm.allow_add_variant_to_cart_from_listing) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Separator of attribute anchor on the product links'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(pageForm.attribute_anchor_separator) }}
+            {{ form_widget(pageForm.attribute_anchor_separator) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Display discounted price'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(pageForm.display_discount_price) }}
+            {{ form_widget(pageForm.display_discount_price) }}
+            <small class="form-text">{{ 'In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

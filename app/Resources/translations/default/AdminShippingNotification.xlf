@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e23375136c63fb5936352717f495bc82">
+        <source>Ranges are not correctly ordered:</source>
+        <target>Ranges are not correctly ordered:</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="11a5324fcccfa07ed027b0226bbf5ee1">
+        <source>Reordering</source>
+        <target>Reordering</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d6bdbfede9754a46df1a5b801f7a6c04">
+        <source>Please validate the last range before creating a new one.</source>
+        <target>Please validate the last range before creating a new one.</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="d9c830e9dc70798aef5634594d183f1c">
+        <source>Are you sure to delete this range ?</source>
+        <target>Are you sure to delete this range ?</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="8a896dc0288ba4be64367f3006d51b98">
+        <source>This range is not valid</source>
+        <target>This range is not valid</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="f3fb906c0bd487b3341bc200d23e8faf">
+        <source>Ranges are overlapping</source>
+        <target>Ranges are overlapping</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="1add5d6b48d9f20ab77e9900918999ff">
+        <source>Please select at least one zone</source>
+        <target>Please select at least one zone</target>
+        <note>Line: 45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/logo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b9bc8a98f12d9decfe96d41c44513157">
+        <source>Are you sure you want to delete the logo?</source>
+        <target>Are you sure you want to delete the logo?</target>
+        <note>Line: 43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c2cbc795de8a7691ec0e4c55fd61fe43">
+        <source>You do not have permission to use this wizard.</source>
+        <target>You do not have permission to use this wizard.</target>
+        <note>Line: 783</note>
+      </trans-unit>
+      <trans-unit id="6305822e6fd3b92120ee6f23552164c4">
+        <source>You must choose at least one shop or group shop.</source>
+        <target>You must choose at least one shop or group shop.</target>
+        <note>Line: 649</note>
+      </trans-unit>
+      <trans-unit id="9ef70769595c35cca03dae49ac1f31d1">
+        <source>An error occurred while saving this carrier.</source>
+        <target>An error occurred while saving this carrier.</target>
+        <note>Line: 828</note>
+      </trans-unit>
+      <trans-unit id="cfabe09befdc8289f6ca5fbc6887ffe5">
+        <source>An error occurred while saving carrier groups.</source>
+        <target>An error occurred while saving carrier groups.</target>
+        <note>Line: 841</note>
+      </trans-unit>
+      <trans-unit id="2222c64a45d69edbf16dd5fb81db904b">
+        <source>An error occurred while saving carrier zones.</source>
+        <target>An error occurred while saving carrier zones.</target>
+        <note>Line: 846</note>
+      </trans-unit>
+      <trans-unit id="bae6cceb9789ee48445a0ddc8c143f0b">
+        <source>An error occurred while saving carrier ranges.</source>
+        <target>An error occurred while saving carrier ranges.</target>
+        <note>Line: 852</note>
+      </trans-unit>
+      <trans-unit id="be78233fdb6fe537e065a0d8650c0e84">
+        <source>An error occurred while saving associations of shops.</source>
+        <target>An error occurred while saving associations of shops.</target>
+        <note>Line: 858</note>
+      </trans-unit>
+      <trans-unit id="5b26cf06b6165264574bf9e097f062bc">
+        <source>An error occurred while saving the tax rules group.</source>
+        <target>An error occurred while saving the tax rules group.</target>
+        <note>Line: 863</note>
+      </trans-unit>
+      <trans-unit id="08c490a8c2d633b012b63dccd00cc719">
+        <source>An error occurred while saving carrier logo.</source>
+        <target>An error occurred while saving carrier logo.</target>
+        <note>Line: 873</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="407ec7ad396ed1f5fc78bc006946af12">
+        <source>An error occurred while updating carrier information.</source>
+        <target>An error occurred while updating carrier information.</target>
+        <note>Line: 525</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

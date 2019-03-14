@@ -1,0 +1,704 @@
+GitHub contributors:
+--------------------------------
+- (d)oekia
+- 0kph
+- 123monsite-regis
+- 1RV34
+- Abdelaziz JRIBI
+- Adam
+- Adonis Karavokyros
+- Adrien
+- Adrien Astier
+- Agence CINS
+- Agnes
+- Alban
+- Alban DEFLANDRE
+- Alban L
+- Aleksander Palyan
+- Alessandro Corbelli
+- Alex Even
+- Alex Sampaio
+- Alexander Galaydyuk
+- Alexander Grosul
+- Alexander Otchenashev
+- Alexander Simonchik
+- Alexandra Even
+- Alexandre Alouit
+- Alexandre Segura
+- alexdee2007
+- AlexEven
+- Alexey Svistunov
+- alexey-svistunov
+- alexsimple
+- Alfakom-MK
+- Alfonso Jimenez
+- AliShareei
+- Alphacom IT Solutions - Macedonia
+- amatosg
+- Amazzing
+- Anas Mammeri
+- anat
+- Anatole
+- Andrew
+- Andy Pieters
+- anegoda1995
+- Angel Guzman Maeso
+- Ansar Mallouli
+- Anthony Girard
+- antoin_m
+- Antoine LA
+- Antoine Mille
+- Antoine THOMAS
+- Antonino Di Bella
+- Antonio Intagliata
+- antoniofr
+- AntonLejon
+- Armando Salvador Perez
+- Arnaud Lemercier
+- Atchworks
+- Atef Ben Ali
+- Aurélien Pelletier
+- axi
+- Axome
+- Aylab
+- Aymeric AUBERTON
+- azisyus
+- Azouz-Jribi
+- Balestrino
+- Bastien Bieri
+- bbsimon
+- bellini13
+- Ben Wallis
+- Benjamin PONGY
+- bercik999
+- Bersam Karbasion
+- BigZ
+- BluTiGeS
+- BMS-fenaille
+- brouillon
+- Bruno Desprez
+- Bruno Leveque
+- bumbu
+- Burhan
+- Caleydon Media
+- cam.lafit
+- can
+- Captain FLAM
+- Captain-FLAM
+- Carlos Addis
+- Casper Olsen
+- cava89
+- ccauw
+- Cedric Mouleyre
+- cedricfontaine
+- cedricgeffroy
+- cgordenne
+- cgordenne_wepika
+- Chafik
+- Chen.Zhidong
+- Chris
+- Chris Gurk
+- Christian Kubitza
+- Christian Verardi
+- ChristopheBoucaut
+- CINS
+- cippest
+- Claire Meuriot
+- cmouleyre
+- cocoweb
+- Code Utopia
+- codvir
+- Comkwatt
+- comxd
+- Conner
+- Conner Burnett
+- Connie
+- Corentin Delcourt
+- Cosmin Hutanu
+- Cristiano Verardi
+- Cyril Dussert
+- damien
+- Damien Metzger
+- Damien PIQUET
+- Damon Skelhorn
+- Dan Hlavenka
+- danidomen
+- Daniel
+- Daniele Giachino
+- Danoosh
+- Danoosh Mir
+- Dany Maillard
+- dariusakafest
+- David
+- David Eschmeyer
+- David Gasperoni
+- David Sivocha
+- David-Julian BUCH
+- Davide
+- Davy Rolink
+- de saint leger
+- Debusschere Alexandre
+- Denis Yurevich
+- Denver Prophit Jr.
+- Desbouche Christophe
+- DevNet
+- devyk
+- Dh42
+- Dhavalkumar Prajapati
+- Dheeraj
+- Dheeraj Sharma
+- Dickriven Chellemboyee
+- Dimitrios Karvounaris
+- Dinis Lage
+- djbuch
+- djfm
+- dks295
+- dlage
+- doekia
+- DOEO
+- DogSports
+- Dragan Skrbic
+- DRC
+- Dream me up
+- DrySs
+- dSevere
+- Dustin
+- Dvir Julius
+- Dvir-Julius
+- e-gaulue
+- ecomm360
+- edamart
+- Edouard Gaulue
+- el-tenkova
+- elationbase
+- eleazar
+- Elitius
+- Emiliano 'AlberT' Gabrielli
+- Emilien Puget
+- emilien-puget
+- emily-d
+- Eolia
+- Eric Le Lay
+- Eric Rouvier
+- erickturcios
+- Erwan
+- Etienne Samson
+- Fabien Serny
+- Fabio Chelly
+- Fatma BOUCHEKOI
+- Fatma Bouchekoua
+- fchellypresta
+- Felipe Uribe
+- fetis
+- Filippo Tessarotto
+- fird
+- firstred
+- flashmaestro
+- florervd
+- Florian Kwakkenbos
+- Florian Lemaitre
+- Florian Nolte
+- Flowster
+- fojtcz
+- Fourat ACHOUR
+- fram
+- Francisco Jiménez Cabrera
+- FranckRIBEIRO
+- FrancMunoz
+- Francois Gaillard
+- Francois-Marie de Jouvencel
+- Fransuisse
+- Frederic BENOIST
+- Gabriel Arama
+- Gabriel Schwardy
+- Gaelle ITZKOVITZ
+- Galaydyuk Alexandr
+- Gamesh
+- Gaspar Fernandez
+- Geoffray
+- Gerdus van Zyl
+- gfanton
+- ggedamed
+- Giant Leap Lab
+- Ginkosama
+- ginodev
+- Gordon Coubrough
+- GoT
+- gr4devel
+- Granger Kevin
+- Gregoire Belorgey
+- Gregory Roussac
+- grezlikowski
+- gRoussac
+- Grzegorz Zawadzki
+- gskema
+- Guilhem Fanton
+- Guillaume DELOINCE
+- Guillaume Durand
+- Guillaume Germain
+- Guillaume Lafarge
+- Guillaume Leseur
+- Guillaume Marsille
+- Guillaume P
+- GuillaumeKadolis
+- Guisardo
+- Gustavo
+- Gytis
+- Gytis Skėma
+- Ha!*!*y
+- ha99y
+- hadjedjvincent
+- hadrich-hatem
+- harelguy
+- hhennes
+- hibatallahAouadni
+- hiousi
+- Horia Rudan
+- Howard Noz
+- htrex
+- hubiktomas
+- Ian Fung
+- idnovate
+- indesign47
+- iNem0o
+- Inetbiz
+- iqit-commerce
+- ironwo0d
+- Ish Gupta
+- Ishiki
+- ITBpro.com
+- Ivan
+- Ivan Shcherbakov
+- ivancasasempere
+- J. Danse
+- Jachym Tousek
+- janisVincent
+- Jaume
+- Javsmile
+- jbroutier
+- JEAN
+- jeanbe
+- jeckyl
+- Jeremie Tabet
+- Jeroen Dewaele
+- Jérôme H
+- Jerome Herry
+- Jérôme Nadaud
+- jessylenne
+- jestemradek
+- jf-viguier
+- jGissinger
+- Joan
+- Joan Juvanteny
+- joce
+- Jocelyn Fournier
+- Joe Siwiak
+- Joel Sanchez
+- joemartin247
+- Joep Hendrix
+- Joe Siwiak
+- Johannes Schramm
+- Jonadabe
+- Jonatan Nunez
+- Jonathan Danse
+- Jonathan Lelievre
+- Jonathan SAHM
+- Jorge Vargas
+- joseantgv
+- jtogrul
+- Juan G. Jordan
+- JuanjoSCu
+- Juha Remes
+- Julien
+- Julien Bouchez
+- Julien Bourdeau
+- Julien Deniau
+- Julien Martin
+- julvernois
+- Kamil Szymański
+- Karel Faille
+- Kelly Karnetsky
+- kermes
+- Kevin Dunglas
+- Kevin Granger
+- khouloud.belguith
+- Kijam Lopez
+- kiropowered
+- Kjeld Borch Egevang
+- kompilorb
+- kpodemski
+- Krystian Podemski
+- Ladel
+- Lathanao
+- ldecoker
+- Lea Mendes Da Silva
+- Leandro F. L
+- Leo
+- Lesley Paone
+- LittleBigDev
+- LOIC ROSSET ltd
+- Loïc Sapone
+- Louise Bonnard
+- lozal2244
+- Luc
+- Luc Vandesype
+- Luca T.
+- Lucas CERDAN
+- Lucas Rolff
+- LucasC
+- Lyo Nick
+- LyoNick
+- M-Mommsen
+- M03G
+- MacRoy
+- Madef
+- Madman
+- mahdi
+- Mahdi Shad
+- Mainmich
+- makk1ntosh
+- makoso
+- Manfredi Petruso
+- manuelbcd
+- Marc González Majoral
+- Marcin Sągol
+- marcinsz101
+- Marco Cervellin
+- Marcos
+- Marek Hanuš
+- Marion François
+- Marius
+- Mark Wienk
+- MarkC
+- Martin Fojtik
+- Mateusz Nastalski
+- Mathias Reker
+- Mathieu Ferment
+- matiasiglesias
+- Mats Rynge
+- Matt75
+- Matteo
+- Matteo Spreafico
+- Matthieu Mota
+- MatthieuB
+- MattLoyeD
+- mauglee
+- MaX3315
+- Maxence
+- Maxence de Flotte
+- Maxime
+- Maxime - Vaisonet
+- maxime aknin
+- Maxime Biloé
+- Maxime Morel-Bailly
+- Maxime Vasse
+- Mbechezi Mlanawo
+- mchelh
+- mchojnacki
+- mdomenjoud
+- MDWeb
+- Mehdi
+- Mehdi Badrani
+- mehdi-ghezal
+- Mehrshad
+- mehrshadz
+- melvin
+- Michael Dekker
+- Michael Hjulskov
+- Michael Käfer
+- Michael Salihi
+- Michal Spaček
+- Michel ANTOINE
+- Michel Courtade
+- Mickael ANDRIEU
+- Mickaël Andrieu
+- Mickael Desgranges
+- Mikael Blotin
+- Mikko Hellsing
+- Milow
+- Mingsong Hu
+- minic studio
+- Mirko Esposito
+- misthero
+- Molka DJEMAL
+- moncef102
+- montes
+- mplh
+- MustangZhong
+- nache
+- natrim
+- neemzy
+- neoteknic
+- nezenmoins
+- Nicklas
+- Nicolas Giacconi
+- Nicolas Lœuillet
+- Nicolas Martin
+- Nicolas Sorosac
+- Niels Wouda
+- nigel
+- Nigel Helliwell
+- nihco2
+- Niklas Ekman
+- Niko Wicaksono
+- Nils-Helge Garli Hegvik
+- NinjaOfWeb
+- Nino Uzelac
+- nodexpl
+- nturato
+- okom3pom
+- oleacorner
+- Olivier Bonvalet
+- Oskar Andersson
+- Otto Nascarella
+- Pablo Borowicz
+- paeddl
+- Pan P
+- Pan P.
+- Pan Ploenes
+- Panagiotis Tigas
+- panesarsandeep
+- Patanock
+- Patrick Mettraux
+- Patrick Weinstein
+- Pavel Novitsky
+- pbirnzain
+- Pedro Câmara
+- Pedro J. Parra
+- Pedro Rendeiro
+- Per Lejontand
+- Peter Schaeffer
+- peterept
+- Petyuska
+- PhpMadman
+- Pierre
+- Pierre Avizou
+- Pierre Joube
+- Pierre RAMBAUD
+- Pierrick
+- pilothuy
+- Piotr Kaczor
+- Piotr Moćko
+- Pliciweb - Nicolas
+- Praneeth Nidarshan
+- Presta Module
+- PrestaEdit
+- PrestaLab
+- PrestaMagician
+- PrestanceDesign
+- Prestanesia
+- prestarocket
+- Prestaspirit
+- Priyank Bolia
+- Profileo
+- Pronux
+- proydsl
+- psandmore
+- pxls
+- quadrateam
+- Quentin Leonetti
+- Quentin Montant
+- Quentin MONTANT - KIWIK
+- Quetzacoalt91
+- Racochejl
+- Rafael Cunha
+- Raphael
+- Raphael Droz
+- Raphael Malie
+- raphael-homann
+- raulgundin
+- rav88
+- rdy4ever
+- Rémi Gaillard
+- Remigiusz Jackowski
+- Renaud Sanchez - ChouetteWeb.fr
+- rGaillard
+- Rhys
+- Richard LT
+- Ricki Hirner
+- Rimas Kudelis
+- Riviere Serge
+- Robbie Thompson
+- robert
+- Rokas
+- Rokas Zygmantas
+- Roland Schütz
+- romainberger
+- Roman Gusev
+- Roy
+- RS
+- Ruben Martins
+- Rudra Sarkar
+- runningz
+- s-duval
+- Sacha
+- Sacha FROMENT
+- sadlyblue
+- sagaradonis
+- sallemiines
+- Sam Sanchez
+- Samir Shah
+- Samy Rabih
+- sandu
+- sandu velea
+- Sarah Lorenzini
+- Šarūnas Jonušas
+- Saycile
+- sbordun
+- Seb
+- Sebastien
+- Sébastien Bareyre
+- Sebastien Bocahu
+- Sébastien LE BRUCHEC
+- Sebastien Monterisi
+- Sébastien Rufer
+- SebSept
+- seleda
+- Sergey P
+- Sergio Quinonez
+- Serhat Durum
+- Serhii Polishchuk
+- seynaeve
+- sfroment42
+- shaffe-fr
+- Shagshag
+- ShepherdV8
+- Shipow
+- Shudrum
+- sidhujag
+- Simone
+- sjousse
+- sLorenzini
+- smartdatasoft
+- snamor
+- soufyan
+- soware
+- Staging
+- Stanislav Popov
+- Stanislav Yordanov
+- Stefano Kowalke
+- Stephan Obadia
+- Steven "SDF" Sulley
+- Steven Sulley
+- stickyrst
+- Studio Kiwik
+- Sullivan SENECHAL
+- Sumh
+- svensson_david
+- Sylvain Gougouzian
+- Sylvain WITMEYER
+- Symeon
+- Tanguy JACQUET
+- tchauviere
+- TechhDan
+- Ted Sanders
+- The Gitter Badger
+- themella
+- therampagerado
+- Thibaud Chauviere
+- Thierry Marianne
+- Thoma
+- thoma202
+- Thomas
+- Thomas Blanc
+- Thomas Ferney
+- Thomas LEVIANDIER
+- Thomas Nabord
+- thomas-aw
+- Threef
+- tiledcode
+- timactive
+- timsit
+- tmackay
+- TMMeilleur
+- tolispy
+- Tom Panier
+- Tomas
+- Tomas Ilginis
+- Tomas Liska
+- Tomas Votruba
+- Tomasz Slominski
+- tomek
+- Tony BOTALLA
+- Travis-CI
+- tucoinfo
+- Tung Dao
+- Tuni-Soft
+- Turtle
+- Txmod Xoops
+- unlocomqx
+- Valentin M
+- Valerii Savchenko
+- vAugagneur
+- venditdevs
+- Vincent Augagneur
+- Vincent Beudez
+- Vincent HADJEDJ
+- Vincent Schoener
+- Vincent Terenti
+- Vincent Van den Brink
+- vinvin27
+- vinzter
+- Vitaly Kondratiev
+- vitekj
+- vmamykin
+- Wayann
+- Web Premiere
+- web-plus
+- webbax
+- webmake
+- Wojciech Grzebieniowski
+- Xavier
+- Xavier Borderie
+- Xavier Gouley
+- Xavier POITAU
+- xitromedia
+- xKnut
+- yanngarras
+- Yannick A
+- Yannick Armand
+- Yolandavdvegt
+- Yoozio
+- yosra.akrout
+- Yuri Blanc
+- zimmi1
+- ZiZuu.com
+- Zollner Robert
+- zuzul
+
+SVN contributors:
+--------------------------------
+- aFolletete
+- aKorczak
+- aNiassy
+- bLeveque
+- bMancone
+- dMetzger
+- dSevere
+- fBrignoli
+- Francois Gaillard
+- fSerny
+- gBrunier
+- gCharmes
+- gPoulain
+- hAitmansour
+- jBreux
+- jmCollin
+- jObregon
+- lBrieu
+- lCherifi
+- lLefevre
+- mBertholino
+- mDeflotte
+- mMarinetti
+- nPellicari
+- rGaillard
+- rMalie
+- rMontagne
+- sLorenzini
+- sThiebaut
+- tDidierjean
+- vAugagneur
+- vChabot
+- vKham
+- vSchoener

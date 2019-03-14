@@ -1,0 +1,92 @@
+admin_webservice:
+    path: /
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:index'
+        _legacy_controller: AdminWebservice
+#@todo: uncomment when grid and entity form are done.
+#        _legacy_link: AdminWebservice
+
+admin_webservice_search:
+  path: /
+  methods: POST
+  defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:search'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:search
+
+admin_webservice_settings_save:
+    path: /settings
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:processForm'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:update
+
+admin_webservice_list_create:
+    path: /create
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:create'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:addwebservice_account
+
+admin_webservice_list_edit:
+    path: /edit/{webserviceAccountId}
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:edit'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:updatewebservice_account
+#        _legacy_parameters:
+#            id_webservice_account: webserviceAccountId
+    requirements:
+        webserviceAccountId: \d+
+
+admin_delete_single_webservice_log:
+    path: /delete/{webserviceAccountId}
+    methods: DELETE
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:deleteSingleWebservice'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:deletewebservice_account
+#        _legacy_parameters:
+#            id_webservice_account: webserviceAccountId
+    requirements:
+        webserviceAccountId: \d+
+
+admin_delete_multiple_webservice_log:
+    path: /delete
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:deleteMultipleWebservice'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:submitBulkdeletewebservice_account
+
+admin_webservice_status_toggle:
+    path: /status/{webserviceAccountId}
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:toggleStatus'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:status
+#        _legacy_parameters:
+#            id_webservice_account: webserviceAccountId
+    requirements:
+        webserviceAccountId: \d+
+
+admin_webservice_bulk_enable:
+    path: /status/bulk/enable
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:enableMultipleStatus'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:submitBulkenableSelectionwebservice_account
+
+admin_webservice_bulk_disable:
+    path: /status/bulk/disable
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:disableMultipleStatus'
+        _legacy_controller: AdminWebservice
+#        _legacy_link: AdminWebservice:submitBulkdisableSelectionwebservice_account

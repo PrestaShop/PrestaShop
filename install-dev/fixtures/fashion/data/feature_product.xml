@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<entity_feature_product>
+  <fields primary="id_feature,id_product">
+    <field name="id_feature"/>
+    <field name="id_product"/>
+    <field name="id_feature_value"/>
+  </fields>
+  <entities>
+    <feature_product id="feature_product_6_9" id_feature="3" id_product="6" id_feature_value="9"/>
+    <feature_product id="feature_product_7_9" id_feature="3" id_product="7" id_feature_value="9"/>
+    <feature_product id="feature_product_8_9" id_feature="3" id_product="8" id_feature_value="9"/>
+    <feature_product id="feature_product_19_9" id_feature="3" id_product="19" id_feature_value="9"/>
+  </entities>
+</entity_feature_product>

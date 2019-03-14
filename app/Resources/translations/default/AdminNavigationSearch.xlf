@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/search/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1eafe1bac879d838ee6d25eccfc9cb35">
+        <source>There are no results matching your query "%s".</source>
+        <target>There are no results matching your query "%s".</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="71eb31b250c9248c64a08e1efad5f6d9">
+        <source>%d results match your query "%s".</source>
+        <target>%d results match your query "%s".</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="7728ad63f14ad095862fd765b7a74fe6">
+        <source>1 result matches your query "%s".</source>
+        <target>1 result matches your query "%s".</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="81609118f8ea6dc02664998181345416">
+        <source>1 feature</source>
+        <target>1 feature</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="6827f95aead7a463cac2c673591edf7e">
+        <source>%d features</source>
+        <target>%d features</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="c4a6a84a33c055a2f92c8f3d52718100">
+        <source>1 module</source>
+        <target>1 module</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="d64f66187ca2535e8aa5eccac54e7013">
+        <source>%d modules</source>
+        <target>%d modules</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="59a2104ef3237945cd8378a51f853ca8">
+        <source>1 category</source>
+        <target>1 category</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="593dafa821d7cebf6e76bf592110ba32">
+        <source>%d categories</source>
+        <target>%d categories</target>
+        <note>Line: 98</note>
+      </trans-unit>
+      <trans-unit id="702085cd8b96c1e778c9e59ffba0394d">
+        <source>1 product</source>
+        <target>1 product</target>
+        <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="864c665aea5e824772fda0e678c3ac4d">
+        <source>%d products</source>
+        <target>%d products</target>
+        <note>Line: 118</note>
+      </trans-unit>
+      <trans-unit id="f08f35ebaebc5e5037a0b2a3474de8c4">
+        <source>1 customer</source>
+        <target>1 customer</target>
+        <note>Line: 130</note>
+      </trans-unit>
+      <trans-unit id="d5865d192ae31edead7bdea6ed1c85d9">
+        <source>%d customers</source>
+        <target>%d customers</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="6febfe29360949ae825d828fa095b6df">
+        <source>1 order</source>
+        <target>1 order</target>
+        <note>Line: 143</note>
+      </trans-unit>
+      <trans-unit id="c0115153d45d00a4510d71e2605196a3">
+        <source>%d orders</source>
+        <target>%d orders</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="1b339eb691ebd4d2103b8b76de41d321">
+        <source>1 addon</source>
+        <target>1 addon</target>
+        <note>Line: 156</note>
+      </trans-unit>
+      <trans-unit id="0cbcb09148c0538edfccc2b40d606ae7">
+        <source>%d addons</source>
+        <target>%d addons</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="e77449fd1e8fd61e78e99eac35791ed7">
+        <source>Show more results...</source>
+        <target>Show more results...</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="fdbb3dd95d543d67dc19d9fb3f6c46f4">
+        <source>Search doc.prestashop.com</source>
+        <target>Search doc.prestashop.com</target>
+        <note>Line: 183</note>
+      </trans-unit>
+      <trans-unit id="14bd5dfadc5c57da66495ebc2c8c020b">
+        <source>Go to the documentation</source>
+        <target>Go to the documentation</target>
+        <note>Line: 184</note>
+      </trans-unit>
+      <trans-unit id="9d6f008f9c1e0446e23b253ecc7b311a">
+        <source>Search addons.prestashop.com</source>
+        <target>Search addons.prestashop.com</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="a68b46728e83ba2fd535a25e8216bdb7">
+        <source>Go to Addons</source>
+        <target>Go to Addons</target>
+        <note>Line: 190</note>
+      </trans-unit>
+      <trans-unit id="96b65991d3a699bf3e83cec22339b620">
+        <source>Search prestashop.com forum</source>
+        <target>Search prestashop.com forum</target>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="550b342104e3b39d04e56c346bc6f014">
+        <source>Go to the Forum</source>
+        <target>Go to the Forum</target>
+        <note>Line: 196</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="75d3b3db03124cd6196c021686bda791">
+        <source>%d result matches your query "%s".</source>
+        <target>%d result matches your query "%s".</target>
+        <note>Line: 57
+Comment: %d can be 0 or 1</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

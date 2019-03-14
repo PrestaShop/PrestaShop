@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2fc6204d2ca7e856d9e4844d2786f053">
+        <source>This field will be modified for all your shops.</source>
+        <target>This field will be modified for all your shops.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="7ac170f2b47dbf7d4c5cd38449093c2b">
+        <source>This field will be modified for all shops in this shop group:</source>
+        <target>This field will be modified for all shops in this shop group:</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="fe0ae15c8f93a5335f0991accadd13ca">
+        <source>This field will be modified for this shop:</source>
+        <target>This field will be modified for this shop:</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Line: 280</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
+        <source>Delete selected</source>
+        <target>Delete selected</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Line: 703</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b3ebc4fbc081856600b6b9ecbb0a99fb">
+        <source>Delete the selected item?</source>
+        <target>Delete the selected item?</target>
+        <note>Line: 1048</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
+        <source>Forbidden characters:</source>
+        <target>Forbidden characters:</target>
+        <note>Line: 90</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsbestmanufacturers/statsbestmanufacturers.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="58ef962a87e6fbbea6027c17a954a18d">
+        <source>Empty recordset returned.</source>
+        <target>Empty recordset returned.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsbestsuppliers/statsbestsuppliers.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f29d8c727dcf2022ac241cb96c31083">
+        <source>Empty recordset returned</source>
+        <target>Empty recordset returned</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

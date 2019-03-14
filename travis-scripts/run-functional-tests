@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ $EXTRA_TESTS != *"functional"* ]]; then
+  exit 0
+fi
+
+bash $TRAVIS_BUILD_DIR/travis-scripts/install-prestashop
+
+echo "* Installing functional tests ...";
+
+cd $TRAVIS_BUILD_DIR/tests/E2E && npm install
+
+echo "* Running functional tests ...";
+npm test -- --MODULE=ps_legalcompliance
+exit $?

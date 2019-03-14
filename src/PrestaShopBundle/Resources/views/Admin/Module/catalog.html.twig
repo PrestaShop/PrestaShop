@@ -1,0 +1,63 @@
+{#**
+  * 2007-2018 PrestaShop
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Open Software License (OSL 3.0)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/OSL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+  * versions in the future. If you wish to customize PrestaShop for your
+  * needs please refer to http://www.prestashop.com for more information.
+  *
+  * @author    PrestaShop SA <contact@prestashop.com>
+  * @copyright 2007-2018 PrestaShop SA
+  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+  * International Registered Trademark & Property of PrestaShop SA
+  *#}
+{% extends '@PrestaShop/Admin/Module/common.html.twig' %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+    $('body').on(
+      'moduleCatalogLoaded',
+      function() {
+        {% if app.request.get('filterCategoryTab') %}
+        $('.module-category-menu[data-category-tab="{{ app.request.get('filterCategoryTab') }}"]').click();
+        {% endif %}
+        {% if app.request.get('filterCategoryRef') %}
+        $('.module-category-menu[data-category-ref="{{ app.request.get('filterCategoryRef') }}"]').click();
+        {% endif %}
+      }
+    );
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-10 module-catalog-page">
+      {# Addons connect modal #}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+      {# PrestaTrust modal #}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_confirm_prestatrust.html.twig' %}
+      {# Contains toolbar-nav for module page #}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+      {# Contains menu with Selection/Categories/Popular and Tag Search #}
+      {% include '@PrestaShop/Admin/Module/Includes/menu_top.html.twig' %}
+      {# Temporary loader until ajax has finished and display the full catalog #}
+      {% include '@PrestaShop/Admin/Module/Includes/grid_loader.html.twig' %}
+      {# Module Categories Grid #}
+      {% if topMenuData.categories is defined %}
+        {% include '@PrestaShop/Admin/Module/Includes/categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

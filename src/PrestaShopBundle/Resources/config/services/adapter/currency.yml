@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        public: true
+
+    # Command handlers
+
+    prestashop.adapter.currency.command_handler.toggle_currency_status:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\ToggleCurrencyStatusHandler'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand' }
+
+    prestashop.adapter.currency.command_handler.delete_currency:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\DeleteCurrencyHandler'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand' }

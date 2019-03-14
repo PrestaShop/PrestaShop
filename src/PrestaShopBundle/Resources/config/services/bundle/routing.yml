@@ -1,0 +1,36 @@
+services:
+    prestashop.bundle.routing.module_route_loader:
+        class: 'PrestaShopBundle\Routing\YamlModuleLoader'
+        arguments:
+          - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+        tags: [routing.loader]
+
+    prestashop.bundle.routing.converter.legacy_url_converter:
+        class: 'PrestaShopBundle\Routing\Converter\LegacyUrlConverter'
+        public: true
+        arguments:
+            - '@router'
+            - '@prestashop.bundle.routing.converter.cache_provider'
+
+    prestashop.bundle.routing.converter.router_provider:
+        class: 'PrestaShopBundle\Routing\Converter\RouterProvider'
+        arguments:
+            - '@router'
+
+    # We set this alias so that we can override it in test environment (to avoid memory limit crashes)
+    prestashop.bundle.routing.converter.cache:
+        alias: Symfony\Component\Cache\Adapter\AdapterInterface
+
+    prestashop.bundle.routing.converter.cache_provider:
+        class: 'PrestaShopBundle\Routing\Converter\CacheProvider'
+        arguments:
+            - '@prestashop.bundle.routing.converter.router_provider'
+            - '@prestashop.bundle.routing.converter.cache'
+            - '@prestashop.bundle.routing.converter.routing_cache_key_generator'
+
+    prestashop.bundle.routing.converter.routing_cache_key_generator:
+        class: 'PrestaShopBundle\Routing\Converter\RoutingCacheKeyGenerator'
+        arguments:
+            - ["%kernel.project_dir%/src/PrestaShopBundle/Resources/config/routing/admin"]
+            - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+            - '%kernel.environment%'

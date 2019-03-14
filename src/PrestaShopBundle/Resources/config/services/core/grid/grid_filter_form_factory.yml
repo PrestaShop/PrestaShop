@@ -1,0 +1,17 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.grid.filter.form_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
+        arguments:
+            - '@form.factory'
+        calls:
+            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+
+    prestashop.core.grid.filter.category_form_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CategoryFilterFormFactory'
+        arguments:
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@router'
+            - '@request_stack'

@@ -1,0 +1,5 @@
+imports:
+    - { resource: services/bundle/*.yml }
+    - { resource: services/core/*.yml }
+    - { resource: services/adapter/*.yml }
+    - { resource: services/alias.yml }

@@ -1,0 +1,77 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% set modulesListShouldBeDisplayed = (modulesList is defined and modulesList is not empty) %}
+{% if modulesListShouldBeDisplayed == true %}
+  <div class="row row-margin-bottom">
+  <div class="col-lg-12">
+    <ul class="nav nav-pills">
+      {% if modulesList.notInstalled|length > 0 %}
+      <li class="active">
+        <a href="#tab_modules_list_not_installed" data-toggle="tab">
+          {{ 'Not Installed'|trans({}) }}
+        </a>
+      </li>
+      {% endif %}
+
+      {% if modulesList.installed|length > 0 %}
+        <li {% if modulesList.notInstalled|length == 0 %}class="active"{% endif %}>
+        <a href="#tab_modules_list_installed" data-toggle="tab">
+          {{ 'Installed'|trans({}) }}
+        </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+<div id="modules_list_container_content" class="tab-content modal-content-overflow">
+  {% if modulesList.notInstalled is defined and modulesList.notInstalled is not empty %}
+  <div class="tab-pane active" id="tab_modules_list_not_installed">
+    <table id="tab_modules_list_not_installed" class="table">
+      {% for module in modulesList.notInstalled %}
+        {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': module}) }}
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+  {% if modulesList.installed|length > 0 %}
+  <div class="tab-pane {% if modulesList.notInstalled|length == 0 %}active{% endif %}" id="tab_modules_list_installed">
+    <table id="tab_modules_list_installed" class="table">
+      {% for module in modulesList.installed %}
+        {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': module}) }}
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+<div class="alert alert-addons row-margin-top" role="alert">
+  <p class="alert-text">
+    <a href="https://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{{ app.request.locale }}&amp;utm_content=download{% if adminListFromSource is defined %}&amp;utm_term={{ adminListFromSource }}{% endif %}" onclick="return !window.open(this.href);">{{ 'More modules on addons.prestashop.com'|trans({}) }}</a>
+  </p>
+</div>
+
+{% if modulesListShouldBeDisplayed == true %}
+  <script src="{{ asset('themes/new-theme/public/module_card.bundle.js') }}"></script>
+{% endif %}

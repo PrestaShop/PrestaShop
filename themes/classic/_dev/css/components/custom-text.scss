@@ -1,0 +1,37 @@
+#custom-text {
+  background: white;
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+  padding: 3.125rem 3.125rem;
+  text-align: center;
+  h2 {
+    text-transform: uppercase;
+    color: $gray-darker;
+    font-size: 1.563rem;
+    font-weight: 700;
+  }
+  p {
+    color: $gray-darker;
+    font-weight: 400;
+    font-size: 1.1em;
+    .dark {
+      color: $gray;
+      font-weight: 400;
+    }
+  }
+}
+.page-content.page-cms{
+  background: white;
+  padding: 1.25rem;
+  text-align: justify;
+  .cms-box{
+    img{
+      max-width: 100%;
+    }
+  }
+}
+@include media-breakpoint-down(md) {
+  #block-cmsinfo {
+    padding: $medium-space $large-space;
+  }
+}

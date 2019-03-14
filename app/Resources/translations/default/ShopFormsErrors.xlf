@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/ValidateConstraintTranslator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f55c2aa6ad7a9d9d52eaca01b6a8f121">
+        <source>Invalid name</source>
+        <target>Invalid name</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="694db8ddd75de82e148834e0f55e4761">
+        <source>Format should be %s.</source>
+        <target>Format should be %s.</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="19f823c6453c2b1ffd09cb715214813d">
+        <source>Required field</source>
+        <target>Required field</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="23cac50dabcf7afd3eb4218454e5e911">
+        <source>Invalid format.</source>
+        <target>Invalid format.</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/form/CustomerAddressForm.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2845ecdc5099c86c8375b45aae5178b6">
+        <source>Invalid postcode - should look like "%zipcode%"</source>
+        <target>Invalid postcode - should look like "%zipcode%"</target>
+        <note>Line: 113</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

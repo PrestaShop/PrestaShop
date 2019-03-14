@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.import.data_match_saver:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\DataMatchSaver'
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'

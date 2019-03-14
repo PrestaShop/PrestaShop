@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statsequipment/statsequipment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="247270d410e2b9de01814b82111becda">
+        <source>Browsers and operating systems</source>
+        <target>Browsers and operating systems</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="2876718a648dea03aaafd4b5a63b1efe">
+        <source>Adds a tab containing graphs about web browser and operating system usage to the Stats dashboard.</source>
+        <target>Adds a tab containing graphs about web browser and operating system usage to the Stats dashboard.</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="854c8e126f839cc861cde822b641230e">
+        <source>Making sure that your website is accessible to as many people as possible</source>
+        <target>Making sure that your website is accessible to as many people as possible</target>
+        <note>Line: 133</note>
+      </trans-unit>
+      <trans-unit id="0d5f13106dec10bb8a9301541052278c">
+        <source>When managing a website, it is important to keep track of the software used by visitors so as to be sure that the site displays the same way for everyone. PrestaShop was built to be compatible with the most recent Web browsers and computer operating systems (OS). However, because you may end up adding advanced features to your website or even modifying the core PrestaShop code, these additions may not be accessible to everyone. That is why it is a good idea to keep track of the percentage of users for each type of software before adding or changing something that only a limited number of users will be able to access.</source>
+        <target>When managing a website, it is important to keep track of the software used by visitors so as to be sure that the site displays the same way for everyone. PrestaShop was built to be compatible with the most recent Web browsers and computer operating systems (OS). However, because you may end up adding advanced features to your website or even modifying the core PrestaShop code, these additions may not be accessible to everyone. That is why it is a good idea to keep track of the percentage of users for each type of software before adding or changing something that only a limited number of users will be able to access.</target>
+        <note>Line: 135</note>
+      </trans-unit>
+      <trans-unit id="11db1362a88c5e3e74c8f699c14d6798">
+        <source>Indicates the percentage of each web browser used by customers.</source>
+        <target>Indicates the percentage of each web browser used by customers.</target>
+        <note>Line: 144</note>
+      </trans-unit>
+      <trans-unit id="998e4c5c80f27dec552e99dfed34889a">
+        <source>CSV Export</source>
+        <target>CSV Export</target>
+        <note>Line: 161</note>
+      </trans-unit>
+      <trans-unit id="90c58bfe4872fc9ca7bf6a181c3e5edd">
+        <source>Indicates the percentage of each operating system used by customers.</source>
+        <target>Indicates the percentage of each operating system used by customers.</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="bb38096ab39160dc20d44f3ea6b44507">
+        <source>Plugins</source>
+        <target>Plugins</target>
+        <note>Line: 168</note>
+      </trans-unit>
+      <trans-unit id="9ffafc9e090c8e1c06f928ef2817efd6">
+        <source>Web browser used</source>
+        <target>Web browser used</target>
+        <note>Line: 182</note>
+      </trans-unit>
+      <trans-unit id="0241b7aaaa5f76afd585bb6cdae314d1">
+        <source>Operating system used</source>
+        <target>Operating system used</target>
+        <note>Line: 194</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

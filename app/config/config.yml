@@ -1,0 +1,135 @@
+imports:
+    - { resource: set_parameters.php }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: addons/*.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    env(PS_THEME_NAME): "classic"
+    AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
+    translator.class: PrestaShopBundle\Translation\Translator
+    translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
+    admin_page: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin"
+    env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
+
+framework:
+    assets:
+        version: !php/const \AppKernel::VERSION
+
+    #esi:             ~
+    secret:          "%secret%"
+    translator:      { fallbacks: ["default"] }
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    serializer:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    session:
+        handler_id:  ~
+    fragments:       ~
+    http_method_override: true
+
+# Monolog configuration #
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: '%env(PS_LOG_OUTPUT)%'
+            level: notice
+        legacy:
+            type: service
+            id: prestashop.handler.log
+            level: warning
+            channels: [app]
+
+# Twig Configuration
+twig:
+    autoescape:       "name"
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form_themes:
+        - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_4_horizontal_layout.html.twig'
+    paths:
+        '%admin_page%/Product': Product
+        '%admin_page%/TwigTemplateForm': Twig
+        '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
+        '%admin_page%/Configure/ShopParameters': ShopParameters
+        '%kernel.root_dir%/../modules': Modules
+    globals:
+        webpack_server: false
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        default_connection: default
+
+        connections:
+            default:
+                driver:   pdo_mysql
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database_name%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                server_version: 5.1
+                charset:  UTF8
+                # if using pdo_sqlite as your database driver:
+                #   1. add the path in parameters.yml
+                #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+                #   2. Uncomment database_path in parameters.yml.dist
+                #   3. Uncomment next line:
+                #     path:     "%database_path%"
+                mapping_types:
+                    enum: string
+
+                options:
+                    1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        # naming_strategy: doctrine.orm.naming_strategy.underscore
+        naming_strategy: prestashop.database.naming_strategy
+        auto_mapping: true
+        dql:
+            string_functions:
+                regexp: DoctrineExtensions\Query\Mysql\Regexp
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
+
+# Guzzle configuration
+csa_guzzle:
+    profiler:
+        enabled: "%kernel.debug%"
+    cache:
+        enabled: true
+        adapter: guzzle.cache
+    clients:
+        addons_api:
+            config: # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
+                base_url: "https://api-addons.prestashop.com"
+                defaults:
+                    timeout: "5.0"
+                headers:
+                    Accept: "application/json"
+
+prestashop:
+    addons:
+        prestatrust:
+            enabled: true
+        api_client:
+            ttl: 7200 # 2h
+            # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage

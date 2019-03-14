@@ -1,0 +1,48 @@
+{#**
+  * 2007-2018 PrestaShop
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Open Software License (OSL 3.0)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/OSL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+  * versions in the future. If you wish to customize PrestaShop for your
+  * needs please refer to http://www.prestashop.com for more information.
+  *
+  * @author    PrestaShop SA <contact@prestashop.com>
+  * @copyright 2007-2018 PrestaShop SA
+  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+  * International Registered Trademark & Property of PrestaShop SA
+  *#}
+<div class="module-sorting-menu">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="module-sorting-search-wording">
+        <span id="selected_modules" class="module-search-result-title module-search-result-wording">{{ '%nbModules% modules and services selected for you'|trans({'%nbModules%' : totalModules}, 'Admin.Modules.Feature') }}</span>
+        <span class="help-box" data-toggle="popover"
+          data-title="{{ "Selection"|trans({}, 'Admin.Modules.Feature') }}"
+          data-content="{{ "Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules."|trans({}, 'Admin.Modules.Help') }}">
+        </span>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="module-sorting module-sorting-author float-right">
+        <select id="sort_module" class="custom-select sort-component">
+          <option value="" disabled selected>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
+          <option value="name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
+          <option value="price">{{ 'Increasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
+          <option value="price-desc">{{ 'Decreasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
+          <option value="scoring-desc">{{ 'Popularity'|trans({}, 'Admin.Modules.Feature') }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

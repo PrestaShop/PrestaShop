@@ -1,0 +1,10 @@
+<phpunit bootstrap="bootstrap.php"
+         color="true"
+         stopOnFailure="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

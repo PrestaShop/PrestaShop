@@ -1,0 +1,95 @@
+@font-face {
+  font-family: 'Noto Sans';
+  src: url(~notosans-fontface/fonts/NotoSans-Regular.eot);
+  src: local('Noto Sans Regular'),
+  local('NotoSans-Regular'),
+  url(~notosans-fontface/fonts/NotoSans-Regular.eot) format('embedded-opentype'),
+  url(~notosans-fontface/fonts/NotoSans-Regular.woff2) format('woff2'),
+  url(~notosans-fontface/fonts/NotoSans-Regular.woff) format('woff'),
+  url(~notosans-fontface/fonts/NotoSans-Regular.ttf) format('truetype'),
+  url(~notosans-fontface/fonts/NotoSans-Regular.svg) format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  src: url(~notosans-fontface/fonts/NotoSans-Bold.eot);
+  src: local('Noto Sans Bold'),
+  local('NotoSans-Bold'),
+  url(~notosans-fontface/fonts/NotoSans-Bold.eot) format('embedded-opentype'),
+  url(~notosans-fontface/fonts/NotoSans-Bold.woff2) format('woff2'),
+  url(~notosans-fontface/fonts/NotoSans-Bold.woff) format('woff'),
+  url(~notosans-fontface/fonts/NotoSans-Bold.ttf) format('truetype'),
+  url(~notosans-fontface/fonts/NotoSans-Bold.svg) format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  src: url(~notosans-fontface/fonts/NotoSans-Italic.eot);
+  src: local('Noto Sans Italic'),
+  local('NotoSans-Italic'),
+  url(~notosans-fontface/fonts/NotoSans-Italic.eot) format('embedded-opentype'),
+  url(~notosans-fontface/fonts/NotoSans-Italic.woff2) format('woff2'),
+  url(~notosans-fontface/fonts/NotoSans-Italic.woff) format('woff'),
+  url(~notosans-fontface/fonts/NotoSans-Italic.ttf) format('truetype'),
+  url(~notosans-fontface/fonts/NotoSans-Italic.svg) format('svg');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  src: url(~notosans-fontface/fonts/NotoSans-BoldItalic.eot);
+  src: local('Noto Sans BoldItalic'),
+  local('NotoSans-BoldItalic'),
+  url(~notosans-fontface/fonts/NotoSans-BoldItalic.eot) format('embedded-opentype'),
+  url(~notosans-fontface/fonts/NotoSans-BoldItalic.woff2) format('woff2'),
+  url(~notosans-fontface/fonts/NotoSans-BoldItalic.woff) format('woff'),
+  url(~notosans-fontface/fonts/NotoSans-BoldItalic.ttf) format('truetype'),
+  url(~notosans-fontface/fonts/NotoSans-BoldItalic.svg) format('svg');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(~material-design-icons/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(~material-design-icons/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
+       url(~material-design-icons/iconfont/MaterialIcons-Regular.woff) format('woff'),
+       url(~material-design-icons/iconfont/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}

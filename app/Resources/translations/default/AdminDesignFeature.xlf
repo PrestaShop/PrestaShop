@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="874d3deed67e503cac1d8bc00417794a">
+        <source>Move images</source>
+        <target>Move images</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="258606ef5a3ed5cd7e39da08435adec0">
+        <source>Regenerate thumbnails</source>
+        <target>Regenerate thumbnails</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="79750ba11832a44ccf92e15eb0e84ae4">
+        <source>Select an image</source>
+        <target>Select an image</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="26e687808eb656fb38bd6e98f592e4f7">
+        <source>Select a format</source>
+        <target>Select a format</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="d379cadd41b68efe7c945b4d85c72085">
+        <source>Erase previous images</source>
+        <target>Erase previous images</target>
+        <note>Line: 107</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules_positions/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="51a8b3a61ad63d4e5df2ce86870e39b8">
+        <source>Transplant a module</source>
+        <target>Transplant a module</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="97e34811d05eb0ee902aa3e190ea5efd">
+        <source>Transplant to</source>
+        <target>Transplant to</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="d5f1381c5f97f928df4ef8d18c2a27c0">
+        <source>Exceptions</source>
+        <target>Exceptions</target>
+        <note>Line: 65</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4ba24d91566786f5315acf453418dbb6">
+        <source>All modules</source>
+        <target>All modules</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="c2f2fa871a47fd6ab9e8442ff4dd468d">
+        <source>Search for a hook</source>
+        <target>Search for a hook</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="4c64748755160a1e441ed3dc34d6b827">
+        <source>Display non-positionable hooks</source>
+        <target>Display non-positionable hooks</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="d97628f4b34d5ca2a77cc1bfa7914aa9">
+        <source>Unhook</source>
+        <target>Unhook</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="feb6f2e19409f021e5fd65c51d21d254">
+        <source>Unhook the selection</source>
+        <target>Unhook the selection</target>
+        <note>Line: 181</note>
+      </trans-unit>
+      <trans-unit id="fdf4e26a28a557ccfae6ddea1881687e">
+        <source>1 module selected</source>
+        <target>1 module selected</target>
+        <note>Line: 175</note>
+      </trans-unit>
+      <trans-unit id="2451f8c34b91d6d3b6e7ee63c23d13fc">
+        <source>modules selected</source>
+        <target>modules selected</target>
+        <note>Line: 177</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/ThemeLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="24e61dc70866cb84d375a6270035c7cf">
+        <source>Full width</source>
+        <target>Full width</target>
+        <note>Line: 26</note>
+      </trans-unit>
+      <trans-unit id="63bd7d20cb7d515fe705bcda029ea776">
+        <source>Three columns</source>
+        <target>Three columns</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="710c71f05157207e5c47015fc032564d">
+        <source>Two columns, small left column</source>
+        <target>Two columns, small left column</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="4c318832b92e5f7b818aba037e1ed5ac">
+        <source>Two columns, small right column</source>
+        <target>Two columns, small right column</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="05559f48f0ea41ebb03f6d08b95e1e25">
+        <source>No side columns, ideal for distraction-free pages such as product pages.</source>
+        <target>No side columns, ideal for distraction-free pages such as product pages.</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="387bf9bbb8c3c3fd021aa85970554839">
+        <source>One large central column and 2 side columns.</source>
+        <target>One large central column and 2 side columns.</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="74266ad9cb6f32c9da66592ca748ef8d">
+        <source>Two columns with a small left column.</source>
+        <target>Two columns with a small left column.</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="fefe6a1aca554473c855e076d0376b52">
+        <source>Two columns with a small right column.</source>
+        <target>Two columns with a small right column.</target>
+        <note>Line: 37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="789ca3cc9e29e7ef767619e13c6b2f9e">
+        <source>CMS Category</source>
+        <target>CMS Category</target>
+        <note>Line: 214</note>
+      </trans-unit>
+      <trans-unit id="52b68aaa602d202c340d9e4e9157f276">
+        <source>Parent category</source>
+        <target>Parent category</target>
+        <note>Line: 249</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsContentController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d0d4e3688fdaee5afa292083b855e143">
+        <source>Add new category</source>
+        <target>Add new category</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="4fb1231b615c9fc59cdb5729577b0919">
+        <source>Edit category: %name%</source>
+        <target>Edit category: %name%</target>
+        <note>Line: 182</note>
+      </trans-unit>
+      <trans-unit id="aa6f77f824eff8e896510f1bbaf9f8e5">
+        <source>Add new page</source>
+        <target>Add new page</target>
+        <note>Line: 187</note>
+      </trans-unit>
+      <trans-unit id="23b8a311aed9d1b2e76424acc4eff45f">
+        <source>Edit page: %meta_title%</source>
+        <target>Edit page: %meta_title%</target>
+        <note>Line: 190</note>
+      </trans-unit>
+      <trans-unit id="5aa00a736e77bff80d8a530b0522803d">
+        <source>Category: %category%</source>
+        <target>Category: %category%</target>
+        <note>Line: 193</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f6162e1430a8d5020bf4c20dc02499f">
+        <source>Pages in category "%name%"</source>
+        <target>Pages in category "%name%"</target>
+        <note>Line: 103</note>
+      </trans-unit>
+      <trans-unit id="897b3f9a5dc0ebb8ab90e033e7ce61f3">
+        <source>Page Category</source>
+        <target>Page Category</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="21f93401134586a6c481422bf01fccfd">
+        <source>Only letters and the hyphen (-) character are allowed.</source>
+        <target>Only letters and the hyphen (-) character are allowed.</target>
+        <note>Line: 210</note>
+      </trans-unit>
+      <trans-unit id="45b1bce0ceb1e155fc99d59a21761b9e">
+        <source>Page content</source>
+        <target>Page content</target>
+        <note>Line: 214</note>
+      </trans-unit>
+      <trans-unit id="ce1e51212c9df52777620dc9de246da0">
+        <source>Indexation by search engines</source>
+        <target>Indexation by search engines</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="cc4fbd30d676ea2f9994b7063a8ada15">
+        <source>Pages in this category</source>
+        <target>Pages in this category</target>
+        <note>Line: 302</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cc350a9d1eabece4f9299f7bb51c3a9c">
+        <source>Images generation options</source>
+        <target>Images generation options</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="d0efb46cfd8b126482192a343e2142b4">
+        <source>Image format</source>
+        <target>Image format</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="92deb9e729da3800aca668de3491f0c8">
+        <source>Use JPEG.</source>
+        <target>Use JPEG.</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="6178649941eae11401f8bd95d32ad690">
+        <source>Use PNG only if the base image is in PNG format.</source>
+        <target>Use PNG only if the base image is in PNG format.</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="d40849d8da6fe69b751ebaa13595b34d">
+        <source>Use PNG for all images.</source>
+        <target>Use PNG for all images.</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="5a259e0a584d2d8f7de738689c91cb20">
+        <source>JPEG compression</source>
+        <target>JPEG compression</target>
+        <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="9c4936420e1471c2233cfbb40ce49319">
+        <source>PNG compression</source>
+        <target>PNG compression</target>
+        <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="2f0f4bfac8d0b89ceaf30a94f39f0d58">
+        <source>Generate images based on one side of the source image</source>
+        <target>Generate images based on one side of the source image</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="fbd5c930381c5176afe9310becf39ee5">
+        <source>Automatic (longest side)</source>
+        <target>Automatic (longest side)</target>
+        <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="9cddfad226d0bc7a731c13fbec74aca6">
+        <source>Maximum file size of product customization pictures</source>
+        <target>Maximum file size of product customization pictures</target>
+        <note>Line: 138</note>
+      </trans-unit>
+      <trans-unit id="4b3a6218bb3e3a7303e8a171a60fcf92">
+        <source>bytes</source>
+        <target>bytes</target>
+        <note>Line: 144</note>
+      </trans-unit>
+      <trans-unit id="ff534cd9270ca999a39a50a6365ff52e">
+        <source>Product picture width</source>
+        <target>Product picture width</target>
+        <note>Line: 148</note>
+      </trans-unit>
+      <trans-unit id="d399848208da8b80a306af0fd62bb03f">
+        <source>pixels</source>
+        <target>pixels</target>
+        <note>Line: 223</note>
+      </trans-unit>
+      <trans-unit id="5891a406596216c63f7a1f8f7c6a81a8">
+        <source>Product picture height</source>
+        <target>Product picture height</target>
+        <note>Line: 159</note>
+      </trans-unit>
+      <trans-unit id="ace52125644d273380446071bcd6d5fb">
+        <source>Generate high resolution images</source>
+        <target>Generate high resolution images</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="b08ea6a4f29e76c9d843856917642409">
+        <source>Use the legacy image filesystem</source>
+        <target>Use the legacy image filesystem</target>
+        <note>Line: 185</note>
+      </trans-unit>
+      <trans-unit id="2dd1148046499f9c2422ce1045a4accf">
+        <source>Image type</source>
+        <target>Image type</target>
+        <note>Line: 197</note>
+      </trans-unit>
+      <trans-unit id="404dede45594c16ad5592b1091cc7ba8">
+        <source>Name for the image type</source>
+        <target>Name for the image type</target>
+        <note>Line: 203</note>
+      </trans-unit>
+      <trans-unit id="d1e9d1892046943ae96e613646fc0381">
+        <source>Add new image type</source>
+        <target>Add new image type</target>
+        <note>Line: 702</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="700e2c3b7b442c597c781eac801408b6">
+        <source>___________ CUSTOM ___________</source>
+        <target>___________ CUSTOM ___________</target>
+        <note>Line: 438</note>
+      </trans-unit>
+      <trans-unit id="6957667301f05bce7e2c0b5cd8567df5">
+        <source>____________ CORE ____________</source>
+        <target>____________ CORE ____________</target>
+        <note>Line: 451</note>
+      </trans-unit>
+      <trans-unit id="1cc06efffbc5252916c871f45098a50f">
+        <source>Admin modules controller</source>
+        <target>Admin modules controller</target>
+        <note>Line: 457</note>
+      </trans-unit>
+      <trans-unit id="2f75fd5bb638eb1353d6941aac58700e">
+        <source>Front modules controller</source>
+        <target>Front modules controller</target>
+        <note>Line: 457</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
+        <source>Pages</source>
+        <target>Pages</target>
+        <note>Line: 538</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="36866999eeb441da24edc6fd075e1765">
+        <source>Add new theme</source>
+        <target>Add new theme</target>
+        <note>Line: 156</note>
+      </trans-unit>
+      <trans-unit id="3ff63fb80ae3bd04b6550282d39f674f">
+        <source>Export current theme</source>
+        <target>Export current theme</target>
+        <note>Line: 161</note>
+      </trans-unit>
+      <trans-unit id="b5c941eace89787ab475237451189eac">
+        <source>Import theme</source>
+        <target>Import theme</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="f5ad3d3e217e4b7ea1729eb997dfbe1e">
+        <source>Your current theme</source>
+        <target>Your current theme</target>
+        <note>Line: 405</note>
+      </trans-unit>
+      <trans-unit id="410901e83305e49595778896745950a9">
+        <source><![CDATA[Invoice & Email Logos]]></source>
+        <target><![CDATA[Invoice & Email Logos]]></target>
+        <note>Line: 409</note>
+      </trans-unit>
+      <trans-unit id="90dafb1cce6579655041476ab07fab90">
+        <source>Favicons</source>
+        <target>Favicons</target>
+        <note>Line: 410</note>
+      </trans-unit>
+      <trans-unit id="49824ed511fd64f33f2f8a1818ee8fe1">
+        <source>Header logo</source>
+        <target>Header logo</target>
+        <note>Line: 414</note>
+      </trans-unit>
+      <trans-unit id="358b0205fd07c94c16a82d8278bc5b76">
+        <source>Mail logo</source>
+        <target>Mail logo</target>
+        <note>Line: 427</note>
+      </trans-unit>
+      <trans-unit id="d84613cd39906ab9161e1ad513f8947b">
+        <source>Invoice logo</source>
+        <target>Invoice logo</target>
+        <note>Line: 436</note>
+      </trans-unit>
+      <trans-unit id="49e95301d8fcdbc23f623e0f2d1ed1e6">
+        <source>Favicon</source>
+        <target>Favicon</target>
+        <note>Line: 445</note>
+      </trans-unit>
+      <trans-unit id="859a82ffb385f9227c656960996025eb">
+        <source>Visit the theme catalog</source>
+        <target>Visit the theme catalog</target>
+        <note>Line: 461</note>
+      </trans-unit>
+      <trans-unit id="d1c54fe762697b168dee820490655563">
+        <source>Adaptation to Right-to-Left languages</source>
+        <target>Adaptation to Right-to-Left languages</target>
+        <note>Line: 481</note>
+      </trans-unit>
+      <trans-unit id="8ed22009aa8884b512b3e3a85d1aeb87">
+        <source>Theme to adapt</source>
+        <target>Theme to adapt</target>
+        <note>Line: 485</note>
+      </trans-unit>
+      <trans-unit id="fb3f98de7e392f98c02ba257e6c46f9a">
+        <source>Generate RTL stylesheet</source>
+        <target>Generate RTL stylesheet</target>
+        <note>Line: 491</note>
+      </trans-unit>
+      <trans-unit id="3388a09e80639f10038e6725fb32f444">
+        <source>Select a theme for the "%name%" shop</source>
+        <target>Select a theme for the "%name%" shop</target>
+        <note>Line: 508</note>
+      </trans-unit>
+      <trans-unit id="8d5cc12b0e7ecbe4e624baa345323035">
+        <source>Theme appearance</source>
+        <target>Theme appearance</target>
+        <note>Line: 529</note>
+      </trans-unit>
+      <trans-unit id="7961c4434751797a383d52d647e044d6">
+        <source>Import from your computer</source>
+        <target>Import from your computer</target>
+        <note>Line: 566</note>
+      </trans-unit>
+      <trans-unit id="6966bbbcdeb44c019201ede70e7b74b8">
+        <source>Zip file</source>
+        <target>Zip file</target>
+        <note>Line: 572</note>
+      </trans-unit>
+      <trans-unit id="dec0faa6eb19bd9120d12c5a876bd1cf">
+        <source>Import from the web</source>
+        <target>Import from the web</target>
+        <note>Line: 588</note>
+      </trans-unit>
+      <trans-unit id="a33388a338ee2b199d66112369279558">
+        <source>Archive URL</source>
+        <target>Archive URL</target>
+        <note>Line: 594</note>
+      </trans-unit>
+      <trans-unit id="cd8d9cc19984ccf9d314eee5eebfc2cc">
+        <source>Import from FTP</source>
+        <target>Import from FTP</target>
+        <note>Line: 622</note>
+      </trans-unit>
+      <trans-unit id="a5a23094873852f0c0a9e55be4f1cf1d">
+        <source>Select the archive</source>
+        <target>Select the archive</target>
+        <note>Line: 628</note>
+      </trans-unit>
+      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
+        <source>Theme</source>
+        <target>Theme</target>
+        <note>Line: 174</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

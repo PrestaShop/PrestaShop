@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2605a817441c19cc88eb9e5d17845dc0">
+        <source>You can add a comment here.</source>
+        <target>You can add a comment here.</target>
+        <note>Line: 56</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="81f32b96f6626b8968e6a0f4a9bce62e">
+        <source>Select the fields you would like to be required for this section.</source>
+        <target>Select the fields you would like to be required for this section.</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="a75835a6fe4329ee7884694415c2d46d">
+        <source>Please make sure you are complying with the opt-in legislation applicable in your country.</source>
+        <target>Please make sure you are complying with the opt-in legislation applicable in your country.</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fef9632f39b66ba488e163a665bb0e99">
+        <source>This feature generates a random password before sending an email to your customer.</source>
+        <target>This feature generates a random password before sending an email to your customer.</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="566d26ec62e9c51270b7243440227dbb">
+        <source>This note will be displayed to all employees but not to customers.</source>
+        <target>This note will be displayed to all employees but not to customers.</target>
+        <note>Line: 364</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="576e650084068ed747fb3b22196dcd70">
+        <source>If you chooses to create this discount for all invoices, only one discount will be created per order invoice.</source>
+        <target>If you chooses to create this discount for all invoices, only one discount will be created per order invoice.</target>
+        <note>Line: 92</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_new_product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dca6b819ed4897f93a1a8531df9b282a">
+        <source>If you don't select "Free shipping," the normal shipping costs will be applied.</source>
+        <target>If you don't select "Free shipping," the normal shipping costs will be applied.</target>
+        <note>Line: 121</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_product_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5728ff6d5efd64ef7db72028eefc7262">
+        <source>(Max %amount_refundable% %tax_method%)</source>
+        <target>(Max %amount_refundable% %tax_method%)</target>
+        <note>Line: 192</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="28a996f23ec7c4f6cf75da6bf30670bd">
+        <source>Search for an existing customer by typing the first letters of his/her name.</source>
+        <target>Search for an existing customer by typing the first letters of his/her name.</target>
+        <note>Line: 1107</note>
+      </trans-unit>
+      <trans-unit id="73af90a8372beea9f81a3c3ca77a4aa8">
+        <source>Send an email to the customer with the link to process the payment.</source>
+        <target>Send an email to the customer with the link to process the payment.</target>
+        <note>Line: 1536</note>
+      </trans-unit>
+      <trans-unit id="9f38710d8e9ee2338dafa9ae484b0d85">
+        <source>Go on payment page to process the payment.</source>
+        <target>Go on payment page to process the payment.</target>
+        <note>Line: 1539</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f741fe9d353085c596e3c3610101e245">
+        <source>Resend this email to the customer</source>
+        <target>Resend this email to the customer</target>
+        <note>Line: 229</note>
+      </trans-unit>
+      <trans-unit id="f9a5775d7def0b6c57393fc86bb7a730">
+        <source>Do not forget to update your exchange rate before making this change.</source>
+        <target>Do not forget to update your exchange rate before making this change.</target>
+        <note>Line: 561</note>
+      </trans-unit>
+      <trans-unit id="883370e6a8360f9ffe2e658db153fd74">
+        <source>This feature will generate a random password and send an email to the customer.</source>
+        <target>This feature will generate a random password and send an email to the customer.</target>
+        <note>Line: 599</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d17f6ab68839ef4a39ead0638cae47a2">
+        <source>View details on the customer page</source>
+        <target>View details on the customer page</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="a901cc409fe745be1a29a311b57880ce">
+        <source>View details on the order page</source>
+        <target>View details on the order page</target>
+        <note>Line: 37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a43fd5e0338751959686921566de352e">
+        <source>Leave this field blank if there's no change.</source>
+        <target>Leave this field blank if there's no change.</target>
+        <note>Line: 401</note>
+      </trans-unit>
+      <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
+        <source>Password should be at least %length% characters long.</source>
+        <target>Password should be at least %length% characters long.</target>
+        <note>Line: 402</note>
+      </trans-unit>
+      <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
+        <source>Enable or disable customer login.</source>
+        <target>Enable or disable customer login.</target>
+        <note>Line: 433</note>
+      </trans-unit>
+      <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
+        <source>This customer will receive your ads via email.</source>
+        <target>This customer will receive your ads via email.</target>
+        <note>Line: 455</note>
+      </trans-unit>
+      <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
+        <source>Select all the groups that you would like to apply to this customer.</source>
+        <target>Select all the groups that you would like to apply to this customer.</target>
+        <note>Line: 481</note>
+      </trans-unit>
+      <trans-unit id="395b64636636e968c756f7514313f760">
+        <source>This group will be the user's default group.</source>
+        <target>This group will be the user's default group.</target>
+        <note>Line: 494</note>
+      </trans-unit>
+      <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
+        <source>Only the discount for the selected group will be applied to this customer.</source>
+        <target>Only the discount for the selected group will be applied to this customer.</target>
+        <note>Line: 495</note>
+      </trans-unit>
+      <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
+        <source>Valid characters:</source>
+        <target>Valid characters:</target>
+        <note>Line: 551</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ed4bfa76b661f4b6bc94d32fe6147d57">
+        <source>Would you like to allow merchandise returns in your shop?</source>
+        <target>Would you like to allow merchandise returns in your shop?</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="c503a53add0f47d2497ca363f9ad1b76">
+        <source>How many days after the delivery date does the customer have to return a product?</source>
+        <target>How many days after the delivery date does the customer have to return a product?</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="095fcccad5a4585fdc2fe1f97fc89561">
+        <source>Prefix used for return name (e.g. RE00001).</source>
+        <target>Prefix used for return name (e.g. RE00001).</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="2bf0a7ee96f0cba7f7d530ff08f01bf8">
+        <source>Merchandise return (RMA) status.</source>
+        <target>Merchandise return (RMA) status.</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="a3d008a6e1f75882761e48de1b001497">
+        <source>List of products in return package.</source>
+        <target>List of products in return package.</target>
+        <note>Line: 137</note>
+      </trans-unit>
+      <trans-unit id="db21428a343da97c41ced5ad9ef17d56">
+        <source>The link is only available after validation and before the parcel gets delivered.</source>
+        <target>The link is only available after validation and before the parcel gets delivered.</target>
+        <note>Line: 145</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0ecbd7a341049250b3da531530e42622">
+        <source>Prefix used for credit slips.</source>
+        <target>Prefix used for credit slips.</target>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="e07ffcdf6051874b295597fb64b62635">
+        <source>Format: 2012-12-31 (inclusive).</source>
+        <target>Format: 2012-12-31 (inclusive).</target>
+        <note>Line: 125</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3c1c7064989da051f0b4b904bcb408cf">
+        <source>This customer will receive your newsletter via email.</source>
+        <target>This customer will receive your newsletter via email.</target>
+        <note>Line: 1253</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Delivery/slip.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8a7a048a67746f3877ab6cb1bc1d4afd">
+        <source>Format: 2011-12-31 (inclusive).</source>
+        <target>Format: 2011-12-31 (inclusive).</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="67342320cb8798c3a911e0c6d8bd026a">
+        <source>Prefix used for delivery slips.</source>
+        <target>Prefix used for delivery slips.</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="6998acbd3739a7200586b4421d0ca508">
+        <source>The next delivery slip will begin with this number and then increase with each additional slip.</source>
+        <target>The next delivery slip will begin with this number and then increase with each additional slip.</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="8cf7df5b4b5858e73a7f4e75cc658cc3">
+        <source>Adds an image before product name on Delivery-slip</source>
+        <target>Adds an image before product name on Delivery-slip</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Invoices/Blocks/generate_by_status.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fef8859b22e06e4d4918f091612bf958">
+        <source>You can also export orders which have not been charged yet.</source>
+        <target>You can also export orders which have not been charged yet.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Invoices/Blocks/invoice_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="60422879211a12247e5da14751a59ac3">
+        <source>If enabled, your customers will receive an invoice for the purchase.</source>
+        <target>If enabled, your customers will receive an invoice for the purchase.</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="afda8f59762167c6720a8afe24345df1">
+        <source>If required, show the total amount per rate of the corresponding tax.</source>
+        <target>If required, show the total amount per rate of the corresponding tax.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="0e963c5b7a1b6bb67429c7d0e7f45741">
+        <source>Adds an image in front of the product name on the invoice</source>
+        <target>Adds an image in front of the product name on the invoice</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="7b87585267aed27676374641013ab66e">
+        <source>Freely definable prefix for invoice number (e.g. #IN00001).</source>
+        <target>Freely definable prefix for invoice number (e.g. #IN00001).</target>
+        <note>Line: 60</note>
+      </trans-unit>
+      <trans-unit id="a93c4ec4b8ef325acf067112d7437c59">
+        <source>The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).</source>
+        <target>The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="7a490daaa2605a4a5be08b30a0c6fe24">
+        <source>Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).</source>
+        <target>Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="e3501dec19c50333c49b4d7d66931abc">
+        <source>This text will appear at the bottom of the invoice, below your company details.</source>
+        <target>This text will appear at the bottom of the invoice, below your company details.</target>
+        <note>Line: 108</note>
+      </trans-unit>
+      <trans-unit id="4e00dcdfbf2f4a6156c01fb15ded75c5">
+        <source>Choose an invoice model.</source>
+        <target>Choose an invoice model.</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="41d8a2a057a1e1b9663d49896d3162f3">
+        <source>Saves memory but slows down the PDF generation.</source>
+        <target>Saves memory but slows down the PDF generation.</target>
+        <note>Line: 122</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/Customer.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
+        <source>Your guest account has been transformed into a customer account</source>
+        <target>Your guest account has been transformed into a customer account</target>
+        <note>Line: 1112</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
+        <source>New voucher for your order %s</source>
+        <target>New voucher for your order %s</target>
+        <note>Line: 644</note>
+      </trans-unit>
+      <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
+        <source>Order confirmation</source>
+        <target>Order confirmation</target>
+        <note>Line: 850</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/PrestaShopLogger.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="caedcb9e2005bf6e522cf4536a1885bd">
+        <source>Log: You have a new alert from your shop</source>
+        <target>Log: You have a new alert from your shop</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/form/CustomerPersister.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9a843f20677a52ca79af903123147af0">
+        <source>Welcome!</source>
+        <target>Welcome!</target>
+        <note>Line: 215</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/order/OrderCarrier.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="87405e011a2c4166bb685336827fbe81">
+        <source>Package in transit</source>
+        <target>Package in transit</target>
+        <note>Line: 149</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/order/OrderHistory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3cf100d3725155b75779945680651f3d">
+        <source>The virtual product that you bought is available for download</source>
+        <target>The virtual product that you bought is available for download</target>
+        <note>Line: 165</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f55e8d67e33d354a5273eb87c903980">
+        <source>Fwd: Customer message</source>
+        <target>Fwd: Customer message</target>
+        <note>Line: 402</note>
+      </trans-unit>
+      <trans-unit id="26fabd8660373b86b9288dd72fd40e13">
+        <source>An answer to your message is available #ct%thread_id% #tc%thread_token%</source>
+        <target>An answer to your message is available #ct%thread_id% #tc%thread_token%</target>
+        <note>Line: 465</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a218495ad30949e8ea1f64a261e37463">
+        <source>Import complete</source>
+        <target>Import complete</target>
+        <note>Line: 4667</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
+        <source>New message regarding your order</source>
+        <target>New message regarding your order</target>
+        <note>Line: 650</note>
+      </trans-unit>
+      <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
+        <source>New credit slip regarding your order</source>
+        <target>New credit slip regarding your order</target>
+        <note>Line: 1039</note>
+      </trans-unit>
+      <trans-unit id="b360ddde7a5a70304c005e45e141cf9d">
+        <source>New voucher for your order #%s</source>
+        <target>New voucher for your order #%s</target>
+        <note>Line: 1120</note>
+      </trans-unit>
+      <trans-unit id="cad374f43e79ca774b2e8e00dcd8b842">
+        <source>Process the payment of your order</source>
+        <target>Process the payment of your order</target>
+        <note>Line: 2017</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f2328a3f139e31d53016f94ea9477124">
+        <source>Your order return status has changed</source>
+        <target>Your order return status has changed</target>
+        <note>Line: 257</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="381fc38b470ed543424afbd43f224453">
+        <source>Message from a customer</source>
+        <target>Message from a customer</target>
+        <note>Line: 108</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="61afad00abe3639b3ead655a1e8696d9">
+        <source>Password query confirmation</source>
+        <target>Password query confirmation</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="c5f4622e4a63b41e7c0ddc100583ee6b">
+        <source>Your new password</source>
+        <target>Your new password</target>
+        <note>Line: 168</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/contactform/contactform.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9e03c4150db1c72add84ba520ee589aa">
+        <source>Message from contact form</source>
+        <target>Message from contact form</target>
+        <note>Line: 614</note>
+      </trans-unit>
+      <trans-unit id="55c19f9aec68a1a320cbeba663f1e4c0">
+        <source>Your message has been correctly sent #ct%thread_id% #tc%thread_token%</source>
+        <target>Your message has been correctly sent #ct%thread_id% #tc%thread_token%</target>
+        <note>Line: 643</note>
+      </trans-unit>
+      <trans-unit id="d40cb87db94e750405e7b20a8a043d81">
+        <source>Your message has been correctly sent</source>
+        <target>Your message has been correctly sent</target>
+        <note>Line: 649</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a95bc59685fb4546de3884a5fbe474ea">
+        <source>Newsletter voucher</source>
+        <target>Newsletter voucher</target>
+        <note>Line: 661</note>
+      </trans-unit>
+      <trans-unit id="efabbb0eb84d3c8e487a72e879953673">
+        <source>Newsletter confirmation</source>
+        <target>Newsletter confirmation</target>
+        <note>Line: 695</note>
+      </trans-unit>
+      <trans-unit id="732f1aa49f17856ff55a5aa0a88374d9">
+        <source>Email verification</source>
+        <target>Email verification</target>
+        <note>Line: 734</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

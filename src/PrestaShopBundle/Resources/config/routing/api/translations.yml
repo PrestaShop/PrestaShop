@@ -1,0 +1,25 @@
+api_translation_domains_tree:
+    path: /tree/{lang}/{type}/{selected}
+    methods: [GET]
+    defaults:
+        _controller: prestashop.core.api.translation.controller:listTreeAction
+        selected: null
+
+api_translation_domain_catalog:
+    path: /{locale}/{domain}/{theme}
+    methods: [GET]
+    defaults:
+        _controller: prestashop.core.api.translation.controller:listDomainTranslationAction
+        theme: null
+
+api_translation_value_edit:
+    path: /edit
+    methods: [POST]
+    defaults:
+        _controller: prestashop.core.api.translation.controller:translationEditAction
+
+api_translation_value_reset:
+    path: /reset
+    methods: [POST]
+    defaults:
+        _controller: prestashop.core.api.translation.controller:translationResetAction

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_quick_access>
+  <fields id="name" class="QuickAccess">
+    <field name="new_window"/>
+    <field name="link"/>
+  </fields>
+  <entities>
+    <quick_access id="Orders" new_window="0">
+      <link>index.php?controller=AdminOrders</link>
+    </quick_access>
+    <quick_access id="New_voucher" new_window="0">
+      <link>index.php?controller=AdminCartRules&amp;addcart_rule</link>
+    </quick_access>
+    <quick_access id="New_product" new_window="0">
+      <link>index.php/sell/catalog/products/new</link>
+    </quick_access>
+    <quick_access id="New_category" new_window="0">
+      <link>index.php?controller=AdminCategories&amp;addcategory</link>
+    </quick_access>
+    <quick_access id="Installed_modules" new_window="0">
+      <link>index.php/improve/modules/manage</link>
+    </quick_access>
+    <quick_access id="Catalog_evaluation" new_window="0">
+      <link>index.php?controller=AdminStats&amp;module=statscheckup</link>
+    </quick_access>
+  </entities>
+</entity_quick_access>

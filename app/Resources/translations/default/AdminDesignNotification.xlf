@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/cms/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="feede4b4294c44c907966ddd76e23614">
+        <source>Your page will be saved as a draft</source>
+        <target>Your page will be saved as a draft</target>
+        <note>Line: 55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8c9b2e81e93417bf65ee4d1c674d00e9">
+        <source>You can choose to keep your images stored in the previous system. There's nothing wrong with that.</source>
+        <target>You can choose to keep your images stored in the previous system. There's nothing wrong with that.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="1f424af91db226ac46ea712713a3728e">
+        <source>You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.</source>
+        <target>You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="cde488e6010c72acfb6ff2781683b030">
+        <source>After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.</source>
+        <target>After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="307cd46da080d0ad19ec342feb2aa6d6">
+        <source>If you want to order/move the following data, please select a shop from the shop list.</source>
+        <target>If you want to order/move the following data, please select a shop from the shop list.</target>
+        <note>Line: 34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c402321a8e5818b776007e8a2d00474a">
+        <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
+        <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
+        <note>Line: 317</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
+        <source>The page Category cannot be moved here.</source>
+        <target>The page Category cannot be moved here.</target>
+        <note>Line: 106</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
+        <source>No items found</source>
+        <target>No items found</target>
+        <note>Line: 316</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ffddcc65274efa9b4c624b34289c922c">
+        <source>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.</source>
+        <target>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.</target>
+        <note>Line: 338</note>
+      </trans-unit>
+      <trans-unit id="5b8cb2aa659c7d6a98b740d2d788c69d">
+        <source>Incorrect value for the selected JPEG image compression.</source>
+        <target>Incorrect value for the selected JPEG image compression.</target>
+        <note>Line: 361</note>
+      </trans-unit>
+      <trans-unit id="8357fadc46ff52546c4c69965de0d653">
+        <source>Incorrect value for the selected PNG image compression.</source>
+        <target>Incorrect value for the selected PNG image compression.</target>
+        <note>Line: 364</note>
+      </trans-unit>
+      <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
+        <source>This name already exists.</source>
+        <target>This name already exists.</target>
+        <note>Line: 390</note>
+      </trans-unit>
+      <trans-unit id="b88862891dbf9c20a73bc59258407d0b">
+        <source>Source file does not exist or is empty (%filepath%)</source>
+        <target>Source file does not exist or is empty (%filepath%)</target>
+        <note>Line: 502</note>
+      </trans-unit>
+      <trans-unit id="985b5b995c4574ae5eba2062a13ef168">
+        <source>Failed to resize image file (%filepath%)</source>
+        <target>Failed to resize image file (%filepath%)</target>
+        <note>Line: 504</note>
+      </trans-unit>
+      <trans-unit id="c5e7d0c13104eed0a195c175f2edfdd2">
+        <source>Failed to resize image file to high resolution (%filepath%)</source>
+        <target>Failed to resize image file to high resolution (%filepath%)</target>
+        <note>Line: 509</note>
+      </trans-unit>
+      <trans-unit id="103d86044b78fa59e02ff8480a3a2f46">
+        <source>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</source>
+        <target>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</target>
+        <note>Line: 541</note>
+      </trans-unit>
+      <trans-unit id="2934958a3f658892ee502aaf8258a6f7">
+        <source>Original image is missing or empty (%filename%) for product ID %id%</source>
+        <target>Original image is missing or empty (%filename%) for product ID %id%</target>
+        <note>Line: 554</note>
+      </trans-unit>
+      <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
+        <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
+        <target>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</target>
+        <note>Line: 676</note>
+      </trans-unit>
+      <trans-unit id="d4f225ec09e4b0eba6558753f4bd8edd">
+        <source>Only part of the images have been regenerated. The server timed out before finishing.</source>
+        <target>Only part of the images have been regenerated. The server timed out before finishing.</target>
+        <note>Line: 679</note>
+      </trans-unit>
+      <trans-unit id="f2febdafe25d3517afc3c6dd3d815562">
+        <source>Server timed out. The watermark may not have been applied to all images.</source>
+        <target>Server timed out. The watermark may not have been applied to all images.</target>
+        <note>Line: 683</note>
+      </trans-unit>
+      <trans-unit id="606495559093a136ed6f2c9daee2645f">
+        <source>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</source>
+        <target>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</target>
+        <note>Line: 688</note>
+      </trans-unit>
+      <trans-unit id="4004c7590c68a8cbbe499736c56bc33c">
+        <source>Error: Your server configuration is not compatible with the new image system. No images were moved.</source>
+        <target>Error: Your server configuration is not compatible with the new image system. No images were moved.</target>
+        <note>Line: 716</note>
+      </trans-unit>
+      <trans-unit id="4c9f49243d6dc02028801d9767abe3c1">
+        <source>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</source>
+        <target>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</target>
+        <note>Line: 722</note>
+      </trans-unit>
+      <trans-unit id="95871efade00fbd0243355ce7937c40a">
+        <source>Error: Some -- or all -- images cannot be moved.</source>
+        <target>Error: Some -- or all -- images cannot be moved.</target>
+        <note>Line: 724</note>
+      </trans-unit>
+      <trans-unit id="cb2f901ceed5c3365d056794a1b5047f">
+        <source>After modification, do not forget to regenerate thumbnails</source>
+        <target>After modification, do not forget to regenerate thumbnails</target>
+        <note>Line: 743</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
+        <source>The uploaded file is too large.</source>
+        <target>The uploaded file is too large.</target>
+        <note>Line: 922</note>
+      </trans-unit>
+      <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
+        <source>Invalid file format.</source>
+        <target>Invalid file format.</target>
+        <note>Line: 366</note>
+      </trans-unit>
+      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
+        <source>Failed to move uploaded file.</source>
+        <target>Failed to move uploaded file.</target>
+        <note>Line: 380</note>
+      </trans-unit>
+      <trans-unit id="3cb5c48f468125102a98fe83a277029d">
+        <source>Warning: if no email logo is available, the main logo will be used instead.</source>
+        <target>Warning: if no email logo is available, the main logo will be used instead.</target>
+        <note>Line: 428</note>
+      </trans-unit>
+      <trans-unit id="4a9fdf95b29176bd9260016655a80852">
+        <source>Your RTL stylesheets has been generated successfully</source>
+        <target>Your RTL stylesheets has been generated successfully</target>
+        <note>Line: 1059</note>
+      </trans-unit>
+      <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
+        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
+        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
+        <note>Line: 1078</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
+        <source>This theme is not valid for PrestaShop 1.7</source>
+        <target>This theme is not valid for PrestaShop 1.7</target>
+        <note>Line: 359</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="832e8c53e8d05c52c824912c28933917">
+        <source>An error occurred. The information "%s" is missing.</source>
+        <target>An error occurred. The information "%s" is missing.</target>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
+        <source>An error occurred. The template "%s" is missing.</source>
+        <target>An error occurred. The template "%s" is missing.</target>
+        <note>Line: 116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f003149576f4755d74550952febe14bb">
+        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
+        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
+        <note>Line: 170</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
+        <source>Your theme has been correctly exported: %path%</source>
+        <target>Your theme has been correctly exported: %path%</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

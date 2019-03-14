@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_currencyselector/ps_currencyselector.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f7a31ae8f776597d4282bd3b1013f08b">
+        <source>Currency block</source>
+        <target>Currency block</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="80ed40ee905b534ee85ce49a54380107">
+        <source>Adds a block allowing customers to choose their preferred shopping currency.</source>
+        <target>Adds a block allowing customers to choose their preferred shopping currency.</target>
+        <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
