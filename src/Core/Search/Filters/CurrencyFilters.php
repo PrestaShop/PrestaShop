@@ -34,7 +34,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class CurrencyFilters extends Filters
 {
-    protected $gridId = CurrencyGridDefinitionFactory::GRID_ID;
+    /** @var string */
+    protected $uuid = CurrencyGridDefinitionFactory::GRID_ID;
 
     /**
      * {@inheritdoc}

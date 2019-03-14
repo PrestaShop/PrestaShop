@@ -31,7 +31,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AdminFilter.
  *
- * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="admin_filter_search_idx", columns={"employee", "shop", "controller", "action"})})
+ * @ORM\Table(
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="admin_filter_search_idx",
+ *             columns={"employee", "shop", "controller", "action"}
+ *         ),
+ *         @ORM\UniqueConstraint(name="admin_filter_search_uuid_idx",
+ *             columns={"employee", "shop", "uuid"}
+ *         )
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AdminFilterRepository")
  */
 class AdminFilter
@@ -83,9 +92,9 @@ class AdminFilter
     /**
      * @var string
      *
-     * @ORM\Column(name="unique_key", type="string", length=255)
+     * @ORM\Column(name="uuid", type="string", length=255)
      */
-    private $uniqueKey = '';
+    private $uuid = '';
 
     /**
      * Get id.
@@ -220,19 +229,19 @@ class AdminFilter
     /**
      * @return string
      */
-    public function getUniqueKey()
+    public function getUuid()
     {
-        return $this->uniqueKey;
+        return $this->uuid;
     }
 
     /**
-     * @param string $uniqueKey
+     * @param string $uuid
      *
      * @return AdminFilter
      */
-    public function setUniqueKey($uniqueKey)
+    public function setUuid($uuid)
     {
-        $this->uniqueKey = $uniqueKey;
+        $this->uuid = $uuid;
 
         return $this;
     }

@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 final class LanguageFilters extends Filters
 {
     /** @var string */
-    protected $gridId = LanguageGridDefinitionFactory::GRID_ID;
+    protected $uuid = LanguageGridDefinitionFactory::GRID_ID;
 
     /**
      * {@inheritdoc}

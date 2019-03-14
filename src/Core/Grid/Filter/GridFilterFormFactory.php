@@ -58,7 +58,7 @@ final class GridFilterFormFactory implements GridFilterFormFactoryInterface
     public function create(GridDefinitionInterface $definition)
     {
         $formBuilder = $this->formFactory->createNamedBuilder(
-            $definition->getId(),
+            empty($definition->getFiltersUuid()) ? $definition->getId() : $definition->getFiltersUuid(),
             FormType::class
         );
 

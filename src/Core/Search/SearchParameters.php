@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search;
 
+use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -49,15 +50,16 @@ final class SearchParameters implements SearchParametersInterface
      */
     public function getFiltersFromRequest(Request $request, $filterClass)
     {
+        /** @var Filters $filters */
         $filters = new $filterClass();
 
         $queryParams = $request->query->all();
         $requestParams = $request->request->all();
 
-        //If filters have a grid id then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
-        if (!empty($filters->getGridId())) {
-            $queryParams = isset($queryParams[$filters->getGridId()]) ? $queryParams[$filters->getGridId()] : [];
-            $requestParams = isset($requestParams[$filters->getGridId()]) ? $requestParams[$filters->getGridId()] : [];
+        //If filters have a uuid then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
+        if (!empty($filters->getUuid())) {
+            $queryParams = isset($queryParams[$filters->getUuid()]) ? $queryParams[$filters->getUuid()] : [];
+            $requestParams = isset($requestParams[$filters->getUuid()]) ? $requestParams[$filters->getUuid()] : [];
         }
 
         $parameters = [];
@@ -78,6 +80,7 @@ final class SearchParameters implements SearchParametersInterface
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass)
     {
+        /** @var AdminFilter $adminFilter */
         $adminFilter = $this->adminFilterRepository->findByEmployeeAndRouteParams(
             $employeeId,
             $shopId,
@@ -89,24 +92,25 @@ final class SearchParameters implements SearchParametersInterface
             return new $filterClass();
         }
 
-        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getUniqueKey());
+        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getUuid());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFiltersFromRepositoryByUniqueKey($employeeId, $shopId, $uniqueKey, $filterClass)
+    public function getFiltersFromRepositoryByUuid($employeeId, $shopId, $uuid, $filterClass)
     {
+        /** @var AdminFilter $adminFilter */
         $adminFilter = $this->adminFilterRepository->findOneBy([
             'employee' => $employeeId,
             'shop' => $shopId,
-            'uniqueKey' => $uniqueKey,
+            'uuid' => $uuid,
         ]);
 
         if (null === $adminFilter) {
             return new $filterClass();
         }
 
-        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getUniqueKey());
+        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getUuid());
     }
 }

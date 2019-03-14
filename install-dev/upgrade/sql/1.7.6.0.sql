@@ -17,6 +17,6 @@ CREATE TABLE `PREFIX_currency_lang` (
 /* PHP:ps_1760_copy_data_from_currency_to_currency_lang(); */;
 
 ALTER TABLE `PREFIX_admin_filter`
-	ADD `unique_key` VARCHAR (255) DEFAULT '' NOT NULL AFTER `shop`,
-	ADD INDEX `search_idx` (`unique_key`, `shop`, `employee`),
-	DROP INDEX `admin_filter_search_idx`;
+	ADD `uuid` VARCHAR (255) DEFAULT '' NOT NULL AFTER `shop`,
+	ADD UNIQUE INDEX `admin_filter_search_uuid_idx` (`uuid`, `shop`, `employee`)
+;
