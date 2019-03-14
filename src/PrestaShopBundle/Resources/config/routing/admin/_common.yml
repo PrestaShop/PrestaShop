@@ -37,10 +37,10 @@ admin_common_reset_search:
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
-        uniqueKey: ''
+        uuid: ''
 
-admin_common_reset_search_by_key:
-  path: /reset_search/{uniqueKey}
+admin_common_reset_search_by_uuid:
+  path: /reset_search/{uuid}
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'

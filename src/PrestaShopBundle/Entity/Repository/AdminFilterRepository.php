@@ -83,14 +83,14 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * @param string $key
+     * @param string $uuid
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function removeByUniqueKey($key)
+    public function removeByUuid($uuid)
     {
         $adminFilter = $this->findOneBy([
-            'uniqueKey' => $key,
+            'uuid' => $uuid,
         ]);
 
         if (null === $adminFilter) {
@@ -102,25 +102,25 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * Persist (create or update) filters into database using employee and unique key
+     * Persist (create or update) filters into database using employee and uuid
      *
      * @param int $employeeId
      * @param int $shopId
      * @param array $filters
-     * @param string $uniqueKey
+     * @param string $uuid
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createOrUpdateByEmployeeAndUniqueKey(
+    public function createOrUpdateByEmployeeAndUuid(
         $employeeId,
         $shopId,
         array $filters,
-        $uniqueKey
+        $uuid
     ) {
         $adminFilter = $this->findOneBy([
             'employee' => $employeeId,
             'shop' => $shopId,
-            'uniqueKey' => $uniqueKey,
+            'uuid' => $uuid,
         ]);
 
         $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
@@ -128,7 +128,7 @@ class AdminFilterRepository extends EntityRepository
         $adminFilter
             ->setController('')
             ->setAction('')
-            ->setUniqueKey($uniqueKey)
+            ->setUuid($uuid)
             ->setEmployee($employeeId)
             ->setShop($shopId)
             ->setFilter(json_encode($filters))
@@ -169,7 +169,7 @@ class AdminFilterRepository extends EntityRepository
         $adminFilter
             ->setController($controller)
             ->setAction($action)
-            ->setUniqueKey('')
+            ->setUuid('')
             ->setEmployee($employeeId)
             ->setShop($shopId)
             ->setFilter(json_encode($filters))

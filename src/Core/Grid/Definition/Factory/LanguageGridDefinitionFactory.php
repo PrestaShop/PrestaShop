@@ -57,6 +57,14 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
+    protected function getFiltersUuid()
+    {
+        return self::GRID_ID;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getId()
     {
         return self::GRID_ID;
@@ -259,9 +267,9 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
              ->add(
                  (new Filter('actions', SearchAndResetType::class))
                  ->setTypeOptions([
-                     'reset_route' => 'admin_common_reset_search_by_key',
+                     'reset_route' => 'admin_common_reset_search_by_uuid',
                      'reset_route_params' => [
-                         'uniqueKey' => self::GRID_ID,
+                         'uuid' => self::GRID_ID,
                      ],
                      'redirect_route' => 'admin_languages_index',
                  ])
