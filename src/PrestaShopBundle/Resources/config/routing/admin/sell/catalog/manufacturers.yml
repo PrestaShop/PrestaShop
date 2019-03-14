@@ -1,0 +1,8 @@
+admin_manufacturers_view:
+  path: /{manufacturerId}/view
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Manufacturer:view'
+    _legacy_controller: 'AdminManufacturers'
+  requirements:
+    manufacturerId: \d
