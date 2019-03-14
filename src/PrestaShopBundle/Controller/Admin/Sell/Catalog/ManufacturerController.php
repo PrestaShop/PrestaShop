@@ -94,7 +94,9 @@ class ManufacturerController extends FrameworkBundleAdminController
     public function editAddressAction(Request $request, $addressId)
     {
         try {
-            $addressForm = $this->getAddressFormBuilder()->getFormFor((int) $addressId);
+            $addressForm = $this->getAddressFormBuilder()->getFormFor((int) $addressId, [], [
+                'is_editing' => true,
+            ]);
             $addressForm->handleRequest($request);
             $result = $this->getAddressFormHandler()->handleFor((int) $addressId, $addressForm);
 
