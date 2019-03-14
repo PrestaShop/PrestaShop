@@ -436,7 +436,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/add.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/create.html.twig', [
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Add new address', 'Admin.Orderscustomers.Feature'),
             'addressForm' => $addressForm->createView(),
