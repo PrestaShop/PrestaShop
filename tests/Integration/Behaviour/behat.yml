@@ -2,13 +2,15 @@ default:
     suites:
         database:
             paths:
-                features: Features/Scenarii/Database
+                features: Features/Scenario/Database
             contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
         cart:
             paths:
-                features: Features/Scenarii/Cart
+                features: Features/Scenario/Cart
             contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\PackConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\RoundingModeConfigurationFeatureContext

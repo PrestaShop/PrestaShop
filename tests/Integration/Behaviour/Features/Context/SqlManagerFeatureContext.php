@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
@@ -38,12 +39,24 @@ use Behat\Gherkin\Node\TableNode;
  */
 class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
 {
+
+    /**
+     * "When" steps perform actions, and some of them store the latest result
+     * in this variable so that "Then" action can check its content
+     *
+     * @var mixed
+     */
+    protected $latestResult;
+
+    /** @var bool */
+    protected $flagPerformDatabaseCleanHard = false;
+
     /**
      * @When I request the database fields from table :tableName
      */
     public function getDatabaseTableFieldsList($tableName)
     {
-        $commandBus = $this::getContainer()->get('prestashop.core.command_bus');
+        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
 
         $fullTableName = _DB_PREFIX_ . $tableName;
         $query = new GetDatabaseTableFieldsList($fullTableName);
@@ -101,7 +114,7 @@ class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function addSqlRequest($sqlRequest, $name)
     {
-        $commandBus = $this::getContainer()->get('prestashop.core.command_bus');
+        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
 
         $command = new AddSqlRequestCommand($name, $sqlRequest);
         $result = $commandBus->handle($command);
