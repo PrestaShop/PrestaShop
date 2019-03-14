@@ -307,7 +307,7 @@ class FrontControllerCore extends Controller
         }
 
         if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed)) {
-            Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
+            Tools::redirect('/index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
         }
 
         /* Theme is missing */
