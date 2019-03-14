@@ -43,12 +43,13 @@ class ManufacturerAddressType extends AbstractType
     /**
      * @var array
      */
-    private $manufacturers;
+    private $manufacturerChoices;
 
     /**
      * @var array
      */
-    private $countries;
+    private $countryChoices;
+
     /**
      * @var ConfigurableFormChoiceProviderInterface
      */
@@ -57,30 +58,31 @@ class ManufacturerAddressType extends AbstractType
     /**
      * @var int
      */
-    private $defaultCountryId;
+    private $contextCountryId;
+
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @param array $manufacturers
-     * @param array $countries
+     * @param array $manufacturerChoices
+     * @param array $countryChoices
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
-     * @param int $defaultCountryId
+     * @param int $contextCountryId
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        array $manufacturers,
-        array $countries,
+        array $manufacturerChoices,
+        array $countryChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
-        $defaultCountryId,
+        $contextCountryId,
         TranslatorInterface $translator
     ) {
-        $this->manufacturers = $manufacturers;
-        $this->countries = $countries;
+        $this->manufacturerChoices = $manufacturerChoices;
+        $this->countryChoices = $countryChoices;
         $this->statesChoiceProvider = $statesChoiceProvider;
-        $this->defaultCountryId = $defaultCountryId;
+        $this->contextCountryId = $contextCountryId;
         $this->translator = $translator;
     }
 
@@ -91,7 +93,8 @@ class ManufacturerAddressType extends AbstractType
     {
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
-                'choices' => $this->manufacturers,
+                'choices' => $this->manufacturerChoices,
+                'translation_domain' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
@@ -157,7 +160,8 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('id_country', ChoiceType::class, [
                 'required' => true,
-                'choices' => $this->countries,
+                'choices' => $this->countryChoices,
+                'translation_domain' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
@@ -166,8 +170,9 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => false,
+                'translation_domain' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $this->defaultCountryId,
+                    'id_country' => $this->contextCountryId,
                 ]),
             ])
             ->add('home_phone', TextType::class, [
