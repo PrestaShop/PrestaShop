@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-const $ = window.$;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
+use Symfony\Component\Validator\Constraint;
 
-$(() => {
-  new ContactsPage;
-});
+/**
+ * Class CleanHtml is responsible for validating the html content to prevent from having javascript events
+ * or script tags.
+ */
+final class CleanHtml extends Constraint
+{
+    public $message = '%s is invalid.';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validatedBy()
+    {
+        return CleanHtmlValidator::class;
+    }
+}

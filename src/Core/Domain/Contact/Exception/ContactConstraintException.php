@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Exception;
 
-const $ = window.$;
+/**
+ * holds all validation constraints that are used together with contact entity.
+ */
+class ContactConstraintException extends ContactException
+{
+    /**
+     * @var int - error is raised when preg match fails to validate according to regex /^[^<>={}]*$/u
+     */
+    const INVALID_TITLE = 1;
 
-$(() => {
-  new ContactsPage;
-});
+    /**
+     * @var int - error is raised when a value in array is not integer type
+     */
+    const INVALID_SHOP_ASSOCIATION = 2;
+
+    /**
+     * @var int - error is raised when CleanHtml constraint validation fails
+     */
+    const INVALID_DESCRIPTION = 3;
+
+    /**
+     * @var int - error is raised when an array does not have the default language value. It might not exist or is empty.
+     *          DefaultLanguage constraint is used here.
+     */
+    const MISSING_TITLE_FOR_DEFAULT_LANGUAGE = 4;
+}

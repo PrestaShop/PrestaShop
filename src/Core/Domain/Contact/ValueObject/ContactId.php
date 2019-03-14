@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject;
 
-const $ = window.$;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 
-$(() => {
-  new ContactsPage;
-});
+/**
+ * Class ContactId
+ */
+class ContactId
+{
+    /**
+     * @var int
+     */
+    private $contactId;
+
+    /**
+     * @param int $contactId
+     *
+     * @throws ContactException
+     */
+    public function __construct($contactId)
+    {
+        $this->assertIsIntegerOrMoreThanZero($contactId);
+
+        $this->contactId = $contactId;
+    }
+
+    /**
+     * @param $contactId
+     *
+     * @throws ContactException
+     */
+    private function assertIsIntegerOrMoreThanZero($contactId)
+    {
+        if (!is_int($contactId) || 0 >= $contactId) {
+            throw new ContactException(
+                sprintf('Invalid Contact id: %s', var_export($contactId, true))
+            );
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->contactId;
+    }
+}

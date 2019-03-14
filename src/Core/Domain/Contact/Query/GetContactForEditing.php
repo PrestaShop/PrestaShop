@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Query;
 
-const $ = window.$;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
-$(() => {
-  new ContactsPage;
-});
+/**
+ * Class GetContactForEditing is responsible for getting the data related with contact entity.
+ */
+class GetContactForEditing
+{
+    /** @var ContactId */
+    private $contactId;
+
+    /**
+     * @param int $contactId
+     *
+     * @throws ContactException
+     */
+    public function __construct($contactId)
+    {
+        $this->contactId = new ContactId($contactId);
+    }
+
+    /**
+     * @return ContactId
+     */
+    public function getContactId()
+    {
+        return $this->contactId;
+    }
+}

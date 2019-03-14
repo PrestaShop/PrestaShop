@@ -1,4 +1,4 @@
-/**
+{#**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,12 +21,20 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-import ContactsPage from './ContactsPage';
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-const $ = window.$;
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/Blocks/form.html.twig' %}
+    </div>
+  </div>
+{% endblock %}
 
-$(() => {
-  new ContactsPage;
-});
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/contacts.bundle.js') }}"></script>
+{% endblock %}

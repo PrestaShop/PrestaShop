@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Exception;
 
-const $ = window.$;
-
-$(() => {
-  new ContactsPage;
-});
+/**
+ * Raised when contact was not found.
+ */
+class ContactNotFoundException extends ContactException
+{
+}

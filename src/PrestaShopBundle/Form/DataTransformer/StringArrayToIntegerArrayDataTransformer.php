@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShopBundle\Form\DataTransformer;
 
-const $ = window.$;
+use Symfony\Component\Form\DataTransformerInterface;
 
-$(() => {
-  new ContactsPage;
-});
+/**
+ * Class StringArrayToIntegerArrayTransformer is responsible for  applying reverse transformation when form is being
+ * submitted. If its array, it casts all elements to integer.
+ */
+final class StringArrayToIntegerArrayDataTransformer implements DataTransformerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($value)
+    {
+        // No transformation is required here due to this data is being sent to template
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reverseTransform($value)
+    {
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        return array_map(function ($item) {
+            return (int) $item;
+        }, $value);
+    }
+}

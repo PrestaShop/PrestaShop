@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler;
 
-const $ = window.$;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
-$(() => {
-  new ContactsPage;
-});
+/**
+ * Interface AddContactHandlerInterface defines contract for AddContactHandler.
+ */
+interface AddContactHandlerInterface
+{
+    /**
+     * @param AddContactCommand $command
+     *
+     * @return ContactId
+     */
+    public function handle(AddContactCommand $command);
+}

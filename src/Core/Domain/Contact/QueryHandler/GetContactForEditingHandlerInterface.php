@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\QueryHandler;
 
-const $ = window.$;
+use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 
-$(() => {
-  new ContactsPage;
-});
+/**
+ * Interface GetContactForEditingHandlerInterface defines contract for GetContactForEditingHandler
+ */
+interface GetContactForEditingHandlerInterface
+{
+    /**
+     * @param GetContactForEditing $query
+     *
+     * @return EditableContact
+     */
+    public function handle(GetContactForEditing $query);
+}

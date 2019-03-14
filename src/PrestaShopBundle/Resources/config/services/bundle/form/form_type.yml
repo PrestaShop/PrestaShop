@@ -649,6 +649,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType'
         arguments:
             - "@=service('prestashop.adapter.form.choice_provider.shop_tree_choice_provider').getChoices()"
+            - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
         tags:
             - { name: form.type }
 
@@ -741,3 +742,13 @@ services:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
       tags:
         - { name: form.type }
+
+    form.type.contact:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
+        arguments:
+          - '@prestashop.bundle.form.data_transformer.default_language_to_filled_array'
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }

@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
-const $ = window.$;
-
-$(() => {
-  new ContactsPage;
-});
+/**
+ * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
+ */
+class DomainConstraintException extends DomainException
+{
+    /**
+     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
+     */
+    const INVALID_EMAIL = 1;
+}

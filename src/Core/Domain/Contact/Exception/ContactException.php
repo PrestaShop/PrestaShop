@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from './ContactsPage';
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Exception;
 
-const $ = window.$;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
-$(() => {
-  new ContactsPage;
-});
+/**
+ * An abstraction for all contact related exceptions. Use this one in catch clause to detect all related exceptions.
+ */
+class ContactException extends DomainException
+{
+}
