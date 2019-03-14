@@ -24,30 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Response;
-
-class ManufacturerController extends FrameworkBundleAdminController
+class ManufacturerId
 {
     /**
-     * Show information about manufacturer
-     *
-     * @param int $manufacturerId
-     *
-     * @return Response
+     * @var int
      */
-    public function viewAction($manufacturerId)
+    private $manufacturerId;
+
+    /**
+     * @param int $manufacturerId
+     */
+    public function __construct($manufacturerId)
     {
-        $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
-            (int) $manufacturerId,
-            (int) $this->getContextLangId()
-        ));
+        $this->manufacturerId = $manufacturerId;
+    }
 
-        dump($viewableManufacturer);
-
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig');
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->manufacturerId;
     }
 }

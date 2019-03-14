@@ -24,30 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
-class ManufacturerController extends FrameworkBundleAdminController
+/**
+ * Get manufacturer information for viewing
+ */
+class GetManufacturerForViewing
 {
     /**
-     * Show information about manufacturer
-     *
-     * @param int $manufacturerId
-     *
-     * @return Response
+     * @var ManufacturerId
      */
-    public function viewAction($manufacturerId)
+    private $manufacturerId;
+
+    /**
+     * @var LanguageId Language in which manufacturer is returned
+     */
+    private $languageId;
+
+    /**
+     * @param int $manufacturerId
+     * @param int $languageId
+     */
+    public function __construct($manufacturerId, $languageId)
     {
-        $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
-            (int) $manufacturerId,
-            (int) $this->getContextLangId()
-        ));
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
+        $this->languageId = new LanguageId($languageId);
+    }
 
-        dump($viewableManufacturer);
+    /**
+     * @return ManufacturerId
+     */
+    public function getManufacturerId()
+    {
+        return $this->manufacturerId;
+    }
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig');
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId()
+    {
+        return $this->languageId;
     }
 }
