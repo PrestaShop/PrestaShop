@@ -23,47 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
-
-/**
- * Responsible for form select 'state' handling
- */
-export default class CountryStateOptionHandler {
-  constructor() {
-    this._handle();
-
-    $('.js-country').on('change', () => this._handle());
-  }
-
-  /**
-   * Handles state select field presentation
-   *
-   * @private
-   */
-  _handle() {
-    const countrySelector = $('.js-country');
-    $.ajax({
-      url: `${countrySelector.data('states-url')}&id_country=${countrySelector.val()}`,
-      method: 'GET',
-      success: (response) => {
-        this._handleCountryState(response.states);
-      },
-    });
-  }
-
-  /**
-   * When country which has no states is selected, state select row is hidden
-   *
-   * @param states
-   *
-   * @private
-   */
-  _handleCountryState(states) {
-    const stateRow = $('.js-country-state');
-    stateRow.fadeIn();
-
-    if (states.length === 0) {
-      stateRow.fadeOut();
-    }
-  }
-}
+export default {
+  manufacturerAddressCountrySelect: '#manufacturer_address_id_country',
+  manufacturerAddressStateBlock: '.js-manufacturer-address-state',
+};

@@ -23,10 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CountryStateOptionHandler from '../../../components/country-state-selection-toggler';
+import CountryStateSelectionToggler from '../../../components/country-state-selection-toggler';
+import ManufacturerAddressMap from './manufacturer-address-map';
 
 const $ = window.$;
 
 $(document).ready(() => {
-  new CountryStateOptionHandler();
+  new CountryStateSelectionToggler(
+    ManufacturerAddressMap.manufacturerAddressCountrySelect,
+    ManufacturerAddressMap.manufacturerAddressStateBlock
+  );
 });
