@@ -104,7 +104,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
         $finder->files()->in($moduleFolder->getRealPath() . '/src/Entity')->name('*.php');
         foreach ($finder as $phpFile) {
             $phpContent = file_get_contents($phpFile->getRealPath());
-            if (false !== preg_match('~namespace[ \t]+(.+)[ \t]*;~Um', $phpContent, $matches)) {
+            if (preg_match('~namespace[ \t]+(.+)[ \t]*;~Um', $phpContent, $matches)) {
                 return $matches[1];
             }
         }
