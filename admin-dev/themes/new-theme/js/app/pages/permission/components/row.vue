@@ -24,7 +24,7 @@
                 :value="type"
                 v-model="permissionValues"
                 @change="sendUpdatePermissionRequest(type)"
-                :disabled="!canEdit"
+                :disabled="!canEdit || !canEditCheckbox(type)"
               >
               <i class="md-checkbox-control"></i>
             </label>
@@ -40,9 +40,10 @@
         :can-edit="canEdit"
         :permission="p"
         :permission-id="pId"
-        :update-key="updateKey"
+        :permission-key="permissionKey"
         :level-depth="levelDepth + 1"
-        :userPermissions.sync="userPermissions"
+        :profile-permissions.sync="profilePermissions"
+        :employee-permissions="employeePermissions"
         :types="types"
         @childUpdated="onChildUpdate"
         @sendRequest="sendRequest"
@@ -61,9 +62,14 @@
         required: false,
         default: false,
       },
-      userPermissions: {
+      profilePermissions: {
         type: Object,
         required: true,
+      },
+      employeePermissions: {
+        type: Object,
+        required: false,
+        default: () => ({}),
       },
       permission: {
         type: Object,
@@ -73,7 +79,7 @@
         type: String,
         required: true,
       },
-      updateKey: {
+      permissionKey: {
         type: String,
         required: true,
       },
@@ -98,7 +104,7 @@
       };
     },
     watch: {
-      userPermissions: {
+      profilePermissions: {
         handler: function mandatoryFunctionForDeepWatching() {
           this.refreshPermissions();
         },
@@ -112,6 +118,17 @@
       this.refreshPermissions();
     },
     methods: {
+      canEditCheckbox(type) {
+        if (Object.keys(this.employeePermissions).length === 0) {
+          return true;
+        }
+
+        if (!this.employeePermissions[this.permissionId]) {
+          return false;
+        }
+
+        return this.employeePermissions[this.permissionId][type] === '1';
+      },
       /**
        * Get the types length, depends if you have the TYPE_ALL or not
        */
@@ -124,7 +141,7 @@
        * Get permission from id
        */
       getPermission() {
-        return this.userPermissions[this.permissionId];
+        return this.profilePermissions[this.permissionId];
       },
       /**
        * Check if profile has permission
@@ -195,9 +212,9 @@
             expected_status: this.permissionValues.includes(type),
           };
 
-          params[this.updateKey] = this.permission[this.updateKey] !== undefined
-                                 ? this.permission[this.updateKey]
-                                 : this.permissionId;
+          params[this.permissionKey] = this.permission[this.permissionKey] !== undefined
+                                     ? this.permission[this.permissionKey]
+                                     : this.permissionId;
 
           this.$emit('sendRequest', params);
         }
