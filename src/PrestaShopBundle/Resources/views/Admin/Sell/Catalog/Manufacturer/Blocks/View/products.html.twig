@@ -32,7 +32,7 @@
     {% for product in viewableManufacturer.manufacturerProducts %}
       <div class="card">
         <div class="card-header clearfix">
-          {% if product.has_attributes %}
+          {% if product.combinations is not empty %}
             <a href="#">{{ product.name }}</a>
           {% else %}
             {{ product.name }}
@@ -43,8 +43,33 @@
           </div>
         </div>
         <div class="card-body">
-          {% if product.has_attributes %}
-
+          {% if product.combinations is not empty %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ 'Attribute name'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                  <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'EAN13'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                  <th>{{ 'UPC'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                  {% if not isAllShopContext and isStockManagementEnabled %}
+                    <th>{{ 'Available quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for combination in product.combinations %}
+                  <tr>
+                    <td>{{ combination.attributes }}</td>
+                    <td>{{ combination.reference }}</td>
+                    <td>{{ combination.ean13 }}</td>
+                    <td>{{ combination.upc }}</td>
+                    {% if not isAllShopContext and isStockManagementEnabled %}
+                      <td>{{ combination.quantity }}</td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           {% else %}
             <table class="table">
               <thead>

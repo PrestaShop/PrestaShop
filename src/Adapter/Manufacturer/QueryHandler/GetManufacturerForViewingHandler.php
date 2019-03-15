@@ -85,6 +85,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
 
             /* Build attributes combinations */
             $combinations = $products[$i]->getAttributeCombinations($languageId->getValue());
+            $productCombinations = [];
 
             foreach ($combinations as $combination) {
                 $combinationsData[$combination['id_product_attribute']]['reference'] = $combination['reference'];
@@ -107,6 +108,9 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
                     $combinationsData[$key]['attributes'] = rtrim($list, ', ');
                 }
                 isset($combinationsData) ? $products[$i]->combination = $combinationsData : '';
+
+                $productCombinations = $combinationsData;
+
                 unset($combinationsData);
             }
 
@@ -116,7 +120,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
                 'ean13' => $products[$i]->ean13,
                 'upc' => $products[$i]->upc,
                 'quantity' => $products[$i]->quantity,
-                'has_attributes' => $products[$i]->hasAttributes(),
+                'combinations' => $productCombinations,
             ];
         }
 
