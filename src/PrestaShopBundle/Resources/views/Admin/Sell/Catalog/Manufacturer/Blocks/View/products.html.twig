@@ -33,13 +33,18 @@
       <div class="card">
         <div class="card-header clearfix">
           {% if product.combinations is not empty %}
-            <a href="#">{{ product.name }}</a>
+            <a href="{{ path('admin_product_form', {'id': product.id}) }}">{{ product.name }}</a>
           {% else %}
             {{ product.name }}
           {% endif %}
 
           <div class="d-inline-block float-right">
-            <a class="btn btn-primary btn-sm" href="#">{{ 'Edit'|trans({}, 'Admin.Actions') }}</a>
+            <a class="btn btn-primary btn-sm" href="{{ path('admin_product_form', {'id': product.id}) }}">
+              {{ 'Edit'|trans({}, 'Admin.Actions') }}
+            </a>
+            <a class="btn btn-primary btn-sm" href="{{ path('admin_product_unit_action', {'action': 'delete', 'id': product.id}) }}">
+              {{ 'Delete'|trans({}, 'Admin.Actions') }}
+            </a>
           </div>
         </div>
         <div class="card-body">
