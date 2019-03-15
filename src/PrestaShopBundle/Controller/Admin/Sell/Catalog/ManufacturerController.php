@@ -68,7 +68,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Is responsible for "Sell > Catalog > Brands & Suppliers" page.
+ * Manages "Sell > Catalog > Brands & Suppliers > Brands" page
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {

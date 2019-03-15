@@ -48,7 +48,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
 
         return new ViewableManufacturer(
             $manufacturer->name,
-            $this->ManufacturerAddresses($manufacturer, $query->getLanguageId()),
+            $this->getManufacturerAddresses($manufacturer, $query->getLanguageId()),
             $this->getManufacturerProducts($manufacturer, $query->getLanguageId())
         );
     }
@@ -133,7 +133,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
      *
      * @return array
      */
-    private function ManufacturerAddresses(Manufacturer $manufacturer, LanguageId $languageId)
+    private function getManufacturerAddresses(Manufacturer $manufacturer, LanguageId $languageId)
     {
         $addresses = [];
         $manufacturerAddresses = $manufacturer->getAddresses($languageId->getValue());
