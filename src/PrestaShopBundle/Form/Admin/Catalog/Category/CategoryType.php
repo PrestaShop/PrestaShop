@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -53,11 +54,13 @@ class CategoryType extends AbstractCategoryType
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
-//                'options' => [
-//                    'constraints' => [
-//                        // @todo: add CleanHtml constraint
-//                    ],
-//                ],
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
             ])
         ;
     }
