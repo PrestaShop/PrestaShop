@@ -395,7 +395,7 @@ class SymfonyRequirements extends RequirementCollection
      */
     public function __construct()
     {
-        /* mandatory requirements follow */
+        // mandatory requirements follow
 
         $installedPhpVersion = PHP_VERSION;
         $requiredPhpVersion = $this->getPhpRequiredVersion();
@@ -572,7 +572,7 @@ class SymfonyRequirements extends RequirementCollection
             );
         }
 
-        /* optional recommendations follow */
+        // optional recommendations follow
 
         if (file_exists(__DIR__.'/../vendor/composer')) {
             require_once __DIR__.'/../vendor/autoload.php';

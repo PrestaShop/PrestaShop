@@ -165,7 +165,7 @@ class SpecificPriceRuleCore extends ObjectModel
 
         $rules = new PrestaShopCollection('SpecificPriceRule');
         foreach ($rules as $rule) {
-            /* @var SpecificPriceRule $rule */
+            // @var SpecificPriceRule $rule
             $rule->apply($products);
         }
     }

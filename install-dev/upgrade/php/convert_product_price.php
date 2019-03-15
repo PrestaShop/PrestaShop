@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/* Convert product prices from the PS < 1.3 wrong rounding system to the new 1.3 one */
+// Convert product prices from the PS < 1.3 wrong rounding system to the new 1.3 one
 function convert_product_price()
 {
     $taxes = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'tax');

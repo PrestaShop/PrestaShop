@@ -42,7 +42,7 @@ class AdminSearchControllerCore extends AdminController
         $this->query = trim(Tools::getValue('bo_query'));
         $searchType = (int) Tools::getValue('bo_search_type');
 
-        /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product */
+        // 1.6 code compatibility, as we use HelperList, we need to handle click to go to product
         $action = Tools::getValue('action');
         if ($action == 'redirectToProduct') {
             $id_product = (int) Tools::getValue('id_product');
@@ -50,36 +50,36 @@ class AdminSearchControllerCore extends AdminController
             Tools::redirectAdmin($link);
         }
 
-        /* Handle empty search field */
+        // Handle empty search field
         if (!empty($this->query)) {
             if (!$searchType && strlen($this->query) > 1) {
                 $this->searchFeatures();
             }
 
-            /* Product research */
+            // Product research
             if (!$searchType || $searchType == 1) {
-                /* Handle product ID */
+                // Handle product ID
                 if ($searchType == 1 && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
                     if (($product = new Product($this->query)) && Validate::isLoadedObject($product)) {
                         Tools::redirectAdmin('index.php?tab=AdminProducts&id_product=' . (int) ($product->id) . '&token=' . Tools::getAdminTokenLite('AdminProducts'));
                     }
                 }
 
-                /* Normal catalog search */
+                // Normal catalog search
                 $this->searchCatalog();
             }
 
-            /* Customer */
+            // Customer
             if (!$searchType || $searchType == 2 || $searchType == 6) {
                 if (!$searchType || $searchType == 2) {
-                    /* Handle customer ID */
+                    // Handle customer ID
                     if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
                         if (($customer = new Customer($this->query)) && Validate::isLoadedObject($customer)) {
                             Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer=' . (int) $customer->id . '&viewcustomer' . '&token=' . Tools::getAdminToken('AdminCustomers' . (int) Tab::getIdFromClassName('AdminCustomers') . (int) $this->context->employee->id));
                         }
                     }
 
-                    /* Normal customer search */
+                    // Normal customer search
                     $this->searchCustomer();
                 }
 
@@ -88,7 +88,7 @@ class AdminSearchControllerCore extends AdminController
                 }
             }
 
-            /* Order */
+            // Order
             if (!$searchType || $searchType == 3) {
                 if (Validate::isUnsignedInt(trim($this->query)) && (int) $this->query && ($order = new Order((int) $this->query)) && Validate::isLoadedObject($order)) {
                     if ($searchType == 3) {
@@ -125,7 +125,7 @@ class AdminSearchControllerCore extends AdminController
                 }
             }
 
-            /* Invoices */
+            // Invoices
             if ($searchType == 4) {
                 if (Validate::isOrderInvoiceNumber($this->query) && ($invoice = OrderInvoice::getInvoiceByNumber($this->query))) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf') . '&submitAction=generateInvoicePDF&id_order=' . (int) ($invoice->id_order));
@@ -133,24 +133,24 @@ class AdminSearchControllerCore extends AdminController
                 $this->errors[] = $this->trans('No invoice was found with this ID:', array(), 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
             }
 
-            /* Cart */
+            // Cart
             if ($searchType == 5) {
                 if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && ($cart = new Cart($this->query)) && Validate::isLoadedObject($cart)) {
                     Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart=' . (int) ($cart->id) . '&viewcart' . '&token=' . Tools::getAdminToken('AdminCarts' . (int) (Tab::getIdFromClassName('AdminCarts')) . (int) $this->context->employee->id));
                 }
                 $this->errors[] = $this->trans('No cart was found with this ID:', array(), 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
             }
-            /* IP */
+            // IP
             // 6 - but it is included in the customer block
 
-            /* Module search */
+            // Module search
             if (!$searchType || $searchType == 7) {
-                /* Handle module name */
+                // Handle module name
                 if ($searchType == 7 && Validate::isModuleName($this->query) && ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
                     Tools::redirectAdmin('index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules'));
                 }
 
-                /* Normal catalog search */
+                // Normal catalog search
                 $this->searchModule();
             }
         }
@@ -282,7 +282,7 @@ class AdminSearchControllerCore extends AdminController
         $genders_icon = array('default' => 'unknown.gif');
         $genders = array(0 => $this->trans('?', array(), 'Admin.Global'));
         foreach (Gender::getGenders() as $gender) {
-            /* @var Gender $gender */
+            // @var Gender $gender
             $genders_icon[$gender->id] = '../genders/' . (int) $gender->id . '.jpg';
             $genders[$gender->id] = $gender->name;
         }
@@ -320,7 +320,7 @@ class AdminSearchControllerCore extends AdminController
         $this->addJqueryPlugin('highlight');
     }
 
-    /* Override because we don't want any buttons */
+    // Override because we don't want any buttons
     public function initToolbar()
     {
     }
@@ -372,7 +372,7 @@ class AdminSearchControllerCore extends AdminController
                 $helper->actions = array('edit');
                 $helper->show_toolbar = false;
                 $helper->table = 'product';
-                /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product, a better way need to be find */
+                // 1.6 code compatibility, as we use HelperList, we need to handle click to go to product, a better way need to be find
                 $helper->currentIndex = $this->context->link->getAdminLink('AdminSearch', false);
                 $helper->currentIndex .= '&action=redirectToProduct';
 

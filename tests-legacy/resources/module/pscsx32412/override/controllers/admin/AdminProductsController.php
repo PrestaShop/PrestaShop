@@ -82,7 +82,7 @@ class AdminProductsController extends AdminProductsControllerCore
             return;
         }
 
-        /* Additional fields */
+        // Additional fields
         foreach (Language::getIDs(false) as $id_lang) {
             if (isset($_POST['meta_keywords_'.$id_lang])) {
                 $_POST['meta_keywords_'.$id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$id_lang]));
@@ -122,12 +122,12 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $this->context->shop->id);
 
-        /* update product quantity with attributes ...*/
+        // update product quantity with attributes ...
         $nb = count($this->_list);
         if ($this->_list) {
             $context = $this->context->cloneContext();
             $context->shop = clone $context->shop;
-            /* update product final price */
+            // update product final price
             for ($i = 0; $i < $nb; $i++) {
                 if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP) {
                     $context->shop = new Shop((int)$this->_list[$i]['id_shop_default']);
@@ -479,7 +479,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $id_image = (int)Tools::getValue('id_image');
         $image = new Image((int)$id_image);
         if (Validate::isLoadedObject($image)) {
-            /* Update product image/legend */
+            // Update product image/legend
             // @todo : move in processEditProductImage
             if (Tools::getIsset('editImage')) {
                 if ($image->cover) {
@@ -488,7 +488,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
                 $_POST['id_image'] = $image->id;
             } elseif (Tools::getIsset('coverImage')) {
-                /* Choose product cover image */
+                // Choose product cover image
                 Image::deleteCover($image->id_product);
                 $image->cover = 1;
                 if (!$image->update()) {
@@ -500,7 +500,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.$this->token;
                 }
             } elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection')) {
-                /* Choose product image position */
+                // Choose product image position
                 $image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
                 $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Images&token='.$this->token;
             }
@@ -1354,7 +1354,7 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         $this->display = 'content';
         $res = true;
-        /* Delete product image */
+        // Delete product image
         $image = new Image((int)Tools::getValue('id_image'));
         $this->content['id'] = $image->id;
         $res &= $image->delete();
@@ -1410,7 +1410,7 @@ class AdminProductsController extends AdminProductsControllerCore
         return false;
     }
 
-    /* Checking customs feature */
+    // Checking customs feature
     protected function checkFeatures($languages, $feature_id)
     {
         $rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
@@ -1452,7 +1452,7 @@ class AdminProductsController extends AdminProductsControllerCore
      */
     public function addProductImage($product, $method = 'auto')
     {
-        /* Updating an existing product image */
+        // Updating an existing product image
         if ($id_image = (int)Tools::getValue('id_image')) {
             $image = new Image((int)$id_image);
             if (!Validate::isLoadedObject($image)) {
@@ -1654,7 +1654,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
 
         $id = (int)Tools::getValue('id_'.$this->table);
-        /* Update an existing product */
+        // Update an existing product
         if (isset($id) && !empty($id)) {
             $object = new $this->className((int)$id);
             $this->object = $object;
@@ -2035,7 +2035,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 return true;
             }
         } else {
-            /* unactive download product if checkbox not checked */
+            // unactive download product if checkbox not checked
             if ($edit == 1) {
                 $id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id);
                 if (!$id_product_download) {
@@ -2084,11 +2084,11 @@ class AdminProductsController extends AdminProductsControllerCore
     public function updateTags($languages, $product)
     {
         $tag_success = true;
-        /* Reset all tags for THIS product */
+        // Reset all tags for THIS product
         if (!Tag::deleteTagsForProduct((int)$product->id)) {
             $this->errors[] = Tools::displayError('An error occurred while attempting to delete previous tags.');
         }
-        /* Assign tags to this product */
+        // Assign tags to this product
         foreach ($languages as $language) {
             if ($value = Tools::getValue('tags_'.$language['id_lang'])) {
                 $tag_success &= Tag::addTags($language['id_lang'], (int)$product->id, $value);
@@ -2184,7 +2184,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $time = time();
         $kpis = array();
 
-        /* The data generation is located in AdminStatsControllerCore */
+        // The data generation is located in AdminStatsControllerCore
 
         if (Configuration::get('PS_STOCK_MANAGEMENT')) {
             $helper = new HelperKpi();
@@ -3129,9 +3129,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         $currency = $this->context->currency;
 
-        /*
-        * Form for adding a virtual product like software, mp3, etc...
-        */
+        // Form for adding a virtual product like software, mp3, etc...
         $product_download = new ProductDownload();
         if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id'))) {
             $product_download = new ProductDownload($id_product_download);
@@ -3586,9 +3584,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->object = $product;
         //$this->display = 'edit';
         $data->assign('product_name_redirected', Product::getProductName((int)$product->id_type_redirected, null, (int)$this->context->language->id));
-        /*
-        * Form for adding a virtual product like software, mp3, etc...
-        */
+        // Form for adding a virtual product like software, mp3, etc...
         $product_download = new ProductDownload();
         if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id'))) {
             $product_download = new ProductDownload($id_product_download);
@@ -4046,7 +4042,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         $comb_array = array();
         if ($product->id) {
-            /* Build attributes combinations */
+            // Build attributes combinations
             $combinations = $product->getAttributeCombinations($this->context->language->id);
             $groups = array();
             if (is_array($combinations)) {
@@ -4077,7 +4073,7 @@ class AdminProductsController extends AdminProductsControllerCore
             foreach ($comb_array as $id_product_attribute => $product_attribute) {
                 $list = '';
 
-                /* In order to keep the same attributes order */
+                // In order to keep the same attributes order
                 asort($product_attribute['attributes']);
 
                 foreach ($product_attribute['attributes'] as $attribute) {

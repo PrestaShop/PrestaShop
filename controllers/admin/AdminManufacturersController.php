@@ -697,7 +697,7 @@ class AdminManufacturersControllerCore extends AdminController
             return;
         }
 
-        /* @var Manufacturer $manufacturer */
+        // @var Manufacturer $manufacturer
 
         $this->toolbar_btn['new'] = array(
             'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
@@ -714,7 +714,7 @@ class AdminManufacturersControllerCore extends AdminController
         for ($i = 0; $i < $total_product; ++$i) {
             $products[$i] = new Product($products[$i]['id_product'], false, $this->context->language->id);
             $products[$i]->loadStockData();
-            /* Build attributes combinations */
+            // Build attributes combinations
             $combinations = $products[$i]->getAttributeCombinations($this->context->language->id);
             foreach ($combinations as $combination) {
                 $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
@@ -816,7 +816,7 @@ class AdminManufacturersControllerCore extends AdminController
         $res = true;
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        /* Generate image with differents size */
+        // Generate image with differents size
         if (($id_manufacturer = (int) Tools::getValue('id_manufacturer')) &&
             isset($_FILES) &&
             count($_FILES) &&

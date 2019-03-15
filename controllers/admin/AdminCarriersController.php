@@ -419,12 +419,12 @@ class AdminCarriersControllerCore extends AdminController
         }
 
         if (Tools::getValue('submitAdd' . $this->table)) {
-            /* Checking fields validity */
+            // Checking fields validity
             $this->validateRules();
             if (!count($this->errors)) {
                 $id = (int) Tools::getValue('id_' . $this->table);
 
-                /* Object update */
+                // Object update
                 if (isset($id) && !empty($id)) {
                     try {
                         if ($this->access('edit')) {

@@ -73,7 +73,7 @@ class AdminCustomersControllerCore extends AdminController
         $titles_array = array();
         $genders = Gender::getGenders($this->context->language->id);
         foreach ($genders as $gender) {
-            /* @var Gender $gender */
+            // @var Gender $gender
             $titles_array[$gender->id_gender] = $gender->name;
         }
 
@@ -345,7 +345,7 @@ class AdminCustomersControllerCore extends AdminController
         $genders = Gender::getGenders();
         $list_genders = array();
         foreach ($genders as $key => $gender) {
-            /* @var Gender $gender */
+            // @var Gender $gender
             $list_genders[$key]['id'] = 'gender_' . $gender->id;
             $list_genders[$key]['value'] = $gender->id;
             $list_genders[$key]['label'] = $gender->name;
@@ -515,7 +515,7 @@ class AdminCustomersControllerCore extends AdminController
 
             $list_risks = array();
             foreach ($risks as $key => $risk) {
-                /* @var Risk $risk */
+                // @var Risk $risk
                 $list_risks[$key]['id_risk'] = (int) $risk->id;
                 $list_risks[$key]['name'] = $risk->name;
             }
@@ -616,7 +616,7 @@ class AdminCustomersControllerCore extends AdminController
         $time = time();
         $kpis = array();
 
-        /* The data generation is located in AdminStatsControllerCore */
+        // The data generation is located in AdminStatsControllerCore
 
         $helper = new HelperKpi();
         $helper->id = 'box-gender';

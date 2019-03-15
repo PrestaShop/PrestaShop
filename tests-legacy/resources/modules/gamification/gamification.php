@@ -35,7 +35,7 @@ include_once dirname(__FILE__).'/classes/GamificationTools.php';
 
 class gamification extends Module
 {
-    /* We recommend to not set it to true in production environment. */
+    // We recommend to not set it to true in production environment.
     const TEST_MODE = false;
 
     public function __construct()

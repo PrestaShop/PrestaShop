@@ -48,7 +48,7 @@ $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_S
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
 $smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
 
-/* Use this constant if you want to load smarty without all PrestaShop functions */
+// Use this constant if you want to load smarty without all PrestaShop functions
 if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
     return;
 }

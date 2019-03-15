@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/* Theme URLs */
+// Theme URLs
 define('_PS_DEFAULT_THEME_NAME_', 'classic');
 define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
 define('_PS_THEME_URI_', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/');
@@ -42,7 +42,7 @@ define('_THEME_IMG_DIR_', _THEME_DIR_.'assets/img/');
 define('_THEME_CSS_DIR_', _THEME_DIR_.'assets/css/');
 define('_THEME_JS_DIR_', _THEME_DIR_.'assets/js/');
 
-/* Image URLs */
+// Image URLs
 define('_PS_IMG_', __PS_BASE_URI__.'img/');
 define('_PS_ADMIN_IMG_', _PS_IMG_.'admin/');
 define('_PS_TMP_IMG_', _PS_IMG_.'tmp/');
@@ -57,14 +57,14 @@ define('_THEME_COL_DIR_', _PS_IMG_.'co/');
 define('_THEME_GENDERS_DIR_', _PS_IMG_.'genders/');
 define('_PS_PROD_IMG_', _PS_IMG_.'p/');
 
-/* Other URLs */
+// Other URLs
 define('_PS_JS_DIR_', __PS_BASE_URI__.'js/');
 define('_PS_CSS_DIR_', __PS_BASE_URI__.'css/');
 define('_THEME_PROD_PIC_DIR_', __PS_BASE_URI__.'upload/');
 define('_MAIL_DIR_', __PS_BASE_URI__.'mails/');
 define('_MODULE_DIR_', __PS_BASE_URI__.'modules/');
 
-/* Define API URLs if not defined before */
+// Define API URLs if not defined before
 Tools::safeDefine('_PS_API_DOMAIN_', 'api.prestashop.com');
 Tools::safeDefine('_PS_API_URL_', 'http://'._PS_API_DOMAIN_);
 Tools::safeDefine('_PS_TAB_MODULE_LIST_URL_', _PS_API_URL_.'/xml/tab_modules_list_17.xml');

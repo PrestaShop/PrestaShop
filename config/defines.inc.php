@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/* Debug only */
+// Debug only
 if (!defined('_PS_MODE_DEV_')) {
     define('_PS_MODE_DEV_', true);
 }
-/* Compatibility warning */
+// Compatibility warning
 define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
 if (_PS_MODE_DEV_ === true) {
     @ini_set('display_errors', 'on');
@@ -54,7 +54,7 @@ if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__P
     define('_PS_ROOT_DIR_', getenv('_PS_ROOT_DIR_') ? getenv('_PS_ROOT_DIR_') : getenv('REDIRECT__PS_ROOT_DIR_'));
 }
 
-/* Directories */
+// Directories
 if (!defined('_PS_ROOT_DIR_')) {
     define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
 }
@@ -64,7 +64,7 @@ if (!defined('_PS_CORE_DIR_')) {
 }
 
 define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_.'/themes/');
-/* BO THEMES */
+// BO THEMES
 if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
@@ -130,7 +130,7 @@ define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_.'st/');
 define('_PS_SUPP_IMG_DIR_', _PS_IMG_DIR_.'su/');
 define('_PS_TMP_IMG_DIR_', _PS_IMG_DIR_.'tmp/');
 
-/* settings php */
+// settings php
 define('_PS_TRANS_PATTERN_', '(.*[^\\\\])');
 define('_PS_MIN_TIME_GENERATE_PASSWD_', '360');
 
@@ -143,7 +143,7 @@ define('_CAN_LOAD_FILES_', 1);
 /* Order statuses
 Order statuses have been moved into config.inc.php file for backward compatibility reasons */
 
-/* Tax behavior */
+// Tax behavior
 define('PS_PRODUCT_TAX', 0);
 define('PS_STATE_TAX', 1);
 define('PS_BOTH_TAX', 2);
@@ -158,10 +158,10 @@ define('PS_ROUND_HALF_DOWN', 3);
 define('PS_ROUND_HALF_EVEN', 4);
 define('PS_ROUND_HALF_ODD', 5);
 
-/* Backward compatibility */
+// Backward compatibility
 define('PS_ROUND_HALF', PS_ROUND_HALF_UP);
 
-/* Carrier::getCarriers() filter */
+// Carrier::getCarriers() filter
 // these defines are DEPRECATED since 1.4.5 version
 define('PS_CARRIERS_ONLY', 1);
 define('CARRIERS_MODULE', 2);
@@ -169,19 +169,19 @@ define('CARRIERS_MODULE_NEED_RANGE', 3);
 define('PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE', 4);
 define('ALL_CARRIERS', 5);
 
-/* SQL Replication management */
+// SQL Replication management
 define('_PS_USE_SQL_SLAVE_', 0);
 
-/* PS Technical configuration */
+// PS Technical configuration
 define('_PS_ADMIN_PROFILE_', 1);
 
-/* Stock Movement */
+// Stock Movement
 define('_STOCK_MOVEMENT_ORDER_REASON_', 3);
 define('_STOCK_MOVEMENT_MISSING_REASON_', 4);
 
 define('_PS_CACHEFS_DIRECTORY_', _PS_ROOT_DIR_.'/cache/cachefs/');
 
-/* Geolocation */
+// Geolocation
 define('_PS_GEOLOCATION_NO_CATALOG_', 0);
 define('_PS_GEOLOCATION_NO_ORDER_', 1);
 

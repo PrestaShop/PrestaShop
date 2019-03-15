@@ -72,7 +72,7 @@ class GetFileControllerCore extends FrontController
                 }
             }
 
-            /* Key format: <sha1-filename>-<hashOrder> */
+            // Key format: <sha1-filename>-<hashOrder>
             $tmp = explode('-', $key);
             if (count($tmp) != 2) {
                 $this->displayCustomError('Invalid key.');
@@ -85,7 +85,7 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This product does not exist in our store.');
             }
 
-            /* check whether order has been paid, which is required to download the product */
+            // check whether order has been paid, which is required to download the product
             $order = new Order((int) $info['id_order']);
             $state = $order->getCurrentOrderState();
             if (!$state || !$state->paid) {
@@ -99,7 +99,7 @@ class GetFileControllerCore extends FrontController
                 Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
             }
 
-            /* Product no more present in catalog */
+            // Product no more present in catalog
             if (!isset($info['id_product_download']) || empty($info['id_product_download'])) {
                 $this->displayCustomError('This product has been deleted.');
             }
@@ -129,14 +129,14 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('You have reached the maximum number of allowed downloads.');
             }
 
-            /* Access is authorized -> increment download value for the customer */
+            // Access is authorized -> increment download value for the customer
             OrderDetail::incrementDownload($info['id_order_detail']);
 
             $file = _PS_DOWNLOAD_DIR_ . $info['filename'];
             $filename = $info['display_filename'];
         }
 
-        /* Detect mime content type */
+        // Detect mime content type
         $mimeType = false;
         if (function_exists('finfo_open')) {
             $finfo = @finfo_open(FILEINFO_MIME);
@@ -300,7 +300,7 @@ class GetFileControllerCore extends FrontController
             ob_end_clean();
         }
 
-        /* Set headers for download */
+        // Set headers for download
         header('Content-Transfer-Encoding: binary');
         header('Content-Type: ' . $mimeType);
         header('Content-Length: ' . filesize($file));

@@ -604,7 +604,7 @@ class HelperListCore extends Helper
             $token = $this->token;
         }
 
-        /* Determine total page number */
+        // Determine total page number
         $pagination = $this->_default_pagination;
         if (in_array((int) Tools::getValue($this->list_id . '_pagination'), $this->_pagination)) {
             $pagination = (int) Tools::getValue($this->list_id . '_pagination');
@@ -622,7 +622,7 @@ class HelperListCore extends Helper
 
         $action = $this->currentIndex . $identifier . '&token=' . $token . '#' . $this->list_id;
 
-        /* Determine current page number */
+        // Determine current page number
         $page = (int) Tools::getValue('submitFilter' . $this->list_id);
 
         if (!$page) {
@@ -635,7 +635,7 @@ class HelperListCore extends Helper
 
         $this->page = (int) $page;
 
-        /* Choose number of results per page */
+        // Choose number of results per page
         $selected_pagination = Tools::getValue(
             $this->list_id . '_pagination',
             isset($this->context->cookie->{$this->list_id . '_pagination'}) ? $this->context->cookie->{$this->list_id . '_pagination'} : $this->_default_pagination

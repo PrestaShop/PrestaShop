@@ -26,7 +26,7 @@
 
 $currentDir = dirname(__FILE__);
 
-/* Custom defines made by users */
+// Custom defines made by users
 if (is_file($currentDir.'/defines_custom.inc.php')) {
     include_once $currentDir.'/defines_custom.inc.php';
 }
@@ -37,26 +37,26 @@ require_once _PS_CONFIG_DIR_.'autoload.php';
 
 $start_time = microtime(true);
 
-/* SSL configuration */
+// SSL configuration
 define('_PS_SSL_PORT_', 443);
 
-/* Improve PHP configuration to prevent issues */
+// Improve PHP configuration to prevent issues
 ini_set('default_charset', 'utf-8');
 
-/* in dev mode - check if composer was executed */
+// in dev mode - check if composer was executed
 if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
         !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
     die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
-/* No settings file? goto installer... */
+// No settings file? goto installer...
 if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
     Tools::redirectToInstall();
 }
 
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-/* Improve PHP configuration on Windows */
+// Improve PHP configuration on Windows
 if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
     Windows::improveFilesytemPerformances();
 }
@@ -70,7 +70,7 @@ if (defined('_PS_CREATION_DATE_')) {
     Tools::redirectToInstall();
 }
 
-/* Custom config made by users */
+// Custom config made by users
 if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
     include_once _PS_CUSTOM_CONFIG_FILE_;
 }
@@ -90,7 +90,7 @@ if (Tools::isPHPCLI() && isset($argc, $argv)) {
     Tools::argvToGET($argc, $argv);
 }
 
-/* Redefine REQUEST_URI if empty (on some webservers...) */
+// Redefine REQUEST_URI if empty (on some webservers...)
 if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) {
     if (!isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['SCRIPT_FILENAME'])) {
         $_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_FILENAME'];
@@ -107,14 +107,14 @@ if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) {
     }
 }
 
-/* Trying to redefine HTTP_HOST if empty (on some webservers...) */
+// Trying to redefine HTTP_HOST if empty (on some webservers...)
 if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST'])) {
     $_SERVER['HTTP_HOST'] = @getenv('HTTP_HOST');
 }
 
 $context = Context::getContext();
 
-/* Initialize the current Shop */
+// Initialize the current Shop
 try {
     $context->shop = Shop::initialize();
 } catch (PrestaShopException $e) {
@@ -125,7 +125,7 @@ define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
-/* Include all defines related to base uri and theme name */
+// Include all defines related to base uri and theme name
 require_once $currentDir.'/defines_uri.inc.php';
 
 global $_MODULES;
@@ -134,25 +134,25 @@ $_MODULES = array();
 define('_PS_PRICE_DISPLAY_PRECISION_', Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
 define('_PS_PRICE_COMPUTE_PRECISION_', _PS_PRICE_DISPLAY_PRECISION_);
 
-/* Load all languages */
+// Load all languages
 Language::loadLanguages();
 
-/* Loading default country */
+// Loading default country
 $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 $context->country = $default_country;
 
-/* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
+// It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice.
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
-/* Set locales */
+// Set locales
 $locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
-/* Please do not use LC_ALL here http://www.php.net/manual/fr/function.setlocale.php#25041 */
+// Please do not use LC_ALL here http://www.php.net/manual/fr/function.setlocale.php#25041
 setlocale(LC_COLLATE, $locale.'.UTF-8', $locale.'.utf8');
 setlocale(LC_CTYPE, $locale.'.UTF-8', $locale.'.utf8');
 setlocale(LC_TIME, $locale.'.UTF-8', $locale.'.utf8');
 setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
-/* Instantiate cookie */
+// Instantiate cookie
 $cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : (int)Configuration::get('PS_COOKIE_LIFETIME_FO');
 if ($cookie_lifetime > 0) {
     $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
@@ -176,12 +176,12 @@ if (defined('_PS_ADMIN_DIR_')) {
 
 $context->cookie = $cookie;
 
-/* Create employee if in BO, customer else */
+// Create employee if in BO, customer else
 if (defined('_PS_ADMIN_DIR_')) {
     $employee = new Employee($cookie->id_employee);
     $context->employee = $employee;
 
-    /* Auth on shops are recached after employee assignation */
+    // Auth on shops are recached after employee assignation
     if ($employee->id_profile != _PS_ADMIN_PROFILE_) {
         Shop::cacheShops(true);
     }
@@ -189,7 +189,7 @@ if (defined('_PS_ADMIN_DIR_')) {
     $cookie->id_lang = (int)$employee->id_lang;
 }
 
-/* if the language stored in the cookie is not available language, use default language */
+// if the language stored in the cookie is not available language, use default language
 if (isset($cookie->id_lang) && $cookie->id_lang) {
     $language = new Language($cookie->id_lang);
 }
@@ -198,7 +198,7 @@ if (!isset($language) || !Validate::isLoadedObject($language)) {
 }
 $context->language = $language;
 
-/* Get smarty */
+// Get smarty
 require_once $currentDir.'/smarty.config.inc.php';
 $context->smarty = $smarty;
 
@@ -219,7 +219,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
     if (!isset($customer) || !Validate::isLoadedObject($customer)) {
         $customer = new Customer();
 
-        /* Change the default group */
+        // Change the default group
         if (Group::isFeatureActive()) {
             $customer->id_default_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
         }
@@ -228,7 +228,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
     $context->customer = $customer;
 }
 
-/* Link should also be initialized in the context here for retrocompatibility */
+// Link should also be initialized in the context here for retrocompatibility
 $https_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 $context->link = new Link($https_link, $https_link);
 

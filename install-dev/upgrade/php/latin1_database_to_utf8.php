@@ -84,7 +84,7 @@ function latin1_database_to_utf8()
     );
 
     foreach ($tables as $table) {
-        /* Latin1 datas' selection */
+        // Latin1 datas' selection
         if (!Db::getInstance()->execute('SET NAMES latin1')) {
             echo 'Cannot change the sql encoding to latin1!';
         }
@@ -108,7 +108,7 @@ function latin1_database_to_utf8()
         }
 
         if (Db::getInstance()->numRows()) {
-            /* Utf-8 datas' restitution */
+            // Utf-8 datas' restitution
             if (!Db::getInstance()->execute('SET NAMES utf8')) {
                 echo 'Cannot change the sql encoding to utf8!';
             }

@@ -116,9 +116,7 @@ class Repository
         }
     }
 
-    /*
-     * get the current culture
-     */
+    // get the current culture
     public function getCulture()
     {
         return $this->locale . ($this->region ? '-' . $this->region : '');

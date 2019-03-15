@@ -276,7 +276,7 @@ class SupplyOrderDetailCore extends ObjectModel
     {
         $errors = array();
 
-        /* required fields */
+        // required fields
         $fields_required = $this->fieldsRequired;
 
         $objectName = $this->getObjectName();
@@ -301,7 +301,7 @@ class SupplyOrderDetailCore extends ObjectModel
             }
         }
 
-        /* Checks maximum fields sizes */
+        // Checks maximum fields sizes
         foreach ($this->fieldsSize as $field => $max_length) {
             if ($value = $this->{$field} && Tools::strlen($value) > $max_length) {
                 $errors[] = $this->trans(
@@ -312,7 +312,7 @@ class SupplyOrderDetailCore extends ObjectModel
             }
         }
 
-        /* Checks fields validity */
+        // Checks fields validity
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
                 if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {

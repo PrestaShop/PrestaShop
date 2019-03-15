@@ -37,7 +37,7 @@ class TemplateFinderTest extends TestCase
     {
         $root = realpath(_PS_ROOT_DIR_).'/tests-legacy/resources/template-hierarchy/templates/';
 
-        /* @var TemplateFinderCore */
+        // @var TemplateFinderCore
         $this->templateFinder = new TemplateFinder(array($root), '.tpl');
     }
 

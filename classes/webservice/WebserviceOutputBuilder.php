@@ -51,7 +51,7 @@ class WebserviceOutputBuilderCore
 
     protected static $_cache_ws_parameters = array();
 
-    /* Header properties */
+    // Header properties
     protected $headerParams = array(
         'Access-Time' => 0,
         'X-Powered-By' => 0,

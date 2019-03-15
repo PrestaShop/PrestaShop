@@ -574,7 +574,7 @@ class ToolsCore
         if (!$cookie) {
             $cookie = Context::getContext()->cookie;
         }
-        /* If language does not exist or is disabled, erase it */
+        // If language does not exist or is disabled, erase it
         if ($cookie->id_lang) {
             $lang = new Language((int) $cookie->id_lang);
             if (!Validate::isLoadedObject($lang) || !$lang->active || !$lang->isAssociatedToShop()) {
@@ -586,7 +586,7 @@ class ToolsCore
             unset($cookie->detect_language);
         }
 
-        /* Automatically detect language if not already defined, detect_language is set in Cookie::update */
+        // Automatically detect language if not already defined, detect_language is set in Cookie::update
         if (!Tools::getValue('isolang') && !Tools::getValue('id_lang') && (!$cookie->id_lang || isset($cookie->detect_language))
             && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
@@ -605,7 +605,7 @@ class ToolsCore
             unset($cookie->detect_language);
         }
 
-        /* If language file not present, you must use default language file */
+        // If language file not present, you must use default language file
         if (!$cookie->id_lang || !Validate::isUnsignedId($cookie->id_lang)) {
             $cookie->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
         }
@@ -1486,7 +1486,7 @@ class ToolsCore
             http://www.tachyonsoft.com/uc0004.htm
         */
         $patterns = array(
-            /* Lowercase */
+            // Lowercase
             /* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}\x{00C0}-\x{00C3}\x{1EA0}-\x{1EB7}]/u',
             /* b  */ '/[\x{0431}]/u',
             /* c  */ '/[\x{00E7}\x{0107}\x{0109}\x{010D}\x{0446}]/u',
@@ -1525,7 +1525,7 @@ class ToolsCore
             /* yu */ '/[\x{044E}]/u',
             /* zh */ '/[\x{0436}]/u',
 
-            /* Uppercase */
+            // Uppercase
             /* A  */ '/[\x{0100}\x{0102}\x{0104}\x{00C0}\x{00C1}\x{00C2}\x{00C3}\x{00C4}\x{00C5}\x{0410}]/u',
             /* B  */ '/[\x{0411}]/u',
             /* C  */ '/[\x{00C7}\x{0106}\x{0108}\x{010A}\x{010C}\x{0426}]/u',
@@ -1597,7 +1597,7 @@ class ToolsCore
         return utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)) . $suffix);
     }
 
-    /*Copied from CakePHP String utility file*/
+    // Copied from CakePHP String utility file
     public static function truncateString($text, $length = 120, $options = array())
     {
         $default = array(
@@ -1966,28 +1966,28 @@ class ToolsCore
             /* preround the result (tmp_value will always be something * 1e14,
             * thus never larger than 1e15 here) */
             $tmp_value = Tools::round_helper($tmp_value, $mode);
-            /* now correctly move the decimal point */
+            // now correctly move the decimal point
             $f2 = 10.0 ** (float) abs($places - $precision_places);
-            /* because places < precision_places */
+            // because places < precision_places
             $tmp_value = $tmp_value / $f2;
         } else {
-            /* adjust the value */
+            // adjust the value
             if ($places >= 0) {
                 $tmp_value = $value * $f1;
             } else {
                 $tmp_value = $value / $f1;
             }
 
-            /* This value is beyond our precision, so rounding it is pointless */
+            // This value is beyond our precision, so rounding it is pointless
             if (abs($tmp_value) >= 1e15) {
                 return $value;
             }
         }
 
-        /* round the temp value */
+        // round the temp value
         $tmp_value = Tools::round_helper($tmp_value, $mode);
 
-        /* see if it makes sense to use simple division to round the value */
+        // see if it makes sense to use simple division to round the value
         if (abs($places) < 23) {
             if ($places > 0) {
                 $tmp_value /= $f1;
@@ -3011,7 +3011,7 @@ exit;
      */
     public static function jsonEncode($data, $options = 0, $depth = 512)
     {
-        if (PHP_VERSION_ID < 50500) { /* PHP version < 5.5.0 */
+        if (PHP_VERSION_ID < 50500) { // PHP version < 5.5.0
             return json_encode($data, $options);
         }
 
@@ -4314,7 +4314,7 @@ exit;
  *
  * @return int
  */
-/* Externalized because of a bug in PHP 5.1.6 when inside an object */
+// Externalized because of a bug in PHP 5.1.6 when inside an object
 function cmpPriceAsc($a, $b)
 {
     if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {

@@ -242,12 +242,12 @@ class AdminTaxesControllerCore extends AdminController
     public function postProcess()
     {
         if ($this->action == 'save') {
-            /* Checking fields validity */
+            // Checking fields validity
             $this->validateRules();
             if (!count($this->errors)) {
                 $id = (int) (Tools::getValue('id_' . $this->table));
 
-                /* Object update */
+                // Object update
                 if (isset($id) && !empty($id)) {
                     /** @var Tax $object */
                     $object = new $this->className($id);

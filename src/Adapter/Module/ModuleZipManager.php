@@ -40,14 +40,10 @@ use ZipArchive;
  */
 class ModuleZipManager
 {
-    /*
-     * Data
-     */
+    // Data
     private static $sources = array();
 
-    /*
-     * Services
-     */
+    // Services
     /**
      * @var \Symfony\Component\Filesystem\Filesystem
      */

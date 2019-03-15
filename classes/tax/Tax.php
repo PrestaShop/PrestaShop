@@ -48,7 +48,7 @@ class TaxCore extends ObjectModel
             'rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
             'active' => array('type' => self::TYPE_BOOL),
             'deleted' => array('type' => self::TYPE_BOOL),
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
         ),
     );
@@ -62,7 +62,7 @@ class TaxCore extends ObjectModel
 
     public function delete()
     {
-        /* Clean associations */
+        // Clean associations
         TaxRule::deleteTaxRuleByIdTax((int) $this->id);
 
         if ($this->isUsed()) {

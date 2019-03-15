@@ -45,7 +45,7 @@ class FeatureCore extends ObjectModel
         'fields' => array(
             'position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
         ),
     );
@@ -102,7 +102,7 @@ class FeatureCore extends ObjectModel
      */
     public function deleteSelection($selection)
     {
-        /* Also delete Attributes */
+        // Also delete Attributes
         foreach ($selection as $value) {
             $obj = new Feature($value);
             if (!$obj->delete()) {
@@ -189,7 +189,7 @@ class FeatureCore extends ObjectModel
      */
     public function delete()
     {
-        /* Also delete related attributes */
+        // Also delete related attributes
         Db::getInstance()->execute('
 			DELETE
 				`' . _DB_PREFIX_ . 'feature_value_lang`
@@ -217,7 +217,7 @@ class FeatureCore extends ObjectModel
             Hook::exec('actionFeatureDelete', array('id_feature' => $this->id));
         }
 
-        /* Reinitializing position */
+        // Reinitializing position
         $this->cleanPositions();
 
         return $return;

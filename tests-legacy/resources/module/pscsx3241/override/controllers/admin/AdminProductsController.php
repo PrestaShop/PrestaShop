@@ -123,7 +123,7 @@ class AdminProductsController extends AdminProductsControllerCore
         // Sort the tabs that need to be preloaded by their priority number
         asort($this->available_tabs, SORT_NUMERIC);
 
-        /* Adding tab if modules are hooked */
+        // Adding tab if modules are hooked
         $modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
         if (is_array($modules_list) && count($modules_list) > 0) {
             foreach ($modules_list as $m) {
@@ -142,7 +142,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts'));
             }
         }
-        /* Join categories table */
+        // Join categories table
         if ($id_category = (int)Tools::getValue('productFilter_cl!name')) {
             $this->_category = new Category((int)$id_category);
             $_POST['productFilter_cl!name'] = $this->_category->name[$this->context->language->id];

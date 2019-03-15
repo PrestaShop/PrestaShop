@@ -137,7 +137,7 @@ class CurrencyCore extends ObjectModel
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
         ),

@@ -29,7 +29,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
-/* Getting cookie or logout */
+// Getting cookie or logout
 require_once _PS_ADMIN_DIR_.'/init.php';
 
 $context = Context::getContext();

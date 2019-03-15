@@ -70,7 +70,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /* The module catalog will contains only 5 modules for theses tests */
+        // The module catalog will contains only 5 modules for theses tests
         $fakeModules = array(
             $this->fakeModule(
                 1,

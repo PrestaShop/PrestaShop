@@ -49,7 +49,7 @@ class MetaCore extends ObjectModel
             'page' => array('type' => self::TYPE_STRING, 'validate' => 'isFileName', 'required' => true, 'size' => 64),
             'configurable' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 
-            /* Lang fields */
+            // Lang fields
             'title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
             'description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),

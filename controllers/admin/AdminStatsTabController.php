@@ -112,7 +112,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         return $tpl->fetch();
     }
 
-    /* Not used anymore, but still work */
+    // Not used anymore, but still work
     protected function displayEngines()
     {
         $tpl = $this->createTemplate('engines.tpl');

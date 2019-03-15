@@ -85,7 +85,7 @@ class CombinationCore extends ObjectModel
             'reference' => array('type' => self::TYPE_STRING, 'size' => 64),
             'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 64),
 
-            /* Shop fields */
+            // Shop fields
             'wholesale_price' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27),
             'price' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
             'ecotax' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),

@@ -596,7 +596,7 @@ class AdminProductWrapper
 
         $shopList = Shop::getContextListShopID();
 
-        /* Update the customization fields to be deleted in the next step if not used */
+        // Update the customization fields to be deleted in the next step if not used
         $product->softDeleteCustomizationFields($customization_ids);
 
         $usedCustomizationIds = $product->getUsedCustomizationFieldsIds();

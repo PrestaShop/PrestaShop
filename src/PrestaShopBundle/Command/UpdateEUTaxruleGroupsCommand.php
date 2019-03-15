@@ -77,7 +77,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        /* Tweak */
+        // Tweak
         $this->output = $output;
 
         $localizationPacksRoot = $this->getContainer()->getParameter('kernel.root_dir') . '/../localization';

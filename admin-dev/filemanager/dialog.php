@@ -32,9 +32,7 @@ if (isset($_POST['submit'])) {
         $subdir = '';
     }
 
-    /***
-     *SUB-DIR CODE
-     ***/
+    // SUB-DIR CODE
     if (!isset($_SESSION['subfolder'])) {
         $_SESSION['subfolder'] = '';
     }
@@ -1019,7 +1017,7 @@ if (isset($_POST['submit'])) {
             $class_ext = 1;
         }
 
-    /* PrestaShop */
+    // PrestaShop
     if (isset($src_thumb) && $src_thumb) {
         if (($src_thumb = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $src_thumb)) == $src_thumb) {
             $src_thumb = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $src_thumb);
@@ -1030,7 +1028,7 @@ if (isset($_POST['submit'])) {
                 $mini_src = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $mini_src);
             }
         }
-    /* END PrestaShop */
+    // END PrestaShop
 
     if ((!(Tools::getValue('type') == 1 && !$is_img) && !((Tools::getValue('type') == 3 && !$is_video) && (Tools::getValue('type') == 3 && !$is_audio))) && $class_ext > 0) {
         ?>

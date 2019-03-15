@@ -143,7 +143,7 @@ function deleteImage($id_item, $id_image = null)
             unlink($path.$id_item.'.jpg');
         }
 
-        /* Auto-generated images */
+        // Auto-generated images
         $imagesTypes = ImageType::getImagesTypes();
         foreach ($imagesTypes as $k => $imagesType) {
             if (file_exists($path.$id_item.'-'.$imagesType['name'].'.jpg')) {
@@ -162,7 +162,7 @@ function deleteImage($id_item, $id_image = null)
             unlink($path.$image->getExistingImgPath().'.jpg');
         }
 
-        /* Auto-generated images */
+        // Auto-generated images
         $imagesTypes = ImageType::getImagesTypes();
         foreach ($imagesTypes as $k => $imagesType) {
             if (file_exists($path.$image->getExistingImgPath().'-'.$imagesType['name'].'.jpg')) {
@@ -171,7 +171,7 @@ function deleteImage($id_item, $id_image = null)
         }
     }
 
-    /* BO "mini" image */
+    // BO "mini" image
     if (file_exists(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg')) {
         unlink(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg');
     }

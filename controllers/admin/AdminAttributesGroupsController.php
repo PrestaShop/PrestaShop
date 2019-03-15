@@ -494,7 +494,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             } elseif ($this->display != 'view' && !$this->ajax) {
                 $this->content .= $this->renderList();
                 $this->content .= $this->renderOptions();
-                /* reset all attributes filter */
+                // reset all attributes filter
                 if (!Tools::getValue('submitFilterattribute_group', 0) && !Tools::getIsset('id_attribute_group')) {
                     $this->processResetFilters('attribute_values');
                 }
@@ -747,7 +747,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             $this->identifier = 'id_attribute';
         }
 
-        /* set location with current index */
+        // set location with current index
         if (Tools::getIsset('id_attribute_group') && Tools::getIsset('viewattribute_group')) {
             self::$currentIndex = self::$currentIndex . '&id_attribute_group=' . Tools::getValue('id_attribute_group', 0) . '&viewattribute_group';
         }
@@ -914,7 +914,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         return $result;
     }
 
-    /* Modify group attribute position */
+    // Modify group attribute position
     public function ajaxProcessUpdateGroupsPositions()
     {
         $way = (int) Tools::getValue('way');
@@ -947,7 +947,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         }
     }
 
-    /* Modify attribute position */
+    // Modify attribute position
     public function ajaxProcessUpdateAttributesPositions()
     {
         $way = (int) Tools::getValue('way');

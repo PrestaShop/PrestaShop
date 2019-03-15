@@ -176,7 +176,7 @@ class AdminLoginControllerCore extends AdminController
 
     public function processLogin()
     {
-        /* Check fields validity */
+        // Check fields validity
         $passwd = trim(Tools::getValue('passwd'));
         $email = trim(Tools::getValue('email'));
         if (empty($email)) {

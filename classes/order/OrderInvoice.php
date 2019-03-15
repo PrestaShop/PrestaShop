@@ -204,7 +204,7 @@ class OrderInvoiceCore extends ObjectModel
 
             $row['id_address_delivery'] = $order->id_address_delivery;
 
-            /* Ecotax */
+            // Ecotax
             $round_mode = $order->round_mode;
 
             $row['ecotax_tax_excl'] = $row['ecotax']; // alias for coherence
@@ -240,7 +240,7 @@ class OrderInvoiceCore extends ObjectModel
             if ($customized_datas) {
                 Product::addProductCustomizationPrice($row, $customized_datas);
             }
-            /* Stock product */
+            // Stock product
             $result_array[(int) $row['id_order_detail']] = $row;
         }
 
@@ -695,7 +695,7 @@ class OrderInvoiceCore extends ObjectModel
             $amount = 0;
             $payments = OrderPayment::getByInvoiceId($this->id);
             foreach ($payments as $payment) {
-                /* @var OrderPayment $payment */
+                // @var OrderPayment $payment
                 $amount += $payment->amount;
             }
             Cache::store($cache_id, $amount);

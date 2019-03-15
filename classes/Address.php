@@ -164,7 +164,7 @@ class AddressCore extends ObjectModel
     {
         parent::__construct($id_address);
 
-        /* Get and cache address country name */
+        // Get and cache address country name
         if ($this->id) {
             $this->country = Country::getNameById($id_lang ? $id_lang : Configuration::get('PS_LANG_DEFAULT'), $this->id_country);
         }
@@ -212,7 +212,7 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
-        /* Skip the required fields */
+        // Skip the required fields
         if ($this->isUsed()) {
             self::$fieldsRequiredDatabase['Address'] = array();
         }

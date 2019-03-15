@@ -100,7 +100,7 @@ class OrderConfirmationControllerCore extends FrontController
         ));
 
         if ($this->context->customer->is_guest) {
-            /* If guest we clear the cookie for security reason */
+            // If guest we clear the cookie for security reason
             $this->context->customer->mylogout();
         }
         $this->setTemplate('checkout/order-confirmation');

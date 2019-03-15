@@ -62,9 +62,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 $token_category = 'SELECT';
             }
 
-            /*
-             * If it isn't obvious, when $skip_next is set, then we ignore the next real token, that is we ignore whitespace.
-             */
+            // If it isn't obvious, when $skip_next is set, then we ignore the next real token, that is we ignore whitespace.
             if ($skip_next > 0) {
                 if ($trim === "") {
                     if ($token_category !== "") { // is this correct??
@@ -85,7 +83,7 @@ class SQLProcessor extends SQLChunkProcessor {
             $upper = strtoupper($trim);
             switch ($upper) {
 
-            /* Tokens that get their own sections. These keywords have subclauses. */
+            // Tokens that get their own sections. These keywords have subclauses.
             case 'SELECT':
             case 'ORDER':
             case 'DUPLICATE':
@@ -225,9 +223,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
                 break;
 
-            /*
-             * These tokens get their own section, but have no subclauses. These tokens identify the statement but have no specific subclauses of their own.
-             */
+            // These tokens get their own section, but have no subclauses. These tokens identify the statement but have no specific subclauses of their own.
             case 'DELETE':
             case 'ALTER':
             case 'INSERT':
@@ -361,7 +357,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
                 break;
 
-            /* This is either LOCK TABLES or SELECT ... LOCK IN SHARE MODE */
+            // This is either LOCK TABLES or SELECT ... LOCK IN SHARE MODE
             case 'LOCK':
                 if ($token_category === "") {
                     $token_category = $upper;
@@ -376,7 +372,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
                 break;
 
-            case 'USING': /* USING in FROM clause is different from USING w/ prepared statement*/
+            case 'USING': // USING in FROM clause is different from USING w/ prepared statement
                 if ($token_category === 'EXECUTE') {
                     $token_category = $upper;
 
@@ -390,7 +386,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
                 break;
 
-            /* DROP TABLE is different from ALTER TABLE DROP ... */
+            // DROP TABLE is different from ALTER TABLE DROP ...
             case 'DROP':
                 if ($token_category !== 'ALTER') {
                     $token_category = $upper;
@@ -430,7 +426,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
                 break;
 
-            /* These tokens are ignored. */
+            // These tokens are ignored.
             case 'TO':
                 if ($token_category === 'RENAME') {
                     break;
@@ -451,7 +447,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
                 break;
 
-            /* These tokens set particular options for the statement. They never stand alone. */
+            // These tokens set particular options for the statement. They never stand alone.
             case 'LOW_PRIORITY':
             case 'DELAYED':
             case 'FORCE':

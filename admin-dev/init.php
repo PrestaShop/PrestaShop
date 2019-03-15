@@ -51,7 +51,7 @@ try {
         include _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
     }
 
-    /* Server Params */
+    // Server Params
     $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
     $protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
     $link = new Link($protocol_link, $protocol_content);

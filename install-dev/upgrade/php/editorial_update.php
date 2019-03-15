@@ -26,7 +26,7 @@
 
 function editorial_update()
 {
-    /*Table creation*/
+    // Table creation
 
     if (Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name`="editorial"')) {
         Db::getInstance()->execute('

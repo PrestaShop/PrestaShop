@@ -34,7 +34,7 @@ function migrate_tabs_17()
 {
     include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
 
-    /* first make some room for new tabs */
+    // first make some room for new tabs
     $moduleTabs = Db::getInstance()->executeS(
         'SELECT id_parent FROM '._DB_PREFIX_.'tab WHERE module IS NOT NULL AND module != "" ORDER BY id_tab ASC'
     );
@@ -46,7 +46,7 @@ function migrate_tabs_17()
         $moduleParents[$idParent] = Db::getInstance()->getValue('SELECT class_name FROM '._DB_PREFIX_.'tab WHERE id_tab='.$idParent);
     }
 
-    /* delete the old structure */
+    // delete the old structure
     Db::getInstance()->execute(
         'DELETE t, tl FROM '._DB_PREFIX_.'tab t JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab=tl.id_tab) WHERE module IS NULL OR module = ""'
     );
@@ -56,13 +56,13 @@ function migrate_tabs_17()
     $languageList = LanguageList::getInstance();
     $languageList->setLanguage($defaultLanguage->iso_code);
 
-    /* insert the new structure */
+    // insert the new structure
     ProfileCore::resetCacheAccesses();
     LanguageCore::resetCache();
     $install = new Install();
     $install->populateDatabase('tab');
 
-    /* update remaining idParent */
+    // update remaining idParent
     foreach($moduleParents as $idParent => $className) {
         $idTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name='.pSQL($className));
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'tab SET id_parent='.(int)$idTab.' WHERE id_parent='.(int)$idParent);

@@ -226,7 +226,7 @@ class CartOld extends Cart
 
                 case Order::ROUND_ITEM:
                 default:
-                    $product_price                       = /*$with_taxes ? $tax_calculator->addTaxes($price) : */
+                    $product_price                       = // $with_taxes ? $tax_calculator->addTaxes($price) :
                         $price;
                     $products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision)
                                                             * (int) $product['cart_quantity'];

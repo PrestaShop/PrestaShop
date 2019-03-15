@@ -109,7 +109,7 @@ abstract class InstallControllerConsole
 
         $datas = Datas::getInstance();
 
-        /* redefine HTTP_HOST  */
+        // redefine HTTP_HOST
         $_SERVER['HTTP_HOST'] = $datas->http_host;
 
         @date_default_timezone_set($datas->timezone);

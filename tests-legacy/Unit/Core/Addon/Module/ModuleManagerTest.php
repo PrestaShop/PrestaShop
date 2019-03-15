@@ -315,7 +315,7 @@ class ModuleManagerTest extends TestCase
 
     private function mockEmployee()
     {
-        /* this is a super admin */
+        // this is a super admin
         $this->employeeS = $this->getMockBuilder('Employee')
             ->disableOriginalConstructor()
             ->getMock();

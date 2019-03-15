@@ -46,7 +46,7 @@ class ThemeRepositoryTest extends TestCase
         $configuration = new Configuration();
         $configuration->restrictUpdatesTo($shop);
 
-        /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository */
+        // @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
         $this->repository = new ThemeRepository(
             $configuration,
             new Filesystem(),

@@ -63,7 +63,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                 continue;
             }
 
-            /* is it a subquery? */
+            // is it a subquery?
             if ($curr->isSubQueryToken()) {
 
                 $processor = new DefaultProcessor();
@@ -71,7 +71,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                 $curr->setTokenType(ExpressionType::SUBQUERY);
 
             } elseif ($curr->isEnclosedWithinParenthesis()) {
-                /* is it an in-list? */
+                // is it an in-list?
 
                 $localTokenList = $this->splitSQLIntoTokens($this->removeParenthesisFromStart($curr->getTrim()));
 
@@ -213,7 +213,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                 $curr->setNoQuotes(trim(trim($curr->getToken()), '@'), "`'\"");
 
             } else {
-                /* it is either an operator, a colref or a constant */
+                // it is either an operator, a colref or a constant
                 switch ($curr->getUpper()) {
 
                 case '*':
@@ -344,7 +344,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                 }
             }
 
-            /* is a reserved word? */
+            // is a reserved word?
             if (!$curr->isOperator() && !$curr->isInList() && !$curr->isFunction() && !$curr->isAggregateFunction()
                     && PHPSQLParserConstants::isReserved($curr->getUpper())) {
 

@@ -65,9 +65,7 @@ class ModuleRepositoryTest extends UnitTestCase
             $_SERVER['HTTP_HOST'] = 'localhost';
         }
 
-        /*
-         * We need a mock in order to change the module folder
-         */
+        // We need a mock in order to change the module folder
         $this->moduleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
             ->getMock();
@@ -134,23 +132,17 @@ class ModuleRepositoryTest extends UnitTestCase
             ->setMethods(array('readCacheFile', 'generateCacheFile'))
             ->getMock();
 
-        /*
-         * Mock function 'readCacheFile()' to disable the cache
-         */
+        // Mock function 'readCacheFile()' to disable the cache
         $this->moduleRepositoryStub
             ->method('readCacheFile')
             ->willReturn(array());
 
-        /*
-         * Mock function 'readCacheFile()' to disable the cache
-         */
+        // Mock function 'readCacheFile()' to disable the cache
         $this->moduleRepositoryStub
             ->method('generateCacheFile')
             ->will($this->returnArgument(0));
 
-        /*
-         * End of mocking for modules folder
-         */
+        // End of mocking for modules folder
     }
 
     public function testGetAtLeastOneModuleFromUniverse()

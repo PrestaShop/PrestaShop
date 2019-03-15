@@ -29,12 +29,10 @@ class AdminModulesControllerCore extends AdminController
 {
     protected $_modules_ad = array(
         'blockcart' => array('cartabandonmentpro'),
-        /* 'bloctopmenu' => array('advancedtopmenu'), */
+        // 'bloctopmenu' => array('advancedtopmenu'),
         'blocklayered' => array('pm_advancedsearch4'),
     );
-    /*
-    ** @var array map with $_GET keywords and their callback
-    */
+    // @var array map with $_GET keywords and their callback
     protected $map = array(
         'check' => 'check',
         'install' => 'install',
@@ -98,7 +96,7 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['payment_security']['name'] = $this->l('Site certification & Fraud prevention');
         $this->list_modules_categories['pricing_promotion']['name'] = $this->l('Pricing and Promotion');
         $this->list_modules_categories['quick_bulk_update']['name'] = $this->l('Quick / Bulk update');
-        /* 		$this->list_modules_categories['search_filter']['name'] = $this->l('Search and Filter'); */
+        // $this->list_modules_categories['search_filter']['name'] = $this->l('Search and Filter');
         $this->list_modules_categories['seo']['name'] = $this->l('SEO');
         $this->list_modules_categories['shipping_logistics']['name'] = $this->l('Shipping and Logistics');
         $this->list_modules_categories['slideshows']['name'] = $this->l('Slideshows');
@@ -485,10 +483,7 @@ class AdminModulesControllerCore extends AdminController
         Configuration::updateValue('PS_SHOW_CAT_MODULES_' . (int) $this->id_employee, '');
     }
 
-    /*
-    ** Post Process Filter
-    **
-    */
+    // Post Process Filter
 
     public function postProcessFilterModules()
     {
@@ -516,10 +511,7 @@ class AdminModulesControllerCore extends AdminController
         Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
     }
 
-    /*
-    ** Post Process Module CallBack
-    **
-    */
+    // Post Process Module CallBack
 
     public function postProcessReset()
     {
@@ -561,7 +553,7 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcessDownload()
     {
-        /* PrestaShop demo mode */
+        // PrestaShop demo mode
         if (_PS_MODE_DEMO_ || ($this->context->mode == Context::MODE_HOST)) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
 
@@ -676,7 +668,7 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcessDelete()
     {
-        /* PrestaShop demo mode */
+        // PrestaShop demo mode
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
 
@@ -720,7 +712,7 @@ class AdminModulesControllerCore extends AdminController
                 continue;
             }
 
-            /* PrestaShop demo mode */
+            // PrestaShop demo mode
             if (_PS_MODE_DEMO_) {
                 $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
 
@@ -1363,7 +1355,7 @@ class AdminModulesControllerCore extends AdminController
         $time = time();
         $kpis = array();
 
-        /* The data generation is located in AdminStatsControllerCore */
+        // The data generation is located in AdminStatsControllerCore
 
         $helper = new HelperKpi();
         $helper->id = 'box-installed-modules';

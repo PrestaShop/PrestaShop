@@ -70,7 +70,7 @@ class AppKernel extends Kernel
             $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
         }
 
-        /* Will not work until PrestaShop is installed */
+        // Will not work until PrestaShop is installed
         if ($this->parametersFileExists()) {
             try {
                 $this->enableComposerAutoloaderOnModules($this->getActiveModules());
@@ -90,7 +90,7 @@ class AppKernel extends Kernel
 
         $activeModules = array();
 
-        /* Will not work until PrestaShop is installed */
+        // Will not work until PrestaShop is installed
         if ($this->parametersFileExists()) {
             try {
                 $this->getConnection()->connect();

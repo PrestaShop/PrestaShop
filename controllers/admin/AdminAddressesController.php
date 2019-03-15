@@ -388,7 +388,7 @@ class AdminAddressesControllerCore extends AdminController
             $this->errors[] = $this->trans('The identification number is incorrect or has already been used.', array(), 'Admin.Orderscustomers.Notification');
         }
 
-        /* If the selected country does not contain states */
+        // If the selected country does not contain states
         $id_state = (int) Tools::getValue('id_state');
         $id_country = (int) Tools::getValue('id_country');
         $country = new Country((int) $id_country);
@@ -396,13 +396,13 @@ class AdminAddressesControllerCore extends AdminController
             $this->errors[] = $this->trans('You have selected a state for a country that does not contain states.', array(), 'Admin.Orderscustomers.Notification');
         }
 
-        /* If the selected country contains states, then a state have to be selected */
+        // If the selected country contains states, then a state have to be selected
         if ((int) $country->contains_states && !$id_state) {
             $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         $postcode = Tools::getValue('postcode');
-        /* Check zip code format */
+        // Check zip code format
         if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
             $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
         } elseif (empty($postcode) && $country->need_zip_code) {
@@ -433,7 +433,7 @@ class AdminAddressesControllerCore extends AdminController
             $this->display = 'edit';
         }
 
-        /* Reassignation of the order's new (invoice or delivery) address */
+        // Reassignation of the order's new (invoice or delivery) address
         $address_type = (int) Tools::getValue('address_type') == 2 ? 'invoice' : 'delivery';
 
         if ($this->action == 'save' && ($id_order = (int) Tools::getValue('id_order')) && !count($this->errors) && !empty($address_type)) {

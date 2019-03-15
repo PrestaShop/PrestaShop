@@ -48,7 +48,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
     protected $modules;
     protected $prestatrustApiResults;
 
-    /* STUBS */
+    // STUBS
 
     /**
      * @var \PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient

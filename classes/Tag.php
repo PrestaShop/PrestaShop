@@ -113,7 +113,7 @@ class TagCore extends ObjectModel
                 $tag = trim(Tools::substr($tag, 0, self::$definition['fields']['name']['size']));
                 $tagObj = new Tag(null, $tag, (int) $idLang);
 
-                /* Tag does not exist in database */
+                // Tag does not exist in database
                 if (!Validate::isLoadedObject($tagObj)) {
                     $tagObj->name = $tag;
                     $tagObj->id_lang = (int) $idLang;

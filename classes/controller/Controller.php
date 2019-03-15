@@ -737,7 +737,7 @@ abstract class ControllerCore
             $method = $bt[1]['function'];
         }
 
-        /* @deprecated deprecated since 1.6.1.1 */
+        // @deprecated deprecated since 1.6.1.1
         Hook::exec('actionAjaxDieBefore', array('controller' => $controller, 'method' => $method, 'value' => $value));
 
         /*

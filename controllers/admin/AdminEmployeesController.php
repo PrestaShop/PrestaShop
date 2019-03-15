@@ -196,7 +196,7 @@ class AdminEmployeesControllerCore extends AdminController
         if ($this->display == 'edit') {
             $obj = $this->loadObject(true);
             if (Validate::isLoadedObject($obj)) {
-                /* @var Employee $obj */
+                // @var Employee $obj
                 array_pop($this->toolbar_title);
                 $this->toolbar_title[] = $this->trans(
                     'Edit: %lastname% %firstname%',
@@ -603,7 +603,7 @@ class AdminEmployeesControllerCore extends AdminController
 
     public function postProcess()
     {
-        /* PrestaShop demo mode */
+        // PrestaShop demo mode
         if ((Tools::isSubmit('submitBulkdeleteemployee') || Tools::isSubmit('submitBulkdisableSelectionemployee') || Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
 

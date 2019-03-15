@@ -57,7 +57,7 @@ class CMSCore extends ObjectModel
             'indexation' => array('type' => self::TYPE_BOOL),
             'active' => array('type' => self::TYPE_BOOL),
 
-            /* Lang fields */
+            // Lang fields
             'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
             'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),

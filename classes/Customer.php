@@ -26,9 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
-/***
- * Class CustomerCore
- */
+// Class CustomerCore
 class CustomerCore extends ObjectModel
 {
     /** @var int $id Customer ID */
@@ -254,7 +252,7 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        /* Can't create a guest customer, if this feature is disabled */
+        // Can't create a guest customer, if this feature is disabled
         if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED')) {
             return false;
         }
@@ -1178,7 +1176,7 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-        /* Customer is valid only if it can be load and if object password is the same as database one */
+        // Customer is valid only if it can be load and if object password is the same as database one
         return $this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd);
     }
 

@@ -53,7 +53,7 @@ class AttributeCore extends ObjectModel
             'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
             'position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
         ),
     );
@@ -116,7 +116,7 @@ class AttributeCore extends ObjectModel
             // Delete associated restrictions on cart rules
             CartRule::cleanProductRuleIntegrity('attributes', $this->id);
 
-            /* Reinitializing position */
+            // Reinitializing position
             $this->cleanPositions((int) $this->id_attribute_group);
         }
         $return = parent::delete();

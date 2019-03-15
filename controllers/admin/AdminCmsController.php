@@ -310,16 +310,16 @@ class AdminCmsControllerCore extends AdminController
 
     public function displayList($token = null)
     {
-        /* Display list header (filtering, pagination and column names) */
+        // Display list header (filtering, pagination and column names)
         $this->displayListHeader($token);
         if (!count($this->_list)) {
             echo '<tr><td class="center" colspan="' . (count($this->fields_list) + 2) . '">' . $this->trans('No items found', array(), 'Admin.Design.Notification') . '</td></tr>';
         }
 
-        /* Show the content of the table */
+        // Show the content of the table
         $this->displayListContent($token);
 
-        /* Close list table and submit button */
+        // Close list table and submit button
         $this->displayListFooter($token);
     }
 
@@ -392,7 +392,7 @@ class AdminCmsControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex . '&id_cms_category=' . $cms->id_cms_category . '&conf=4&token=' . Tools::getAdminTokenLite('AdminCmsContent'));
             }
         } elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position'))) {
-            /* @var CMS $object */
+            // @var CMS $object
             if (!$this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!Validate::isLoadedObject($object = $this->loadObject())) {

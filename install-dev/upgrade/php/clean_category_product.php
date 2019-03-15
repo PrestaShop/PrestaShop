@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/* Remove duplicate entries from ps_category_product */
+// Remove duplicate entries from ps_category_product
 function clean_category_product()
 {
     $list = Db::getInstance()->executeS('

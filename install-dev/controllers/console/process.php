@@ -98,7 +98,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     public function process()
     {
-        /* avoid exceptions on re-installation */
+        // avoid exceptions on re-installation
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {

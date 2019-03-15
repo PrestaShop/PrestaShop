@@ -84,7 +84,7 @@ class CMSCategoryCore extends ObjectModel
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
             'link_rewrite' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
             'description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
@@ -270,7 +270,7 @@ class CMSCategoryCore extends ObjectModel
         $cmsCategories = $this->getAllChildren();
         $cmsCategories[] = $this;
         foreach ($cmsCategories as $cmsCategory) {
-            /* @var CMSCategory */
+            // @var CMSCategory
             $cmsCategory->deleteCMS();
             $cmsCategory->deleteLite();
             CMSCategory::cleanPositions($cmsCategory->id_parent);

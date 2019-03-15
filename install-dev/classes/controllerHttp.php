@@ -374,7 +374,7 @@ class InstallControllerHttp
      */
     public function getDocumentationLink()
     {
-        /* Link to translated documentation (if available) */
+        // Link to translated documentation (if available)
         return $this->translator->trans('http://doc.prestashop.com/display/PS17/Installing+PrestaShop', array(), 'Install');
     }
 
@@ -385,7 +385,7 @@ class InstallControllerHttp
      */
     public function getTutorialLink()
     {
-        /* Link to localized video tutorial (if available) */
+        // Link to localized video tutorial (if available)
         return $this->translator->trans('https://www.youtube.com/watch?v=cANFwuJqdgM', array(), 'Install');
     }
 
@@ -396,7 +396,7 @@ class InstallControllerHttp
      */
     public function getTailoredHelp()
     {
-        /* Link to support on addons */
+        // Link to support on addons
         return $this->translator->trans('https://addons.prestashop.com/en/388-support', array(), 'Install');
     }
 
@@ -407,7 +407,7 @@ class InstallControllerHttp
      */
     public function getForumLink()
     {
-        /* Link to localized forum */
+        // Link to localized forum
         return $this->translator->trans('http://www.prestashop.com/forums/', array(), 'Install');
     }
 

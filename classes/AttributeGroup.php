@@ -53,7 +53,7 @@ class AttributeGroupCore extends ObjectModel
             'group_type' => array('type' => self::TYPE_STRING, 'required' => true),
             'position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
             'public_name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
         ),
@@ -168,7 +168,7 @@ class AttributeGroupCore extends ObjectModel
     public function delete()
     {
         if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL) {
-            /* Select children in order to find linked combinations */
+            // Select children in order to find linked combinations
             $attributeIds = Db::getInstance()->executeS(
                 '
 				SELECT `id_attribute`
@@ -178,7 +178,7 @@ class AttributeGroupCore extends ObjectModel
             if ($attributeIds === false) {
                 return false;
             }
-            /* Removing attributes to the found combinations */
+            // Removing attributes to the found combinations
             $toRemove = array();
             foreach ($attributeIds as $attribute) {
                 $toRemove[] = (int) $attribute['id_attribute'];
@@ -189,11 +189,11 @@ class AttributeGroupCore extends ObjectModel
 					IN (' . implode(', ', $toRemove) . ')') === false) {
                 return false;
             }
-            /* Remove combinations if they do not possess attributes anymore */
+            // Remove combinations if they do not possess attributes anymore
             if (!AttributeGroup::cleanDeadCombinations()) {
                 return false;
             }
-            /* Also delete related attributes */
+            // Also delete related attributes
             if (count($toRemove)) {
                 if (!Db::getInstance()->execute('
 				DELETE FROM `' . _DB_PREFIX_ . 'attribute_lang`
@@ -272,7 +272,7 @@ class AttributeGroupCore extends ObjectModel
      */
     public function deleteSelection($selection)
     {
-        /* Also delete Attributes */
+        // Also delete Attributes
         foreach ($selection as $value) {
             $obj = new AttributeGroup($value);
             if (!$obj->delete()) {

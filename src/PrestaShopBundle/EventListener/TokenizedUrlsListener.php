@@ -82,9 +82,7 @@ class TokenizedUrlsListener
         $route = $request->get('_route');
         $uri = $request->getUri();
 
-        /*
-         * every route prefixed by '_' won't be secured
-         */
+        // every route prefixed by '_' won't be secured
         if (
             0 === strpos($route, '_') ||
             0 === strpos($route, 'api_')
@@ -92,9 +90,7 @@ class TokenizedUrlsListener
             return;
         }
 
-        /*
-         * every uri which contains 'token' should use the old validation system
-         */
+        // every uri which contains 'token' should use the old validation system
         if ($request->query->has('token')) {
             if (0 == strcasecmp(Tools::getAdminToken($this->employeeId), $request->query->get('token'))) {
                 return;

@@ -44,7 +44,7 @@ class OrderMessageCore extends ObjectModel
         'fields' => array(
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
             'message' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200),
         ),

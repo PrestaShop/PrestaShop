@@ -75,7 +75,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     public function process()
     {
-        /* avoid exceptions on re-installation */
+        // avoid exceptions on re-installation
         $this->clearConfigXML() && $this->clearConfigThemes();
 
         if (!$this->session->process_validated) {

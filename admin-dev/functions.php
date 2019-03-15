@@ -492,7 +492,7 @@ function runAdminTab($tab, $ajax_mode = false)
                             $admin_obj->displayAjax();
                         }
                     } else {
-                        /* Filter memorization */
+                        // Filter memorization
                         if (isset($_POST) && !empty($_POST) && isset($admin_obj->table)) {
                             foreach ($_POST as $key => $value) {
                                 if (is_array($admin_obj->table)) {

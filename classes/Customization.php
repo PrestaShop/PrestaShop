@@ -60,7 +60,7 @@ class CustomizationCore extends ObjectModel
         'table' => 'customization',
         'primary' => 'id_customization',
         'fields' => array(
-            /* Classic fields */
+            // Classic fields
             'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_address_delivery' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),

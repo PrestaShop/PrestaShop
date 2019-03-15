@@ -30,7 +30,7 @@ function reorderpositions()
     $ps_lang_default = Db::getInstance()->getValue('SELECT value
 		FROM `'._DB_PREFIX_.'configuration`
 		WHERE name="PS_LANG_DEFAULT"');
-    /* Clean products positions */
+    // Clean products positions
     $cat = Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`');
     if ($cat) {
         foreach ($cat as $categ) {
@@ -83,7 +83,7 @@ function reorderpositions()
         }
     }
 
-    /* Clean CMS positions */
+    // Clean CMS positions
     $cms_cat = Db::getInstance()->executeS('SELECT id_cms_category FROM `'._DB_PREFIX_.'cms_category` WHERE active=1');
     if ($cms_cat) {
         foreach ($cms_cat as $i => $categ) {

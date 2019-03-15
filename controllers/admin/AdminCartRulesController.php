@@ -410,7 +410,7 @@ class AdminCartRulesControllerCore extends AdminController
         return $productRuleGroupsArray;
     }
 
-    /* Return the form for a single cart rule group either with or without product_rules set up */
+    // Return the form for a single cart rule group either with or without product_rules set up
     public function getProductRuleGroupDisplay($product_rule_group_id, $product_rule_group_quantity = 1, $product_rules = null)
     {
         Context::getContext()->smarty->assign('product_rule_group_id', $product_rule_group_id);

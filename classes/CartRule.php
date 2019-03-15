@@ -29,7 +29,7 @@
  */
 class CartRuleCore extends ObjectModel
 {
-    /* Filters used when retrieving the cart rules applied to a cart of when calculating the value of a reduction */
+    // Filters used when retrieving the cart rules applied to a cart of when calculating the value of a reduction
 
     const FILTER_ACTION_ALL = 1;
     const FILTER_ACTION_SHIPPING = 2;
@@ -127,7 +127,7 @@ class CartRuleCore extends ObjectModel
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            /* Lang fields */
+            // Lang fields
             'name' => array(
                 'type' => self::TYPE_STRING,
                 'lang' => true,
