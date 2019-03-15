@@ -4782,7 +4782,10 @@ class ProductCore extends ObjectModel
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
-            $row['price_tax_exc'] = Tools::ps_round($row['price_tax_exc'], 2);
+            $row['price_tax_exc'] = Tools::ps_round(
+                $row['price_tax_exc'],
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION')
+            );
             $row['price'] = Product::getPriceStatic(
                 (int) $row['id_product'],
                 true,
