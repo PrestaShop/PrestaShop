@@ -68,11 +68,15 @@ class CommonController extends FrameworkBundleAdminController
      * @param int $offset
      * @param int $total
      * @param string $view full|quicknav To change default template used to render the content
+     * @param string $paramsPrefix Indicates the params prefix (eg: ?limit=10&offset=20 -> ?scope[limit]=10&scope[offset]=20)
      *
      * @return array|Response
      */
-    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
+    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $paramsPrefix = '')
     {
+        $offsetParam = empty($paramsPrefix) ? 'offset' : sprintf('%s[offset]', $paramsPrefix);
+        $limitParam = empty($paramsPrefix) ? 'limit' : sprintf('%s[limit]', $paramsPrefix);
+
         $limit = max($limit, 10);
 
         $currentPage = floor($offset / $limit) + 1;
@@ -91,44 +95,44 @@ class CommonController extends FrameworkBundleAdminController
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => min($total - 1, $offset + $limit),
-                'limit' => $limit,
+                $offsetParam => min($total - 1, $offset + $limit),
+                $limitParam => $limit,
             )
         ));
 
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => max(0, $offset - $limit),
-                'limit' => $limit,
+                $offsetParam => max(0, $offset - $limit),
+                $limitParam => $limit,
             )
         ));
         $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => 0,
-                'limit' => $limit,
+                $offsetParam => 0,
+                $limitParam => $limit,
             )
         ));
         $lastPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => ($pageCount - 1) * $limit,
-                'limit' => $limit,
+                $offsetParam => ($pageCount - 1) * $limit,
+                $limitParam => $limit,
             )
         ));
         $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => 0,
-                'limit' => '_limit',
+                $offsetParam => 0,
+                $limitParam => '_limit',
             )
         ));
         $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => 999999,
-                'limit' => $limit,
+                $offsetParam => 999999,
+                $limitParam => $limit,
             )
         ));
         $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
