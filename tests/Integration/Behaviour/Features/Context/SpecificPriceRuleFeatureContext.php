@@ -49,7 +49,7 @@ class SpecificPriceRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a specific price rule named (.+) with a percent discount of (\d+)% and minimum quantity of (\d+)$/
+     * @Given /^there is a specific price rule named "(.+)" with a percent discount of (\d+)% and minimum quantity of (\d+)$/
      */
     public function insertSpecificPriceRulePercent($priceRuleName, $value, $minimalQuantity)
     {
@@ -57,7 +57,7 @@ class SpecificPriceRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a specific price rule named (.+) with an amount discount of (\d+) and minimum quantity of (\d+)$/
+     * @Given /^there is a specific price rule named "(.+)" with an amount discount of (\d+) and minimum quantity of (\d+)$/
      */
     public function insertSpecificPriceRuleAmount($priceRuleName, $value, $minimalQuantity)
     {
@@ -84,7 +84,7 @@ class SpecificPriceRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^specific price rule (.+) changes product price to (\d+\.\d+)$/
+     * @Given /^specific price rule "(.+)" changes product price to (\d+\.\d+)$/
      */
     public function setPriceModifier($priceRuleName, $price)
     {

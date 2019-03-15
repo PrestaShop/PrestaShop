@@ -39,7 +39,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customers = [];
 
     /**
-     * @Given /^there is a customer named (.+) whose email is (.+)$/
+     * @Given /^there is a customer named "(.+)" whose email is "(.+)"$/
      */
     public function createCustomer($customerName, $customerEmail)
     {
@@ -53,7 +53,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I am logged in as (.+)$/
+     * @When /^I am logged in as "(.+)"$/
      */
     public function setCurrentCustomer($customerName)
     {

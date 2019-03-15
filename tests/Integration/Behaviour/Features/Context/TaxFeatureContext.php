@@ -69,7 +69,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a tax named (.+) and rate (\d+\.\d+)%$/
+     * @Given /^there is a tax named "(.+)" and rate (\d+\.\d+)%$/
      */
     public function createTax($name, $rate)
     {
@@ -82,7 +82,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a tax rule named (.+) in country (.+) and state (.+) where tax (.+) is applied$/
+     * @Given /^there is a tax rule named "(.+)"in country "(.+)" and state "(.+)" where tax "(.+)" is applied$/
      */
     public function createTaxRule($taxRuleName, $countryName, $stateName, $taxName)
     {
@@ -152,7 +152,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^product named (.+) belongs to tax group named (.+)$/
+     * @Given /^product "(.+)" belongs to tax group "(.+)"$/
      */
     public function setProductTaxRuleGroup($productName, $taxName)
     {
@@ -164,7 +164,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^carrier named (.+) belongs to tax group named (.+)$/
+     * @Given /^carrier "(.+)" belongs to tax group "(.+)"$/
      */
     public function setCarrierTaxRuleGroup($carrierName, $taxName)
     {

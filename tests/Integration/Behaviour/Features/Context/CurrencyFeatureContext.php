@@ -64,7 +64,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a currency named (.+) with iso code (.+) and exchange rate of (\d+\.\d+)$/
+     * @Given /^there is a currency named "(.+)" with iso code "(.+)" and exchange rate of (\d+\.\d+)$/
      */
     public function thereIsACurrency($currencyName, $currencyIsoCode, $changeRate)
     {
@@ -88,7 +88,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^currency (.+) is the default one$/
+     * @Given /^currency "(.+)" is the default one$/
      */
     public function setDefaultCurrency($currencyName)
     {
@@ -105,7 +105,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^currency named (.+) is the current one$/
+     * @Given /^currency "(.+)" is the current one$/
      */
     public function setCurrentCurrency($currencyName)
     {

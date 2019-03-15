@@ -31,7 +31,7 @@ use Tools;
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^shop configuration for (.+) is set to (.+)$/
+     * @Given /^shop configuration for "(.+)" is set to (.+)$/
      */
     public function shopConfigurationOfIsSetTo($index, $value)
     {

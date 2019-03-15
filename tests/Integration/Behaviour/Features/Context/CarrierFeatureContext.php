@@ -89,7 +89,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a zone named (.+)$/
+     * @Given /^there is a zone named "(.+)"$/
      */
     public function createZone($zoneName)
     {
@@ -108,7 +108,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a country named (.+) and iso code (.+) in zone (.+)$/
+     * @Given /^there is a country named "(.+)" and iso code "(.+)" in zone "(.+)"$/
      */
     public function createCountry($countryName, $isoCode, $zoneName)
     {
@@ -145,7 +145,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a state named (.+) with iso code (.+) in country (.+) and zone (.+)$/
+     * @Given /^there is a state named "(.+)" with iso code "(.+)" in country"(.+)" and zone "(.+)"$/
      */
     public function createState($stateName, $stateIsoCode, $countryName, $zoneName)
     {
@@ -179,7 +179,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is an address named (.+) with postcode (.+) in state (.+)$/
+     * @Given /^there is an address named "(.+)" with postcode "(.+)" in state "(.+)"$/
      */
     public function createAddress($addressName, $postCode, $stateName)
     {
@@ -198,7 +198,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^address named (.+) is associated to customer named (.+)$/
+     * @Given /^address "(.+)" is associated to customer "(.+)"$/
      */
     public function setAddressCustomer($addressName, $customerName)
     {
@@ -217,7 +217,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a carrier named (.+)$/
+     * @Given /^there is a carrier named "(.+)"$/
      */
     public function createCarrier($carrierName)
     {
@@ -238,7 +238,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^carrier named (.+) ships to all groups$/
+     * @Given /^carrier "(.+)" ships to all groups$/
      */
     public function setCarrierShipsToAllGroups($carrierName)
     {
@@ -274,7 +274,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * Be careful: this method REPLACES shipping fees for carrier
      *
-     * @Given /^carrier named (.+) applies shipping fees of (\d+\.\d+) in zone (.+) for quantities between (\d+) and (\d+)$/
+     * @Given /^carrier "(.+)" applies shipping fees of (\d+\.\d+) in zone "(.+)" for quantities between (\d+) and (\d+)$/
      */
     public function setCarrierFees($carrierName, $shippingPrice, $zoneName, $fromQuantity, $toQuantity)
     {
@@ -339,7 +339,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I select carrier (.+) in my cart$/
+     * @When /^I select carrier "(.+)" in my cart$/
      */
     public function setCartCarrier($carrierName)
     {
@@ -353,7 +353,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I select address named (.+) in my cart$/
+     * @When /^I select address "(.+)" in my cart$/
      */
     public function setCartAddress($addresssName)
     {

@@ -80,7 +80,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a cart rule named (.+) that applies a percent discount of (\d+\.\d+)% with priority (\d+), quantity of (.*) and quantity per user (.*)$/
+     * @Given /^there is a cart rule named "(.+)" that applies a percent discount of (\d+\.\d+)% with priority (\d+), quantity of (.*) and quantity per user (.*)$/
      */
     public function thereIsACartRuleWithNameAndPercentDiscountOf50AndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $percent, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
     {
@@ -88,7 +88,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a cart rule named (.+) that applies an amount discount of (\d+\.\d+) with priority (\d+), quantity of (.*) and quantity per user (.*)$/
+     * @Given /^there is a cart rule named "(.+)" that applies an amount discount of (\d+\.\d+) with priority (\d+), quantity of (.*) and quantity per user (.*)$/
      */
     public function thereIsACartRuleWithNameAndAmountDiscountOfAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
     {
@@ -116,7 +116,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule named (.+) has a discount code (.+)$/
+     * @Given /^cart rule "(.+)" has a discount code "(.+)"$/
      */
     public function cartRuleNamedHasACode($cartRuleName, $cartRuleCode)
     {
@@ -126,7 +126,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule (.+) is restricted to product (.+)$/
+     * @Given /^cart rule "(.+)" is restricted to product "(.+)"$/
      */
     public function cartRuleNamedIsRestrictedToProductNamed($cartRuleName, $productName)
     {
@@ -138,7 +138,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule (.+) is restricted to carrier (.+)$/
+     * @Given /^cart rule "(.+)" is restricted to carrier "(.+)"$/
      */
     public function cartRuleNamedIsRestrictedToCarrierNamed($cartRuleName, $carrierName)
     {
@@ -155,7 +155,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule (.+) offers a gift product (.+)$/
+     * @Given /^cart rule "(.+)" offers a gift product "(.+)"$/
      */
     public function cartRuleNamedHasAGiftProductNamed($cartRuleName, $productName)
     {
@@ -166,7 +166,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^cart rule (.+) cannot be applied to my cart$/
+     * @Then /^cart rule "(.+)" cannot be applied to my cart$/
      */
     public function cartRuleNamedCannotBeAppliedToMyCart($cartRuleName)
     {
@@ -183,7 +183,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^cart rule (.+) can be applied to my cart$/
+     * @Then /^cart rule "(.+)" can be applied to my cart$/
      */
     public function cartRuleNamedCanBeAppliedToMyCart($cartRuleName)
     {
@@ -200,7 +200,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I use the discount named (.+)$/
+     * @When /^I use the discount "(.+)"$/
      *
      * @param $cartRuleName
      */
@@ -252,7 +252,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^customer (.+) should have (\d+) cart rule(?:s)? that apply to (?:him|her)$/
+     * @Then /^customer "(.+)" should have (\d+) cart rule(?:s)? that apply to (?:him|her)$/
      */
     public function checkCartRuleCountForCustomer($customerName, $expectedCount)
     {
@@ -271,7 +271,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^cart rule for customer (.+) in position (\d+) should apply a discount of (\d+.\d+)$/
+     * @Then /^cart rule for customer "(.+)" in position (\d+) should apply a discount of (\d+.\d+)$/
      */
     public function checkCartRuleValueForCustomer($customerName, $position, $expectedValue)
     {

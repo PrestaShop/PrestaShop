@@ -72,7 +72,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a product in the catalog named (.+) with a price of (\d+\.\d+) and (\d+) items in stock$/
+     * @Given /^there is a product in the catalog named "(.+)" with a price of (\d+\.\d+) and (\d+) items in stock$/
      */
     public function thereIsAProductWithNameAndPriceAndQuantity($productName, $price, $productQuantity)
     {
@@ -80,7 +80,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I add (\d+) items of product (.+) in my cart$/
+     * @When /^I add (\d+) items of product "(.+)" in my cart$/
      */
     public function iAddProductNamedInMyCartWithQuantity($productQuantity, $productName)
     {
@@ -97,7 +97,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I change quantity of product named (.+) in my cart with quantity (\d+) and operator (up|down|nothing), result of change is (OK|KO)$/
+     * @When /^I change quantity of product "(.+)" in my cart with quantity (\d+) and operator (up|down|nothing), result of change is (OK|KO)$/
      */
     public function iChangeProductQuantityInMyCart($productName, $productQuantity, $operator, $expectedStr)
     {
@@ -116,7 +116,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^my cart should contain (\d+) units of product (.+), (excluding|including) items in pack$/
+     * @Then /^my cart should contain (\d+) units of product "(.+)", (excluding|including) items in pack$/
      */
     public function quantityOfProductNamedInMyCartShouldBe($productQuantity, $productName, $packItemsIncluded = null)
     {
@@ -146,7 +146,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^the remaining available stock for product (.+) should be ([\-\d]+)$/
+     * @Then /^the remaining available stock for product "(.+)" should be ([\-\d]+)$/
      */
     public function remainingQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
@@ -164,7 +164,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^I am not allowed to add (\d+) items of product (.+) in my cart$/
+     * @Then /^I am not allowed to add (\d+) items of product "(.+)" in my cart$/
      */
     public function iAmNotAbleToAddProductNamedInMyCartWithQuantity($productQuantity, $productName)
     {
@@ -211,7 +211,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^product named (.+) is out of stock$/
+     * @Given /^product "(.+)" is out of stock$/
      *
      * @param string $productName
      */
@@ -234,7 +234,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^product named (.+) has following tax rule group id: (\d+)$/
+     * @When /^product "(.+)" has following tax rule group id: (\d+)$/
      */
     public function setProductTaxRuleGroupId($productName, $taxRuleGroupId)
     {
@@ -246,7 +246,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /* COMBINATION */
 
     /**
-     * @Given /^product named (.+) has a combination named (.+) with (.*) items in stock$/
+     * @Given /^product "(.+)" has a combination named "(.+)" with (.*) items in stock$/
      */
     public function productWithNameHasACombinationWithNameAndQuantity($productName, $combinationName, $combinationQuantity)
     {
@@ -263,7 +263,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^the remaining available stock for combination (.+) of product (.+) should be ([\-\d]+)$/
+     * @Then /^the remaining available stock for combination "(.+)" of product "(.+)" should be ([\-\d]+)$/
      */
     public function remainingQuantityOfCombinationNamedForProductNamedShouldBe($combinationName, $productName, $combinationQuantity)
     {
@@ -282,7 +282,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I add (\d+) items of combination (.+) of product (.+)$/
+     * @When /^I add (\d+) items of combination "(.+)" of product "(.+)"$/
      */
     public function iAddCombinationNamedOfProductNamedInMyCartWithQuantity($combinationQuantity, $combinationName, $productName)
     {
@@ -300,7 +300,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^I am not able to add (\d+) items of combination (.+) of product (.+) in my cart$/
+     * @Then /^I am not able to add (\d+) items of combination "(.+)" of product "(.+)" in my cart$/
      */
     public function iAmNotAbleToAddPCombinationNamedOfroductNamedInMyCartWithQuantity($combinationQuantity, $combinationName, $productName)
     {
@@ -318,7 +318,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^I should have (\d+) items of combination (.+) of product (.+) in my cart$/
+     * @Then /^I should have (\d+) items of combination "(.+)" of product "(.+)" in my cart$/
      */
     public function quantityOfCombinationNamedOfProductNamedInMyCartShouldBe($combinationQuantity, $combinationName, $productName)
     {
@@ -363,7 +363,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /* CUSTOMIZATION */
 
     /**
-     * @Given /^product named (.+) has a customization field named (.+)$/
+     * @Given /^product "(.+)" has a customization field named "(.+)"$/
      */
     public function productWithNameHasACustomizationWithName($productName, $customizationFieldName)
     {
@@ -383,7 +383,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^the remaining available stock for customization (.*) of product (.*) should be (.*)$/
+     * @Then /^the remaining available stock for customization "(.*)" of product "(.*)" should be (.*)$/
      */
     public function remainingQuantityOfCustomizationNamedForProductNamedShouldBe($customizationFieldName, $productName, $customizationQuantity)
     {
@@ -402,7 +402,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I add (\d+) items of customization (.+) of product (.+)$/
+     * @When /^I add (\d+) items of customization "(.+)"of product "(.+)"$/
      */
     public function iAddCustomizationNamedOfProductNamedInMyCartWithQuantity($customizationFieldQuantity, $customizationFieldName, $productName)
     {
@@ -420,7 +420,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^I am not able to add (\d+) items of customization (.+) of product (.+) to my cart$/
+     * @Then /^I am not able to add (\d+) items of customization "(.+)"of product "(.+)" to my cart$/
      */
     public function iAmNotAbleToAddPCustomizationNamedOfroductNamedInMyCartWithQuantity($customizationFieldQuantity, $customizationFieldName, $productName)
     {
@@ -439,7 +439,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^I should have (\d+) items of customization (.+) of product (.+) in my cart$/
+     * @Then /^I should have (\d+) items of customization "(.+)" of product "(.+)" in my cart$/
      */
     public function quantityOfCustomizationNamedOfProductNamedInMyCartShouldBe($customizationFieldQuantity, $customizationFieldName, $productName)
     {
@@ -518,7 +518,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /* PACK */
 
     /**
-     * @Given /^product named (.+) is a pack containing (\d+) items of product (.+)$/
+     * @Given /^product "(.+)" is a pack containing (\d+) items of product "(.+)"$/
      */
     public function productWithNameIsAPackContainingQuantityOfProductNamed($packName, $containedQuantity, $containedProductName)
     {
@@ -532,7 +532,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^pack named (.+) has (enough stock|not enough stock) for an order of (\d+) items$/
+     * @Then /^pack "(.+)" has (enough stock|not enough stock) for an order of (\d+) items$/
      */
     public function packWithNameIsInStockForQuantity($packName, $enoughStock, $packQuantity)
     {
@@ -561,7 +561,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^product (.+) is considered as a pack$/
+     * @Then /^product "(.+)" is considered as a pack$/
      */
     public function productIsConsideredAsAPack($productName)
     {
