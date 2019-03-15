@@ -34,6 +34,7 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
 import TranslatableInput from '../../components/translatable-input';
 import TaggableField from '../../components/taggable-field';
+import FormSubmitButton from '../../components/form-submit-button';
 
 const $ = window.$;
 
@@ -57,4 +58,6 @@ $(() => {
       createTokensOnBlur: true,
     },
   });
+
+  new FormSubmitButton();
 });
