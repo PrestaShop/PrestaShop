@@ -124,7 +124,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
     }
-    
+
     public function viewAction($manufacturerId)
     {
         try {
