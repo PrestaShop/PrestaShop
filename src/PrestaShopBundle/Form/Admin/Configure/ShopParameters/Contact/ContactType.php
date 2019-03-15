@@ -84,13 +84,13 @@ class ContactType extends AbstractType
                 'options' => [
                     'constraints' => [
                         new Regex([
-                                'pattern' => '/^[^<>={}]*$/u',
-                                'message' => $this->trans(
-                                    '%s is invalid.',
-                                    [],
-                                    'Admin.Notifications.Error'
-                                ),
-                            ]
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans(
+                                '%s is invalid.',
+                                [],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
                         ),
                     ],
                 ],

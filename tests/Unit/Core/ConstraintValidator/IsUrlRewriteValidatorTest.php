@@ -152,10 +152,10 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
     {
         return [
             [
-              'aĮأ',
+                'aĮأ',
             ],
             [
-              'Šarūnas',
+                'Šarūnas',
             ],
             [
                 '_$',
