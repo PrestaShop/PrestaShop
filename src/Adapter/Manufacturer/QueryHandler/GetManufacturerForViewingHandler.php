@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler;
 
 use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler\GetManufacturerForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
@@ -63,7 +64,9 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
         $manufacturer = new Manufacturer($manufacturerId->getValue());
 
         if ($manufacturer->id !== $manufacturerId->getValue()) {
-            //@todo: throw exception when another Manufacturers PR gets merged
+            throw new ManufacturerNotFoundException(
+                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
+            );
         }
 
         return $manufacturer;
