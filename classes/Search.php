@@ -669,24 +669,7 @@ class SearchCore
         }
 
         // Every fields are weighted according to the configuration in the backend
-        $weight_array = array(
-            'pname' => Configuration::get('PS_SEARCH_WEIGHT_PNAME'),
-            'reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
-            'pa_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
-            'supplier_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
-            'pa_supplier_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
-            'ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
-            'pa_ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
-            'upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
-            'pa_upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
-            'description_short' => Configuration::get('PS_SEARCH_WEIGHT_SHORTDESC'),
-            'description' => Configuration::get('PS_SEARCH_WEIGHT_DESC'),
-            'cname' => Configuration::get('PS_SEARCH_WEIGHT_CNAME'),
-            'mname' => Configuration::get('PS_SEARCH_WEIGHT_MNAME'),
-            'tags' => Configuration::get('PS_SEARCH_WEIGHT_TAG'),
-            'attributes' => Configuration::get('PS_SEARCH_WEIGHT_ATTRIBUTE'),
-            'features' => Configuration::get('PS_SEARCH_WEIGHT_FEATURE'),
-        );
+        $weight_array = Search::getSearchIndexWeights();
 
         // Those are kind of global variables required to save the processed data in the database every X occurrences, in order to avoid overloading MySQL
         $count_words = 0;
@@ -791,6 +774,28 @@ class SearchCore
         }
 
         return true;
+    }
+    
+    protected static function getSearchIndexWeights()
+    {
+        return array(
+            'pname'                 => Configuration::get('PS_SEARCH_WEIGHT_PNAME'),
+            'reference'             => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'pa_reference'          => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'supplier_reference'    => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'pa_supplier_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'ean13'                 => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'pa_ean13'              => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'upc'                   => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'pa_upc'                => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'description_short'     => Configuration::get('PS_SEARCH_WEIGHT_SHORTDESC'),
+            'description'           => Configuration::get('PS_SEARCH_WEIGHT_DESC'),
+            'cname'                 => Configuration::get('PS_SEARCH_WEIGHT_CNAME'),
+            'mname'                 => Configuration::get('PS_SEARCH_WEIGHT_MNAME'),
+            'tags'                  => Configuration::get('PS_SEARCH_WEIGHT_TAG'),
+            'attributes'            => Configuration::get('PS_SEARCH_WEIGHT_ATTRIBUTE'),
+            'features'              => Configuration::get('PS_SEARCH_WEIGHT_FEATURE'),
+        );
     }
 
     public static function removeProductsSearchIndex($products)
