@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Base exception for manufacturer sub-domain
+ * Base exception for Manufacturer subdomain
  */
 class ManufacturerException extends DomainException
 {
