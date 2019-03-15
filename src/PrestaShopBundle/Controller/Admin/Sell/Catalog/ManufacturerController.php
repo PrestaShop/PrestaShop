@@ -177,6 +177,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             ));
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
             return $this->redirectToRoute('admin_manufacturers_index');
         }
 
