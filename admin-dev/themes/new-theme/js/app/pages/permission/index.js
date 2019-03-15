@@ -31,7 +31,7 @@ const $ = window.$;
  * Vue component displaying a permission tree.
  */
 class PermissionApp {
-  constructor(profileId, target, userPermissions, updateKey) {
+  constructor(profileId, target, permissionKey, profilePermissions, employeePermissions) {
     if ($(target).length === 0) {
       return;
     }
@@ -39,16 +39,17 @@ class PermissionApp {
     // If the selector cannot be found, we do not load the Vue app
     this.vm = new Vue({
       el: target,
-      template: '<permission :update-key="updateKey" :profile-id="profileId" :update-url="updateUrl" :messages="messages" :permissions="permissions" :types="types" :user-permissions="userPermissions" :canEdit="canEdit" />',
+      template: '<permission :permission-key="permissionKey" :employee-permissions="employeePermissions" :profile-id="profileId" :update-url="updateUrl" :messages="messages" :permissions="permissions" :types="types" :profile-permissions="profilePermissions" :canEdit="canEdit" />',
       data: {
         profileId,
-        messages: window.permissionsMessages,
+        permissionKey,
+        profilePermissions,
+        employeePermissions: employeePermissions || {},
         permissions: $(target).data('permissions'),
-        updateKey,
-        userPermissions,
         updateUrl: $(target).data('update-url'),
         canEdit: $(target).data('can-edit'),
         types: $(target).data('types'),
+        messages: window.permissionsMessages,
       },
       components: {
         Permission,

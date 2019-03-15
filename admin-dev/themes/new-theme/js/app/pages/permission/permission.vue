@@ -32,7 +32,7 @@
       <div class="table js-permissions-table">
         <bulk
           :types="types"
-          :user-permissions.sync="userDataPermissions"
+          :profile-permissions.sync="profileDataPermissions"
           @updateBulk="updateBulk"
         />
         <div class="col-xs-12" v-if="permissions === null">
@@ -46,8 +46,9 @@
             :max-level-depth="4"
             :permission="permission"
             :permission-id="permissionId"
-            :update-key="updateKey"
-            :user-permissions.sync="userDataPermissions"
+            :permission-key="permissionKey"
+            :profile-permissions.sync="profileDataPermissions"
+            :employee-permissions="employeePermissions"
             :parent="true"
             :types="Object.keys(types)"
             @sendRequest="sendRequest"
@@ -84,7 +85,7 @@
         type: String,
         required: true,
       },
-      updateKey: {
+      permissionKey: {
         type: String,
         required: true,
       },
@@ -96,7 +97,11 @@
         type: Object,
         required: true,
       },
-      userPermissions: {
+      profilePermissions: {
+        type: Object,
+        required: true,
+      },
+      employeePermissions: {
         type: Object,
         required: true,
       },
@@ -108,7 +113,7 @@
     },
     data() {
       return {
-        userDataPermissions: this.userPermissions,
+        profileDataPermissions: this.profilePermissions,
       };
     },
     methods: {
@@ -139,14 +144,14 @@
        * Update user permissions from bulk action
        */
       updateBulk(data) {
-        Object.keys(this.userDataPermissions).forEach((key) => {
-          this.userDataPermissions[key][data.type] = data.status ? '1' : '0';
+        Object.keys(this.profileDataPermissions).forEach((key) => {
+          this.profileDataPermissions[key][data.type] = data.status ? '1' : '0';
         });
         const params = {
           expected_status: data.status,
           permission: data.type,
         };
-        params[this.updateKey] = '-1';
+        params[this.permissionKey] = '-1';
 
         this.sendRequest(params);
       },
