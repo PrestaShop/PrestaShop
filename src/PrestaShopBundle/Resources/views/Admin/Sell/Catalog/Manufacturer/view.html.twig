@@ -26,5 +26,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/Blocks/View/addresses.html.twig' %}
+    </div>
+  </div>
 {% endblock %}
