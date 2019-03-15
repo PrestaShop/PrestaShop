@@ -76,6 +76,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
      */
     private function getManufacturerProducts(Manufacturer $manufacturer, LanguageId $languageId)
     {
+        $manufacturerProducts = [];
         $products = $manufacturer->getProductsLite($languageId->getValue());
 
         foreach ($products as $i => $product) {
@@ -108,8 +109,19 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
                 isset($combinationsData) ? $products[$i]->combination = $combinationsData : '';
                 unset($combinationsData);
             }
+
+            $manufacturerProducts[] = [
+                'name' => $products[$i]->name,
+                'reference' => $products[$i]->reference,
+                'ean13' => $products[$i]->ean13,
+                'upc' => $products[$i]->upc,
+                'quantity' => $products[$i]->quantity,
+                'has_attributes' => $products[$i]->hasAttributes(),
+            ];
         }
 
-        return $products;
+        dump($manufacturerProducts);
+
+        return $manufacturerProducts;
     }
 }
