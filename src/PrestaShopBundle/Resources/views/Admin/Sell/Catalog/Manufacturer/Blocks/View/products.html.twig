@@ -42,9 +42,13 @@
             <a class="btn btn-primary btn-sm" href="{{ path('admin_product_form', {'id': product.id}) }}">
               {{ 'Edit'|trans({}, 'Admin.Actions') }}
             </a>
-            <a class="btn btn-primary btn-sm" href="{{ path('admin_product_unit_action', {'action': 'delete', 'id': product.id}) }}">
+            <button type="button"
+                    class="btn btn-primary btn-sm js-form-submit-btn"
+                    data-form-submit-url="{{ path('admin_product_unit_action', {'action': 'delete', 'id': product.id}) }}"
+                    data-form-confirm-message="{{ '%s%s?'|format('Delete item #'|trans({}, 'Admin.International.Feature'), product.id) }}"
+            >
               {{ 'Delete'|trans({}, 'Admin.Actions') }}
-            </a>
+            </button>
           </div>
         </div>
         <div class="card-body">
