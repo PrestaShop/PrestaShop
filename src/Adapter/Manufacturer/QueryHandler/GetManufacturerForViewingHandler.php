@@ -114,6 +114,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
             }
 
             $products[] = [
+                'id' => $product->id,
                 'name' => $product->name,
                 'reference' => $product->reference,
                 'ean13' => $product->ean13,
