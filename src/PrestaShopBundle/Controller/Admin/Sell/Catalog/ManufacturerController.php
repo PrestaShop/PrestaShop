@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -48,11 +50,17 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function viewAction($manufacturerId)
     {
-        /** @var ViewableManufacturer $viewableManufacturer */
-        $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
-            (int) $manufacturerId,
-            (int) $this->getContextLangId()
-        ));
+        try {
+            /** @var ViewableManufacturer $viewableManufacturer */
+            $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
+                (int) $manufacturerId,
+                (int) $this->getContextLangId()
+            ));
+        } catch (ManufacturerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_manufacturers_index');
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig', [
             'layoutTitle' => $viewableManufacturer->getName(),
@@ -60,5 +68,18 @@ class ManufacturerController extends FrameworkBundleAdminController
             'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            ManufacturerNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }
