@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult;
 class ViewableManufacturer
 {
     /**
-     * @var array
+     * @var string
      */
-    private $manufacturer;
+    private $name;
 
     /**
      * @var array
@@ -44,23 +44,23 @@ class ViewableManufacturer
     private $manufacturerProducts;
 
     /**
-     * @param array $manufacturer
+     * @param array $name
      * @param array $manufacturerAddresses
      * @param array $manufacturerProducts
      */
-    public function __construct(array $manufacturer, array $manufacturerAddresses, array $manufacturerProducts)
+    public function __construct($name, array $manufacturerAddresses, array $manufacturerProducts)
     {
-        $this->manufacturer = $manufacturer;
+        $this->name = $name;
         $this->manufacturerAddresses = $manufacturerAddresses;
         $this->manufacturerProducts = $manufacturerProducts;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getManufacturer()
+    public function getName()
     {
-        return $this->manufacturer;
+        return $this->name;
     }
 
     /**

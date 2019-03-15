@@ -47,9 +47,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
         $manufacturer = $this->getManufacturer($query->getManufacturerId());
 
         return new ViewableManufacturer(
-            [
-                'name' => $manufacturer->name,
-            ],
+            $manufacturer->name,
             $manufacturer->getAddresses($query->getLanguageId()->getValue()),
             $this->getManufacturerProducts($manufacturer, $query->getLanguageId())
         );
