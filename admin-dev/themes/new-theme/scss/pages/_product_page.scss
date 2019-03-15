@@ -759,6 +759,14 @@
   }
 }
 
+.page-sidebar-closed:not(.mobile) {
+    .product-page {
+        .product-footer {
+            left: $size-navbar-width-mini;
+        }
+    }
+}
+
 .popover-title {
   display: none;
 }
