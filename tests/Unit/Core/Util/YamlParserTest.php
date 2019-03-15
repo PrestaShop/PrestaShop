@@ -33,6 +33,7 @@ class YamlParserTest extends UnitTestCase
 {
     /**
      * @param $yamlFiles
+     *
      * @return string
      */
     private function clearCacheFile($yamlFiles)
@@ -85,7 +86,7 @@ class YamlParserTest extends UnitTestCase
         $this->assertEquals($cacheTime, filemtime($cacheFile));
 
         // if source yaml change, the cache should be refreshed
-        touch($yamlFiles, time()+1);
+        touch($yamlFiles, time() + 1);
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);
