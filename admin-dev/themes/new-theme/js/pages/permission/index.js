@@ -32,15 +32,16 @@ $(document).ready(() => {
     new PermissionApp(
       $(element).data('profile-id'),
       `#profile-content-${$(element).data('profile-id')}`,
-      $(element).data('profile-permissions'),
-      'tab_id'
+      'tab_id',
+      $(element).data('profile-permissions')
     );
 
     new PermissionApp(
       $(element).data('profile-id'),
       `#module-content-${$(element).data('profile-id')}`,
+      'id_module',
       $(element).data('modules-permissions'),
-      'id_module'
+      $(element).data('employee-modules-permissions')
     );
   });
 });
