@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,6 +42,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function viewAction($manufacturerId)
     {
+        /** @var ViewableManufacturer $viewableManufacturer */
         $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
             (int) $manufacturerId,
             (int) $this->getContextLangId()
@@ -48,6 +50,11 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         dump($viewableManufacturer);
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig');
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig', [
+            'layoutTitle' => $viewableManufacturer->getManufacturer()['name'],
+            'viewableManufacturer' => $viewableManufacturer,
+            'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
+        ]);
     }
 }
