@@ -44,7 +44,7 @@ class ViewableManufacturer
     private $manufacturerProducts;
 
     /**
-     * @param array $name
+     * @param string $name
      * @param array $manufacturerAddresses
      * @param array $manufacturerProducts
      */
