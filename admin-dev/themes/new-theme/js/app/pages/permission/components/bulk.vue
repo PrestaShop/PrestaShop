@@ -31,7 +31,7 @@
         type: Object,
         required: true,
       },
-      userPermissions: {
+      profilePermissions: {
         type: Object,
         required: true,
       },
@@ -43,7 +43,7 @@
       };
     },
     watch: {
-      userPermissions: {
+      profilePermissions: {
         handler: function mandatoryFunctionForDeepWatching(val) {
           this.refreshPermissionsCheckboxes(val);
         },
@@ -51,7 +51,7 @@
       },
     },
     mounted() {
-      this.refreshPermissionsCheckboxes(this.userPermissions);
+      this.refreshPermissionsCheckboxes(this.profilePermissions);
     },
     methods: {
       /**
