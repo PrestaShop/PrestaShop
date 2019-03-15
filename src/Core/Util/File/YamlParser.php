@@ -26,8 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\File;
 
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -35,15 +38,25 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class YamlParser
 {
+    /**
+     * @var string
+     */
+    private $cacheDir;
+
+    /**
+     * @var bool
+     */
     private $useCache;
 
     /**
      * YamlParser constructor.
      *
+     * @param string $cacheDir
      * @param bool $useCache
      */
-    public function __construct($useCache = true)
+    public function __construct($cacheDir, $useCache = true)
     {
+        $this->cacheDir = $cacheDir;
         $this->useCache = $useCache;
     }
 
@@ -55,9 +68,9 @@ final class YamlParser
      *
      * @return mixed The YAML converted to a PHP value
      *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
-     * @throws \Symfony\Component\Yaml\Exception\ParseException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
+     * @throws ParseException
      */
     public function parse($sourceFile, $forceRefresh = false)
     {
@@ -88,6 +101,10 @@ final class YamlParser
      */
     public function getCacheFile($sourceFile)
     {
-        return _PS_CACHE_DIR_ . 'yaml/' . md5($sourceFile) . '.php';
+        return sprintf(
+            '%syaml/%s.php',
+            $this->cacheDir,
+            md5($sourceFile)
+        );
     }
 }

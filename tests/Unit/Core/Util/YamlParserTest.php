@@ -38,7 +38,7 @@ class YamlParserTest extends UnitTestCase
      */
     private function clearCacheFile($yamlFiles)
     {
-        $yamlParser = new YamlParser(false);
+        $yamlParser = new YamlParser($this->getCacheDir(), false);
         $cacheFile = $yamlParser->getCacheFile($yamlFiles);
         @unlink($cacheFile);
 
@@ -50,13 +50,18 @@ class YamlParserTest extends UnitTestCase
         return _PS_ROOT_DIR_ . '/app/config';
     }
 
+    public function getCacheDir()
+    {
+        return _PS_ROOT_DIR_ . '/var/cache/test/';
+    }
+
     /**
      * @dataProvider getYamlFilesProvider
      */
     public function testParserNoCache($yamlFiles)
     {
         $cacheFile = $this->clearCacheFile($yamlFiles);
-        $yamlParser = new YamlParser(false);
+        $yamlParser = new YamlParser($this->getCacheDir(), false);
 
         // no cache file
         $config = $yamlParser->parse($yamlFiles);
@@ -72,7 +77,7 @@ class YamlParserTest extends UnitTestCase
         $cacheFile = $this->clearCacheFile($yamlFiles);
 
         // create the cache file
-        $yamlParser = new YamlParser(true);
+        $yamlParser = new YamlParser($this->getConfigDir(), true);
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);
@@ -102,7 +107,7 @@ class YamlParserTest extends UnitTestCase
         $cacheFile = $this->clearCacheFile($yamlFiles);
 
         // create the cache file
-        $yamlParser = new YamlParser(true);
+        $yamlParser = new YamlParser($this->getConfigDir(), true);
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);

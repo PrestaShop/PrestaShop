@@ -156,7 +156,7 @@ class ModuleManagerBuilder
             return;
         }
 
-        $yamlParser = new YamlParser();
+        $yamlParser = new YamlParser(_PS_CACHE_DIR_);
 
         $config = $yamlParser->parse($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml');
         $prestashopAddonsConfig =
