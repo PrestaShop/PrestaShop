@@ -48,10 +48,8 @@ class ManufacturerController extends FrameworkBundleAdminController
             (int) $this->getContextLangId()
         ));
 
-        dump($viewableManufacturer);
-
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig', [
-            'layoutTitle' => $viewableManufacturer->getManufacturer()['name'],
+            'layoutTitle' => $viewableManufacturer->getName(),
             'viewableManufacturer' => $viewableManufacturer,
             'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
