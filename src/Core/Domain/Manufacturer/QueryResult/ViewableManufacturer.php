@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult;
 
+/**
+ * Stores query result for getting manufacturer for viewing
+ */
 class ViewableManufacturer
 {
     /**
