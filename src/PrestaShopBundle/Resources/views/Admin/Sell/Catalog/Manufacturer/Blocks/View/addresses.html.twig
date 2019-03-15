@@ -33,9 +33,12 @@
       {% for address in viewableManufacturer.manufacturerAddresses %}
         <div class="card">
           <div class="card-header clearfix">
-            {{ address.firstname }} {{ address.lastname }}
+            {{ address.first_name }} {{ address.last_name }}
             <div class="d-inline-block float-right">
-              <a class="btn btn-primary btn-sm" href="#">{{ 'Edit'|trans({}, 'Admin.Actions') }}</a>
+              <a class="btn btn-primary btn-sm"
+                 href="{{ getAdminLink('AdminManufacturers', true, {'id_address': address.id, 'editaddresses': 1}) }}">
+                {{ 'Edit'|trans({}, 'Admin.Actions') }}
+              </a>
             </div>
           </div>
           <div class="card-body">
