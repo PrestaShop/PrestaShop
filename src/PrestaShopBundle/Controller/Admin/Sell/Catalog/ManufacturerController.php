@@ -32,6 +32,9 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Manages "Sell > Catalog > Brands & Suppliers > Brands" page
+ */
 class ManufacturerController extends FrameworkBundleAdminController
 {
     /**

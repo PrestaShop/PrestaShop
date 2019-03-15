@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
+/**
+ * Manufacturer's identity type
+ */
 class ManufacturerId
 {
     /**

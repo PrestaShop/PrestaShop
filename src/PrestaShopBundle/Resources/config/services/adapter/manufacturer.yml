@@ -5,4 +5,5 @@ services:
   prestashop.adapter.manufacturer.query_handler.get_manufacturer_for_viewing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler\GetManufacturerForViewingHandler'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing }
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing
