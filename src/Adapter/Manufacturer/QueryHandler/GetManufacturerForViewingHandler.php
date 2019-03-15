@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufactu
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use Product;
 
+/**
+ * Handles getting manufacturer for viewing query using legacy object model
+ */
 final class GetManufacturerForViewingHandler implements GetManufacturerForViewingHandlerInterface
 {
     /**
@@ -62,7 +65,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
         $manufacturer = new Manufacturer($manufacturerId->getValue());
 
         if ($manufacturer->id !== $manufacturerId->getValue()) {
-            //@todo: throw exception
+            //@todo: throw exception when another Manufacturers PR gets merged
         }
 
         return $manufacturer;
@@ -76,56 +79,52 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
      */
     private function getManufacturerProducts(Manufacturer $manufacturer, LanguageId $languageId)
     {
-        $manufacturerProducts = [];
-        $products = $manufacturer->getProductsLite($languageId->getValue());
+        $products = [];
+        $manufacturerProducts = $manufacturer->getProductsLite($languageId->getValue());
 
-        foreach ($products as $i => $product) {
-            $products[$i] = new Product($products[$i]['id_product'], false, $languageId->getValue());
-            $products[$i]->loadStockData();
+        foreach ($manufacturerProducts as $productData) {
+            $product = new Product($productData['id_product'], false, $languageId->getValue());
+            $product->loadStockData();
 
-            /* Build attributes combinations */
-            $combinations = $products[$i]->getAttributeCombinations($languageId->getValue());
-            $productCombinations = [];
+            $productCombinations = $product->getAttributeCombinations($languageId->getValue());
+            $combinations = [];
 
-            foreach ($combinations as $combination) {
-                $combinationsData[$combination['id_product_attribute']]['reference'] = $combination['reference'];
-                $combinationsData[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
-                $combinationsData[$combination['id_product_attribute']]['upc'] = $combination['upc'];
-                $combinationsData[$combination['id_product_attribute']]['quantity'] = $combination['quantity'];
-                $combinationsData[$combination['id_product_attribute']]['attributes'][] = [
-                    $combination['group_name'],
-                    $combination['attribute_name'],
-                    $combination['id_attribute'],
-                ];
-            }
+            foreach ($productCombinations as $combination) {
+                $attributeId = $combination['id_product_attribute'];
 
-            if (isset($combinationsData)) {
-                foreach ($combinationsData as $key => $productAttribute) {
-                    $list = '';
-                    foreach ($productAttribute['attributes'] as $attribute) {
-                        $list .= $attribute[0] . ' - ' . $attribute[1] . ', ';
-                    }
-                    $combinationsData[$key]['attributes'] = rtrim($list, ', ');
+                if (!isset($combinations[$attributeId])) {
+                    $combinations[$attributeId] = [
+                        'reference' => $combination['reference'],
+                        'ean13' => $combination['upc'],
+                        'upc' => $combination['upc'],
+                        'quantity' => $combination['quantity'],
+                        'attributes' => '',
+                    ];
                 }
-                isset($combinationsData) ? $products[$i]->combination = $combinationsData : '';
 
-                $productCombinations = $combinationsData;
+                $attribute = sprintf(
+                    '%s - %s',
+                    $combination['group_name'],
+                    $combination['attribute_name']
+                );
 
-                unset($combinationsData);
+                if (!empty($combinations[$attributeId]['attributes'])) {
+                    $attribute = sprintf(', %s', $attribute);
+                }
+
+                $combinations[$attributeId]['attributes'] .= $attribute;
             }
 
-            $manufacturerProducts[] = [
-                'name' => $products[$i]->name,
-                'reference' => $products[$i]->reference,
-                'ean13' => $products[$i]->ean13,
-                'upc' => $products[$i]->upc,
-                'quantity' => $products[$i]->quantity,
-                'combinations' => $productCombinations,
+            $products[] = [
+                'name' => $product->name,
+                'reference' => $product->reference,
+                'ean13' => $product->ean13,
+                'upc' => $product->upc,
+                'quantity' => $product->quantity,
+                'combinations' => $combinations,
             ];
         }
 
-        dump($manufacturerProducts);
-
-        return $manufacturerProducts;
+        return $products;
     }
 }
