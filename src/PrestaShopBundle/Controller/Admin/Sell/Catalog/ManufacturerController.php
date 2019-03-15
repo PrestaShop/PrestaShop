@@ -166,7 +166,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'manufacturerForm' => $manufacturerForm->createView(),
         ]);
     }
-    
+
     public function viewAction($manufacturerId)
     {
         try {
