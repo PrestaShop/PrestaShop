@@ -37,6 +37,7 @@ const $ = window.$;
  * <button class="js-form-submit-btn"
  *         data-form-submit-url="/my-custom-url"          // (required) URL to which form will be submitted
  *         data-form-csrf-token="my-generated-csrf-token" // (optional) to increase security
+ *         data-form-confirm-message="Are you sure?"      // (optional) to confirm action before submit
  *         type="button"                                  // make sure its simple button
  *                                                        // so we can avoid submitting actual form
  *                                                        // when our button is defined inside form
@@ -54,6 +55,10 @@ export default class FormSubmitButton {
       event.preventDefault();
 
       const $btn = $(this);
+
+      if ($btn.data('form-confirm-message') && false === confirm($btn.data('form-confirm-message'))) {
+        return;
+      }
 
       const $form = $('<form>', {
         'action': $btn.data('form-submit-url'),
