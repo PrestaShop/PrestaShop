@@ -31,6 +31,7 @@
           'limit': grid.pagination.limit,
           'offset': grid.pagination.offset,
           'total': grid.data.records_total,
+          'paramsPrefix': grid.filters_uuid,
           'caller_route': app.request.attributes.get('_route')
         })) }}
       </div>

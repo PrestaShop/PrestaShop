@@ -61,6 +61,7 @@ final class GridPresenter implements GridPresenterInterface
         $presentedGrid = [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
+            'filters_uuid' => $definition->getFiltersUuid(),
             'filter_form' => $filterForm->createView(),
             'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),

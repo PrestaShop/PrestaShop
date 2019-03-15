@@ -40,7 +40,6 @@ const $ = window.$;
 $(document).ready(() => {
   const gridIds = ['language', 'currency'];
   gridIds.forEach(function initGrid(gridId) {
-    console.log('init '+gridId);
     const grid = new Grid(gridId);
 
     grid.addExtension(new ReloadListActionExtension());
