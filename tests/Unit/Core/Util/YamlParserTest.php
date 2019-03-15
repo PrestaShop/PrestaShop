@@ -47,7 +47,7 @@ class YamlParserTest extends UnitTestCase
 
     public function getConfigDir()
     {
-        return _PS_ROOT_DIR_ . '/app/config';
+        return _PS_ROOT_DIR_ . '/app/config/';
     }
 
     public function getCacheDir()
@@ -77,7 +77,7 @@ class YamlParserTest extends UnitTestCase
         $cacheFile = $this->clearCacheFile($yamlFiles);
 
         // create the cache file
-        $yamlParser = new YamlParser($this->getConfigDir(), true);
+        $yamlParser = new YamlParser($this->getCacheDir(), true);
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);
@@ -107,7 +107,7 @@ class YamlParserTest extends UnitTestCase
         $cacheFile = $this->clearCacheFile($yamlFiles);
 
         // create the cache file
-        $yamlParser = new YamlParser($this->getConfigDir(), true);
+        $yamlParser = new YamlParser($this->getCacheDir(), true);
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);

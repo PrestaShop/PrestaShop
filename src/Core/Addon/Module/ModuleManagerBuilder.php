@@ -156,11 +156,11 @@ class ModuleManagerBuilder
             return;
         }
 
-        $yamlParser = new YamlParser(_PS_CACHE_DIR_);
+        $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
 
-        $config = $yamlParser->parse($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml');
+        $config = $yamlParser->parse($this->getConfigDir() . '/config.yml');
         $prestashopAddonsConfig =
-            $yamlParser->parse($this->getConfigDir() . DIRECTORY_SEPARATOR . 'addons/categories.yml');
+            $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
 
@@ -245,7 +245,7 @@ class ModuleManagerBuilder
 
     protected function getConfigDir()
     {
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
+        return _PS_ROOT_DIR_ . '/app/config';
     }
 
     /**
