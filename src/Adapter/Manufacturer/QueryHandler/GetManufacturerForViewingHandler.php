@@ -48,7 +48,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
 
         return new ViewableManufacturer(
             $manufacturer->name,
-            $manufacturer->getAddresses($query->getLanguageId()->getValue()),
+            $this->ManufacturerAddresses($manufacturer, $query->getLanguageId()),
             $this->getManufacturerProducts($manufacturer, $query->getLanguageId())
         );
     }
@@ -124,5 +124,36 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
         }
 
         return $products;
+    }
+
+    /**
+     * @param Manufacturer $manufacturer
+     * @param LanguageId $languageId
+     *
+     * @return array
+     */
+    private function ManufacturerAddresses(Manufacturer $manufacturer, LanguageId $languageId)
+    {
+        $addresses = [];
+        $manufacturerAddresses = $manufacturer->getAddresses($languageId->getValue());
+
+        foreach ($manufacturerAddresses as $address) {
+            $addresses[] = [
+                'id' => $address['id_address'],
+                'first_name' => $address['firstname'],
+                'last_name' => $address['lastname'],
+                'address1' => $address['address1'],
+                'address2' => $address['address2'],
+                'postcode' => $address['postcode'],
+                'city' => $address['city'],
+                'state' => $address['state'],
+                'country' => $address['country'],
+                'phone' => $address['phone'],
+                'phone_mobile' => $address['phone_mobile'],
+                'other' => $address['other'],
+            ];
+        }
+
+        return $addresses;
     }
 }
