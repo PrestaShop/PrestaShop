@@ -55,6 +55,22 @@ class AdminFilterRepository extends EntityRepository
     /**
      * @param $employeeId
      * @param $shopId
+     * @param $uuid
+     *
+     * @return AdminFilter|null
+     */
+    public function findByEmployeeAndUuid($employeeId, $shopId, $uuid)
+    {
+        return $this->findOneBy([
+            'employee' => $employeeId ?: 0,
+            'shop' => $shopId ?: 0,
+            'uuid' => $uuid,
+        ]);
+    }
+
+    /**
+     * @param $employeeId
+     * @param $shopId
      * @param $controller
      * @param $action
      *
