@@ -82,9 +82,6 @@ class ShopLogosType extends AbstractType
         $builder
             ->add('header_logo', FileType::class, [
                 'required' => false,
-                'attr' => [
-                    'data-test' => 1,
-                ],
             ])
             ->add('mail_logo', FileType::class, [
                 'required' => false,

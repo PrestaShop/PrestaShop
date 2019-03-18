@@ -283,6 +283,11 @@ class ThemeController extends AbstractAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteThemeCommand(new ThemeName($themeName)));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleDeleteThemeException($e));
 
