@@ -661,6 +661,16 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Meta title', 'Admin.Global')),
                         ]
                     ),
+                CmsPageCategoryConstraintException::INVALID_DESCRIPTION =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Description', 'Admin.Global')),
+                        ]
+                    ),
                 CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION =>
                     $this->trans(
                         'The %s field is not valid',

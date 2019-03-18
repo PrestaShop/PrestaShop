@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
@@ -85,8 +86,25 @@ abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
         }
     }
 
+    /**
+     * @param array $localisedDescription
+     *
+     * @throws CmsPageCategoryConstraintException
+     */
     protected function assertDescriptionContainsCleanHtml(array $localisedDescription)
     {
-        //todo: wait for clean html validator to be merged.
+        foreach ($localisedDescription as $description) {
+            $errors = $this->validator->validate($description, new CleanHtml());
+
+            if (0 !== count($errors)) {
+                throw new CmsPageCategoryConstraintException(
+                    sprintf(
+                        'Given description "%s" contains javascript events or script tags',
+                        $description
+                    ),
+                    CmsPageCategoryConstraintException::INVALID_DESCRIPTION
+                );
+            }
+        }
     }
 }
