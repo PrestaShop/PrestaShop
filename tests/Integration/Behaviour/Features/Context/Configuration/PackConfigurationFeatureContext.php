@@ -32,19 +32,19 @@ use Pack;
 class PackConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^specific shop configuration for "pack stock type" is set to (STOCK_TYPE_PACK_ONLY|STOCK_TYPE_PRODUCTS_ONLY|STOCK_TYPE_PACK_BOTH)$/
+     * @Given /^specific shop configuration for "pack stock type" is set to decrement (packs only|products only|both packs and products)$/
      */
     public function specificShopConfigurationPackStockTypeOfIsSetTo($value)
     {
         $this->previousConfiguration['PS_PACK_STOCK_TYPE'] = Configuration::get('PS_PACK_STOCK_TYPE');
         switch ($value) {
-            case 'STOCK_TYPE_PACK_ONLY':
+            case 'packs only':
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_ONLY);
                 break;
-            case 'STOCK_TYPE_PRODUCTS_ONLY':
+            case 'products only':
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PRODUCTS_ONLY);
                 break;
-            case 'STOCK_TYPE_PACK_BOTH':
+            case 'both packs and products':
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_BOTH);
                 break;
             default:

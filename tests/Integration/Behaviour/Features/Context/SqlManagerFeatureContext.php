@@ -64,7 +64,7 @@ class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then i should get a set of database fields that contain values:
+     * @Then I should get a set of database fields that contain values:
      */
     public function assertSetOfDatabaseFieldsContain(TableNode $table)
     {

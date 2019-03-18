@@ -402,7 +402,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I add (\d+) items of customization "(.+)"of product "(.+)"$/
+     * @When /^I add (\d+) items of customization "(.+)" of product "(.+)"$/
      */
     public function iAddCustomizationNamedOfProductNamedInMyCartWithQuantity($customizationFieldQuantity, $customizationFieldName, $productName)
     {
@@ -420,7 +420,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^I am not able to add (\d+) items of customization "(.+)"of product "(.+)" to my cart$/
+     * @Then /^I am not able to add (\d+) items of customization "(.+)" of product "(.+)" to my cart$/
      */
     public function iAmNotAbleToAddPCustomizationNamedOfroductNamedInMyCartWithQuantity($customizationFieldQuantity, $customizationFieldName, $productName)
     {

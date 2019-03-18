@@ -5,7 +5,7 @@ Feature: SQL Manager
 
   Scenario: Get required database fields
     When I request the database fields from table carrier
-    Then i should get a set of database fields that contain values:
+    Then I should get a set of database fields that contain values:
       | id_carrier      |
       | name            |
       | shipping_method |
