@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * This class is responsible of managing filters of Listing pages.
  */
-abstract class Filters extends ParameterBag implements SearchCriteriaInterface
+class Filters extends ParameterBag implements SearchCriteriaInterface
 {
     /** @var string */
     protected $uuid = '';
@@ -48,11 +48,11 @@ abstract class Filters extends ParameterBag implements SearchCriteriaInterface
     }
 
     /**
-     * @return array Define the default filters configuration
+     * @return Filters
      */
-    public static function getDefaults()
+    public static function buildDefaults()
     {
-        return [];
+        return new static(static::getDefaults());
     }
 
     /**

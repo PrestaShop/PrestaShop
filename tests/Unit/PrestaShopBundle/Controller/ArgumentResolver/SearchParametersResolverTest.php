@@ -379,7 +379,7 @@ class SearchParametersResolverTest extends TestCase
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|SearchParametersInterface
      */
-    private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = null)
+    private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = [])
     {
         $searchParametersMock = $this->getMockBuilder(SearchParametersInterface::class)
             ->disableOriginalConstructor()
@@ -395,14 +395,12 @@ class SearchParametersResolverTest extends TestCase
             ;
         }
 
-        if (null !== $requestParameters) {
-            $requestFilters = new SampleFilters($requestParameters);
-            $searchParametersMock
-                ->expects($this->once())
-                ->method('getFiltersFromRequest')
-                ->willReturn($requestFilters)
-            ;
-        }
+        $requestFilters = new SampleFilters($requestParameters);
+        $searchParametersMock
+            ->expects(empty($requestParameters) ? $this->any() : $this->once())
+            ->method('getFiltersFromRequest')
+            ->willReturn($requestFilters)
+        ;
 
         return $searchParametersMock;
     }
