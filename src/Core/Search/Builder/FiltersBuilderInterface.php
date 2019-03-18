@@ -24,7 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search;
+namespace PrestaShop\PrestaShop\Core\Search\Builder;
+
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 interface FiltersBuilderInterface
 {
