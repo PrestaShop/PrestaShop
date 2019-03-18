@@ -31,16 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AdminFilter.
  *
- * @ORM\Table(
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="admin_filter_search_idx",
- *             columns={"employee", "shop", "controller", "action"}
- *         ),
- *         @ORM\UniqueConstraint(name="admin_filter_search_uuid_idx",
- *             columns={"employee", "shop", "uuid"}
- *         )
- *     }
- * )
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="admin_filter_search_uuid_idx",columns={"employee", "shop", "controller", "action", "uuid"})})
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AdminFilterRepository")
  */
 class AdminFilter

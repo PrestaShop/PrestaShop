@@ -18,5 +18,7 @@ CREATE TABLE `PREFIX_currency_lang` (
 
 ALTER TABLE `PREFIX_admin_filter`
 	ADD `uuid` VARCHAR (255) DEFAULT '' NOT NULL AFTER `shop`,
-	ADD UNIQUE INDEX `admin_filter_search_uuid_idx` (`uuid`, `shop`, `employee`)
+  DROP INDEX IF EXISTS `admin_filter_search_idx`,
+  DROP INDEX IF EXISTS `search_idx`,
+	ADD UNIQUE INDEX `admin_filter_search_uuid_idx` (`employee`, `shop`, `controller`, `action`, `uuid`)
 ;
