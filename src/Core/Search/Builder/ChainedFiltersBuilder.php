@@ -72,6 +72,10 @@ class ChainedFiltersBuilder extends AbstractFiltersBuilder
      */
     public function buildFilters(Filters $filters = null)
     {
+        if (empty($this->builders)) {
+            return $filters;
+        }
+
         /** @var FiltersBuilderInterface $builder */
         foreach ($this->builders as $builder) {
             $filters = $builder->buildFilters($filters);
