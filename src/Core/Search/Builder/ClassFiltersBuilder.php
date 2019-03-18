@@ -54,16 +54,18 @@ class ClassFiltersBuilder extends AbstractFiltersBuilder
      */
     public function buildFilters(Filters $filters = null)
     {
-        $typedFilters = $filters;
-        if (null !== $this->filtersClass) {
-            /** @var array $defaultParameters */
-            $defaultParameters = call_user_func($this->filtersClass, 'getDefaults');
+        if (null === $this->filtersClass) {
+            return $filters;
+        }
 
+        /** @var array $defaultParameters */
+        $defaultParameters = call_user_func([$this->filtersClass, 'getDefaults']);
+        if (null !== $filters) {
             /** @var Filters $typedFilters */
-            $typedFilters = new $this->filtersClass($defaultParameters);
-            if (null !== $filters) {
-                $typedFilters->add($filters->all());
-            }
+            $typedFilters = new $this->filtersClass($filters->all());
+            $typedFilters->add($defaultParameters);
+        } else {
+            $typedFilters = new $this->filtersClass($defaultParameters, $this->filtersUuid);
         }
 
         return $typedFilters;
