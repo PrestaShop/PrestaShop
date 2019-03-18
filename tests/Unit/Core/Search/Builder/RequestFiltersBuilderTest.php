@@ -117,21 +117,21 @@ class RequestFiltersBuilderTest extends TestCase
             'offset' => 10,
             'unknownParameter' => 'plop',
         ];
-        $requestMock = $this->buildRequestMock($requestParameters, 'language');
+        $requestMock = $this->buildRequestMock($requestParameters, 'alternate_language');
 
         $filters = new Filters(['limit' => 20, 'sortOrder' => 'ASC'], 'alternate_language');
         $builder = new RequestFiltersBuilder();
         $builder->setConfig(['request' => $requestMock, 'filters_uuid' => 'language']);
-        $filters = $builder->buildFilters($filters);
-        $this->assertNotNull($filters);
+        $builtFilters = $builder->buildFilters($filters);
+        $this->assertNotNull($builtFilters);
 
         $expectedParameters = [
             'limit' => 10,
             'offset' => 10,
             'sortOrder' => 'ASC',
         ];
-        $this->assertEquals($expectedParameters, $filters->all());
-        $this->assertEquals('alternate_language', $filters->getUuid());
+        $this->assertEquals($expectedParameters, $builtFilters->all());
+        $this->assertEquals('alternate_language', $builtFilters->getUuid());
     }
 
     public function testBuildWithPostRequest()
@@ -159,7 +159,7 @@ class RequestFiltersBuilderTest extends TestCase
             'offset' => 10,
             'unknownParameter' => 'plop',
         ];
-        $requestMock = $this->buildRequestMock($requestParameters, 'language', true);
+        $requestMock = $this->buildRequestMock($requestParameters, 'alternate_language', true);
 
         $filters = new Filters(['limit' => 20, 'sortOrder' => 'ASC'], 'alternate_language');
         $builder = new RequestFiltersBuilder();

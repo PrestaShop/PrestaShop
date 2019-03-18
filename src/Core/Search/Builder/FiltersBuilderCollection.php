@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 /**
  * Collection of FiltersBuilderInterface.
  */
-class FiltersBuilderCollection extends AbstractTypedCollection
+final class FiltersBuilderCollection extends AbstractTypedCollection
 {
     /**
      * @inheritDoc

@@ -29,49 +29,47 @@ namespace PrestaShop\PrestaShop\Core\Search\Builder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * This builder instantiate a filters object of the specified type using
- * its default values for creation.
+ * This builder does not modify the filters but instead saves them in database for
+ * each Employee, thus it can then be found by the RepositoryFiltersBuilder.
  */
-final class ClassFiltersBuilder extends AbstractFiltersBuilder
+final class PersistFiltersBuilder extends AbstractRepositoryFiltersBuilder
 {
-    /** @var string */
-    private $filtersClass;
-
     /**
-     * @inheritDoc
-     */
-    public function setConfig(array $config)
-    {
-        if (isset($config['filters_class'])) {
-            $this->filtersClass = $config['filters_class'];
-        }
-
-        return parent::setConfig($config);
-    }
-
-    /**
-     * Build the filters with the class defined by filtersClass
-     *
      * @param Filters|null $filters
      *
      * @return Filters
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function buildFilters(Filters $filters = null)
     {
-        if (null === $this->filtersClass) {
+        if (null === $filters || !$this->employeeProvider->getId() || !$this->shopId) {
             return $filters;
         }
 
-        /** @var array $defaultParameters */
-        $defaultParameters = call_user_func([$this->filtersClass, 'getDefaults']);
-        if (null !== $filters) {
-            /** @var Filters $typedFilters */
-            $typedFilters = new $this->filtersClass($filters->all(), $filters->getUuid());
-            $typedFilters->add($defaultParameters);
-        } else {
-            $typedFilters = new $this->filtersClass($defaultParameters, $this->filtersUuid);
+        $filtersUuid = $this->getFiltersUuid($filters);
+        if (empty($filtersUuid) && (empty($this->controller) || empty($this->action))) {
+            return $filters;
         }
 
-        return $typedFilters;
+        $filtersToSave = $filters->all();
+
+        if (!empty($filtersUuid)) {
+            $this->adminFilterRepository->createOrUpdateByEmployeeAndUuid(
+                $this->employeeProvider->getId(),
+                $this->shopId,
+                $filtersToSave,
+                $filtersUuid
+            );
+        } else {
+            $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
+                $this->employeeProvider->getId(),
+                $this->shopId,
+                $filtersToSave,
+                $this->controller,
+                $this->action
+            );
+        }
+
+        return $filters;
     }
 }

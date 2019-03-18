@@ -29,7 +29,17 @@ namespace PrestaShop\PrestaShop\Core\Search\Builder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestFiltersBuilder extends AbstractFiltersBuilder
+/**
+ * This builder builds a Filters instance from the request, it is able to fetch the
+ * parameters from both GET and POST requests. If the built filter has a filter uuid
+ * it filters the request parameters in a scope (e.g: ?language[limit]=10 instead of
+ * ?limit=10)
+ * The filters uuid can be set
+ *  - from the builder config
+ *  - from the provided filter which class has a default filtersUuid
+ *  - from the provided filter which has been manually instantiated with an uuid
+ */
+final class RequestFiltersBuilder extends AbstractFiltersBuilder
 {
     /** @var Request */
     private $request;
@@ -53,13 +63,14 @@ class RequestFiltersBuilder extends AbstractFiltersBuilder
             return $filters;
         }
 
+        $filtersUuid = $this->getFiltersUuid($filters);
         $queryParams = $this->request->query->all();
         $requestParams = $this->request->request->all();
 
         //If filters have a uuid then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
-        if (!empty($this->filtersUuid)) {
-            $queryParams = isset($queryParams[$this->filtersUuid]) ? $queryParams[$this->filtersUuid] : [];
-            $requestParams = isset($requestParams[$this->filtersUuid]) ? $requestParams[$this->filtersUuid] : [];
+        if (!empty($filtersUuid)) {
+            $queryParams = isset($queryParams[$filtersUuid]) ? $queryParams[$filtersUuid] : [];
+            $requestParams = isset($requestParams[$filtersUuid]) ? $requestParams[$filtersUuid] : [];
         }
 
         $parameters = [];
@@ -74,7 +85,7 @@ class RequestFiltersBuilder extends AbstractFiltersBuilder
         if (null !== $filters) {
             $filters->add($parameters);
         } else {
-            $filters = new Filters($parameters, $this->filtersUuid);
+            $filters = new Filters($parameters, $filtersUuid);
         }
 
         return $filters;

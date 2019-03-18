@@ -28,6 +28,14 @@ namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
+/**
+ * Interface for filters builders, each builder needs a config which is provided
+ * through the setConfig method which MUST be called before calling buildFilters.
+ *
+ * As the builders are called one after the other they may be provided with an
+ * existing filters instance that they need to override, if not they simply create
+ * a new Filters instance.
+ */
 interface FiltersBuilderInterface
 {
     const FILTER_TYPES = array(

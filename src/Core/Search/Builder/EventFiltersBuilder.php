@@ -27,51 +27,37 @@
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * This builder instantiate a filters object of the specified type using
- * its default values for creation.
+ * This builder is used to allow modification of the built filters via
+ * a symfony event prestashop.search_criteria.filter (used to change the
+ * generic building process in some edge cases)
+ *
+ * @see FilterCategorySearchCriteriaListener
  */
-final class ClassFiltersBuilder extends AbstractFiltersBuilder
+final class EventFiltersBuilder extends AbstractFiltersBuilder
 {
-    /** @var string */
-    private $filtersClass;
+    /** @var EventDispatcherInterface */
+    private $dispatcher;
+
+    /**
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
 
     /**
      * @inheritDoc
      */
-    public function setConfig(array $config)
-    {
-        if (isset($config['filters_class'])) {
-            $this->filtersClass = $config['filters_class'];
-        }
-
-        return parent::setConfig($config);
-    }
-
-    /**
-     * Build the filters with the class defined by filtersClass
-     *
-     * @param Filters|null $filters
-     *
-     * @return Filters
-     */
     public function buildFilters(Filters $filters = null)
     {
-        if (null === $this->filtersClass) {
-            return $filters;
-        }
+        $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
+        $this->dispatcher->dispatch(FilterSearchCriteriaEvent::NAME, $filterSearchParametersEvent);
 
-        /** @var array $defaultParameters */
-        $defaultParameters = call_user_func([$this->filtersClass, 'getDefaults']);
-        if (null !== $filters) {
-            /** @var Filters $typedFilters */
-            $typedFilters = new $this->filtersClass($filters->all(), $filters->getUuid());
-            $typedFilters->add($defaultParameters);
-        } else {
-            $typedFilters = new $this->filtersClass($defaultParameters, $this->filtersUuid);
-        }
-
-        return $typedFilters;
+        return $filterSearchParametersEvent->getSearchCriteria();
     }
 }
