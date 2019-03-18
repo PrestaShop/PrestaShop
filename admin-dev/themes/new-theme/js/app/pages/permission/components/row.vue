@@ -40,19 +40,12 @@
 
       <div class="col-lg-8 row">
         <div class="col text-center" v-for="type in types">
-          <div class="md-checkbox md-checkbox-inline">
-            <label>
-              <input
-                type="checkbox"
-                class="js-tab-permissions-checkbox"
-                :value="type"
-                v-model="permissionValues"
-                @change="sendUpdatePermissionRequest(type)"
-                :disabled="!canEdit || !canEditCheckbox(type)"
-              >
-              <i class="md-checkbox-control"></i>
-            </label>
-          </div>
+          <ps-checkbox
+            :value="type"
+            v-model="permissionValues"
+            @change="sendUpdatePermissionRequest(type)"
+            :disabled="!canEdit || !canEditCheckbox(type)"
+          />
         </div>
       </div>
     </div>
@@ -78,8 +71,13 @@
 </template>
 
 <script>
+  import PsCheckbox from '../../../components/checkbox.vue';
+
   export default {
     name: 'row',
+    components: {
+      PsCheckbox,
+    },
     props: {
       parent: {
         type: Boolean,
