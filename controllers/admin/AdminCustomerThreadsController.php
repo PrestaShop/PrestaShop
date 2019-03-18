@@ -437,8 +437,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     }
                     $customer = new Customer($ct->id_customer);
                     $reply = Tools::getValue('reply_message');
-                    if (Configuration::get('PS_MAIL_TYPE') != Mail::TYPE_TEXT)
+                    if (Configuration::get('PS_MAIL_TYPE') == MAIL::TYPE_HTML) {
                         $reply = Tools::nl2br($reply);
+                    }
                     $params = array(
                         '{reply}' => $reply,
                         '{link}' => Tools::url(
