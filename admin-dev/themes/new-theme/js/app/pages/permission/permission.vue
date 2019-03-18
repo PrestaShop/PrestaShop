@@ -1,4 +1,3 @@
-
 <!--**
      * 2007-2019 PrestaShop and Contributors
      *
@@ -147,6 +146,7 @@
         Object.keys(this.profileDataPermissions).forEach((key) => {
           this.profileDataPermissions[key][data.type] = data.status ? '1' : '0';
         });
+
         const params = {
           expected_status: data.status,
           permission: data.type,
