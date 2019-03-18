@@ -243,9 +243,6 @@ class CategoryCore extends ObjectModel
             $changed = $this->getDuplicatePosition();
         }
 
-        error_reporting(E_ALL);
-        ini_set('display_errors', TRUE);
-
         if ($changed) {
             if (Tools::isSubmit('checkBoxShopAsso_category')) {
                 foreach (Tools::getValue('checkBoxShopAsso_category') as $idAssoObject => $idShop) {
