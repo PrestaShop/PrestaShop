@@ -32,19 +32,19 @@ use Order;
 class RoundingTypeConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^specific shop configuration for "rounding type" is set to (ROUND_ITEM|ROUND_LINE|ROUND_TOTAL)$/
+     * @Given /^specific shop configuration for "rounding type" is set to round (each article|each line|cart total)$/
      */
     public function setRoundingMode($value)
     {
         $this->previousConfiguration['PS_ROUND_TYPE'] = Configuration::get('PS_ROUND_TYPE');
         switch ($value) {
-            case 'ROUND_ITEM':
+            case 'each article':
                 $this->setConfiguration('PS_ROUND_TYPE', Order::ROUND_ITEM);
                 break;
-            case 'ROUND_LINE':
+            case 'each line':
                 $this->setConfiguration('PS_ROUND_TYPE', Order::ROUND_LINE);
                 break;
-            case 'ROUND_TOTAL':
+            case 'cart total':
                 $this->setConfiguration('PS_ROUND_TYPE', Order::ROUND_TOTAL);
                 break;
             default:

@@ -31,28 +31,28 @@ use Configuration;
 class RoundingModeConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
     /**
-     * @Given /^specific shop configuration for "rounding mode" is set to (PS_ROUND_UP|PS_ROUND_DOWN|PS_ROUND_HALF_UP|PS_ROUND_HALF_DOWN|PS_ROUND_HALF_EVEN|PS_ROUND_HALF_ODD)$/
+     * @Given /^specific shop configuration for "rounding mode" is set to round (up|down|half up|half down|half even|half even|half odd)$/
      */
     public function setRoundingMode($value)
     {
         $this->previousConfiguration['PS_PRICE_ROUND_MODE'] = Configuration::get('PS_PRICE_ROUND_MODE');
         switch ($value) {
-            case 'PS_ROUND_UP':
+            case 'up':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_UP);
                 break;
-            case 'PS_ROUND_DOWN':
+            case 'down':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_DOWN);
                 break;
-            case 'PS_ROUND_HALF_UP':
+            case 'half up':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_UP);
                 break;
-            case 'PS_ROUND_HALF_DOWN':
+            case 'half down':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_DOWN);
                 break;
-            case 'PS_ROUND_HALF_EVEN':
+            case 'half even':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_EVEN);
                 break;
-            case 'PS_ROUND_HALF_ODD':
+            case 'half odd':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_ODD);
                 break;
             default:
