@@ -24,8 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Search\Filters;
-
+namespace Tests\Unit\Core\Search\Builder;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Search\Builder\RequestFiltersBuilder;
@@ -49,6 +48,7 @@ class RequestFiltersBuilderTest extends TestCase
         $builtFilters = $builder->buildFilters($filters);
         $this->assertNotNull($builtFilters);
         $this->assertEquals($filters->all(), $builtFilters->all());
+        $this->assertEmpty($builtFilters->getUuid());
     }
 
     public function testBuildWithGetRequest()
@@ -66,6 +66,7 @@ class RequestFiltersBuilderTest extends TestCase
         $this->assertNotNull($filters);
         unset($expectedParameters['unknownParameter']);
         $this->assertEquals($expectedParameters, $filters->all());
+        $this->assertEmpty($filters->getUuid());
     }
 
     public function testOverrideWithGetRequest()
@@ -88,6 +89,7 @@ class RequestFiltersBuilderTest extends TestCase
             'orderBy' => 'language_id',
         ];
         $this->assertEquals($expectedParameters, $filters->all());
+        $this->assertEmpty($builtFilters->getUuid());
     }
 
     public function testBuildWithGetRequestAndFiltersUuid()
@@ -105,6 +107,7 @@ class RequestFiltersBuilderTest extends TestCase
         $this->assertNotNull($filters);
         unset($expectedParameters['unknownParameter']);
         $this->assertEquals($expectedParameters, $filters->all());
+        $this->assertEquals('language', $filters->getUuid());
     }
 
     public function testOverrideWithGetRequestAndFiltersUuid()
@@ -116,7 +119,7 @@ class RequestFiltersBuilderTest extends TestCase
         ];
         $requestMock = $this->buildRequestMock($requestParameters, 'language');
 
-        $filters = new Filters(['limit' => 20, 'sortOrder' => 'ASC']);
+        $filters = new Filters(['limit' => 20, 'sortOrder' => 'ASC'], 'alternate_language');
         $builder = new RequestFiltersBuilder();
         $builder->setConfig(['request' => $requestMock, 'filters_uuid' => 'language']);
         $filters = $builder->buildFilters($filters);
@@ -128,6 +131,7 @@ class RequestFiltersBuilderTest extends TestCase
             'sortOrder' => 'ASC',
         ];
         $this->assertEquals($expectedParameters, $filters->all());
+        $this->assertEquals('alternate_language', $filters->getUuid());
     }
 
     public function testBuildWithPostRequest()
@@ -145,6 +149,7 @@ class RequestFiltersBuilderTest extends TestCase
         $this->assertNotNull($filters);
         unset($expectedParameters['unknownParameter']);
         $this->assertEquals($expectedParameters, $filters->all());
+        $this->assertEmpty($filters->getUuid());
     }
 
     public function testOverrideWithPostRequestAndFiltersUuid()
@@ -156,7 +161,7 @@ class RequestFiltersBuilderTest extends TestCase
         ];
         $requestMock = $this->buildRequestMock($requestParameters, 'language', true);
 
-        $filters = new Filters(['limit' => 20, 'sortOrder' => 'ASC']);
+        $filters = new Filters(['limit' => 20, 'sortOrder' => 'ASC'], 'alternate_language');
         $builder = new RequestFiltersBuilder();
         $builder->setConfig(['request' => $requestMock, 'filters_uuid' => 'language']);
         $filters = $builder->buildFilters($filters);
@@ -168,6 +173,7 @@ class RequestFiltersBuilderTest extends TestCase
             'sortOrder' => 'ASC',
         ];
         $this->assertEquals($expectedParameters, $filters->all());
+        $this->assertEquals('alternate_language', $filters->getUuid());
     }
 
     /**

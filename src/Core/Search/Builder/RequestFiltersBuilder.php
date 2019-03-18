@@ -39,9 +39,7 @@ class RequestFiltersBuilder extends AbstractFiltersBuilder
      */
     public function setConfig(array $config)
     {
-        if (isset($config['request'])) {
-            $this->request = $config['request'];
-        }
+        $this->request = isset($config['request']) ? $config['request'] : null;
 
         return parent::setConfig($config);
     }
@@ -76,7 +74,7 @@ class RequestFiltersBuilder extends AbstractFiltersBuilder
         if (null !== $filters) {
             $filters->add($parameters);
         } else {
-            $filters = new Filters($parameters);
+            $filters = new Filters($parameters, $this->filtersUuid);
         }
 
         return $filters;

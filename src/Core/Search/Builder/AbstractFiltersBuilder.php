@@ -38,9 +38,7 @@ abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
      */
     public function setConfig(array $config)
     {
-        if (isset($config['filters_uuid'])) {
-            $this->filtersUuid = $config['filters_uuid'];
-        }
+        $this->filtersUuid = isset($config['filters_uuid']) ? $config['filters_uuid'] : '';
 
         return $this;
     }
