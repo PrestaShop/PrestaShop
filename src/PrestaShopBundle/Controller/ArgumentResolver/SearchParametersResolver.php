@@ -41,6 +41,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * If an action inject instance of Filters, this class is responsible of
  * creating it from available sources.
+ *
+ * @deprecated Use FiltersBuilderResolver instead
  */
 class SearchParametersResolver implements ArgumentValueResolverInterface
 {
@@ -84,8 +86,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         AdminFilterRepository $adminFilterRepository,
         EventDispatcherInterface $dispatcher,
         $shopId
-    )
-    {
+    ) {
         $this->searchParameters = $searchParameters;
         $this->adminFilterRepository = $adminFilterRepository;
         $this->employee = $this->getEmployee($tokenStorage);
@@ -189,6 +190,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      * @param Filters $filters
      * @param string $controller
      * @param string $action
+     *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     private function persistFilters(Filters $filters, $controller, $action)

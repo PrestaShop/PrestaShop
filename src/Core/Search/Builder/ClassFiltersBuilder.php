@@ -38,7 +38,7 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
     private $filtersClass;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setConfig(array $config)
     {

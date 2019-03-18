@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
-
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\Entity\AdminFilter;
 
@@ -38,7 +37,7 @@ use PrestaShopBundle\Entity\AdminFilter;
 final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function buildFilters(Filters $filters = null)
     {

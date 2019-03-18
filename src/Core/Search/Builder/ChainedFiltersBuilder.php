@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
-
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -53,7 +52,7 @@ final class ChainedFiltersBuilder extends AbstractFiltersBuilder
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setConfig(array $config)
     {
@@ -68,7 +67,7 @@ final class ChainedFiltersBuilder extends AbstractFiltersBuilder
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function buildFilters(Filters $filters = null)
     {
@@ -83,5 +82,4 @@ final class ChainedFiltersBuilder extends AbstractFiltersBuilder
 
         return $filters;
     }
-
 }

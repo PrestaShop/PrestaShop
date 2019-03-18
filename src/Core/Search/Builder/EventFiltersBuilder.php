@@ -51,7 +51,7 @@ final class EventFiltersBuilder extends AbstractFiltersBuilder
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function buildFilters(Filters $filters = null)
     {

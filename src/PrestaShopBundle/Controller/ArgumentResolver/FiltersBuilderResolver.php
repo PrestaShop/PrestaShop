@@ -32,6 +32,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
+/**
+ * This argument resolver uses the FiltersBuilderInterface service to automatically
+ * instantiate and inject parameters in controllers.
+ */
 class FiltersBuilderResolver implements ArgumentValueResolverInterface
 {
     /** @var FiltersBuilderInterface */
@@ -54,7 +58,7 @@ class FiltersBuilderResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {

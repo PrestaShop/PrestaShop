@@ -94,7 +94,7 @@ class ConfigurableFiltersBuilder extends AbstractFiltersBuilder
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setConfig(array $config)
     {
@@ -110,7 +110,7 @@ class ConfigurableFiltersBuilder extends AbstractFiltersBuilder
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function buildFilters(Filters $filters = null)
     {

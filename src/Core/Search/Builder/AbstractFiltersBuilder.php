@@ -38,7 +38,7 @@ abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
     protected $filtersUuid;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setConfig(array $config)
     {
@@ -48,7 +48,7 @@ abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     abstract public function buildFilters(Filters $filters = null);
 
