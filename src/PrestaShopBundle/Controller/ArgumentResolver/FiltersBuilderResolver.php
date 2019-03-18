@@ -24,45 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Builder;
+namespace PrestaShopBundle\Controller\ArgumentResolver;
 
+use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-/**
- * Basic abstract class for FiltersBuilder classes, able to store the filters_uuid
- * from the config.
- */
-abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
+class FiltersBuilderResolver implements ArgumentValueResolverInterface
 {
-    /** @var string */
-    protected $filtersUuid;
+    /** @var FiltersBuilderInterface */
+    private $builder;
 
     /**
-     * @inheritDoc
+     * @param FiltersBuilderInterface $builder
      */
-    public function setConfig(array $config)
+    public function __construct(FiltersBuilderInterface $builder)
     {
-        $this->filtersUuid = isset($config['filters_uuid']) ? $config['filters_uuid'] : '';
+        $this->builder = $builder;
+    }
 
-        return $this;
+    /**
+     * {@inheritdoc}
+     */
+    public function supports(Request $request, ArgumentMetadata $argument)
+    {
+        return is_subclass_of($argument->getType(), Filters::class);
     }
 
     /**
      * @inheritDoc
      */
-    abstract public function buildFilters(Filters $filters = null);
-
-    /**
-     * @param Filters|null $filters
-     *
-     * @return string
-     */
-    protected function getFiltersUuid(Filters $filters = null)
+    public function resolve(Request $request, ArgumentMetadata $argument)
     {
-        if (null === $filters) {
-            return $this->filtersUuid;
-        }
+        $this->builder->setConfig([
+            'filters_class' => $argument->getType(),
+            'request' => $request,
+        ]);
 
-        return $filters->getUuid();
+        $filters = $this->builder->buildFilters();
+
+        yield $filters;
     }
 }

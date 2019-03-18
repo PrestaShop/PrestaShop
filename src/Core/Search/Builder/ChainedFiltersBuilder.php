@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  * This allows to split every Filters building into separate classes and then compose
  * them based on your needs.
  */
-class ChainedFiltersBuilder extends AbstractFiltersBuilder
+final class ChainedFiltersBuilder extends AbstractFiltersBuilder
 {
     /** @var FiltersBuilderCollection */
     private $builders;

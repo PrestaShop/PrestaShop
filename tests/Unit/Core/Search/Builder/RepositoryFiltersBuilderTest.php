@@ -27,10 +27,12 @@
 namespace Tests\Unit\Core\Search\Builder;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\RepositoryFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 class RepositoryFiltersBuilderTest extends TestCase
 {
@@ -42,7 +44,13 @@ class RepositoryFiltersBuilderTest extends TestCase
             ->getMock()
         ;
 
-        $builder = new RepositoryFiltersBuilder($repositoryMock);
+        /** @var ContextEmployeeProviderInterface $employeeProviderMock */
+        $employeeProviderMock = $this->getMockBuilder(ContextEmployeeProviderInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $builder = new RepositoryFiltersBuilder($repositoryMock, $employeeProviderMock, 0);
         $filters = $builder->buildFilters();
         $this->assertNull($filters);
     }
@@ -53,11 +61,13 @@ class RepositoryFiltersBuilderTest extends TestCase
             'limit' => 10,
             'offset' => 10,
         ];
-        $builder = new RepositoryFiltersBuilder($this->buildRepositoryByUuidMock($expectedFilters));
+        $builder = new RepositoryFiltersBuilder(
+            $this->buildRepositoryByUuidMock($expectedFilters, 'language'),
+            $this->buildEmployeeProviderMock(),
+            1
+        );
         $builder->setConfig([
             'filters_uuid' => 'language',
-            'employee_id' => 1,
-            'shop_id' => 1,
         ]);
         $filters = $builder->buildFilters();
         $this->assertNotNull($filters);
@@ -71,11 +81,13 @@ class RepositoryFiltersBuilderTest extends TestCase
             'limit' => 10,
             'offset' => 10,
         ];
-        $builder = new RepositoryFiltersBuilder($this->buildRepositoryByUuidMock($repositoryFilters));
+        $builder = new RepositoryFiltersBuilder(
+            $this->buildRepositoryByUuidMock($repositoryFilters, 'alternate_language'),
+            $this->buildEmployeeProviderMock(),
+            1
+        );
         $builder->setConfig([
             'filters_uuid' => 'language',
-            'employee_id' => 1,
-            'shop_id' => 1,
         ]);
         $filters = new Filters(['limit' => 20, 'orderBy' => 'language_id'], 'alternate_language');
         $builtFilters = $builder->buildFilters($filters);
@@ -91,18 +103,41 @@ class RepositoryFiltersBuilderTest extends TestCase
 
     public function testBuildWithController()
     {
+        $expectedFilters = [
+            'limit' => 10,
+            'offset' => 10,
+        ];
+        $builder = new RepositoryFiltersBuilder(
+            $this->buildRepositoryByRouteMock($expectedFilters, 'language', 'index'),
+            $this->buildEmployeeProviderMock(),
+            1
+        );
+        $builder->setConfig([
+            'controller' => 'language',
+            'action' => 'index',
+        ]);
+        $filters = $builder->buildFilters();
+        $this->assertNotNull($filters);
+        $this->assertEquals($expectedFilters, $filters->all());
+        $this->assertEmpty($filters->getUuid());
+    }
+
+    public function testOverrideWithController()
+    {
         $repositoryFilters = [
             'limit' => 10,
             'offset' => 10,
         ];
-        $builder = new RepositoryFiltersBuilder($this->buildRepositoryByRouteMock($repositoryFilters));
+        $builder = new RepositoryFiltersBuilder(
+            $this->buildRepositoryByRouteMock($repositoryFilters, 'language', 'index'),
+            $this->buildEmployeeProviderMock(),
+            1
+        );
         $builder->setConfig([
             'controller' => 'language',
             'action' => 'index',
-            'employee_id' => 1,
-            'shop_id' => 1,
         ]);
-        $filters = new Filters(['limit' => 20, 'orderBy' => 'language_id'], 'alternate_language');
+        $filters = new Filters(['limit' => 20, 'orderBy' => 'language_id']);
         $builtFilters = $builder->buildFilters($filters);
         $this->assertNotNull($builtFilters);
         $expectedFilters = [
@@ -110,22 +145,23 @@ class RepositoryFiltersBuilderTest extends TestCase
             'offset' => 10,
             'orderBy' => 'language_id',
         ];
-        $this->assertEquals($expectedFilters, $filters->all());
-        $this->assertEquals('alternate_language', $filters->getUuid());
+        $this->assertEquals($expectedFilters, $builtFilters->all());
+        $this->assertEmpty($builtFilters->getUuid());
     }
 
-    public function testOverrideWithController()
+    public function testBuildWithRequest()
     {
         $expectedFilters = [
             'limit' => 10,
             'offset' => 10,
         ];
-        $builder = new RepositoryFiltersBuilder($this->buildRepositoryByRouteMock($expectedFilters));
+        $builder = new RepositoryFiltersBuilder(
+            $this->buildRepositoryByRouteMock($expectedFilters, 'language', 'index'),
+            $this->buildEmployeeProviderMock(),
+            1
+        );
         $builder->setConfig([
-            'controller' => 'language',
-            'action' => 'index',
-            'employee_id' => 1,
-            'shop_id' => 1,
+            'request' => $this->buildRequestMock('PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::indexAction'),
         ]);
         $filters = $builder->buildFilters();
         $this->assertNotNull($filters);
@@ -134,51 +170,71 @@ class RepositoryFiltersBuilderTest extends TestCase
     }
 
     /**
-     * @param array|null $filters
+     * @param array $filters
+     * @param string $filtersUuid
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilterRepository
      */
-    private function buildRepositoryByUuidMock(array $filters = null)
+    private function buildRepositoryByUuidMock(array $filters, $filtersUuid)
     {
         $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        if (null !== $filters) {
-            $adminFilterMock = $this->buildAdminFilterMock($filters);
+        $adminFilterMock = $this->buildAdminFilterMock($filters);
 
-            $repositoryMock
-                ->expects($this->once())
-                ->method('findByEmployeeAndUuid')
-                ->willReturn($adminFilterMock)
-            ;
-        }
+        $repositoryMock
+            ->expects($this->once())
+            ->method('findByEmployeeAndUuid')
+            ->with(
+                $this->equalTo(1),
+                $this->equalTo(1),
+                $this->equalTo($filtersUuid)
+            )
+            ->willReturn($adminFilterMock)
+        ;
+
+        $repositoryMock
+            ->expects($this->never())
+            ->method('findByEmployeeAndRouteParams')
+        ;
 
         return $repositoryMock;
     }
 
     /**
-     * @param array|null $filters
+     * @param array $filters
+     * @param string $controller
+     * @param string $action
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilterRepository
      */
-    private function buildRepositoryByRouteMock(array $filters = null)
+    private function buildRepositoryByRouteMock(array $filters, $controller, $action)
     {
         $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        if (null !== $filters) {
-            $adminFilterMock = $this->buildAdminFilterMock($filters);
+        $adminFilterMock = $this->buildAdminFilterMock($filters);
 
-            $repositoryMock
-                ->expects($this->once())
-                ->method('findByEmployeeAndRouteParams')
-                ->willReturn($adminFilterMock)
-            ;
-        }
+        $repositoryMock
+            ->expects($this->once())
+            ->method('findByEmployeeAndRouteParams')
+            ->with(
+                $this->equalTo(1),
+                $this->equalTo(1),
+                $this->equalTo($controller),
+                $this->equalTo($action)
+            )
+            ->willReturn($adminFilterMock)
+        ;
+
+        $repositoryMock
+            ->expects($this->never())
+            ->method('findByEmployeeAndUuid')
+        ;
 
         return $repositoryMock;
     }
@@ -202,5 +258,49 @@ class RepositoryFiltersBuilderTest extends TestCase
         ;
 
         return $adminFilterMock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|ContextEmployeeProviderInterface
+     */
+    private function buildEmployeeProviderMock()
+    {
+        $employeeProviderMock = $this->getMockBuilder(ContextEmployeeProviderInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $employeeProviderMock
+            ->expects($this->atLeastOnce())
+            ->method('getId')
+            ->willReturn(1)
+        ;
+
+        return $employeeProviderMock;
+    }
+
+    /**
+     * @param string $controller
+     *
+     * @return Request
+     */
+    private function buildRequestMock($controller)
+    {
+        /** @var Request $requestMock */
+        $requestMock = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $requestMock
+            ->expects($this->once())
+            ->method('get')
+            ->with(
+                $this->equalTo('_controller')
+            )
+            ->willReturn($controller)
+        ;
+
+        return $requestMock;
     }
 }

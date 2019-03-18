@@ -29,86 +29,57 @@ namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\Entity\AdminFilter;
-use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 
-class RepositoryFiltersBuilder extends AbstractFiltersBuilder
+/**
+ * This builder is able to get the employee saved filter:
+ *  - thanks to filters uuid if one has been specified (either in the config or by the Filters sub class)
+ *  - thanks to controller/action matching from the request
+ */
+final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
 {
-    /** @var AdminFilterRepository */
-    private $adminFilterRepository;
-
-    /** @var int */
-    private $employeeId;
-
-    /** @var int */
-    private $shopId;
-
-    /** @var string */
-    private $controller;
-
-    /** @var string */
-    private $action;
-
-    /**
-     * @param AdminFilterRepository $adminFilterRepository
-     */
-    public function __construct(AdminFilterRepository $adminFilterRepository)
-    {
-        $this->adminFilterRepository = $adminFilterRepository;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setConfig(array $config)
-    {
-        $this->employeeId = isset($config['employee_id']) ? $config['employee_id'] : null;
-        $this->shopId = isset($config['shop_id']) ? $config['shop_id'] : null;
-        $this->controller = isset($config['controller']) ? $config['controller'] : '';
-        $this->action = isset($config['action']) ? $config['action'] : '';
-
-        return parent::setConfig($config);
-    }
-
     /**
      * @inheritDoc
      */
     public function buildFilters(Filters $filters = null)
     {
-        if (null === $this->employeeId || null === $this->shopId) {
+        if (!$this->employeeProvider->getId() || !$this->shopId) {
             return $filters;
         }
 
-        $parameters = $this->getParametersFromRepository();
+        $filtersUuid = $this->getFiltersUuid($filters);
+        $parameters = $this->getParametersFromRepository($filtersUuid);
 
         if (null !== $filters) {
             $filters->add($parameters);
         } else {
-            $filters = new Filters($parameters, $this->filtersUuid);
+            $filters = new Filters($parameters, $filtersUuid);
         }
 
         return $filters;
     }
 
     /**
+     * @param string $filtersUuid
+     *
      * @return array
      */
-    private function getParametersFromRepository()
+    private function getParametersFromRepository($filtersUuid)
     {
-        if (empty($this->filtersUuid) && (empty($this->controller) || empty($this->action))) {
+        if (empty($filtersUuid) && (empty($this->controller) || empty($this->action))) {
             return [];
         }
 
-        if (!empty($this->filtersUuid)) {
+        if (!empty($filtersUuid)) {
             /** @var AdminFilter $adminFilter */
             $adminFilter = $this->adminFilterRepository->findByEmployeeAndUuid(
-                $this->employeeId,
+                $this->employeeProvider->getId(),
                 $this->shopId,
-                $this->filtersUuid
+                $filtersUuid
             );
         } else {
             /** @var AdminFilter $adminFilter */
             $adminFilter = $this->adminFilterRepository->findByEmployeeAndRouteParams(
-                $this->employeeId,
+                $this->employeeProvider->getId(),
                 $this->shopId,
                 $this->controller,
                 $this->action
