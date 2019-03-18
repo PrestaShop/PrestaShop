@@ -36,6 +36,7 @@ import ColumnTogglingExtension from '../../components/grid/extension/column-togg
 import PositionExtension from '../../components/grid/extension/position-extension';
 import ChoiceTree from "../../components/form/choice-tree";
 import TranslatableInput from "../../components/translatable-input";
+import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copier";
 
 const $ = window.$;
 
@@ -52,7 +53,12 @@ $(() => {
   cmsCategory.addExtension(new SubmitRowActionExtension());
   cmsCategory.addExtension(new ColumnTogglingExtension());
   cmsCategory.addExtension(new PositionExtension());
-  //todo: multishop choice tree enable
+
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input[name^="cms_page_category[name]"]',
+    destinationElementSelector: 'input[name^="cms_page_category[friendly_url]"]',
+  });
+
   new ChoiceTree('#cms_page_category_parent_category');
 
   const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
