@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermis
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,6 +44,8 @@ class PermissionController extends FrameworkBundleAdminController
 {
     /**
      * Show permissions configuration page
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -63,6 +66,8 @@ class PermissionController extends FrameworkBundleAdminController
 
     /**
      * Update tab permissions for profile
+     *
+     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -93,6 +98,8 @@ class PermissionController extends FrameworkBundleAdminController
 
     /**
      * Updates module permissions for profile
+     *
+     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
