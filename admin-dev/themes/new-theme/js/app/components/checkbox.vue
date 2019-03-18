@@ -42,7 +42,10 @@
         @change="$emit('input', $event.target.checked)"
       />
 
-      <i class="md-checkbox-control"></i>
+      <slot>
+        <!-- - Fallback content -->
+        <i class="md-checkbox-control"></i>
+      </slot>
     </label>
   </div>
 </template>
