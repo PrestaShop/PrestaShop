@@ -28,19 +28,12 @@
 
     <div class="col-lg-8 row">
       <div class="col text-center" v-for="bulk, bulkType in types">
-        <div class="md-checkbox md-checkbox-inline">
-          <label>
-            <input
-              type="checkbox"
-              class="js-tab-permissions-checkbox"
-              v-model="status"
-              @change="updateBulk(bulkType)"
-              :value="bulkType"
-              :disabled="bulk.value !== true"
-            />
-            <i class="md-checkbox-control"></i>
-          </label>
-        </div>
+        <ps-checkbox
+          v-model="status"
+          @change="updateBulk(bulkType)"
+          :value="bulkType"
+          :disabled="bulk.value !== true"
+        />
         <br>
         <strong>{{ bulk.label }}</strong>
       </div>
@@ -49,7 +42,12 @@
 </template>
 
 <script>
+  import PsCheckbox from '../../../components/checkbox.vue';
+
   export default {
+    components: {
+      PsCheckbox,
+    },
     props: {
       types: {
         type: Object,
