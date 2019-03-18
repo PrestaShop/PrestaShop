@@ -36,10 +36,21 @@ class PermissionApp {
       return;
     }
 
+    const template = `<permission
+      :permission-key="permissionKey"
+      :employee-permissions="employeePermissions"
+      :profile-id="profileId"
+      :update-url="updateUrl"
+      :messages="messages"
+      :permissions="permissions"
+      :types="types"
+      :profile-permissions="profilePermissions"
+      :canEdit="canEdit" />`;
+
     // If the selector cannot be found, we do not load the Vue app
     this.vm = new Vue({
       el: target,
-      template: '<permission :permission-key="permissionKey" :employee-permissions="employeePermissions" :profile-id="profileId" :update-url="updateUrl" :messages="messages" :permissions="permissions" :types="types" :profile-permissions="profilePermissions" :canEdit="canEdit" />',
+      template,
       data: {
         profileId,
         permissionKey,
