@@ -36,7 +36,7 @@
       <div class="card-text">
 
         {% set invalidCharactersForCatalogLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>;=#{}' %}
-        {% set invalidCharactersForNameLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>=#{}' %}
+        {% set invalidCharactersForNameLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>={}' %}
 
         {{ ps.form_group_row(cmsPageCategoryForm.name, {}, {
           'label': 'Name'|trans({}, 'Admin.Global'),
