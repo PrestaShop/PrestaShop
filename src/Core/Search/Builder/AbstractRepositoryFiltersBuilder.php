@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
-
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\ControllerAction;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
@@ -71,7 +70,7 @@ abstract class AbstractRepositoryFiltersBuilder extends AbstractFiltersBuilder
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setConfig(array $config)
     {

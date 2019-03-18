@@ -156,7 +156,7 @@ class AdminFilterRepository extends EntityRepository
 
     /**
      * Persist (create or update) filters into database using employee and controller name and its action name.
-     * 
+     *
      * @param int $employeeId
      * @param int $shopId
      * @param array $filters
@@ -172,7 +172,6 @@ class AdminFilterRepository extends EntityRepository
         $controller,
         $action
     ) {
-
         $adminFilter = $this->findOneBy([
             'employee' => $employeeId,
             'shop' => $shopId,

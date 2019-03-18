@@ -38,6 +38,7 @@ final class PersistFiltersBuilder extends AbstractRepositoryFiltersBuilder
      * @param Filters|null $filters
      *
      * @return Filters
+     *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function buildFilters(Filters $filters = null)

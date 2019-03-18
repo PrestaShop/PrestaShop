@@ -202,6 +202,7 @@ final class GridDefinition implements GridDefinitionInterface
 
     /**
      * @param string $filtersUuid
+     *
      * @return $this
      */
     public function setFiltersUuid($filtersUuid)

@@ -45,7 +45,7 @@ final class RequestFiltersBuilder extends AbstractFiltersBuilder
     private $request;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setConfig(array $config)
     {
@@ -55,7 +55,7 @@ final class RequestFiltersBuilder extends AbstractFiltersBuilder
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function buildFilters(Filters $filters = null)
     {

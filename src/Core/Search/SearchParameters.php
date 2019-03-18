@@ -32,6 +32,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Retrieve filters parameters if any from the User request.
+ *
+ * @deprecated Use FiltersBuilderInterface instead
  */
 final class SearchParameters implements SearchParametersInterface
 {
