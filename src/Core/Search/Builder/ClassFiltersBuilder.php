@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
-
-use PrestaShop\PrestaShop\Core\Search\AbstractFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 class ClassFiltersBuilder extends AbstractFiltersBuilder

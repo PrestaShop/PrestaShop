@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
-use PrestaShop\PrestaShop\Core\Search\FiltersBuilderInterface;
 
 /**
  * Collection of FiltersBuilderInterface.

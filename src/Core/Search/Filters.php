@@ -58,6 +58,20 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     /**
      * {@inheritdoc}
      */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => null,
+            'sortOrder' => null,
+            'filters' => [],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getOrderBy()
     {
         return $this->get('orderBy');
