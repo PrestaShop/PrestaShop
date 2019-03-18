@@ -13,3 +13,8 @@ services:
         arguments:
             - "%mail_themes_uri%"
             - '@prestashop.adapter.tools'
+
+    prestashop.adapter.environment:
+      class: PrestaShop\PrestaShop\Adapter\Environment
+      arguments:
+        - !php/const _PS_MODE_DEV_
