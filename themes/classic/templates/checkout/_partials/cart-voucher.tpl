@@ -31,7 +31,7 @@
             <ul class="promo-name card-block">
               {foreach from=$cart.vouchers.added item=voucher}
                 <li class="cart-summary-line">
-                  <span class="label">{l s='Discount' d='Shop.Theme.Checkout'}&nbsp;{$voucher.id_cart_rule}</span>
+                  <span class="label">{$voucher.name}</span>
                   <div class="float-xs-right">
                     <span>{$voucher.reduction_formatted}</span>
                     <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>

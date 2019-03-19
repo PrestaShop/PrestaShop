@@ -7,6 +7,44 @@
 .cart-item {
   padding: 1rem 0;
 }
+.card-block{
+  &.cart-summary-totals {
+    padding: 1rem;
+    .cart-summary-line {
+      padding: .5rem;
+
+      &.cart-total {
+        background-color: #F1F1F1;
+        padding: .5rem;
+        .label,
+        .value {
+          font-weight: bold;
+        }
+        .label {
+          font-size: 1rem;
+        }
+        .value {
+          font-size: 1.125rem;
+        }
+      }
+      span {
+        &.sub {
+          text-align: left;
+          font-size: .88rem;
+          display: block;
+        }
+        &.label.sub {
+          margin-top: .5rem;
+        }
+        &.value.sub {
+          float: none;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
 .cart-summary-line {
   @include clearfix;
   clear: both;
@@ -47,6 +85,8 @@
 }
 /** CART RIGHT **/
 .cart-grid-right {
+  .card-block {
+  }
   .promo-discounts {
     margin-bottom: 0;
     text-align: center;
@@ -69,20 +109,6 @@
       }
       .value {
         font-size: 1rem;
-      }
-    }
-    &.cart-total {
-      background-color: #F1F1F1;
-      padding: .5rem;
-      .label,
-      .value {
-        font-weight: bold;
-      }
-      .label {
-        font-size: 1rem;
-      }
-      .value {
-        font-size: 1.125rem;
       }
     }
   }
@@ -131,6 +157,7 @@
   .promo-name {
     color: $brand-warning;
     font-weight: 600;
+    margin-bottom: 0;
     a {
       font-weight: normal;
       color: $gray-darker;
@@ -164,6 +191,7 @@
       &[aria-expanded="true"] {
         display: block;
         margin-top: 1rem;
+        padding-bottom: 0;
       }
     }
   }

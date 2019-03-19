@@ -51,15 +51,15 @@
     {/foreach}
   </div>
 
-  <div class="card-block">
+  <div class="card-block cart-summary-totals">
     <div class="cart-summary-line cart-total">
       <span class="label">{$cart.totals.total.label} {$cart.labels.tax_short}</span>
       <span class="value">{$cart.totals.total.value}</span>
     </div>
 
     <div class="cart-summary-line">
-      <small class="label">{$cart.subtotals.tax.label}</small>
-      <small class="value">{$cart.subtotals.tax.value}</small>
+      <span class="label sub">{$cart.subtotals.tax.label}</span>
+      <span class="value sub">{$cart.subtotals.tax.value}</span>
     </div>
   </div>
 
