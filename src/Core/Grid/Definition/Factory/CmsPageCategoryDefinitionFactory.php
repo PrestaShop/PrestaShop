@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -119,10 +120,16 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'field' => 'description',
                 ])
             )
-            ->add((new DataColumn('position'))
+            ->add((new PositionColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_cms_category',
+                    'id_field' => 'id_cms_category',
+                    'position_field' => 'position',
+                    'update_method' => 'POST',
+                    'update_route' => 'admin_cms_pages_update_position_cms_category',
+                    'record_route_params' => [
+                        'id_parent' => 'id_cms_category',
+                    ],
                 ])
             )
             ->add((new ToggleColumn('active'))
