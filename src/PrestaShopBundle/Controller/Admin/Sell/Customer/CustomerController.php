@@ -171,6 +171,10 @@ class CustomerController extends AbstractAdminController
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
+                if ($request->query->has('back')) {
+                    return $this->redirect(urldecode($request->query->get('back')));
+                }
+
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_customers_index');

@@ -633,7 +633,11 @@ class AdminGroupsControllerCore extends AdminController
         $href = self::$currentIndex . '&' . $this->identifier . '=' . $id . '&update' . $this->table . '&token=' . ($token != null ? $token : $this->token);
 
         if ($this->display == 'view') {
-            $href = Context::getContext()->link->getAdminLink('AdminCustomers') . '&id_customer=' . (int) $id . '&updatecustomer&back=' . urlencode($href);
+            $href = Context::getContext()->link->getAdminLink('AdminCustomers', true, [], [
+                'id_customer' => $id,
+                'updatecustomer' => 1,
+                'back' => urlencode($href),
+            ]);
         }
 
         $tpl->assign(array(
