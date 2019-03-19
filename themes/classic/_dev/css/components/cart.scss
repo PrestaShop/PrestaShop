@@ -7,9 +7,49 @@
 .cart-item {
   padding: 1rem 0;
 }
+.card-block{
+  padding: 1.25rem 1.25rem .5rem;
+  &.cart-summary-totals {
+    padding: 0 1rem 1rem;
+    .cart-summary-line {
+      padding: .5rem .2rem;
+
+      &.cart-total {
+        background-color: $gray-light;
+        padding: .5rem;
+        .label,
+        .value {
+          font-weight: bold;
+        }
+        .label {
+          font-size: 1rem;
+        }
+        .value {
+          font-size: 1.125rem;
+        }
+      }
+      span {
+        &.sub {
+          text-align: left;
+          font-size: .88rem;
+          display: block;
+        }
+        &.label.sub {
+          margin-top: -.3rem;
+        }
+        &.value.sub {
+          float: none;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
 .cart-summary-line {
   @include clearfix;
   clear: both;
+  margin-bottom: .315rem;
   .label {
     padding-left: 0;
     font-weight: normal;
@@ -50,6 +90,7 @@
   .promo-discounts {
     margin-bottom: 0;
     text-align: center;
+    padding-bottom: .5rem;
     .cart-summary-line {
       .label {
         color: $gray;
@@ -58,7 +99,6 @@
           cursor: pointer;
         }
       }
-      
     }
   }
   .cart-summary-line {
@@ -71,26 +111,12 @@
         font-size: 1rem;
       }
     }
-    &.cart-total {
-      background-color: #F1F1F1;
-      padding: .5rem;
-      .label,
-      .value {
-        font-weight: bold;
-      }
-      .label {
-        font-size: 1rem;
-      }
-      .value {
-        font-size: 1.125rem;
-      }
-    }
   }
 }
 .block-promo {
   background: $gray-lighter-second;
   .promo-code {
-    padding: 1.60rem;
+    padding: 1rem;
     .alert-danger {
       position: relative;
       margin-top: 1.25rem;
@@ -124,13 +150,14 @@
     + button {
       margin-top: -4px;
       text-transform: capitalize;
-      border: 2px solid #2fb5d2;
+      border: 2px solid $brand-primary;
     }
   }
   .cart-summary-line .label,
   .promo-name {
     color: $brand-warning;
     font-weight: 600;
+    margin-bottom: 0;
     a {
       font-weight: normal;
       color: $gray-darker;
@@ -155,7 +182,7 @@
   .promo-code-button {
     display: block;
     text-align: center;
-    padding-bottom: 1.25rem;
+    padding: 1.25rem 0;
     &[aria-expanded="true"] {
       display: none;
     }
@@ -163,6 +190,7 @@
       color: $brand-primary;
       &[aria-expanded="true"] {
         display: block;
+        padding: 0;
         margin-top: 1rem;
       }
     }
