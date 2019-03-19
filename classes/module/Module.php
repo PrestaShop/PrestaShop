@@ -1960,12 +1960,19 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
-     * @param string|null $locale Give a context for the translation
+     * @param string|null $locale [deprecated] Unused
      *
      * @return string Translation
      */
     public function l($string, $specific = false, $locale = null)
     {
+        if ($locale !== null) {
+            @trigger_error(
+                'Use of $locale in ' . __FUNCTION__ . ' has no effect and is deprecated since version 1.7.6.0.',
+                E_USER_DEPRECATED
+            );
+        }
+
         if (self::$_generate_config_xml_mode) {
             return $string;
         }
