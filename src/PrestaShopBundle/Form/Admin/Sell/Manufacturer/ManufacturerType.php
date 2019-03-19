@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Manufacturer;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -93,15 +94,35 @@ class ManufacturerType extends AbstractType
                     ]),
                 ],
             ])
-            //@todo: implement isCleanHtml constraint
             ->add('short_description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->translator->trans(
+                                '%s is invalid.',
+                                [],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
-            //@todo: implement isCleanHtml constraint
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->translator->trans(
+                                '%s is invalid.',
+                                [],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
             ->add('logo', FileType::class, [
                 'required' => false,
