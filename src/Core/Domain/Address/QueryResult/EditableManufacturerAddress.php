@@ -40,7 +40,7 @@ class EditableManufacturerAddress
     private $addressId;
 
     /**
-     * @var ManufacturerId
+     * @var ManufacturerId|null
      */
     private $manufacturerId;
 
@@ -101,7 +101,7 @@ class EditableManufacturerAddress
 
     /**
      * @param AddressId $addressId
-     * @param ManufacturerId $manufacturerId
+     * @param ManufacturerId|null $manufacturerId
      * @param string $lastName
      * @param string $firstName
      * @param string $address
@@ -116,7 +116,7 @@ class EditableManufacturerAddress
      */
     public function __construct(
         AddressId $addressId,
-        ManufacturerId $manufacturerId,
+        $manufacturerId,
         $lastName,
         $firstName,
         $address,
@@ -129,8 +129,11 @@ class EditableManufacturerAddress
         $mobilePhone,
         $other
     ) {
-        $this->addressId = $addressId;
+        if (null !== $manufacturerId) {
+            $manufacturerId = new ManufacturerId($manufacturerId);
+        }
         $this->manufacturerId = $manufacturerId;
+        $this->addressId = $addressId;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
         $this->address = $address;
@@ -153,7 +156,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return ManufacturerId
+     * @return ManufacturerId|null
      */
     public function getManufacturerId()
     {

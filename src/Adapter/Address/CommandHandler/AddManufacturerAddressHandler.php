@@ -65,7 +65,9 @@ final class AddManufacturerAddressHandler implements AddManufacturerAddressHandl
     private function createAddressFromCommand(AddManufacturerAddressCommand $command)
     {
         $address = new Address();
-        $address->id_manufacturer = $command->getManufacturerId();
+        if (null !== $command->getManufacturerId()) {
+            $address->id_manufacturer = $command->getManufacturerId()->getValue();
+        }
         $address->lastname = $command->getLastName();
         $address->firstname = $command->getFirstName();
         $address->address1 = $command->getAddress();
