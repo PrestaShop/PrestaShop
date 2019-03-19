@@ -25,7 +25,7 @@
 <template>
   <div class="card">
     <h3 class="card-header">
-      {{ messages.menu }}
+      {{ title }}
     </h3>
     <div class="card-body">
       <div class="table js-permissions-table">
@@ -35,7 +35,7 @@
           @updateBulk="updateBulk"
         />
         <div class="col-xs-12" v-if="permissions === null">
-          <td colspan="6">{{ messages.noMenu }}</td>
+          <td colspan="6">{{ emptyData }}</td>
         </div>
 
         <template v-else v-for="permission, permissionId in permissions">
@@ -72,6 +72,14 @@
       Row,
     },
     props: {
+      title: {
+        type: String,
+        required: true,
+      },
+      emptyData: {
+        type: String,
+        required: true,
+      },
       profileId: {
         type: Number,
         required: true,
