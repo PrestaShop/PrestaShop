@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -83,20 +84,10 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'id_manufacturer',
                 ])
             )
-            ->add((new ContentColumn('logo'))
+            ->add((new ImageColumn('logo'))
                 ->setName($this->trans('Logo', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'logo',
-                    'modifier' => function (array $row) use ($imageManager) {
-                        $row['logo'] = $imageManager->getThumbnailForListing(
-                            $row['id_manufacturer'],
-                            'jpg',
-                            'manufacturer',
-                            'm'
-                        );
-
-                        return $row;
-                    },
+                    'src_field' => 'logo',
                 ])
             )
             ->add((new DataColumn('name'))
