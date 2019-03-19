@@ -1960,7 +1960,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
-     * @param string|null $locale Give a context for the translation
+     * @param string|null $locale Locale to translate to
      *
      * @return string Translation
      */
@@ -1970,7 +1970,14 @@ abstract class ModuleCore implements ModuleInterface
             return $string;
         }
 
-        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
+        return Translate::getModuleTranslation(
+            $this,
+            $string,
+            ($specific) ? $specific : $this->name,
+            null,
+            false,
+            $locale
+        );
     }
 
     /**
