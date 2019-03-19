@@ -31,10 +31,10 @@
             <ul class="promo-name card-block">
               {foreach from=$cart.vouchers.added item=voucher}
                 <li class="cart-summary-line">
-                  <span class="label">{$voucher.name}</span>
-                  <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
+                  <span class="label">{l s='Discount' d='Shop.Theme.Checkout'}&nbsp;{$voucher.id_cart_rule}</span>
                   <div class="float-xs-right">
-                    {$voucher.reduction_formatted}
+                    <span>{$voucher.reduction_formatted}</span>
+                    <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
                   </div>
                 </li>
               {/foreach}
@@ -53,19 +53,18 @@
             <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
               <input type="hidden" name="token" value="{$static_token}">
               <input type="hidden" name="addDiscount" value="1">
-              <input class="promo-input" type="text" name="discount_name" placeholder="{l s='Promo code' d='Shop.Theme.Checkout'}">
-              <button type="submit" class="btn btn-primary"><span>{l s='Add' d='Shop.Theme.Actions'}</span></button>
+              <input class="promo-input" type="text" name="discount_name" placeholder="{l s='Promo code' d='Shop.Theme.Checkout'}"><!--
+              --><button type="submit" class="btn btn-primary"><span>{l s='Add' d='Shop.Theme.Actions'}</span></button>
             </form>
           {/block}
-
+         
           {block name='cart_voucher_notifications'}
             <div class="alert alert-danger js-error" role="alert">
               <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>
             </div>
           {/block}
-        </div>
 
-        {if $cart.discounts|count > 0}
+          {if $cart.discounts|count > 0}
           <p class="block-promo promo-highlighted">
             {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
           </p>
@@ -77,6 +76,10 @@
           {/foreach}
           </ul>
         {/if}
+          <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">
+            {l s='Close' d='Shop.Theme.Checkout'}
+          </a>
+        </div>
       </div>
     </div>
   {/block}

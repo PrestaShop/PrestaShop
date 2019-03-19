@@ -14,6 +14,7 @@
     padding-left: 0;
     font-weight: normal;
     white-space: inherit;
+    color: $gray-dark;
   }
   .value {
     color: $gray-darker;
@@ -48,21 +49,48 @@
 .cart-grid-right {
   .promo-discounts {
     margin-bottom: 0;
+    text-align: center;
     .cart-summary-line {
       .label {
         color: $gray;
         .code {
-          text-decoration: underline;
+          color: $warning-second;
           cursor: pointer;
         }
+      }
+      
+    }
+  }
+  .cart-summary-line {
+    &.cart-subtotal-products {
+      .label,
+      .value {
+        font-weight: 600;
+      }
+      .value {
+        font-size: 1rem;
+      }
+    }
+    &.cart-total {
+      background-color: #F1F1F1;
+      padding: .5rem;
+      .label,
+      .value {
+        font-weight: bold;
+      }
+      .label {
+        font-size: 1rem;
+      }
+      .value {
+        font-size: 1.125rem;
       }
     }
   }
 }
 .block-promo {
+  background: $gray-lighter-second;
   .promo-code {
     padding: 1.60rem;
-    background: $gray-light;
     .alert-danger {
       position: relative;
       margin-top: 1.25rem;
@@ -96,6 +124,7 @@
     + button {
       margin-top: -4px;
       text-transform: capitalize;
+      border: 2px solid #2fb5d2;
     }
   }
   .cart-summary-line .label,
@@ -108,14 +137,43 @@
       display: inline-block;
     }
   }
+  .promo-name {
+    .cart-summary-line {
+      .label {
+        font-weight: normal;
+        color: $gray-dark;
+      }
+      span {
+        color: $warning-second;
+      }
+    }
+    .material-icons {
+      font-size: 1.2rem;
+      margin-left: .4rem;
+    }
+  }
   .promo-code-button {
-    padding-left: 1.25rem;
-    margin-bottom: 1.25rem;
-    display: inline-block;
+    display: block;
+    text-align: center;
+    padding-bottom: 1.25rem;
+    &[aria-expanded="true"] {
+      display: none;
+    }
+    &.cancel-promo {
+      color: $brand-primary;
+      &[aria-expanded="true"] {
+        display: block;
+        margin-top: 1rem;
+      }
+    }
   }
   &.promo-highlighted {
     padding: 1.25rem;
     padding-bottom: 0;
+    margin-bottom: 0;
+    text-align: center;
+  }
+  p {
     margin-bottom: 0;
   }
 }
