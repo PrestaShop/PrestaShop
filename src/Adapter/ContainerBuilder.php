@@ -161,7 +161,7 @@ class ContainerBuilder
         //Build extensions
         $builderExtensions = [
             new ContainerParametersExtension($this->environment),
-            new DoctrineBuilderExtension(),
+            new DoctrineBuilderExtension($this->environment->getCacheDir()),
         ];
         /** @var ContainerBuilderExtensionInterface $builderExtension */
         foreach ($builderExtensions as $builderExtension) {

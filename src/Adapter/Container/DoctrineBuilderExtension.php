@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Container;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
+use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -39,18 +40,25 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
 {
+    /** @var string */
+    private $cacheDir;
+
+    /**
+     * @param string $cacheDir
+     */
+    public function __construct($cacheDir)
+    {
+        $this->cacheDir = $cacheDir;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function build(ContainerBuilder $container)
     {
-        //Config is mandatory to init doctrine, during install process it might no be available so we skip the build
-        $configFile = _PS_ROOT_DIR_ . '/app/config/config.php';
-        if (!file_exists($configFile)) {
-            return;
-        }
-        $config = require $configFile;
+        $yamlParser = new YamlParser($this->cacheDir);
 
+        $config = $yamlParser->parse(_PS_ROOT_DIR_ . '/app/config/config.yml');
         $container->registerExtension(new DoctrineExtension());
         $container->loadFromExtension('doctrine', $config['doctrine']);
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
