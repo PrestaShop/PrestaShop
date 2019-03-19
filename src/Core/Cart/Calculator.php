@@ -136,15 +136,14 @@ class Calculator
     }
 
     /**
-     * @param bool $withTaxes
-     *
+     * @param bool $ignoreProcessedFlag force getting total even if calculation was not made internaly
      * @return AmountImmutable
      *
      * @throws \Exception
      */
-    public function getTotal()
+    public function getTotal($ignoreProcessedFlag = false)
     {
-        if (!$this->isProcessed) {
+        if (!$this->isProcessed && !$ignoreProcessedFlag) {
             throw new \Exception('Cart must be processed before getting its total');
         }
 
@@ -154,9 +153,13 @@ class Calculator
             $amount = $amount->add($rowPrice);
         }
         $shippingFees = $this->fees->getFinalShippingFees();
-        $amount = $amount->add($shippingFees);
+        if (null !== $shippingFees) {
+            $amount = $amount->add($shippingFees);
+        }
         $wrappingFees = $this->fees->getFinalWrappingFees();
-        $amount = $amount->add($wrappingFees);
+        if (null !== $wrappingFees) {
+            $amount = $amount->add($wrappingFees);
+        }
 
         return $amount;
     }
