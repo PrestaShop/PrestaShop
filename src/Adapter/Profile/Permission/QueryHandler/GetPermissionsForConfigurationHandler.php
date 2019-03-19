@@ -75,12 +75,11 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
 
         $permissionIds = ['view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4];
-        $employeeProfileId = (int) Context::getContext()->employee->id_profile;
-
+        $employeeProfileId = $query->getEmployeeProfileId()->getValue();
         $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(PageVoter::UPDATE, 'AdminAccess');
 
         $bulkConfigurationPermissions = $this->getBulkConfigurationForProfiles(
-            $query->getEmployeeProfileId()->getValue(),
+            $employeeProfileId,
             $canEmployeeEditPermissions,
             $tabPermissionsForProfiles,
             $profiles,
