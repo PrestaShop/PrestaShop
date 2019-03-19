@@ -49,6 +49,7 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
         $parentId = null;
         try {
             $entity = new CMSCategory($command->getCmsPageCategoryId()->getValue());
+            $parentId = (int) $entity->id_parent;
 
             if (0 >= $entity->id) {
                 throw new CmsPageCategoryNotFoundException(
@@ -68,6 +69,7 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
                     )
                 );
             }
+            //todo: custom position update which also takes into perspective the current context shop ids.
         } catch (PrestaShopException $exception) {
             throw new CmsPageCategoryException(
                 sprintf(
