@@ -763,6 +763,9 @@
     .product-page {
         .product-footer {
             left: $size-navbar-width-mini;
+            @media (max-width:63.99875em) {
+                left: 0;
+            }
         }
     }
 }
