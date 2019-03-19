@@ -349,7 +349,7 @@ class CartCore extends ObjectModel
             'SELECT cd.`value`
             FROM `' . _DB_PREFIX_ . 'customized_data` cd
             INNER JOIN `' . _DB_PREFIX_ . 'customization` c ON (cd.`id_customization`= c.`id_customization`)
-            WHERE cd.`type`= 0 AND c.`id_cart`=' . (int) $this->id
+            WHERE cd.`type`= ' . (int) Product::CUSTOMIZE_FILE . ' AND c.`id_cart`=' . (int) $this->id
         );
 
         foreach ($uploaded_files as $must_unlink) {
@@ -1273,10 +1273,15 @@ class CartCore extends ObjectModel
      *
      * @param int $quantity Quantity to add (or substract)
      * @param int $id_product Product ID
-     * @param int $id_product_attribute Attribute ID if needed
+     * @param int|null $id_product_attribute Attribute ID if needed
+     * @param int|false $id_customization Customization ID
      * @param string $operator Indicate if quantity must be increased or decreased
+     * @param int $id_address_delivery Delivery Address ID
+     * @param Shop|null $shop
+     * @param bool $auto_add_cart_rule
+     * @param bool $skipAvailabilityCheckOutOfStock
      *
-     * @return bool Whether the quantity has been succesfully updated
+     * @return bool Whether the quantity has been successfully updated
      */
     public function updateQty(
         $quantity,
@@ -1485,6 +1490,15 @@ class CartCore extends ObjectModel
 
     /**
      * Customization management.
+     *
+     * @param int $quantity Quantity value to add or subtract
+     * @param int $id_customization Customization ID
+     * @param int $id_product Product ID
+     * @param int $id_product_attribute ProductAttribute ID
+     * @param int $id_address_delivery Delivery Address ID
+     * @param string $operator Indicate if quantity must be increased (up) or decreased (down)
+     *
+     * @return bool
      */
     protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $id_address_delivery, $operator = 'up')
     {
@@ -1546,16 +1560,14 @@ class CartCore extends ObjectModel
      *
      * @param int $id_product Product ID
      * @param int $id_product_attribute ProductAttribute ID
-     * @param int $index Index
-     * @param int $type Type enum
-     *                  - Product::CUSTOMIZE_FILE
-     *                  - Product::CUSTOMIZE_TEXTFIELD
-     * @param string $field Field
-     * @param int $quantity Quantity
+     * @param int $index Customization field identifier as id_customization_field in table customization_field
+     * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
+     * @param string $value Customization value
+     * @param int $quantity Quantity value
      *
      * @return bool Success
      */
-    public function _addCustomization($id_product, $id_product_attribute, $index, $type, $field, $quantity)
+    public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity)
     {
         $exising_customization = Db::getInstance()->executeS(
             'SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `' . _DB_PREFIX_ . 'customization` cu
@@ -1593,7 +1605,7 @@ class CartCore extends ObjectModel
         }
 
         $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
-            VALUES (' . (int) $id_customization . ', ' . (int) $type . ', ' . (int) $index . ', \'' . pSQL($field) . '\')';
+            VALUES (' . (int) $id_customization . ', ' . (int) $type . ', ' . (int) $index . ', \'' . pSQL($value) . '\')';
 
         if (!Db::getInstance()->execute($query)) {
             return false;
@@ -1770,8 +1782,8 @@ class CartCore extends ObjectModel
      * then the Image is also deleted.
      *
      * @param int $id_customization Customization Id
-     * @param null $id_product Unused
-     * @param null $id_product_attribute Unused
+     * @param int|null $id_product Unused
+     * @param int|null $id_product_attribute Unused
      * @param int|null $id_address_delivery Unused
      *
      * @return bool Indicates if the Customization was successfully deleted
@@ -1790,7 +1802,7 @@ class CartCore extends ObjectModel
                 WHERE `id_customization` = ' . (int) $id_customization);
 
             // Delete customization picture if necessary
-            if (isset($cust_data['type']) && $cust_data['type'] == 0) {
+            if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
                 $result &= (@unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) && @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small'));
             }
 
@@ -4092,12 +4104,11 @@ class CartCore extends ObjectModel
      * Add customer's text.
      *
      * @param int $id_product Product ID
-     * @param int $index
-     * @param int $type
-     * @param string $textValue
+     * @param int $index Customization field identifier as id_customization_field in table customization_field
+     * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
+     * @param string $text_value
      *
      * @return bool Always true
-     * @todo: Improve this PHPDoc comment
      */
     public function addTextFieldToProduct($id_product, $index, $type, $text_value)
     {
@@ -4106,6 +4117,11 @@ class CartCore extends ObjectModel
 
     /**
      * Add customer's pictures.
+     *
+     * @param int $id_product Product ID
+     * @param int $index Customization field identifier as id_customization_field in table customization_field
+     * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
+     * @param string $file Filename
      *
      * @return bool Always true
      */
@@ -4117,8 +4133,8 @@ class CartCore extends ObjectModel
     /**
      * @deprecated 1.5.5.0
      *
-     * @param int $id_product
-     * @param $index
+     * @param int $id_product Product ID
+     * @param int $index Customization field identifier as id_customization_field in table customization_field
      *
      * @return bool
      */
@@ -4126,17 +4142,16 @@ class CartCore extends ObjectModel
     {
         Tools::displayAsDeprecated('Use deleteCustomizationToProduct() instead');
 
-        return $this->deleteCustomizationToProduct($id_product, 0);
+        return $this->deleteCustomizationToProduct($id_product, (int) $index);
     }
 
     /**
      * Remove a customer's customization.
      *
      * @param int $id_product Product ID
-     * @param int $index
+     * @param int $index Customization field identifier as id_customization_field in table customization_field
      *
      * @return bool
-     * @todo: Improve this PHPDoc comment
      */
     public function deleteCustomizationToProduct($id_product, $index)
     {
@@ -4153,7 +4168,7 @@ class CartCore extends ObjectModel
         );
 
         // Delete customization picture if necessary
-        if ($cust_data['type'] == 0) {
+        if ($cust_data['type'] == Product::CUSTOMIZE_FILE) {
             $result &= (@unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) && @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small'));
         }
 
@@ -4170,7 +4185,7 @@ class CartCore extends ObjectModel
      * Return custom pictures in this cart for a specified product.
      *
      * @param int $id_product Product ID
-     * @param int $type Only return customization of this type
+     * @param int|null $type Only return customization of this type, can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param bool $not_in_cart Only return customizations that are not in the cart already
      *
      * @return array Result from DB
@@ -4326,7 +4341,7 @@ class CartCore extends ObjectModel
 
                 $customized_value = $custom['value'];
 
-                if ((int) $custom['type'] == 0) {
+                if ((int) $custom['type'] == Product::CUSTOMIZE_FILE) {
                     $customized_value = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
                     Tools::copy(_PS_UPLOAD_DIR_ . $custom['value'], _PS_UPLOAD_DIR_ . $customized_value);
                     Tools::copy(_PS_UPLOAD_DIR_ . $custom['value'] . '_small', _PS_UPLOAD_DIR_ . $customized_value . '_small');
@@ -4510,7 +4525,7 @@ class CartCore extends ObjectModel
      * @param int $id_product_attribute Product Attribute ID
      * @param int $id_address_delivery Delivery Address ID
      * @param int $new_id_address_delivery New Delivery Address ID
-     * @param int $quantity Quantity
+     * @param int $quantity Quantity value
      * @param bool $keep_quantity Keep the quantity, do not reset if true
      *
      * @return bool Whether the product has been successfully duplicated
