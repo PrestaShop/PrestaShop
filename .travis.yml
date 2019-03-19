@@ -105,7 +105,7 @@ script:
         bash tests/check_integration.sh;
     fi
 
-  - if [ "$PRESTASHOP_TEST_TYPE" = "e2e" ]; then
+  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
         bash tests-legacy/check_e2e.sh;
     fi
 
