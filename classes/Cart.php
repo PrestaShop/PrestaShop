@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
@@ -181,7 +180,7 @@ class CartCore extends ObjectModel
     const ONLY_SHIPPING = 5;
     const ONLY_WRAPPING = 6;
 
-    /** @deprecated since 1.7 * */
+    /** @deprecated since 1.7 **/
     const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
     const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
@@ -1289,8 +1288,7 @@ class CartCore extends ObjectModel
         Shop $shop = null,
         $auto_add_cart_rule = true,
         $skipAvailabilityCheckOutOfStock = false
-    )
-    {
+    ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
         }
@@ -1666,8 +1664,7 @@ class CartCore extends ObjectModel
         $id_product_attribute = 0,
         $id_customization = 0,
         $id_address_delivery = 0
-    )
-    {
+    ) {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
@@ -1882,8 +1879,7 @@ class CartCore extends ObjectModel
         $products = null,
         $id_carrier = null,
         $use_cache = false
-    )
-    {
+    ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
         }
@@ -4530,8 +4526,7 @@ class CartCore extends ObjectModel
         $new_id_address_delivery,
         $quantity = 1,
         $keep_quantity = false
-    )
-    {
+    ) {
         // Check address is linked with the customer
         if (!Customer::customerHasAddress(Context::getContext()->customer->id, $new_id_address_delivery)) {
             return false;

@@ -137,6 +137,7 @@ class Calculator
 
     /**
      * @param bool $ignoreProcessedFlag force getting total even if calculation was not made internaly
+     *
      * @return AmountImmutable
      *
      * @throws \Exception
