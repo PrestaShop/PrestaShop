@@ -89,7 +89,7 @@ class CategoryController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
-            'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons(),
+            'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
         ]);
@@ -112,7 +112,9 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
         $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
 
-        $categoryForm = $categoryFormBuilder->getForm();
+        $categoryId = (int) $request->query->get('id_category', $this->configuration->getInt('PS_HOME_CATEGORY'));
+
+        $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $categoryId]);
         $categoryForm->handleRequest($request);
 
         try {
@@ -631,9 +633,11 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Request $request
+     *
      * @return array
      */
-    private function getCategoryToolbarButtons()
+    private function getCategoryToolbarButtons(Request $request)
     {
         $toolbarButtons = [];
 
@@ -645,8 +649,10 @@ class CategoryController extends FrameworkBundleAdminController
             ];
         }
 
+        $categoryId = $request->query->get('id_category', $this->configuration->getInt('PS_HOME_CATEGORY'));
+
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_categories_add'),
+            'href' => $this->generateUrl('admin_categories_add', ['id_category' => $categoryId]),
             'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];
