@@ -57,14 +57,6 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getFiltersUuid()
-    {
-        return self::GRID_ID;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getId()
     {
         return self::GRID_ID;

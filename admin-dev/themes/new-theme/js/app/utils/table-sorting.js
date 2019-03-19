@@ -70,7 +70,7 @@ class TableSorting {
    * @private
    */
   _sortByColumn(column, direction) {
-    window.location = this._getUrl(column.data('sortColName'), (direction === 'desc') ? 'desc' : 'asc');
+    window.location = this._getUrl(column.data('sortColName'), (direction === 'desc') ? 'desc' : 'asc', column.data('sortPrefix'));
   }
 
   /**
@@ -87,15 +87,21 @@ class TableSorting {
    * Returns the url for the sorted table
    * @param {string} colName
    * @param {string} direction
+   * @param {string} prefix
    * @return {string}
    * @private
    */
-  _getUrl(colName, direction) {
+  _getUrl(colName, direction, prefix) {
     const url = new URL(window.location.href);
     const params = url.searchParams;
 
-    params.set('orderBy', colName);
-    params.set('sortOrder', direction);
+    if (prefix) {
+      params.set(prefix+'[orderBy]', colName);
+      params.set(prefix+'[sortOrder]', direction);
+    } else {
+      params.set('orderBy', colName);
+      params.set('sortOrder', direction);
+    }
 
     return url.toString();
   }

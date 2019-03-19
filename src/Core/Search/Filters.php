@@ -35,16 +35,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Filters extends ParameterBag implements SearchCriteriaInterface
 {
     /** @var string */
-    protected $uuid = '';
+    protected $filterId = '';
 
     /**
      * @param array $filters
-     * @param string $uuid
+     * @param string $filterId
      */
-    public function __construct(array $filters = [], $uuid = '')
+    public function __construct(array $filters = [], $filterId = '')
     {
         parent::__construct($filters);
-        $this->uuid = !empty($uuid) ? $uuid : $this->uuid;
+        $this->filterId = !empty($filterId) ? $filterId : $this->filterId;
     }
 
     /**
@@ -112,19 +112,19 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     /**
      * @return string
      */
-    public function getUuid()
+    public function getFilterId()
     {
-        return $this->uuid;
+        return $this->filterId;
     }
 
     /**
-     * @param string $uuid
+     * @param string $filterId
      *
      * @return $this
      */
-    public function setUuid($uuid)
+    public function setFilterId($filterId)
     {
-        $this->uuid = $uuid;
+        $this->filterId = $filterId;
 
         return $this;
     }

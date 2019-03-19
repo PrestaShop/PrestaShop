@@ -53,18 +53,18 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * @param $employeeId
-     * @param $shopId
-     * @param $uuid
+     * @param int $employeeId
+     * @param int $shopId
+     * @param string $filterId
      *
      * @return AdminFilter|null
      */
-    public function findByEmployeeAndUuid($employeeId, $shopId, $uuid)
+    public function findByEmployeeAndFilterId($employeeId, $shopId, $filterId)
     {
         return $this->findOneBy([
             'employee' => $employeeId ?: 0,
             'shop' => $shopId ?: 0,
-            'uuid' => $uuid,
+            'filterId' => $filterId,
         ]);
     }
 
@@ -99,14 +99,14 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * @param string $uuid
+     * @param string $filterId
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function removeByUuid($uuid)
+    public function removeByFilterId($filterId)
     {
         $adminFilter = $this->findOneBy([
-            'uuid' => $uuid,
+            'filterId' => $filterId,
         ]);
 
         if (null === $adminFilter) {
@@ -123,20 +123,20 @@ class AdminFilterRepository extends EntityRepository
      * @param int $employeeId
      * @param int $shopId
      * @param array $filters
-     * @param string $uuid
+     * @param string $filterId
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createOrUpdateByEmployeeAndUuid(
+    public function createOrUpdateByEmployeeAndFilterId(
         $employeeId,
         $shopId,
         array $filters,
-        $uuid
+        $filterId
     ) {
         $adminFilter = $this->findOneBy([
             'employee' => $employeeId,
             'shop' => $shopId,
-            'uuid' => $uuid,
+            'filterId' => $filterId,
         ]);
 
         $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
@@ -144,7 +144,7 @@ class AdminFilterRepository extends EntityRepository
         $adminFilter
             ->setController('')
             ->setAction('')
-            ->setUuid($uuid)
+            ->setFilterId($filterId)
             ->setEmployee($employeeId)
             ->setShop($shopId)
             ->setFilter(json_encode($filters))
@@ -184,7 +184,7 @@ class AdminFilterRepository extends EntityRepository
         $adminFilter
             ->setController($controller)
             ->setAction($action)
-            ->setUuid('')
+            ->setFilterId('')
             ->setEmployee($employeeId)
             ->setShop($shopId)
             ->setFilter(json_encode($filters))

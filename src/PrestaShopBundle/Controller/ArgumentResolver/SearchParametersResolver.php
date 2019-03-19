@@ -139,24 +139,14 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      */
     private function overrideWithSavedFilters(Filters $filters, $controller, $action)
     {
-        if (!empty($filters->getUuid())) {
-            /** @var Filters $savedFilters */
-            $savedFilters = $this->searchParameters->getFiltersFromRepositoryByUuid(
-                $this->employee->getId(),
-                $this->shopId,
-                $filters->getUuid(),
-                get_class($filters)
-            );
-        } else {
-            /** @var Filters $savedFilters */
-            $savedFilters = $this->searchParameters->getFiltersFromRepository(
-                $this->employee->getId(),
-                $this->shopId,
-                $controller,
-                $action,
-                get_class($filters)
-            );
-        }
+        /** @var Filters $savedFilters */
+        $savedFilters = $this->searchParameters->getFiltersFromRepository(
+            $this->employee->getId(),
+            $this->shopId,
+            $controller,
+            $action,
+            get_class($filters)
+        );
 
         if ($savedFilters) {
             $filters->add($savedFilters->all());
@@ -199,22 +189,13 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         $filtersToSave = $filters->all();
         unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
 
-        if (!empty($filters->getUuid())) {
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndUuid(
-                $this->employee->getId(),
-                $this->shopId,
-                $filtersToSave,
-                $filters->getUuid()
-            );
-        } else {
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
-                $this->employee->getId(),
-                $this->shopId,
-                $filtersToSave,
-                $controller,
-                $action
-            );
-        }
+        $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
+            $this->employee->getId(),
+            $this->shopId,
+            $filtersToSave,
+            $controller,
+            $action
+        );
     }
 
     /**

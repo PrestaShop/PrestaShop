@@ -31,7 +31,7 @@ use PrestaShopBundle\Entity\AdminFilter;
 
 /**
  * This builder is able to get the employee saved filter:
- *  - thanks to filters uuid if one has been specified (either in the config or by the Filters sub class)
+ *  - thanks to filterId if one has been specified (either in the config or by the Filters sub class)
  *  - thanks to controller/action matching from the request
  */
 final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
@@ -45,35 +45,35 @@ final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
             return $filters;
         }
 
-        $filtersUuid = $this->getFiltersUuid($filters);
-        $parameters = $this->getParametersFromRepository($filtersUuid);
+        $filterId = $this->getFilterId($filters);
+        $parameters = $this->getParametersFromRepository($filterId);
 
         if (null !== $filters) {
             $filters->add($parameters);
         } else {
-            $filters = new Filters($parameters, $filtersUuid);
+            $filters = new Filters($parameters, $filterId);
         }
 
         return $filters;
     }
 
     /**
-     * @param string $filtersUuid
+     * @param string $filterId
      *
      * @return array
      */
-    private function getParametersFromRepository($filtersUuid)
+    private function getParametersFromRepository($filterId)
     {
-        if (empty($filtersUuid) && (empty($this->controller) || empty($this->action))) {
+        if (empty($filterId) && (empty($this->controller) || empty($this->action))) {
             return [];
         }
 
-        if (!empty($filtersUuid)) {
+        if (!empty($filterId)) {
             /** @var AdminFilter $adminFilter */
-            $adminFilter = $this->adminFilterRepository->findByEmployeeAndUuid(
+            $adminFilter = $this->adminFilterRepository->findByEmployeeAndFilterId(
                 $this->employeeProvider->getId(),
                 $this->shopId,
-                $filtersUuid
+                $filterId
             );
         } else {
             /** @var AdminFilter $adminFilter */

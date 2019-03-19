@@ -75,12 +75,4 @@ interface GridDefinitionInterface
      * @return FilterCollectionInterface
      */
     public function getFilters();
-
-    /**
-     * Specify an uuid to match a filter, it is also used as a scope for
-     * this grid request parameters.
-     *
-     * @return string
-     */
-    public function getFiltersUuid();
 }

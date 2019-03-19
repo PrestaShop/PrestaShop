@@ -29,20 +29,20 @@ namespace PrestaShop\PrestaShop\Core\Search\Builder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Basic abstract class for FiltersBuilder classes, able to store the filters_uuid
+ * Basic abstract class for FiltersBuilder classes, able to store the filters_id
  * from the config.
  */
 abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
 {
     /** @var string */
-    protected $filtersUuid;
+    protected $filterId;
 
     /**
      * {@inheritdoc}
      */
     public function setConfig(array $config)
     {
-        $this->filtersUuid = isset($config['filters_uuid']) ? $config['filters_uuid'] : '';
+        $this->filterId = isset($config['filter_id']) ? $config['filter_id'] : '';
 
         return $this;
     }
@@ -57,12 +57,12 @@ abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
      *
      * @return string
      */
-    protected function getFiltersUuid(Filters $filters = null)
+    protected function getFilterId(Filters $filters = null)
     {
         if (null === $filters) {
-            return $this->filtersUuid;
+            return $this->filterId;
         }
 
-        return $filters->getUuid();
+        return $filters->getFilterId();
     }
 }
