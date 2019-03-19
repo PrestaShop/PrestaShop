@@ -40,7 +40,6 @@ use PrestaShopException;
  */
 final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler implements AddCmsPageCategoryHandlerInterface
 {
-
     /**
      * {@inheritdoc}
      *

@@ -50,7 +50,6 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
      */
     public function handle(EditCmsPageCategoryCommand $command)
     {
-        //todo: position stuff
         try {
             $cmsPageCategory = new CMSCategory($command->getCmsPageCategoryId()->getValue());
 
