@@ -100,7 +100,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to add this."
      * )
      *
@@ -141,7 +141,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
      * )
      *
@@ -189,12 +189,12 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to delete this."
      * )
      * @DemoRestricted(
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
+     *     redirectQueryParamsToKeep={"id_cms_category"}
      * )
      *
      * @param int $cmsCategoryId
@@ -228,12 +228,12 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to delete this."
      * )
      * @DemoRestricted(
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
+     *     redirectQueryParamsToKeep={"id_cms_category"}
      * )
      *
      * @param Request $request
@@ -271,12 +271,12 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
+     *     redirectQueryParamsToKeep={"id_cms_category"}
      * )
      *
      * @param Request $request
@@ -327,12 +327,12 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *      redirectRoute="admin_cms_pages_index",
-     *      redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *      redirectQueryParamsToKeep={"id_cms_category"},
      *      message="You do not have permission to edit this."
      * )
      * @DemoRestricted(
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
+     *     redirectQueryParamsToKeep={"id_cms_category"}
      * )
      *
      * @param int $cmsCategoryId
@@ -365,12 +365,12 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
+     *     redirectQueryParamsToKeep={"id_cms_category"}
      * )
      *
      * @param Request $request
@@ -407,12 +407,12 @@ class CmsPageController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(
      *     redirectRoute="admin_cms_pages_index",
-     *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
+     *     redirectQueryParamsToKeep={"id_cms_category"}
      * )
      *
      * @param Request $request
