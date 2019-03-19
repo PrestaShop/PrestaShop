@@ -77,6 +77,8 @@
               data-can-edit="{{ configurablePermissions.hasEmployeeEditPermission ? 'true' : 'false' }}"
               data-types="{{ profileTypes|json_encode }}"
               data-permissions="{{ configurablePermissions.tabs|json_encode}}"
+              data-title="{{ 'Menu'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
+              data-empty="{{ 'No menu'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
             >
             </div>
           </div>
@@ -103,6 +105,8 @@
               data-can-edit="{{ configurablePermissions.hasEmployeeEditPermission ? 'true' : 'false' }}"
               data-types="{{ moduleTypes|json_encode }}"
               data-permissions="{{ profilePermissionsForModules[profile.id]|json_encode}}"
+              data-title="{{ 'Modules'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
+              data-empty="{{ 'No Modules'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
             >
             </div>
           </div>
@@ -115,8 +119,6 @@
 {% block javascripts %}
   <script>
     var permissionsMessages = {
-      menu: "{{ 'Menu'|trans({}, 'Admin.Advparameters.Feature')|escape('js') }}",
-      noMenu: "{{ 'No menu'|trans({}, 'Admin.Advparameters.Feature')|escape('js') }}",
       success: "{{ 'Update successful'|trans({}, 'Admin.Notifications.Success')|escape('js') }}",
       error: "{{ 'Unable to update settings.'|trans({}, 'Admin.Notifications.Error')|escape('js') }}",
     };
