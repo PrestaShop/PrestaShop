@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <div v-if="permission.children !== null">
+    <div v-if="permission.children !== undefined">
       <row
         v-for="p, pId in permission.children"
         :key="p.id"
@@ -141,14 +141,31 @@
     },
     methods: {
       canEditCheckbox(type) {
+        // We don't check for employee permissions
         if (Object.keys(this.employeePermissions).length === 0) {
           return true;
         }
 
+        // Permission id not found
         if (!this.employeePermissions[this.permissionId]) {
           return false;
         }
 
+        // Check if we can check TYPE_ALL checkbox
+        if (type === this.TYPE_ALL) {
+          let canBeChecked = true;
+          // eslint-disable-next-line no-restricted-syntax
+          for (const t of this.types) {
+            if (this.employeePermissions[this.permissionId][t] === '0') {
+              canBeChecked = false;
+              break;
+            }
+          }
+
+          return canBeChecked;
+        }
+
+        // Normal behavior
         return this.employeePermissions[this.permissionId][type] === '1';
       },
       /**
