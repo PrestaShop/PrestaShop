@@ -5,6 +5,7 @@ admin_manufacturers_index:
     ##todo: implement index action
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
     _legacy_controller: AdminManufacturers
+    _legacy_link: AdminManufacturers
 
 #
 # Manufacturer routes
@@ -22,6 +23,7 @@ admin_manufacturers_create:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
     _legacy_controller: AdminManufacturers
+    _legacy_link: AdminManufacturers:addmanufacturer
 
 admin_manufacturers_view:
   path: manufacturers/{manufacturerId}/view
@@ -38,6 +40,9 @@ admin_manufacturers_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:edit'
     _legacy_controller: AdminManufacturers
+    _legacy_link: AdminManufacturers:updatemanufacturer
+    _legacy_parameters:
+      id_manufacturer: manufacturerId
   requirements:
     manufacturerId: \d+
 
