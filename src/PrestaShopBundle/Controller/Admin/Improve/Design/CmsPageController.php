@@ -287,9 +287,17 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function updateCmsCategoryPositionAction(Request $request)
     {
-        $cmsCategoryParentId = $request->query->getInt('id_cms_category');
+        $cmsCategoryParentId = $request->query->getInt('id_cms_category') ?:
+            CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID
+        ;
 
-        //todo: position update using ajax and position search fix in another PR.
+        $routeParameters = [];
+        if ($cmsCategoryParentId !== CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID) {
+            $routeParameters = [
+                'id_cms_category' => $cmsCategoryParentId,
+            ];
+        }
+
         $positionsData = [
             'positions' => $request->request->get('positions'),
             'parentId' => $cmsCategoryParentId,
@@ -305,7 +313,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
 
-            return $this->redirectToParentIndexPage($cmsCategoryParentId);
+            return $this->redirectToRoute('admin_cms_pages_index', $routeParameters);
         }
 
         $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
@@ -318,7 +326,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToParentIndexPage($cmsCategoryParentId);
+        return $this->redirectToRoute('admin_cms_pages_index', $routeParameters);
     }
 
     /**
