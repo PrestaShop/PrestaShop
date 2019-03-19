@@ -1951,7 +1951,7 @@ class CartCore extends ObjectModel
 
         // CART CALCULATION
         $cartRules = array();
-        if (in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS])) {
+        if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getCartRules();
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
@@ -1975,6 +1975,10 @@ class CartCore extends ObjectModel
 
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
+                $calculator->calculateRows();
+                $calculator->calculateCartRules();
+                $amount = $calculator->getTotal(true);
+                break;
             case Cart::ONLY_PRODUCTS:
                 $calculator->calculateRows();
                 $amount = $calculator->getRowTotal();
@@ -4309,7 +4313,7 @@ class CartCore extends ObjectModel
 
         // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
         $new_customization_method = (int) Db::getInstance()->getValue(
-            '
+                '
             SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE `id_cart` = ' . (int) $this->id .
                 ' AND `id_customization` != 0'

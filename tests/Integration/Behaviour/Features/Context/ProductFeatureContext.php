@@ -575,4 +575,14 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
             );
         }
     }
+
+    /**
+     * @Given /^product "(.+)" is virtual$/
+     */
+    public function productWithNameProductisVirtual($productName)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->is_virtual = 1;
+        $this->products[$productName]->save();
+    }
 }
