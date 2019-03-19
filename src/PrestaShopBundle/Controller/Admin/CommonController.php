@@ -65,14 +65,14 @@ class CommonController extends FrameworkBundleAdminController
      * @param int $offset
      * @param int $total
      * @param string $view full|quicknav To change default template used to render the content
-     * @param string $paramsPrefix Indicates the params prefix (eg: ?limit=10&offset=20 -> ?scope[limit]=10&scope[offset]=20)
+     * @param string $prefix Indicates the params prefix (eg: ?limit=10&offset=20 -> ?scope[limit]=10&scope[offset]=20)
      *
      * @return array|Response
      */
-    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $paramsPrefix = '')
+    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $prefix = '')
     {
-        $offsetParam = empty($paramsPrefix) ? 'offset' : sprintf('%s[offset]', $paramsPrefix);
-        $limitParam = empty($paramsPrefix) ? 'limit' : sprintf('%s[limit]', $paramsPrefix);
+        $offsetParam = empty($prefix) ? 'offset' : sprintf('%s[offset]', $prefix);
+        $limitParam = empty($prefix) ? 'limit' : sprintf('%s[limit]', $prefix);
 
         $limit = max($limit, 10);
 
@@ -260,7 +260,7 @@ class CommonController extends FrameworkBundleAdminController
         }
 
         if (!empty($uuid)) {
-            $adminFiltersRepository->removeByUuid($uuid);
+            $adminFiltersRepository->removeByFilterId($uuid);
         }
 
         return new JsonResponse();

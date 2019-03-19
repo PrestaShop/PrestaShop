@@ -488,7 +488,7 @@ class FrameworkBundleAdminController extends Controller
      * Process Grid search.
      *
      * @param Request $request
-     * @param string $gridDefinitionFactoryService
+     * @param string $gridDefinitionFactoryServiceId
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
      *
@@ -496,12 +496,12 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function redirectToFilteredGrid(
         Request $request,
-        $gridDefinitionFactoryService,
+        $gridDefinitionFactoryServiceId,
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
     ) {
         /** @var GridDefinitionFactoryInterface $definitionFactory */
-        $definitionFactory = $this->get($gridDefinitionFactoryService);
+        $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
         /** @var GridDefinitionInterface $definition */
         $definition = $definitionFactory->getDefinition();
 
@@ -512,17 +512,11 @@ class FrameworkBundleAdminController extends Controller
 
         $redirectParams = [];
         if ($filtersForm->isSubmitted()) {
-            if (empty($definition->getFiltersUuid())) {
-                $redirectParams = [
+            $redirectParams = [
+                $definition->getId() => [
                     'filters' => $filtersForm->getData(),
-                ];
-            } else {
-                $redirectParams = [
-                    $definition->getFiltersUuid() => [
-                        'filters' => $filtersForm->getData(),
-                    ],
-                ];
-            }
+                ],
+            ];
         }
 
         foreach ($redirectQueryParamsToKeep as $paramName) {

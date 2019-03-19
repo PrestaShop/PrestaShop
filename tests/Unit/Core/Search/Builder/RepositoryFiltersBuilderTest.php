@@ -55,39 +55,39 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertNull($filters);
     }
 
-    public function testBuildWithFiltersUuid()
+    public function testBuildWithFilterId()
     {
         $expectedFilters = [
             'limit' => 10,
             'offset' => 10,
         ];
         $builder = new RepositoryFiltersBuilder(
-            $this->buildRepositoryByUuidMock($expectedFilters, 'language'),
+            $this->buildRepositoryByFilterIdMock($expectedFilters, 'language'),
             $this->buildEmployeeProviderMock(),
             1
         );
         $builder->setConfig([
-            'filters_uuid' => 'language',
+            'filter_id' => 'language',
         ]);
         $filters = $builder->buildFilters();
         $this->assertNotNull($filters);
         $this->assertEquals($expectedFilters, $filters->all());
-        $this->assertEquals('language', $filters->getUuid());
+        $this->assertEquals('language', $filters->getFilterId());
     }
 
-    public function testOverrideWithFiltersUuid()
+    public function testOverrideWithFilterId()
     {
         $repositoryFilters = [
             'limit' => 10,
             'offset' => 10,
         ];
         $builder = new RepositoryFiltersBuilder(
-            $this->buildRepositoryByUuidMock($repositoryFilters, 'alternate_language'),
+            $this->buildRepositoryByFilterIdMock($repositoryFilters, 'alternate_language'),
             $this->buildEmployeeProviderMock(),
             1
         );
         $builder->setConfig([
-            'filters_uuid' => 'language',
+            'filter_id' => 'language',
         ]);
         $filters = new Filters(['limit' => 20, 'orderBy' => 'language_id'], 'alternate_language');
         $builtFilters = $builder->buildFilters($filters);
@@ -98,7 +98,7 @@ class RepositoryFiltersBuilderTest extends TestCase
             'orderBy' => 'language_id',
         ];
         $this->assertEquals($expectedFilters, $builtFilters->all());
-        $this->assertEquals('alternate_language', $filters->getUuid());
+        $this->assertEquals('alternate_language', $filters->getFilterId());
     }
 
     public function testBuildWithController()
@@ -119,7 +119,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $filters = $builder->buildFilters();
         $this->assertNotNull($filters);
         $this->assertEquals($expectedFilters, $filters->all());
-        $this->assertEmpty($filters->getUuid());
+        $this->assertEmpty($filters->getFilterId());
     }
 
     public function testOverrideWithController()
@@ -146,7 +146,7 @@ class RepositoryFiltersBuilderTest extends TestCase
             'orderBy' => 'language_id',
         ];
         $this->assertEquals($expectedFilters, $builtFilters->all());
-        $this->assertEmpty($builtFilters->getUuid());
+        $this->assertEmpty($builtFilters->getFilterId());
     }
 
     public function testBuildWithRequest()
@@ -166,16 +166,16 @@ class RepositoryFiltersBuilderTest extends TestCase
         $filters = $builder->buildFilters();
         $this->assertNotNull($filters);
         $this->assertEquals($expectedFilters, $filters->all());
-        $this->assertEmpty($filters->getUuid());
+        $this->assertEmpty($filters->getFilterId());
     }
 
     /**
      * @param array $filters
-     * @param string $filtersUuid
+     * @param string $filterId
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilterRepository
      */
-    private function buildRepositoryByUuidMock(array $filters, $filtersUuid)
+    private function buildRepositoryByFilterIdMock(array $filters, $filterId)
     {
         $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
             ->disableOriginalConstructor()
@@ -186,11 +186,11 @@ class RepositoryFiltersBuilderTest extends TestCase
 
         $repositoryMock
             ->expects($this->once())
-            ->method('findByEmployeeAndUuid')
+            ->method('findByEmployeeAndFilterId')
             ->with(
                 $this->equalTo(1),
                 $this->equalTo(1),
-                $this->equalTo($filtersUuid)
+                $this->equalTo($filterId)
             )
             ->willReturn($adminFilterMock)
         ;
@@ -233,7 +233,7 @@ class RepositoryFiltersBuilderTest extends TestCase
 
         $repositoryMock
             ->expects($this->never())
-            ->method('findByEmployeeAndUuid')
+            ->method('findByEmployeeAndFilterId')
         ;
 
         return $repositoryMock;

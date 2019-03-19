@@ -47,19 +47,19 @@ final class PersistFiltersBuilder extends AbstractRepositoryFiltersBuilder
             return $filters;
         }
 
-        $filtersUuid = $this->getFiltersUuid($filters);
-        if (empty($filtersUuid) && (empty($this->controller) || empty($this->action))) {
+        $filterId = $this->getFilterId($filters);
+        if (empty($filterId) && (empty($this->controller) || empty($this->action))) {
             return $filters;
         }
 
         $filtersToSave = $filters->all();
 
-        if (!empty($filtersUuid)) {
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndUuid(
+        if (!empty($filterId)) {
+            $this->adminFilterRepository->createOrUpdateByEmployeeAndFilterId(
                 $this->employeeProvider->getId(),
                 $this->shopId,
                 $filtersToSave,
-                $filtersUuid
+                $filterId
             );
         } else {
             $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(

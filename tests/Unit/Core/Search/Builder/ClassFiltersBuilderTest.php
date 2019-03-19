@@ -46,7 +46,7 @@ class ClassFiltersBuilderTest extends TestCase
         $builtFilters = $builder->buildFilters($filters);
         $this->assertNotNull($builtFilters);
         $this->assertEquals($filters->all(), $builtFilters->all());
-        $this->assertEmpty($builtFilters->getUuid());
+        $this->assertEmpty($builtFilters->getFilterId());
     }
 
     public function testBuildWithClass()
@@ -56,18 +56,18 @@ class ClassFiltersBuilderTest extends TestCase
         $filters = $builder->buildFilters();
         $this->assertNotNull($filters);
         $this->assertEquals(SampleFilters::getDefaults(), $filters->all());
-        $this->assertEmpty($filters->getUuid());
+        $this->assertEmpty($filters->getFilterId());
         $this->assertInstanceOf(SampleFilters::class, $filters);
     }
 
-    public function testBuildWithClassAndUuid()
+    public function testBuildWithClassAndFilterId()
     {
         $builder = new ClassFiltersBuilder();
-        $builder->setConfig(['filters_class' => SampleFilters::class, 'filters_uuid' => 'language']);
+        $builder->setConfig(['filters_class' => SampleFilters::class, 'filter_id' => 'language']);
         $filters = $builder->buildFilters();
         $this->assertNotNull($filters);
         $this->assertEquals(SampleFilters::getDefaults(), $filters->all());
-        $this->assertEquals('language', $filters->getUuid());
+        $this->assertEquals('language', $filters->getFilterId());
         $this->assertInstanceOf(SampleFilters::class, $filters);
     }
 
@@ -79,7 +79,7 @@ class ClassFiltersBuilderTest extends TestCase
         $builtFilters = $builder->buildFilters($filters);
         $this->assertNotNull($builtFilters);
         $this->assertEquals(SampleFilters::getDefaults(), $builtFilters->all());
-        $this->assertEmpty($builtFilters->getUuid());
+        $this->assertEmpty($builtFilters->getFilterId());
         $this->assertInstanceOf(SampleFilters::class, $builtFilters);
     }
 }

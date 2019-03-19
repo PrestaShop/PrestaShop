@@ -58,10 +58,10 @@ final class SearchParameters implements SearchParametersInterface
         $queryParams = $request->query->all();
         $requestParams = $request->request->all();
 
-        //If filters have a uuid then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
-        if (!empty($filters->getUuid())) {
-            $queryParams = isset($queryParams[$filters->getUuid()]) ? $queryParams[$filters->getUuid()] : [];
-            $requestParams = isset($requestParams[$filters->getUuid()]) ? $requestParams[$filters->getUuid()] : [];
+        //If filters have a filterId then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
+        if (!empty($filters->getFilterId())) {
+            $queryParams = isset($queryParams[$filters->getFilterId()]) ? $queryParams[$filters->getFilterId()] : [];
+            $requestParams = isset($requestParams[$filters->getFilterId()]) ? $requestParams[$filters->getFilterId()] : [];
         }
 
         $parameters = [];
@@ -94,25 +94,6 @@ final class SearchParameters implements SearchParametersInterface
             return new $filterClass();
         }
 
-        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getUuid());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFiltersFromRepositoryByUuid($employeeId, $shopId, $uuid, $filterClass)
-    {
-        /** @var AdminFilter $adminFilter */
-        $adminFilter = $this->adminFilterRepository->findOneBy([
-            'employee' => $employeeId,
-            'shop' => $shopId,
-            'uuid' => $uuid,
-        ]);
-
-        if (null === $adminFilter) {
-            return new $filterClass();
-        }
-
-        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getUuid());
+        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getFilterId());
     }
 }

@@ -69,18 +69,12 @@ final class GridDefinition implements GridDefinitionInterface
     private $filters;
 
     /**
-     * @var string
-     */
-    private $filtersUuid;
-
-    /**
      * @param string $id Unique grid identifier
      * @param string $name
      * @param ColumnCollectionInterface $columns
      * @param FilterCollectionInterface $filters
      * @param GridActionCollectionInterface $gridActions
      * @param BulkActionCollectionInterface $bulkActions
-     * @param string $filtersUuid
      */
     public function __construct(
         $id,
@@ -88,8 +82,7 @@ final class GridDefinition implements GridDefinitionInterface
         ColumnCollectionInterface $columns,
         FilterCollectionInterface $filters,
         GridActionCollectionInterface $gridActions,
-        BulkActionCollectionInterface $bulkActions,
-        $filtersUuid = ''
+        BulkActionCollectionInterface $bulkActions
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -97,7 +90,6 @@ final class GridDefinition implements GridDefinitionInterface
         $this->filters = $filters;
         $this->gridActions = $gridActions;
         $this->bulkActions = $bulkActions;
-        $this->filtersUuid = $filtersUuid;
     }
 
     /**
@@ -190,25 +182,5 @@ final class GridDefinition implements GridDefinitionInterface
     public function setFilters(FilterCollectionInterface $filters)
     {
         $this->filters = $filters;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFiltersUuid()
-    {
-        return $this->filtersUuid;
-    }
-
-    /**
-     * @param string $filtersUuid
-     *
-     * @return $this
-     */
-    public function setFiltersUuid($filtersUuid)
-    {
-        $this->filtersUuid = $filtersUuid;
-
-        return $this;
     }
 }

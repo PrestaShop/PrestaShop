@@ -52,14 +52,4 @@ interface SearchParametersInterface
      * @return Filters|null A collection of filters
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass);
-
-    /**
-     * @param int $employeeId
-     * @param int $shopId
-     * @param string $uuid
-     * @param string $filterClass
-     *
-     * @return Filters|null A collection of filters
-     */
-    public function getFiltersFromRepositoryByUuid($employeeId, $shopId, $uuid, $filterClass);
 }
