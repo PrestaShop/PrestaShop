@@ -2158,7 +2158,19 @@ class ToolsCore
                     }
                 }
             }
+
             $content = curl_exec($curl);
+
+            if (false === $content && _PS_MODE_DEV_) {
+                $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
+                    $url,
+                    curl_errno($curl),
+                    curl_error($curl)
+                );
+
+                throw new \Exception($errorMessage);
+            }
+
             curl_close($curl);
         }
 
