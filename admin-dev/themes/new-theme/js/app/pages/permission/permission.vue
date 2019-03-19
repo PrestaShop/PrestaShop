@@ -48,7 +48,7 @@
             :permission-key="permissionKey"
             :profile-permissions.sync="profileDataPermissions"
             :employee-permissions="employeePermissions"
-            :parent="permission.children"
+            :parent="permission.children !== undefined"
             :types="Object.keys(types)"
             @sendRequest="sendRequest"
           >
