@@ -609,10 +609,8 @@ class CmsPageController extends FrameworkBundleAdminController
                     'You must select at least one element to delete.',
                     'Admin.Notifications.Error'
                 ),
-                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT =>
-                    $this->trans('The page Category cannot be moved here.', 'Admin.Design.Notification'),
-                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME =>
-                    $this->trans(
+                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT => $this->trans('The page Category cannot be moved here.', 'Admin.Design.Notification'),
+                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -621,8 +619,7 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Name', 'Admin.Global')),
                         ]
                     ),
-                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL =>
-                    $this->trans(
+                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -631,8 +628,7 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Friendly URL', 'Admin.Global')),
                         ]
                     ),
-                CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME =>
-                    $this->trans(
+                CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -641,8 +637,7 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Name', 'Admin.Global')),
                         ]
                     ),
-                CmsPageCategoryConstraintException::INVALID_LINK_REWRITE =>
-                    $this->trans(
+                CmsPageCategoryConstraintException::INVALID_LINK_REWRITE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -651,8 +646,7 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Friendly URL', 'Admin.Global')),
                         ]
                     ),
-                CmsPageCategoryConstraintException::INVALID_META_TITLE =>
-                    $this->trans(
+                CmsPageCategoryConstraintException::INVALID_META_TITLE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -661,8 +655,7 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Meta title', 'Admin.Global')),
                         ]
                     ),
-                CmsPageCategoryConstraintException::INVALID_DESCRIPTION =>
-                    $this->trans(
+                CmsPageCategoryConstraintException::INVALID_DESCRIPTION => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -671,8 +664,7 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Description', 'Admin.Global')),
                         ]
                     ),
-                CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION =>
-                    $this->trans(
+                CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -681,8 +673,7 @@ class CmsPageController extends FrameworkBundleAdminController
                                 $this->trans('Meta description', 'Admin.Global')),
                         ]
                     ),
-                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS =>
-                    $this->trans(
+                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [

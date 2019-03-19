@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
-use CMSCategory;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory;
 
-use CMSCategory;
 use Db;
 use DbQuery;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
@@ -56,7 +55,7 @@ class CategoriesProvider
         array $contextShopIds
     ) {
         $this->contextLanguageId = (int) $contextLanguageId;
-        $this->contextShopIds = array_map(function ($item){ return (int) $item; }, $contextShopIds);
+        $this->contextShopIds = array_map(function ($item) { return (int) $item; }, $contextShopIds);
     }
 
     /**
@@ -77,10 +76,10 @@ class CategoriesProvider
      * @param int $cmsPageCategoryId
      *
      * @return array - [
-     *  'id_cms_category' => 1,
-     *  'name' => 'root category',
-     *  'children' => [...]
-     * ]
+     *               'id_cms_category' => 1,
+     *               'name' => 'root category',
+     *               'children' => [...]
+     *               ]
      *
      * @throws PrestaShopDatabaseException
      */
@@ -120,7 +119,7 @@ class CategoriesProvider
         ;
 
         $childCategories = Db::getInstance()->executeS($childrenQuery);
-        $childCategories = is_array($childCategories) ? $childCategories: [];
+        $childCategories = is_array($childCategories) ? $childCategories : [];
 
         foreach ($childCategories as $childCategory) {
             $categories['children'][] = $this->collectNestedCategoriesIdsAndNames($childCategory['id_cms_category']);

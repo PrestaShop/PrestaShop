@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 final class CmsCategoriesChoiceProvider implements FormChoiceProviderInterface

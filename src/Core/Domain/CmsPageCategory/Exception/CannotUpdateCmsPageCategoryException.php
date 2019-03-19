@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
-
 class CannotUpdateCmsPageCategoryException extends CmsPageCategoryException
 {
 }

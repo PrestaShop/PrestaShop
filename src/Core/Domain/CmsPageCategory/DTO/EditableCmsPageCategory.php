@@ -101,7 +101,6 @@ class EditableCmsPageCategory
         array $localisedFriendlyUrl,
         array $shopIds
     ) {
-
         $this->localisedName = $localisedName;
         $this->isDisplayed = $isDisplayed;
         $this->parentId = new CmsPageCategoryId($parentId);

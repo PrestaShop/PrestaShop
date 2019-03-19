@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
 
-
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
@@ -77,18 +76,18 @@ class CmsPageCategoryType extends AbstractType
             ->add('name', TranslatableType::class, [
                 'error_bubbling' => false,
                 'constraints' => [
-                    new DefaultLanguage()
+                    new DefaultLanguage(),
                 ],
                 'options' => [
                     'constraints' => [
                         new Regex([
                             'pattern' => $categoryNameValidationPattern,
-                            'message' =>  $this->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
                             ),
-                        ])
+                        ]),
                     ],
                 ],
             ])
@@ -105,7 +104,7 @@ class CmsPageCategoryType extends AbstractType
                 'type' => TextareaType::class,
                 'options' => [
                     'constraints' => [
-                        new CleanHtml()
+                        new CleanHtml(),
                     ],
                 ],
             ])
@@ -115,12 +114,12 @@ class CmsPageCategoryType extends AbstractType
                     'constraints' => [
                         new Regex([
                             'pattern' => $genericNameValidationPattern,
-                            'message' =>  $this->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
                             ),
-                        ])
+                        ]),
                     ],
                 ],
             ])
@@ -130,12 +129,12 @@ class CmsPageCategoryType extends AbstractType
                     'constraints' => [
                         new Regex([
                             'pattern' => $genericNameValidationPattern,
-                            'message' =>  $this->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
                             ),
-                        ])
+                        ]),
                     ],
                 ],
             ])
@@ -145,12 +144,12 @@ class CmsPageCategoryType extends AbstractType
                     'constraints' => [
                         new Regex([
                             'pattern' => $genericNameValidationPattern,
-                            'message' =>  $this->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
                             ),
-                        ])
+                        ]),
                     ],
                 ],
             ])
@@ -161,7 +160,7 @@ class CmsPageCategoryType extends AbstractType
                 ],
                 'options' => [
                     'constraints' => [
-                        new IsUrlRewrite()
+                        new IsUrlRewrite(),
                     ],
                 ],
             ])

@@ -26,10 +26,8 @@
 
 namespace Tests\Unit\Core\Domain\CmsPageCategory\Command;
 
-
 use PHPUnit\Framework\TestCase;
 
 class EditCmsPageCategoryCommandTest extends TestCase
 {
-    
 }

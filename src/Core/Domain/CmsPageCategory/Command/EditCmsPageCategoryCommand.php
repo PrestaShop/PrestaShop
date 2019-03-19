@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command;
 
-
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
@@ -165,6 +164,7 @@ class EditCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
     public function setParentId($parentId)
     {
         $this->parentId = new CmsPageCategoryId($parentId);
+
         return $this;
     }
 
@@ -184,6 +184,7 @@ class EditCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
     public function setIsDisplayed($isDisplayed)
     {
         $this->isDisplayed = $isDisplayed;
+
         return $this;
     }
 
@@ -295,5 +296,4 @@ class EditCmsPageCategoryCommand extends AbstractCmsPageCategoryCommand
 
         return $this;
     }
-
 }
