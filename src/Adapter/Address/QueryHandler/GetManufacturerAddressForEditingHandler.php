@@ -48,11 +48,11 @@ final class GetManufacturerAddressForEditingHandler extends AbstractManufacturer
 
         return new EditableManufacturerAddress(
             $addressId,
-            new ManufacturerId((int) $address->id_manufacturer),
             $address->lastname,
             $address->firstname,
             $address->address1,
             $address->city,
+            (int) $address->id_manufacturer,
             (int) $address->id_country,
             $address->address2,
             $address->postcode,

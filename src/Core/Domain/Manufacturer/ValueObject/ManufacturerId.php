@@ -40,6 +40,8 @@ class ManufacturerId
 
     /**
      * @param $id
+     *
+     * @throws ManufacturerConstraintException
      */
     public function __construct($id)
     {
