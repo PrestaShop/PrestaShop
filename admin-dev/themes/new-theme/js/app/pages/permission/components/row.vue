@@ -24,7 +24,7 @@
      *-->
 <template>
   <div>
-    <div :class="{parent, 'bg-light': levelDepth === 1}" class="row permission-row">
+    <div :class="{parent, 'bg-light': parent}" class="row permission-row">
       <div class="col-lg-4">
         <template v-for="i in levelDepth" v-if="i > 2">
           &nbsp;&nbsp;
@@ -32,7 +32,7 @@
 
         &raquo;
 
-        <strong v-if="levelDepth === 1">{{ permission.name }}</strong>
+        <strong v-if="parent">{{ permission.name }}</strong>
         <template v-else>
           {{ permission.name }}
         </template>
