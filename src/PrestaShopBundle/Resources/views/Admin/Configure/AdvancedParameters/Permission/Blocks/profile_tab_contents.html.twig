@@ -33,6 +33,7 @@
       data-profile-id="{{ profile.id }}"
       data-profile-permissions="{{profileTabPermissions|json_encode}}"
       data-modules-permissions="{{ profilePermissionsForModules[profile.id]|json_encode }}"
+      data-employee-permissions="{{ configurablePermissions.profilePermissionsForTabs[employeeProfileId]|json_encode }}"
       data-employee-modules-permissions="{{ profilePermissionsForModules[employeeProfileId]|json_encode }}"
       role="tabpanel"
       aria-labelledby="profileListItem_{{ profile.id }}"

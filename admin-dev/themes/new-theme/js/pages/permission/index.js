@@ -33,7 +33,8 @@ $(document).ready(() => {
       $(element).data('profile-id'),
       `#profile-content-${$(element).data('profile-id')}`,
       'tab_id',
-      $(element).data('profile-permissions')
+      $(element).data('profile-permissions'),
+      $(element).data('employee-permissions')
     );
 
     new PermissionApp(
