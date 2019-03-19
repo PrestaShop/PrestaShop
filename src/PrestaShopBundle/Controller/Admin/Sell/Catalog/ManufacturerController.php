@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
@@ -49,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
@@ -434,6 +437,10 @@ class ManufacturerController extends FrameworkBundleAdminController
             }
         } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof ManufacturerConstraintException) {
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/create.html.twig', [
@@ -631,5 +638,13 @@ class ManufacturerController extends FrameworkBundleAdminController
     private function getAddressFormBuilder()
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_address_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getAddressFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_address_form_handler');
     }
 }

@@ -26,13 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+
 /**
  * Adds new address
  */
 class AddManufacturerAddressCommand
 {
     /**
-     * @var int|null
+     * @var ManufacturerId|null
      */
     private $manufacturerId;
 
@@ -96,7 +99,7 @@ class AddManufacturerAddressCommand
      * @param string $firstName
      * @param string $address
      * @param string $city
-     * @param int $manufacturerId
+     * @param int|null $manufacturerId
      * @param string|null $address2
      * @param int|null $countryId
      * @param string|null $postCode
@@ -104,14 +107,16 @@ class AddManufacturerAddressCommand
      * @param string|null $homePhone
      * @param string $mobilePhone
      * @param string|null $other
+     *
+     * @throws ManufacturerConstraintException
      */
     public function __construct(
-        $manufacturerId,
         $lastName,
         $firstName,
         $address,
         $countryId,
         $city,
+        $manufacturerId = null,
         $address2 = null,
         $postCode = null,
         $stateId = null,
@@ -119,6 +124,9 @@ class AddManufacturerAddressCommand
         $mobilePhone = null,
         $other = null
     ) {
+        if (null !== $manufacturerId) {
+            $manufacturerId = new ManufacturerId($manufacturerId);
+        }
         $this->manufacturerId = $manufacturerId;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
@@ -134,7 +142,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return int
+     * @return ManufacturerId|null
      */
     public function getManufacturerId()
     {

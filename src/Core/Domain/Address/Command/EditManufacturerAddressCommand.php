@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
  * Edits manufacturer address
@@ -40,7 +42,7 @@ class EditManufacturerAddressCommand
     private $addressId;
 
     /**
-     * @var int|null
+     * @var ManufacturerId|null
      */
     private $manufacturerId;
 
@@ -126,7 +128,7 @@ class EditManufacturerAddressCommand
     }
 
     /**
-     * @return int|null
+     * @return ManufacturerId|null
      */
     public function getManufacturerId()
     {
@@ -135,9 +137,14 @@ class EditManufacturerAddressCommand
 
     /**
      * @param int|null $manufacturerId
+     *
+     * @throws ManufacturerConstraintException
      */
     public function setManufacturerId($manufacturerId)
     {
+        if (null !== $manufacturerId) {
+            $manufacturerId = new ManufacturerId($manufacturerId);
+        }
         $this->manufacturerId = $manufacturerId;
     }
 

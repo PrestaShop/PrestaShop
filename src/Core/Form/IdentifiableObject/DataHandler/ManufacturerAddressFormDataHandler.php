@@ -56,12 +56,12 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
     {
         /** @var AddressId $addressId */
         $addressId = $this->commandBus->handle(new AddManufacturerAddressCommand(
-            $data['id_manufacturer'],
             $data['last_name'],
             $data['first_name'],
             $data['address'],
             $data['id_country'],
             $data['city'],
+            $data['id_manufacturer'],
             $data['address2'],
             $data['post_code'],
             $data['id_state'],
