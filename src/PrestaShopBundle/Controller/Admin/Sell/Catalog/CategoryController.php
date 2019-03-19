@@ -28,10 +28,8 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
@@ -112,9 +110,9 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
         $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
 
-        $categoryId = (int) $request->query->get('id_category', $this->configuration->getInt('PS_HOME_CATEGORY'));
+        $parentId = (int) $request->query->get('id_parent', $this->configuration->getInt('PS_HOME_CATEGORY'));
 
-        $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $categoryId]);
+        $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $parentId]);
         $categoryForm->handleRequest($request);
 
         try {
@@ -652,7 +650,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryId = $request->query->get('id_category', $this->configuration->getInt('PS_HOME_CATEGORY'));
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_categories_add', ['id_category' => $categoryId]),
+            'href' => $this->generateUrl('admin_categories_add', ['id_parent' => $categoryId]),
             'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];
