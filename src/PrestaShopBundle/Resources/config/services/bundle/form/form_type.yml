@@ -752,7 +752,7 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
-          -
+
     form.type.international.tax:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType'
       arguments:
