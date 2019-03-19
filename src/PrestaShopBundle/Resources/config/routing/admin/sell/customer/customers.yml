@@ -43,6 +43,8 @@ admin_customers_view:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:view
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:viewcustomer
+    _legacy_parameters:
+      id_customer: customerId
   requirements:
     customerId: \d+
 
