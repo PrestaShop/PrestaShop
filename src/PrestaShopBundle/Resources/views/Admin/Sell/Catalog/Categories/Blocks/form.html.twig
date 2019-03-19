@@ -62,12 +62,10 @@
       </div>
       {% endif %}
 
-      {% if categoryForm.description is defined %}
-        {{ ps.form_group_row(categoryForm.description, {}, {
-          'label': 'Description'|trans({}, 'Admin.Global'),
-          'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-        }) }}
-      {% endif %}
+      {{ ps.form_group_row(categoryForm.description, {}, {
+        'label': 'Description'|trans({}, 'Admin.Global'),
+        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
 
       <div class="form-group row">
         <label class="form-control-label">

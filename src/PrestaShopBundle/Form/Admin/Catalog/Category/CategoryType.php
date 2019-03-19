@@ -51,17 +51,6 @@ class CategoryType extends AbstractCategoryType
                 // user should not be able to select that category as parent
                 'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : [],
             ])
-            ->add('description', TranslatableType::class, [
-                'type' => TextareaType::class,
-                'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new CleanHtml([
-                            'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
-                        ]),
-                    ],
-                ],
-            ])
         ;
     }
 

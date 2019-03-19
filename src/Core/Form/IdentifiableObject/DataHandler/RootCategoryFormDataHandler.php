@@ -130,6 +130,10 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
             $data['active']
         );
 
+        if (null !== $data['description']) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+
         if (null !== $data['meta_title']) {
             $command->setLocalizedMetaTitles($data['meta_title']);
         }
@@ -166,6 +170,10 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
 
         if (null !== $data['name']) {
             $command->setLocalizedNames($data['name']);
+        }
+
+        if (null !== $data['description']) {
+            $command->setLocalizedDescriptions($data['description']);
         }
 
         if (null !== $data['meta_title']) {
