@@ -32,22 +32,20 @@
               {foreach from=$cart.vouchers.added item=voucher}
                 <li class="cart-summary-line">
                   <span class="label">{$voucher.name}</span>
-                  <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
                   <div class="float-xs-right">
-                    {$voucher.reduction_formatted}
+                    <span>{$voucher.reduction_formatted}</span>
+                    <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
                   </div>
                 </li>
               {/foreach}
             </ul>
           {/block}
         {/if}
-
         <p>
           <a class="collapse-button promo-code-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
             {l s='Have a promo code?' d='Shop.Theme.Checkout'}
           </a>
         </p>
-
         <div class="promo-code collapse{if $cart.discounts|count > 0} in{/if}" id="promo-code">
           {block name='cart_voucher_form'}
             <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
@@ -57,15 +55,12 @@
               <button type="submit" class="btn btn-primary"><span>{l s='Add' d='Shop.Theme.Actions'}</span></button>
             </form>
           {/block}
-
           {block name='cart_voucher_notifications'}
             <div class="alert alert-danger js-error" role="alert">
               <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>
             </div>
           {/block}
-        </div>
-
-        {if $cart.discounts|count > 0}
+          {if $cart.discounts|count > 0}
           <p class="block-promo promo-highlighted">
             {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
           </p>
@@ -76,7 +71,11 @@
             </li>
           {/foreach}
           </ul>
-        {/if}
+          {/if}
+          <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">
+            {l s='Close' d='Shop.Theme.Checkout'}
+          </a>
+        </div>
       </div>
     </div>
   {/block}

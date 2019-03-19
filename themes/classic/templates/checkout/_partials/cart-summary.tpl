@@ -35,7 +35,7 @@
 
         <p>
           <a href="#" data-toggle="collapse" data-target="#cart-summary-product-list">
-            {l s='show details' d='Shop.Theme.Actions'}
+            {l s='show details' d='Shop.Theme.Actions'} <i class="material-icons">expand_more</i>
           </a>
         </p>
 
@@ -64,14 +64,12 @@
 
   </div>
 
-  {block name='cart_summary_voucher'}
-    {include file='checkout/_partials/cart-voucher.tpl'}
-  {/block}
-
-  <hr class="separator">
-
   {block name='cart_summary_totals'}
     {include file='checkout/_partials/cart-summary-totals.tpl' cart=$cart}
+  {/block}
+
+  {block name='cart_summary_voucher'}
+    {include file='checkout/_partials/cart-voucher.tpl'}
   {/block}
 
 </section>
