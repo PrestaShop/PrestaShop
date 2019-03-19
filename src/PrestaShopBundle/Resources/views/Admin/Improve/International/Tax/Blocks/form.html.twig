@@ -55,6 +55,10 @@
       {{ ps.form_group_row(taxForm.is_enabled, {}, {
         'label': 'Enable'|trans({}, 'Admin.Actions')
       }) }}
+
+      {% block tax_form_rest %}
+        {{ form_rest(taxForm) }}
+      {% endblock %}
     </div>
   </div>
 
