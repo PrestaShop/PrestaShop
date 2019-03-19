@@ -79,6 +79,7 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
         $category->id_parent = $this->configuration->get('PS_ROOT_CATEGORY');
         $category->name = $command->getLocalizedNames();
         $category->link_rewrite = $command->getLocalizedLinkRewrites();
+        $category->active = $command->isActive();
 
         if (null !== $command->getLocalizedDescriptions()) {
             $category->description = $command->getLocalizedDescriptions();

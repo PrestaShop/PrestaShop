@@ -71,6 +71,10 @@ final class EditCategoryHandler extends AbstractCategoryHandler implements EditC
      */
     private function updateCategoryFromCommandData(Category $category, EditCategoryCommand $command)
     {
+        if (null !== $command->isActive()) {
+            $category->active = $command->isActive();
+        }
+
         if (null !== $command->getParentCategoryId()) {
             $category->id_parent = $command->getParentCategoryId();
         }

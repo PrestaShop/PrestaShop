@@ -64,6 +64,10 @@ final class EditRootCategoryHandler extends AbstractCategoryHandler implements E
      */
     private function updateRootCategoryFromCommandData(Category $category, EditRootCategoryCommand $command)
     {
+        if (null !== $command->isActive()) {
+            $category->active = $command->isActive();
+        }
+
         if (null !== $command->getLocalizedNames()) {
             $category->name = $command->getLocalizedNames();
         }

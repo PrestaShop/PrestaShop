@@ -162,6 +162,7 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
     private function createEditRootCategoryCommand($rootCategoryId, array $data)
     {
         $command = new EditRootCategoryCommand($rootCategoryId);
+        $command->setIsActive($data['active']);
 
         if (null !== $data['name']) {
             $command->setLocalizedNames($data['name']);

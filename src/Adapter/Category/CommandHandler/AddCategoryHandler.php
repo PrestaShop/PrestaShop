@@ -61,6 +61,7 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
     {
         $category = new Category();
         $category->id_parent = $command->getParentCategoryId();
+        $category->active = $command->isActive();
 
         if (null !== $command->getLocalizedNames()) {
             $category->name = $command->getLocalizedNames();

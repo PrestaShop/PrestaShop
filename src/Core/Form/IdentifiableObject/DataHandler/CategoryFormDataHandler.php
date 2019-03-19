@@ -170,6 +170,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
     private function createEditCategoryCommand($categoryId, array $data)
     {
         $command = new EditCategoryCommand($categoryId);
+        $command->setIsActive($data['active']);
 
         if (null !== $data['name']) {
             $command->setLocalizedNames($data['name']);
