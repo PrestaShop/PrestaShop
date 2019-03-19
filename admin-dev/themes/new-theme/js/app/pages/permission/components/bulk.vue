@@ -103,9 +103,16 @@
       /**
        * Check is type all must be checked
        */
-      checkForTypeAllCheckbox() {
+      checkForTypeAllCheckbox(bulkType) {
         // no need to check there is no type all
         if (!(this.TYPE_ALL in this.types)) {
+          return;
+        }
+
+        if (bulkType === this.TYPE_ALL) {
+          this.status = this.status.includes(bulkType) ?
+                        Object.keys(this.types) :
+                        [];
           return;
         }
 
@@ -125,14 +132,15 @@
        * Update bulk type
        */
       updateBulk(bulkType) {
+        this.checkForTypeAllCheckbox(bulkType);
         this.$emit(
           'updateBulk',
           {
-            type: bulkType,
+            updateType: bulkType,
             status: this.status.includes(bulkType),
+            types: bulkType !== this.TYPE_ALL ? [bulkType] : Object.keys(this.types),
           },
         );
-        this.checkForTypeAllCheckbox();
       },
     },
   };
