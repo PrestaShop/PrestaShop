@@ -48,6 +48,9 @@ class TaxType extends AbstractType
      */
     private $translator;
 
+    /**
+     * @param TranslatorInterface $translator
+     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
@@ -71,14 +74,10 @@ class TaxType extends AbstractType
                             ),
                         ]),
                         new Regex([
-                            //@todo: specific Constraint instead (is in another PR)
+                            //@todo: specific Constraint instead (is in another PR #12735)
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [
-                                    sprintf('"%s"', $this->translator->trans('Name', [], 'Admin.Global')),
-                                ],
-                                'Admin.Notifications.Error'
+                                '%s is invalid.', [], 'Admin.Notifications.Error'
                             ),
                         ]),
                     ],

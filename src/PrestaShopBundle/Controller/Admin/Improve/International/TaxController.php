@@ -137,7 +137,10 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handles tax creation
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     * )
      *
      * @param Request $request
      *
@@ -148,9 +151,9 @@ class TaxController extends FrameworkBundleAdminController
         $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
         $taxFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_form_builder');
 
-        $taxForm = $taxFormBuilder->getForm();
-        $taxForm->handleRequest($request);
         try {
+            $taxForm = $taxFormBuilder->getForm();
+            $taxForm->handleRequest($request);
             $result = $taxFormHandler->handle($taxForm);
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
@@ -164,11 +167,17 @@ class TaxController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/create.html.twig', [
             'taxForm' => $taxForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
         ]);
     }
 
     /**
      * Handles tax edit
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     * )
      *
      * @param Request $request
      * @param int $taxId
@@ -180,10 +189,9 @@ class TaxController extends FrameworkBundleAdminController
         $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
         $taxFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_form_builder');
 
-        $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
-        $taxForm->handleRequest($request);
-
         try {
+            $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
+            $taxForm->handleRequest($request);
             $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -206,6 +214,7 @@ class TaxController extends FrameworkBundleAdminController
             'taxForm' => $taxForm->createView(),
             'taxName' => $editableTax->getLocalizedNames()[$this->getContextLangId()],
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
         ]);
     }
 
