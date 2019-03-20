@@ -52,17 +52,8 @@ final class SearchParameters implements SearchParametersInterface
      */
     public function getFiltersFromRequest(Request $request, $filterClass)
     {
-        /** @var Filters $filters */
-        $filters = new $filterClass();
-
         $queryParams = $request->query->all();
         $requestParams = $request->request->all();
-
-        //If filters have a filterId then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
-        if (!empty($filters->getFilterId())) {
-            $queryParams = isset($queryParams[$filters->getFilterId()]) ? $queryParams[$filters->getFilterId()] : [];
-            $requestParams = isset($requestParams[$filters->getFilterId()]) ? $requestParams[$filters->getFilterId()] : [];
-        }
 
         $parameters = [];
         foreach (self::FILTER_TYPES as $type) {
@@ -72,9 +63,8 @@ final class SearchParameters implements SearchParametersInterface
                 $parameters[$type] = $requestParams[$type];
             }
         }
-        $filters->replace($parameters);
 
-        return $filters;
+        return new $filterClass($parameters);
     }
 
     /**
@@ -90,10 +80,8 @@ final class SearchParameters implements SearchParametersInterface
             $action
         );
 
-        if (null === $adminFilter) {
-            return new $filterClass();
-        }
+        $parameters = null !== $adminFilter ? json_decode($adminFilter->getFilter(), true) : [];
 
-        return new $filterClass(json_decode($adminFilter->getFilter(), true), $adminFilter->getFilterId());
+        return new $filterClass($parameters);
     }
 }
