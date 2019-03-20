@@ -70,13 +70,12 @@ class TranslationController extends ApiController
             $module = $request->query->get('module');
             $search = $request->query->get('search');
 
+            $validationErrors = $this->container->get('validator')->validate($locale, [
+                new Locale(),
+            ]);
+
             // If the locale is invalid, no need to call the translation provider.
-            if (
-                $locale !== 'default' &&
-                !$this->container->get('validator')->validate($locale, [
-                    new Locale(),
-                ])
-            ) {
+            if ($locale !== 'default' && count($validationErrors) > 0) {
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
 

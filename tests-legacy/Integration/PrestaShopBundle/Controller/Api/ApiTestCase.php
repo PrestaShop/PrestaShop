@@ -31,6 +31,7 @@ use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 // bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
@@ -42,7 +43,7 @@ abstract class ApiTestCase extends WebTestCase
     protected $router;
 
     /**
-     * @var \Symfony\Component\BrowserKit\Client
+     * @var Client
      */
     protected static $client;
 
@@ -99,7 +100,7 @@ abstract class ApiTestCase extends WebTestCase
             ->getMock();
 
         $contextMock = $this->mockContext();
-        $legacyContextMock->method('getContext')->willReturn($contextMock);
+        $legacyContextMock->expects($this->any())->method('getContext')->willReturn($contextMock);
 
         $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
         $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
@@ -114,7 +115,7 @@ abstract class ApiTestCase extends WebTestCase
      */
     private function mockContext()
     {
-        $contextMock = $this->getMockBuilder('\Context')->getMock();
+        $contextMock = $this->getMockBuilder('Context')->getMock();
 
         $employeeMock = $this->mockEmployee();
         $contextMock->employee = $employeeMock;
