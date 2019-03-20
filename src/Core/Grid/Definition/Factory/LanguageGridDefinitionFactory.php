@@ -259,9 +259,9 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
              ->add(
                  (new Filter('actions', SearchAndResetType::class))
                  ->setTypeOptions([
-                     'reset_route' => 'admin_common_reset_search_by_uuid',
+                     'reset_route' => 'admin_common_reset_search_by_filter_id',
                      'reset_route_params' => [
-                         'uuid' => self::GRID_ID,
+                         'filterId' => self::GRID_ID,
                      ],
                      'redirect_route' => 'admin_languages_index',
                  ])
