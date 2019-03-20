@@ -130,29 +130,12 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
             $data['active']
         );
 
-        if (null !== $data['description']) {
-            $command->setLocalizedDescriptions($data['description']);
-        }
-
-        if (null !== $data['meta_title']) {
-            $command->setLocalizedMetaTitles($data['meta_title']);
-        }
-
-        if (null !== $data['meta_description']) {
-            $command->setLocalizedMetaDescriptions($data['meta_description']);
-        }
-
-        if (null !== $data['meta_keyword']) {
-            $command->setLocalizedMetaKeywords($data['meta_keyword']);
-        }
-
-        if (null !== $data['group_association']) {
-            $command->setAssociatedGroupIds($data['group_association']);
-        }
-
-        if (null !== $data['shop_association']) {
-            $command->setAssociatedShopIds($data['shop_association']);
-        }
+        $command->setLocalizedDescriptions($data['description']);
+        $command->setLocalizedMetaTitles($data['meta_title']);
+        $command->setLocalizedMetaDescriptions($data['meta_description']);
+        $command->setLocalizedMetaKeywords($data['meta_keyword']);
+        $command->setAssociatedGroupIds($data['group_association']);
+        $command->setAssociatedShopIds($data['shop_association']);
 
         return $command;
     }
@@ -167,34 +150,14 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
     {
         $command = new EditRootCategoryCommand($rootCategoryId);
         $command->setIsActive($data['active']);
-
-        if (null !== $data['name']) {
-            $command->setLocalizedNames($data['name']);
-        }
-
-        if (null !== $data['description']) {
-            $command->setLocalizedDescriptions($data['description']);
-        }
-
-        if (null !== $data['meta_title']) {
-            $command->setLocalizedMetaTitles($data['meta_title']);
-        }
-
-        if (null !== $data['meta_description']) {
-            $command->setLocalizedMetaDescriptions($data['meta_description']);
-        }
-
-        if (null !== $data['meta_keyword']) {
-            $command->setLocalizedMetaKeywords($data['meta_keyword']);
-        }
-
-        if (null !== $data['group_association']) {
-            $command->setAssociatedGroupIds($data['group_association']);
-        }
-
-        if (null !== $data['shop_association']) {
-            $command->setAssociatedShopIds($data['shop_association']);
-        }
+        $command->setLocalizedLinkRewrites($data['link_rewrite']);
+        $command->setLocalizedNames($data['name']);
+        $command->setLocalizedDescriptions($data['description']);
+        $command->setLocalizedMetaTitles($data['meta_title']);
+        $command->setLocalizedMetaDescriptions($data['meta_description']);
+        $command->setLocalizedMetaKeywords($data['meta_keyword']);
+        $command->setAssociatedGroupIds($data['group_association']);
+        $command->setAssociatedShopIds($data['shop_association']);
 
         return $command;
     }
