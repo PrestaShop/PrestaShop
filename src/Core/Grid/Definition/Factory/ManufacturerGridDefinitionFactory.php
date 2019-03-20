@@ -51,12 +51,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'manufacturer';
+
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'manufacturer';
+        return self::GRID_ID;
     }
 
     /**
@@ -226,10 +228,9 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'manufacturer',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_manufacturers_index',
                 ])
