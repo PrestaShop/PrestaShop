@@ -26,17 +26,22 @@
 const $ = window.$;
 
 class CatalogModeOptionHandler {
-  constructor() {
+  constructor(pageMap) {
+    this.pageMap = Object.assign({
+      catalogModeField: 'input[name="form[general][catalog_mode]"]',
+      selectedCatalogModeField: 'input[name="form[general][catalog_mode]"]:checked',
+      catalogModeOptions: '.catalog-mode-option'
+    }, pageMap);
     this.handle(0);
 
-    $('input[name="form[general][catalog_mode]"]').on('change', () => this.handle(600));
+    $(this.pageMap.catalogModeField).on('change', () => this.handle(600));
   }
 
   handle(fadeLength) {
-    const catalogModeVal = $('input[name="form[general][catalog_mode]"]:checked').val();
+    const catalogModeVal = $(this.pageMap.selectedCatalogModeField).val();
     const catalogModeEnabled = parseInt(catalogModeVal);
 
-    let catalogOptions = $('.catalog-mode-option');
+    let catalogOptions = $(this.pageMap.catalogModeOptions);
     if (catalogModeEnabled) {
       catalogOptions.show(fadeLength);
     } else {
