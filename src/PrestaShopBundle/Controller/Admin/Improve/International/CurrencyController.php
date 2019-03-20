@@ -46,6 +46,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,12 +91,14 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        return $this->redirectToFilteredGrid(
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.currency'),
             $request,
-            'prestashop.core.grid.definition.factory.currency',
-            'admin_currencies_index',
-            [],
-            CurrencyGridDefinitionFactory::GRID_ID
+            CurrencyGridDefinitionFactory::GRID_ID,
+            'admin_currencies_index'
         );
     }
 

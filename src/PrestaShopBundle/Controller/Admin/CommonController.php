@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -297,20 +299,41 @@ class CommonController extends FrameworkBundleAdminController
      * Process Grid search.
      *
      * @param Request $request
-     * @param string $gridDefinitionFactoryService
+     * @param string $gridDefinitionFactoryServiceId
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
-     * @param string $filterId
      *
      * @return RedirectResponse
      */
     public function searchGridAction(
         Request $request,
-        $gridDefinitionFactoryService,
+        $gridDefinitionFactoryServiceId,
         $redirectRoute,
-        array $redirectQueryParamsToKeep = [],
-        $filterId = ''
+        array $redirectQueryParamsToKeep = []
     ) {
-        return $this->redirectToFilteredGrid($request, $gridDefinitionFactoryService, $redirectRoute, $redirectQueryParamsToKeep, $filterId);
+        /** @var GridDefinitionFactoryInterface $definitionFactory */
+        $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
+        /** @var GridDefinitionInterface $definition */
+        $definition = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+
+        $filtersForm = $gridFilterFormFactory->create($definition);
+        $filtersForm->handleRequest($request);
+
+        $redirectParams = [];
+        if ($filtersForm->isSubmitted()) {
+            $redirectParams = [
+                'filters' => $filtersForm->getData(),
+            ];
+        }
+
+        foreach ($redirectQueryParamsToKeep as $paramName) {
+            if ($request->query->has($paramName)) {
+                $redirectParams[$paramName] = $request->query->get($paramName);
+            }
+        }
+
+        return $this->redirectToRoute($redirectRoute, $redirectParams);
     }
 }

@@ -30,8 +30,6 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -39,7 +37,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -482,57 +479,5 @@ class FrameworkBundleAdminController extends Controller
             $exceptionType,
             $exceptionCode
         );
-    }
-
-    /**
-     * Process Grid search.
-     *
-     * @param Request $request
-     * @param string $gridDefinitionFactoryServiceId
-     * @param string $redirectRoute
-     * @param array $redirectQueryParamsToKeep
-     * @param string $filterId
-     *
-     * @return RedirectResponse
-     */
-    protected function redirectToFilteredGrid(
-        Request $request,
-        $gridDefinitionFactoryServiceId,
-        $redirectRoute,
-        array $redirectQueryParamsToKeep = [],
-        $filterId = ''
-    ) {
-        /** @var GridDefinitionFactoryInterface $definitionFactory */
-        $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
-        /** @var GridDefinitionInterface $definition */
-        $definition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-
-        $filtersForm = $gridFilterFormFactory->create($definition);
-        $filtersForm->handleRequest($request);
-
-        $redirectParams = [];
-        if ($filtersForm->isSubmitted()) {
-            if (!empty($filterId)) {
-                $redirectParams = [
-                    $filterId => [
-                        'filters' => $filtersForm->getData(),
-                    ],
-                ];
-            } else {
-                $redirectParams = [
-                    'filters' => $filtersForm->getData(),
-                ];
-            }
-        }
-
-        foreach ($redirectQueryParamsToKeep as $paramName) {
-            if ($request->query->has($paramName)) {
-                $redirectParams[$paramName] = $request->query->get($paramName);
-            }
-        }
-
-        return $this->redirectToRoute($redirectRoute, $redirectParams);
     }
 }
