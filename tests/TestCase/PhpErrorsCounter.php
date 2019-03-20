@@ -32,6 +32,7 @@ class PhpErrorsCounter
     private $warnings = 0;
     private $errors = 0;
     private $deprecations = 0;
+    private $report = [];
 
     /**
      * This error handler allow us to count every errors
@@ -40,7 +41,7 @@ class PhpErrorsCounter
      */
     public function registerErrorHandler()
     {
-        set_error_handler(function ($errorType) {
+        set_error_handler(function ($errorType, $errorMessage, $errorFile, $errorLine) {
             switch ($errorType) {
                 case E_WARNING:
                     $this->warnings++;
@@ -58,6 +59,8 @@ class PhpErrorsCounter
                 default:
                     // nothing to do.
             }
+
+            $this->report[] = $this->addReportLine($errorType, $errorMessage, $errorFile, $errorLine);
         }, E_ALL);
     }
 
@@ -98,18 +101,37 @@ class PhpErrorsCounter
         return $this->errors;
     }
 
+    public function addReportLine($errorType, $errorMessage, $errorFile, $errorLine)
+    {
+        return sprintf(
+            '[%s] "%s" in %s:%s',
+            $this->getFormattedType($errorType),
+            $errorMessage,
+            $errorFile,
+            $errorLine
+        );
+    }
+
     /**
      * @return string a summary report of errors
      */
     public function displaySummary()
     {
-        return sprintf(
+        $summary = sprintf(
             'Errors: %d / Warnings: %d / Notices: %d / Deprecations: %d',
             $this->getErrors(),
             $this->getWarnings(),
             $this->getNotices(),
             $this->getDeprecations()
         );
+
+        $summary .= PHP_EOL;
+
+        foreach ($this->report as $index => $reportLine) {
+            $summary .= $index . '. ' . $reportLine . PHP_EOL;
+        }
+
+        return $summary;
     }
 
     /**
@@ -121,5 +143,27 @@ class PhpErrorsCounter
         $this->errors = 0;
         $this->notices = 0;
         $this->warnings = 0;
+        $this->report = [];
+    }
+
+    private function getFormattedType($errorType)
+    {
+        switch ($errorType) {
+            case E_WARNING:
+                return 'Warning';
+            break;
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                return 'Deprecated';
+            break;
+            case E_ERROR:
+                return 'Error';
+            break;
+            case E_NOTICE:
+                return 'Notice';
+            break;
+            default:
+                return $errorType;
+        }
     }
 }
