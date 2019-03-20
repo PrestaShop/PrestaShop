@@ -28,8 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
  * Edits manufacturer address
@@ -42,7 +40,7 @@ class EditManufacturerAddressCommand
     private $addressId;
 
     /**
-     * @var ManufacturerId|null
+     * @var int
      */
     private $manufacturerId;
 
@@ -128,7 +126,7 @@ class EditManufacturerAddressCommand
     }
 
     /**
-     * @return ManufacturerId|null
+     * @return int|null
      */
     public function getManufacturerId()
     {
@@ -136,15 +134,19 @@ class EditManufacturerAddressCommand
     }
 
     /**
-     * @param int|null $manufacturerId
+     * @param int $manufacturerId
      *
-     * @throws ManufacturerConstraintException
+     * @throws AddressConstraintException
      */
     public function setManufacturerId($manufacturerId)
     {
-        if (null !== $manufacturerId) {
-            $manufacturerId = new ManufacturerId($manufacturerId);
+        if (!is_int($manufacturerId) || 0 > $manufacturerId) {
+            throw new AddressConstraintException(
+                sprintf('Invalid manufacturer id "%s" provided for address.', var_export($manufacturerId, true)),
+                AddressConstraintException::INVALID_MANUFACTURER_ID
+            );
         }
+
         $this->manufacturerId = $manufacturerId;
     }
 
