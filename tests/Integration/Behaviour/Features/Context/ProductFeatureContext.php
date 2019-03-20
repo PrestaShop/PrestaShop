@@ -59,6 +59,8 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected $customizationFields = [];
 
+    protected $flagModifierCreateVirtualProducts = false;
+
     /* PRODUCTS */
 
     /**
@@ -69,6 +71,11 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function getProductWithName($productName)
     {
         return $this->products[$productName];
+    }
+
+    public function activateCreateVirtualProductsModifier()
+    {
+        $this->flagModifierCreateVirtualProducts = true;
     }
 
     /**
@@ -188,6 +195,11 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $product->price = $price;
         $product->name = $productName;
         $product->quantity = $productQuantity;
+
+        if ($this->flagModifierCreateVirtualProducts) {
+            $product->is_virtual = 1;
+        }
+
         $product->add();
         StockAvailable::setQuantity((int) $product->id, 0, $product->quantity);
 
