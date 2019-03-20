@@ -276,9 +276,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $customization_fields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
             if (is_array($customization_fields)) {
                 foreach ($customization_fields as &$customization_field) {
-                    if ($customization_field['type'] == 0) {
+                    if ($customization_field['type'] == Product::CUSTOMIZE_FILE) {
                         $customization_field['key'] = 'pictures_' . $this->product->id . '_' . $customization_field['id_customization_field'];
-                    } elseif ($customization_field['type'] == 1) {
+                    } elseif ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
                         $customization_field['key'] = 'textFields_' . $this->product->id . '_' . $customization_field['id_customization_field'];
                     }
                 }

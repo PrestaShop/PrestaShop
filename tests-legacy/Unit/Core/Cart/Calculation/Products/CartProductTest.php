@@ -28,6 +28,9 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\Products;
 
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
+/**
+ * behat equivalent : Scenarii/Cart/Calculation/Product/only_products.feature
+ */
 class CartProductTest extends AbstractCartCalculationTest
 {
     /**
