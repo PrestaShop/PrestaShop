@@ -2,10 +2,12 @@ admin_manufacturers_index:
   path: /
   methods: GET
   defaults:
-    ##todo: implement index action
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
+    ##todo: implement index action after PR #9337; Implement legacy links at the end of whole page migration
+    _controller: 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController:redirectAction'
     _legacy_controller: AdminManufacturers
-    _legacy_link: AdminManufacturers
+    ##todo:remove this redirect route after index implementation
+    route: admin_manufacturers_create
+#    _legacy_link: AdminManufacturers
 
 #
 # Manufacturer routes
@@ -23,7 +25,7 @@ admin_manufacturers_create:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
     _legacy_controller: AdminManufacturers
-    _legacy_link: AdminManufacturers:addmanufacturer
+#    _legacy_link: AdminManufacturers:addmanufacturer
 
 admin_manufacturers_view:
   path: manufacturers/{manufacturerId}/view
