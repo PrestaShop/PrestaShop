@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.cms_page.command_handler.bulk_disable_cms_page:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\BulkDisableCmsPageHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand
