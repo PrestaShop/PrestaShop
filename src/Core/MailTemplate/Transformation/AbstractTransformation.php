@@ -50,7 +50,7 @@ abstract class AbstractTransformation implements TransformationInterface
     {
         $availableTypes = [
             MailTemplateInterface::HTML_TYPE,
-            MailTemplateInterface::TXT_TYPE
+            MailTemplateInterface::TXT_TYPE,
         ];
         if (!in_array($type, $availableTypes)) {
             throw new InvalidArgumentException(sprintf(

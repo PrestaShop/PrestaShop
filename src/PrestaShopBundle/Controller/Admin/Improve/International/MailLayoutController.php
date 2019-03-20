@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
@@ -68,7 +68,7 @@ class MailLayoutController extends FrameworkBundleAdminController
         $renderedLayout = $this->renderLayout($theme, $layout, $type, $locale);
 
         $response = new Response($renderedLayout, 200, [
-            'Content-Type' => 'text/plain'
+            'Content-Type' => 'text/plain',
         ]);
 
         return $response;
@@ -94,7 +94,7 @@ class MailLayoutController extends FrameworkBundleAdminController
         }
 
         $layout = null;
-        /** @var LayoutInterface $layout */
+        /* @var LayoutInterface $layout */
         foreach ($theme->getLayouts() as $layoutInterface) {
             if ($layoutInterface->getName() == $layoutName) {
                 $layout = $layoutInterface;
@@ -102,7 +102,7 @@ class MailLayoutController extends FrameworkBundleAdminController
             }
         }
 
-        if( null === $layout) {
+        if (null === $layout) {
             throw new NotFoundHttpException(sprintf(
                 'Could not find layout %s in theme %s',
                 $layoutName,
@@ -115,6 +115,7 @@ class MailLayoutController extends FrameworkBundleAdminController
         if (empty($locale)) {
             $locale = $this->getContext()->language->locale;
         }
+        /** @var LanguageInterface $language */
         $language = $languageRepository->getByLocale($locale);
         if (null === $language) {
             throw new InvalidArgumentException(sprintf('Could not find Language with locale %s', $locale));
