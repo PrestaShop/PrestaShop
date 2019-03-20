@@ -23,9 +23,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card-footer">
-  <a href="{{ path('admin_cms_pages_index') }}" class="btn btn-outline-secondary">
-    <i class="material-icons">arrow_back</i>
-    {{ 'Back to list'|trans({}, 'Admin.Actions') }}
-  </a>
-</div>
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/category_form.html.twig', {
+          'cmsPageCategoryForm': cmsPageCategoryForm,
+          'cmsCategoryParentId': cmsCategoryParentId
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/cms_page.bundle.js') }}"></script>
+{% endblock %}

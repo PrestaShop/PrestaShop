@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,17 +16,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="card-footer">
-  <a href="{{ path('admin_cms_pages_index') }}" class="btn btn-outline-secondary">
-    <i class="material-icons">arrow_back</i>
-    {{ 'Back to list'|trans({}, 'Admin.Actions') }}
-  </a>
-</div>
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
+
+/**
+ * Defines contract for EditCmsPageCategoryHandler.
+ */
+interface EditCmsPageCategoryHandlerInterface
+{
+    /**
+     * @param EditCmsPageCategoryCommand $command
+     *
+     * @return CmsPageCategoryId
+     */
+    public function handle(EditCmsPageCategoryCommand $command);
+}

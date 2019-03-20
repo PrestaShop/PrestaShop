@@ -31,7 +31,12 @@ const $ = window.$;
  */
 $(() => {
   // loads form popover instance
-  $('[data-toggle="form-popover-error"]').popover();
+  $('[data-toggle="form-popover-error"]').popover({
+    html: true,
+    content: function () {
+      return getErrorContent(this);
+    },
+  });
 
   /**
    * Recalculates popover position so it is always aligned horizontally and width is identical
@@ -64,6 +69,18 @@ $(() => {
     const popoverHorizontalPosition = $errorPopover.offset().left;
 
     return inputHorizontalPosition - popoverHorizontalPosition;
+  };
+
+  /**
+   * Gets popover error content pre-fetched in html. It used unique selector to identify which one content to render.
+   *
+   * @param popoverTriggerElement
+   * @returns {jQuery}
+   */
+  const getErrorContent = (popoverTriggerElement) => {
+    const popoverTriggerId = $(popoverTriggerElement).data('id');
+
+    return $(`.js-popover-error-content[data-id="${popoverTriggerId}"]`).html();
   };
 
   // registers the event which displays the popover

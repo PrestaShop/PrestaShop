@@ -34,6 +34,10 @@ import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-act
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import PositionExtension from '../../components/grid/extension/position-extension';
+import ChoiceTree from '../../components/form/choice-tree';
+import TranslatableInput from '../../components/translatable-input';
+import textToLinkRewriteCopier from '../../components/text-to-link-rewrite-copier';
+import TaggableField from "../../components/taggable-field";
 
 const $ = window.$;
 
@@ -50,4 +54,23 @@ $(() => {
   cmsCategory.addExtension(new SubmitRowActionExtension());
   cmsCategory.addExtension(new ColumnTogglingExtension());
   cmsCategory.addExtension(new PositionExtension());
+
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input[name^="cms_page_category[name]"]',
+    destinationElementSelector: 'input[name^="cms_page_category[friendly_url]"]',
+  });
+
+  new ChoiceTree('#cms_page_category_parent_category');
+
+  const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
+  shopChoiceTree.enableAutoCheckChildren();
+
+  new TranslatableInput();
+
+  new TaggableField({
+    tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
 });
