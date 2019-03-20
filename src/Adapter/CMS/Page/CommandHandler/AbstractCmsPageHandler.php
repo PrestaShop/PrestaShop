@@ -24,48 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Command;
+namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
+
+use CMS;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShopException;
 
 /**
- * Disables multiple cms pages.
+ * Abstraction which holds all common functions required for cms page functionality.
+ *
+ * @internal
  */
-class BulkDisableCmsPageCommand
+abstract class AbstractCmsPageHandler
 {
     /**
-     * @var CmsPageId[]
-     */
-    private $cmsPages;
-
-    /**
-     * @param array $cmsPageIds
+     * Gets cms object if it exists. If it does not exist it throws exceptions.
+     *
+     * @param $cmsId
+     * @return CMS
      *
      * @throws CmsPageException
+     * @throws CmsPageNotFoundException
      */
-    public function __construct(array $cmsPageIds)
+    protected function getCmsPageIfExistsById($cmsId)
     {
-        $this->setCmsPages($cmsPageIds);
-    }
+        try {
+            $cms = new CMS($cmsId);
 
-    /**
-     * @return CmsPageId[]
-     */
-    public function getCmsPages()
-    {
-        return $this->cmsPages;
-    }
+            if (0 >= $cms->id) {
+                throw new CmsPageNotFoundException(
+                    sprintf('cms page has not been found with id %s', $cmsId)
+                );
+            }
 
-    /**
-     * @param array $cmsPageIds
-     *
-     * @throws CmsPageException
-     */
-    private function setCmsPages(array $cmsPageIds)
-    {
-        foreach ($cmsPageIds as $cmsPageId) {
-            $this->cmsPages[] = new CmsPageId($cmsPageId);
+        } catch (PrestaShopException $exception) {
+            throw new CmsPageException(
+                sprintf('An error occurred when trying to get cms pag with id %s', $cmsId)
+            );
         }
+
+        return $cms;
     }
 }
