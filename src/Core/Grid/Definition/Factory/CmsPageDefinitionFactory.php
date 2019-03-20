@@ -30,10 +30,20 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\CmsCategoryName;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class responsible for providing columns, filters, actions for cms page list.
@@ -41,16 +51,29 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
+     * @var int
+     */
+    private $cmsCategoryParentId;
+
+    /**
      * @var CommandBusInterface
      */
     private $queryBus;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @param CommandBusInterface $queryBus
      */
-    public function __construct(CommandBusInterface $queryBus)
+    public function __construct(CommandBusInterface $queryBus, RequestStack $requestStack)
     {
         $this->queryBus = $queryBus;
+        $this->requestStack = $requestStack;
+
+        $this->setCmsPageCategoryParentId($requestStack);
     }
 
     /**
@@ -122,11 +145,130 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Displayed', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
-                    'route' => 'admin_cms_pages_toggle_cms_category', //todo: route
+                    'route' => 'admin_cms_pages_toggle_cms',
                     'primary_field' => 'id_cms',
-                    'route_param_name' => 'cmsCategoryId',
+                    'route_param_name' => 'cmsId',
+                ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_cms_pages_edit_cms',
+                                'route_param_name' => 'cmsId',
+                                'route_param_field' => 'id_cms',
+                            ])
+                        )
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'method' => 'DELETE',
+                                'route' => 'admin_cms_pages_delete_cms',
+                                'route_param_name' => 'cmsId',
+                                'route_param_field' => 'id_cms',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        ),
                 ])
             )
         ;
+    }
+
+    protected function getFilters()
+    {
+        $actionsTypeOptions = [
+            'reset_route' => 'admin_common_reset_search',
+            'reset_route_params' => [
+                'controller' => 'CmsPage',
+                'action' => 'index',
+            ],
+            'redirect_route' => 'admin_cms_pages_index',
+        ];
+
+        if ($this->cmsCategoryParentId) {
+            //todo: implement query params to keep usage directly in the  filter reset generation
+            $actionsTypeOptions['redirect_route_params'] = [
+                'id_cms_category' => $this->cmsCategoryParentId,
+            ];
+        }
+
+        return (new FilterCollection())
+            ->add((new Filter('id_cms', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('ID', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_cms')
+            )
+            ->add((new Filter('link_rewrite', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('URL', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('link_rewrite')
+            )
+            ->add((new Filter('meta_title', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Title', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('meta_title')
+            )
+            ->add((new Filter('head_seo_title', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Meta title', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('head_seo_title')
+            )
+            ->add((new Filter('position', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Position', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('position')
+            )
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('active')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions($actionsTypeOptions)
+                ->setAssociatedColumn('actions')
+            )
+        ;
+    }
+
+    /**
+     *
+     * Sets cms page category parent id directly from request attribute. On not found case, it assigns the default one.
+     *
+     * @param RequestStack $requestStack
+     */
+    private function setCmsPageCategoryParentId(RequestStack $requestStack)
+    {
+        $request = $requestStack->getCurrentRequest();
+
+        if (null !== $request && $request->query->getInt('id_cms_category')) {
+            $this->cmsCategoryParentId = $request->query->getInt('id_cms_category');
+        }
     }
 }
