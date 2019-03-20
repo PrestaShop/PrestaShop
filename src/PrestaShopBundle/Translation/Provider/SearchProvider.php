@@ -44,8 +44,12 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     private $externalModuleLegacySystemProvider;
 
-    public function __construct(LoaderInterface $databaseLoader, ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider, $resourceDirectory, $modulesDirectory)
-    {
+    public function __construct(
+        LoaderInterface $databaseLoader,
+        ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider,
+        $resourceDirectory,
+        $modulesDirectory
+    ) {
         $this->modulesDirectory = $modulesDirectory;
         $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
 
