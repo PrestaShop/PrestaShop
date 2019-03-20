@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -92,7 +93,9 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->redirectToFilteredGrid(
             $request,
             'prestashop.core.grid.definition.factory.currency',
-            'admin_currencies_index'
+            'admin_currencies_index',
+            [],
+            CurrencyGridDefinitionFactory::GRID_ID
         );
     }
 

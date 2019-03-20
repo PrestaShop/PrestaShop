@@ -39,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -90,10 +92,10 @@ class LanguageController extends FrameworkBundleAdminController
     public function searchGridAction(Request $request)
     {
         $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.language';
-        $filterId = 'language';
+        $filterId = LanguageGridDefinitionFactory::GRID_ID;;
         if ($request->request->has('currency')) {
             $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.currency_for_language';
-            $filterId = 'currency';
+            $filterId = CurrencyGridDefinitionFactory::GRID_ID;
         }
 
         return $this->redirectToFilteredGrid($request, $gridDefinitionFactory, 'admin_languages_index', [], $filterId);
