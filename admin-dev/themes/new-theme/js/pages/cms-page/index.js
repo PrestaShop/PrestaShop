@@ -73,4 +73,10 @@ $(() => {
       createTokensOnBlur: true,
     },
   });
+
+  const cmsGrid = new Grid('cms_page');
+  cmsGrid.addExtension(new ReloadListActionExtension());
+  cmsGrid.addExtension(new ExportToSqlManagerExtension());
+  cmsGrid.addExtension(new FiltersResetExtension());
+  cmsGrid.addExtension(new SortingExtension());
 });
