@@ -62,21 +62,16 @@ class LanguageController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param LanguageFilters $filters
-     * @param CurrencyFilters $currencyFilters
      *
      * @return Response
      */
-    public function indexAction(Request $request, LanguageFilters $filters, CurrencyFilters $currencyFilters)
+    public function indexAction(Request $request, LanguageFilters $filters)
     {
         $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
         $languageGrid = $languageGridFactory->getGrid($filters);
 
-        $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency_for_language');
-        $currencyGrid = $currencyGridFactory->getGrid($currencyFilters);
-
         return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
             'languageGrid' => $this->presentGrid($languageGrid),
-            'currencyGrid' => $this->presentGrid($currencyGrid),
             'isHtaccessFileWriter' => $this->get('prestashop.core.util.url.url_file_checker')->isHtaccessFileWritable(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -91,14 +86,13 @@ class LanguageController extends FrameworkBundleAdminController
      */
     public function searchGridAction(Request $request)
     {
-        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.language';
-        $filterId = LanguageGridDefinitionFactory::GRID_ID;;
-        if ($request->request->has('currency')) {
-            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.currency_for_language';
-            $filterId = CurrencyGridDefinitionFactory::GRID_ID;
-        }
-
-        return $this->redirectToFilteredGrid($request, $gridDefinitionFactory, 'admin_languages_index', [], $filterId);
+        return $this->redirectToFilteredGrid(
+            $request,
+            'prestashop.core.grid.definition.factory.language',
+            'admin_languages_index',
+            [],
+            LanguageGridDefinitionFactory::GRID_ID
+        );
     }
 
     /**

@@ -38,20 +38,17 @@ import ColumnTogglingExtension from "../../components/grid/extension/column-togg
 const $ = window.$;
 
 $(document).ready(() => {
-  const gridIds = ['language', 'currency'];
-  gridIds.forEach(function initGrid(gridId) {
-    const grid = new Grid(gridId);
+  const grid = new Grid('language');
 
-    grid.addExtension(new ReloadListActionExtension());
-    grid.addExtension(new ExportToSqlManagerExtension());
-    grid.addExtension(new FiltersResetExtension());
-    grid.addExtension(new SortingExtension());
-    grid.addExtension(new LinkRowActionExtension());
-    grid.addExtension(new SubmitBulkExtension());
-    grid.addExtension(new SubmitRowActionExtension());
-    grid.addExtension(new BulkActionCheckboxExtension());
-    grid.addExtension(new ColumnTogglingExtension());
-  });
+  grid.addExtension(new ReloadListActionExtension());
+  grid.addExtension(new ExportToSqlManagerExtension());
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new SortingExtension());
+  grid.addExtension(new LinkRowActionExtension());
+  grid.addExtension(new SubmitBulkExtension());
+  grid.addExtension(new SubmitRowActionExtension());
+  grid.addExtension(new BulkActionCheckboxExtension());
+  grid.addExtension(new ColumnTogglingExtension());
 
   // needed for shop association input in form
   new ChoiceTree('#language_shop_association').enableAutoCheckChildren();
