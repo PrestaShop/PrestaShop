@@ -24,36 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
-
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Is thrown when Manufacturer constraint is violated
  */
-final class DataColumn extends AbstractColumn
+class ManufacturerConstraintException extends ManufacturerException
 {
     /**
-     * {@inheritdoc}
+     * When manufacturer id is not valid
      */
-    public function getType()
-    {
-        return 'data';
-    }
+    const INVALID_ID = 10;
 
     /**
-     * {@inheritdoc}
+     * When manufacturer status is not valid
      */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
-    }
+    const INVALID_STATUS = 20;
 }

@@ -24,36 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Gets manufacturer for editing in Back Office
  */
-final class DataColumn extends AbstractColumn
+class GetManufacturerForEditing
 {
     /**
-     * {@inheritdoc}
+     * @var ManufacturerId
      */
-    public function getType()
+    private $manufacturerId;
+
+    /**
+     * @param int
+     *
+     * @throws ManufacturerConstraintException
+     */
+    public function __construct($manufacturerId)
     {
-        return 'data';
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return ManufacturerId
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getManufacturerId()
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+        return $this->manufacturerId;
     }
 }

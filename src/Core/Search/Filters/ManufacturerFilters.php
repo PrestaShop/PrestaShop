@@ -24,36 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Class ManufacturerFilters is responsible for providing filter values for manufacturer grid.
  */
-final class DataColumn extends AbstractColumn
+final class ManufacturerFilters extends Filters
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public static function getDefaults()
     {
-        return 'data';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'name',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }

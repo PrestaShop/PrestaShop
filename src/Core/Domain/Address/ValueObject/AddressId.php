@@ -24,36 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Provides address id
  */
-final class DataColumn extends AbstractColumn
+class AddressId
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function getType()
+    private $addressId;
+
+    /**
+     * @param int $addressId
+     *
+     * @throws AddressConstraintException
+     */
+    public function __construct($addressId)
     {
-        return 'data';
+        $this->assertIsIntegerGreaterThanZero($addressId);
+        $this->addressId = $addressId;
     }
 
     /**
-     * {@inheritdoc}
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param $value
+     *
+     * @throws AddressConstraintException
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    private function assertIsIntegerGreaterThanZero($value)
     {
-        parent::configureOptions($resolver);
+        if (!is_int($value) || 0 >= $value) {
+            throw new AddressConstraintException(
+                sprintf('Invalid address id "%s".', var_export($value, true))
+            );
+        }
+    }
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->addressId;
     }
 }

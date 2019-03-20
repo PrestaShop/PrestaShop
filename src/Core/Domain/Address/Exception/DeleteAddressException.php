@@ -24,36 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
-
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Is thrown when address or addresses cannot be deleted
  */
-final class DataColumn extends AbstractColumn
+class DeleteAddressException extends AddressException
 {
     /**
-     * {@inheritdoc}
+     * When fails to delete single address
      */
-    public function getType()
-    {
-        return 'data';
-    }
+    const FAILED_DELETE = 10;
 
     /**
-     * {@inheritdoc}
+     * When fails to delete address in bulk action
      */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
-    }
+    const FAILED_BULK_DELETE = 20;
 }

@@ -24,36 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Provides manufacturer id
  */
-final class DataColumn extends AbstractColumn
+class ManufacturerId
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function getType()
+    private $id;
+
+    /**
+     * @param int $id
+     *
+     * @throws ManufacturerConstraintException
+     */
+    public function __construct($id)
     {
-        return 'data';
+        $this->assertIsIntegerGreaterThanZero($id);
+        $this->id = $id;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getValue()
     {
-        parent::configureOptions($resolver);
+        return $this->id;
+    }
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+    /**
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param $value
+     *
+     * @throws ManufacturerConstraintException
+     */
+    private function assertIsIntegerGreaterThanZero($value)
+    {
+        if (!is_int($value) || 0 >= $value) {
+            throw new ManufacturerConstraintException(
+                sprintf('Invalid manufacturer id "%s".', var_export($value, true))
+            );
+        }
     }
 }

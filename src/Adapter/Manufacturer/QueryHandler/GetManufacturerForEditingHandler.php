@@ -24,36 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\AbstractManufacturerHandler;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler\GetManufacturerForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Handles query which gets manufacturer for editing
  */
-final class DataColumn extends AbstractColumn
+final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler implements GetManufacturerForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function handle(GetManufacturerForEditing $query)
     {
-        return 'data';
-    }
+        $manufacturerId = $query->getManufacturerId();
+        $manufacturer = $this->getManufacturer($manufacturerId);
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+        return new EditableManufacturer(
+            $manufacturerId,
+            $manufacturer->name,
+            $manufacturer->active
+        );
     }
 }

@@ -24,36 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\DeleteAddressHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Handles command which deletes address
  */
-final class DataColumn extends AbstractColumn
+final class DeleteAddressHandler extends AbstractAddressHandler implements DeleteAddressHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function handle(DeleteAddressCommand $command)
     {
-        return 'data';
-    }
+        $addressId = $command->getAddressId();
+        $address = $this->getAddress($addressId);
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+        if (!$this->deleteAddress($address)) {
+            throw new DeleteAddressException(
+                sprintf('Cannot delete Address object with id "%s".', $addressId->getValue()),
+                DeleteAddressException::FAILED_DELETE
+            );
+        }
     }
 }

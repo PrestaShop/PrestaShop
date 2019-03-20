@@ -24,36 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Deletes Address
  */
-final class DataColumn extends AbstractColumn
+class DeleteAddressCommand
 {
     /**
-     * {@inheritdoc}
+     * @var AddressId
      */
-    public function getType()
+    private $addressId;
+
+    /**
+     * @param int $addressId
+     *
+     * @throws AddressConstraintException
+     */
+    public function __construct($addressId)
     {
-        return 'data';
+        $this->addressId = new AddressId($addressId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return AddressId
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getAddressId()
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+        return $this->addressId;
     }
 }

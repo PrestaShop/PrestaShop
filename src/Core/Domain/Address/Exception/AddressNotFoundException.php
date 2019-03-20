@@ -24,36 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
-
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Is thrown when address is not found
  */
-final class DataColumn extends AbstractColumn
+class AddressNotFoundException extends AddressException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return 'data';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
-    }
 }

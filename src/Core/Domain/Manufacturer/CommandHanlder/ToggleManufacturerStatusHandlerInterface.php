@@ -24,36 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Defines contract for ToggleManufacturerStatusHandler
  */
-final class DataColumn extends AbstractColumn
+interface ToggleManufacturerStatusHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param ToggleManufacturerStatusCommand $command
      */
-    public function getType()
-    {
-        return 'data';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
-    }
+    public function handle(ToggleManufacturerStatusCommand $command);
 }

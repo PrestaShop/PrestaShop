@@ -126,3 +126,13 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
+
+    prestashop.core.grid.definition.factory.manufacturer_grid_definition_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.manufacturer_address_grid_definition_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true

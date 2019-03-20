@@ -24,36 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Deletes addresses in bulk action
  */
-final class DataColumn extends AbstractColumn
+class BulkDeleteAddressCommand
 {
     /**
-     * {@inheritdoc}
+     * @var AddressId[]
      */
-    public function getType()
+    private $addressIds;
+
+    /**
+     * @param int[] $addressIds
+     *
+     * @throws AddressConstraintException
+     */
+    public function __construct($addressIds)
     {
-        return 'data';
+        $this->setAddressIds($addressIds);
     }
 
     /**
-     * {@inheritdoc}
+     * @return AddressId[]
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getAdressIds()
     {
-        parent::configureOptions($resolver);
+        return $this->addressIds;
+    }
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+    /**
+     * @param int[] $addressIds
+     *
+     * @throws AddressConstraintException
+     */
+    private function setAddressIds(array $addressIds)
+    {
+        foreach ($addressIds as $addressId) {
+            $this->addressIds[] = new AddressId($addressId);
+        }
     }
 }

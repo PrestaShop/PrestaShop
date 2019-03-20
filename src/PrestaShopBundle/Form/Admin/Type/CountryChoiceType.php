@@ -24,36 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Class CountryChoiceType is responsible for providing country choices with -- symbol in front of array.
  */
-final class DataColumn extends AbstractColumn
+class CountryChoiceType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * @var FormChoiceProviderInterface
      */
-    public function getType()
+    private $countriesChoiceProvider;
+
+    /**
+     * @param FormChoiceProviderInterface $countriesChoiceProvider
+     */
+    public function __construct(FormChoiceProviderInterface $countriesChoiceProvider)
     {
-        return 'data';
+        $this->countriesChoiceProvider = $countriesChoiceProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
+        $choices = array_merge(
+            ['--' => ''],
+            $this->countriesChoiceProvider->getChoices()
+        );
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+        $resolver->setDefaults([
+            'choices' => $choices,
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return ChoiceType::class;
     }
 }

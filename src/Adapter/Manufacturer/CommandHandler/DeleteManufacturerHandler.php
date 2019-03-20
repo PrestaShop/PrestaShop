@@ -24,36 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\DeleteManufacturerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Handles command which deletes manufacturer using legacy object model
  */
-final class DataColumn extends AbstractColumn
+final class DeleteManufacturerHandler extends AbstractManufacturerCommandHandler implements DeleteManufacturerHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function handle(DeleteManufacturerCommand $command)
     {
-        return 'data';
-    }
+        $manufacturer = $this->getManufacturer($command->getManufacturerId());
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+        if (!$this->deleteManufacturer($manufacturer)) {
+            throw new DeleteManufacturerException(sprintf(
+                'Cannot delete Manufacturer object with id "%s".', $manufacturer->id),
+                DeleteManufacturerException::FAILED_DELETE
+            );
+        }
     }
 }

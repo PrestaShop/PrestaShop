@@ -24,36 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\ToggleManufacturerStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Handles command which toggles manufacturer status
  */
-final class DataColumn extends AbstractColumn
+final class ToggleManufacturerStatusHandler extends AbstractManufacturerCommandHandler implements ToggleManufacturerStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function handle(ToggleManufacturerStatusCommand $command)
     {
-        return 'data';
-    }
+        $manufacturer = $this->getManufacturer($command->getManufacturerId());
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
+        if (!$this->toggleManufacturerStatus($manufacturer, $command->getExpectedStatus())) {
+            throw new UpdateManufacturerException(
+                sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturer->id),
+                UpdateManufacturerException::FAILED_UPDATE_STATUS
+            );
+        }
     }
 }

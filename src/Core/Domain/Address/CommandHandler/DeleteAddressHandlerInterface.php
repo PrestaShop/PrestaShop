@@ -24,36 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Defines contract for DeleteAddressHandler
  */
-final class DataColumn extends AbstractColumn
+interface DeleteAddressHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param DeleteAddressCommand $command
      */
-    public function getType()
-    {
-        return 'data';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setAllowedTypes('field', 'string')
-        ;
-    }
+    public function handle(DeleteAddressCommand $command);
 }
