@@ -330,7 +330,7 @@ class CartPresenter implements PresenterInterface
 
         $subtotals['products'] = array(
             'type' => 'products',
-            'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
+            'label' => $this->translator->trans('Total articles', array(), 'Shop.Theme.Checkout'),
             'amount' => $totalCartAmount,
             'value' => $this->priceFormatter->format($totalCartAmount),
         );

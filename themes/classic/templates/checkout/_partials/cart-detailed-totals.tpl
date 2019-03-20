@@ -56,16 +56,14 @@
       <span class="label">{$cart.totals.total.label} {$cart.labels.tax_short}</span>
       <span class="value">{$cart.totals.total.value}</span>
     </div>
-
     <div class="cart-summary-line">
       <span class="label sub">{$cart.subtotals.tax.label}</span>
-      <span class="value sub">{$cart.subtotals.tax.value}</span>
+      <span class="value sub">{$cart.subtotals.tax.value}&nbsp;({l s='VAT' d=''})</span>
     </div>
   </div>
 
   {block name='cart_voucher'}
     {include file='checkout/_partials/cart-voucher.tpl'}
   {/block}
-
 </div>
 {/block}

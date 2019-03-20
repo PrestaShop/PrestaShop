@@ -182,7 +182,7 @@
   .promo-code-button {
     display: block;
     text-align: center;
-    padding-bottom: 1.25rem;
+    padding: 1.25rem 0;
     &[aria-expanded="true"] {
       display: none;
     }
