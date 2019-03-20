@@ -110,6 +110,10 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
+        $availableFilters = [
+            'id_cms_category_parent',
+        ];
+
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'cms', 'c')
@@ -133,6 +137,19 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb->setParameter('contextLangId', $this->contextIdLang);
         $qb->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
+
+        foreach ($filters as $filterName => $value) {
+            if (!in_array($filterName, $availableFilters, true)) {
+                continue;
+            }
+
+            if ('id_cms_category_parent' === $filterName) {
+                $qb->andWhere('c.`id_cms_category` = :id_cms_category_parent');
+                $qb->setParameter('id_cms_category_parent', $value);
+
+                continue;
+            }
+        }
 
         return $qb;
     }
