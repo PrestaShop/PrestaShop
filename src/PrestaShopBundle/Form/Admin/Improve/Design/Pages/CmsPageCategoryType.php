@@ -151,6 +151,9 @@ class CmsPageCategoryType extends AbstractType
                             ),
                         ]),
                     ],
+                    'attr' => [
+                        'placeholder' => $this->trans('Add tag', [], 'Admin.Actions'),
+                    ],
                 ],
             ])
             ->add('friendly_url', TranslatableType::class, [

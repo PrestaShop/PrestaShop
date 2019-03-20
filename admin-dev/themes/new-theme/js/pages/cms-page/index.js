@@ -37,6 +37,7 @@ import PositionExtension from '../../components/grid/extension/position-extensio
 import ChoiceTree from '../../components/form/choice-tree';
 import TranslatableInput from '../../components/translatable-input';
 import textToLinkRewriteCopier from '../../components/text-to-link-rewrite-copier';
+import TaggableField from "../../components/taggable-field";
 
 const $ = window.$;
 
@@ -65,4 +66,11 @@ $(() => {
   shopChoiceTree.enableAutoCheckChildren();
 
   new TranslatableInput();
+
+  new TaggableField({
+    tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
 });
