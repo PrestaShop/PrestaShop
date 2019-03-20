@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -103,7 +104,15 @@ class ManufacturerController extends FrameworkBundleAdminController
             $filterId = ManufacturerAddressGridDefinitionFactory::GRID_ID;
         }
 
-        return $this->redirectToFilteredGrid($request, $gridDefinitionFactory, 'admin_manufacturers_index', [], $filterId);
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get($gridDefinitionFactory),
+            $request,
+            $filterId,
+            'admin_manufacturers_index'
+        );
     }
 
     public function createManufacturerAction()
