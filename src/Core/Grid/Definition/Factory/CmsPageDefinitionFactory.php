@@ -27,6 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\CmsCategoryName;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -37,6 +40,19 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
  */
 class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(CommandBusInterface $queryBus)
+    {
+        $this->queryBus = $queryBus;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -50,8 +66,14 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return 'test';
-        // TODO: Implement getName() method.
+        /** @var CmsCategoryName $cmsCategoryName */
+        $cmsCategoryName = $this->queryBus->handle(new GetCmsPageCategoryNameForListing());
+
+        return $this->trans(
+            'Pages in category "%name%"',
+            array('%name%' => $cmsCategoryName->getName()),
+            'Admin.Design.Feature'
+        );
     }
 
     /**

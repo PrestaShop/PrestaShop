@@ -83,3 +83,11 @@ services:
           - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
           - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
 
+    prestashop.adapter.cms_page.query_handler.get_cms_page_category_name_for_listing:
+        class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoryNameForListingHandler
+        arguments:
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+          - '@request_stack'
+        tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing
