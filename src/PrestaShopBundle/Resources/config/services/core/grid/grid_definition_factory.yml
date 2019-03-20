@@ -137,4 +137,6 @@ services:
     prestashop.core.grid.definition.factory.cms_page:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@prestashop.core.query_bus'
         public: true
