@@ -127,9 +127,6 @@ class MailLayoutController extends FrameworkBundleAdminController
             case MailTemplateInterface::HTML_TYPE:
                 $renderedLayout = $renderer->renderHtml($layout, $language);
                 break;
-            case MailTemplateInterface::MJML_TYPE:
-                $renderedLayout = $renderer->renderMjml($layout, $language);
-                break;
             case MailTemplateInterface::TXT_TYPE:
                 $renderedLayout = $renderer->renderTxt($layout, $language);
                 break;
