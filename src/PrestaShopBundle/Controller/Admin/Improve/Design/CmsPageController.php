@@ -485,6 +485,22 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToParentIndexPage((int) $cmsPageCategoryIds[0]);
     }
 
+    public function toggleCmsAction()
+    {
+        //todo: implement
+    }
+
+    public function editCmsAction()
+    {
+        //todo: implement
+    }
+
+
+    public function deleteCmsAction()
+    {
+        //todo: implement
+    }
+
     /**
      * This function is used for redirecting to the specific cms page category page.
      *

@@ -76,3 +76,30 @@ admin_cms_pages_update_position_cms_category:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:updateCmsCategoryPosition'
         _legacy_controller: AdminCmsContent
+
+admin_cms_pages_toggle_cms:
+  path: /{cmsId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:toggleCms'
+    _legacy_controller: AdminCmsContent
+  requirements:
+    cmsId: \d+
+
+admin_cms_pages_edit_cms:
+  path: /{cmsId}/edit
+  methods: [GET,POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:editCms'
+    _legacy_controller: AdminCmsContent
+  requirements:
+    cmsId: \d+
+
+admin_cms_pages_delete_cms:
+  path: /{cmsId}/delete
+  methods: DELETE
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:deleteCms'
+    _legacy_controller: AdminCmsContent
+  requirements:
+    cmsId: \d+
