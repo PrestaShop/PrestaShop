@@ -167,3 +167,11 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'manufacturer_address'
+
+    prestashop.core.grid.data_provider.cms_page:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.cms_page'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'cms_page'
