@@ -27,40 +27,46 @@
 namespace Tests\Unit\Core\Domain\CmsPageCategory\Command;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\AddCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 
-class EditCmsPageCategoryCommandTest extends TestCase
+class AddCmsPageCategoryCommandTest extends TestCase
 {
     public function testItThrowsAnExceptionWhenCmsCategoryNamedIsIncorrect()
     {
         $this->expectException(CmsPageCategoryConstraintException::class);
         $this->expectExceptionCode(CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME);
 
-        $command = new EditCmsPageCategoryCommand(1);
+        $incorrectName = [
+            1 => 'hashtag #',
+        ];
 
-        $command->setLocalisedName([
-            1 => 'name with #',
-        ]);
-    }
-
-    public function testItThrowsAnExceptionWhenIncorrectTypeIdIsPassed()
-    {
-        $this->expectException(CmsPageCategoryException::class);
-
-        $incorrectTypeId = '1';
-        $command = new EditCmsPageCategoryCommand($incorrectTypeId);
+        $command = new AddCmsPageCategoryCommand(
+            $incorrectName,
+            [
+                1 => 'hashtag',
+            ],
+            1,
+            true
+        );
     }
 
     public function testItThrowsAnExceptionWhenIncorrectTypeIdIsPassedForCategoryParent()
     {
         $this->expectException(CmsPageCategoryException::class);
 
-        $incorrectTypeId = '1';
-        $command = new EditCmsPageCategoryCommand(1);
-
-        $command->setParentId($incorrectTypeId);
+        $incorrectId = '1';
+        $command = new AddCmsPageCategoryCommand(
+            [
+                1 => 'hashtag',
+            ],
+            [
+                1 => 'hashtag',
+            ],
+            $incorrectId,
+            true
+        );
     }
 
     public function testItThrowsAnExceptionWhenMetaTitleIsIncorrect()
@@ -68,7 +74,7 @@ class EditCmsPageCategoryCommandTest extends TestCase
         $this->expectException(CmsPageCategoryConstraintException::class);
         $this->expectExceptionCode(CmsPageCategoryConstraintException::INVALID_META_TITLE);
 
-        $command = new EditCmsPageCategoryCommand(1);
+        $command = new AddCmsPageCategoryCommand([], [], 1, false);
 
         $command->setLocalisedMetaTitle([
             1 => '{object}',
@@ -80,10 +86,10 @@ class EditCmsPageCategoryCommandTest extends TestCase
         $this->expectException(CmsPageCategoryConstraintException::class);
         $this->expectExceptionCode(CmsPageCategoryConstraintException::INVALID_META_KEYWORDS);
 
-        $command = new EditCmsPageCategoryCommand(1);
+        $command = new AddCmsPageCategoryCommand([], [], 1, false);
 
         $command->setLocalisedMetaKeywords([
-            1 => '{object}',
+            1 => '<object>',
         ]);
     }
 
@@ -92,10 +98,10 @@ class EditCmsPageCategoryCommandTest extends TestCase
         $this->expectException(CmsPageCategoryConstraintException::class);
         $this->expectExceptionCode(CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION);
 
-        $command = new EditCmsPageCategoryCommand(1);
+        $command = new AddCmsPageCategoryCommand([], [], 1, false);
 
         $command->setLocalisedMetaDescription([
-            1 => '{object}',
+            1 => '=object=',
         ]);
     }
 }
