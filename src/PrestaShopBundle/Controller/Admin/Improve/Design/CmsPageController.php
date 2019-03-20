@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -62,15 +63,17 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param CmsPageCategoryFilters $filters
-     * @param Request $request
+     * @param CmsPageCategoryFilters $categoryFilters
+     * @param CmsPageFilters $cmsFilters
+     * @param Request $reques
      *
      * @return Response
      */
-    public function indexAction(CmsPageCategoryFilters $filters, Request $request)
+    public function indexAction(CmsPageCategoryFilters $categoryFilters, CmsPageFilters $cmsFilters, Request $request)
     {
-        $cmsCategoryParentId = (int) $filters->getFilters()['id_cms_category_parent'];
+        $cmsCategoryParentId = (int) $categoryFilters->getFilters()['id_cms_category_parent'];
         $viewData = [];
+
         try {
             $viewData = $this
                 ->get('prestashop.core.cms_page.data_provider.cms_page_view')
@@ -82,12 +85,16 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
-        $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
+        $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($categoryFilters);
+
+        $cmsGridFactory = $this->get('prestashop.core.grid.factory.cms_page');
+        $cmsGrid = $cmsGridFactory->getGrid($cmsFilters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Cms/index.html.twig', [
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
+            'cmsGrid' => $gridPresenter->present($cmsGrid),
             'cmsPageView' => $viewData,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),

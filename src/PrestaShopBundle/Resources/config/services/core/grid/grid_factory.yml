@@ -168,3 +168,12 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
         calls:
             - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+
+    prestashop.core.grid.factory.cms_page:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.cms_page'
+            - '@prestashop.core.grid.data_provider.cms_page'
+            - '@prestashop.core.grid.filter.form_factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
