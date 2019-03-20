@@ -423,11 +423,10 @@ class ManufacturerController extends FrameworkBundleAdminController
     {
         $addressFormBuilder = $this->getAddressFormBuilder();
         $addressFormHandler = $this->getAddressFormHandler();
+        $addressForm = $addressFormBuilder->getForm();
+        $addressForm->handleRequest($request);
 
         try {
-            $addressForm = $addressFormBuilder->getForm();
-            $addressForm->handleRequest($request);
-
             $result = $addressFormHandler->handle($addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -468,9 +467,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormHandler = $this->getAddressFormHandler();
 
         try {
-            $addressForm = $addressFormBuilder->getFormFor((int) $addressId, [], [
-                'is_editing' => true,
-            ]);
+            $addressForm = $addressFormBuilder->getFormFor((int) $addressId);
             $addressForm->handleRequest($request);
 
             $result = $addressFormHandler->handleFor((int) $addressId, $addressForm);

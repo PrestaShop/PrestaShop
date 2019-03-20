@@ -40,7 +40,7 @@ class EditableManufacturerAddress
     private $addressId;
 
     /**
-     * @var ManufacturerId|null
+     * @var int
      */
     private $manufacturerId;
 
@@ -101,11 +101,11 @@ class EditableManufacturerAddress
 
     /**
      * @param AddressId $addressId
-     * @param ManufacturerId|null $manufacturerId
      * @param string $lastName
      * @param string $firstName
      * @param string $address
      * @param string $city
+     * @param int $manufacturerId
      * @param int $countryId
      * @param string $address2
      * @param string $postCode
@@ -116,11 +116,11 @@ class EditableManufacturerAddress
      */
     public function __construct(
         AddressId $addressId,
-        $manufacturerId,
         $lastName,
         $firstName,
         $address,
         $city,
+        $manufacturerId,
         $countryId,
         $address2,
         $postCode,
@@ -129,15 +129,12 @@ class EditableManufacturerAddress
         $mobilePhone,
         $other
     ) {
-        if (null !== $manufacturerId) {
-            $manufacturerId = new ManufacturerId($manufacturerId);
-        }
-        $this->manufacturerId = $manufacturerId;
         $this->addressId = $addressId;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
         $this->address = $address;
         $this->city = $city;
+        $this->manufacturerId = $manufacturerId;
         $this->countryId = $countryId;
         $this->address2 = $address2;
         $this->postCode = $postCode;
@@ -156,7 +153,7 @@ class EditableManufacturerAddress
     }
 
     /**
-     * @return ManufacturerId|null
+     * @return int
      */
     public function getManufacturerId()
     {

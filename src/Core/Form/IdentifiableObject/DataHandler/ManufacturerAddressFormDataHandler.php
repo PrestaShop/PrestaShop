@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
@@ -92,20 +93,46 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
      *
      * @param EditManufacturerAddressCommand $command
      * @param array $data
+     *
+     * @throws AddressConstraintException
      */
     private function fillCommandWithData(EditManufacturerAddressCommand $command, array $data)
     {
-        $command->setManufacturerId($data['id_manufacturer']);
-        $command->setLastName($data['last_name']);
-        $command->setFirstName($data['first_name']);
-        $command->setAddress($data['address']);
-        $command->setCountryId($data['id_country']);
-        $command->setCity($data['city']);
-        $command->setAddress2($data['address2']);
-        $command->setPostCode($data['post_code']);
-        $command->setStateId($data['id_state']);
-        $command->setHomePhone($data['home_phone']);
-        $command->setMobilePhone($data['mobile_phone']);
-        $command->setOther($data['other']);
+        if (null !== $data['id_manufacturer']) {
+            $command->setManufacturerId($data['id_manufacturer']);
+        }
+        if (null !== $data['last_name']) {
+            $command->setLastName($data['last_name']);
+        }
+        if (null !== $data['first_name']) {
+            $command->setFirstName($data['first_name']);
+        }
+        if (null !== $data['address']) {
+            $command->setAddress($data['address']);
+        }
+        if (null !== $data['id_country']) {
+            $command->setCountryId($data['id_country']);
+        }
+        if (null !== $data['city']) {
+            $command->setCity($data['city']);
+        }
+        if (null !== $data['address2']) {
+            $command->setAddress2($data['address2']);
+        }
+        if (null !== $data['post_code']) {
+            $command->setPostCode($data['post_code']);
+        }
+        if (null !== $data['id_state']) {
+            $command->setStateId($data['id_state']);
+        }
+        if (null !== $data['home_phone']) {
+            $command->setHomePhone($data['home_phone']);
+        }
+        if (null !== $data['mobile_phone']) {
+            $command->setMobilePhone($data['mobile_phone']);
+        }
+        if (null !== $data['other']) {
+            $command->setOther($data['other']);
+        }
     }
 }

@@ -95,8 +95,9 @@ class ManufacturerAddressType extends AbstractType
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
                 'disabled' => $options['is_editing'],
-                'choices' => $this->manufacturerChoices,
+                'choices' => $this->getManufacturersChoiceList(),
                 'translation_domain' => false,
+                'placeholder' => false,
                 'required' => false,
             ])
             ->add('last_name', TextType::class, [
@@ -210,8 +211,21 @@ class ManufacturerAddressType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        //@todo: double check if on edit allowed to change manufacturer, if yes, this code can be deleted
         $resolver->setDefaults([
             'is_editing' => false,
         ]);
+    }
+
+    /**
+     * Get manufacturers array for choice list
+     *
+     * @return array
+     */
+    private function getManufacturersChoiceList()
+    {
+        $this->manufacturerChoices['--'] = 0;
+
+        return $this->manufacturerChoices;
     }
 }
