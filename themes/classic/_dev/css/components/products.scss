@@ -316,10 +316,16 @@
 #blockcart-modal {
   color: $gray-darker;
   .modal-header {
-    background: $brand-success;
+    background: white;
+    .close {
+      opacity: 1;
+      .material-icons {
+        color: $gray-dark;
+      }
+    }
   }
   .modal-body {
-    background: $gray-light;
+    background: white;
     padding: 3.125rem 1.875rem;
     .divide-right span {
       display: inline-block;
@@ -332,28 +338,53 @@
   }
   .product-image {
     width: 100%;
+    max-width: 9.375rem;
+    display: block;
+    margin: 0 0 0 auto;
   }
   .modal-title {
-    font-weight: 600;
-    color: white;
-    font-size: 1.125rem;
+    color: #353943;
+    font-size: 1rem;
+    font-weight: 400;
     i.material-icons {
       margin-right: $large-space;
+      color: $brand-success;
     }
   }
   .product-name {
     color: $brand-primary;
     font-size: 1.125rem;
   }
-  .cart-products-count {
-    font-size: 1.125rem;
+  .product-price {
+    color: $gray-dark;
   }
+  
   .cart-content {
     padding-left: $extra-large-space;
+    p {
+      color: $gray-dark;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 .5rem;
+      &.product-total {
+        background-color: $gray-light;
+        padding: .5rem;
+      }
+      &.cart-products-count {
+        font-size: 1rem;
+        color: $btn-tertiary-color;
+      }
+      &.no-spacing {
+        display: inherit;
+      }
+      strong {
+        font-weight: 600;
+      }
+    }
     .cart-content-btn {
       display: inline-flex;
       button {
-        margin-right: 0.3125rem;
+        margin-right: 0.9rem;
       }
       .btn {
         white-space: inherit;
@@ -361,7 +392,7 @@
     }
   }
   .divide-right {
-    border-right: $gray 1px solid;
+    border-right: 1px solid #DBDBDB;
   }
 }
 .product-images {
