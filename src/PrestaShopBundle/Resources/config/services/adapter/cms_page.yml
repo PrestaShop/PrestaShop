@@ -7,3 +7,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand
+
+  prestashop.adapter.cms_page.command_handler.bulk_enable_cms_page:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\BulkEnableCmsPageHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand
