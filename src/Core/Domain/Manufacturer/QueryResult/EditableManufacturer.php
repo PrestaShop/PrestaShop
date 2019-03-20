@@ -81,7 +81,7 @@ class EditableManufacturer
     /**
      * @var array
      */
-    private $shopAssociation;
+    private $associatedShops;
 
     /**
      * @param ManufacturerId $manufacturerId
@@ -93,7 +93,7 @@ class EditableManufacturer
      * @param array|null $localizedMetaTitles
      * @param array|null $localizedMetaDescriptions
      * @param array|null $localizedMetaKeywords
-     * @param array $shopAssociation
+     * @param array $associatedShops
      */
     public function __construct(
         ManufacturerId $manufacturerId,
@@ -105,7 +105,7 @@ class EditableManufacturer
         array $localizedMetaDescriptions = null,
         array $localizedMetaKeywords = null,
         array $logoImage = null,
-        array $shopAssociation = []
+        array $associatedShops = []
     ) {
         $this->manufacturerId = $manufacturerId;
         $this->name = $name;
@@ -116,7 +116,7 @@ class EditableManufacturer
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
         $this->localizedMetaKeywords = $localizedMetaKeywords;
         $this->enabled = $enabled;
-        $this->shopAssociation = $shopAssociation;
+        $this->associatedShops = $associatedShops;
     }
 
     /**
@@ -194,8 +194,8 @@ class EditableManufacturer
     /**
      * @return array
      */
-    public function getShopAssociation()
+    public function getAssociatedShops()
     {
-        return $this->shopAssociation;
+        return $this->associatedShops;
     }
 }

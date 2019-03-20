@@ -84,7 +84,7 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
         ];
 
         if ($this->multistoreEnabled) {
-            $data['shop_association'] = $editableManufacturer->getShopAssociation();
+            $data['shop_association'] = $editableManufacturer->getAssociatedShops();
         }
 
         return $data;
