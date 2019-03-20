@@ -7,6 +7,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
         cart:
+            parameters:
+                profile: 'default'
             paths:
                 features: Features/Scenario/Cart
             contexts:
@@ -27,9 +29,18 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Modifier\ProductFeatureContextModifier
         translation:
             paths:
                 features: Features/Scenario/Translation
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\TranslationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
+
+virtual_products:
+    suites:
+        cart:
+            parameters:
+                profile: 'virtual_products'
+            filters:
+                tags: '@test-with-modifier-virtual-products'

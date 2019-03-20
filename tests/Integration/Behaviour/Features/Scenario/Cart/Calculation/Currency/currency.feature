@@ -5,6 +5,7 @@ Feature: Cart calculation with currencies
 
   # USD / USD
 
+  @test-with-modifier-virtual-products
   Scenario: Empty cart (default USD/ current USD)
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
