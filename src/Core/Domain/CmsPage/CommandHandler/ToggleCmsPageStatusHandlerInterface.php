@@ -33,5 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand
  */
 interface ToggleCmsPageStatusHandlerInterface
 {
+    /**
+     * @param ToggleCmsPageStatusCommand $command
+     *
+     * @return void
+     */
     public function handle(ToggleCmsPageStatusCommand $command);
 }
