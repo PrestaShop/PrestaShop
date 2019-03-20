@@ -40,9 +40,6 @@ class Layout implements LayoutInterface
     private $htmlPath;
 
     /** @var string */
-    private $mjmlPath;
-
-    /** @var string */
     private $txtPath;
 
     /** @var string */
@@ -53,20 +50,17 @@ class Layout implements LayoutInterface
      * @param string $htmlPath Absolute path of the html layout file
      * @param string $txtPath Absolute path of the txt layout file
      * @param string $moduleName Which module this layout is associated to (if any)
-     * @param string $mjmlPath Absolute path of the mjml layout file (if any)
      */
     public function __construct(
         $name,
         $htmlPath,
         $txtPath,
-        $moduleName = '',
-        $mjmlPath = ''
+        $moduleName = ''
     ) {
         $this->name = $name;
         $this->htmlPath = $htmlPath;
         $this->txtPath = $txtPath;
         $this->moduleName = $moduleName;
-        $this->mjmlPath = $mjmlPath;
     }
 
     /**
@@ -83,14 +77,6 @@ class Layout implements LayoutInterface
     public function getHtmlPath()
     {
         return $this->htmlPath;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMjmlPath()
-    {
-        return $this->mjmlPath;
     }
 
     /**

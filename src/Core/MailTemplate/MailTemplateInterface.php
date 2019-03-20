@@ -37,7 +37,6 @@ interface MailTemplateInterface
     const MODULES_CATEGORY = 'modules';
 
     const HTML_TYPE = 'html';
-    const MJML_TYPE = 'mjml';
     const TXT_TYPE = 'txt';
 
     /**

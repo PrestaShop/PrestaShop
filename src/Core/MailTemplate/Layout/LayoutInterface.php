@@ -46,13 +46,6 @@ interface LayoutInterface
     public function getHtmlPath();
 
     /**
-     * Absolute path of the mjml layout file
-     *
-     * @return string
-     */
-    public function getMjmlPath();
-
-    /**
      * Absolute path of the html layout file
      *
      * @return string

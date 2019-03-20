@@ -55,14 +55,6 @@ interface MailTemplateRendererInterface
     public function renderHtml(LayoutInterface $layout, LanguageInterface $language);
 
     /**
-     * @param LayoutInterface $layout
-     * @param LanguageInterface $language
-     *
-     * @return string
-     */
-    public function renderMjml(LayoutInterface $layout, LanguageInterface $language);
-
-    /**
      * Adds a transformer to the renderer, when template is rendered all transformers
      * matching its type (html or txt) are applied to the output content.
      *

@@ -101,20 +101,6 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /**
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
-     *
-     * @throws FileNotFoundException
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
-     *
-     * @return string
-     */
-    public function renderMjml(LayoutInterface $layout, LanguageInterface $language)
-    {
-        return $this->render($layout, $language, MailTemplateInterface::MJML_TYPE);
-    }
-
-    /**
-     * @param LayoutInterface $layout
-     * @param LanguageInterface $language
      * @param string $templateType
      *
      * @return string
@@ -129,8 +115,6 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $layoutVariables = $this->variablesBuilder->buildVariables($layout, $language);
         if (MailTemplateInterface::HTML_TYPE === $templateType) {
             $layoutPath = !empty($layout->getHtmlPath()) ? $layout->getHtmlPath() : $layout->getTxtPath();
-        } else if (MailTemplateInterface::MJML_TYPE === $templateType) {
-            $layoutPath = $layout->getMjmlPath();
         } else {
             $layoutPath = !empty($layout->getTxtPath()) ? $layout->getTxtPath() : $layout->getHtmlPath();
         }
