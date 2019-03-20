@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
@@ -59,6 +60,8 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param EngineInterface $engine
      * @param LayoutVariablesBuilderInterface $variablesBuilder
      * @param HookDispatcherInterface $hookDispatcher
+     *
+     * @throws TypeException
      */
     public function __construct(
         EngineInterface $engine,
@@ -75,9 +78,12 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     * @throws TypeException
      *
      * @return string
+     *
+     * @throws FileNotFoundException
+     * @throws TypeException
      */
     public function renderHtml(LayoutInterface $layout, LanguageInterface $language)
     {
@@ -89,7 +95,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LanguageInterface $language
      *
      * @throws FileNotFoundException
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     * @throws TypeException
      *
      * @return string
      */
@@ -104,8 +110,9 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param string $templateType
      *
      * @return string
+     *
      * @throws FileNotFoundException
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     * @throws TypeException
      */
     private function render(
         LayoutInterface $layout,
@@ -143,7 +150,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      *
      * @return TransformationCollection
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     * @throws TypeException
      */
     private function getMailLayoutTransformations(LayoutInterface $mailLayout, $templateType)
     {
