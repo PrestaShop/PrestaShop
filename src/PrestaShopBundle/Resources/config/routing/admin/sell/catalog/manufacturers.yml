@@ -2,9 +2,10 @@ admin_manufacturers_index:
   path: /
   methods: GET
   defaults:
-    ##todo: implement index action
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createAddress'
+    ##todo: implement index action and remove redirect route. Add legacy links in the end of page migration
+    _controller: 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController:redirectAction'
     _legacy_controller: AdminManufacturers
+    route: admin_manufacturer_addresses_create
 
 admin_manufacturer_addresses_create:
   path: addresses/new

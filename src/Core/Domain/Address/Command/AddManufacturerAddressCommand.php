@@ -26,8 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 
 /**
  * Adds new address
@@ -35,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 class AddManufacturerAddressCommand
 {
     /**
-     * @var ManufacturerId|null
+     * @var int|null
      */
     private $manufacturerId;
 
@@ -98,17 +97,17 @@ class AddManufacturerAddressCommand
      * @param string $lastName
      * @param string $firstName
      * @param string $address
-     * @param string $city
-     * @param int|null $manufacturerId
-     * @param string|null $address2
      * @param int|null $countryId
+     * @param string $city
+     * @param int
+     * @param string|null $address2
      * @param string|null $postCode
      * @param int|null $stateId
      * @param string|null $homePhone
      * @param string $mobilePhone
      * @param string|null $other
      *
-     * @throws ManufacturerConstraintException
+     * @throws AddressConstraintException
      */
     public function __construct(
         $lastName,
@@ -124,9 +123,7 @@ class AddManufacturerAddressCommand
         $mobilePhone = null,
         $other = null
     ) {
-        if (null !== $manufacturerId) {
-            $manufacturerId = new ManufacturerId($manufacturerId);
-        }
+        $this->assertIsNullOrNonNegativeInt($manufacturerId);
         $this->manufacturerId = $manufacturerId;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
@@ -142,7 +139,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @return ManufacturerId|null
+     * @return int
      */
     public function getManufacturerId()
     {
@@ -235,5 +232,22 @@ class AddManufacturerAddressCommand
     public function getOther()
     {
         return $this->other;
+    }
+
+    /**
+     * @param $value
+     *
+     * @throws AddressConstraintException
+     */
+    private function assertIsNullOrNonNegativeInt($value)
+    {
+        if (null === $value || is_int($value) || 0 <= $value) {
+            return;
+        }
+
+        throw new AddressConstraintException(
+            sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)),
+            AddressConstraintException::INVALID_MANUFACTURER_ID
+        );
     }
 }

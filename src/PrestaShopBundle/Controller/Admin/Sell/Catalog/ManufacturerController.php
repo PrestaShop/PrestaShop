@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAddress;
@@ -57,11 +58,10 @@ class ManufacturerController extends FrameworkBundleAdminController
     {
         $addressFormBuilder = $this->getAddressFormBuilder();
         $addressFormHandler = $this->getAddressFormHandler();
+        $addressForm = $addressFormBuilder->getForm();
+        $addressForm->handleRequest($request);
 
         try {
-            $addressForm = $addressFormBuilder->getForm();
-            $addressForm->handleRequest($request);
-
             $result = $addressFormHandler->handle($addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -102,9 +102,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormHandler = $this->getAddressFormHandler();
 
         try {
-            $addressForm = $addressFormBuilder->getFormFor((int) $addressId, [], [
-                'is_editing' => true,
-            ]);
+            $addressForm = $addressFormBuilder->getFormFor((int) $addressId);
             $addressForm->handleRequest($request);
 
             $result = $addressFormHandler->handleFor((int) $addressId, $addressForm);
@@ -117,7 +115,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
             /** @var EditableManufacturerAddress $editableAddress */
             $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing((int) $addressId));
-        } catch (DomainException $e) {
+        } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
