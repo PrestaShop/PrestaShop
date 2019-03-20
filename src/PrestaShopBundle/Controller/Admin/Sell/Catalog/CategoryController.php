@@ -166,7 +166,9 @@ class CategoryController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_categories_index');
+                return $this->redirectToRoute('admin_categories_index', [
+                    'id_category' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                ]);
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -287,7 +289,9 @@ class CategoryController extends FrameworkBundleAdminController
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_categories_index');
+                return $this->redirectToRoute('admin_categories_index', [
+                    'id_category' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                ]);
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
