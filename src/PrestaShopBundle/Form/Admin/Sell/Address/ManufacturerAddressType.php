@@ -142,7 +142,9 @@ class ManufacturerAddressType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     //@todo: TypedRegexConstraint isPostcode another PR #12735
-                    'pattern' => '/^[a-zA-Z 0-9-]+$/',
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z 0-9-]+$/',
+                    ]),
                 ],
             ])
             //@todo: TypedRegexConstraint isCityName another PR #12735
