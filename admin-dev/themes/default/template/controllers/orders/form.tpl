@@ -479,6 +479,11 @@
     var customer_search = $customer_search_input.val();
     var customer_search_url = $customer_search_input.data('customers-search-url');
 
+    // id_customer parameter is reuqired to generate url
+    // in this case id_customer is dynamic
+    // so 0 is used as placeholder and later replaced with actual id_customer
+    var customer_view_url_template = '{$link->getAdminLink('AdminCustomers', true, [], ['viewcustomer' => 1, 'liteDisplaying' => 1, 'id_customer' => 0])}';
+
 		$.ajax({
 			type:"GET",
 			url : customer_search_url,
@@ -494,6 +499,8 @@
         if (res.found) {
           var html = '';
           $.each(res.customers, function () {
+            var customer_view_url = customer_view_url_template.replace('/0/', '/' + this.id_customer + '/');
+
             html += '<div class="customerCard col-lg-4">';
             html += '<div class="panel">';
             html += '<div class="panel-heading">' + this.firstname + ' ' + this.lastname;
@@ -501,7 +508,7 @@
             html += '<span>' + this.email + '</span><br/>';
             html += '<span class="text-muted">' + ((this.birthday != '0000-00-00') ? this.birthday : '') + '</span><br/>';
             html += '<div class="panel-footer">';
-            html += '<a href="{$link->getAdminLink('AdminCustomers', true, [], ['viewcustomer' => 1, 'liteDisplaying' => 1])}&id_customer=' + this.id_customer + '" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details' d='Admin.Global' js=1}</a>';
+            html += '<a href="' + customer_view_url + '" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details' d='Admin.Global' js=1}</a>';
             html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right" id="choose_customer_btn"><i class="icon-arrow-right"></i> {l s='Choose' d='Admin.Actions' js=1}</button>';
             html += '</div>';
             html += '</div>';
