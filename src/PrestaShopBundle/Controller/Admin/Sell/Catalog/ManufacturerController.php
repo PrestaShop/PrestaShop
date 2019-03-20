@@ -39,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerExcepti
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -94,19 +96,14 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.manufacturer_grid_definition_factory');
-        $definitionFactory = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
-        $searchParametersForm->handleRequest($request);
-
-        $filters = [];
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
+        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.manufacturer';
+        $filterId = ManufacturerGridDefinitionFactory::GRID_ID;
+        if ($request->request->has(ManufacturerAddressGridDefinitionFactory::GRID_ID)) {
+            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.manufacturer_address';
+            $filterId = ManufacturerAddressGridDefinitionFactory::GRID_ID;
         }
 
-        return $this->redirectToRoute('admin_manufacturers_index', ['filters' => $filters]);
+        return $this->redirectToFilteredGrid($request, $gridDefinitionFactory, 'admin_manufacturers_index', [], $filterId);
     }
 
     public function createManufacturerAction()
