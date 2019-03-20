@@ -309,7 +309,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         );
 
         if (Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) {
-            $this->disabledPricesControls($result);
+            $this->disablePriceControls($result);
         }
 
         // sort order is useful for template,
@@ -398,7 +398,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      *
      * @param ProductSearchResult $result
      */
-    protected function disabledPricesControls(ProductSearchResult $result)
+    protected function disablePriceControls(ProductSearchResult $result)
     {
         if ($result->getFacetCollection()) {
             $filteredFacets = [];
