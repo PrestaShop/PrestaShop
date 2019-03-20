@@ -300,6 +300,7 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $gridDefinitionFactoryService
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
+     * @param string $filterId
      *
      * @return RedirectResponse
      */
@@ -307,8 +308,9 @@ class CommonController extends FrameworkBundleAdminController
         Request $request,
         $gridDefinitionFactoryService,
         $redirectRoute,
-        array $redirectQueryParamsToKeep = []
+        array $redirectQueryParamsToKeep = [],
+        $filterId = ''
     ) {
-        return $this->redirectToFilteredGrid($request, $gridDefinitionFactoryService, $redirectRoute, $redirectQueryParamsToKeep);
+        return $this->redirectToFilteredGrid($request, $gridDefinitionFactoryService, $redirectRoute, $redirectQueryParamsToKeep, $filterId);
     }
 }

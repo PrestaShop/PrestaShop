@@ -491,6 +491,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string $gridDefinitionFactoryServiceId
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
+     * @param string $filterId
      *
      * @return RedirectResponse
      */
@@ -498,7 +499,8 @@ class FrameworkBundleAdminController extends Controller
         Request $request,
         $gridDefinitionFactoryServiceId,
         $redirectRoute,
-        array $redirectQueryParamsToKeep = []
+        array $redirectQueryParamsToKeep = [],
+        $filterId = ''
     ) {
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
@@ -512,11 +514,17 @@ class FrameworkBundleAdminController extends Controller
 
         $redirectParams = [];
         if ($filtersForm->isSubmitted()) {
-            $redirectParams = [
-                $definition->getId() => [
+            if (!empty($filterId)) {
+                $redirectParams = [
+                    $filterId => [
+                        'filters' => $filtersForm->getData(),
+                    ],
+                ];
+            } else {
+                $redirectParams = [
                     'filters' => $filtersForm->getData(),
-                ],
-            ];
+                ];
+            }
         }
 
         foreach ($redirectQueryParamsToKeep as $paramName) {

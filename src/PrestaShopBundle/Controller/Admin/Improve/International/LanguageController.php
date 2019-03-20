@@ -90,11 +90,13 @@ class LanguageController extends FrameworkBundleAdminController
     public function searchGridAction(Request $request)
     {
         $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.language';
+        $filterId = 'language';
         if ($request->request->has('currency')) {
             $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.currency_for_language';
+            $filterId = 'currency';
         }
 
-        return $this->redirectToFilteredGrid($request, $gridDefinitionFactory, 'admin_languages_index');
+        return $this->redirectToFilteredGrid($request, $gridDefinitionFactory, 'admin_languages_index', [], $filterId);
     }
 
     /**
