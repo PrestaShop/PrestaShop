@@ -95,6 +95,14 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
+     * Creates cms page
+     */
+    public function createAction()
+    {
+
+    }
+
+    /**
      * Displays cms category page form and handles create new cms page category logic.
      *
      * @AdminSecurity(
