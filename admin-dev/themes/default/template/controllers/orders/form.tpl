@@ -479,7 +479,7 @@
     var customer_search = $customer_search_input.val();
     var customer_search_url = $customer_search_input.data('customers-search-url');
 
-    // id_customer parameter is reuqired to generate url
+    // id_customer parameter is required to generate url
     // in this case id_customer is dynamic
     // so 0 is used as placeholder and later replaced with actual id_customer
     var customer_view_url_template = '{$link->getAdminLink('AdminCustomers', true, [], ['viewcustomer' => 1, 'liteDisplaying' => 1, 'id_customer' => 0])}';
