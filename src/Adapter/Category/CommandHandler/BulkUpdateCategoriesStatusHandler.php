@@ -27,18 +27,17 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\UpdateCategoriesStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\BulkUpdateCategoriesStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
  * Class ChangeCategoriesStatusHandler.
  *
  * @internal
  */
-final class UpdateCategoriesStatusHandler implements UpdateCategoriesStatusHandlerInterface
+final class BulkUpdateCategoriesStatusHandler implements BulkUpdateCategoriesStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -46,18 +45,15 @@ final class UpdateCategoriesStatusHandler implements UpdateCategoriesStatusHandl
      * @throws CannotUpdateCategoryStatusException
      * @throws CategoryNotFoundException
      */
-    public function handle(UpdateCategoriesStatusCommand $command)
+    public function handle(BulkUpdateCategoriesStatusCommand $command)
     {
-        $isActive = $command->getNewStatus()->isEqualTo(
-            new CategoryStatus(CategoryStatus::ENABLED)
-        );
-
         foreach ($command->getCategoryIds() as $categoryId) {
             $entity = new Category($categoryId->getValue());
-            $entity->active = $isActive;
+            $entity->active = $command->getNewStatus();
 
             if (!$entity->id) {
                 throw new CategoryNotFoundException(
+                    $categoryId,
                     sprintf('Category with id "%s" was not found', $categoryId->getValue())
                 );
             }

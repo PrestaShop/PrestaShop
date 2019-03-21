@@ -24,10 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand;
 
-class GroupException extends DomainException
+/**
+ * Interface UpdateCategoriesStatusHandlerInterface.
+ */
+interface BulkUpdateCategoriesStatusHandlerInterface
 {
+    /**
+     * @param BulkUpdateCategoriesStatusCommand $command
+     */
+    public function handle(BulkUpdateCategoriesStatusCommand $command);
 }

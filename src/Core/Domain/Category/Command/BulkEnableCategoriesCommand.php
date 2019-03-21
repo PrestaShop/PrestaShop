@@ -24,17 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 
 /**
- * Interface UpdateCategoriesStatusHandlerInterface.
+ * Enables given categories
  */
-interface UpdateCategoriesStatusHandlerInterface
+class BulkEnableCategoriesCommand extends BulkUpdateCategoriesStatusCommand
 {
     /**
-     * @param UpdateCategoriesStatusCommand $command
+     * @param int[] $categoryIds
+     *
+     * @throws CategoryConstraintException
+     * @throws CategoryException
      */
-    public function handle(UpdateCategoriesStatusCommand $command);
+    public function __construct(array $categoryIds)
+    {
+        parent::__construct($categoryIds, true);
+    }
 }

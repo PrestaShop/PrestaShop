@@ -29,8 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
-use PrestaShop\PrestaShop\Core\Domain\Group\QueryResult\DefaultGroups;
+use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 
 /**
  * Provides data for category add/edit category forms
@@ -48,13 +47,31 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $contextShopId;
 
     /**
+     * @var int
+     */
+    private $contextShopRootCategoryId;
+
+    /**
+     * @var DefaultGroupsProviderInterface
+     */
+    private $defaultGroupsProvider;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param int $contextShopId
+     * @param int $contextShopRootCategoryId
+     * @param DefaultGroupsProviderInterface $defaultGroupsProvider
      */
-    public function __construct(CommandBusInterface $queryBus, $contextShopId)
-    {
+    public function __construct(
+        CommandBusInterface $queryBus,
+        $contextShopId,
+        $contextShopRootCategoryId,
+        DefaultGroupsProviderInterface $defaultGroupsProvider
+    ) {
         $this->queryBus = $queryBus;
         $this->contextShopId = $contextShopId;
+        $this->contextShopRootCategoryId = $contextShopRootCategoryId;
+        $this->defaultGroupsProvider = $defaultGroupsProvider;
     }
 
     /**
@@ -84,18 +101,17 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        /** @var DefaultGroups $defaultGroups */
-        $defaultGroups = $this->queryBus->handle(new GetDefaultGroups());
+        $defaultGroups = $this->defaultGroupsProvider->getGroups();
 
         return [
+            'id_parent' => $this->contextShopRootCategoryId,
             'group_association' => [
-                $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
-                $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
-                $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
+                $defaultGroups->getVisitorsGroup()->getId(),
+                $defaultGroups->getGuestsGroup()->getId(),
+                $defaultGroups->getCustomersGroup()->getId(),
             ],
-            'shop_association' => [
-                $this->contextShopId,
-            ],
+            'shop_association' => $this->contextShopId,
+            'active' => true,
         ];
     }
 }

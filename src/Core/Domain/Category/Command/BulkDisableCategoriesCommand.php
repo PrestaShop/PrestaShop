@@ -24,11 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 
 /**
- * Class GetDefaultGroups returns default groups data.
+ * Class DisableCategoriesCommand disables provided categories.
  */
-class GetDefaultGroups
+class BulkDisableCategoriesCommand extends BulkUpdateCategoriesStatusCommand
 {
+    /**
+     * @param int[] $categoryIds
+     *
+     * @throws CategoryConstraintException
+     */
+    public function __construct(array $categoryIds)
+    {
+        parent::__construct($categoryIds, false);
+    }
 }

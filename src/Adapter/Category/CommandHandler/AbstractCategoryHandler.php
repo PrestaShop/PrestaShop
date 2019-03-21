@@ -26,117 +26,38 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
-use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-
 /**
- * Class AbstractAddCategoryHandler.
- *
- * @internal
+ * Encapsulates common behavior for legacy categories
  */
 abstract class AbstractCategoryHandler
 {
     /**
-     * @var ImageUploaderInterface
+     * @param array $associatedShopIds
      */
-    private $categoryImageUploader;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryThumbnailUploader;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryMenuThumbnailUploader;
-
-    /**
-     * @param ImageUploaderInterface $categoryCoverUploader
-     * @param ImageUploaderInterface $categoryThumbnailUploader
-     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
-     */
-    public function __construct(
-        ImageUploaderInterface $categoryCoverUploader,
-        ImageUploaderInterface $categoryThumbnailUploader,
-        ImageUploaderInterface $categoryMenuThumbnailUploader
-    ) {
-        $this->categoryImageUploader = $categoryCoverUploader;
-        $this->categoryThumbnailUploader = $categoryThumbnailUploader;
-        $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
-    }
-
-    /**
-     * Populate Category's object model with data from command so it can be used to create simple or root category.
-     *
-     * @param Category $category
-     * @param AbstractCategoryCommand $command
-     *
-     * @return Category
-     */
-    protected function populateCategoryWithCommandData(Category $category, AbstractCategoryCommand $command)
+    protected function addShopAssociation(array $associatedShopIds)
     {
-        if (null !== $command->getLocalizedNames()) {
-            $category->name = $command->getLocalizedNames();
-        }
-
-        if (null !== $command->getLocalizedLinkRewrites()) {
-            $category->link_rewrite = $command->getLocalizedLinkRewrites();
-        }
-
-        if (null !== $command->getLocalizedDescriptions()) {
-            $category->description = $command->getLocalizedDescriptions();
-        }
-
-        if (null !== $command->getLocalizedMetaTitles()) {
-            $category->meta_title = $command->getLocalizedMetaTitles();
-        }
-
-        if (null !== $command->getLocalizedMetaDescriptions()) {
-            $category->meta_description = $command->getLocalizedMetaDescriptions();
-        }
-
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $category->meta_keywords = $command->getLocalizedMetaKeywords();
-        }
-
-        if (null !== $command->getAssociatedGroupIds()) {
-            $category->groupBox = $command->getAssociatedGroupIds();
-        }
-
         // This is a workaround to make Category's object model work.
         // Inside Category::add() & Category::update() method it checks if shop association is submitted
         // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
-        $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
-
-        return $category;
+        $_POST['checkBoxShopAsso_category'] = $this->getLegacyShopAssociation($associatedShopIds);
     }
 
     /**
-     * @param Category $category
-     * @param AbstractCategoryCommand $command
+     * Legacy shop association expects both key & value to be the same,
+     * because both are used to calculate category position.
+     *
+     * @param int[] $shopIds
+     *
+     * @return array
      */
-    protected function uploadImages(Category $category, AbstractCategoryCommand $command)
+    private function getLegacyShopAssociation(array $shopIds)
     {
-        if (null !== $command->getCoverImage()) {
-            $this->categoryImageUploader->upload(
-                $category->id,
-                $command->getCoverImage()
-            );
+        $legacyShopAssociation = [];
+
+        foreach ($shopIds as $shopId) {
+            $legacyShopAssociation[$shopId] = $shopId;
         }
 
-        if (null !== $command->getThumbnailImage()) {
-            $this->categoryThumbnailUploader->upload(
-                $category->id,
-                $command->getThumbnailImage()
-            );
-        }
-
-        if (!empty($menuThumbnails = $command->getMenuThumbnailImages())) {
-            foreach ($menuThumbnails as $menuThumbnail) {
-                $this->categoryMenuThumbnailUploader->upload($category->id, $menuThumbnail);
-            }
-        }
+        return $legacyShopAssociation;
     }
 }
