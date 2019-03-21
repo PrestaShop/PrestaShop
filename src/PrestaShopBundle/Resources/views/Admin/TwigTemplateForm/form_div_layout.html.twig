@@ -229,16 +229,6 @@
   {{ block('button_widget') }}
 {%- endblock reset_widget -%}
 
-{%- block addons_connect_widget -%}
-  {% if is_addons_connected %}
-    {{ block('addons_connected_information') }}
-  {% endif %}
-
-  <div>
-    {{ block('addons_connect_button') }}
-  </div>
-{%- endblock addons_connect_widget -%}
-
 {# Labels #}
 
 {%- block form_label -%}
@@ -422,28 +412,3 @@
     {%- endif -%}
   {%- endfor -%}
 {%- endblock attributes -%}
-
-{%- block addons_connected_information -%}
-  {{ 'You are currently connected as %username%'|trans({}, 'Admin.Advparameters.Feature')|replace({ '%username%': addons_username }) }}
-{%- endblock addons_connected_information -%}
-
-{%- block addons_connect_button -%}
-  {% if is_addons_connected %}
-    {% set label, target =
-      'Sign out from PrestaShop Addons'|trans({}, 'Admin.Advparameters.Feature'),
-      '#module-modal-addons-logout'
-    %}
-  {% else %}
-    {% set label, target =
-      'Sign in'|trans({}, 'Admin.Advparameters.Feature'),
-      '#module-modal-addons-connect'
-    %}
-  {% endif %}
-
-  {% set attr = attr|merge({
-    'data-toggle': 'modal',
-    'data-target': target,
-  }) %}
-
-  {{ block('button_widget') }}
-{%- endblock -%}
