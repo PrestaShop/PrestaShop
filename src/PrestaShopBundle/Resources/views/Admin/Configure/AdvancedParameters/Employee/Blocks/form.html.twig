@@ -153,11 +153,45 @@
         {% endif %}
 
         {% if isRestrictedAccess and showAddonsConnectButton %}
-          {{ ps.form_group_row(employeeForm.prestashop_addons, { attr: {
-            class: 'btn-outline-secondary',
-          }}, {
-            'label': 'PrestaShop Addons',
-          }) }}
+          <div class="form-group row">
+            <label class="form-control-label">
+              PrestaShop Addons
+            </label>
+            <div class="col-sm">
+              {% if employeeForm.prestashop_addons.vars.is_addons_connected %}
+                <p>
+                  <i class="material-icons">account_circle</i>
+                  {{ 'You are currently connected as %username%'
+                        |trans({}, 'Admin.Advparameters.Feature')
+                        |replace({ '%username%': employeeForm.prestashop_addons.vars.addons_username })
+                  }}
+                </p>
+              {% endif %}
+
+              <div>
+                {% if employeeForm.prestashop_addons.vars.is_addons_connected %}
+                  {% set label, target =
+                    'Sign out from PrestaShop Addons'|trans({}, 'Admin.Advparameters.Feature'),
+                    '#module-modal-addons-logout'
+                  %}
+                {% else %}
+                  {% set label, target =
+                    'Sign in'|trans({}, 'Admin.Advparameters.Feature'),
+                    '#module-modal-addons-connect'
+                  %}
+                {% endif %}
+
+                {{ form_widget(employeeForm.prestashop_addons, {
+                  attr: {
+                    'class': 'btn-outline-secondary',
+                    'data-toggle': 'modal',
+                    'data-target': target,
+                  },
+                  label: label,
+                }) }}
+              </div>
+            </div>
+          </div>
         {% endif %}
 
         {{ ps.form_group_row(employeeForm.optin, {}, {
