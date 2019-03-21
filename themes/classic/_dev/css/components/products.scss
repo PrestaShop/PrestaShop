@@ -330,6 +330,11 @@
     .divide-right span {
       display: inline-block;
       margin-bottom: 0.3125rem;
+
+      @include media-breakpoint-down(sm) {
+        display: block;
+        padding: 0 .5rem;
+      } 
     }
   }
   .modal-dialog {
@@ -354,9 +359,17 @@
   .product-name {
     color: $brand-primary;
     font-size: 1.125rem;
+    
+    @include media-breakpoint-down(sm) {
+      padding: 0 .5rem;
+    } 
   }
   .product-price {
     color: $gray-dark;
+
+    @include media-breakpoint-down(sm) {
+      padding: 0 .5rem;
+    } 
   }
   
   .cart-content {
