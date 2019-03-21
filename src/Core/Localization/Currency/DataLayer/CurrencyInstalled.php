@@ -76,7 +76,7 @@ class CurrencyInstalled
      */
     public function getAvailableCurrencyCodes()
     {
-        $currencies = $this->dataProvider->getCurrencies();
+        $currencies = $this->dataProvider->findAll();
         $currencyIds = array_column($currencies, 'iso_code');
 
         return $currencyIds;

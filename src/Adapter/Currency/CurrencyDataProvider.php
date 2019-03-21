@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use Currency;
 use Exception;
+use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopException;
@@ -67,6 +68,14 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function findAll()
+    {
+        return Currency::findAll(false);
+    }
+
+    /**
      * Get a Currency entity instance by ISO code.
      *
      * @param string $isoCode
@@ -90,6 +99,23 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
         }
 
         return new Currency($currencyId, $idLang);
+    }
+
+    /**
+     * Get a Currency entity instance by ISO code.
+     *
+     * @param string $isoCode
+     *                        An ISO 4217 currency code
+     * @param string $locale
+     *                       The locale to use for localized data
+     *
+     * @return currency|null
+     *                       The asked Currency object, or null if not found
+     */
+    public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
+    {
+        $idLang = Language::getIdByLocale($locale);
+        return $this->getCurrencyByIsoCode($isoCode, $idLang);
     }
 
     /**
