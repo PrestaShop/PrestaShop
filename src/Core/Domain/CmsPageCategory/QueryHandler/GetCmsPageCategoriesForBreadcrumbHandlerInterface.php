@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageCategoriesBreadcrumbTree;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\BreadcrumbTree;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
 
 /**
@@ -37,7 +37,7 @@ interface GetCmsPageCategoriesForBreadcrumbHandlerInterface
     /**
      * @param GetCmsPageCategoriesForBreadcrumb $query
      *
-     * @return CmsPageCategoriesBreadcrumbTree
+     * @return BreadcrumbTree
      */
     public function handle(GetCmsPageCategoriesForBreadcrumb $query);
 }

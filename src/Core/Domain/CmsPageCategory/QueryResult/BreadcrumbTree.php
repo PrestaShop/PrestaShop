@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult;
 
 use ArrayIterator;
 use IteratorAggregate;
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 /**
  * Class CmsPageCategoriesForBreadcrumb is a DTO which is used in building cms page categories breadcrumb.
  */
-class CmsPageCategoriesBreadcrumbTree implements IteratorAggregate
+class BreadcrumbTree implements IteratorAggregate
 {
     /**
      * @var CmsPageCategory[]
