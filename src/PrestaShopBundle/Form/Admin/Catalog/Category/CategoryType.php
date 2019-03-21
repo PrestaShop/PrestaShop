@@ -26,10 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
