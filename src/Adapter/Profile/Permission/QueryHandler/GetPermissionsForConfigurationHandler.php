@@ -37,7 +37,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Tab;
 
 /**
- * Get configuratble permissions
+ * Get configurable permissions
  *
  * @internal
  */
