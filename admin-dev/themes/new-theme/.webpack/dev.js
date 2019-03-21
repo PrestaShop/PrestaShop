@@ -17,8 +17,8 @@ function devConfig() {
       },
     }
   );
+  
   return dev;
-
 }
 
 module.exports = devConfig;
