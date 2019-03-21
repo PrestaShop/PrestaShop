@@ -144,6 +144,25 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
+     * Creates cms page
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        $formBuilder = $this->getCmsPageFormBuilder();
+        $form = $formBuilder->getForm();
+
+        return $this->render('PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig', [
+            'cmsPageForm' => $form->createView(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
+    }
+
+    /**
      * Displays cms category page form and handles create new cms page category logic.
      *
      * @AdminSecurity(
@@ -809,6 +828,22 @@ class CmsPageController extends FrameworkBundleAdminController
         );
 
         return $cmsPageCategoryParentId;
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getCmsPageFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.cms_page_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getCmsPageFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.cms_page_form_handler');
     }
 
     /**
