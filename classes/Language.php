@@ -727,6 +727,28 @@ class LanguageCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
+    /**
+     * Return id from locale
+     *
+     * @param string $locale Locale
+     * @param bool $no_cache
+     *
+     * @return false|string|null
+     */
+    public static function getIdByLocale($locale, $no_cache = false)
+    {
+        $key = 'Language::getIdByLocale_' . $locale;
+        if ($no_cache || !Cache::isStored($key)) {
+            $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'');
+
+            Cache::store($key, $id_lang);
+
+            return $id_lang;
+        }
+
+        return Cache::retrieve($key);
+    }
+
     public static function getLangDetails($iso)
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
