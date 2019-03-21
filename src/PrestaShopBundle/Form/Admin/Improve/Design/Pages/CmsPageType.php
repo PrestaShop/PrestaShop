@@ -30,19 +30,22 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Defines Improve > Design > Pages cms page form
  */
-class CmsPageType  extends AbstractType
+class CmsPageType extends AbstractType
 {
     /**
      * @var TranslatorInterface
@@ -55,21 +58,32 @@ class CmsPageType  extends AbstractType
     private $allCmsCategories;
 
     /**
+     * @var bool
+     */
+    private $isMultiShopEnabled;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $allCmsCategories
+     * @param $isMultiShopEnabled
      */
-    public function __construct(TranslatorInterface $translator, array $allCmsCategories)
+    public function __construct(TranslatorInterface $translator, array $allCmsCategories, $isMultiShopEnabled)
     {
         $this->translator = $translator;
         $this->allCmsCategories = $allCmsCategories;
+        $this->isMultiShopEnabled = $isMultiShopEnabled;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('page_category', MaterialChoiceTreeType::class, [
                 'required' => false,
                 'choices_tree' => $this->allCmsCategories,
+                'choice_value' => 'id_cms_category',
             ])
             ->add('title', TranslatableType::class, [
                 'options' => [
@@ -134,7 +148,8 @@ class CmsPageType  extends AbstractType
                     ],
                 ],
             ])
-            ->add('meta_description', TranslatableType::class, [
+            ->add('meta_keyword', TranslatableType::class, [
+                'type' => TextType::class,
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -166,16 +181,16 @@ class CmsPageType  extends AbstractType
                 'options' => [
                     'constraints' => [
                         new IsUrlRewrite(),
+                        new Length([
+                            'max' => 128,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 128],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                     ],
                 ],
-                new Length([
-                    'max' => 128,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => 128],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
             ])
             ->add('content', TranslatableType::class, [
                 'type' => TextareaType::class,
@@ -208,5 +223,21 @@ class CmsPageType  extends AbstractType
                 'required' => false,
             ])
         ;
+
+        if ($this->isMultiShopEnabled) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->translator->trans('Shop association', [], 'Admin.Global')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]);
+        }
     }
 }

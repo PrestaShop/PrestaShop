@@ -767,3 +767,12 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    form.type.cms_page:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
+      arguments:
+        - '@translator'
+        - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
+        - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      tags:
+        - { name: form.type }

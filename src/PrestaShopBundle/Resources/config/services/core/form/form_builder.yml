@@ -77,3 +77,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType'
       - '@prestashop.core.form.identifiable_object.data_provider.cms_page_category_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.cms_page_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
+      - '@prestashop.core.form.identifiable_object.data_provider.cms_page_form_data_provider'
