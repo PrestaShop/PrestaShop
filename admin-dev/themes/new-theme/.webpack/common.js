@@ -46,8 +46,6 @@ module.exports = {
     tax: './js/pages/tax',
     cms_page: './js/pages/cms-page',
     form_popover_error: './js/components/form/form-popover-error.js',
-    manufacturer: './js/pages/catalog/manufacturer',
-    address: './js/pages/catalog/address',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
