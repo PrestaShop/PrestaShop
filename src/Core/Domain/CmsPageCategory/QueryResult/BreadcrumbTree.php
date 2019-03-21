@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult;
 
 use ArrayIterator;
 use IteratorAggregate;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategory;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\BreadcrumbTreeItem;
 
 /**
  * Class CmsPageCategoriesForBreadcrumb is a DTO which is used in building cms page categories breadcrumb.
@@ -36,12 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 class BreadcrumbTree implements IteratorAggregate
 {
     /**
-     * @var CmsPageCategory[]
+     * @var BreadcrumbTreeItem[]
      */
     private $cmsPageCategories;
 
     /**
-     * @param CmsPageCategory[] $cmsPageCategories
+     * @param BreadcrumbTreeItem[] $cmsPageCategories
      */
     public function __construct(array $cmsPageCategories)
     {

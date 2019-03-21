@@ -24,14 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Class CmsPageCategory is responsible for providing cms page id and name combination.
  */
-class CmsPageCategory
+class BreadcrumbTreeItem
 {
     /**
      * @var CmsPageCategoryId
