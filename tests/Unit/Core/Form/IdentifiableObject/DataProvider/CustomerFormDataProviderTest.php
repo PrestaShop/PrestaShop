@@ -29,7 +29,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;

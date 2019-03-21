@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
