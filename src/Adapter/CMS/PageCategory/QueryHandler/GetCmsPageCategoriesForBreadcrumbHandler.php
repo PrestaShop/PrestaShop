@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageCategoriesBreadcrumbTree;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\BreadcrumbTree;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
@@ -99,7 +99,7 @@ final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCatego
         ];
 
         if (CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID === $query->getCurrentCategoryId()->getValue()) {
-            return new CmsPageCategoriesBreadcrumbTree([
+            return new BreadcrumbTree([
                 new CmsPageCategory(
                     (int) $rootCategoryData['id_cms_category'],
                     $rootCategoryData['name']
@@ -119,6 +119,6 @@ final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCatego
             );
         }
 
-        return new CmsPageCategoriesBreadcrumbTree($categories);
+        return new BreadcrumbTree($categories);
     }
 }
