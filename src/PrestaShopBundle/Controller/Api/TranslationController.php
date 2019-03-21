@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\View\TreeBuilder;
@@ -70,7 +71,8 @@ class TranslationController extends ApiController
             $module = $request->query->get('module');
             $search = $request->query->get('search');
 
-            $validationErrors = $this->container->get('validator')->validate($locale, [
+            $icuLocale = Converter::toPrestaShopLocale($locale);
+            $validationErrors = $this->container->get('validator')->validate($icuLocale, [
                 new Locale(),
             ]);
 
