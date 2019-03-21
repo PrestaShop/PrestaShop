@@ -60,7 +60,7 @@ class ProfileId
     {
         if (!is_int($profileId) || 0 > $profileId) {
             throw new ProfileConstraintException(
-                sprintf('Invlaid profile id %s provided', var_export($profileId, true))
+                sprintf('Invalid profile id %s provided', var_export($profileId, true))
             );
         }
     }
