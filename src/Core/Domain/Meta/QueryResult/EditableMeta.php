@@ -24,8 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Meta;
+namespace PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\Name;
