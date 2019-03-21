@@ -90,6 +90,7 @@ class CategoryController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
+            'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
         ]);
     }
 
