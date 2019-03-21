@@ -118,7 +118,6 @@ class ControllerTest extends TestCase
             array('AdminStatusesController'),
             array('AdminZonesController'),
             array('AdminLoginController'),
-            array('AdminCustomersController'),
             array('AdminProfilesController'),
             array('AdminQuickAccessesController'),
             array('AdminCustomerThreadsController'),
