@@ -229,14 +229,6 @@
   {{ block('button_widget') }}
 {%- endblock reset_widget -%}
 
-{%- block clickable_avatar_widget -%}
-  {%- set classes = (attr.class|default('') ~ ' img-thumbnail clickable-avatar')|trim -%}
-
-  <a href="{{ click_url }}" target="_blank">
-    <img class="{{ classes }}" src="{{ value }}" alt="{{ image_alt }}">
-  </a>
-{%- endblock clickable_avatar_widget -%}
-
 {%- block addons_connect_widget -%}
   {% if is_addons_connected %}
     {{ block('addons_connected_information') }}
