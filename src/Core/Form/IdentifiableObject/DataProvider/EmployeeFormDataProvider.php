@@ -51,26 +51,18 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
     private $defaultShopAssociation;
 
     /**
-     * @var string
-     */
-    private $defaultAvatarUrl;
-
-    /**
      * @param CommandBusInterface $queryBus
      * @param bool $isMultistoreFeatureActive
      * @param array $defaultShopAssociation
-     * @param string $defaultAvatarUrl
      */
     public function __construct(
         CommandBusInterface $queryBus,
         $isMultistoreFeatureActive,
-        array $defaultShopAssociation,
-        $defaultAvatarUrl
+        array $defaultShopAssociation
     ) {
         $this->queryBus = $queryBus;
         $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
         $this->defaultShopAssociation = $defaultShopAssociation;
-        $this->defaultAvatarUrl = $defaultAvatarUrl;
     }
 
     /**
@@ -84,7 +76,6 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
         return [
             'firstname' => $editableEmployee->getFirstName()->getValue(),
             'lastname' => $editableEmployee->getLastName()->getValue(),
-            'avatar' => $editableEmployee->getAvatarUrl(),
             'email' => $editableEmployee->getEmail()->getValue(),
             'optin' => $editableEmployee->isSubscribedToNewsletter(),
             'default_page' => $editableEmployee->getDefaultPageId(),
@@ -101,7 +92,6 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         $data = [
-            'avatar' => $this->defaultAvatarUrl,
             'optin' => true,
             'active' => true,
         ];

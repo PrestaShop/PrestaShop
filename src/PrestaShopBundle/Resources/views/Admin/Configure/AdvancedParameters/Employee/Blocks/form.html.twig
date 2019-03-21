@@ -49,8 +49,8 @@
         <div class="form-group row">
           <label class="form-control-label"></label>
           <div class="col-sm">
-            <a href="{{ employeeForm.avatar.vars.click_url }}" target="_blank">
-              <img class="img-thumbnail clickable-avatar" src="{{ employeeForm.avatar.vars.value }}" alt="{{ employeeForm.avatar.vars.image_alt }}">
+            <a href="https://www.prestashop.com/forums/" target="_blank">
+              <img class="img-thumbnail clickable-avatar" src="{{ avatarUrl }}" alt="">
             </a>
           </div>
         </div>
@@ -62,7 +62,7 @@
               <p class="alert-text">
                 {{ 'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.'|trans({}, 'Admin.Advparameters.Help')
                     |replace({
-                      '%url%': '<a href="' ~ employeeForm.avatar.vars.click_url ~ '" class="alert-link" target="_blank">PrestaShop.com</a>',
+                      '%url%': '<a href="https://www.prestashop.com/forums/" class="alert-link" target="_blank">PrestaShop.com</a>',
                       '%email%': employeeForm.email.vars.value
                     })|raw
                 }}
@@ -76,35 +76,76 @@
         }) }}
 
         {% if isRestrictedAccess %}
-          {% set buttonAttributes = { class: 'btn-outline-secondary' } %}
+            {% set oldPasswordVars = employeeForm.change_password.old_password.vars|merge(old_password|default({})) %}
+            {% set newPasswordFirstVars = employeeForm.change_password.new_password.children.first.vars|merge(new_password.first_options|default({})) %}
+            {% set newPasswordSecondVars = employeeForm.change_password.new_password.children.second.vars|merge(new_password.second_options|default({})) %}
 
-          {{ ps.form_group_row(employeeForm.change_password, {
-            change_password_button: {
-              label: 'Change password...'|trans({}, 'messages'),
-              attr: buttonAttributes,
-            },
-            generate_password_button: {
-              label: 'Generate password'|trans({}, 'messages'),
-              attr: buttonAttributes
-            },
-            old_password: {
-              label: 'Current password'|trans({}, 'messages'),
-            },
-            new_password: {
-              first_options: {
-                label: 'New password'|trans({}, 'messages'),
-              },
-              second_options: {
-                label: 'Confirm password'|trans({}, 'messages'),
-              }
-            },
-            cancel_button: {
-              label: 'Cancel'|trans({}, 'Admin.Actions'),
-              attr: buttonAttributes,
-            }
-          }, {
-            'label': 'Password'|trans({}, 'Admin.Global')
-          }) }}
+            <div class="form-group row">
+              <label class="form-control-label">
+                {{ 'Password'|trans({}, 'Admin.Global') }}
+              </label>
+              <div class="col-sm">
+                {# "Change password" button #}
+                {{ form_widget(employeeForm.change_password.change_password_button, {
+                  label: 'Change password...'|trans({}, 'messages'),
+                  attr: {
+                    class: 'btn-outline-secondary js-change-password',
+                  }
+                }) }}
+
+                <div class="card card-body js-change-password-block d-none">
+                  {{ ps.form_group_row(employeeForm.change_password.old_password, oldPasswordVars, {
+                    label: 'Current password'|trans({}, 'messages'),
+                    required: true,
+                  }) }}
+
+                  {# New password first input #}
+                  {# Empty help text needed to render the text container for validation feedback messages #}
+                  {{ ps.form_group_row(employeeForm.change_password.new_password.children.first, employeeForm.change_password.new_password.first.vars, {
+                    label: 'New password'|trans({}, 'messages'),
+                    help: '',
+                    required: true,
+                  }) }}
+
+                  {# New password second input (confirmation) #}
+                  {{ ps.form_group_row(employeeForm.change_password.new_password.children.second, newPasswordSecondVars, {
+                    label: 'Confirm password'|trans({}, 'messages'),
+                    help: '',
+                    required: true,
+                  }) }}
+
+                  <div class="form-group row">
+                    <label class="form-control-label"></label>
+                    <div class="col-sm">
+                      {{ form_widget(employeeForm.change_password.generated_password) }}
+                    </div>
+                    <div class="col-sm">
+                      {{ form_widget(employeeForm.change_password.generate_password_button, {
+                        label: 'Generate password'|trans({}, 'messages'),
+                        attr: {
+                          class: 'btn-outline-secondary',
+                        }
+                      }) }}
+                    </div>
+                  </div>
+
+                  {{ ps.form_group_row(employeeForm.change_password.cancel_button, {
+                    label: 'Cancel'|trans({}, 'Admin.Actions'),
+                    attr: {
+                      class: 'btn-outline-secondary js-change-password-cancel',
+                    }
+                  }) }}
+
+                  {# Password strength feedback messages - used in JS #}
+                  <div class="js-password-strength-feedback d-none">
+                    <span class="strength-low">{{ 'Invalid'|trans({}, 'messages') }}</span>
+                    <span class="strength-medium">{{ 'Okay'|trans({}, 'messages') }}</span>
+                    <span class="strength-high">{{ 'Good'|trans({}, 'messages') }}</span>
+                    <span class="strength-extreme">{{ 'Fabulous'|trans({}, 'messages') }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
         {% else %}
           {{ ps.form_group_row(employeeForm.password, {}, {
             'label': 'Password'|trans({}, 'Admin.Global')
