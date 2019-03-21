@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -128,15 +127,22 @@ class ManufacturerType extends AbstractType
                 'required' => false,
             ])
             ->add('meta_title', TranslatableType::class, [
-                'type' => TextWithLengthCounterType::class,
+                'type' => TextType::class,
                 'required' => false,
                 'options' => [
                     'constraints' => [
                         new TypedRegexConstraint([
                             'type' => 'generic_name',
                         ]),
+                        new Length([
+                            'max' => 255,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 255],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                     ],
-                    'max_length' => 255,
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
