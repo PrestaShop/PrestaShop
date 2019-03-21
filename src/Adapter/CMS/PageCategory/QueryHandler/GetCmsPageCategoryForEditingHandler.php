@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\DTO\EditableCmsPageCategory;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\EditableCmsPageCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
