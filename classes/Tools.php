@@ -721,28 +721,16 @@ class ToolsCore
 
     /**
      * Return the CLDR associated with the context or given language_code.
+     * @see Tools::getContextLocale
      *
      * @param Context|null $context
      * @param null $language_code
-     *
-     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
      *
      * @throws PrestaShopException
      */
     public static function getCldr(Context $context = null, $language_code = null)
     {
-        if ($context && $context->language instanceof Language) {
-            $language_code = $context->language->locale;
-        }
-
-        if (!empty(static::$cldr_cache[$language_code])) {
-            $cldr = static::$cldr_cache[$language_code];
-        } else {
-            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
-            static::$cldr_cache[$language_code] = $cldr;
-        }
-
-        return $cldr;
+        throw new PrestaShopException('This CLDR library has been removed. See Tools::getContextLocale instead.');
     }
 
     /**
