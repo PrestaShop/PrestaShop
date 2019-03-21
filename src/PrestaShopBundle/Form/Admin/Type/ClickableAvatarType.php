@@ -60,12 +60,4 @@ class ClickableAvatarType extends AbstractType
             ->setAllowedTypes('image_alt', 'string')
         ;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'clickable_avatar';
-    }
 }

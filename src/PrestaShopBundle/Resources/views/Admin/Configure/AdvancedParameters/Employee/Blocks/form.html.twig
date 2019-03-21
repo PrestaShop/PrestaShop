@@ -46,9 +46,14 @@
           'label': 'Last name'|trans({}, 'Admin.Global')
         }) }}
 
-        {{ ps.form_group_row(employeeForm.avatar, {}, {
-          'label': ''
-        }) }}
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            <a href="{{ employeeForm.avatar.vars.click_url }}" target="_blank">
+              <img class="img-thumbnail clickable-avatar" src="{{ employeeForm.avatar.vars.value }}" alt="{{ employeeForm.avatar.vars.image_alt }}">
+            </a>
+          </div>
+        </div>
 
         <div class="form-group row">
           <label class="form-control-label"></label>
