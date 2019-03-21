@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Password;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
-use PrestaShopBundle\Form\Admin\Type\ClickableAvatarType;
 use PrestaShopBundle\Form\Admin\Type\AddonsConnectType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -41,6 +40,8 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email as EmployeeEmail;
@@ -75,21 +76,29 @@ final class EmployeeType extends AbstractType
     private $isMultistoreFeatureActive;
 
     /**
+     * @var string
+     */
+    private $defaultAvatarUrl;
+
+    /**
      * @param array $languagesChoices
      * @param array $tabChoices
      * @param array $profilesChoices
      * @param bool $isMultistoreFeatureActive
+     * @param string $defaultAvatarUrl
      */
     public function __construct(
         array $languagesChoices,
         array $tabChoices,
         array $profilesChoices,
-        $isMultistoreFeatureActive
+        $isMultistoreFeatureActive,
+        $defaultAvatarUrl
     ) {
         $this->languagesChoices = $languagesChoices;
         $this->tabChoices = $tabChoices;
         $this->profilesChoices = $profilesChoices;
         $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
+        $this->defaultAvatarUrl = $defaultAvatarUrl;
     }
 
     /**
@@ -110,7 +119,6 @@ final class EmployeeType extends AbstractType
                     $this->getLengthConstraint(LastName::MAX_LENGTH),
                 ],
             ])
-            ->add('avatar', ClickableAvatarType::class)
             ->add('email', EmailType::class, [
                 'constraints' => [
                     $this->getNotBlankConstraint(),
@@ -179,6 +187,14 @@ final class EmployeeType extends AbstractType
                 ]);
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['defaultAvatarUrl'] = $this->defaultAvatarUrl;
     }
 
     /**

@@ -779,6 +779,7 @@ services:
             - '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
