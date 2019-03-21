@@ -222,6 +222,9 @@ body#checkout {
       label {
         text-align: inherit;
       }
+      img {
+        width: 3.125rem;
+      }
     }
     .carrier-delay,
     .carrier-name {
@@ -326,6 +329,12 @@ body#checkout {
       border: 1px solid #e5e5e5;
       border-radius: 0;
       padding: 1rem;
+      .logo-container {
+        text-align: center;
+        img {
+          width: 3.125rem;
+        }
+      }
     }
     .step-edit {
       display: inline;
