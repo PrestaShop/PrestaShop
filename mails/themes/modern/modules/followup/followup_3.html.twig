@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Backoffice Order'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Follow up 3'|trans({}, 'EmailsBody', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -46,6 +46,15 @@
                                       </td>
                                     </tr>
                                     <!-- TITLE ENDING -->
+                                    <!-- SUBTITLE BEGINING -->
+                                    <tr>
+                                      <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:25px;word-break:break-word;">
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
+                                          {{ 'Thanks for your trust.'|trans({}, 'EmailsBody', locale)|raw }}
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    <!-- SUBTITLE ENDING -->
                                   </table>
                                 </td>
                               </tr>
@@ -89,7 +98,7 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px 20px;text-align:left;vertical-align:top;">
+                      <td style="direction:ltr;font-size:0px;padding:0 50px 40px;text-align:left;vertical-align:top;">
                         <!--[if mso | IE]>
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                 
@@ -102,10 +111,20 @@
                         <div class="mj-column-px-25 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tr>
-                              <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
-                                <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                  <p style="border-bottom:3px solid #505050;width:25px;border-radius:6px; margin: 0"></p>
-                                </div>
+                              <td class="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-right:0;padding-left:0;word-break:break-word;">
+                                <p style="border-top:solid 3px #505050;font-size:1;margin:0px auto;width:25px;">
+                                </p>
+                                <!--[if mso | IE]>
+        <table
+           align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 3px #505050;font-size:1;margin:0px auto;width:25px;" role="presentation" width="25px"
+        >
+          <tr>
+            <td style="height:0;line-height:0;">
+              &nbsp;
+            </td>
+          </tr>
+        </table>
+      <![endif]-->
                               </td>
                             </tr>
                           </table>
@@ -131,73 +150,6 @@
             </tr>
           <![endif]-->
               <!-- BORDER ENDING -->
-              <!-- ORDER BEGINING -->
-              <!--[if mso | IE]>
-            <tr>
-              <td
-                 class="" width="604px"
-              >
-          
-      <table
-         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:604px;" width="604"
-      >
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]-->
-              <div style="Margin:0px auto;max-width:604px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px 0;text-align:center;vertical-align:top;">
-                        <!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                
-        <tr>
-      
-            <td
-               class="" style="vertical-align:top;width:554px;"
-            >
-          <![endif]-->
-                        <div class="mj-column-per-100 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                            <tbody>
-                              <tr>
-                                <td style="vertical-align:top;padding:0;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
-                                    <tr>
-                                      <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'A new order has been generated on your behalf.'|trans({}, 'EmailsBody', locale)|raw }}
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--[if mso | IE]>
-            </td>
-          
-        </tr>
-      
-                  </table>
-                <![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
-      
-              </td>
-            </tr>
-          <![endif]-->
-              <!-- ORDER ENDING -->
               <!-- BOX BEGINING -->
               <!--[if mso | IE]>
             <tr>
@@ -234,7 +186,20 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Please go on <a href="{order_link}">{order_link}</a> to complete the payment.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'We are pleased to offer you a discount of <span class="label">{amount}%</span> off your next order. And this offer is valid for <span class="label">{days}</span> days, so do not waste a moment!'|trans({}, 'EmailsBody', locale)|raw }}
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
+                                          <span style="font-weight:700">{{ 'Here is your Voucher Code :'|trans({}, 'EmailsBody', locale)|raw }}</span> {voucher_num} </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
+                                          {{ 'Enter this code in your shopping cart to get the discount.'|trans({}, 'EmailsBody', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

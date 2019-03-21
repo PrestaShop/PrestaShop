@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Backoffice Order'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Log Alert'|trans({}, 'EmailsBody', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -89,7 +89,7 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px 20px;text-align:left;vertical-align:top;">
+                      <td style="direction:ltr;font-size:0px;padding:0 50px 40px;text-align:left;vertical-align:top;">
                         <!--[if mso | IE]>
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                 
@@ -102,10 +102,20 @@
                         <div class="mj-column-px-25 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tr>
-                              <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
-                                <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                  <p style="border-bottom:3px solid #505050;width:25px;border-radius:6px; margin: 0"></p>
-                                </div>
+                              <td class="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-right:0;padding-left:0;word-break:break-word;">
+                                <p style="border-top:solid 3px #505050;font-size:1;margin:0px auto;width:25px;">
+                                </p>
+                                <!--[if mso | IE]>
+        <table
+           align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 3px #505050;font-size:1;margin:0px auto;width:25px;" role="presentation" width="25px"
+        >
+          <tr>
+            <td style="height:0;line-height:0;">
+              &nbsp;
+            </td>
+          </tr>
+        </table>
+      <![endif]-->
                               </td>
                             </tr>
                           </table>
@@ -131,7 +141,7 @@
             </tr>
           <![endif]-->
               <!-- BORDER ENDING -->
-              <!-- ORDER BEGINING -->
+              <!-- SUBTITLE BEGINING -->
               <!--[if mso | IE]>
             <tr>
               <td
@@ -167,7 +177,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'A new order has been generated on your behalf.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'New alert message saved'|trans({}, 'EmailsBody', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -197,7 +207,7 @@
               </td>
             </tr>
           <![endif]-->
-              <!-- ORDER ENDING -->
+              <!-- SUBTITLE ENDING -->
               <!-- BOX BEGINING -->
               <!--[if mso | IE]>
             <tr>
@@ -234,7 +244,14 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Please go on <a href="{order_link}">{order_link}</a> to complete the payment.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ '<span class="warning">WARNING :</span> you have received a new log alert in your back office.'|trans({}, 'EmailsBody', locale)|raw }}
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
+                                          {{ 'You can check for it in the <span class="label">"Advanced Parameters" &gt; "Logs"</span> section of your Back Office.'|trans({}, 'EmailsBody', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

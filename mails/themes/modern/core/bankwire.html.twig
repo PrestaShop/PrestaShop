@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}Bankwire{% endblock %}
+{% block title %}{{ 'Bankwire'|trans({}, 'EmailsBody', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -186,7 +186,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Order ID {order_name}'|trans({}, 'EmailsBody', locale) }} - {{ 'pending payment'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Order ID {order_name}'|trans({}, 'EmailsBody', locale) }} - {{ 'Pending payment'|trans({}, 'EmailsBody', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -253,7 +253,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your order with the reference <span class="strong">{order_name}</span> has been placed successfully. You can expect <span class="strong"> delivery as soon as your payment is received</span>.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Your order with the reference <span class="label">{order_name}</span> has been placed successfully. You can expect <span class="strong"> delivery as soon as your payment is received</span>.'|trans({}, 'EmailsBody', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -661,10 +661,19 @@
       font-weight: 700;
     }
 
+    .warning {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
     a {
       color: #25B9D7;
-      font-weight: 600;
       text-decoration: underline;
+      font-weight: 600;
+    }
+
+    a.light {
+      font-weight: 400;
     }
 
     span.strong {
