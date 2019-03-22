@@ -24,33 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Tax\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
 
 /**
- * Gets tax for editing in Back Office
+ * Defines contract for AddTaxHandler
  */
-class GetTaxForEditing
+interface AddTaxHandlerInterface
 {
     /**
-     * @var TaxId
+     * @param AddTaxCommand $command
      */
-    private $taxId;
-
-    /**
-     * @param int $taxId
-     */
-    public function __construct($taxId)
-    {
-        $this->taxId = new TaxId($taxId);
-    }
-
-    /**
-     * @return TaxId
-     */
-    public function getTaxId()
-    {
-        return $this->taxId;
-    }
+    public function handle(AddTaxCommand $command);
 }

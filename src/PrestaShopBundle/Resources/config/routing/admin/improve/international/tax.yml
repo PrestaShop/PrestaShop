@@ -4,6 +4,7 @@ admin_taxes_index:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:index'
     _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes
 
 admin_taxes_save_options:
   path: /save-options
@@ -11,6 +12,7 @@ admin_taxes_save_options:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:saveOptions'
     _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitOptionstax
 
 admin_taxes_search:
   path: /
@@ -18,6 +20,27 @@ admin_taxes_search:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:search'
     _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitFiltertax
+
+admin_taxes_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:create'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:addtax
+
+admin_taxes_edit:
+  path: /{taxId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:edit'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:updatetax
+    _legacy_parameters:
+      id_tax: taxId
+  requirements:
+    taxId: \d+
 
 admin_taxes_delete:
   path: /{taxId}/delete
@@ -25,6 +48,7 @@ admin_taxes_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:delete'
     _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:deletetax
   requirements:
     taxId: \d+
 
@@ -33,9 +57,12 @@ admin_taxes_toggle_status:
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:toggleStatus'
-    _legacy_controller: AdminCurrencies
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:statustax
+    _legacy_parameters:
+      id_tax: taxId
   requirements:
-    currencyId: \d+
+    taxId: \d+
 
 admin_taxes_bulk_enable_status:
   path: /bulk-enable-status
@@ -43,6 +70,7 @@ admin_taxes_bulk_enable_status:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkEnableStatus'
     _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitBulkenableSelectiontax
 
 admin_taxes_bulk_disable_status:
   path: /bulk-disable-status
@@ -50,6 +78,7 @@ admin_taxes_bulk_disable_status:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkDisableStatus'
     _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitBulkdisableSelectiontax
 
 admin_taxes_bulk_delete:
   path: /bulk-delete
@@ -57,3 +86,4 @@ admin_taxes_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:bulkDelete'
     _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitBulkdeletetax

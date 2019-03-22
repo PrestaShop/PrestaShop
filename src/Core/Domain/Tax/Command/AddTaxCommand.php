@@ -24,33 +24,69 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Tax\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
+namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 
 /**
- * Gets tax for editing in Back Office
+ * Adds new tax
  */
-class GetTaxForEditing
+class AddTaxCommand
 {
     /**
-     * @var TaxId
+     * @var array
      */
-    private $taxId;
+    private $localizedNames;
 
     /**
-     * @param int $taxId
+     * @var float
      */
-    public function __construct($taxId)
+    private $rate;
+
+    /**
+     * @var bool
+     */
+    private $enabled;
+
+    /**
+     * @param array $localizedNames
+     * @param float $rate
+     * @param bool $enabled
+     */
+    public function __construct(array $localizedNames, $rate, $enabled)
     {
-        $this->taxId = new TaxId($taxId);
+        $this->localizedNames = $localizedNames;
+        $this->rate = $rate;
+        $this->enabled = $enabled;
     }
 
     /**
-     * @return TaxId
+     * @return array
      */
-    public function getTaxId()
+    public function getLocalizedNames()
     {
-        return $this->taxId;
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return float
+     */
+    public function getRate()
+    {
+        return $this->rate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
     }
 }

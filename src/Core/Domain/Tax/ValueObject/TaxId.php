@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 
 /**
  * Provides tax id data
@@ -42,7 +41,7 @@ class TaxId
     /**
      * @param int $taxId
      *
-     * @throws TaxException
+     * @throws TaxConstraintException
      */
     public function __construct($taxId)
     {
@@ -53,7 +52,7 @@ class TaxId
             );
         }
 
-        $this->taxId = (int) $taxId;
+        $this->taxId = $taxId;
     }
 
     /**

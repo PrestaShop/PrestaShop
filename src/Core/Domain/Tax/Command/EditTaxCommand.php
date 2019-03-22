@@ -24,14 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Tax\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Tax\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 
 /**
- * Gets tax for editing in Back Office
+ * Edits given tax with provided data
  */
-class GetTaxForEditing
+class EditTaxCommand
 {
     /**
      * @var TaxId
@@ -39,7 +40,24 @@ class GetTaxForEditing
     private $taxId;
 
     /**
+     * @var array|null
+     */
+    private $localizedNames;
+
+    /**
+     * @var float|null
+     */
+    private $rate;
+
+    /**
+     * @var bool|null
+     */
+    private $enabled;
+
+    /**
      * @param int $taxId
+     *
+     * @throws TaxException
      */
     public function __construct($taxId)
     {
@@ -52,5 +70,65 @@ class GetTaxForEditing
     public function getTaxId()
     {
         return $this->taxId;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getLocalizedNames()
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param array|null $localizedNames
+     *
+     * @return self
+     */
+    public function setLocalizedNames($localizedNames)
+    {
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getRate()
+    {
+        return $this->rate;
+    }
+
+    /**
+     * @param float|null $rate
+     *
+     * @return self
+     */
+    public function setRate($rate)
+    {
+        $this->rate = $rate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool|null $enabled
+     *
+     * @return self
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 }
