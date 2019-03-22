@@ -4,6 +4,12 @@ admin_mail_layout_preview_localized:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\MailLayout:preview
 
+admin_mail_layout_preview_module_localized:
+  path: /preview/{module}/{theme}/{locale}/{layout}.{type}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\MailLayout:preview
+
 admin_mail_layout_preview:
   path: /preview/{theme}/{layout}.{type}
   methods: [GET]
