@@ -102,3 +102,9 @@ services:
     tags:
     - name: tactician.handler
       command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
+
+  prestashop.adapter.category.command_handler.update_category_position_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoryPositionHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand
