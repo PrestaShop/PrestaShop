@@ -100,7 +100,7 @@ class RangeWeightCore extends ObjectModel
      *
      * @param int $id_carrier Carrier identifier
      *
-     * @return array|false All range for this carrier
+     * @return array|bool All range for this carrier
      */
     public static function getRanges($id_carrier)
     {
