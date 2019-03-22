@@ -35,7 +35,7 @@
     <div class="card-block row">
       <div class="card-text">
         <div class="form-group row">
-          {{ ps.label_with_help(('Catalog mode'|trans), ('Catalog mode disables the shopping cart on your store. Visitors will still able to browse your product catalog, but not buy them.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          {{ ps.label_with_help(('Catalog mode'|trans), ('Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.'|trans({}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(generalForm.catalog_mode) }}
             {{ form_widget(generalForm.catalog_mode) }}
