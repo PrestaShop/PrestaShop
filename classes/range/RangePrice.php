@@ -25,8 +25,19 @@
  */
 class RangePriceCore extends ObjectModel
 {
+    /**
+     * @var int
+     */
     public $id_carrier;
+
+    /**
+     * @var float
+     */
     public $delimiter1;
+
+    /**
+     * @var float
+     */
     public $delimiter2;
 
     /**
@@ -87,41 +98,76 @@ class RangePriceCore extends ObjectModel
     /**
      * Get all available price ranges.
      *
-     * @return array Ranges
+     * @param int $id_carrier Carrier identifier
+     *
+     * @return array|false All range for this carrier
      */
     public static function getRanges($id_carrier)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT *
-            FROM `' . _DB_PREFIX_ . 'range_price`
-            WHERE `id_carrier` = ' . (int) $id_carrier . '
-            ORDER BY `delimiter1` ASC');
+        $query = new DbQuery();
+        $query->select('*');
+        $query->from(static::$definition['table']);
+        $query->where('id_carrier = ' . (int) $id_carrier);
+        $query->orderBy('delimiter1 ASC');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
 
+    /**
+     * Check if a range exist for delimiter1 and delimiter2 by id_carrier or id_reference
+     *
+     * @param int|null $id_carrier Carrier identifier
+     * @param float $delimiter1
+     * @param float $delimiter2
+     * @param int|null $id_reference Carrier reference is the initial Carrier identifier (optional)
+     *
+     * @return int|bool Number of existing range
+     */
     public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-            SELECT count(*)
-            FROM `' . _DB_PREFIX_ . 'range_price` rp' .
-            (null === $id_carrier && $id_reference ? '
-            INNER JOIN `' . _DB_PREFIX_ . 'carrier` c on (rp.`id_carrier` = c.`id_carrier`)' : '') . '
-            WHERE' .
-            ($id_carrier ? ' `id_carrier` = ' . (int) $id_carrier : '') .
-            (null === $id_carrier && $id_reference ? ' c.`id_reference` = ' . (int) $id_reference : '') . '
-            AND `delimiter1` = ' . (float) $delimiter1 . ' AND `delimiter2` = ' . (float) $delimiter2);
+        $query = new DbQuery();
+        $query->select('COUNT(r.' . static::$definition['primary'] . ')');
+        $query->from(static::$definition['table'], 'r');
+        $query->where('r.delimiter1 = ' . (float) $delimiter1);
+        $query->where('r.delimiter2 = ' . (float) $delimiter2);
+
+        if ($id_carrier) {
+            $query->where('r.id_carrier = ' . (int) $id_carrier);
+        }
+
+        if ($id_reference) {
+            $query->innerJoin('carrier', 'c', 'r.id_carrier = c.id_carrier');
+            $query->where('c.id_reference = ' . (int) $id_reference);
+        }
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
-    public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
+    /**
+     * Check if a range overlap another range for this carrier
+     *
+     * @param int $id_carrier Carrier identifier
+     * @param float $delimiter1
+     * @param float $delimiter2
+     * @param int|null $id_range RangePrice identifier (optional)
+     *
+     * @return int|bool Number of range overlap
+     */
+    public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_range = null)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-            SELECT count(*)
-            FROM `' . _DB_PREFIX_ . 'range_price`
-            WHERE `id_carrier` = ' . (int) $id_carrier . '
-            AND ((`delimiter1` >= ' . (float) $delimiter1 . ' AND `delimiter1` < ' . (float) $delimiter2 . ')
-                OR (`delimiter2` > ' . (float) $delimiter1 . ' AND `delimiter2` < ' . (float) $delimiter2 . ')
-                OR (' . (float) $delimiter1 . ' > `delimiter1` AND ' . (float) $delimiter1 . ' < `delimiter2`)
-                OR (' . (float) $delimiter2 . ' < `delimiter1` AND ' . (float) $delimiter2 . ' > `delimiter2`)
-            )
-            ' . (null !== $id_rang ? ' AND `id_range_price` != ' . (int) $id_rang : ''));
+        $query = new DbQuery();
+        $query->select('COUNT(' . static::$definition['primary'] . ')');
+        $query->from(static::$definition['table']);
+        $query->where('id_carrier = ' . (int) $id_carrier);
+        $overlapCondition = '(delimiter1 >= ' . (float) $delimiter1 . ' AND delimiter1 < ' . (float) $delimiter2 . ')';
+        $overlapCondition .= ' OR (delimiter2 > ' . (float) $delimiter1 . ' AND delimiter2 < ' . (float) $delimiter2 . ')';
+        $overlapCondition .= ' OR (' . (float) $delimiter1 . ' > delimiter1 AND ' . (float) $delimiter1 . ' < delimiter2)';
+        $overlapCondition .= ' OR (' . (float) $delimiter2 . ' < delimiter1 AND ' . (float) $delimiter2 . ' > delimiter2)';
+        $query->where($overlapCondition);
+        if ($id_range) {
+            $query->where(static::$definition['primary'] . ' != ' . (int) $id_range);
+        }
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 }
