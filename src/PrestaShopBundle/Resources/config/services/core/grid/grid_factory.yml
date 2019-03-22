@@ -124,15 +124,6 @@ services:
         calls:
           - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
-    prestashop.core.grid.factory.currency_for_language:
-      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-      arguments:
-        - '@prestashop.core.grid.definition.factory.currency_for_language'
-        - '@prestashop.core.currency.grid_data_factory'
-        - '@prestashop.core.grid.filter.form_factory'
-      calls:
-        - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
-
     prestashop.core.grid.factory.profiles:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:

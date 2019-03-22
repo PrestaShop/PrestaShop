@@ -98,13 +98,6 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
-    prestashop.core.grid.definition.factory.currency_for_language:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory'
-        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - 'admin_languages_index'
-        public: true
-
     prestashop.core.grid.definition.factory.supplier:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'

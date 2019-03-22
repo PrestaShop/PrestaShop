@@ -50,16 +50,6 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'currency';
 
-    private $resetRedirectRoute;
-
-    /**
-     * @param string $resetRedirectRoute
-     */
-    public function __construct($resetRedirectRoute = 'admin_currencies_index')
-    {
-        $this->resetRedirectRoute = $resetRedirectRoute;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -180,7 +170,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'reset_route_params' => [
                         'filterId' => self::GRID_ID,
                     ],
-                    'redirect_route' => $this->resetRedirectRoute,
+                    'redirect_route' => 'admin_currencies_index',
                 ])
                 ->setAssociatedColumn('actions')
             )
