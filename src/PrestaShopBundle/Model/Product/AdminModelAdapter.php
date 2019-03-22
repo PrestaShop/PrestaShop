@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
-use Tools as ToolsLegacy;
 
 /**
  * This form class is responsible to map the form data to the product object.
@@ -56,8 +55,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $contextShop;
     /** @var AdminProductWrapper */
     private $adminProductWrapper;
-    /** @var \PrestaShop\PrestaShop\Core\Cldr\Repository */
-    private $cldrRepository;
     /** @var array */
     private $locales;
     /** @var string */
@@ -198,7 +195,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
         $this->adminProductWrapper = $adminProductWrapper;
-        $this->cldrRepository = ToolsLegacy::getCldr($this->contextShop);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $toolsAdapter;

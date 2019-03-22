@@ -24,8 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Cldr\Composer\Hook;
-
 require_once 'install_version.php';
 
 // Check PHP version
@@ -44,7 +42,6 @@ try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
     InstallControllerConsole::execute($argc, $argv);
     echo '-- Installation successful! --'."\n";
-    Hook::init(null);
     exit(0);
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();
