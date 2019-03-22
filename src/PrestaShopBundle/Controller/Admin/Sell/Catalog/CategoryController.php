@@ -28,10 +28,12 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
@@ -634,6 +636,41 @@ class CategoryController extends FrameworkBundleAdminController
             ->setHeadersData($headers)
             ->setFileName('category_' . date('Y-m-d_His') . '.csv')
         ;
+    }
+
+    /**
+     * Updates category position
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updatePositionAction(Request $request)
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateCategoryPositionCommand(
+                $request->request->getInt('id_category_to_move'),
+                $request->request->getInt('id_category_parent'),
+                $request->request->getInt('way'),
+                $request->request->get('categories'),
+                $request->request->getBoolean('found_first')
+            ));
+        } catch (CategoryException $e) {
+            return $this->json([
+                'success' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ]);
+        }
+
+        return $this->json([
+            'success' => true,
+            'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+        ]);
     }
 
     /**

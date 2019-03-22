@@ -107,3 +107,10 @@ admin_categories_delete_menu_thumbnail:
     requirements:
         categoryId: \d+
         menuThumbnailId: 0|1|2 # menu thumbnails only have 3 fixed ids
+
+admin_categories_update_position:
+    path: /update-positions
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:updatePosition
+        _legacy_controller: AdminCategories
