@@ -721,6 +721,7 @@ class ToolsCore
 
     /**
      * Return the CLDR associated with the context or given language_code.
+     *
      * @see Tools::getContextLocale
      *
      * @param Context|null $context
@@ -797,10 +798,9 @@ class ToolsCore
 
         /** @var LocaleRepository $localeRepository */
         $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-        $locale = !empty($context->language->locale) ?
-            $context->language->locale :
-            $context->language->language_code;
-        $locale = $localeRepository->getLocale($locale);
+        $locale = $localeRepository->getLocale(
+            $context->language->getLocale()
+        );
 
         return $locale;
     }

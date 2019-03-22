@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Cldr\Repository;
-
 class CurrencyCore extends ObjectModel
 {
     public $id;
@@ -193,7 +191,7 @@ class CurrencyCore extends ObjectModel
                 $this->name = ucfirst($this->name);
             }
 
-            $this->iso_code_num = $this->numeric_iso_code = $this->iso_code;
+            $this->iso_code_num = $this->numeric_iso_code;
 
             $this->format = '';
             $this->blank = 1;
@@ -229,9 +227,6 @@ class CurrencyCore extends ObjectModel
             return false;
         }
 
-        $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
-        $this->name = $cldrCurrency['name'];
-
         return Currency::exists($this->iso_code) ? false : parent::add($autoDate, $nullValues);
     }
 
@@ -250,9 +245,6 @@ class CurrencyCore extends ObjectModel
         if ((float) $this->conversion_rate <= 0) {
             return false;
         }
-
-        $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
-        $this->name = $cldrCurrency['name'];
 
         return parent::update($nullValues);
     }
@@ -395,9 +387,7 @@ class CurrencyCore extends ObjectModel
         $currencies = Db::getInstance()->executeS('
             SELECT *
             FROM `' . _DB_PREFIX_ . 'currency` c
-            ' . Shop::addSqlAssociation('currency', 'c') .
-                ' LEFT JOIN ' . _DB_PREFIX_ . 'currency_lang cl
-                ON (cl.id_currency = c.id_currency AND cl.id_lang = ' . (int) Context::getContext()->language->id . ')
+            ' . Shop::addSqlAssociation('currency', 'c') . '
                 WHERE `deleted` = 0' .
                 ($active ? ' AND c.`active` = 1' : '') .
                 ($groupBy ? ' GROUP BY c.`id_currency`' : '') .
@@ -435,8 +425,6 @@ class CurrencyCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'currency` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
         ' . ($idShop ? ' WHERE cs.`id_shop` = ' . (int) $idShop : '') . '
-        LEFT JOIN ' . _DB_PREFIX_ . 'currency_lang cl
-                ON (cl.id_currency = c.id_currency AND cl.id_lang = ' . (int) Context::getContext()->language->id . ')
 		ORDER BY `iso_code` ASC');
 
         return self::addCldrDatasToCurrency($currencies);
@@ -452,15 +440,17 @@ class CurrencyCore extends ObjectModel
     {
         if (is_array($currencies)) {
             foreach ($currencies as $k => $c) {
-                $currencies[$k] = Currency::getCurrencyInstance($c['id_currency'], Context::getContext()->language->id, 1);
+                $currencies[$k] = Currency::getCurrencyInstance($c['id_currency']);
                 if (!$isObject) {
                     $currencies[$k] = (array) $currencies[$k];
+                    $currencies[$k]['id_currency'] = $currencies[$k]['id'];
                 }
             }
         } else {
-            $currencies = Currency::getCurrencyInstance($currencies['id_currency'], Context::getContext()->language->id);
+            $currencies = Currency::getCurrencyInstance($currencies['id_currency']);
             if (!$isObject) {
                 $currencies = (array) $currencies;
+                $currencies['id_currency'] = $currencies['id'];
             }
         }
 
