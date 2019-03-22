@@ -65,7 +65,7 @@ class CurrencyDatabaseTest extends TestCase
         $this->fakeFrEuro->precision        = 2;
 
         $this->fakeDataProvider = $this->createMock(CurrencyDataProvider::class);
-        $this->fakeDataProvider->method('getCurrencyByIsoCode')
+        $this->fakeDataProvider->method('getCurrencyByIsoCodeAndLocale')
             ->willReturnMap([
                 ['EUR', 'fr-FR', $this->fakeFrEuro],
             ]);

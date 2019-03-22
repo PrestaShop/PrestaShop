@@ -68,7 +68,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function findAll()
     {
@@ -115,6 +115,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
     {
         $idLang = Language::getIdByLocale($locale);
+
         return $this->getCurrencyByIsoCode($isoCode, $idLang);
     }
 

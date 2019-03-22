@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
@@ -1297,8 +1296,7 @@ class LanguageCore extends ObjectModel
 
     public static function updateMultilangFromCldr($lang)
     {
-        $cldrRepository = new cldrRepository($lang->locale);
-        $cldrLocale = $cldrRepository->getCulture();
+        $cldrLocale = $lang->getLocale();
         $cldrFile = _PS_TRANSLATIONS_DIR_ . 'cldr/datas/main/' . $cldrLocale . '/territories.json';
 
         if (file_exists($cldrFile)) {
@@ -1452,5 +1450,15 @@ class LanguageCore extends ObjectModel
         );
 
         return $processor;
+    }
+
+    /**
+     * @return string return the language locale, or its code by default
+     */
+    public function getLocale()
+    {
+        return !empty($this->locale) ?
+            $this->locale :
+            $this->language_code;
     }
 }
