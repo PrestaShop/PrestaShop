@@ -28,6 +28,9 @@ if [ -n "$(ls ${REPORT_PATH})" ]; then
   ./scripts/combine-reports.py "${REPORT_PATH}" "${DIR_PATH}/reports/${REPORT_NAME}.json"
   nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${DIR_PATH}/reports/${REPORT_NAME}.json" -o "${DIR_PATH}/reports"
 
+  # send mail
+  ./send-mail.sh "${REPORT_NAME}-stats.json"
+
   # Send file, remove directory, and shutdown if everything is ok
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly && \
   rm -rf $DIR_PATH && \
