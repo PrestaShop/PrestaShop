@@ -64,15 +64,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 return;
             }
 
-            parent::canonicalRedirection($this->context->link->getProductLink(
-                $this->product,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            ));
+            parent::canonicalRedirection($this->context->link->getProductLink($this->product));
         }
     }
 
