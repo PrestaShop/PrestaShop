@@ -59,8 +59,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 unset($_GET['id_product_attribute']);
             } elseif (!$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
                 $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
+            } else {
+                //Only redirect to canonical (parent product without combination) when the requested combination is not valid
+                return;
             }
-            $idProductAttribute = $this->getIdProductAttributeByRequest();
+
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -68,7 +71,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 null,
                 null,
                 null,
-                $idProductAttribute
+                null
             ));
         }
     }
