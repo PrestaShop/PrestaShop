@@ -158,12 +158,10 @@ export default class CategoryPositionExtension {
     }).then((response) => {
       response = JSON.parse(response);
 
-      if (typeof response.message !== 'undefined') {
+      if (response.success) {
         showSuccessMessage(response.message);
       } else {
-        // use legacy error
-        // @todo: update when all category controller is migrated to symfony
-        showErrorMessage(response.errors);
+        showErrorMessage(response.message);
       }
 
       this._updateCategoryIdsAndPositions();
