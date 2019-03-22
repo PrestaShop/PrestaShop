@@ -306,4 +306,15 @@ final class Locale implements LocaleInterface
 
         return null;
     }
+
+    /**
+     * Get CLDR data of all currencies.
+     *
+     * @return currencyData[]
+     *                        Data of all currencies
+     */
+    public function getAllCurrencies()
+    {
+        return $this->currencies;
+    }
 }

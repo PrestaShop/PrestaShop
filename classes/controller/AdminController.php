@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
-use PrestaShop\PrestaShop\Core\Cldr;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 
 class AdminControllerCore extends Controller
@@ -1944,8 +1943,6 @@ class AdminControllerCore extends Controller
         // Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
         $this->context->shop = new Shop((int) $this->context->shop->id);
 
-        $cldrRepository = new Cldr\Repository($this->context->language->language_code);
-
         $this->context->smarty->assign(array(
             'img_dir' => _PS_IMG_,
             'iso' => $this->context->language->iso_code,
@@ -1956,7 +1953,7 @@ class AdminControllerCore extends Controller
             'version' => _PS_VERSION_,
             'lang_iso' => $this->context->language->iso_code,
             'full_language_code' => $this->context->language->language_code,
-            'full_cldr_language_code' => $cldrRepository->getCulture(),
+            'full_cldr_language_code' => $this->context->currentLocale->getCode(),
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
             'base_url' => $this->context->shop->getBaseURL(),

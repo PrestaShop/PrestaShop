@@ -53,11 +53,11 @@ final class CurrencyNameByIsoCodeChoiceProvider implements FormChoiceProviderInt
     {
         $result = [];
         foreach ($this->cldrAllCurrencies as $cldrCurrency) {
-            if (!isset($cldrCurrency['code'], $cldrCurrency['name'])) {
-                continue;
-            }
+            $currencyNames = $cldrCurrency->getDisplayNames();
+            $isoCode = $cldrCurrency->getIsoCode();
+            $displayName = $currencyNames['default'] . ' (' . $isoCode . ')';
 
-            $result[$cldrCurrency['name']] = $cldrCurrency['code'];
+            $result[$displayName] = $isoCode;
         }
 
         return $result;

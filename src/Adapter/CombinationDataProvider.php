@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Combination;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Product;
-use Tools as ToolsLegacy;
 
 /**
  * This class will provide data from DB / ORM about product combination.
@@ -49,15 +49,17 @@ class CombinationDataProvider
     private $productAdapter;
 
     /**
-     * @var \PrestaShop\PrestaShop\Core\Cldr\Repository
+     * @var Locale
      */
-    private $cldrRepository;
+    private $locale;
 
-    public function __construct()
+    public function __construct(LocaleRepository $repository)
     {
         $this->context = new LegacyContext();
         $this->productAdapter = new ProductDataProvider();
-        $this->cldrRepository = ToolsLegacy::getCldr($this->context->getContext());
+        $this->locale = $repository->getLocale(
+            $this->context->getContext()->language->getLocale()
+        );
     }
 
     /**
@@ -156,7 +158,7 @@ class CombinationDataProvider
             'attribute_wholesale_price' => $combination['wholesale_price'],
             'attribute_price_impact' => $attribute_price_impact,
             'attribute_price' => $combination['price'],
-            'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->context->getContext()->currency->iso_code),
+            'attribute_price_display' => $this->locale->formatPrice($combination['price'], $this->context->getContext()->currency->iso_code),
             'final_price' => (string) $finalPrice,
             'attribute_priceTI' => '',
             'attribute_ecotax' => $combination['ecotax'],

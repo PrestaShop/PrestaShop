@@ -153,4 +153,12 @@ interface LocaleInterface
      *                           The wanted currency data. Null if this currency is not available for this locale.
      */
     public function getCurrencyData($currencyCode);
+
+    /**
+     * Get CLDR data of all currencies.
+     *
+     * @return currencyData[]
+     *                        Data of all currencies
+     */
+    public function getAllCurrencies();
 }

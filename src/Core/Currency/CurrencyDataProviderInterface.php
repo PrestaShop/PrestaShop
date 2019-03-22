@@ -48,7 +48,7 @@ interface CurrencyDataProviderInterface
 
     /**
      * Return raw currencies data from the database reated to the current shop.
-     * 
+     *
      * @return array Installed currencies
      */
     public function findAll();

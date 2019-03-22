@@ -71,7 +71,6 @@ namespace PrestaShopBundle\Install {
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
     use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-    use PrestaShop\PrestaShop\Core\Cldr\Update;
     use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
     use RandomLib;
     use Shop;
@@ -728,9 +727,6 @@ namespace PrestaShopBundle\Install {
 
                         if (empty($errorsLanguage)) {
                             Language::loadLanguages();
-
-                            $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-                            $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
                         } else {
                             $this->logError('Error updating translations', 44);
                         }

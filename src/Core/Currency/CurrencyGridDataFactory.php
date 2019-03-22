@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Currency;
 
-use PrestaShop\PrestaShop\Core\Cldr\Repository;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -44,22 +43,14 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     private $gridDataFactory;
 
     /**
-     * @var Repository
-     */
-    private $cldrRepository;
-
-    /**
      * CurrencyGridDataFactory constructor.
      *
      * @param GridDataFactoryInterface $gridDataFactory
-     * @param Repository $cldrRepository
      */
     public function __construct(
-        GridDataFactoryInterface $gridDataFactory,
-        Repository $cldrRepository
+        GridDataFactoryInterface $gridDataFactory
     ) {
         $this->gridDataFactory = $gridDataFactory;
-        $this->cldrRepository = $cldrRepository;
     }
 
     /**
@@ -89,12 +80,8 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     {
         $result = [];
         foreach ($records as $key => $record) {
-            $cldrCurrency = $this->cldrRepository->getCurrency($record['iso_code']);
-
             $result[$key] = $record;
-            $result[$key]['currency'] = !empty($cldrCurrency['name']) ? ucfirst($cldrCurrency['name']) : '';
-            $result[$key]['symbol'] = !empty($cldrCurrency['symbol']) ? $cldrCurrency['symbol'] : '';
-            $result[$key]['iso_code'] .= !empty($cldrCurrency['iso_code']) ? ' / ' . $cldrCurrency['iso_code'] : '';
+            $result[$key]['currency'] = ucfirst($result[$key]['name']);
             $result[$key]['conversion_rate'] = (float) $result[$key]['conversion_rate'];
         }
 
