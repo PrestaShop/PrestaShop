@@ -108,10 +108,7 @@
         "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony/symfony": ">=3.4.8",
         "tecnickcom/tcpdf": "^6.2.12",
-        "twig/twig": "^1.0||^2.0"
-    },
-    "conflict": {
-        "twig/twig": "1.37.0|2.6.1"
+        "twig/twig": "^1.38||^2.0"
     },
     "repositories": [
         {
