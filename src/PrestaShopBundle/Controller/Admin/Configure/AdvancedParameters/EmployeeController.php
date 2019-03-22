@@ -468,12 +468,12 @@ class EmployeeController extends FrameworkBundleAdminController
                 EmployeeConstraintException::INVALID_FIRST_NAME => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Firstname', 'Admin.Global'))]
+                    [sprintf('"%s"', $this->trans('First name', 'Admin.Global'))]
                 ),
                 EmployeeConstraintException::INVALID_LAST_NAME => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Lastname', 'Admin.Global'))]
+                    [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
                 ),
                 EmployeeConstraintException::INCORRECT_PASSWORD => $this->trans(
                     'Your current password is invalid.',
@@ -500,7 +500,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
             'getTabsUrl' => $this->generateUrl('admin_employees_get_tabs'),
-            'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
+            'errorMessage' => $this->trans('You need permission to add this.', 'Admin.Notifications.Error'),
         ];
     }
 }
