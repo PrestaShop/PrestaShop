@@ -357,7 +357,7 @@ body#checkout {
 }
 /**** ORDER CONFIRMATION *****/
 #order-details {
-  padding-left: $large-space;
+  padding-left: 1.3rem;
   > .card-title {
     margin-bottom: $large-space;
   }
@@ -380,6 +380,24 @@ body#checkout {
       td {
         &:last-child {
           text-align: right;
+        }
+      }
+      td {
+        padding: .5rem;
+        font-size: .875rem;
+      }
+      &.total-value {
+        background-color: $gray-light;
+      }
+      &.taxes {
+        td {
+          text-align: left;
+        }
+        &:last-child {
+          td {
+            font-weight: 600;
+            padding-top: 0;
+          }
         }
       }
     }
