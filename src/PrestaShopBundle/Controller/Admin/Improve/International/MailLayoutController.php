@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
@@ -45,12 +46,13 @@ class MailLayoutController extends FrameworkBundleAdminController
      * @param string $layout
      * @param string $type
      * @param string $locale
+     * @param string $module
      *
      * @return Response
      */
-    public function previewAction($theme, $layout, $type, $locale = '')
+    public function previewAction($theme, $layout, $type, $locale = '', $module = '')
     {
-        $renderedLayout = $this->renderLayout($theme, $layout, $type, $locale);
+        $renderedLayout = $this->renderLayout($theme, $layout, $type, $locale, $module);
 
         return new Response($renderedLayout);
     }
@@ -79,10 +81,11 @@ class MailLayoutController extends FrameworkBundleAdminController
      * @param string $layoutName
      * @param string $type
      * @param string $locale
+     * @param string $module
      *
      * @return string
      */
-    private function renderLayout($themeName, $layoutName, $type, $locale)
+    private function renderLayout($themeName, $layoutName, $type, $locale = '', $module = '')
     {
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get(ThemeCatalogInterface::class);
@@ -90,21 +93,24 @@ class MailLayoutController extends FrameworkBundleAdminController
             /** @var ThemeInterface $theme */
             $theme = $themeCatalog->getByName($themeName);
         } catch (InvalidArgumentException $e) {
-            throw new NotFoundHttpException($e->getMessage());
+            throw new InvalidArgumentException($e->getMessage());
         }
 
+        /** @var LayoutInterface $layout */
         $layout = null;
-        /* @var LayoutInterface $layout */
+        /* @var LayoutInterface $layoutInterface */
         foreach ($theme->getLayouts() as $layoutInterface) {
-            if ($layoutInterface->getName() == $layoutName) {
+            if ($layoutInterface->getName() == $layoutName &&
+                (empty($module) || $layoutInterface->getModuleName() == $module)) {
                 $layout = $layoutInterface;
                 break;
             }
         }
 
         if (null === $layout) {
-            throw new NotFoundHttpException(sprintf(
-                'Could not find layout %s in theme %s',
+            throw new FileNotFoundException(sprintf(
+                'Could not find layout %s%s in theme %s',
+                empty($module) ? '' : $module.':',
                 $layoutName,
                 $themeName
             ));
