@@ -21,7 +21,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" ships to all groups
-    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for weight between 0 and 10000
     When I am logged in as "customer1"
     When I add 1 items of product "product1" in my cart
     When I use the discount "cartrule1"
@@ -57,7 +57,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" ships to all groups
-    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for weight between 0 and 10000
     When I am logged in as "customer1"
     When I add 1 items of product "product1" in my cart
     When I use the discount "cartrule1"
@@ -97,7 +97,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" ships to all groups
-    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for weight between 0 and 10000
     When I am logged in as "customer1"
     When I add 1 items of product "product2" in my cart
     When I add 1 items of product "product1" in my cart
@@ -139,7 +139,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" ships to all groups
-    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for weight between 0 and 10000
     When I am logged in as "customer1"
     When I add 1 items of product "product2" in my cart
     When I add 1 items of product "product1" in my cart
@@ -177,7 +177,7 @@ Feature: Check cart to order data copy
     Given address "address1" is associated to customer "customer1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" ships to all groups
-    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for weight between 0 and 10000
     When I am logged in as "customer1"
     When I add 1 items of product "product1" in my cart
     When I use the discount "cartrule5"

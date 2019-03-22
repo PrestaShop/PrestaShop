@@ -80,7 +80,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I add (\d+) items of product "(.+)" in my cart$/
+     * @When /^I add (\d+) items? of product "(.+)" in my cart$/
      */
     public function iAddProductNamedInMyCartWithQuantity($productQuantity, $productName)
     {
