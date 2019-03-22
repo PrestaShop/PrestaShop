@@ -39,6 +39,10 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * This controller is used to preview mail templates from new theme. It uses the
+ * same service used by the generator so it is a handy way to debug them.
+ */
 class MailLayoutController extends FrameworkBundleAdminController
 {
     /**
@@ -110,7 +114,7 @@ class MailLayoutController extends FrameworkBundleAdminController
         if (null === $layout) {
             throw new FileNotFoundException(sprintf(
                 'Could not find layout %s%s in theme %s',
-                empty($module) ? '' : $module.':',
+                empty($module) ? '' : $module . ':',
                 $layoutName,
                 $themeName
             ));
