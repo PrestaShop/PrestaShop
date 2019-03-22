@@ -104,13 +104,11 @@ class RangeWeightCore extends ObjectModel
      */
     public static function getRanges($id_carrier)
     {
-        $query = new DbQuery();
-        $query->select('*');
-        $query->from(static::$definition['table']);
-        $query->where('id_carrier = ' . (int) $id_carrier);
-        $query->orderBy('delimiter1 ASC');
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT *
+            FROM `' . _DB_PREFIX_ . 'range_weight`
+            WHERE `id_carrier` = ' . (int) $id_carrier . '
+            ORDER BY `delimiter1` ASC');
     }
 
     /**
@@ -125,22 +123,15 @@ class RangeWeightCore extends ObjectModel
      */
     public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
-        $query = new DbQuery();
-        $query->select('COUNT(r.' . static::$definition['primary'] . ')');
-        $query->from(static::$definition['table'], 'r');
-        $query->where('r.delimiter1 = ' . (float) $delimiter1);
-        $query->where('r.delimiter2 = ' . (float) $delimiter2);
-
-        if ($id_carrier) {
-            $query->where('r.id_carrier = ' . (int) $id_carrier);
-        }
-
-        if ($id_reference) {
-            $query->innerJoin('carrier', 'c', 'r.id_carrier = c.id_carrier');
-            $query->where('c.id_reference = ' . (int) $id_reference);
-        }
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            SELECT count(*)
+            FROM `' . _DB_PREFIX_ . 'range_weight` rw' .
+            (null === $id_carrier && $id_reference ? '
+            INNER JOIN `' . _DB_PREFIX_ . 'carrier` c on (rw.`id_carrier` = c.`id_carrier`)' : '') . '
+            WHERE' .
+            ($id_carrier ? ' `id_carrier` = ' . (int) $id_carrier : '') .
+            (null === $id_carrier && $id_reference ? ' c.`id_reference` = ' . (int) $id_reference : '') . '
+            AND `delimiter1` = ' . (float) $delimiter1 . ' AND `delimiter2` = ' . (float) $delimiter2);
     }
 
     /**
@@ -149,25 +140,21 @@ class RangeWeightCore extends ObjectModel
      * @param int $id_carrier Carrier identifier
      * @param float $delimiter1
      * @param float $delimiter2
-     * @param int|null $id_range RangeWeight identifier (optional)
+     * @param int|null $id_rang RangeWeight identifier (optional)
      *
      * @return int|bool Number of range overlap
      */
-    public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_range = null)
+    public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
     {
-        $query = new DbQuery();
-        $query->select('COUNT(' . static::$definition['primary'] . ')');
-        $query->from(static::$definition['table']);
-        $query->where('id_carrier = ' . (int) $id_carrier);
-        $overlapCondition = '(delimiter1 >= ' . (float) $delimiter1 . ' AND delimiter1 < ' . (float) $delimiter2 . ')';
-        $overlapCondition .= ' OR (delimiter2 > ' . (float) $delimiter1 . ' AND delimiter2 < ' . (float) $delimiter2 . ')';
-        $overlapCondition .= ' OR (' . (float) $delimiter1 . ' > delimiter1 AND ' . (float) $delimiter1 . ' < delimiter2)';
-        $overlapCondition .= ' OR (' . (float) $delimiter2 . ' < delimiter1 AND ' . (float) $delimiter2 . ' > delimiter2)';
-        $query->where($overlapCondition);
-        if ($id_range) {
-            $query->where(static::$definition['primary'] . ' != ' . (int) $id_range);
-        }
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            SELECT count(*)
+            FROM `' . _DB_PREFIX_ . 'range_weight`
+            WHERE `id_carrier` = ' . (int) $id_carrier . '
+            AND ((`delimiter1` >= ' . (float) $delimiter1 . ' AND `delimiter1` < ' . (float) $delimiter2 . ')
+                OR (`delimiter2` > ' . (float) $delimiter1 . ' AND `delimiter2` < ' . (float) $delimiter2 . ')
+                OR (' . (float) $delimiter1 . ' > `delimiter1` AND ' . (float) $delimiter1 . ' < `delimiter2`)
+                OR (' . (float) $delimiter2 . ' < `delimiter1` AND ' . (float) $delimiter2 . ' > `delimiter2`)
+            )
+            ' . (null !== $id_rang ? ' AND `id_range_weight` != ' . (int) $id_rang : ''));
     }
 }
