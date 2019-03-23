@@ -214,7 +214,7 @@ class ContainerBuilder
      * Needs to be done as earlier as possible in application lifecycle. Unfortunately this can't
      * be done in a compiler pass because they are only executed on compilation and this needs to
      * be done at each container instanciation.
-
+     *
      *
      * @param ContainerInterface $container
      *
