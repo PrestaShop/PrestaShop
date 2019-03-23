@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -71,15 +72,18 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $genderChoices;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param bool $isB2bFeatureEnabled
      * @param bool $isMultistoreFeatureEnabled
      * @param array $genderChoices
      */
     public function __construct(
+        HookDispatcherInterface $hookDispatcher,
         $isB2bFeatureEnabled,
         $isMultistoreFeatureEnabled,
         array $genderChoices
     ) {
+        parent::__construct($hookDispatcher);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
         $this->genderChoices = $genderChoices;
