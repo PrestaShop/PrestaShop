@@ -1326,7 +1326,7 @@ final class ProductImportHandler extends AbstractImportHandler
                     if ($price == 0) {
                         $price = 0.000001;
                     }
-                    $price = round(floatval($price), 6);
+                    $price = round((float) $price, 6);
                     $warehouse = new Warehouse($product->warehouse);
                     $productAdded = $stockManager->addProduct(
                         (int) $product->id,
