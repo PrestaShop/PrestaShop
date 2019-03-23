@@ -66,7 +66,7 @@ class ProfilesController extends FrameworkBundleAdminController
                         'href' => $this->generateUrl('admin_profiles_create'),
                         'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
                         'icon' => 'add_circle_outline',
-                  ],
+                    ],
                 ],
                 'help_link' => $this->generateSidebarLink('AdminProfiles'),
                 'enableSidebar' => true,
