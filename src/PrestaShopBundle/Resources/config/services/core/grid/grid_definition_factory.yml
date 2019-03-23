@@ -5,9 +5,10 @@ services:
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
         abstract: true
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
         calls:
             - [setTranslator, ['@translator']]
-            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.definition.factory.logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'

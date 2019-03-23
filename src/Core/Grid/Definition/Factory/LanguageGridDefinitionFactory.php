@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -63,11 +64,16 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectUrl;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetUrl
      * @param string $redirectUrl
      */
-    public function __construct($resetUrl, $redirectUrl)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        $resetUrl,
+        $redirectUrl
+    ) {
+        parent::__construct($hookDispatcher);
         $this->resetUrl = $resetUrl;
         $this->redirectUrl = $redirectUrl;
     }
