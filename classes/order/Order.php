@@ -404,12 +404,12 @@ class OrderCore extends ObjectModel
         $product_price_tax_excl = $order_detail->unit_price_tax_excl * $quantity;
         $product_price_tax_incl = $order_detail->unit_price_tax_incl * $quantity;
 
-        /* Update cart */
+        // Update cart
         $cart = new Cart($this->id_cart);
         $cart->updateQty($quantity, $order_detail->product_id, $order_detail->product_attribute_id, false, 'down'); // customization are deleted in deleteCustomization
         $cart->update();
 
-        /* Update order */
+        // Update order
         $shipping_diff_tax_incl = $this->total_shipping_tax_incl - $cart->getPackageShippingCost($this->id_carrier, true, null, $this->getCartProducts());
         $shipping_diff_tax_excl = $this->total_shipping_tax_excl - $cart->getPackageShippingCost($this->id_carrier, false, null, $this->getCartProducts());
         $this->total_shipping -= $shipping_diff_tax_incl;
@@ -434,19 +434,19 @@ class OrderCore extends ObjectModel
             'total_paid_real',
         );
 
-        /* Prevent from floating precision issues */
+        // Prevent from floating precision issues
         foreach ($fields as $field) {
             if ($this->{$field} < 0) {
                 $this->{$field} = 0;
             }
         }
 
-        /* Prevent from floating precision issues */
+        // Prevent from floating precision issues
         foreach ($fields as $field) {
             $this->{$field} = number_format($this->{$field}, _PS_PRICE_COMPUTE_PRECISION_, '.', '');
         }
 
-        /* Update order detail */
+        // Update order detail
         $order_detail->product_quantity -= (int) $quantity;
         if ($order_detail->product_quantity == 0) {
             if (!$order_detail->delete()) {
@@ -662,7 +662,7 @@ class OrderCore extends ObjectModel
                 Product::addProductCustomizationPrice($row, $customized_datas);
             }
 
-            /* Stock product */
+            // Stock product
             $result_array[(int) $row['id_order_detail']] = $row;
         }
 
@@ -1065,7 +1065,7 @@ class OrderCore extends ObjectModel
         if ($this->total_products_wt != '0.00' && !$products) {
             return $this->total_products_wt;
         }
-        /* Retro-compatibility (now set directly on the validateOrder() method) */
+        // Retro-compatibility (now set directly on the validateOrder() method)
 
         if (!$products) {
             $products = $this->getProductsDetail();

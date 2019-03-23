@@ -302,9 +302,7 @@ class ProductInformation extends CommonAbstractType
                 $event->setData($data);
             }
 
-            /*
-             * Remove duplicates to prevent SQL errors.
-             */
+            // Remove duplicates to prevent SQL errors.
             if (isset($data['features'])) {
                 $ids = [];
                 foreach ($data['features'] as $idx => $feature) {

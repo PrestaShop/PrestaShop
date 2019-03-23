@@ -384,7 +384,7 @@ class AdminCategoriesControllerCore extends AdminController
         $time = time();
         $kpis = array();
 
-        /* The data generation is located in AdminStatsControllerCore */
+        // The data generation is located in AdminStatsControllerCore
 
         $helper = new HelperKpi();
         $helper->id = 'box-disabled-categories';
@@ -873,7 +873,7 @@ class AdminCategoriesControllerCore extends AdminController
 
     public function processFatherlessProducts($id_parent)
     {
-        /* Delete or link products which were not in others categories */
+        // Delete or link products which were not in others categories
         $fatherless_products = Db::getInstance()->executeS('
             SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
@@ -999,7 +999,7 @@ class AdminCategoriesControllerCore extends AdminController
         $category = new Category($id_category_to_move);
         if (Validate::isLoadedObject($category)) {
             if (isset($position) && $category->updatePosition($way, $position)) {
-                /* Position '0' was not found in given positions so try to reorder parent category*/
+                // Position '0' was not found in given positions so try to reorder parent category
                 if (!$found_first) {
                     $category->cleanPositions((int) $category->id_parent);
                 }

@@ -329,7 +329,7 @@ class Reader implements ReaderInterface
         if (isset($numbersData->otherNumberingSystems)) {
             $numberingSystems = [];
             foreach ($numbersData->otherNumberingSystems->children() as $system) {
-                /* @var $system SimplexmlElement */
+                // @var $system SimplexmlElement
                 $numberingSystems[$system->getName()] = (string) $system;
             }
             $localeData->setNumberingSystems($numberingSystems);

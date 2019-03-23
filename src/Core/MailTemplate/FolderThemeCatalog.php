@@ -191,7 +191,7 @@ class FolderThemeCatalog implements ThemeCatalogInterface
         $moduleFinder = new Finder();
         $moduleFinder->directories()->in($moduleLayoutsFolder)->depth(0);
 
-        /* @var SplFileInfo $fileInfo */
+        // @var SplFileInfo $fileInfo
         foreach ($moduleFinder as $moduleFileInfo) {
             $moduleName = $moduleFileInfo->getFilename();
             $moduleFolder = implode(DIRECTORY_SEPARATOR, [$moduleLayoutsFolder, $moduleName]);

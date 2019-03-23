@@ -38,7 +38,7 @@ class AdminShopControllerCore extends AdminController
 
         $this->id_shop_group = (int) Tools::getValue('id_shop_group');
 
-        /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
+        // if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs
         if ($this->id_shop = (int) Tools::getValue('shop_id')) {
             $_GET['id_shop'] = $this->id_shop;
         }
@@ -651,7 +651,7 @@ class AdminShopControllerCore extends AdminController
             $_POST['id_category'] = (int) Tools::getValue('id_category_default');
         }
 
-        /* Checking fields validity */
+        // Checking fields validity
         $this->validateRules();
 
         if (!count($this->errors)) {

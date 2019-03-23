@@ -425,7 +425,7 @@ class DbPDOCore extends Db
             }
         }
 
-        /* MySQL >= 5.6 */
+        // MySQL >= 5.6
         $sql = 'SHOW ENGINES';
         $result = $this->link->query($sql);
         while ($row = $result->fetch()) {

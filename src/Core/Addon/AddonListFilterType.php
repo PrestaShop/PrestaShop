@@ -28,10 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Addon;
 
 class AddonListFilterType
 {
-    /* Bitwise operator */
+    // Bitwise operator
     const THEME = 1;
     const MODULE = 2;
     const SERVICE = 4;
 
-    const ALL = 7; /* = 1 | 2 | 4 */
+    const ALL = 7; // = 1 | 2 | 4
 }

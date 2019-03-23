@@ -28,9 +28,7 @@
  * @deprecated 1.5.0.1
  */
 define('_CUSTOMIZE_FILE_', 0);
-/*
- * @deprecated 1.5.0.1
- */
+// @deprecated 1.5.0.1
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -319,7 +317,7 @@ class ProductCore extends ObjectModel
         'multilang' => true,
         'multilang_shop' => true,
         'fields' => array(
-            /* Classic fields */
+            // Classic fields
             'id_shop_default' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_manufacturer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_supplier' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
@@ -352,7 +350,7 @@ class ProductCore extends ObjectModel
                 'size' => 255,
             ),
 
-            /* Shop fields */
+            // Shop fields
             'id_category_default' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
             'id_tax_rules_group' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
             'on_sale' => array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
@@ -385,7 +383,7 @@ class ProductCore extends ObjectModel
             'date_upd' => array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'pack_stock_type' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 
-            /* Lang fields */
+            // Lang fields
             'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
             'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -1421,16 +1419,16 @@ class ProductCore extends ObjectModel
             ($all_shops ? ' GROUP BY pac.id_attribute, pac.id_product_attribute ' : '')
         );
 
-        /* If something's wrong */
+        // If something's wrong
         if (!$result || empty($result)) {
             return false;
         }
-        /* Product attributes simulation */
+        // Product attributes simulation
         $product_attributes = array();
         foreach ($result as $product_attribute) {
             $product_attributes[$product_attribute['id_product_attribute']][] = $product_attribute['id_attribute'];
         }
-        /* Checking product's attribute existence */
+        // Checking product's attribute existence
         foreach ($product_attributes as $key => $product_attribute) {
             if (count($product_attribute) == count($attributes_list)) {
                 $diff = false;
@@ -4616,7 +4614,7 @@ class ProductCore extends ObjectModel
             return true;
         }
         foreach ($customizations['fields'] as $customization_field) {
-            /* The new datas concern the new product */
+            // The new datas concern the new product
             $customization_field['id_product'] = (int) $product_id;
             $old_customization_field_id = (int) $customization_field['id_customization_field'];
 
@@ -5039,9 +5037,7 @@ class ProductCore extends ObjectModel
         return Product::getAttachmentsStatic($id_lang, $this->id);
     }
 
-    /*
-    ** Customization management
-    */
+    // Customization management
 
     public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null, $id_customization = null)
     {
@@ -5133,7 +5129,7 @@ class ProductCore extends ObjectModel
                 $customization_quantity_refunded = 0;
                 $customization_quantity_returned = 0;
 
-                /* Compatibility */
+                // Compatibility
                 $product_id = isset($product_update['id_product']) ? (int) $product_update['id_product'] : (int) $product_update['product_id'];
                 $product_attribute_id = isset($product_update['id_product_attribute']) ? (int) $product_update['id_product_attribute'] : (int) $product_update['product_attribute_id'];
                 $id_address_delivery = (int) $product_update['id_address_delivery'];
@@ -5173,9 +5169,7 @@ class ProductCore extends ObjectModel
         }
     }
 
-    /*
-    ** Add customization price for a single product
-    */
+    // Add customization price for a single product
     public static function addProductCustomizationPrice(&$product, &$customized_datas)
     {
         if (!$customized_datas) {
@@ -5187,9 +5181,7 @@ class ProductCore extends ObjectModel
         $product = $products[0];
     }
 
-    /*
-    ** Customization fields' label management
-    */
+    // Customization fields' label management
 
     protected function _checkLabelField($field, $value)
     {
@@ -5211,7 +5203,7 @@ class ProductCore extends ObjectModel
             Product::CUSTOMIZE_TEXTFIELD => (int) $this->text_fields,
         );
 
-        /* Get customization field ids */
+        // Get customization field ids
         if ((
             $result = Db::getInstance()->executeS(
             'SELECT `id_customization_field`, `type`
@@ -5239,7 +5231,7 @@ class ProductCore extends ObjectModel
         $extra_file = count($customization_fields[Product::CUSTOMIZE_FILE]) - $max[Product::CUSTOMIZE_FILE];
         $extra_text = count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $max[Product::CUSTOMIZE_TEXTFIELD];
 
-        /* If too much inside the database, deletion */
+        // If too much inside the database, deletion
         if ($extra_file > 0 && count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file >= 0 &&
         (!Db::getInstance()->execute(
             'DELETE `' . _DB_PREFIX_ . 'customization_field`,`' . _DB_PREFIX_ . 'customization_field_lang`
@@ -5328,12 +5320,12 @@ class ProductCore extends ObjectModel
     {
         $has_required_fields = 0;
         foreach ($_POST as $field => $value) {
-            /* Label update */
+            // Label update
             if (strncmp($field, 'label_', 6) == 0) {
                 if (!$tmp = $this->_checkLabelField($field, $value)) {
                     return false;
                 }
-                /* Multilingual label name update */
+                // Multilingual label name update
                 if (Shop::isFeatureActive()) {
                     foreach (Shop::getContextListShopID() as $id_shop) {
                         if (!Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customization_field_lang`
@@ -5351,7 +5343,7 @@ class ProductCore extends ObjectModel
 
                 $is_required = isset($_POST['require_' . (int) $tmp[1] . '_' . (int) $tmp[2]]) ? 1 : 0;
                 $has_required_fields |= $is_required;
-                /* Require option update */
+                // Require option update
                 if (!Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'customization_field`
                     SET `required` = ' . (int) $is_required . '
@@ -6665,7 +6657,7 @@ class ProductCore extends ObjectModel
         $collection_download = new PrestaShopCollection('ProductDownload');
         $collection_download->where('id_product', '=', $this->id);
         foreach ($collection_download as $product_download) {
-            /* @var ProductDownload $product_download */
+            // @var ProductDownload $product_download
             $result &= $product_download->delete($product_download->checkFile());
         }
 
@@ -6810,9 +6802,7 @@ class ProductCore extends ObjectModel
         return $type_information[$this->getType()];
     }
 
-    /*
-        Create the link rewrite if not exists or invalid on product creation
-    */
+    // Create the link rewrite if not exists or invalid on product creation
     public function modifierWsLinkRewrite()
     {
         foreach ($this->name as $id_lang => $name) {

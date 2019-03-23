@@ -199,7 +199,7 @@ final class CategoryImportHandler extends AbstractImportHandler
     public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
         if (!$runtimeConfig->shouldValidateData() && $runtimeConfig->isFinished()) {
-            /* Import has finished, we can regenerate the categories nested tree */
+            // Import has finished, we can regenerate the categories nested tree
             Category::regenerateEntireNtree();
         }
 
@@ -430,7 +430,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                 throw new InvalidDataRowException();
             }
 
-            /* No automatic nTree regeneration for import */
+            // No automatic nTree regeneration for import
             $category->doNotRegenerateNTree = true;
 
             // If id category AND id category already in base, trying to update

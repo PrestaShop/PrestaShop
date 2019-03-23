@@ -60,7 +60,7 @@ class ContactCore extends ObjectModel
                 'validate' => 'isBool',
             ),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array(
                 'type' => self::TYPE_STRING,
                 'lang' => true,

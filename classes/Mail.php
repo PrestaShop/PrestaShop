@@ -287,7 +287,7 @@ class MailCore extends ObjectModel
             return false;
         }
 
-        /* Construct multiple recipients list if needed */
+        // Construct multiple recipients list if needed
         $message = \Swift_Message::newInstance();
         if (is_array($to) && isset($to)) {
             foreach ($to as $key => $addr) {
@@ -311,7 +311,7 @@ class MailCore extends ObjectModel
             }
             $toPlugin = $to[0];
         } else {
-            /* Simple recipient, one address */
+            // Simple recipient, one address
             $toPlugin = $to;
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
             $message->addTo(self::toPunycode($to), $toName);
@@ -333,7 +333,7 @@ class MailCore extends ObjectModel
         }
 
         try {
-            /* Connect with the appropriate configuration */
+            // Connect with the appropriate configuration
             if ($configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
                 if (empty($configuration['PS_MAIL_SERVER']) || empty($configuration['PS_MAIL_SMTP_PORT'])) {
                     self::dieOrLog($die, 'Error: invalid SMTP server or SMTP port');
@@ -357,7 +357,7 @@ class MailCore extends ObjectModel
             }
 
             $swift = \Swift_Mailer::newInstance($connection);
-            /* Get templates content */
+            // Get templates content
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
             $isoArray = [];
@@ -458,13 +458,13 @@ class MailCore extends ObjectModel
                 true
             );
 
-            /* Create mail and attach differents parts */
+            // Create mail and attach differents parts
             $subject = '[' . $shop->name . '] ' . $subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
 
-            /* Set Message-ID - getmypid() is blocked on some hosting */
+            // Set Message-ID - getmypid() is blocked on some hosting
             $message->setId(Mail::generateId());
 
             if (!($replyTo && Validate::isEmail($replyTo))) {
@@ -490,7 +490,7 @@ class MailCore extends ObjectModel
                 }
             }
             ShopUrl::cacheMainDomainForShop((int) $idShop);
-            /* don't attach the logo as */
+            // don't attach the logo as
             if (isset($logo)) {
                 $templateVars['{shop_logo}'] = $message->embed(\Swift_Image::fromPath($logo));
             }
@@ -576,7 +576,7 @@ class MailCore extends ObjectModel
                     }
                 }
             }
-            /* Send mail */
+            // Send mail
             $message->setFrom(array($from => $fromName));
 
             // Hook to alter Swift Message before sending mail
@@ -606,7 +606,7 @@ class MailCore extends ObjectModel
                     $recipientsBcc = [];
                 }
                 foreach (array_merge($recipientsTo, $recipientsCc, $recipientsBcc) as $email => $recipient_name) {
-                    /* @var Swift_Address $recipient */
+                    // @var Swift_Address $recipient
                     $mail->id = null;
                     $mail->recipient = Tools::substr($email, 0, 255);
                     $mail->add();
@@ -781,7 +781,7 @@ class MailCore extends ObjectModel
         );
     }
 
-    /* Rewrite of Swift_Message::generateId() without getmypid() */
+    // Rewrite of Swift_Message::generateId() without getmypid()
     protected static function generateId($idstring = null)
     {
         $midparams = [

@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Addon;
 
 class AddonListFilterOrigin
 {
-    /* Bitwise operators */
+    // Bitwise operators
     const DISK = 1;
     const ADDONS_MUST_HAVE = 2;
     const ADDONS_SERVICE = 4;

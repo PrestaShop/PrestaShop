@@ -605,7 +605,7 @@ class AdminImagesControllerCore extends AdminController
         return $errors;
     }
 
-    /* Hook watermark optimization */
+    // Hook watermark optimization
     protected function _regenerateWatermark($dir, $type = null)
     {
         $result = Db::getInstance()->executeS('

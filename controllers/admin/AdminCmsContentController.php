@@ -41,7 +41,7 @@ class AdminCmsContentControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        /* Get current category */
+        // Get current category
         $id_cms_category = (int) Tools::getValue('id_cms_category', Tools::getValue('id_cms_category_parent', 1));
         self::$category = new CMSCategory($id_cms_category);
         if (!Validate::isLoadedObject(self::$category)) {

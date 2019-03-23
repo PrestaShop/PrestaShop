@@ -24,9 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/*
- * This is the bootstrap file to setup required dependencies for Behat tests
- */
+// This is the bootstrap file to setup required dependencies for Behat tests
 
 $rootDirectory = __DIR__ . '/../../../';
 

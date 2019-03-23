@@ -64,7 +64,7 @@ class OrderReturnCore extends ObjectModel
 
     public function addReturnDetail($order_detail_list, $product_qty_list, $customization_ids, $customization_qty_input)
     {
-        /* Classic product return */
+        // Classic product return
         if ($order_detail_list) {
             foreach ($order_detail_list as $key => $order_detail) {
                 if ($qty = (int) $product_qty_list[$key]) {
@@ -72,7 +72,7 @@ class OrderReturnCore extends ObjectModel
                 }
             }
         }
-        /* Customized product return */
+        // Customized product return
         if ($customization_ids) {
             foreach ($customization_ids as $order_detail_id => $customizations) {
                 foreach ($customizations as $customization_id) {
@@ -91,7 +91,7 @@ class OrderReturnCore extends ObjectModel
             die(Tools::displayError());
         }
         $products = $order->getProducts();
-        /* Products already returned */
+        // Products already returned
         $order_return = OrderReturn::getOrdersReturn($order->id_customer, $order->id, true);
         foreach ($order_return as $or) {
             $order_return_products = OrderReturn::getOrdersReturnProducts($or['id_order_return'], $order);
@@ -99,7 +99,7 @@ class OrderReturnCore extends ObjectModel
                 $products[$key]['product_quantity'] -= (int) $orp['product_quantity'];
             }
         }
-        /* Quantity check */
+        // Quantity check
         if ($order_detail_list) {
             foreach (array_keys($order_detail_list) as $key) {
                 if ($qty = (int) $product_qty_list[$key]) {
@@ -109,7 +109,7 @@ class OrderReturnCore extends ObjectModel
                 }
             }
         }
-        /* Customization quantity check */
+        // Customization quantity check
         if ($customization_ids) {
             $ordered_customizations = Customization::getOrderedCustomizations((int) $order->id_cart);
             foreach ($customization_ids as $customizations) {

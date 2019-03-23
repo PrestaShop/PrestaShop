@@ -91,7 +91,7 @@ class CountryCore extends ObjectModel
             'zip_code_format' => array('type' => self::TYPE_STRING, 'validate' => 'isZipCodeFormat'),
             'display_tax_label' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
         ),
         'associations' => array(
@@ -153,7 +153,7 @@ class CountryCore extends ObjectModel
         if ($listStates) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'state` ORDER BY `name` ASC');
             foreach ($result as $row) {
-                if (isset($countries[$row['id_country']]) && $row['active'] == 1) { /* Does not keep the state if its country has been disabled and not selected */
+                if (isset($countries[$row['id_country']]) && $row['active'] == 1) { // Does not keep the state if its country has been disabled and not selected
                     $countries[$row['id_country']]['states'][] = $row;
                 }
             }

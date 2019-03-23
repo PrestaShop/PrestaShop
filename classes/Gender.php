@@ -46,7 +46,7 @@ class GenderCore extends ObjectModel
         'fields' => array(
             'type' => array('type' => self::TYPE_INT, 'required' => true),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
         ),
     );

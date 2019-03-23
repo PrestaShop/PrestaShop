@@ -90,7 +90,7 @@ class OrderStateCore extends ObjectModel
             'pdf_invoice' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
             'template' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
         ),
@@ -104,11 +104,11 @@ class OrderStateCore extends ObjectModel
         ),
     );
 
-    const FLAG_NO_HIDDEN = 1;  /* 00001 */
-    const FLAG_LOGABLE = 2;  /* 00010 */
-    const FLAG_DELIVERY = 4;  /* 00100 */
-    const FLAG_SHIPPED = 8;  /* 01000 */
-    const FLAG_PAID = 16; /* 10000 */
+    const FLAG_NO_HIDDEN = 1;  // 00001
+    const FLAG_LOGABLE = 2;  // 00010
+    const FLAG_DELIVERY = 4;  // 00100
+    const FLAG_SHIPPED = 8;  // 01000
+    const FLAG_PAID = 16; // 10000
 
     /**
      * Get all available order statuses.

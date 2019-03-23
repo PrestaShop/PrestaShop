@@ -196,7 +196,7 @@ class TreeToolbarCore implements ITreeToolbarCore
     public function render()
     {
         foreach ($this->getActions() as $action) {
-            /* @var ITreeToolbarButton $action */
+            // @var ITreeToolbarButton $action
             $action->setAttribute('data', $this->getData());
         }
 

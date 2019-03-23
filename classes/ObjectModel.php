@@ -960,7 +960,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $html = (isset($field['html'])) ? $field['html'] : false;
             }
 
-            /* Check fields validity */
+            // Check fields validity
             if (!Validate::isTableOrIdentifier($field_name)) {
                 throw new PrestaShopException('identifier is not table or identifier : ' . $field_name);
             }
@@ -1822,7 +1822,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if ($force_delete || !$this->hasMultishopEntries()) {
-            /* Deleting object images and thumbnails (cache) */
+            // Deleting object images and thumbnails (cache)
             if ($this->image_dir) {
                 if (file_exists($this->image_dir . $this->id . '.' . $this->image_format)
                     && !unlink($this->image_dir . $this->id . '.' . $this->image_format)) {

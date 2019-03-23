@@ -449,9 +449,9 @@ namespace PrestaShopBundle\Install {
                 foreach ($sqlContent as $query) {
                     $query = trim($query);
                     if (!empty($query)) {
-                        /* If php code have to be executed */
+                        // If php code have to be executed
                         if (strpos($query, '/* PHP:') !== false) {
-                            /* Parsing php code */
+                            // Parsing php code
                             $pos = strpos($query, '/* PHP:') + strlen('/* PHP:');
                             $phpString = substr($query, $pos, strlen($query) - $pos - strlen(' */;'));
                             $php = explode('::', $phpString);
@@ -470,7 +470,7 @@ namespace PrestaShopBundle\Install {
                             }
 
                             $phpRes = null;
-                            /* Call a simple function */
+                            // Call a simple function
                             if (strpos($phpString, '::') === false) {
                                 $func_name = str_replace($pattern[0], '', $php[0]);
                                 if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_ . strtolower($func_name) . '.php')) {
@@ -480,7 +480,7 @@ namespace PrestaShopBundle\Install {
                                     $phpRes = call_user_func_array($func_name, $parameters);
                                 }
                             } else {
-                                /* Or an object method, not supported */
+                                // Or an object method, not supported
                                 $this->logWarning('[ERROR] ' . $version . ' PHP - Object Method call is forbidden (' . $php[0] . '::' . str_replace($pattern[0], '', $php[1]) . ')', 42, array(), true);
                             }
                             if ((is_array($phpRes) && !empty($phpRes['error'])) || $phpRes === false) {

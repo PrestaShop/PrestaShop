@@ -340,7 +340,5 @@ class ApiClient
         return $this;
     }
 
-    /*
-     * END OF REQUEST PARAMETER SETTERS.
-     */
+    // END OF REQUEST PARAMETER SETTERS.
 }

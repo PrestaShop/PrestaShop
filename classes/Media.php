@@ -773,7 +773,7 @@ class MediaCore
 
     public static function deferInlineScripts($output)
     {
-        /* Try to enqueue in js_files inline scripts with src but without conditionnal comments */
+        // Try to enqueue in js_files inline scripts with src but without conditionnal comments
         $dom = new DOMDocument();
         libxml_use_internal_errors(true);
         @$dom->loadHTML(($output));
@@ -847,11 +847,11 @@ class MediaCore
             $inline = trim($matches[2]);
         }
 
-        /* This is an inline script, add its content to inline scripts stack then remove it from content */
+        // This is an inline script, add its content to inline scripts stack then remove it from content
         if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && !preg_match('/' . Media::$pattern_keepinline . '/', $original) && Media::$inline_script[] = $inline) {
             return '';
         }
-        /* This is an external script, if it already belongs to js_files then remove it from content */
+        // This is an external script, if it already belongs to js_files then remove it from content
         preg_match('/src\s*=\s*["\']?([^"\']*)[^>]/ims', $original, $results);
         if (array_key_exists(1, $results)) {
             if (substr($results[1], 0, 2) == '//') {
@@ -864,7 +864,7 @@ class MediaCore
             }
         }
 
-        /* return original string because no match was found */
+        // return original string because no match was found
         return "\n" . $original;
     }
 }

@@ -49,7 +49,7 @@ class FeatureValueCore extends ObjectModel
             'id_feature' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'custom' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-            /* Lang fields */
+            // Lang fields
             'value' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
         ),
     );
@@ -242,7 +242,7 @@ class FeatureValueCore extends ObjectModel
      */
     public function delete()
     {
-        /* Also delete related products */
+        // Also delete related products
         Db::getInstance()->execute(
             '
 			DELETE FROM `' . _DB_PREFIX_ . 'feature_product`

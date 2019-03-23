@@ -49,7 +49,7 @@ class AttributeController extends FrameworkBundleAdminController
         $dataGroupAttributes = [];
         $data = [];
         foreach ($attributes as $attribute) {
-            /* Construct attribute group selector. Ex : Color : All */
+            // Construct attribute group selector. Ex : Color : All
             $dataGroupAttributes[$attribute['id_attribute_group']] = [
                 'value' => 'group-' . $attribute['id_attribute_group'],
                 'label' => $attribute['public_name'] . ' : ' . $this->trans('All', 'Admin.Global'),

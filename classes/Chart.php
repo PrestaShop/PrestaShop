@@ -30,7 +30,7 @@ class ChartCore
     protected $width = 600;
     protected $height = 300;
 
-    /* Time mode */
+    // Time mode
     protected $timeMode = false;
     protected $from;
     protected $to;
@@ -113,7 +113,7 @@ class ChartCore
             $options = 'xaxis:{mode:"time",timeformat:\'' . addslashes($this->format) . '\',min:' . $this->from . '000,max:' . $this->to . '000}';
             if ($this->granularity == 'd') {
                 foreach ($this->curves as $curve) {
-                    /* @var Curve $curve */
+                    // @var Curve $curve
                     for ($i = $this->from; $i <= $this->to; $i = strtotime('+1 day', $i)) {
                         if (!$curve->getPoint($i)) {
                             $curve->setPoint($i, 0);

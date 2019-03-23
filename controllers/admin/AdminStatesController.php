@@ -230,7 +230,7 @@ class AdminStatesControllerCore extends AdminController
             }
         }
 
-        /* Delete state */
+        // Delete state
         if (Tools::isSubmit('delete' . $this->table)) {
             if ($this->access('delete')) {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {

@@ -402,7 +402,7 @@ class Install extends AbstractInstall
             }
         }
 
-        /* Instantiate cookie */
+        // Instantiate cookie
         $cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int) Configuration::get('PS_COOKIE_LIFETIME_BO') : (int) Configuration::get('PS_COOKIE_LIFETIME_FO');
         if ($cookie_lifetime > 0) {
             $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
@@ -800,7 +800,7 @@ class Install extends AbstractInstall
                     Configuration::updateGlobalValue($states_default[$key], (int) $states[$key]['id_order_state']);
                 }
             }
-            /* deprecated order state */
+            // deprecated order state
             Configuration::updateGlobalValue('PS_OS_OUTOFSTOCK_PAID', (int) Configuration::get('PS_OS_OUTOFSTOCK'));
         }
 
