@@ -146,8 +146,8 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('name' === $name) {
                 $qb
-                    ->andWhere("m.name = :$name")
-                    ->setParameter($name, $value)
+                    ->andWhere("m.name LIKE :$name")
+                    ->setParameter($name, '%' . $value . '%')
                 ;
 
                 continue;
