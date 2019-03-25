@@ -60,7 +60,7 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function getId()
     {
-        return $this->contextEmployee->id;
+        return (int) $this->contextEmployee->id;
     }
 
     /**
@@ -68,6 +68,6 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function getLanguageId()
     {
-        return $this->contextEmployee->id_lang;
+        return (int) $this->contextEmployee->id_lang;
     }
 }

@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeStatu
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -272,11 +273,6 @@ class EmployeeController extends FrameworkBundleAdminController
      * Show Employee edit page.
      *
      * @DemoRestricted(redirectRoute="admin_employees_index")
-     * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_employees_index"
-     * )
      *
      * @param int $employeeId
      * @param Request $request
@@ -285,6 +281,23 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function editAction($employeeId, Request $request)
     {
+        $contextEmployeeProvider = $this->get('prestashop.adapter.data_provider.employee');
+
+        // If employee is editing his own profile - he doesn't need to have access to the edit form.
+        if ($contextEmployeeProvider->getId() != $employeeId) {
+            if (!$this->isGranted(PageVoter::UPDATE, $request->get('_legacy_controller'))) {
+                $this->addFlash(
+                    'error',
+                    $this->trans(
+                        'You do not have permission to update this.',
+                        'Admin.Notifications.Error'
+                    )
+                );
+
+                return $this->redirectToRoute('admin_employees_index');
+            }
+        }
+
         $formAccessChecker = $this->get('prestashop.adapter.employee.form_access_checker');
 
         if (!$formAccessChecker->canAccessEditFormFor($employeeId)) {
@@ -299,26 +312,32 @@ class EmployeeController extends FrameworkBundleAdminController
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
         $canAccessAddonsConnect = $formAccessChecker->canAccessAddonsConnect();
 
-        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
-            'is_restricted_access' => $isRestrictedAccess,
-            'is_for_editing' => true,
-            'show_addons_connect_button' => $canAccessAddonsConnect,
-        ]);
-
         try {
+            $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
+                'is_restricted_access' => $isRestrictedAccess,
+                'is_for_editing' => true,
+                'show_addons_connect_button' => $canAccessAddonsConnect,
+            ]);
+
             $employeeForm->handleRequest($request);
             $result = $this->getEmployeeFormHandler()->handleFor((int) $employeeId, $employeeForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_employees_index');
+                return $this->redirectToRoute('admin_employees_edit', [
+                    'employeeId' => $result->getIdentifiableObjectId(),
+                ]);
             }
+
+            $editableEmployee = $this->getQueryBus()->handle(new GetEmployeeForEditing((int) $employeeId));
         } catch (EmployeeException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-        }
 
-        $editableEmployee = $this->getQueryBus()->handle(new GetEmployeeForEditing((int) $employeeId));
+            if ($e instanceof EmployeeNotFoundException) {
+                return $this->redirectToRoute('admin_employees_index');
+            }
+        }
 
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
