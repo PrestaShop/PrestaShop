@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\CmsCategoryName;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -94,12 +93,11 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        /** @var CmsCategoryName $cmsCategoryName */
         $cmsCategoryName = $this->queryBus->handle(new GetCmsPageCategoryNameForListing());
 
         return $this->trans(
             'Pages in category "%name%"',
-            array('%name%' => $cmsCategoryName->getName()),
+            array('%name%' => $cmsCategoryName),
             'Admin.Design.Feature'
         );
     }
