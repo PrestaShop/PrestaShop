@@ -140,7 +140,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'meta_title',
+                    'field' => 'position',
                 ])
             )
             ->add((new ToggleColumn('active'))
