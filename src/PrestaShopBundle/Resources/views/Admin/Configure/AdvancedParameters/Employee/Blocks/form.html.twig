@@ -96,11 +96,13 @@
                 }) }}
 
                 <div class="card card-body js-change-password-block d-none">
+                  {# Current password input #}
                   {{ ps.form_group_row(employeeForm.change_password.old_password, oldPasswordVars, {
                     label: 'Current password'|trans({}, 'messages'),
                     required: true,
                   }) }}
 
+                  {# New password first input #}
                   <div class="form-group row">
                       {{ ps.label_with_help('New password'|trans({}, 'messages'), passwordHelpMessage, '', employeeForm.change_password.new_password.children.first.vars.id, true) }}
                     <div class="col-sm">
