@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "x$TRAVIS_BUILD_DIR" == "x" ]; then
+  export TRAVIS_BUILD_DIR=$(cd $(dirname "$0")/../ && pwd);
+fi
+
 bash travis-scripts/run-selenium-tests;
 SELENIUM=$?
 
