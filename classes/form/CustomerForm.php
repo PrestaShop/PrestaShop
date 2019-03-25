@@ -77,7 +77,7 @@ class CustomerFormCore extends AbstractForm
     {
         $params = get_object_vars($customer);
         $params['id_customer'] = $customer->id;
-        $params['birthday'] = $customer->birthday === '0000-00-00' ? null : Tools::displayDate($customer->birthday);
+        $params['birthday'] = $customer->birthday === '0000-00-00' ? null : $customer->birthday;
 
         return $this->fillWith($params);
     }
