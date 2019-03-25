@@ -24,22 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler;
 
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryId;
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler\GetCmsCategoryIdHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
-final class GetCmsCategoryIdHandler extends AbstractCmsPageHandler implements GetCmsCategoryIdHandlerInterface
+interface GetCmsCategoryIdHandlerForRedirectionInterface
 {
     /**
-     * {@inheritdoc}
+     * @param GetCmsCategoryIdForRedirection $query
+     *
+     * @return CmsPageCategoryId
      */
-    public function handle(GetCmsCategoryId $query)
-    {
-        $cms = $this->getCmsPageIfExistsById($query->getCmsPageId()->getValue());
-
-        return new CmsPageCategoryId((int) $cms->id_cms_category);
-    }
+    public function handle(GetCmsCategoryIdForRedirection $query);
 }

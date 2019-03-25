@@ -16,3 +16,12 @@ services:
 
   prestashop.adapter.cms_page.command_handler.toggle_cms_page_status:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\ToggleCmsPageStatusHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand
+
+  prestashop.adapter.cms_page.query_handler.get_cms_category_id_for_redirection:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler\GetCmsCategoryIdForRedirectionHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection
