@@ -77,6 +77,7 @@ class ChangePasswordType extends AbstractType
             ])
             ->add('generated_password', TextType::class, [
                 'label' => false,
+                'disabled' => true,
             ])
             ->add('generate_password_button', ButtonType::class)
             ->add('cancel_button', ButtonType::class)
