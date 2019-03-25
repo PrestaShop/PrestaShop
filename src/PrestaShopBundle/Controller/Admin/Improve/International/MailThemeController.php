@@ -26,9 +26,15 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
+use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Improve\International\Localization\GenerateMailsType;
+use PrestaShopBundle\Form\Admin\Improve\International\MailTemplate\GenerateMailsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,7 +52,8 @@ class MailThemeController extends FrameworkBundleAdminController
     public function generateMailsFormAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-        $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
+        $defaultMailTheme = $this->configuration->get('PS_MAIL_THEME');
+        $generateThemeMailsForm = $this->createForm(GenerateMailsType::class, ['theme' => $defaultMailTheme]);
 
         return $this->render('@PrestaShop/Admin/Improve/International/MailTheme/generate_mails_form.html.twig', [
             'layoutHeaderToolbarBtn' => [],
@@ -69,16 +76,37 @@ class MailThemeController extends FrameworkBundleAdminController
      */
     public function generateMailsAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
+        $generateThemeMailsForm->handleRequest($request);
 
-        return $this->render('@PrestaShop/Admin/Improve/International/MailTheme/generate_mails_form.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Theme Mails Generation', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
-            'generateMailsForm' => $generateThemeMailsForm->createView(),
-        ]);
+        if ($generateThemeMailsForm->isSubmitted()) {
+            $data = $generateThemeMailsForm->getData();
+
+            try {
+                /** @var GenerateMailTemplatesService $generator */
+                $generator = $this->get('prestashop.service.generate_mail_templates');
+                $generator->generateMailTemplates($data['theme'], $data['language'], $data['override']);
+
+                $flashMessage = 'Successfully generated mail templates for theme %s with locale %s';
+                if ($data['override']) {
+                    $flashMessage = 'Successfully overrode mail templates for theme %s with locale %s';
+                }
+                $this->addFlash(
+                    'success',
+                    $this->trans(
+                        sprintf(
+                            $flashMessage,
+                            $data['theme'],
+                            $data['language']
+                        ),
+                        'Admin.Notifications.Success'
+                    )
+                );
+            } catch (CoreException $e) {
+                $this->flashErrors([$e->getMessage()]);
+            }
+        }
+
+        return $this->redirectToRoute('admin_mail_theme_generate_form');
     }
 }
