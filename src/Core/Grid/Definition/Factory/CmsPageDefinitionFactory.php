@@ -282,34 +282,34 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
     }
-//
-//    /**
-//     * {@inheritdoc}
-//     */
-//    protected function getBulkActions()
-//    {
-//        return (new BulkActionCollection())
-//            ->add((new SubmitBulkAction('enable_selection'))
-//                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-//                ->setOptions([
-//                    'submit_route' => 'admin_cms_pages_bulk_status_enable',
-//                ])
-//            )
-//            ->add((new SubmitBulkAction('disable_selection'))
-//                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-//                ->setOptions([
-//                    'submit_route' => 'admin_cms_pages_bulk_status_disable',
-//                ])
-//            )
-//            ->add((new SubmitBulkAction('delete_bulk'))
-//                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-//                ->setOptions([
-//                    'submit_route' => 'admin_cms_pages_delete_bulk',
-//                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-//                ])
-//            )
-//            ;
-//    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('enable_selection'))
+                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_cms_pages_bulk_enable_status',
+                ])
+            )
+            ->add((new SubmitBulkAction('disable_selection'))
+                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_cms_pages_bulk_disable_status',
+                ])
+            )
+            ->add((new SubmitBulkAction('delete_bulk'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_cms_pages_bulk_delete',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                ])
+            )
+            ;
+    }
 
     /**
      *
