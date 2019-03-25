@@ -814,3 +814,12 @@ services:
             - '@=service("prestashop.adapter.admin.data_provider.addons").getAddonsEmail()["username_addons"]'
         tags:
             - { name: form.type }
+
+    form.type.localization.generate_mails:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\GenerateMailsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
+        tags:
+            - { name: form.type }

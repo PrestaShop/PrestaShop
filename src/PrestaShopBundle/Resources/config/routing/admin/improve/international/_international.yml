@@ -21,3 +21,7 @@ _currency:
 _tax:
     resource: "tax.yml"
     prefix: /taxes/
+
+_mail_theme:
+  resource: "mail_theme.yml"
+  prefix: /mail_theme/
