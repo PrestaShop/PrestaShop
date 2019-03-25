@@ -329,14 +329,14 @@ class EmployeeController extends FrameworkBundleAdminController
                     'employeeId' => $result->getIdentifiableObjectId(),
                 ]);
             }
-
-            $editableEmployee = $this->getQueryBus()->handle(new GetEmployeeForEditing((int) $employeeId));
         } catch (EmployeeException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
 
-            if ($e instanceof EmployeeNotFoundException) {
-                return $this->redirectToRoute('admin_employees_index');
-            }
+        try {
+            $editableEmployee = $this->getQueryBus()->handle(new GetEmployeeForEditing((int) $employeeId));
+        } catch (EmployeeNotFoundException $e) {
+            return $this->redirectToRoute('admin_employees_index');
         }
 
         $templateVars = [

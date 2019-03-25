@@ -232,16 +232,12 @@
         {% set isRequired = extraVars.required %}
       {% endif %}
 
-      {% if extraVars.help is defined and extraVars.help is not empty %}
-        {{ self.label_with_help(extraVars.label, extraVars.help, '', form.vars.id, isRequired) }}
-      {% else %}
-        <label for="{{ form.vars.id }}" class="form-control-label">
-          {% if isRequired %}
-            <span class="text-danger">*</span>
-          {% endif %}
-          {{ extraVars.label }}
-        </label>
-      {% endif %}
+      <label for="{{ form.vars.id }}" class="form-control-label">
+        {% if isRequired %}
+          <span class="text-danger">*</span>
+        {% endif %}
+        {{ extraVars.label }}
+      </label>
     {% endif %}
 
     <div class="col-sm">

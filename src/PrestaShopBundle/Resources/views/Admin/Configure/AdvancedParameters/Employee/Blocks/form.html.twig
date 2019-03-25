@@ -101,12 +101,12 @@
                     required: true,
                   }) }}
 
-                  {# New password first input #}
-                  {{ ps.form_group_row(employeeForm.change_password.new_password.children.first, employeeForm.change_password.new_password.first.vars, {
-                    label: 'New password'|trans({}, 'messages'),
-                    help: passwordHelpMessage,
-                    required: true,
-                  }) }}
+                  <div class="form-group row">
+                      {{ ps.label_with_help('New password'|trans({}, 'messages'), passwordHelpMessage, '', employeeForm.change_password.new_password.children.first.vars.id, true) }}
+                    <div class="col-sm">
+                      {{ ps.form_widget_with_error(employeeForm.change_password.new_password.children.first, employeeForm.change_password.new_password.children.first.vars) }}
+                    </div>
+                  </div>
 
                   {# New password second input (confirmation) #}
                   {# Empty help text needed to render the text container for validation feedback messages #}
@@ -241,11 +241,9 @@
     </div>
     <div class="card-footer">
       <a href="{{ path('admin_employees_index') }}" class="btn btn-outline-secondary">
-        <i class="material-icons">cancel</i>
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
       <button class="btn btn-primary float-right">
-        <i class="material-icons">save</i>
         {{ 'Save'|trans({}, 'Admin.Actions') }}
       </button>
     </div>
