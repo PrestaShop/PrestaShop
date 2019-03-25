@@ -91,9 +91,6 @@ services:
     prestashop.core.grid.definition.factory.language:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'language', 'action': 'index'})"
-            - "@=service('router').generate('admin_languages_index')"
         public: true
 
     prestashop.core.grid.definition.factory.currency:
@@ -127,12 +124,12 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
-    prestashop.core.grid.definition.factory.manufacturer_grid_definition_factory:
+    prestashop.core.grid.definition.factory.manufacturer:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
-    prestashop.core.grid.definition.factory.manufacturer_address_grid_definition_factory:
+    prestashop.core.grid.definition.factory.manufacturer_address:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true

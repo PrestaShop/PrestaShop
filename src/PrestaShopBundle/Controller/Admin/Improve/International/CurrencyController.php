@@ -40,11 +40,13 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,19 +91,15 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.currency');
-        $definitionFactory = $definitionFactory->getDefinition();
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
-        $searchParametersForm->handleRequest($request);
-
-        $filters = [];
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_currencies_index', ['filters' => $filters]);
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.currency'),
+            $request,
+            CurrencyGridDefinitionFactory::GRID_ID,
+            'admin_currencies_index'
+        );
     }
 
     /**

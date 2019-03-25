@@ -72,6 +72,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->select('a.id_address, m.name, a.firstname, a.lastname, a.postcode, a.city, cl.name as country');
 
         $this->searchCriteriaApplicator
+            ->applySorting($searchCriteria, $qb)
             ->applyPagination($searchCriteria, $qb)
         ;
 
@@ -100,7 +101,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $allowedFilters = [
             'id_address',
-            'brand',
+            'name',
             'firstname',
             'lastname',
             'postcode',
@@ -128,8 +129,6 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('a.id_warehouse = 0')
             ->andWhere('a.deleted = 0')
         ;
-        //@todo: Enable filtering when its fixed in another PR
-        return $qb;
 
         foreach ($filters as $name => $value) {
             if (!in_array($name, $allowedFilters, true)) {
@@ -137,14 +136,40 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_address' === $name) {
-                $qb->andWhere("$name = :$name");
-                $qb->setParameter($name, $value);
+                $qb
+                    ->andWhere("a.id_address = :$name")
+                    ->setParameter($name, $value)
+                ;
+
                 continue;
             }
+
             if ('name' === $name) {
-                $qb->andHaving("m.$name LIKE :$name");
-                $qb->setParameter($name, '%' . $value . '%');
+                $qb
+                    ->andWhere("m.name LIKE :$name")
+                    ->setParameter($name, '%' . $value . '%')
+                ;
+
+                continue;
             }
+
+            if ('country' === $name) {
+                if (empty($value)) {
+                    continue;
+                }
+
+                $qb
+                    ->andWhere("a.id_country = :$name")
+                    ->setParameter($name, $value)
+                ;
+
+                continue;
+            }
+
+            $qb
+                ->andWhere("a.$name LIKE :$name")
+                ->setParameter($name, '%' . $value . '%')
+            ;
         }
 
         return $qb;
