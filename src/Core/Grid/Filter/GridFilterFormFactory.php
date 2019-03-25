@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\DependencyInjection\Container;
