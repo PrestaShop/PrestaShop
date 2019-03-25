@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -65,11 +67,15 @@ class CommonController extends FrameworkBundleAdminController
      * @param int $offset
      * @param int $total
      * @param string $view full|quicknav To change default template used to render the content
+     * @param string $prefix Indicates the params prefix (eg: ?limit=10&offset=20 -> ?scope[limit]=10&scope[offset]=20)
      *
      * @return array|Response
      */
-    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
+    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $prefix = '')
     {
+        $offsetParam = empty($prefix) ? 'offset' : sprintf('%s[offset]', $prefix);
+        $limitParam = empty($prefix) ? 'limit' : sprintf('%s[limit]', $prefix);
+
         $limit = max($limit, 10);
 
         $currentPage = floor($offset / $limit) + 1;
@@ -88,44 +94,44 @@ class CommonController extends FrameworkBundleAdminController
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => min($total - 1, $offset + $limit),
-                'limit' => $limit,
+                $offsetParam => min($total - 1, $offset + $limit),
+                $limitParam => $limit,
             )
         ));
 
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => max(0, $offset - $limit),
-                'limit' => $limit,
+                $offsetParam => max(0, $offset - $limit),
+                $limitParam => $limit,
             )
         ));
         $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => 0,
-                'limit' => $limit,
+                $offsetParam => 0,
+                $limitParam => $limit,
             )
         ));
         $lastPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => ($pageCount - 1) * $limit,
-                'limit' => $limit,
+                $offsetParam => ($pageCount - 1) * $limit,
+                $limitParam => $limit,
             )
         ));
         $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => 0,
-                'limit' => '_limit',
+                $offsetParam => 0,
+                $limitParam => '_limit',
             )
         ));
         $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => 999999,
-                'limit' => $limit,
+                $offsetParam => 999999,
+                $limitParam => $limit,
             )
         ));
         $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
@@ -237,17 +243,27 @@ class CommonController extends FrameworkBundleAdminController
     /**
      * @param string $controller
      * @param string $action
+     * @param string $filterId
      *
      * @return JsonResponse
      *
-     * @throws \LogicException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function resetSearchAction($controller, $action)
+    public function resetSearchAction($controller = '', $action = '', $filterId = '')
     {
-        $employeeId = $this->getUser()->getId();
-        $shopId = $this->getContext()->shop->id;
+        $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
 
-        $this->get('prestashop.core.admin.admin_filter.repository')->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+        // for compatibility when $controller and $action are used
+        if (!empty($controller) && !empty($action)) {
+            $employeeId = $this->getUser()->getId();
+            $shopId = $this->getContext()->shop->id;
+
+            $adminFiltersRepository->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+        }
+
+        if (!empty($filterId)) {
+            $adminFiltersRepository->removeByFilterId($filterId);
+        }
 
         return new JsonResponse();
     }
@@ -283,7 +299,7 @@ class CommonController extends FrameworkBundleAdminController
      * Process Grid search.
      *
      * @param Request $request
-     * @param string $gridDefinitionFactoryService
+     * @param string $gridDefinitionFactoryServiceId
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
      *
@@ -291,11 +307,13 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function searchGridAction(
         Request $request,
-        $gridDefinitionFactoryService,
+        $gridDefinitionFactoryServiceId,
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
     ) {
-        $definitionFactory = $this->get($gridDefinitionFactoryService);
+        /** @var GridDefinitionFactoryInterface $definitionFactory */
+        $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
+        /** @var GridDefinitionInterface $definition */
         $definition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -304,9 +322,10 @@ class CommonController extends FrameworkBundleAdminController
         $filtersForm->handleRequest($request);
 
         $redirectParams = [];
-
         if ($filtersForm->isSubmitted()) {
-            $redirectParams['filters'] = $filtersForm->getData();
+            $redirectParams = [
+                'filters' => $filtersForm->getData(),
+            ];
         }
 
         foreach ($redirectQueryParamsToKeep as $paramName) {

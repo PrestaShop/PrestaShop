@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * it impossible to fine tune overrides (which one has the priority).
  *
  * @see SearchParametersResolver class for usage.
+ * @deprecated Use FiltersBuilderInterface instead
  */
 interface SearchParametersInterface
 {
@@ -48,7 +49,7 @@ interface SearchParametersInterface
      * @param string $controller the controller name
      * @param string $action the action name
      *
-     * @return Filters A collection of filters
+     * @return Filters|null A collection of filters
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass);
 }
