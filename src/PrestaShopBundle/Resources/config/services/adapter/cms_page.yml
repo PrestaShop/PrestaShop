@@ -13,3 +13,6 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand
+
+  prestashop.adapter.cms_page.command_handler.toggle_cms_page_status:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\ToggleCmsPageStatusHandler
