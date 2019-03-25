@@ -45,6 +45,7 @@ module.exports = {
     profiles: './js/pages/profiles',
     tax: './js/pages/tax',
     cms_page: './js/pages/cms-page',
+    cms_page_form: './js/pages/cms-page/form',
     form_popover_error: './js/components/form/form-popover-error.js',
     manufacturer: './js/pages/catalog/manufacturer',
     address: './js/pages/catalog/address',
