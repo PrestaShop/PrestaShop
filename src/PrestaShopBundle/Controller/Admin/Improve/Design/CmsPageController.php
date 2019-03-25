@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
@@ -131,21 +132,14 @@ class CmsPageController extends FrameworkBundleAdminController
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        $cmsCategoryId = $request->query->getInt('id_cms_category');
-
-        $queryParametersToKeep = [];
-        if ($cmsCategoryId && CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID !== $cmsCategoryId) {
-            $queryParametersToKeep = [
-                'id_cms_category' => $cmsCategoryId,
-            ];
-        }
-
         return $responseBuilder->buildSearchResponse(
             $this->get($gridDefinitionFactory),
             $request,
             $filterId,
             'admin_cms_pages_index',
-            $queryParametersToKeep
+            [
+                'id_cms_category',
+            ]
         );
     }
 
@@ -537,6 +531,11 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(
                 new BulkDisableCmsPageCommand($cmsPagesToDisable)
             );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CmsPageException $exception) {
             $this->addFlash('error', $this->handleException($exception));
         }
@@ -561,6 +560,11 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(
                 new BulkEnableCmsPageCommand($cmsPagesToDisable)
             );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CmsPageException $exception) {
             $this->addFlash('error', $this->handleException($exception));
         }
@@ -568,8 +572,35 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToParentIndexPageByBulkIds($cmsPagesToDisable);
     }
 
-    public function bulkDeleteCmsPageAction()
+    /**
+     * Deletes multiple cms pages.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteCmsPageAction(Request $request)
     {
+        $cmsPagesToDisable = $request->request->get('cms_page_bulk');
+
+        $redirectResponse = $this->redirectToParentIndexPageByBulkIds($cmsPagesToDisable);
+
+        try {
+            $cmsPagesToDisable = array_map(function ($item) { return (int) $item; }, $cmsPagesToDisable);
+
+            $this->getCommandBus()->handle(
+                new BulkDeleteCmsPageCommand($cmsPagesToDisable)
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (CmsPageException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $redirectResponse;
     }
 
     /**
@@ -581,6 +612,8 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function deleteCmsAction($cmsId)
     {
+        $redirectResponse = $this->redirectToParentIndexPageByCmsPageId($cmsId);
+        
         try {
             $this->getCommandBus()->handle(new DeleteCmsPageCommand((int) $cmsId));
 
@@ -592,7 +625,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToParentIndexPageByCmsPageId($cmsId);
+        return $redirectResponse;
     }
 
     public function editCmsAction()
