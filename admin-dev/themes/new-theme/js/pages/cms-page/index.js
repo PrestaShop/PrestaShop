@@ -79,4 +79,5 @@ $(() => {
   cmsGrid.addExtension(new ExportToSqlManagerExtension());
   cmsGrid.addExtension(new FiltersResetExtension());
   cmsGrid.addExtension(new SortingExtension());
+  cmsGrid.addExtension(new ColumnTogglingExtension());
 });

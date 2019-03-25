@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\CmsCategoryName;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -147,7 +149,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Displayed', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
-                    'route' => 'admin_cms_pages_toggle_cms',
+                    'route' => 'admin_cms_pages_toggle',
                     'primary_field' => 'id_cms',
                     'route_param_name' => 'cmsId',
                 ])
@@ -160,7 +162,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_cms_pages_edit_cms',
+                                'route' => 'admin_cms_pages_edit',
                                 'route_param_name' => 'cmsId',
                                 'route_param_field' => 'id_cms',
                             ])
@@ -170,7 +172,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_cms_pages_delete_cms',
+                                'route' => 'admin_cms_pages_delete',
                                 'route_param_name' => 'cmsId',
                                 'route_param_field' => 'id_cms',
                                 'confirm_message' => $this->trans(
@@ -197,7 +199,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
         ];
 
         if ($this->cmsCategoryParentId) {
-            //todo: implement query params to keep usage directly in the  filter reset generation
+            //todo: implement query params to keep usage directly in the  filter reset generation. This will help to avoid request stack usage
             $actionsTypeOptions['redirect_route_params'] = [
                 'id_cms_category' => $this->cmsCategoryParentId,
             ];
@@ -279,6 +281,34 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
     }
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    protected function getBulkActions()
+//    {
+//        return (new BulkActionCollection())
+//            ->add((new SubmitBulkAction('enable_selection'))
+//                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+//                ->setOptions([
+//                    'submit_route' => 'admin_cms_pages_bulk_status_enable',
+//                ])
+//            )
+//            ->add((new SubmitBulkAction('disable_selection'))
+//                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+//                ->setOptions([
+//                    'submit_route' => 'admin_cms_pages_bulk_status_disable',
+//                ])
+//            )
+//            ->add((new SubmitBulkAction('delete_bulk'))
+//                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+//                ->setOptions([
+//                    'submit_route' => 'admin_cms_pages_delete_bulk',
+//                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+//                ])
+//            )
+//            ;
+//    }
 
     /**
      *
