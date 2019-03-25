@@ -80,10 +80,11 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb
             ->select('c.`id_cms`, cl.`link_rewrite`, c.`active`, c.`position`, cl.`meta_title`, cl.`head_seo_title`')
             ->groupBy('c.`id_cms`')
-            ->orderBy(
-                $searchCriteria->getOrderBy(),
-                $searchCriteria->getOrderWay()
-            )
+        ;
+
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb)
         ;
 
         return $qb;

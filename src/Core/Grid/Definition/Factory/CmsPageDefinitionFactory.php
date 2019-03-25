@@ -132,7 +132,6 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Title', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'meta_title',
-                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('head_seo_title'))
