@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Service\MailTemplate;
 
-
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;

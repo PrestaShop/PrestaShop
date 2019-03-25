@@ -724,7 +724,7 @@ namespace PrestaShopBundle\Install {
 
                         $lang_pack = Language::getLangDetails($isoCode);
                         Language::installSfLanguagePack($lang_pack['locale'], $errorsLanguage);
-                        Language::installEmailsLanguagePack($lang_pack, $errorsLanguage);
+                        Language::generateEmailsLanguagePack($lang_pack, $errorsLanguage);
 
                         if (empty($errorsLanguage)) {
                             Language::loadLanguages();
