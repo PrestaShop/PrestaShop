@@ -101,4 +101,42 @@ class GenerateMailTemplatesService
 
         $this->generator->generateTemplates($theme, $language, $this->coreMailsFolder, $this->modulesMailFolder, $overrideTemplates);
     }
+
+    /**
+     * @return string
+     */
+    public function getCoreMailsFolder()
+    {
+        return $this->coreMailsFolder;
+    }
+
+    /**
+     * @param string $coreMailsFolder
+     * @return $this
+     */
+    public function setCoreMailsFolder($coreMailsFolder)
+    {
+        $this->coreMailsFolder = $coreMailsFolder;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModulesMailFolder()
+    {
+        return $this->modulesMailFolder;
+    }
+
+    /**
+     * @param string $modulesMailFolder
+     * @return $this
+     */
+    public function setModulesMailFolder($modulesMailFolder)
+    {
+        $this->modulesMailFolder = $modulesMailFolder;
+
+        return $this;
+    }
 }

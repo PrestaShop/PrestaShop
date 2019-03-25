@@ -93,6 +93,10 @@ class MailTemplateGenerator
             ));
         }
 
+        $this->logger->info(sprintf('Exporting mail with theme %s for language %s', $theme->getName(), $language->getName()));
+        $this->logger->info(sprintf('Core output folder: %s', $coreOutputFolder));
+        $this->logger->info(sprintf('Modules output folder: %s', $modulesOutputFolder));
+
         /** @var LayoutCollectionInterface $layouts */
         $layouts = $theme->getLayouts();
         /** @var LayoutInterface $layout */
