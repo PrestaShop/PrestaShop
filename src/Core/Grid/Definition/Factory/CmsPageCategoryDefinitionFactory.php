@@ -128,7 +128,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Displayed', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
-                    'route' => 'admin_cms_pages_toggle_cms_category',
+                    'route' => 'admin_cms_pages_category_toggle',
                     'primary_field' => 'id_cms_category',
                     'route_param_name' => 'cmsCategoryId',
                 ])
@@ -150,7 +150,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_cms_pages_edit_cms_category',
+                                'route' => 'admin_cms_pages_category_edit',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
                             ])
@@ -160,7 +160,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_cms_pages_delete_cms_category',
+                                'route' => 'admin_cms_pages_category_delete',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
                                 'confirm_message' => $this->trans(
@@ -251,19 +251,19 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             ->add((new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_cms_pages_bulk_status_enable',
+                    'submit_route' => 'admin_cms_pages_category_bulk_status_enable',
                 ])
             )
             ->add((new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_cms_pages_bulk_status_disable',
+                    'submit_route' => 'admin_cms_pages_category_bulk_status_disable',
                 ])
             )
             ->add((new SubmitBulkAction('delete_bulk'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_cms_pages_delete_bulk_cms_category',
+                    'submit_route' => 'admin_cms_pages_category_delete_bulk',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
