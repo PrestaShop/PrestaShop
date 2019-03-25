@@ -45,4 +45,11 @@ interface LanguageRepositoryInterface
      * @return LanguageInterface
      */
     public function getByIsoCode($isoCode);
+
+    /**
+     * @param string $locale
+     *
+     * @return LanguageInterface
+     */
+    public function getByLocaleOrIsoCode($locale);
 }
