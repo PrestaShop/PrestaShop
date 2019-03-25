@@ -72,8 +72,4 @@
     {include file='checkout/_partials/cart-voucher.tpl'}
   {/block}
 
-  {* <hr class="separator"> *}
-
-  
-
 </section>
