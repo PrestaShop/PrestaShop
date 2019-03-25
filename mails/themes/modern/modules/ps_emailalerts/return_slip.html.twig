@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/order_layout.html.twig' %}
         
-{% block title %}{{ 'Return Slip'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Return Slip'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi,'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Hi,'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -50,7 +50,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'You have received a new return request for {shop_name}.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'You have received a new return request for {shop_name}.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -186,7 +186,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Return Details'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Return Details'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -253,13 +253,13 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label">{{ 'Order:'|trans({}, 'EmailsBody', locale)|raw }}</span> {order_name} {{ 'Placed on'|trans({}, 'EmailsBody', locale)|raw }} {date} </div>
+                                          <span class="label">{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date} </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label">{{ 'Customer:'|trans({}, 'EmailsBody', locale)|raw }}</span> {firstname} {lastname}, ({email}) </div>
+                                          <span class="label">{{ 'Customer:'|trans({}, 'Emails.Body', locale)|raw }}</span> {firstname} {lastname}, ({email}) </div>
                                       </td>
                                     </tr>
                                   </table>
@@ -322,9 +322,9 @@
                               <td align="left" style="font-size:0px;padding:10px 25px;padding-right:50px;padding-left:50px;word-break:break-word;">
                                 <table cellpadding="0" cellspacing="0" width="100%" border="0" style="cellspacing:0;color:#000000;font-family:Open sans, arial, sans-serif;font-size:14px;line-height:22px;table-layout:auto;width:100%;">
                                   <tr>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Reference'|trans({}, 'EmailsBody', locale)|raw }}</th>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Product'|trans({}, 'EmailsBody', locale)|raw }}</th>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Quantity'|trans({}, 'EmailsBody', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Reference'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Product'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
                                   </tr>
                                   <tr>
                                     <td colspan="3" style="border: 1px solid #DFDFDF;padding:10px 0 10px 10px"> {items} </td>
@@ -395,7 +395,7 @@
                                             <td>
                                               <p style="font-weight:600;">
                                                 <img src="{{ mailThemesUrl }}/modern/assets/baseline-location_on-24px.png" style="width:15px;margin-right:10px">
-                                                {{ 'Delivery address'|trans({}, 'EmailsBody', locale)|raw }}
+                                                {{ 'Delivery address'|trans({}, 'Emails.Body', locale)|raw }}
                                               </p>
                                               <p style="border: 1px solid #DFDFDF;background-color: #FEFEFE;padding:20px;font-size:14px"> {delivery_block_html} </p>
                                             </td>
@@ -411,7 +411,7 @@
                                             <td>
                                               <p style="font-weight:600;">
                                                 <img src="{{ mailThemesUrl }}/modern/assets/baseline-credit_card-24px.png" style="width:25px;margin-right:10px">
-                                                {{ 'Billing address'|trans({}, 'EmailsBody', locale)|raw }}
+                                                {{ 'Billing address'|trans({}, 'Emails.Body', locale)|raw }}
                                               </p>
                                               <p style="border: 1px solid #DFDFDF;background-color: #FEFEFE;padding:20px;font-size:14px"> {invoice_block_html} </p>
                                             </td>
@@ -482,7 +482,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Customer message:'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Customer message:'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Refferalprogram Congratulations'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Refferalprogram Congratulations'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Congratulations!'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Congratulations!'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -177,14 +177,14 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your referred friend <span class="label">{sponsored_firstname}</span> <span class="label">{sponsored_lastname}</span> has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Your referred friend <span class="label">{sponsored_firstname}</span> <span class="label">{sponsored_lastname}</span> has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'We are pleased to offer you a voucher worth <span class="label">{discount_display}</span> (VOUCHER # <span class="label">{discount_name}</span> that you can use on your next order.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'We are pleased to offer you a voucher worth <span class="label">{discount_display}</span> (VOUCHER # <span class="label">{discount_name}</span> that you can use on your next order.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -247,7 +247,7 @@
                             <tr>
                               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                 <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                  {{ 'Best regards,'|trans({}, 'EmailsBody', locale)|raw }}
+                                  {{ 'Best regards,'|trans({}, 'Emails.Body', locale)|raw }}
                                 </div>
                               </td>
                             </tr>

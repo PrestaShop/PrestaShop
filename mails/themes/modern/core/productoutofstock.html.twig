@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Product out of stock'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Product out of stock'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -175,7 +175,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ '{product} is almost out of stock.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ '{product} is almost out of stock.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -242,20 +242,20 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'There are now less than <span class="label">{last_qty}</span> items in stock.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'There are now less than <span class="label">{last_qty}</span> items in stock.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="warning">{{ 'Remaining stock:'|trans({}, 'EmailsBody', locale)|raw }}</span> {qty} </div>
+                                          <span class="warning">{{ 'Remaining stock:'|trans({}, 'Emails.Body', locale)|raw }}</span> {qty} </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Replenish your inventory, go to the <span class="label">"Catalog" &gt; "Stocks"</span> section of your back office to manage your stock.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Replenish your inventory, go to the <span class="label">"Catalog" &gt; "Stocks"</span> section of your back office to manage your stock.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

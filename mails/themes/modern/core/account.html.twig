@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Account'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Account'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -50,7 +50,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Thank you for creating a customer account at {shop_name}.'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Thank you for creating a customer account at {shop_name}.'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -186,7 +186,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your login details on {shop_name}'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Your login details on {shop_name}'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -253,14 +253,14 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Here are your login details:'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Here are your login details:'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label">{{ 'Email address:'|trans({}, 'EmailsBody', locale)|raw }}</span> <span style="color:#25B9D7;font-weight:600">{email}</span>
+                                          <span class="label">{{ 'Email address:'|trans({}, 'Emails.Body', locale)|raw }}</span> <span style="color:#25B9D7;font-weight:600">{email}</span>
                                         </div>
                                       </td>
                                     </tr>
@@ -327,7 +327,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Important Security Tips:'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Important Security Tips:'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -394,28 +394,28 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label" style="font-size:16px">1.</span> <span>{{ 'Always keep your account details safe.'|trans({}, 'EmailsBody', locale)|raw }}</span>
+                                          <span class="label" style="font-size:16px">1.</span> <span>{{ 'Always keep your account details safe.'|trans({}, 'Emails.Body', locale)|raw }}</span>
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label" style="font-size:16px">2.</span> <span>{{ 'Never disclose your login details to anyone.'|trans({}, 'EmailsBody', locale)|raw }}</span>
+                                          <span class="label" style="font-size:16px">2.</span> <span>{{ 'Never disclose your login details to anyone.'|trans({}, 'Emails.Body', locale)|raw }}</span>
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label" style="font-size:16px">3.</span> <span>{{ 'Change your password regularly.'|trans({}, 'EmailsBody', locale)|raw }}</span>
+                                          <span class="label" style="font-size:16px">3.</span> <span>{{ 'Change your password regularly.'|trans({}, 'Emails.Body', locale)|raw }}</span>
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label" style="font-size:16px">4.</span> <span>{{ 'Should you suspect someone is using your account illegally, please notify us immediately.'|trans({}, 'EmailsBody', locale)|raw }}</span>
+                                          <span class="label" style="font-size:16px">4.</span> <span>{{ 'Should you suspect someone is using your account illegally, please notify us immediately.'|trans({}, 'Emails.Body', locale)|raw }}</span>
                                         </div>
                                       </td>
                                     </tr>
@@ -478,7 +478,7 @@
                             <tr>
                               <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                 <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:center;color:#363A41;">
-                                  {{ 'You can now place orders on our shop:'|trans({}, 'EmailsBody', locale)|raw }} <a href="{shop_url}" target="_blank" style="text-decoration:none;color:#25B9D7; display:block">{shop_name}</a>
+                                  {{ 'You can now place orders on our shop:'|trans({}, 'Emails.Body', locale)|raw }} <a href="{shop_url}" target="_blank" style="text-decoration:none;color:#25B9D7; display:block">{shop_name}</a>
                                 </div>
                               </td>
                             </tr>

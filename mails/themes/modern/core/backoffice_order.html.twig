@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Back Office Order'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Back Office Order'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -167,7 +167,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'A new order has been generated on your behalf.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'A new order has been generated on your behalf.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -234,7 +234,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Please go on <a href="{order_link}">{order_link}</a> to complete the payment.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Please go on <a href="{order_link}">{order_link}</a> to complete the payment.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
