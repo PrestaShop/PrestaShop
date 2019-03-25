@@ -35,7 +35,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Class CmsPageCategoryFilterFormFactory is responsible for changing form action to the custom one.
  */
-final class CmsPageCategoryFilterFormFactory implements GridFilterFormFactoryInterface
+final class CmsPageFilterFormFactory implements GridFilterFormFactoryInterface
 {
     /**
      * @var GridFilterFormFactoryInterface
