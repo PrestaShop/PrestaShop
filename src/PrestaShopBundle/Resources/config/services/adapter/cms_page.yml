@@ -31,3 +31,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand
+
+  prestashop.adapter.cms_page.command_handler.bulk_delete_cms_page:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\BulkDeleteCmsPageHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand

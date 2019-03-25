@@ -116,7 +116,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Description', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'description',
-                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('position'))
