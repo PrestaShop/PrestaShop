@@ -816,10 +816,19 @@ services:
             - { name: form.type }
 
     form.type.cms_page:
-      class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
-      arguments:
-        - '@translator'
-        - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
-        - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-      tags:
-        - { name: form.type }
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        tags:
+            - { name: form.type }
+
+    form.type.localization.generate_mails:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\GenerateMailsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
+        tags:
+            - { name: form.type }
