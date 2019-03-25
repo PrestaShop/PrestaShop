@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShopBundle\Entity\Lang;
 
@@ -76,7 +75,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getByLocaleOrIsoCode($locale)
     {
@@ -89,7 +88,6 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
 
         return $language;
     }
-
 
     /**
      * @param string $key
