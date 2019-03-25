@@ -46,9 +46,12 @@
 .stock-app .stock-overview .table .qty-update .material-icons {
   transform: scaleX(-1);
 }
+<<<<<<< HEAD
 
 /* Fixes image flipping for RTL language */
 .img-rtl {
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
 }
+=======
+>>>>>>> 199d56fdd616b52a9801e7f37750179b94952331

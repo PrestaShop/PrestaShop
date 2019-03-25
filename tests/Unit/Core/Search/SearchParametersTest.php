@@ -156,6 +156,10 @@ class SearchParametersTest extends TestCase
     }
 
     /**
+<<<<<<< HEAD
+=======
+     *
+>>>>>>> 199d56fdd616b52a9801e7f37750179b94952331
      * @return \PHPUnit_Framework_MockObject_MockObject|Request
      */
     private function buildRequestMock(array $parameters, $postQuery = false)
@@ -202,8 +206,12 @@ class SearchParametersTest extends TestCase
     }
 }
 
+<<<<<<< HEAD
 class SampleFilters extends Filters
 {
+=======
+class SampleFilters extends Filters {
+>>>>>>> 199d56fdd616b52a9801e7f37750179b94952331
     /**
      * {@inheritdoc}
      */
