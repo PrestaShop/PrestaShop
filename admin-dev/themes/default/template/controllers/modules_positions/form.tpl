@@ -59,6 +59,7 @@
 						{/foreach}
 					{/if}
 				</select>
+				<div class="help-block">* {l s='Hook already registered' d='Admin.Design.Help'}</div>
 			</div>
 		</div>
 		<div class="form-group">

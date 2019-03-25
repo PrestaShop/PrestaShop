@@ -197,7 +197,10 @@ $(function(){
 							var hook_description = '';
 							if(jsonData[current_hook].description != '')
 								hook_description = ' ('+jsonData[current_hook].description+')';
-							hook_select.append('<option value="'+jsonData[current_hook].id_hook+'">'+jsonData[current_hook].name+hook_description+'</option>');
+							var is_registered = jsonData[current_hook].registered;
+							var disabled = is_registered ? "disabled" : "";
+							var flag = is_registered ? "*" : "";
+							hook_select.append('<option value="'+jsonData[current_hook].id_hook+'" '+ disabled + '>'+flag+jsonData[current_hook].name+hook_description+'</option>');
 						}
 
 						hook_select.prop('disabled', false);
