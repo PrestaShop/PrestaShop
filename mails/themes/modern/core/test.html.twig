@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Test'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Test'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -177,14 +177,14 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Here is a test <span class="label">email</span> from your shop.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Here is a test <span class="label">email</span> from your shop.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'If you can read this, it means the test is successful!'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'If you can read this, it means the test is successful!'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

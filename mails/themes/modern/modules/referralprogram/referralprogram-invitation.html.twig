@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Refferalprogram Invitation'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Refferalprogram Invitation'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -40,7 +40,7 @@
                                     <!-- TITLE BEGINING -->
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;"> {firstname_friend} {lastname_friend}, {{ 'Join us!'|trans({}, 'EmailsBody', locale)|raw }}
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;"> {firstname_friend} {lastname_friend}, {{ 'Join us!'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -176,17 +176,17 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your friend <span class="label">{firstname} {lastname}</span> wants to refer you on <a href="{shop_url}" target="_blank">{shop_name}</a>!'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Your friend <span class="label">{firstname} {lastname}</span> wants to refer you on <a href="{shop_url}" target="_blank">{shop_name}</a>!'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'We are pleased to offer you a voucher worth <span class="label">{discount}</span> that you can use on your next order.'|trans({}, 'EmailsBody', locale)|raw }}
-                                          {{ 'Get referred and earn a discount voucher of <span class="label">{discount}</span>!'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'We are pleased to offer you a voucher worth <span class="label">{discount}</span> that you can use on your next order.'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Get referred and earn a discount voucher of <span class="label">{discount}</span>!'|trans({}, 'Emails.Body', locale)|raw }}
                                           <p>
-                                            <a href="{link}" class="light" target="_blank">{{ 'It\'s very easy to sign up, just click here!'|trans({}, 'EmailsBody', locale)|raw }}</a>
+                                            <a href="{link}" class="light" target="_blank">{{ 'It\'s very easy to sign up, just click here!'|trans({}, 'Emails.Body', locale)|raw }}</a>
                                           </p>
                                         </div>
                                       </td>
@@ -250,7 +250,7 @@
                             <tr>
                               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                 <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                  {{ 'When signing up, don\'t forget to provide the email address of your referring friend:'|trans({}, 'EmailsBody', locale)|raw }} <span class="label">{email}</span>. </div>
+                                  {{ 'When signing up, don\'t forget to provide the email address of your referring friend:'|trans({}, 'Emails.Body', locale)|raw }} <span class="label">{email}</span>. </div>
                               </td>
                             </tr>
                           </table>
@@ -308,7 +308,7 @@
                             <tr>
                               <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
                                 <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                  {{ 'Best regards,'|trans({}, 'EmailsBody', locale)|raw }}
+                                  {{ 'Best regards,'|trans({}, 'Emails.Body', locale)|raw }}
                                 </div>
                               </td>
                             </tr>

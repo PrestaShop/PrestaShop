@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Out of stock'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Out of stock'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -50,7 +50,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Thanks for your order with the reference {order_name} from {shop_name}.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Thanks for your order with the reference {order_name} from {shop_name}.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -186,7 +186,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Order ID {order_name}'|trans({}, 'EmailsBody', locale)|raw }} - {{ 'Replenishment required'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Order ID {order_name}'|trans({}, 'Emails.Body', locale)|raw }} - {{ 'Replenishment required'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -253,7 +253,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Unfortunately, one or more items are currently out of stock and this may cause a slight delay for delivery. Please accept our apologies for this inconvenience and be sure we are doing our best to correct the situation.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Unfortunately, one or more items are currently out of stock and this may cause a slight delay for delivery. Please accept our apologies for this inconvenience and be sure we are doing our best to correct the situation.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -316,7 +316,7 @@
                             <tr>
                               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                 <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                  {{ 'Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">Order history and details</a> section of your customer account.'|trans({}, 'EmailsBody', locale)|raw }}
+                                  {{ 'Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">Order history and details</a> section of your customer account.'|trans({}, 'Emails.Body', locale)|raw }}
                                 </div>
                               </td>
                             </tr>
@@ -375,7 +375,7 @@
                             <tr>
                               <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
                                 <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                  {{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">Guest Tracking</a> section on our shop.'|trans({}, 'EmailsBody', locale)|raw }}
+                                  {{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">Guest Tracking</a> section on our shop.'|trans({}, 'Emails.Body', locale)|raw }}
                                 </div>
                               </td>
                             </tr>

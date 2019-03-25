@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Product coverage'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Product coverage'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -177,14 +177,14 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your stock cover is now less than the specified minimum of:'|trans({}, 'EmailsBody', locale)|raw }}<span class="label"> {warning_coverage}</span>
+                                          {{ 'Your stock cover is now less than the specified minimum of:'|trans({}, 'Emails.Body', locale)|raw }}<span class="label"> {warning_coverage}</span>
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span style="font-size:16px; font-weight: 700">{{ 'Current stock cover:'|trans({}, 'EmailsBody', locale)|raw }}</span> {current_coverage} </div>
+                                          <span style="font-size:16px; font-weight: 700">{{ 'Current stock cover:'|trans({}, 'Emails.Body', locale)|raw }}</span> {current_coverage} </div>
                                       </td>
                                     </tr>
                                   </table>

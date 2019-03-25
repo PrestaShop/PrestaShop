@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Follow up 1'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Follow up 1'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -177,7 +177,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your cart at {shop_name}'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Your cart at {shop_name}'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -244,21 +244,21 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Thanks for your visit. However, it looks like you did not complete your purchase.'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Thanks for your visit. However, it looks like you did not complete your purchase.'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your cart has been saved, you can go back to your order on our shop:'|trans({}, 'EmailsBody', locale)|raw }} <a href="{shop_url}" target="_blank">{shop_url}</a>
+                                          {{ 'Your cart has been saved, you can go back to your order on our shop:'|trans({}, 'Emails.Body', locale)|raw }} <a href="{shop_url}" target="_blank">{shop_url}</a>
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'We are pleased to offer you a discount of {amount}% off your next order. And this offer is valid for <span class="label">{days}</span> days, so do not wait any longer!'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'We are pleased to offer you a discount of {amount}% off your next order. And this offer is valid for <span class="label">{days}</span> days, so do not wait any longer!'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -325,7 +325,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your voucher code on {shop_name}'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Your voucher code on {shop_name}'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -392,13 +392,13 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span style="font-weight:700">{{ 'Here is your VOUCHER Code:'|trans({}, 'EmailsBody', locale)|raw }}</span> {voucher_num} </div>
+                                          <span style="font-weight:700">{{ 'Here is your VOUCHER Code:'|trans({}, 'Emails.Body', locale)|raw }}</span> {voucher_num} </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Enter this code in your shopping cart to get the discount.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Enter this code in your shopping cart to get the discount.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

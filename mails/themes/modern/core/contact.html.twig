@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Contact'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Contact'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Message from a {shop_name} customer'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Message from a {shop_name} customer'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -177,14 +177,14 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label">{{ 'Customer Email Address:'|trans({}, 'EmailsBody', locale)|raw }}</span> <span style="color:#25B9D7;font-weight:600; text-decoration: underline;">{email}</span>
+                                          <span class="label">{{ 'Customer Email Address:'|trans({}, 'Emails.Body', locale)|raw }}</span> <span style="color:#25B9D7;font-weight:600; text-decoration: underline;">{email}</span>
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label">{{ 'Order ID #:'|trans({}, 'EmailsBody', locale)|raw }}</span>
+                                          <span class="label">{{ 'Order ID #:'|trans({}, 'Emails.Body', locale)|raw }}</span>
                                           <span> {order_name}</span>
                                         </div>
                                       </td>
@@ -192,7 +192,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          <span class="label">{{ 'Attached file:'|trans({}, 'EmailsBody', locale)|raw }}</span><span> {attached_file}</span>
+                                          <span class="label">{{ 'Attached file:'|trans({}, 'Emails.Body', locale)|raw }}</span><span> {attached_file}</span>
                                         </div>
                                       </td>
                                     </tr>
@@ -259,7 +259,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Customer message:'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Customer message:'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

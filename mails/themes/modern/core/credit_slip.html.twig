@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Credit Slip'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Credit Slip'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -177,7 +177,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Order ID {order_name}'|trans({}, 'EmailsBody', locale) }} - {{ 'Credit slip'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Order ID {order_name}'|trans({}, 'Emails.Body', locale) }} - {{ 'Credit slip'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -244,7 +244,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'A credit slip has been generated in your name for order with the reference <span class="label">{order_name}</span>.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'A credit slip has been generated in your name for order with the reference <span class="label">{order_name}</span>.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -307,7 +307,7 @@
                             <tr>
                               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                 <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                  {{ 'Review this credit slip and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">Credit slips</a> section of your customer account.'|trans({}, 'EmailsBody', locale)|raw }}
+                                  {{ 'Review this credit slip and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">Credit slips</a> section of your customer account.'|trans({}, 'Emails.Body', locale)|raw }}
                                 </div>
                               </td>
                             </tr>

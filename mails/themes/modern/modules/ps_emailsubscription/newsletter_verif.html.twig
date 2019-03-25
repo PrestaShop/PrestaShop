@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Newsletter Verification'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Newsletter Verification'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -177,7 +177,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Thank you for subscribing to our newsletter. Please click on the following link to confirm your request:'|trans({}, 'EmailsBody', locale)|raw }}<br>
+                                          {{ 'Thank you for subscribing to our newsletter. Please click on the following link to confirm your request:'|trans({}, 'Emails.Body', locale)|raw }}<br>
                                           <a href="{verif_url}" target="_blank">{verif_url}</a>
                                         </div>
                                       </td>

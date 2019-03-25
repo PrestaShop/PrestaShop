@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Refferalprogram Voucher'|trans({}, 'EmailsBody', locale) }}{% endblock %}
+{% block title %}{{ 'Refferalprogram Voucher'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -41,7 +41,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}
+                                          {{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>
@@ -177,7 +177,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Sponsorship Program'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Sponsorship Program'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -244,15 +244,15 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'We have created a voucher in your name for referring a friend.'|trans({}, 'EmailsBody', locale)|raw }}<br>
-                                          {{ 'Here is the code of your voucher:'|trans({}, 'EmailsBody', locale)|raw }} {voucher_num}{{ ', with an amount of'|trans({}, 'EmailsBody', locale)|raw }} <span class="label">{voucher_num}</span>
+                                          {{ 'We have created a voucher in your name for referring a friend.'|trans({}, 'Emails.Body', locale)|raw }}<br>
+                                          {{ 'Here is the code of your voucher:'|trans({}, 'Emails.Body', locale)|raw }} {voucher_num}{{ ', with an amount of'|trans({}, 'Emails.Body', locale)|raw }} <span class="label">{voucher_num}</span>
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Simply copy/paste this code during the payment process for your next order.'|trans({}, 'EmailsBody', locale)|raw }}
+                                          {{ 'Simply copy/paste this code during the payment process for your next order.'|trans({}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
