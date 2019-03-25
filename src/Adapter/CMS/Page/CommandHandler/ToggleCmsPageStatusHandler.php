@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageExcep
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShopException;
 
-class ToggleCmsPageStatusHandler extends AbstractCmsPageHandler implements  ToggleCmsPageStatusHandlerInterface
+final class ToggleCmsPageStatusHandler extends AbstractCmsPageHandler implements  ToggleCmsPageStatusHandlerInterface
 {
     /**
      * {@inheritdoc}

@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
@@ -485,9 +487,18 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToParentIndexPage((int) $cmsPageCategoryIds[0]);
     }
 
-    public function toggleCmsAction()
+    public function toggleCmsAction($cmsId)
     {
-        //todo: implement
+        try {
+            $this->getCommandBus(new ToggleCmsPageStatusCommand((int) $cmsId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CmsPageException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
     }
 
     public function editCmsAction()
@@ -515,6 +526,11 @@ class CmsPageController extends FrameworkBundleAdminController
         $cmsPageCategoryParentId = $this->getParentCategoryId($cmsPageCategoryId);
 
         return $this->redirectToIndexPageById($cmsPageCategoryParentId->getValue());
+    }
+
+    private function redirectToParentIndexPageByCmsPageId($cmsPageId)
+    {
+
     }
 
     /**
@@ -554,6 +570,11 @@ class CmsPageController extends FrameworkBundleAdminController
         );
 
         return $cmsPageCategoryParentId;
+    }
+
+    private function getParentCategoryIdByCmsPageId($cmsPageId)
+    {
+
     }
 
     /**
