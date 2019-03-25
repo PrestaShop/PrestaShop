@@ -27,7 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDeleteCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDisableCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageException;
@@ -541,21 +544,58 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToParentIndexPageByBulkIds($cmsPagesToDisable);
     }
 
-    public function bulkEnableCmsPageStatusAction()
+    /**
+     * Enables multiple cms pages.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkEnableCmsPageStatusAction(Request $request)
     {
+        $cmsPagesToDisable = $request->request->get('cms_page_bulk');
+
+        try {
+            $cmsPagesToDisable = array_map(function ($item) { return (int) $item; }, $cmsPagesToDisable);
+
+            $this->getCommandBus()->handle(
+                new BulkEnableCmsPageCommand($cmsPagesToDisable)
+            );
+        } catch (CmsPageException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToParentIndexPageByBulkIds($cmsPagesToDisable);
     }
 
     public function bulkDeleteCmsPageAction()
     {
     }
 
-    public function editCmsAction()
+    /**
+     * Deletes cms page by given id.
+     *
+     * @param int $cmsId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteCmsAction($cmsId)
     {
-        //todo: implement
+        try {
+            $this->getCommandBus()->handle(new DeleteCmsPageCommand((int) $cmsId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (CmsPageException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToParentIndexPageByCmsPageId($cmsId);
     }
 
-
-    public function deleteCmsAction()
+    public function editCmsAction()
     {
         //todo: implement
     }
@@ -874,6 +914,16 @@ class CmsPageController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
         ];
+
+        if ($exception instanceof CannotDeleteCmsPageException) {
+            return $this->trans(
+                'Can\'t delete #%id%',
+                'Admin.Notifications.Error',
+                [
+                    '%id%' => $exception->getCmsPageId(),
+                ]
+            );
+        }
 
         $exceptionType = get_class($exception);
 
