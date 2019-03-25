@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
 
-
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 class CmsPageException extends DomainException

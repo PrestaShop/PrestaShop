@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 
-
 use CMSCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;

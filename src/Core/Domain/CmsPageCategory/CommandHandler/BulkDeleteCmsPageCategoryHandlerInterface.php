@@ -35,8 +35,6 @@ interface BulkDeleteCmsPageCategoryHandlerInterface
 {
     /**
      * @param BulkDeleteCmsPageCommand $command
-     *
-     * @return void
      */
     public function handle(BulkDeleteCmsPageCommand $command);
 }
