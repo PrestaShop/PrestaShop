@@ -45,7 +45,7 @@ class CmsPageCategoryId
      */
     public function __construct($cmsPageCategoryId)
     {
-        $this->assertIsIntegerAndLargerThenZero($cmsPageCategoryId);
+        $this->assertIsIntegerGreaterThanZero($cmsPageCategoryId);
         $this->cmsPageCategoryId = (int) $cmsPageCategoryId;
     }
 
@@ -62,7 +62,7 @@ class CmsPageCategoryId
      *
      * @throws CmsPageCategoryException
      */
-    private function assertIsIntegerAndLargerThenZero($cmsPageCategoryId)
+    private function assertIsIntegerGreaterThanZero($cmsPageCategoryId)
     {
         if (!is_int($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
             throw new CmsPageCategoryException(

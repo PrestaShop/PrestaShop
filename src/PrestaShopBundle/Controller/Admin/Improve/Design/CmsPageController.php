@@ -613,7 +613,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function deleteCmsAction($cmsId)
     {
         $redirectResponse = $this->redirectToParentIndexPageByCmsPageId($cmsId);
-        
+
         try {
             $this->getCommandBus()->handle(new DeleteCmsPageCommand((int) $cmsId));
 

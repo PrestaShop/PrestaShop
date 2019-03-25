@@ -42,7 +42,7 @@ abstract class AbstractCmsPageHandler
     /**
      * Gets cms object if it exists. If it does not exist it throws exceptions.
      *
-     * @param $cmsId
+     * @param int $cmsId
      * @return CMS
      *
      * @throws CmsPageException
@@ -55,7 +55,7 @@ abstract class AbstractCmsPageHandler
 
             if (0 >= $cms->id) {
                 throw new CmsPageNotFoundException(
-                    sprintf('cms page has not been found with id %s', $cmsId)
+                    sprintf('Cms page with id "%s" not found', $cmsId)
                 );
             }
 

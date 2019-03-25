@@ -43,7 +43,7 @@ class CmsPageId
      */
     public function __construct($cmsPageId)
     {
-        $this->assertIsIntegerAndLargerThenZero($cmsPageId);
+        $this->assertIsIntegerGreaterThanZero($cmsPageId);
         $this->cmsPageId = $cmsPageId;
     }
 
@@ -55,7 +55,7 @@ class CmsPageId
         return $this->cmsPageId;
     }
 
-    private function assertIsIntegerAndLargerThenZero($cmsPageId)
+    private function assertIsIntegerGreaterThanZero($cmsPageId)
     {
         if (!is_int($cmsPageId) || 0 >= $cmsPageId) {
             throw new CmsPageException(
