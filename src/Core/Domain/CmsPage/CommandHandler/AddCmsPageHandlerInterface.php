@@ -24,49 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 
-class CmsPageFormDataProvider implements FormDataProviderInterface
+/**
+ * Interface for services that handles AddCmsPageCommand
+ */
+interface AddCmsPageHandlerInterface
 {
     /**
-     * @var array
-     */
-    private $contextShopIds;
-
-    /**
-     * @param array $contextShopIds
-     */
-    public function __construct(array $contextShopIds)
-    {
-        $this->contextShopIds = $contextShopIds;
-    }
-
-    /**
-     * Get form data for given object with given id.
+     * @param AddCmsPageCommand $command
      *
-     * @param int $id
-     *
-     * @return mixed
+     * @return CmsPageId
      */
-    public function getData($id)
-    {
-        // TODO: Implement getData() method.
-    }
-
-    /**
-     * Get default form data.
-     *
-     * @return mixed
-     */
-    public function getDefaultData()
-    {
-        return [
-            'page_category' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
-            'shop_association' => $this->contextShopIds,
-            'is_indexed_for_search' => false,
-            'is_displayed' => false,
-        ];
-    }
+    public function handle(AddCmsPageCommand $command);
 }

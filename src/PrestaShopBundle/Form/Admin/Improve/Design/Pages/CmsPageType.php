@@ -86,6 +86,21 @@ class CmsPageType extends AbstractType
                 'choice_value' => 'id_cms_category',
             ])
             ->add('title', TranslatableType::class, [
+                'error_bubbling' => false,
+                'constraints' => [
+                    new DefaultLanguage([
+                        'message' => $this->translator->trans(
+                            'The field %field_name% is required at least in your default language.',
+                            [
+                                '%field_name%' => sprintf(
+                                    '"%s"',
+                                    $this->translator->trans('Title', [], 'Admin.Global')
+                                ),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
                 'options' => [
                     'constraints' => [
                         //@todo: typedRegexConstraint generic_name PR #12735
@@ -152,6 +167,10 @@ class CmsPageType extends AbstractType
                 'type' => TextType::class,
                 'required' => false,
                 'options' => [
+                    'attr' => [
+                        'class' => 'js-taggable-field',
+                        'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
+                    ],
                     'constraints' => [
                         //@todo: typedRegexConstraint generic_name PR #12735
                         new Regex([
@@ -176,7 +195,18 @@ class CmsPageType extends AbstractType
             ->add('friendly_url', TranslatableType::class, [
                 'error_bubbling' => false,
                 'constraints' => [
-                    new DefaultLanguage(),
+                    new DefaultLanguage([
+                        'message' => $this->translator->trans(
+                            'The field %field_name% is required at least in your default language.',
+                            [
+                                '%field_name%' => sprintf(
+                                    '"%s"',
+                                    $this->translator->trans('Friendly URL', [], 'Admin.Global')
+                                ),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
                 ],
                 'options' => [
                     'constraints' => [
@@ -219,7 +249,7 @@ class CmsPageType extends AbstractType
             ->add('is_indexed_for_search', SwitchType::class, [
                 'required' => false,
             ])
-            ->add('is_enabled', SwitchType::class, [
+            ->add('is_displayed', SwitchType::class, [
                 'required' => false,
             ])
         ;
