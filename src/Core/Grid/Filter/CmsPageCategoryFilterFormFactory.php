@@ -91,7 +91,7 @@ final class CmsPageCategoryFilterFormFactory implements GridFilterFormFactoryInt
         $request = $this->requestStack->getCurrentRequest();
 
         if (null !== $request) {
-            $newActionUrl = $this->urlGenerator->generate('admin_cms_pages_category_search', [
+            $newActionUrl = $this->urlGenerator->generate('admin_cms_pages_search', [
                 'id_cms_category' => $request->query->getInt('id_cms_category'),
             ]);
 

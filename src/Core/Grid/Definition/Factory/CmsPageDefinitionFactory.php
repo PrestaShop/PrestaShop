@@ -54,6 +54,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'cms_page';
+
     /**
      * @var int
      */
@@ -85,7 +87,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'cms_page';
+        return self::GRID_ID;
     }
 
     /**
@@ -190,19 +192,19 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         $actionsTypeOptions = [
-            'reset_route' => 'admin_common_reset_search',
+            'reset_route' => 'admin_common_reset_search_by_filter_id',
             'reset_route_params' => [
-                'controller' => 'CmsPage',
-                'action' => 'index',
+                'filterId' => self::GRID_ID,
             ],
             'redirect_route' => 'admin_cms_pages_index',
         ];
 
         if ($this->cmsCategoryParentId) {
-            //todo: implement query params to keep usage directly in the  filter reset generation. This will help to avoid request stack usage
             $actionsTypeOptions['redirect_route_params'] = [
                 'id_cms_category' => $this->cmsCategoryParentId,
             ];
+
+            $actionsTypeOptions['reset_route_params']['id_cms_category'] = $this->cmsCategoryParentId;
         }
 
         return (new FilterCollection())
