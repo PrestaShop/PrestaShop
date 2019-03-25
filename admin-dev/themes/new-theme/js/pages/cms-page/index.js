@@ -80,4 +80,7 @@ $(() => {
   cmsGrid.addExtension(new FiltersResetExtension());
   cmsGrid.addExtension(new SortingExtension());
   cmsGrid.addExtension(new ColumnTogglingExtension());
+  cmsGrid.addExtension(new BulkActionCheckboxExtension());
+  cmsGrid.addExtension(new SubmitBulkExtension());
+  cmsGrid.addExtension(new SubmitRowActionExtension());
 });
