@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler;
 
-
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
 
 /**
@@ -36,8 +35,6 @@ interface BulkEnableCmsPageHandlerInterface
 {
     /**
      * @param BulkEnableCmsPageCommand $command
-     *
-     * @return void
      */
     public function handle(BulkEnableCmsPageCommand $command);
 }

@@ -39,7 +39,7 @@ class CannotDeleteCmsPageException extends CmsPageException
      * @param int $code
      * @param null $previous
      */
-    public function __construct($cmsPageId, $message = "", $code = 0, $previous = null)
+    public function __construct($cmsPageId, $message = '', $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 

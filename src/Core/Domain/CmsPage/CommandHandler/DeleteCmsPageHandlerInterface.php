@@ -35,8 +35,6 @@ interface DeleteCmsPageHandlerInterface
 {
     /**
      * @param DeleteCmsPageCommand $command
-     *
-     * @return void
      */
     public function handle(DeleteCmsPageCommand $command);
 }

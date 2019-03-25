@@ -35,8 +35,6 @@ interface ToggleCmsPageStatusHandlerInterface
 {
     /**
      * @param ToggleCmsPageStatusCommand $command
-     *
-     * @return void
      */
     public function handle(ToggleCmsPageStatusCommand $command);
 }

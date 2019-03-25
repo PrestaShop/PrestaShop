@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler;
 
-
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
 
 /**
@@ -36,8 +35,6 @@ interface BulkDisableCmsPageHandlerInterface
 {
     /**
      * @param BulkDisableCmsPageCommand $command
-     *
-     * @return void
      */
     public function handle(BulkDisableCmsPageCommand $command);
 }

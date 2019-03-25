@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\CmsCategoryName;
@@ -312,7 +311,6 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
     }
 
     /**
-     *
      * Sets cms page category parent id directly from request attribute. On not found case, it assigns the default one.
      *
      * @param RequestStack $requestStack

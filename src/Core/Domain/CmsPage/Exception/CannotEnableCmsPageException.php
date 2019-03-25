@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
 
-
 class CannotEnableCmsPageException extends CmsPageException
 {
 }

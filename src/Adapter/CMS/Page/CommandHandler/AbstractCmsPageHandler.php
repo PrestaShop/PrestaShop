@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
-
 use CMS;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
@@ -43,6 +42,7 @@ abstract class AbstractCmsPageHandler
      * Gets cms object if it exists. If it does not exist it throws exceptions.
      *
      * @param int $cmsId
+     *
      * @return CMS
      *
      * @throws CmsPageException
@@ -58,7 +58,6 @@ abstract class AbstractCmsPageHandler
                     sprintf('Cms page with id "%s" not found', $cmsId)
                 );
             }
-
         } catch (PrestaShopException $exception) {
             throw new CmsPageException(
                 sprintf('An error occurred when trying to get cms pag with id %s', $cmsId)

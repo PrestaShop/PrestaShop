@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDeleteCmsPageExcep
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShopException;
 
+/**
+ * Deletes given cms page.
+ */
 final class DeleteCmsPageHandler extends AbstractCmsPageHandler implements DeleteCmsPageHandlerInterface
 {
     /**
@@ -46,7 +49,7 @@ final class DeleteCmsPageHandler extends AbstractCmsPageHandler implements Delet
         try {
             if (false === $cms->delete()) {
                 throw new CannotDeleteCmsPageException(
-                    $command->getCmsPageId()->getValue().
+                    $command->getCmsPageId()->getValue() .
                     sprintf(
                         'An error occurred when deleting cms page with id %s',
                         $command->getCmsPageId()->getValue()

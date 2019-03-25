@@ -496,7 +496,6 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param int $cmsId
      *
      * @return RedirectResponse
-     *
      */
     public function toggleCmsAction($cmsId)
     {
@@ -706,12 +705,11 @@ class CmsPageController extends FrameworkBundleAdminController
      * @param int $cmsPageId
      *
      * @return RedirectResponse
-     *
      */
     private function redirectToParentIndexPageByCmsPageId($cmsPageId)
     {
         try {
-            $cmsCategoryId = $this->getQueryBus()->handle(new GetCmsCategoryIdForRedirection((int)$cmsPageId));
+            $cmsCategoryId = $this->getQueryBus()->handle(new GetCmsCategoryIdForRedirection((int) $cmsPageId));
         } catch (CmsPageException $e) {
             $cmsCategoryId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
         }
