@@ -30,6 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Theme\Query;
  * This query is responsible for using withing query bus to call its handler which returns theme logo, email, invoice
  * and favicon logos.
  */
-class GetLogo
+class GetThemeLogos
 {
 }

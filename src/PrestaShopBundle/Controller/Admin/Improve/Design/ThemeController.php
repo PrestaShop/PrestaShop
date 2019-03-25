@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
-use PrestaShop\PrestaShop\Core\Domain\Theme\Query\GetLogo;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Query\GetThemeLogos;
 use PrestaShop\PrestaShop\Core\Domain\Theme\QueryResult\Logo;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
@@ -96,7 +96,7 @@ class ThemeController extends AbstractAdminController
         $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
         $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
         /** @var Logo $logoProvider */
-        $logoProvider = $this->getQueryBus()->handle(new GetLogo());
+        $logoProvider = $this->getQueryBus()->handle(new GetThemeLogos());
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
             'themeCatalogUrl' => $themeCatalogUrl,

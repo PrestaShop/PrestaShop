@@ -28,14 +28,14 @@ namespace PrestaShop\PrestaShop\Adapter\Theme\QueryHandler;
 
 
 use Configuration;
-use PrestaShop\PrestaShop\Core\Domain\Theme\Query\GetLogo;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Query\GetThemeLogos;
 use PrestaShop\PrestaShop\Core\Domain\Theme\QueryHandler\GetLogoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\QueryResult\Logo;
 
 /**
  * Responsible for providing header, email, invoice and favicon logo paths for specific shop context.
  */
-final class GetLogoHandler implements GetLogoHandlerInterface
+final class GetThemeLogosHandler implements GetLogoHandlerInterface
 {
     /**
      * @var string
@@ -60,7 +60,7 @@ final class GetLogoHandler implements GetLogoHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(GetLogo $query)
+    public function handle(GetThemeLogos $query)
     {
         return new Logo(
             $this->getHeaderLogoPath(),

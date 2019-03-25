@@ -27,15 +27,15 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\QueryHandler;
 
 
-use PrestaShop\PrestaShop\Core\Domain\Theme\Query\GetLogo;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Query\GetThemeLogos;
 use PrestaShop\PrestaShop\Core\Domain\Theme\QueryResult\Logo;
 
 interface GetLogoHandlerInterface
 {
     /**
-     * @param GetLogo $query
+     * @param GetThemeLogos $query
      *
      * @return Logo
      */
-    public function handle(GetLogo $query);
+    public function handle(GetThemeLogos $query);
 }
