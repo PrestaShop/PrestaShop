@@ -48,6 +48,11 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
     public function handle(AddCmsPageCommand $command)
     {
         $cms = $this->createCmsFromCommand($command);
+
+        if (false === $cms->validateFields(false)) {
+            throw new CmsPageException('Cms page contains invalid field values');
+        }
+
         try {
             if (false === $cms->add()) {
                 throw new CannotAddCmsPageException(
