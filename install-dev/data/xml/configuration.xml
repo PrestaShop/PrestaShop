@@ -841,5 +841,8 @@ Country</value>
     <configuration id="PS_LABEL_OOS_PRODUCTS_BOD" name="PS_LABEL_OOS_PRODUCTS_BOD">
       <value>Out-of-Stock</value>
     </configuration>
+    <configuration id="PS_MAIL_THEME" name="PS_MAIL_THEME">
+      <value>classic</value>
+    </configuration>
   </entities>
 </entity_configuration>

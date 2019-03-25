@@ -117,12 +117,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
     {
         /** @var LanguageRepositoryInterface $languageRepository */
         $languageRepository = $this->getContainer()->get('prestashop.core.admin.lang.repository');
-        $language = $languageRepository->getByLocale($locale);
-        if (!$language) {
-            $localeParts = explode('-', $locale);
-            $isoCode = strtolower($localeParts[0]);
-            $language = $languageRepository->getByIsoCode($isoCode);
-        }
+        $language = $languageRepository->getByLocaleOrIsoCode($locale);
 
         if (null === $language) {
             throw new InvalidArgumentException(sprintf('Could not find Language for locale: %s', $locale));

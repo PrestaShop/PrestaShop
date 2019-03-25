@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShopBundle\Entity\Lang;
 
@@ -73,6 +74,22 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     {
         return $this->searchLanguage(self::ISO_CODE, $isoCode);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByLocaleOrIsoCode($locale)
+    {
+        $language = $this->getByLocale($locale);
+        if (!$language) {
+            $localeParts = explode('-', $locale);
+            $isoCode = strtolower($localeParts[0]);
+            $language = $this->getByIsoCode($isoCode);
+        }
+
+        return $language;
+    }
+
 
     /**
      * @param string $key
