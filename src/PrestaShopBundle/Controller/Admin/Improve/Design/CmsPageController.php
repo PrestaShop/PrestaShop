@@ -392,7 +392,7 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @throws CmsPageCategoryException
      */
-    public function bulkCmsPageStatusEnableAction(Request $request)
+    public function bulkCmsPageCategoryStatusEnableAction(Request $request)
     {
         $cmsCategoriesToEnable = $request->request->get('cms_page_category_bulk');
         $cmsCategoryParentId = null;
@@ -434,7 +434,7 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @throws CmsPageCategoryException
      */
-    public function bulkCmsPageStatusDisableAction(Request $request)
+    public function bulkCmsPageCategoryStatusDisableAction(Request $request)
     {
         $cmsCategoriesToDisable = $request->request->get('cms_page_category_bulk');
         try {
