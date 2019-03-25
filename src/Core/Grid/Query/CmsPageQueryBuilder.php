@@ -113,6 +113,12 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $availableFilters = [
             'id_cms_category_parent',
+            'id_cms',
+            'link_rewrite',
+            'meta_title',
+            'head_seo_title',
+            'position',
+            'active',
         ];
 
         $qb = $this->connection
@@ -150,6 +156,16 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
+
+            if (in_array($filterName, ['id_cms', 'active', 'position'], true)) {
+                $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
+                $qb->setParameter($filterName, $value);
+
+                continue;
+            }
+
+            $qb->andWhere('cl.`' . $filterName . '` LIKE :' . $filterName);
+            $qb->setParameter($filterName, '%' . $value . '%');
         }
 
         return $qb;
