@@ -27,7 +27,11 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDisableCmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
@@ -487,10 +491,19 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToParentIndexPage((int) $cmsPageCategoryIds[0]);
     }
 
+    /**
+     * Toggles cms page listing status.
+     *
+     * @param int $cmsId
+     *
+     * @return RedirectResponse
+     *
+     * @throws CmsPageException
+     */
     public function toggleCmsAction($cmsId)
     {
         try {
-            $this->getCommandBus(new ToggleCmsPageStatusCommand((int) $cmsId));
+            $this->getCommandBus()->handle(new ToggleCmsPageStatusCommand((int) $cmsId));
 
             $this->addFlash(
                 'success',
@@ -499,6 +512,8 @@ class CmsPageController extends FrameworkBundleAdminController
         } catch (CmsPageException $exception) {
             $this->addFlash('error', $this->handleException($exception));
         }
+
+        return $this->redirectToParentIndexPageByCmsPageId($cmsId);
     }
 
     public function editCmsAction()
@@ -528,9 +543,18 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToIndexPageById($cmsPageCategoryParentId->getValue());
     }
 
+    /**
+     * @param int $cmsPageId
+     *
+     * @return RedirectResponse
+     *
+     * @throws CmsPageException
+     */
     private function redirectToParentIndexPageByCmsPageId($cmsPageId)
     {
+        $cmsCategoryId = $this->getQueryBus()->handle(new GetCmsCategoryIdForRedirection((int) $cmsPageId));
 
+        return $this->redirectToIndexPageById($cmsCategoryId->getValue());
     }
 
     /**
@@ -572,11 +596,6 @@ class CmsPageController extends FrameworkBundleAdminController
         return $cmsPageCategoryParentId;
     }
 
-    private function getParentCategoryIdByCmsPageId($cmsPageId)
-    {
-
-    }
-
     /**
      * Handles commands exceptions and formats to user friendly error message.
      *
@@ -595,6 +614,10 @@ class CmsPageController extends FrameworkBundleAdminController
 
         if ($exception instanceof CmsPageCategoryException && 0 !== $statusCode) {
             $errorMessage = $this->getCmsPageCategoryErrorByExceptionTypeAndCode($exception);
+        }
+
+        if ($exception instanceof CmsPageException && 0 === $statusCode) {
+            $errorMessage = $this->getCmsPageErrorByExceptionType($exception);
         }
 
         return $errorMessage;
@@ -737,5 +760,38 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->getFallbackErrorMessage($exceptionType, $statusCode);
+    }
+
+    /**
+     * Gets user friendly error message by exception.
+     *
+     * @param CmsPageException $exception
+     *
+     * @return string
+     */
+    private function getCmsPageErrorByExceptionType(CmsPageException $exception)
+    {
+        $exceptionTypeDictionary = [
+            CannotToggleCmsPageException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+            CannotDisableCmsPageException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+            CannotEnableCmsPageException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+        ];
+
+        $exceptionType = get_class($exception);
+
+        if (isset($exceptionTypeDictionary[$exceptionType])) {
+            return $exceptionTypeDictionary[$exceptionType];
+        }
+
+        return $this->getFallbackErrorMessage($exceptionType, $exception->getCode());
     }
 }
