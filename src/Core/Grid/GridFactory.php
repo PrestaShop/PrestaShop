@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Component\DependencyInjection\Container;
@@ -40,8 +39,6 @@ use Symfony\Component\DependencyInjection\Container;
  */
 final class GridFactory implements GridFactoryInterface
 {
-    use HookDispatcherAwareTrait;
-
     /**
      * @var GridDefinitionFactoryInterface
      */
