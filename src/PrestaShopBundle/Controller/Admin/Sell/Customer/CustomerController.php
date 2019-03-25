@@ -130,6 +130,16 @@ class CustomerController extends AbstractAdminController
             if ($customerId = $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
+                if ($request->query->has('submitFormAjax')) {
+                    /** @var ViewableCustomer $customerInformation */
+                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+
+                    return $this->render('@PrestaShop/Admin/Sell/Customer/modal_create_success.html.twig', [
+                        'customerId' => $customerId,
+                        'customerEmail' => $customerInformation->getPersonalInformation()->getEmail(),
+                    ]);
+                }
+
                 return $this->redirectToRoute('admin_customers_index');
             }
         } catch (CustomerException $e) {
@@ -163,8 +173,7 @@ class CustomerController extends AbstractAdminController
                 'is_password_required' => false,
             ];
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
-                ->getFormFor((int) $customerId, [], $customerFormOptions)
-            ;
+                ->getFormFor((int) $customerId, [], $customerFormOptions);
             $customerForm->handleRequest($request);
 
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
@@ -771,8 +780,7 @@ class CustomerController extends AbstractAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('customer_' . date('Y-m-d_His') . '.csv')
-        ;
+            ->setFileName('customer_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
