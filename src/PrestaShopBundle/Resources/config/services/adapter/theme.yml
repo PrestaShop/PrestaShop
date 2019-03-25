@@ -8,11 +8,11 @@ services:
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
       - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
 
-  prestashop.adapter.theme.query_handler.get_logo_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Theme\QueryHandler\GetLogoHandler'
+  prestashop.adapter.theme.query_handler.get_theme_logos_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Theme\QueryHandler\GetThemeLogosHandler'
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_")'
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_DIR_")'
     tags:
       - name: 'tactician.handler'
-        command: PrestaShop\PrestaShop\Core\Domain\Theme\Query\GetLogo
+        command: PrestaShop\PrestaShop\Core\Domain\Theme\Query\GetThemeLogos

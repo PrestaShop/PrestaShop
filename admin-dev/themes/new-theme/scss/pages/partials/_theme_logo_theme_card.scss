@@ -75,10 +75,6 @@
       left: 50%;
       transform: translate(-50%, -80%);
 
-      &:first-child {
-
-      }
-
       .action-button {
         @include action-button;
         font-weight: normal;
