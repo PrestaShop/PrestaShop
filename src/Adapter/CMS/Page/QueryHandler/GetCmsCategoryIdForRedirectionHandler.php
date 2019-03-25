@@ -24,18 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler;
 
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryId;
+use PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\AbstractCmsPageHandler;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler\GetCmsCategoryIdHandlerForRedirectionInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
-interface GetCmsCategoryIdHandlerInterface
+final class GetCmsCategoryIdForRedirectionHandler extends AbstractCmsPageHandler implements GetCmsCategoryIdHandlerForRedirectionInterface
 {
     /**
-     * @param GetCmsCategoryId $query
-     *
-     * @return CmsPageCategoryId
+     * {@inheritdoc}
      */
-    public function handle(GetCmsCategoryId $query);
+    public function handle(GetCmsCategoryIdForRedirection $query)
+    {
+        try {
+            $cms = $this->getCmsPageIfExistsById($query->getCmsPageId()->getValue());
+            $categoryId = (int) $cms->id_cms_category;
+        } catch (CmsPageException $exception) {
+            $categoryId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
+        }
+
+        return new CmsPageCategoryId($categoryId);
+    }
 }

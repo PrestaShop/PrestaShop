@@ -30,7 +30,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Query;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 
-class GetCmsCategoryId
+/**
+ * This class is used for getting the id which is used later on to redirect to the right page after certain controller
+ * actions.
+ */
+class GetCmsCategoryIdForRedirection
 {
     /**
      * @var CmsPageId
