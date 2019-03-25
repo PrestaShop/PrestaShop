@@ -61,3 +61,5 @@ services:
 
   prestashop.core.form.identifiable_object.data_provider.cms_page_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CmsPageFormDataProvider'
+    arguments:
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'

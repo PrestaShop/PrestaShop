@@ -24,49 +24,50 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 
-class CmsPageFormDataProvider implements FormDataProviderInterface
+/**
+ * Provides cms page identification
+ */
+class CmsPageId
 {
     /**
-     * @var array
+     * @var int
      */
-    private $contextShopIds;
+    private $cmsPageId;
 
     /**
-     * @param array $contextShopIds
+     * @param int $cmsPageId
+     *
+     * @throws CmsPageException
      */
-    public function __construct(array $contextShopIds)
+    public function __construct($cmsPageId)
     {
-        $this->contextShopIds = $contextShopIds;
+        $this->assertIsIntegerGreaterThanZero($cmsPageId);
+        $this->cmsPageId = $cmsPageId;
     }
 
     /**
-     * Get form data for given object with given id.
-     *
-     * @param int $id
-     *
-     * @return mixed
+     * @return int
      */
-    public function getData($id)
+    public function getValue()
     {
-        // TODO: Implement getData() method.
+        return $this->cmsPageId;
     }
 
     /**
-     * Get default form data.
+     * @param $value
      *
-     * @return mixed
+     * @throws CmsPageException
      */
-    public function getDefaultData()
+    private function assertIsIntegerGreaterThanZero($value)
     {
-        return [
-            'page_category' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
-            'shop_association' => $this->contextShopIds,
-            'is_indexed_for_search' => false,
-            'is_displayed' => false,
-        ];
+        if (!is_int($value) || 0 >= $value) {
+            throw new CmsPageException(
+                sprintf('Invalid cms page id %s supplied', var_export($value, true))
+            );
+        }
     }
 }

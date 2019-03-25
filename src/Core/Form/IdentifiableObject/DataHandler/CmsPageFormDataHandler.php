@@ -27,6 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 
 class CmsPageFormDataHandler implements FormDataHandlerInterface
 {
@@ -48,11 +51,29 @@ class CmsPageFormDataHandler implements FormDataHandlerInterface
      *
      * @param array $data
      *
-     * @return mixed
+     * @return int
+     *
+     * @throws CmsPageCategoryException
      */
     public function create(array $data)
     {
-        // TODO: Implement create() method.
+        /**
+         * @var CmsPageId
+         */
+        $cmsPageId = $this->commandBus->handle(new AddCmsPageCommand(
+            (int) $data['page_category'],
+            $data['title'],
+            $data['meta_title'],
+            $data['meta_description'],
+            $data['meta_keyword'],
+            $data['friendly_url'],
+            $data['content'],
+            $data['is_indexed_for_search'],
+            $data['is_displayed'],
+            is_array($data['shop_association']) ? $data['shop_association'] : []
+        ));
+
+        return $cmsPageId->getValue();
     }
 
     /**

@@ -33,8 +33,7 @@
   <div class="card-block row">
     <div class="card-text">
 
-      {% set invalidCharactersForCatalogLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>;=#{}' %}
-      {% set invalidCharactersForNameLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>={}' %}
+      {% set invalidCharsHint = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>={}' %}
 
       {{ ps.form_group_row(cmsPageForm.page_category, {}, {
         'label': 'Page category'|trans({}, 'Admin.Design.Feature'),
@@ -42,42 +41,38 @@
 
       {{ ps.form_group_row(cmsPageForm.title, {}, {
         'label': 'Title'|trans({}, 'Admin.Global'),
-        'help': invalidCharactersForCatalogLabel
+        'help': invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.meta_title, {}, {
         'label': 'Meta title'|trans({}, 'Admin.Global'),
-        'help': invalidCharactersForCatalogLabel
+        'help': invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.meta_description, {}, {
         'label': 'Meta description'|trans({}, 'Admin.Global'),
-        'help': invalidCharactersForCatalogLabel
+        'help': invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.meta_keyword, {}, {
         'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-        'help': invalidCharactersForCatalogLabel
+        'help': invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.friendly_url, {}, {
         'label': 'Friendly URL'|trans({}, 'Admin.Global'),
-        'help': invalidCharactersForCatalogLabel
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.content, {}, {
         'label': 'Page content'|trans({}, 'Admin.Design.Feature'),
-        'help': invalidCharactersForCatalogLabel
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.is_indexed_for_search, {}, {
         'label': 'Indexation by search engines'|trans({}, 'Admin.Design.Feature'),
-        'help': invalidCharactersForCatalogLabel
       }) }}
 
-      {{ ps.form_group_row(cmsPageForm.is_enabled, {}, {
+      {{ ps.form_group_row(cmsPageForm.is_displayed, {}, {
         'label': 'Displayed'|trans({}, 'Admin.Global'),
-        'help': invalidCharactersForCatalogLabel
       }) }}
 
       {% if cmsPageForm.shop_association is defined %}
@@ -105,3 +100,8 @@
 
 </div>
 {{ form_end(cmsPageForm) }}
+
+{% block javascripts %}
+
+  <script src="{{ asset('themes/new-theme/public/cms_page_form.bundle.js') }}"></script>
+{% endblock %}

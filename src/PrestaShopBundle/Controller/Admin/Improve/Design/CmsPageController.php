@@ -97,6 +97,11 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Creates cms page
      *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index"
+     * )
+     *
      * @param Request $request
      *
      * @return Response
@@ -105,6 +110,22 @@ class CmsPageController extends FrameworkBundleAdminController
     {
         $formBuilder = $this->getCmsPageFormBuilder();
         $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        try {
+            $result = $this->getCmsPageFormHandler()->handle($form);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
 
         return $this->render('PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig', [
             'cmsPageForm' => $form->createView(),
@@ -728,5 +749,15 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->getFallbackErrorMessage($exceptionType, $statusCode);
+    }
+
+    /**
+     * Gets user friendly error messages
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [];
     }
 }
