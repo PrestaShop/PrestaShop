@@ -1,0 +1,6 @@
+admin_mail_theme_generate:
+  path: /generate
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\MailTheme:generateMailsForm
+    _legacy_controller: AdminMailTheme

@@ -184,3 +184,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CmsCategoriesChoiceProvider'
     arguments:
       - '@=service("prestashop.adapter.cms_page.categories_provider").getAllNestedCategories()'
+
+  prestashop.core.form.choice_provider.mail_themes:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailThemeChoiceProvider'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface'
