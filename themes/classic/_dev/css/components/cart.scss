@@ -9,7 +9,7 @@
 }
 .card-block{
   &.cart-summary-totals {
-    padding: 1rem;
+    padding: .7rem 1rem 1rem;
     .cart-summary-line {
       padding: .5rem;
 
@@ -48,6 +48,7 @@
 .cart-summary-line {
   @include clearfix;
   clear: both;
+  margin-bottom: .315rem;
   .label {
     padding-left: 0;
     font-weight: normal;
@@ -116,7 +117,7 @@
 .block-promo {
   background: $gray-lighter-second;
   .promo-code {
-    padding: 1.60rem;
+    padding: 1rem;
     .alert-danger {
       position: relative;
       margin-top: 1.25rem;
