@@ -805,7 +805,7 @@ services:
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
-           - { name: form.type }
+            - { name: form.type }
 
     form.type.addons_connect:
         class: 'PrestaShopBundle\Form\Admin\Type\AddonsConnectType'

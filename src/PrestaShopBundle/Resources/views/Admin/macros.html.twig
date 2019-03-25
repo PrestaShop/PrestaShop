@@ -52,8 +52,12 @@
 </div>
 {% endmacro %}
 
-{% macro label_with_help(label, help, class = '') %}
-<label class="form-control-label {{ class }}">
+{% macro label_with_help(label, help, class = '', for = '', isRequired = false) %}
+<label{% if for is not empty %} for="{{ for }}"{% endif %} class="form-control-label {{ class }}">
+  {% if isRequired %}
+    <span class="text-danger">*</span>
+  {% endif %}
+
   {{ label }}
   <span
     class="help-box"
@@ -228,12 +232,16 @@
         {% set isRequired = extraVars.required %}
       {% endif %}
 
-      <label for="{{ form.vars.id }}" class="form-control-label">
-        {% if isRequired %}
-          <span class="text-danger">*</span>
-        {% endif %}
-        {{ extraVars.label }}
-      </label>
+      {% if extraVars.help is defined and extraVars.help is not empty %}
+        {{ self.label_with_help(extraVars.label, extraVars.help, '', form.vars.id, isRequired) }}
+      {% else %}
+        <label for="{{ form.vars.id }}" class="form-control-label">
+          {% if isRequired %}
+            <span class="text-danger">*</span>
+          {% endif %}
+          {{ extraVars.label }}
+        </label>
+      {% endif %}
     {% endif %}
 
     <div class="col-sm">

@@ -75,6 +75,8 @@
           'label': 'Email address'|trans({}, 'Admin.Global')
         }) }}
 
+        {% set passwordHelpMessage = 'Password should be at least %num% characters long.'|trans({ '%num%': 8 }, 'Admin.Advparameters.Help') %}
+
         {% if isRestrictedAccess %}
             {% set oldPasswordVars = employeeForm.change_password.old_password.vars|merge(old_password|default({})) %}
             {% set newPasswordFirstVars = employeeForm.change_password.new_password.children.first.vars|merge(new_password.first_options|default({})) %}
@@ -100,14 +102,14 @@
                   }) }}
 
                   {# New password first input #}
-                  {# Empty help text needed to render the text container for validation feedback messages #}
                   {{ ps.form_group_row(employeeForm.change_password.new_password.children.first, employeeForm.change_password.new_password.first.vars, {
                     label: 'New password'|trans({}, 'messages'),
-                    help: '',
+                    help: passwordHelpMessage,
                     required: true,
                   }) }}
 
                   {# New password second input (confirmation) #}
+                  {# Empty help text needed to render the text container for validation feedback messages #}
                   {{ ps.form_group_row(employeeForm.change_password.new_password.children.second, newPasswordSecondVars, {
                     label: 'Confirm password'|trans({}, 'messages'),
                     help: '',
@@ -148,7 +150,8 @@
             </div>
         {% else %}
           {{ ps.form_group_row(employeeForm.password, {}, {
-            'label': 'Password'|trans({}, 'Admin.Global')
+            'label': 'Password'|trans({}, 'Admin.Global'),
+            'help': passwordHelpMessage,
           }) }}
         {% endif %}
 
