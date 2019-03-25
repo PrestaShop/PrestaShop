@@ -28,6 +28,9 @@ use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class LanguageCore extends ObjectModel
 {
@@ -1048,7 +1051,7 @@ class LanguageCore extends ObjectModel
         } else {
             $lang_pack = self::getLangDetails($iso);
             self::installSfLanguagePack($lang_pack['locale'], $errors);
-            self::installEmailsLanguagePack($lang_pack, $errors);
+            self::generateEmailsLanguagePack($lang_pack, $errors);
         }
 
         return count($errors) ? $errors : true;
@@ -1064,7 +1067,6 @@ class LanguageCore extends ObjectModel
         }
 
         self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
-        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'emails');
 
         return !count($errors);
     }
@@ -1109,6 +1111,33 @@ class LanguageCore extends ObjectModel
         }
     }
 
+    /**
+     * This method has been introduce in Language out of conveniency but if you can prefer
+     * using the GenerateMailTemplatesService or MailTemplateGenerator services.
+     *
+     * @param array $lang_pack
+     * @param array $errors
+     */
+    public static function generateEmailsLanguagePack($lang_pack, &$errors = array())
+    {
+        $locale = $lang_pack['locale'];
+        $sfContainer = SymfonyContainer::getInstance();
+        /** @var GenerateMailTemplatesService $mailGenerator */
+        $mailGenerator = $sfContainer->get('prestashop.service.generate_mail_templates');
+        $mailTheme = Configuration::get('PS_MAIL_THEME');
+        try {
+            $mailGenerator->generateMailTemplates($mailTheme, $locale, true);
+        } catch (CoreException $e) {
+            $errors[] = Context::getContext()->getTranslator()->trans('Could not generate mail templates: %s.', array($e->getMessage()), 'Admin.International.Notification');
+        }
+    }
+
+    /**
+     * @param array $lang_pack
+     * @param array $errors
+     *
+     * @deprecated This method is deprecated since 1.7.6.0 use Language::generateEmailsLanguagePack instead or even better use GenerateMailTemplatesService
+     */
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
         $folder = _PS_TRANSLATIONS_DIR_ . 'emails-' . $lang_pack['locale'];
@@ -1171,7 +1200,7 @@ class LanguageCore extends ObjectModel
 
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
-        self::installEmailsLanguagePack($lang_pack, $errors);
+        self::generateEmailsLanguagePack($lang_pack, $errors);
 
         return count($errors) ? $errors : true;
     }

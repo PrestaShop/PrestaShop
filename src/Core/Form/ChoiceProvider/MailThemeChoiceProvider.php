@@ -45,7 +45,7 @@ class MailThemeChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getChoices()
     {
