@@ -58,7 +58,7 @@
     </div>
     <div class="cart-summary-line">
       <span class="label sub">{$cart.subtotals.tax.label}</span>
-      <span class="value sub">{$cart.subtotals.tax.value}&nbsp;({l s='VAT' d=''})</span>
+      <span class="value sub">{$cart.subtotals.tax.value}</span>
     </div>
   </div>
 

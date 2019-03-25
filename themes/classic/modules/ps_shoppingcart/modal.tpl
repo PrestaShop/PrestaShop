@@ -60,7 +60,7 @@
               <p><span>{l s='Total shipping:' d='Shop.Theme.Checkout'}</span>&nbsp;<span><strong>{$cart.subtotals.shipping.value} {hook h='displayCheckoutSubtotalDetails' subtotal=$cart.subtotals.shipping}</strong></span></p>
               <p class="product-total"><span><strong>{l s='Total:' d='Shop.Theme.Checkout'}</strong></span>&nbsp;<span><strong>{$cart.totals.total.value} {$cart.labels.tax_short}</strong></span></p>
               {if $cart.subtotals.tax}
-                <p class="no-spacing">{$cart.subtotals.tax.label}&nbsp;<strong>{$cart.subtotals.tax.value}&nbsp;({l s='VAT' d='Shop.Theme.Checkout'})</strong></p>
+                <p class="no-spacing">{$cart.subtotals.tax.label}&nbsp;<strong>{$cart.subtotals.tax.value}</strong></p>
               {/if}
               <div class="cart-content-btn">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{l s='Continue shopping' d='Shop.Theme.Actions'}</button>
