@@ -3300,6 +3300,7 @@ abstract class ModuleCore implements ModuleInterface
                     'name' => $hook_name,
                     'description' => $current_hook['description'],
                     'title' => $current_hook['title'],
+                    'registered' => (int) $this->isRegisteredInHook($hook_name),
                 );
             }
         }
