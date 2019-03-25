@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -57,10 +58,14 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
     private $cmsCategoryParentId;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param RequestStack $requestStack
      */
-    public function __construct(RequestStack $requestStack)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        RequestStack $requestStack
+    ) {
+        parent::__construct($hookDispatcher);
         $this->setCmsPageCategoryParentId($requestStack);
     }
 
