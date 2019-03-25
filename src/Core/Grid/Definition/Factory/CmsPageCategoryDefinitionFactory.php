@@ -52,6 +52,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'cms_page_category';
     /**
      * @var int
      */
@@ -74,7 +75,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getId()
     {
-        return 'cms_page_category';
+        return self::GRID_ID;
     }
 
     /**
@@ -181,10 +182,9 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
     protected function getFilters()
     {
         $actionsTypeOptions = [
-            'reset_route' => 'admin_common_reset_search',
+            'reset_route' => 'admin_common_reset_search_by_filter_id',
             'reset_route_params' => [
-                'controller' => 'CmsPage',
-                'action' => 'index',
+                'filterId' => self::GRID_ID,
             ],
             'redirect_route' => 'admin_cms_pages_index',
         ];
@@ -193,6 +193,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             $actionsTypeOptions['redirect_route_params'] = [
                 'id_cms_category' => $this->cmsCategoryParentId,
             ];
+
+            $actionsTypeOptions['reset_route_params']['id_cms_category'] = $this->cmsCategoryParentId;
         }
 
         return (new FilterCollection())

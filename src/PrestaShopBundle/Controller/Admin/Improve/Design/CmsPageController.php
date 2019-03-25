@@ -48,6 +48,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
@@ -55,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,7 +74,7 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @param CmsPageCategoryFilters $categoryFilters
      * @param CmsPageFilters $cmsFilters
-     * @param Request $reques
+     * @param Request $request
      *
      * @return Response
      */
@@ -105,6 +108,41 @@ class CmsPageController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cms_page_category';
+        $filterId = CmsPageCategoryDefinitionFactory::GRID_ID;
+        if ($request->request->has(CmsPageDefinitionFactory::GRID_ID)) {
+            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cms_page';
+            $filterId = CmsPageDefinitionFactory::GRID_ID;
+        }
+
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        $cmsCategoryId = $request->query->getInt('id_cms_category');
+
+        $queryParametersToKeep = [];
+        if ($cmsCategoryId && CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID !== $cmsCategoryId) {
+            $queryParametersToKeep = [
+                'id_cms_category' => $cmsCategoryId,
+            ];
+        }
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get($gridDefinitionFactory),
+            $request,
+            $filterId,
+            'admin_cms_pages_index',
+            $queryParametersToKeep
+        );
     }
 
     /**
