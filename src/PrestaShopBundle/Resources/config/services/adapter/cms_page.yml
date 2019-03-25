@@ -25,3 +25,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection
+
+  prestashop.adapter.cms_page.command_handler.delete_cms_page:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\DeleteCmsPageHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand
