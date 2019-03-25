@@ -211,9 +211,13 @@ $search-border-color: #bbcdd2
 
 			#employee_links
 				.employee_avatar
+					height: auto
+					width: auto
 					img
 						border: none
 						padding: 0
+						width: 3.8rem
+						height: 3.8rem
 
 				@media (max-width: $screen-sm)
 					li
@@ -249,7 +253,7 @@ $search-border-color: #bbcdd2
 							color: white
 					&.username
 						font-weight: 600
-						padding: 16px 0 9px
+						padding: 1rem 0 1.5rem
 						display: inline-block
 						max-width: 120px
 						vertical-align: top
@@ -265,6 +269,7 @@ $search-border-color: #bbcdd2
 							padding: 0
 							margin-right: 5px
 							color: #576C72
+							vertical-align: middle;
 						&.admin-link
 							border: 1px solid #899EA5
 							border-radius: 1px
