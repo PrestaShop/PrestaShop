@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 
+/**
+ * Class which holds the cms page id value.
+ */
 class CmsPageId
 {
     /**

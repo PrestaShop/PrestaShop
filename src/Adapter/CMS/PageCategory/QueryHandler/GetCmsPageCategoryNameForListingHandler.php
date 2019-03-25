@@ -30,7 +30,6 @@ use CMSCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler\GetCmsPageCategoryNameForListingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\CmsCategoryName;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -67,9 +66,7 @@ final class GetCmsPageCategoryNameForListingHandler implements GetCmsPageCategor
     {
         $cmsCategory = new CMSCategory($this->getCmsCategoryIdFromRequest());
 
-        return new CmsCategoryName(
-            isset($cmsCategory->name[$this->contextLanguageId]) ? $cmsCategory->name[$this->contextLanguageId] : ''
-        );
+        return isset($cmsCategory->name[$this->contextLanguageId]) ? $cmsCategory->name[$this->contextLanguageId] : '';
     }
 
     /**

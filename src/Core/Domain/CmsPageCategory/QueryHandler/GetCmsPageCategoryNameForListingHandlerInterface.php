@@ -37,7 +37,7 @@ interface GetCmsPageCategoryNameForListingHandlerInterface
     /**
      * @param GetCmsPageCategoryNameForListing $query
      *
-     * @return CmsCategoryName
+     * @return string
      */
     public function handle(GetCmsPageCategoryNameForListing $query);
 }
