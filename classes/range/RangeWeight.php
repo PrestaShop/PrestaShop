@@ -96,11 +96,11 @@ class RangeWeightCore extends ObjectModel
     }
 
     /**
-     * Get all available price weight.
+     * Get all available weight ranges.
      *
      * @param int $id_carrier Carrier identifier
      *
-     * @return array|bool All range for this carrier
+     * @return array|false All ranges for this carrier, or false on error
      */
     public static function getRanges($id_carrier)
     {
@@ -112,14 +112,14 @@ class RangeWeightCore extends ObjectModel
     }
 
     /**
-     * Check if a range exist for delimiter1 and delimiter2 by id_carrier or id_reference
+     * Check if a range exists for delimiter1 and delimiter2 by id_carrier or id_reference
      *
      * @param int|null $id_carrier Carrier identifier
      * @param float $delimiter1
      * @param float $delimiter2
      * @param int|null $id_reference Carrier reference is the initial Carrier identifier (optional)
      *
-     * @return int|bool Number of existing range
+     * @return int|false Total of existing ranges, or false on error
      */
     public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
@@ -135,14 +135,14 @@ class RangeWeightCore extends ObjectModel
     }
 
     /**
-     * Check if a range overlap another range for this carrier
+     * Check if a range overlaps another range for this carrier
      *
      * @param int $id_carrier Carrier identifier
      * @param float $delimiter1
      * @param float $delimiter2
      * @param int|null $id_rang RangeWeight identifier (optional)
      *
-     * @return int|bool Number of range overlap
+     * @return int|false Total of overlapping ranges, or false on error
      */
     public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
     {
