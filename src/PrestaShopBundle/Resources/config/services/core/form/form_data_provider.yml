@@ -63,7 +63,8 @@ services:
 
   prestashop.core.form.identifiable_object.data_provider.tax_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxFormDataProvider'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+    arguments:
+      - '@prestashop.core.query_bus'
 
   prestashop.core.form.identifiable_object.data_provider.manufacturer_address_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ManufacturerAddressFormDataProvider'

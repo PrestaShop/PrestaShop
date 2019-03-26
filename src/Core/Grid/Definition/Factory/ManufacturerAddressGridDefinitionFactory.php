@@ -129,7 +129,7 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_manufacturer_addresses_edit',
-                                'route_param_name' => 'manufacturerAddressId',
+                                'route_param_name' => 'addressId',
                                 'route_param_field' => 'id_address',
                             ])
                         )
