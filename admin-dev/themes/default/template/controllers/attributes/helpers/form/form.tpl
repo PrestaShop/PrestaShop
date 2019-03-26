@@ -46,6 +46,13 @@
 			{else}
 				<p class="form-control-static">{l s='None' d='Admin.Global'}</p>
 			{/if}
+			{if isset($imageTextureUrl) && $imageTextureUrl && isset($imageTextureExists) && $imageTextureExists}
+			<p>
+				<a class="btn btn-default" href="{$imageTextureUrl}">
+					<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
+				</a>
+			</p>
+			{/if}
 		</div>
 	{else}
 		{$smarty.block.parent}
