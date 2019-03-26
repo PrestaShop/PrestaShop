@@ -166,7 +166,7 @@ class Currency implements CurrencyInterface
      */
     public function getSymbol($localeCode)
     {
-        if (!isset($this->symbols[$localeCode])) {
+        if (!array_key_exists($localeCode, $this->symbols)) {
             throw new LocalizationException('Unknown locale code: ' . $localeCode);
         }
 

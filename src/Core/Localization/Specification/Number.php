@@ -323,4 +323,12 @@ class Number implements NumberInterface
             throw new LocalizationException('Invalid secondaryGroupSize');
         }
     }
+
+    /**
+     * @param int $maxFractionDigits
+     */
+    public function setMaxFractionDigits($maxFractionDigits)
+    {
+        $this->maxFractionDigits = $maxFractionDigits;
+    }
 }

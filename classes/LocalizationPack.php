@@ -23,7 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Factory as SpecificationFactory;
 
 class LocalizationPackCore
 {
@@ -325,25 +329,18 @@ class LocalizationPackCore
                     continue;
                 }
 
-                $defaultLang = (int) Configuration::get('PS_LANG_DEFAULT');
+                /** @var Language $defaultLang */
+                $defaultLang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
-                $currency = new Currency(null, $defaultLang);
+                $currency = new Currency(null, $defaultLang->id);
                 $currency->name = (string) $attributes['name'];
                 $currency->iso_code = (string) $attributes['iso_code'];
                 $currency->iso_code_num = (int) $attributes['iso_code_num'];
                 $currency->numeric_iso_code = (string) $attributes['iso_code_num'];
-                // @todo retrieve sign/symbol from CLDR reference
-                $currency->sign = (string) $attributes['sign'];
-                $currency->symbol = (string) $attributes['sign'];
                 $currency->blank = (int) $attributes['blank'];
                 $currency->conversion_rate = 1; // This value will be updated if the store is online
                 $currency->format = (int) $attributes['format'];
                 $currency->decimals = (int) $attributes['decimals'];
-                // @todo retrieve precision from CLDR reference
-                // needs to be tested against installation process, currency adding, and automated tests
-                // following does not work properly since CLDR service is not initialized at install
-                // $currency->precision = (int) Tools::getContextLocale(Context::getContext())->getPriceSpecifications()->get($currency->iso_code)->getMaxFractionDigits();
-                $currency->precision = (int) $attributes['decimals'] > 0 ? 2 : 0;
                 $currency->active = true;
                 if (!$currency->validateFields()) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid currency properties.', array(), 'Admin.International.Notification');
@@ -356,6 +353,9 @@ class LocalizationPackCore
 
                         return false;
                     }
+                    Cache::clear();
+                    $this->setCurrencyCldrData($currency, $defaultLang);
+                    $currency->save();
 
                     PaymentModule::addCurrencyPermissions($currency->id);
                 }
@@ -372,6 +372,37 @@ class LocalizationPackCore
         }
 
         return true;
+    }
+
+    protected function setCurrencyCldrData(Currency $currency, Language $lang){
+        $context = Context::getContext();
+        $container = isset($context->controller) ? $context->controller->getContainer() : null;
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
+        }
+        /** @var \PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository $localeRepo */
+        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        /** @var \PrestaShop\PrestaShop\Core\Localization\Locale\Repository $localeRepo */
+        $localeRepo = $container->get('prestashop.core.localization.locale.repository');
+        /** @var \PrestaShop\PrestaShop\Core\Localization\Currency\Repository $currencyRepo */
+        $currencyRepo = $container->get('prestashop.core.localization.currency.repository');
+
+        $cldrCurrency = $currencyRepo->getCurrency($currency->iso_code, $lang->locale);
+        $cldrLocale = $localeRepoCLDR->getLocale($lang->locale);
+        $priceSpecification = (new SpecificationFactory())->buildPriceSpecification(
+            $lang->locale,
+            $cldrLocale,
+            $cldrCurrency,
+            $localeRepo->isNumberGroupingUsed(),
+            $localeRepo->getCurrencyDisplayType()
+        );
+        $currency->precision = (int) $priceSpecification->getMaxFractionDigits();
+        $symbol = (string) $priceSpecification->getCurrencySymbol();
+        if (empty($symbol)) {
+            $symbol = $currency->iso_code;
+        }
+        $currency->sign = $symbol;
+        $currency->symbol = $symbol;
     }
 
     /**
