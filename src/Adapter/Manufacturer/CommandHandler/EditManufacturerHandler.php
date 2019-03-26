@@ -50,6 +50,10 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
         $this->populateManufacturerWithData($manufacturer, $command);
 
         try {
+            if (false === $manufacturer->validateFields(false)) {
+                throw new ManufacturerException('Manufacturer contains invalid field values');
+            }
+
             if (null !== $command->getAssociatedShops()) {
                 $this->associateWithShops($manufacturer, $command->getAssociatedShops());
             }

@@ -47,6 +47,10 @@ final class AddManufacturerHandler extends AbstractManufacturerHandler implement
         $this->fillLegacyManufacturerWithData($manufacturer, $command);
 
         try {
+            if (false === $manufacturer->validateFields(false)) {
+                throw new ManufacturerException('Manufacturer contains invalid field values');
+            }
+
             if (!$manufacturer->add()) {
                 throw new ManufacturerException(
                     sprintf('Failed to add new manufacturer "%s"', $command->getName())
