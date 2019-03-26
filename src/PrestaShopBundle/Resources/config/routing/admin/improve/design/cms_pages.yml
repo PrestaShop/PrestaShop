@@ -10,7 +10,7 @@ admin_cms_pages_search_cms_category:
     methods: POST
     defaults:
         _controller: PrestaShopBundle:Admin\Common:searchGrid
-        gridDefinitionFactoryService: prestashop.core.grid.definition.factory.cms_page_category
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.cms_page_category
         redirectRoute: admin_cms_pages_index
         redirectQueryParamsToKeep:
           - 'id_cms_category'

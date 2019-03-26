@@ -10,7 +10,7 @@ admin_categories_search:
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Common:searchGrid
-        gridDefinitionFactoryService: prestashop.core.grid.definition.factory.category
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.category
         redirectRoute: admin_categories_index
         redirectQueryParamsToKeep:
             - 'id_category'
