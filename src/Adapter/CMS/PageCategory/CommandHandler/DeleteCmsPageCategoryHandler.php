@@ -67,7 +67,6 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
                     )
                 );
             }
-
         } catch (PrestaShopException $exception) {
             throw new CmsPageCategoryException(
                 sprintf(

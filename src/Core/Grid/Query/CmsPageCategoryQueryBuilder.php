@@ -201,7 +201,7 @@ final class CmsPageCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @param $positionFilterValue
      *
-     * @return int|null - if null is returned then no results are found since position field does not hold null values.
+     * @return int|null - if null is returned then no results are found since position field does not hold null values
      */
     private function getModifiedPositionFilter($positionFilterValue)
     {
