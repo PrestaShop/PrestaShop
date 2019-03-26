@@ -32,22 +32,33 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class GenerateMailsType is responsible for build the form to generate mail
+ * templates, the link is hidden for now but accessible via admin_mail_theme_generate_form
+ * route (/improve/international/mail_theme/generate)
+ */
 class GenerateMailsType extends TranslatorAwareType
 {
+    /** @var array */
+    private $mailThemes;
+
     /** @var array */
     private $themes;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
+     * @param array $mailThemes
      * @param array $themes
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        array $mailThemes,
         array $themes
     ) {
         parent::__construct($translator, $locales);
+        $this->mailThemes = $mailThemes;
         $this->themes = $themes;
     }
 
@@ -56,16 +67,25 @@ class GenerateMailsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $noTheme = $this->trans('Core (no theme selected)', 'Admin.International.Feature');
+
         $builder
-            ->add('theme', ChoiceType::class, [
-                'choices' => $this->themes,
+            ->add('mailTheme', ChoiceType::class, [
+                'choices' => $this->mailThemes,
             ])
             ->add('language', ChoiceType::class, [
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,
             ])
-            ->add('override', SwitchType::class)
+            ->add('theme', ChoiceType::class, [
+                'choices' => $this->themes,
+                'placeholder' => $noTheme,
+                'required' => false,
+                'empty_data' => '',
+                'data' => '',
+            ])
+            ->add('overwrite', SwitchType::class, ['data' => false])
         ;
     }
 }
