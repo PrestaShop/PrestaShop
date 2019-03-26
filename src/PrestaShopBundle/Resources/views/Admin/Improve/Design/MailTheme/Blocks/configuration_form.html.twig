@@ -37,7 +37,10 @@
 
             <div class="form-group row">
               <label class="form-control-label">
-                {{ 'Select your default mail theme'|trans }}
+                {{ ps.label_with_help(
+                  ('Select your default mail theme'|trans),
+                  ('This won\'t regenerate mail templates, it only sets the default mail theme for future generation (when a language is installed for example).'|trans({}, 'Admin.MailTheme.Help'))
+                ) }}
               </label>
               <div class="col-sm">
                 {{ form_errors(mailThemeConfigurationForm.configuration.defaultTheme) }}
