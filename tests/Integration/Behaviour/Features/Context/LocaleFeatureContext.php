@@ -26,26 +26,46 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Context\Context as BehatContext;
+use AppKernel;
+use Context;
 
-/**
- * PrestaShopFeatureContext provides behat hooks to perform necessary operations for testing:
- * - shop setup
- * - database reset between scenario
- * - cache clear between steps
- * - ...
- */
-abstract class AbstractPrestaShopFeatureContext implements BehatContext
+class LocaleFeatureContext extends AbstractPrestaShopFeatureContext
 {
-    const MODULES_DIRECTORY = __DIR__ . '/../../../../Resources/modules';
+    /**
+     * PrestaShop Symfony AppKernel
+     *
+     * Required to access services through the container
+     *
+     * @var AppKernel
+     */
+    protected static $kernel;
 
-    protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare($scope)
     {
-        if (!isset($fixtures[$fixtureIndex])) {
-            $fixtureNames = array_keys($fixtures);
-            $firstFixtureNames = array_splice($fixtureNames, 0, 5);
-            $firstFixtureNamesStr = implode(',', $firstFixtureNames);
-            throw new \Exception($fixtureName . ' named "' . $fixtureIndex . '" was not added in fixtures. First 5 added are: ' . $firstFixtureNamesStr);
-        }
+        require_once __DIR__ . '/../../bootstrap.php';
+        self::$kernel = new AppKernel('test', true);
+        self::$kernel->boot();
+    }
+
+    /**
+     * @Given I set the translation locale to :locale
+     */
+    public function iSetTheTranslationLocaleTo($locale)
+    {
+        Context::getContext()->getTranslator()->setLocale($locale);
+        $this::getContainer()->get('translator')->setLocale($locale);
+    }
+
+    /**
+     * Return PrestaShop Symfony services container
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    public static function getContainer()
+    {
+        return static::$kernel->getContainer();
     }
 }
