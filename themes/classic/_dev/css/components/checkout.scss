@@ -371,6 +371,14 @@ body#checkout {
 }
 #order-items {
   border-right: $gray-light 1px solid;
+  .h3 {
+    &._desktop-title {
+      text-align: right;
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+    }
+  }
   hr {
     border-top-color: $gray-darker;
   }
@@ -431,7 +439,7 @@ body#checkout {
 }
 @include media-breakpoint-down(md) {
   .done {
-    margin: 0;
+    margin-right: .625rem;
     padding: 0;
   }
   body#checkout section.checkout-step .address-item {

@@ -23,10 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div id="order-items" class="col-md-12">
-
-  {block name='order_items_table_head'}
-    <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
-  {/block}
+  <div class="row">
+    {block name='order_items_table_head'}
+      <h3 class="card-title h3 col-md-6 col-12">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
+      <h3 class="card-title h3 col-md-3 _desktop-title">{l s='Unit price' d='Shop.Theme.Checkout'}</h3>
+      <h3 class="card-title h3 col-md-3 _desktop-title">{l s='Total (tax incl.)' d='Shop.Theme.Checkout'}</h3>
+    {/block}
+  </div>
 
   <div class="order-confirmation-table">
 
