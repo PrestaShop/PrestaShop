@@ -68,7 +68,7 @@ class MailTemplateGenerator
      * @param LanguageInterface $language
      * @param string $coreOutputFolder
      * @param string $modulesOutputFolder
-     * @param bool $overrideTemplates
+     * @param bool $overwriteTemplates
      *
      * @throws FileNotFoundException
      */
@@ -77,7 +77,7 @@ class MailTemplateGenerator
         LanguageInterface $language,
         $coreOutputFolder,
         $modulesOutputFolder,
-        $overrideTemplates = false
+        $overwriteTemplates = false
     ) {
         if (!is_dir($coreOutputFolder)) {
             throw new FileNotFoundException(sprintf(
@@ -109,7 +109,7 @@ class MailTemplateGenerator
 
             //Generate HTML template
             $htmlTemplatePath = $this->generateTemplatePath($layout, MailTemplateInterface::HTML_TYPE, $outputFolder);
-            if (!$this->fileSystem->exists($htmlTemplatePath) || $overrideTemplates) {
+            if (!$this->fileSystem->exists($htmlTemplatePath) || $overwriteTemplates) {
                 $generatedTemplate = $this->renderer->renderHtml($layout, $language);
                 $this->fileSystem->dumpFile($htmlTemplatePath, $generatedTemplate);
                 $this->logger->info(sprintf('Generate html template %s at %s', $layout->getName(), $htmlTemplatePath));
@@ -117,7 +117,7 @@ class MailTemplateGenerator
 
             //Generate TXT template
             $txtTemplatePath = $this->generateTemplatePath($layout, MailTemplateInterface::TXT_TYPE, $outputFolder);
-            if ($this->fileSystem->exists($txtTemplatePath) || $overrideTemplates) {
+            if (!$this->fileSystem->exists($txtTemplatePath) || $overwriteTemplates) {
                 $generatedTemplate = $this->renderer->renderTxt($layout, $language);
                 $this->fileSystem->dumpFile($txtTemplatePath, $generatedTemplate);
                 $this->logger->info(sprintf('Generate txt template %s at %s', $layout->getName(), $txtTemplatePath));
