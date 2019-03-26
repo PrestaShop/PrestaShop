@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -57,17 +58,33 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      * @var int
      */
     private $cmsCategoryParentId;
+    /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
+     * @var bool
+     */
+    private $isMultiStoreFeatureUsed;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param RequestStack $requestStack
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param bool $isMultiStoreFeatureUsed
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
+        $isMultiStoreFeatureUsed
     ) {
         parent::__construct($hookDispatcher);
         $this->setCmsPageCategoryParentId($requestStack);
+
+        $this->multistoreContextChecker = $multistoreContextChecker;
+        $this->isMultiStoreFeatureUsed = $isMultiStoreFeatureUsed;
     }
 
     /**
@@ -91,7 +108,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columnCollection = (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
                     'bulk_field' => 'id_cms_category',
@@ -117,18 +134,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setOptions([
                     'field' => 'description',
                     'sortable' => false,
-                ])
-            )
-            ->add((new PositionColumn('position'))
-                ->setName($this->trans('Position', [], 'Admin.Global'))
-                ->setOptions([
-                    'id_field' => 'id_cms_category',
-                    'position_field' => 'position',
-                    'update_method' => 'POST',
-                    'update_route' => 'admin_cms_pages_update_position_cms_category',
-                    'record_route_params' => [
-                        'id_parent' => 'id_cms_category',
-                    ],
                 ])
             )
             ->add((new ToggleColumn('active'))
@@ -180,6 +185,26 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ])
             )
         ;
+
+        if ($this->isAllShopContextOrShopFeatureIsNotUsed()) {
+            $columnCollection
+                ->addAfter(
+                    'description',
+                    (new PositionColumn('position'))
+                        ->setName($this->trans('Position', [], 'Admin.Global'))
+                        ->setOptions([
+                            'id_field' => 'id_cms_category',
+                            'position_field' => 'position',
+                            'update_method' => 'POST',
+                            'update_route' => 'admin_cms_pages_update_position_cms_category',
+                            'record_route_params' => [
+                                'id_parent' => 'id_cms_category',
+                            ],
+                        ])
+                );
+        }
+
+        return $columnCollection;
     }
 
     /**
@@ -202,7 +227,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             ];
         }
 
-        return (new FilterCollection())
+        $filterCollection = (new FilterCollection())
             ->add((new Filter('id_cms_category', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
@@ -230,15 +255,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ])
                 ->setAssociatedColumn('description')
             )
-            ->add((new Filter('position', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Position', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('position')
-            )
             ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
             )
@@ -247,6 +263,22 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setAssociatedColumn('actions')
             )
         ;
+
+        if ($this->isAllShopContextOrShopFeatureIsNotUsed()) {
+            $filterCollection
+                ->add((new Filter('position', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Position', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('position')
+                )
+            ;
+        }
+
+        return $filterCollection;
     }
 
     /**
@@ -310,5 +342,17 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
         if (null !== $request && $request->query->getInt('id_cms_category')) {
             $this->cmsCategoryParentId = $request->query->getInt('id_cms_category');
         }
+    }
+
+    /**
+     * This function is required due to in cms_category contains position column - on ideal case cms_category_shop
+     * should have this column configured instead.
+     * In such case the condition would be $this->multistoreContextChecker->isSingleShopContext()
+     *
+     * @return bool
+     */
+    private function isAllShopContextOrShopFeatureIsNotUsed()
+    {
+        return $this->multistoreContextChecker->isAllShopContext() || !$this->isMultiStoreFeatureUsed;
     }
 }
