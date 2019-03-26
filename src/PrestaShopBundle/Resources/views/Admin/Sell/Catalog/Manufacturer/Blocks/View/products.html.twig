@@ -39,16 +39,26 @@
           {% endif %}
 
           <div class="d-inline-block float-right">
-            <a class="btn btn-primary btn-sm" href="{{ path('admin_product_form', {'id': product.id}) }}">
-              {{ 'Edit'|trans({}, 'Admin.Actions') }}
-            </a>
-            <button type="button"
-                    class="btn btn-primary btn-sm js-form-submit-btn"
-                    data-form-submit-url="{{ path('admin_product_unit_action', {'action': 'delete', 'id': product.id}) }}"
-                    data-form-confirm-message="{{ '%s%s?'|format('Delete item #'|trans({}, 'Admin.International.Feature'), product.id) }}"
-            >
-              {{ 'Delete'|trans({}, 'Admin.Actions') }}
-            </button>
+            <div class="btn-group-action text-right">
+              <div class="btn-group">
+                <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="btn tooltip-link js-submit-row-action dropdown-item"
+                     href="{{ path('admin_product_form', {'id': product.id}) }}"
+                  >
+                    {{ 'Edit'|trans({}, 'Admin.Actions') }}
+                  </a>
+                  <button class="btn tooltip-link js-form-submit-btn dropdown-item"
+                          type="button"
+                          data-form-submit-url="{{ path('admin_product_unit_action', {'action': 'delete', 'id': product.id}) }}"
+                          data-form-confirm-message="{{ '%s%s?'|format('Delete item #'|trans({}, 'Admin.International.Feature'), product.id) }}"
+                  >
+                    {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="card-body">
