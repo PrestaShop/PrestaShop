@@ -328,3 +328,13 @@ services:
             -
               'options': 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
             - 'Tax'
+
+    prestashop.admin.mail_theme.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.mail_theme.form_data_provider'
+            -
+              'configuration': 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType'
+            - 'MailTheme'
