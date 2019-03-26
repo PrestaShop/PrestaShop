@@ -47,4 +47,17 @@ final class UnsupportedModuleException extends NotFoundResourceException
 
         return new self($exceptionMessage);
     }
+
+    /**
+     * @param string $domain the Domain used to retrieve the related module
+     */
+    public static function moduleNotFound($domain)
+    {
+        $exceptionMessage = sprintf(
+            'No module was retrieved based on the domain "%s". Maybe the module is not installed or disabled?',
+            $domain
+        );
+
+        return new self($exceptionMessage);
+    }
 }
