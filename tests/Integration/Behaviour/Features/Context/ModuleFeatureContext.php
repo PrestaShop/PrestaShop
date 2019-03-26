@@ -26,26 +26,22 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Context\Context as BehatContext;
+use Symfony\Component\Filesystem\Filesystem;
+use Module;
+use Cache;
 
-/**
- * PrestaShopFeatureContext provides behat hooks to perform necessary operations for testing:
- * - shop setup
- * - database reset between scenario
- * - cache clear between steps
- * - ...
- */
-abstract class AbstractPrestaShopFeatureContext implements BehatContext
+class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
-    const MODULES_DIRECTORY = __DIR__ . '/../../../../Resources/modules';
-
-    protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
+    /**
+     * @Given the module :module is installed
+     */
+    public function theModuleIsInstalled($module)
     {
-        if (!isset($fixtures[$fixtureIndex])) {
-            $fixtureNames = array_keys($fixtures);
-            $firstFixtureNames = array_splice($fixtureNames, 0, 5);
-            $firstFixtureNamesStr = implode(',', $firstFixtureNames);
-            throw new \Exception($fixtureName . ' named "' . $fixtureIndex . '" was not added in fixtures. First 5 added are: ' . $firstFixtureNamesStr);
-        }
+        $fs = new Filesystem();
+        $fs->mirror(self::MODULES_DIRECTORY . '/' . $module, _PS_MODULE_DIR_ . '/' . $module);
+
+        // enable the module
+        Module::enableByName($module);
+        Cache::clear();
     }
 }
