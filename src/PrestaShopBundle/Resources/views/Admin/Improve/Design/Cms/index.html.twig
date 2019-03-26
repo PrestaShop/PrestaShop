@@ -26,9 +26,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% set layoutHeaderToolbarBtn = {
-  add: {
-    href: path('admin_cms_pages_category_create', {'id_cms_category' : app.request.query.get('id_cms_category')}),
-    desc: 'Add new page category'|trans({}, 'Admin.Design.Help'),
+  add_cms_page: {
+    href: path('admin_cms_pages_create', {'id_cms_category' : app.request.query.get('id_cms_category')}),
+    desc: 'Add new page'|trans({}, 'Admin.Design.Help'),
     icon: 'add_circle_outline',
   }
 }
