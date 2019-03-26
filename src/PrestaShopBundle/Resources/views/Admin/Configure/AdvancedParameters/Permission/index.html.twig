@@ -29,11 +29,11 @@
   {% set employeeProfileId = configurablePermissions.employeeProfileId %}
   {% set profilePermissionsForModules = configurablePermissions.profilePermissionsForModules %}
 
-  <div class="row">
-    <div class="col-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-2">
       {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/profile_tabs.html.twig' %}
     </div>
-    <div class="col-10">
+    <div class="col-lg-10">
       {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/Blocks/profile_tab_contents.html.twig' %}
     </div>
   </div>
