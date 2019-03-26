@@ -825,7 +825,7 @@ services:
             - { name: form.type }
 
     form.type.localization.generate_mails:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\MailTemplate\GenerateMailsType'
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:

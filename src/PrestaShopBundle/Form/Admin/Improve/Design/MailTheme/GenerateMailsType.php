@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\MailTemplate;
+namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -33,9 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class GenerateMailsType is responsible for build the form to generate mail
- * templates, the link is hidden for now but accessible via admin_mail_theme_generate_form
- * route (/improve/international/mail_theme/generate)
+ * Class GenerateMailsType is responsible for build the form to generate mail templates.
  */
 class GenerateMailsType extends TranslatorAwareType
 {
