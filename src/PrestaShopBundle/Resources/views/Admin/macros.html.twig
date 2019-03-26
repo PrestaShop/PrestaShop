@@ -127,7 +127,7 @@
   {{ form_widget(form, vars) }}
 
   {% if extraVars.help is defined %}
-    <small class="form-text">{{ extraVars.help|raw }}</small>
+    <small class="form-text">{{ extraVars.help }}</small>
   {% endif %}
 
   {% if errors|length > 0 %}
