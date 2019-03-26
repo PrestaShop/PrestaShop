@@ -150,6 +150,8 @@ class SurvivalTest extends WebTestCase
             'admin_metas_create' => ['Add new meta', 'admin_metas_create'],
             'admin_contacts_index' => ['Contacts', 'admin_contacts_index'],
             'admin_contacts_create' => ['Add new contact', 'admin_contacts_create'],
+            'admin_cms_pages_index' => ['Cms page', 'admin_cms_pages_index'],
+            'admin_cms_pages_category_create' => ['Add new cms category page', 'admin_cms_pages_category_create'],
         ];
     }
 
