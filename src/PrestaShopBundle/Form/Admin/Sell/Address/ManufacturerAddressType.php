@@ -219,6 +219,7 @@ class ManufacturerAddressType extends AbstractType
 
     /**
      * Get manufacturers array for choice list
+     * List is modified to enable selecting no manufacturer
      *
      * @return array
      */
