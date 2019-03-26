@@ -89,6 +89,7 @@
   .promo-discounts {
     margin-bottom: 0;
     text-align: center;
+    padding-bottom: .5rem;
     .cart-summary-line {
       .label {
         color: $gray;
@@ -97,7 +98,6 @@
           cursor: pointer;
         }
       }
-      
     }
   }
   .cart-summary-line {
@@ -189,8 +189,8 @@
       color: $brand-primary;
       &[aria-expanded="true"] {
         display: block;
+        padding: 0;
         margin-top: 1rem;
-        padding-bottom: 0;
       }
     }
   }
