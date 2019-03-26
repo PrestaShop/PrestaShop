@@ -7,3 +7,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand'
+
+  prestashop.adapter.cms_page.command_handler.edit_cms_page_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\EditCmsPageHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand'
