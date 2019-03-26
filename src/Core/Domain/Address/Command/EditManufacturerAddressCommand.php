@@ -40,7 +40,7 @@ class EditManufacturerAddressCommand
     private $addressId;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $manufacturerId;
 
