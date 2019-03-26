@@ -80,6 +80,10 @@ export default class CountryStateSelectionToggler {
       }
 
       this.$stateSelectionBlock.fadeIn();
+    }).catch((response) => {
+      if (typeof response.responseJSON !== 'undefined') {
+        showErrorMessage(response.responseJSON.message);
+      }
     });
   }
 }

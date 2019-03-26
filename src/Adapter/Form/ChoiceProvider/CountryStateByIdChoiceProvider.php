@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShopException;
 use State;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -44,11 +46,19 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
         $this->configureOptions($resolver);
         $resolvedOptions = $resolver->resolve($options);
 
-        $states = State::getStatesByIdCountry($resolvedOptions['id_country'], $resolvedOptions['only_active']);
-        $choices = [];
+        try {
+            $states = State::getStatesByIdCountry($resolvedOptions['id_country'], $resolvedOptions['only_active']);
+            $choices = [];
 
-        foreach ($states as $state) {
-            $choices[$state['name']] = $state['id_state'];
+            foreach ($states as $state) {
+                $choices[$state['name']] = $state['id_state'];
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'An error occurred when getting states for country id "%s"',
+                    $resolvedOptions['id_country'])
+            );
         }
 
         return $choices;
@@ -63,8 +73,18 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
     {
         $resolver->setDefaults(['only_active' => false]);
         $resolver->setRequired('id_country');
-
         $resolver->setAllowedTypes('id_country', 'int');
         $resolver->setAllowedTypes('only_active', 'bool');
+        $this->allowIdCountryGreaterThanZero($resolver);
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    private function allowIdCountryGreaterThanZero(OptionsResolver $resolver)
+    {
+        $resolver->setAllowedValues('id_country', function ($value) {
+            return 0 < $value;
+        });
     }
 }

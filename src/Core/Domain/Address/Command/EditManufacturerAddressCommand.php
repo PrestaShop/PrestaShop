@@ -140,13 +140,7 @@ class EditManufacturerAddressCommand
      */
     public function setManufacturerId($manufacturerId)
     {
-        if (!is_int($manufacturerId) || 0 > $manufacturerId) {
-            throw new AddressConstraintException(
-                sprintf('Invalid manufacturer id "%s" provided for address.', var_export($manufacturerId, true)),
-                AddressConstraintException::INVALID_MANUFACTURER_ID
-            );
-        }
-
+        $this->assertIsNullOrNonNegativeInt($manufacturerId);
         $this->manufacturerId = $manufacturerId;
     }
 
@@ -324,5 +318,21 @@ class EditManufacturerAddressCommand
     public function setOther($other)
     {
         $this->other = $other;
+    }
+
+    /**
+     * @param $value
+     *
+     * @throws AddressConstraintException
+     */
+    private function assertIsNullOrNonNegativeInt($value)
+    {
+        if (null === $value || is_int($value) || 0 <= $value) {
+            return;
+        }
+        throw new AddressConstraintException(
+            sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)),
+            AddressConstraintException::INVALID_MANUFACTURER_ID
+        );
     }
 }
