@@ -58,6 +58,8 @@ class CmsPageCategoryId
     }
 
     /**
+     * Validates that the value is integer and is greater than zero.
+     *
      * @param int $cmsPageCategoryId
      *
      * @throws CmsPageCategoryException

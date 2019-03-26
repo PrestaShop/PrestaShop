@@ -188,6 +188,9 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getFilters()
     {
         $actionsTypeOptions = [

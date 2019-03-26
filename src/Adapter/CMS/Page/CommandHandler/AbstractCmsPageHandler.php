@@ -60,7 +60,7 @@ abstract class AbstractCmsPageHandler
             }
         } catch (PrestaShopException $exception) {
             throw new CmsPageException(
-                sprintf('An error occurred when trying to get cms pag with id %s', $cmsId)
+                sprintf('An error occurred when trying to get cms page with id %s', $cmsId)
             );
         }
 

@@ -57,6 +57,13 @@ class CmsPageId
         return $this->cmsPageId;
     }
 
+    /**
+     * Validates that the value is integer and is greater than zero.
+     *
+     * @param int $cmsPageId
+     *
+     * @throws CmsPageException
+     */
     private function assertIsIntegerGreaterThanZero($cmsPageId)
     {
         if (!is_int($cmsPageId) || 0 >= $cmsPageId) {
