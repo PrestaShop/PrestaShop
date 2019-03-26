@@ -5,24 +5,25 @@
       &:focus {
         outline: 3px $brand-primary solid;
         color: $gray-darker;
-        background: white;
         + button .search {
           color: $brand-primary;
         }
       }
       border: none;
+      border-radius: 5px;
       padding: 10px;
       min-width: 255px;
       color: $gray;
-      border: $input-btn-border-width solid $input-border-color;
+      background: $gray-light;
+      padding-left: 38px;
     }
     button[type=submit] {
       position: absolute;
       background: none;
       border: none;
       bottom: 0.3125rem;
-      right: 0.125rem;
-      color: $gray;
+      left: 0.125rem;
+      color: $gray-searchbar;
       .search:hover {
         color: $brand-primary;
       }
