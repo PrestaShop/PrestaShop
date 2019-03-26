@@ -34,6 +34,10 @@ use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class MailThemeController manages mail theme generation, it is hidden for now but accessible
+ * via admin_mail_theme_generate_form route (/improve/international/mail_theme/generate)
+ */
 class MailThemeController extends FrameworkBundleAdminController
 {
     /**
@@ -83,10 +87,10 @@ class MailThemeController extends FrameworkBundleAdminController
                 $generator = $this->get('prestashop.service.generate_mail_templates');
                 //Overwrite theme folder if selected
                 if (!empty($data['theme'])) {
-                    $themeFolder = $this->getParameter('kernel.project_dir').'/themes/'.$data['theme'];
+                    $themeFolder = $this->getParameter('kernel.project_dir') . '/themes/' . $data['theme'];
                     $generator
-                        ->setCoreMailsFolder($themeFolder.'/mails')
-                        ->setModulesMailFolder($themeFolder.'/modules')
+                        ->setCoreMailsFolder($themeFolder . '/mails')
+                        ->setModulesMailFolder($themeFolder . '/modules')
                     ;
                 }
 
@@ -117,7 +121,7 @@ class MailThemeController extends FrameworkBundleAdminController
                         ),
                         'Admin.Notifications.Error'
                     ),
-                    $e->getMessage()
+                    $e->getMessage(),
                 ]);
             }
         }
