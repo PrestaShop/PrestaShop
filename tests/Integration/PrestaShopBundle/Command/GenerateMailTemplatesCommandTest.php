@@ -47,7 +47,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
     /**
      * @expectedException \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Not enough arguments (missing: "theme, locale, coreOutputFolder").
+     * @expectedExceptionMessage Not enough arguments (missing: "theme, locale").
      */
     public function testMissingArguments()
     {
@@ -87,13 +87,13 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $expectedFiles = [];
         foreach ($themeInfos['coreLayouts'] as $coreLayout) {
-            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $coreLayout . '.html']);
-            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $coreLayout . '.txt']);
+            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, 'en', $coreLayout . '.html']);
+            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, 'en', $coreLayout . '.txt']);
         }
         foreach ($themeInfos['modulesLayouts'] as $moduleName => $moduleLayouts) {
             foreach ($moduleLayouts as $moduleLayout) {
-                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $moduleName, 'mails', $moduleLayout . '.html']);
-                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $moduleName, 'mails', $moduleLayout . '.txt']);
+                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $moduleName, 'mails', 'en', $moduleLayout . '.html']);
+                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $moduleName, 'mails', 'en', $moduleLayout . '.txt']);
             }
         }
         $this->assertFilesExist($expectedFiles);
@@ -129,13 +129,13 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $expectedFiles = [];
         foreach ($themeInfos['coreLayouts'] as $coreLayout) {
-            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, $coreLayout . '.html']);
-            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, $coreLayout . '.txt']);
+            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, 'en', $coreLayout . '.html']);
+            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, 'en', $coreLayout . '.txt']);
         }
         foreach ($themeInfos['modulesLayouts'] as $moduleName => $moduleLayouts) {
             foreach ($moduleLayouts as $moduleLayout) {
-                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $moduleName, 'mails', $moduleLayout . '.html']);
-                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $moduleName, 'mails', $moduleLayout . '.txt']);
+                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $moduleName, 'mails', 'en', $moduleLayout . '.html']);
+                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $moduleName, 'mails', 'en', $moduleLayout . '.txt']);
             }
         }
         $this->assertFilesExist($expectedFiles);
