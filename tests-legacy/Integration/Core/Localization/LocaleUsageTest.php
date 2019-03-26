@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Tests\TestCase\SymfonyIntegrationTestCase;
+use AppKernel;
 
 class LocaleUsageTest extends SymfonyIntegrationTestCase
 {
@@ -54,13 +55,24 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
+
+        global $kernel;
+        if (null === $kernel && null !== self::$kernel) {
+            $kernel = self::$kernel;
+        } elseif (null !== $kernel && null === self::$kernel) {
+            self::$kernel = $kernel;
+        } else {
+            $kernel = new AppKernel('test', true);
+            $kernel->boot();
+            self::$kernel = $kernel;
+        }
+
         self::installTestedLanguagePacks();
     }
 
     protected function setUp()
     {
         parent::setUp();
-
         if (!self::$isCacheClear) {
             $this->clearCache();
             self::$isCacheClear = true;
