@@ -53,6 +53,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'cms_page_category';
+
     /**
      * @var int
      */
