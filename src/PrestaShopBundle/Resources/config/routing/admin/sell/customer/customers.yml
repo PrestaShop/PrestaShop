@@ -12,7 +12,7 @@ admin_customers_filter:
   defaults:
     _controller: PrestaShopBundle:Admin\Common:searchGrid
     _legacy_controller: AdminCustomers
-    gridDefinitionFactoryService: prestashop.core.grid.definition.factory.customer
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer
     redirectRoute: admin_customers_index
     _legacy_link: AdminCustomers:submitFiltercustomer
 
