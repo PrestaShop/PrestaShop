@@ -26,9 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use Exception;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible for handling country states data
@@ -38,27 +41,30 @@ class StateController extends FrameworkBundleAdminController
     /**
      * Provides country states in json response
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
      */
     public function getStatesAction(Request $request)
     {
-        $countryId = (int) $request->query->get('id_country');
-
-        if (!$countryId) {
-            return $this->json([
-                'states' => [],
+        try {
+            $countryId = (int) $request->query->get('id_country');
+            $statesProvider = $this->get('prestashop.adapter.form.choice_provider.country_state_by_id');
+            $states = $statesProvider->getChoices([
+                'id_country' => $countryId,
             ]);
+
+            return $this->json([
+                'states' => $states,
+            ]);
+        } catch (Exception $e) {
+            return $this->json([
+                    'message' => $this->getErrorMessageForException($e, []),
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
-
-        $statesProvider = $this->get('prestashop.adapter.form.choice_provider.country_state_by_id');
-        $states = $statesProvider->getChoices([
-            'id_country' => $countryId,
-        ]);
-
-        return $this->json([
-            'states' => $states,
-        ]);
     }
 }

@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressComm
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\AddManufacturerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShopException;
 
 /**
  * Adds manufacturer address using legacy object model
@@ -48,9 +49,18 @@ final class AddManufacturerAddressHandler implements AddManufacturerAddressHandl
     {
         $address = $this->createAddressFromCommand($command);
 
-        if (false === $address->add()) {
+        try {
+            if (false === $address->validateFields(false)) {
+                throw new AddressException('Address contains invalid field values');
+            }
+            if (false === $address->add()) {
+                throw new AddressException(
+                    sprintf('Failed to add new address "%s"', $command->getAddress())
+                );
+            }
+        } catch (PrestaShopException $e) {
             throw new AddressException(
-                sprintf('Failed to add new address "%s"', $command->getAddress())
+                sprintf('An error occurred when adding new address "%s"', $command->getAddress())
             );
         }
 
