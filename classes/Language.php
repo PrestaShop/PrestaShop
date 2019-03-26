@@ -1112,7 +1112,7 @@ class LanguageCore extends ObjectModel
     }
 
     /**
-     * This method has been introduce in Language out of conveniency but if you can prefer
+     * This method has been introduce in Language out of conveniency but, if you can, prefer
      * using the GenerateMailTemplatesService or MailTemplateGenerator services.
      *
      * @param array $lang_pack
