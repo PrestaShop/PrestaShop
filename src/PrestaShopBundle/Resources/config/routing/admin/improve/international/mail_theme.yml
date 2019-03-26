@@ -4,6 +4,9 @@ admin_mail_theme_generate_form:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\MailTheme:generateMailsForm
     _legacy_controller: AdminMailTheme
+    _legacy_link:
+      - AdminMailTheme
+      - AdminMailTheme:generateMails
 
 admin_mail_theme_generate:
   path: /generate
@@ -11,3 +14,4 @@ admin_mail_theme_generate:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\MailTheme:generateMails
     _legacy_controller: AdminMailTheme
+    _legacy_link: AdminMailTheme:postGenerateMails

@@ -40,11 +40,11 @@
 
             <div class="form-group row">
               <label class="form-control-label">
-                {{ 'Select your theme'|trans }}
+                {{ 'Select your mail theme'|trans }}
               </label>
               <div class="col-sm">
-                {{ form_errors(generateMailsForm.theme) }}
-                {{ form_widget(generateMailsForm.theme) }}
+                {{ form_errors(generateMailsForm.mailTheme) }}
+                {{ form_widget(generateMailsForm.mailTheme) }}
               </div>
             </div>
 
@@ -59,13 +59,28 @@
             </div>
 
             <div class="form-group row">
-              {{ ps.label_with_help(('Override templates'|trans), ('By default mail template files are not overridden, enable this option to force overriding them.'|trans({}, 'Admin.MailTheme.Help'))) }}
+              <label class="form-control-label">
+                {{ ps.label_with_help(
+                  ('Select a theme you want to overwrite'|trans),
+                  ('Core mail templates are stored in the mails folder but can be overriden by theme proper mails folder. Use this option to overwrite mails from a theme.'|trans({}, 'Admin.MailTheme.Help'))
+                ) }}
+              </label>
               <div class="col-sm">
-                {{ form_errors(generateMailsForm.override) }}
-                {{ form_widget(generateMailsForm.override) }}
+                {{ form_errors(generateMailsForm.theme) }}
+                {{ form_widget(generateMailsForm.theme) }}
               </div>
             </div>
 
+            <div class="form-group row">
+              {{ ps.label_with_help(
+                ('Overwrite templates'|trans),
+              ('By default existing mail template files are not modified to avoid erase your modifications, enable this option to force overriding them.'|trans({}, 'Admin.MailTheme.Help'))
+              ) }}
+              <div class="col-sm">
+                {{ form_errors(generateMailsForm.overwrite) }}
+                {{ form_widget(generateMailsForm.overwrite) }}
+              </div>
+            </div>
 
           </div>
         </div>
