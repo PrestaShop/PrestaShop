@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,8 +39,6 @@ class StateController extends FrameworkBundleAdminController
 {
     /**
      * Provides country states in json response
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
