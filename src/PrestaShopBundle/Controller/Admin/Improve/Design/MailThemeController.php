@@ -24,19 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\International;
+namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Improve\International\MailTemplate\GenerateMailsType;
+use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class MailThemeController manages mail theme generation, it is hidden for now but accessible
- * via admin_mail_theme_generate_form route (/improve/international/mail_theme/generate)
+ * Class MailThemeController manages mail theme generation, you can define the shop
+ * mail theme, and regenerate mail in a specific language.
+ *
+ * Accessible via "Design > Mail Theme"
  */
 class MailThemeController extends FrameworkBundleAdminController
 {
@@ -49,15 +51,15 @@ class MailThemeController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function generateMailsFormAction(Request $request)
+    public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $defaultMailTheme = $this->configuration->get('PS_MAIL_THEME');
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class, ['theme' => $defaultMailTheme]);
 
-        return $this->render('@PrestaShop/Admin/Improve/International/MailTheme/generate_mails_form.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/generate_mails_form.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Theme Mails Generation', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Mail Theme', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
