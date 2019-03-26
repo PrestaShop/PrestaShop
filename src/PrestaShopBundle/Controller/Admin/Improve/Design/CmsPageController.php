@@ -120,7 +120,7 @@ class CmsPageController extends FrameworkBundleAdminController
                     'success',
                     $this->trans('Successful creation.', 'Admin.Notifications.Success')
                 );
-
+                //todo: wait for second list to be merged and
                 return $this->redirectToRoute('admin_cms_pages_index');
             }
         } catch (DomainException $e) {
