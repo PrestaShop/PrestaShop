@@ -39,7 +39,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Show localization settings page.
      *
-     * AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -64,7 +64,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Show localization settings page.
      *
-     * AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -81,10 +81,19 @@ class MailThemeController extends FrameworkBundleAdminController
             try {
                 /** @var GenerateMailTemplatesService $generator */
                 $generator = $this->get('prestashop.service.generate_mail_templates');
-                $generator->generateMailTemplates($data['theme'], $data['language'], $data['override']);
+                //Overwrite theme folder if selected
+                if (!empty($data['theme'])) {
+                    $themeFolder = $this->getParameter('kernel.project_dir').'/themes/'.$data['theme'];
+                    $generator
+                        ->setCoreMailsFolder($themeFolder.'/mails')
+                        ->setModulesMailFolder($themeFolder.'/modules')
+                    ;
+                }
+
+                $generator->generateMailTemplates($data['mailTheme'], $data['language'], $data['overwrite']);
 
                 $flashMessage = 'Successfully generated mail templates for theme %s with locale %s';
-                if ($data['override']) {
+                if ($data['overwrite']) {
                     $flashMessage = 'Successfully overrode mail templates for theme %s with locale %s';
                 }
                 $this->addFlash(
@@ -92,14 +101,24 @@ class MailThemeController extends FrameworkBundleAdminController
                     $this->trans(
                         sprintf(
                             $flashMessage,
-                            $data['theme'],
+                            $data['mailTheme'],
                             $data['language']
                         ),
                         'Admin.Notifications.Success'
                     )
                 );
             } catch (CoreException $e) {
-                $this->flashErrors([$e->getMessage()]);
+                $this->flashErrors([
+                    $this->trans(
+                        sprintf(
+                            'Could not generate mail templates for theme %s with locale %s',
+                            $data['mailTheme'],
+                            $data['language']
+                        ),
+                        'Admin.Notifications.Error'
+                    ),
+                    $e->getMessage()
+                ]);
             }
         }
 

@@ -83,12 +83,12 @@ class GenerateMailTemplatesService
     /**
      * @param string $themeName
      * @param string $locale
-     * @param bool $overrideTemplates
+     * @param bool $overwriteTemplates
      *
      * @throws InvalidArgumentException
      * @throws FileNotFoundException
      */
-    public function generateMailTemplates($themeName, $locale, $overrideTemplates = false)
+    public function generateMailTemplates($themeName, $locale, $overwriteTemplates = false)
     {
         /** @var LanguageInterface $language */
         $language = $this->languageRepository->getByLocaleOrIsoCode($locale);
@@ -99,7 +99,7 @@ class GenerateMailTemplatesService
         /** @var ThemeInterface $theme */
         $theme = $this->themeCatalog->getByName($themeName);
 
-        $this->generator->generateTemplates($theme, $language, $this->coreMailsFolder, $this->modulesMailFolder, $overrideTemplates);
+        $this->generator->generateTemplates($theme, $language, $this->coreMailsFolder, $this->modulesMailFolder, $overwriteTemplates);
     }
 
     /**
