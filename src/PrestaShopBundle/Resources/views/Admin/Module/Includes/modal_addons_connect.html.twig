@@ -61,15 +61,19 @@
                     <label for="module-addons-connect-password">{{ 'Password'|trans({}, 'Admin.Global') }}</label>
                     <input name="password_addons" type="password" class="form-control" id="module-addons-connect-password" placeholder="Password">
                   </div>
-                  <div class="checkbox">
+                  <div class="md-checkbox md-checkbox-inline">
                     <label>
-                      <input name="addons_remember_me" type="checkbox"> {{ 'Remember me'|trans({}, 'Admin.Global') }}
+                      <input type="checkbox" name="addons_remember_me">
+                      <i class="md-checkbox-control"></i>
+                      {{ 'Remember me'|trans({}, 'Admin.Global') }}
                     </label>
                   </div>
-                  <button type="submit" class="btn btn-primary">{{ "Let's go!"|trans({}, 'Admin.Actions') }}</button>
-                  <div id="addons_login_btn" class="spinner" style="display:none;"></div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary">{{ "Let's go!"|trans({}, 'Admin.Actions') }}</button>
+                    <div id="addons_login_btn" class="spinner" style="display:none;"></div>
+                  </div>
                 </form>
-                <p>
+                <p class="text-center py-3">
                     <a href="https://addons.prestashop.com/password.php" target="_blank">{{ 'Forgot your password?'|trans({}, 'Admin.Global') }}</a>
                 </p>
               </div>
