@@ -206,7 +206,7 @@
                 <tab id="Themes_Catalog" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminThemesCatalog</class_name>
                 </tab>
-                <tab id="Mail_Theme" id_parent="Look_feel" active="0" hide_host_mode="0" icon="">
+                <tab id="Mail_Theme" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
                   <class_name>AdminMailTheme</class_name>
                 </tab>
                 <tab id="Pages" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">

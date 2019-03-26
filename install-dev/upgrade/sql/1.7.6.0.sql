@@ -22,3 +22,6 @@ ALTER TABLE `PREFIX_admin_filter`
   DROP INDEX IF EXISTS `search_idx`,
 	ADD UNIQUE INDEX `admin_filter_search_id_idx` (`employee`, `shop`, `controller`, `action`, `filter_id`)
 ;
+
+/* PHP:ps_1760_update_configuration(); */;
+/* PHP:ps_1760_update_tabs(); */;
