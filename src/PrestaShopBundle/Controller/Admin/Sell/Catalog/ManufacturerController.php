@@ -467,10 +467,10 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormHandler = $this->getAddressFormHandler();
 
         try {
-            $addressForm = $addressFormBuilder->getFormFor((int) $addressId);
+            $addressForm = $addressFormBuilder->getFormFor($addressId);
             $addressForm->handleRequest($request);
 
-            $result = $addressFormHandler->handleFor((int) $addressId, $addressForm);
+            $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -479,7 +479,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             }
 
             /** @var EditableManufacturerAddress $editableAddress */
-            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing((int) $addressId));
+            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
         } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
