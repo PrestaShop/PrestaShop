@@ -78,12 +78,12 @@ class EditCmsPageCommand
     /**
      * @var bool|null
      */
-    private $indexedForSearch;
+    private $isIndexedForSearch;
 
     /**
      * @var bool|null
      */
-    private $displayed;
+    private $isDisplayed;
 
     /**
      * @var array|null
@@ -97,5 +97,225 @@ class EditCmsPageCommand
     public function __construct($cmsPageId)
     {
         $this->cmsPageId = new CmsPageId($cmsPageId);
+    }
+
+    /**
+     * @return CmsPageId
+     */
+    public function getCmsPageId()
+    {
+        return $this->cmsPageId;
+    }
+
+    /**
+     * @param CmsPageId $cmsPageId
+     *
+     * @return self
+     */
+    public function setCmsPageId($cmsPageId)
+    {
+        $this->cmsPageId = $cmsPageId;
+
+        return $this;
+    }
+
+    /**
+     * @return CmsPageCategoryId|null
+     */
+    public function getCmsPageCategoryId()
+    {
+        return $this->cmsPageCategoryId;
+    }
+
+    /**
+     * @param CmsPageCategoryId|null $cmsPageCategoryId
+     *
+     * @return self
+     */
+    public function setCmsPageCategoryId($cmsPageCategoryId)
+    {
+        $this->cmsPageCategoryId = $cmsPageCategoryId;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedTitle()
+    {
+        return $this->localizedTitle;
+    }
+
+    /**
+     * @param string[]|null $localizedTitle
+     *
+     * @return self
+     */
+    public function setLocalizedTitle(array $localizedTitle)
+    {
+        $this->localizedTitle = $localizedTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedMetaTitle()
+    {
+        return $this->localizedMetaTitle;
+    }
+
+    /**
+     * @param string[]|null $localizedMetaTitle
+     *
+     * @return self
+     */
+    public function setLocalizedMetaTitle(array $localizedMetaTitle)
+    {
+        $this->localizedMetaTitle = $localizedMetaTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedMetaDescription()
+    {
+        return $this->localizedMetaDescription;
+    }
+
+    /**
+     * @param string[]|null $localizedMetaDescription
+     *
+     * @return self
+     */
+    public function setLocalizedMetaDescription(array $localizedMetaDescription)
+    {
+        $this->localizedMetaDescription = $localizedMetaDescription;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedMetaKeyword()
+    {
+        return $this->LocalizedMetaKeyword;
+    }
+
+    /**
+     * @param string[]|null $LocalizedMetaKeyword
+     *
+     * @return self
+     */
+    public function setLocalizedMetaKeyword(array $LocalizedMetaKeyword)
+    {
+        $this->LocalizedMetaKeyword = $LocalizedMetaKeyword;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedFriendlyUrl()
+    {
+        return $this->localizedFriendlyUrl;
+    }
+
+    /**
+     * @param string[]|null $localizedFriendlyUrl
+     *
+     * @return self
+     */
+    public function setLocalizedFriendlyUrl(array $localizedFriendlyUrl)
+    {
+        $this->localizedFriendlyUrl = $localizedFriendlyUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedContent()
+    {
+        return $this->localizedContent;
+    }
+
+    /**
+     * @param string[]|null $localizedContent
+     *
+     * @return self
+     */
+    public function setLocalizedContent(array $localizedContent)
+    {
+        $this->localizedContent = $localizedContent;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isIndexedForSearch()
+    {
+        return $this->isIndexedForSearch;
+    }
+
+    /**
+     * @param bool|null $isIndexedForSearch
+     *
+     * @return self
+     */
+    public function setIsIndexedForSearch($isIndexedForSearch)
+    {
+        $this->isIndexedForSearch = $isIndexedForSearch;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isDisplayed()
+    {
+        return $this->isDisplayed;
+    }
+
+    /**
+     * @param bool|null $isDisplayed
+     *
+     * @return self
+     */
+    public function setIsDisplayed($isDisplayed)
+    {
+        $this->isDisplayed = $isDisplayed;
+
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getShopAssociation()
+    {
+        return $this->shopAssociation;
+    }
+
+    /**
+     * @param array|null $shopAssociation
+     *
+     * @return self
+     */
+    public function setShopAssociation(array $shopAssociation)
+    {
+        $this->shopAssociation = $shopAssociation;
+
+        return $this;
     }
 }

@@ -62,7 +62,7 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
             $this->associateWithShops($cms, $command->getShopAssociation());
         } catch (PrestaShopException $e) {
             throw new CmsPageException(
-                'An unexpected error occurred when adding cms page category',
+                'An unexpected error occurred when adding cms page',
                 0,
                 $e
             );
