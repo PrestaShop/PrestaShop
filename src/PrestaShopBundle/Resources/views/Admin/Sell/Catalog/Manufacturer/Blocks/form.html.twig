@@ -47,7 +47,7 @@
       {% endset %}
 
       {{ ps.form_group_row(manufacturerForm.short_description, {}, {
-        'label': 'Short description'|trans({}, 'Admin.Global'),
+        'label': 'Short description'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
 
       {{ ps.form_group_row(manufacturerForm.description, {}, {
@@ -73,7 +73,7 @@
       {% endif %}
 
       {{ ps.form_group_row(manufacturerForm.meta_title, {}, {
-        'label': 'Meta title'|trans({}, 'Admin.Global'),
+        'label': 'Meta title'|trans({}, 'Admin.Catalog.Feature'),
         'help': invalidGenericNameHint
       }) }}
 
@@ -83,7 +83,7 @@
       }) }}
 
       {% set keywordHint %}
-        {{ 'To add "tags," click inside the field, write something, and then press "Enter."'|trans({}, 'Admin.Catalog.Help') }}
+        {{ 'To add "tags", click inside the field, write something, and then press "Enter."'|trans({}, 'Admin.Catalog.Help') }}
         {{ invalidGenericNameHint }}
       {% endset %}
 
