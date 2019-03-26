@@ -30,39 +30,49 @@
   </h3>
   <div class="card-body">
     {% if viewableManufacturer.manufacturerAddresses is not empty %}
-      {% for address in viewableManufacturer.manufacturerAddresses %}
-        <div class="card">
-          <div class="card-header clearfix">
-            {{ address.first_name }} {{ address.last_name }}
-            <div class="d-inline-block float-right">
-              <a class="btn btn-primary btn-sm"
-                 href="{{ getAdminLink('AdminManufacturers', true, {'id_address': address.id, 'editaddresses': 1}) }}">
-                {{ 'Edit'|trans({}, 'Admin.Actions') }}
-              </a>
-            </div>
-          </div>
-          <div class="card-body">
-            <p class="mb-0">{{ address.address1 }}</p>
-            <p class="mb-0">{{ address.address2 }}</p>
-            <p class="mb-0">{{ address.city }}</p>
-            {% if address.state %}
-              <p class="mb-0">{{ address.state }}</p>
-            {% endif %}
-            <p class="mb-0"><strong>{{ address.country }}</strong></p>
-            {% if address.phone %}
-              <p class="mb-0">{{ address.phone }}</p>
-            {% endif %}
-            {% if address.phone_mobile %}
-              <p class="mb-0">{{ address.phone_mobile }}</p>
-            {% endif %}
-            {% if address.other %}
-              <div class="mt-1">
-                <em>{{ address.other|nl2br }}</em>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-      {% endfor %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Address'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Address (2)'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'City'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'State'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Home phone'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Mobile phone'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Other'|trans({}, 'Admin.Global') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for address in viewableManufacturer.manufacturerAddresses %}
+            <tr>
+              <td>{{ address.first_name }} {{ address.last_name }}</td>
+              <td>{{ address.address1 }}</td>
+              <td>{{ address.address2 }}</td>
+              <td>{{ address.city }}</td>
+              <td>{% if address.state %}{{ address.state }}{% else %}-{% endif %}</td>
+              <td>{% if address.phone %}{{ address.phone }}{% else %}-{% endif %}</td>
+              <td>{% if address.phone_mobile %}{{ address.phone_mobile }}{% else %}-{% endif %}</td>
+              <td>{% if address.other %}{{ address.other|nl2br }}{% else %}-{% endif %}</td>
+              <td>
+                <div class="btn-group-action text-right">
+                  <div class="btn-group">
+                    <a class="btn tooltip-link js-link-row-action dropdown-item"
+                       href="{{ getAdminLink('AdminManufacturers', true, {'id_address': address.id, 'editaddresses': 1}) }}"
+                       data-toggle="pstooltip"
+                       data-placement="top"
+                       data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+                    >
+                      <i class="material-icons">edit</i>
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% else %}
       {{ 'No address has been found for this brand.'|trans({}, 'Admin.Catalog.Notification') }}
     {% endif %}
