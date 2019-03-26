@@ -25,7 +25,7 @@
 <template>
   <div>
     <div :class="{parent, 'bg-light': parent}" class="row permission-row">
-      <div class="col-lg-4">
+      <div class="col-4">
         <template v-for="i in levelDepth" v-if="i > 2">
           &nbsp;&nbsp;
         </template>
@@ -38,8 +38,8 @@
         </template>
       </div>
 
-      <div class="col-lg-8 row">
-        <div class="col text-center" v-for="type in types">
+      <div class="col-8 row">
+        <div class="text-center" :class="getClasses(types, index === 0)" v-for="(type, index) in types">
           <ps-checkbox
             :value="type"
             v-model="permissionValues"
@@ -72,9 +72,13 @@
 
 <script>
   import PsCheckbox from '../../../components/checkbox.vue';
+  import ColSize from '../../../mixins/col-size.vue';
 
   export default {
     name: 'row',
+    mixins: [
+      ColSize,
+    ],
     components: {
       PsCheckbox,
     },

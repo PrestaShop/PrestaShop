@@ -24,10 +24,10 @@
      *-->
 <template>
   <div class="row bulk-row">
-    <div class="col-lg-4"></div>
+    <div class="col-4"></div>
 
-    <div class="col-lg-8 row">
-      <div class="col text-center" v-for="bulk, bulkType in types">
+    <div class="col-8 row">
+      <div class="text-center" :class="getClasses(types, bulkType === 'view')" v-for="bulk, bulkType in types">
         <ps-checkbox
           v-model="status"
           @change="updateBulk(bulkType)"
@@ -43,8 +43,12 @@
 
 <script>
   import PsCheckbox from '../../../components/checkbox.vue';
+  import ColSize from '../../../mixins/col-size.vue';
 
   export default {
+    mixins: [
+      ColSize,
+    ],
     components: {
       PsCheckbox,
     },
