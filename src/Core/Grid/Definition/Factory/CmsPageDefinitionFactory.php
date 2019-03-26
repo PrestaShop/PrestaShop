@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -69,11 +70,13 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $requestStack;
 
-    /**
-     * @param CommandBusInterface $queryBus
-     */
-    public function __construct(CommandBusInterface $queryBus, RequestStack $requestStack)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        CommandBusInterface $queryBus,
+        RequestStack $requestStack
+    ) {
+        parent::__construct($hookDispatcher);
+
         $this->queryBus = $queryBus;
         $this->requestStack = $requestStack;
 
