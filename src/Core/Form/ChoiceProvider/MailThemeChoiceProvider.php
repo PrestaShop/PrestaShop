@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 
+/**
+ * Class MailThemeChoiceProvider is responsible to provide a list of available mail themes.
+ */
 class MailThemeChoiceProvider implements FormChoiceProviderInterface
 {
     /** @var ThemeCatalogInterface */

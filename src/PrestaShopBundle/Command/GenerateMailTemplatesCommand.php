@@ -27,11 +27,6 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
-use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -49,9 +44,9 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
             ->setDescription('Generate mail templates for a specified theme')
             ->addArgument('theme', InputArgument::REQUIRED, 'Theme to use for mail templates.')
             ->addArgument('locale', InputArgument::REQUIRED, 'Which locale to use for the templates.')
-            ->addArgument('coreOutputFolder', InputArgument::REQUIRED, 'Output folder to export core templates.')
+            ->addArgument('coreOutputFolder', InputArgument::OPTIONAL, 'Output folder to export core templates.')
             ->addArgument('modulesOutputFolder', InputArgument::OPTIONAL, 'Output folder to export modules templates (by default same as core).')
-            ->addOption('override', 'o', InputOption::VALUE_OPTIONAL, 'Override existing templates', false)
+            ->addOption('overwrite', 'o', InputOption::VALUE_OPTIONAL, 'Overwrite existing templates', false)
         ;
     }
 
@@ -65,16 +60,16 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
     {
         $themeName = $input->getArgument('theme');
         $coreOutputFolder = $input->getArgument('coreOutputFolder');
-        if (file_exists($coreOutputFolder)) {
+        if (!empty($coreOutputFolder) && file_exists($coreOutputFolder)) {
             $coreOutputFolder = realpath($coreOutputFolder);
         }
         $modulesOutputFolder = $input->getArgument('modulesOutputFolder');
-        if (null !== $modulesOutputFolder && file_exists($modulesOutputFolder)) {
+        if (!empty($modulesOutputFolder) && file_exists($modulesOutputFolder)) {
             $modulesOutputFolder = realpath($modulesOutputFolder);
         } else {
             $modulesOutputFolder = $coreOutputFolder;
         }
-        $override = false !== $input->getOption('override');
+        $overwrite = false !== $input->getOption('overwrite');
 
         $this->initContext();
 
@@ -85,9 +80,9 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
         /** @var GenerateMailTemplatesService $generator */
         $generator = $this->getContainer()->get('prestashop.service.generate_mail_templates');
         $generator
-            ->setCoreMailsFolder($coreOutputFolder)
-            ->setModulesMailFolder($modulesOutputFolder)
-            ->generateMailTemplates($themeName, $locale, $override)
+            ->setCoreMailsFolder(!empty($coreOutputFolder) ? $coreOutputFolder : $generator->getCoreMailsFolder())
+            ->setModulesMailFolder(!empty($modulesOutputFolder) ? $modulesOutputFolder : $generator->getModulesMailFolder())
+            ->generateMailTemplates($themeName, $locale, $overwrite)
         ;
     }
 

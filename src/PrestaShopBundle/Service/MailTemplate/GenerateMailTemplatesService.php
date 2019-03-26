@@ -112,6 +112,7 @@ class GenerateMailTemplatesService
 
     /**
      * @param string $coreMailsFolder
+     *
      * @return $this
      */
     public function setCoreMailsFolder($coreMailsFolder)
@@ -131,6 +132,7 @@ class GenerateMailTemplatesService
 
     /**
      * @param string $modulesMailFolder
+     *
      * @return $this
      */
     public function setModulesMailFolder($modulesMailFolder)
