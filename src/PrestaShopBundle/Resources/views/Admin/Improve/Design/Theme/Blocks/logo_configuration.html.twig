@@ -138,7 +138,15 @@
           >
       </div>
 
-      {{ ps.form_group_row(shopLogosForm.options.favicon, {}, {'help': 'Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!'|trans({'[1]': '<a href="https://addons.prestashop.com/create-favicon.php?pab=1" target="_blank">', '[/1]': '</a>'}, 'Admin.Design.Help')|raw }) }}
+      <div class="form-group row">
+        <div class="col-sm">
+          {{ ps.form_widget_with_error(shopLogosForm.options.favicon) }}
+          <small class="form-text">
+            {{ 'Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!'|trans({'[1]': '<a href="https://addons.prestashop.com/create-favicon.php?pab=1" target="_blank">', '[/1]': '</a>'}, 'Admin.Design.Help')|raw }}
+          </small>
+        </div>
+      </div>
+
     {% endblock %}
   {% endembed %}
 </div>
