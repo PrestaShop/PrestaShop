@@ -27,10 +27,12 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -43,7 +45,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MailThemeController extends FrameworkBundleAdminController
 {
     /**
-     * Show localization settings page.
+     * Show mail theme settings and generation page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
@@ -57,18 +59,19 @@ class MailThemeController extends FrameworkBundleAdminController
         $defaultMailTheme = $this->configuration->get('PS_MAIL_THEME');
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class, ['theme' => $defaultMailTheme]);
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/generate_mails_form.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Mail Theme', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
+            'mailThemeConfigurationForm' => $this->getMailThemeFormHandler()->getForm()->createView(),
             'generateMailsForm' => $generateThemeMailsForm->createView(),
         ]);
     }
 
     /**
-     * Show localization settings page.
+     * Manage generation form post and generate mails.
      *
      * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", message="Access denied.")
      *
@@ -96,7 +99,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     ;
                 }
 
-                $generator->generateMailTemplates($data['mailTheme'], $data['language'], $data['overwrite']);
+                $generator->generateMailTemplates($data['mail_theme'], $data['language'], $data['overwrite']);
 
                 $flashMessage = 'Successfully generated mail templates for theme %s with locale %s';
                 if ($data['overwrite']) {
@@ -107,7 +110,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     $this->trans(
                         sprintf(
                             $flashMessage,
-                            $data['mailTheme'],
+                            $data['mail_theme'],
                             $data['language']
                         ),
                         'Admin.Notifications.Success'
@@ -118,7 +121,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     $this->trans(
                         sprintf(
                             'Could not generate mail templates for theme %s with locale %s',
-                            $data['mailTheme'],
+                            $data['mail_theme'],
                             $data['language']
                         ),
                         'Admin.Notifications.Error'
@@ -128,6 +131,49 @@ class MailThemeController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_mail_theme_generate_form');
+        return $this->redirectToRoute('admin_mail_theme_index');
+    }
+
+    /**
+     * Save mail theme configuration
+     *
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function saveConfigurationAction(Request $request)
+    {
+        /** @var FormHandlerInterface $formHandler */
+        $formHandler = $this->getMailThemeFormHandler();
+        /** @var Form $form */
+        $form = $formHandler->getForm()->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $errors = $formHandler->save($form->getData());
+
+            if (empty($errors)) {
+                $this->addFlash(
+                    'success',
+                    $this->trans(
+                        'Successfully saved mail theme configuration.',
+                        'Admin.Notifications.Success'
+                    )
+                );
+            } else {
+                $this->flashErrors($errors);
+            }
+        }
+
+        return $this->redirectToRoute('admin_mail_theme_index');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getMailThemeFormHandler()
+    {
+        return $this->get('prestashop.admin.mail_theme.form_handler');
     }
 }
