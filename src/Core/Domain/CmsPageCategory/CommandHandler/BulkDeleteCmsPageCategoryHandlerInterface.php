@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 
 /**
