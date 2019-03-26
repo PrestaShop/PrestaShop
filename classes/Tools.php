@@ -795,7 +795,7 @@ class ToolsCore
      *
      * @throws Exception
      */
-    protected static function getContextLocale(Context $context)
+    public static function getContextLocale(Context $context)
     {
         $locale = $context->currentLocale;
         if (null !== $locale) {
