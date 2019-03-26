@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkDeleteCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
@@ -44,7 +44,7 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
      *
      * @throws CmsPageCategoryException
      */
-    public function handle(BulkDeleteCmsPageCommand $command)
+    public function handle(BulkDeleteCmsPageCategoryCommand $command)
     {
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
