@@ -53,9 +53,9 @@ ul{
           border-radius: 0;
         }
         a {
-          padding-top: 7.5px;
-          padding-left: 13px;
-          padding-bottom: 7.5px;
+          padding-top: .47rem;
+          padding-left: .813rem;
+          padding-bottom: .47rem;
           &:hover {
             border: none;
             border-radius: 0;
@@ -82,7 +82,7 @@ ul{
     .search-widget {
       float: none;
       background: $gray-light;
-      margin-bottom: 10px;
+      margin-bottom: .625rem;
       form {
         margin: 0 auto;
         input[type="text"] {
@@ -95,12 +95,11 @@ ul{
     }
   }
   .search-cross {
-    display: block;
     position: absolute;
     background: none;
     border: none;
     bottom: .0125rem;
-    right: 10px;
+    right: .625rem;
     color: $gray-searchbar;
   }
   ul {
