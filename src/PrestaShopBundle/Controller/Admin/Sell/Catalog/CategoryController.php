@@ -109,7 +109,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function addAction(Request $request)
+    public function createAction(Request $request)
     {
         $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
         $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
@@ -135,7 +135,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig', [
             'allowMenuThumbnailsUpload' => true,
             'categoryForm' => $categoryForm->createView(),
             'defaultGroups' => $defaultGroups,
@@ -154,7 +154,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function addRootAction(Request $request)
+    public function createRootAction(Request $request)
     {
         $rootCategoryFormBuilder =
             $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
@@ -180,7 +180,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig', [
             'allowMenuThumbnailsUpload' => true,
             'rootCategoryForm' => $rootCategoryForm->createView(),
             'defaultGroups' => $defaultGroups,
@@ -684,7 +684,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         if ($this->get('prestashop.adapter.feature.multistore')->isUsed()) {
             $toolbarButtons['add_root'] = [
-                'href' => $this->generateUrl('admin_categories_add_root'),
+                'href' => $this->generateUrl('admin_categories_create_root'),
                 'desc' => $this->trans('Add new root category', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle_outline',
             ];
@@ -693,7 +693,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryId = $request->query->get('id_category', $this->configuration->getInt('PS_HOME_CATEGORY'));
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_categories_add', ['id_parent' => $categoryId]),
+            'href' => $this->generateUrl('admin_categories_create', ['id_parent' => $categoryId]),
             'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];

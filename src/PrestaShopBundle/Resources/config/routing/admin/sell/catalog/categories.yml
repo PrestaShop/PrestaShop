@@ -68,19 +68,19 @@ admin_categories_export:
       _legacy_controller: AdminCategories
       _legacy_link: AdminCategories:exportcategory
 
-admin_categories_add:
+admin_categories_create:
     path: /new
     methods: [GET, POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:add
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:create
         _legacy_controller: AdminCategories
         _legacy_link: AdminCategories:addcategory
 
-admin_categories_add_root:
+admin_categories_create_root:
     path: /new-root
     methods: [GET, POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:addRoot
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:createRoot
         _legacy_controller: AdminCategories
         _legacy_link: AdminCategories:addcategoryroot
         _legacy_parameters:
