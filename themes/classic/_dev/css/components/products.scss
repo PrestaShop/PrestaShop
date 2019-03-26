@@ -325,7 +325,7 @@
     }
   }
   .modal-body {
-    background: white;
+    background: $btn-warning-color;
     padding: 3.125rem 1.875rem;
     .divide-right span {
       display: inline-block;
@@ -405,7 +405,7 @@
     }
   }
   .divide-right {
-    border-right: 1px solid #DBDBDB;
+    border-right: 1px solid $gray-light-second;
   }
 }
 .product-images {

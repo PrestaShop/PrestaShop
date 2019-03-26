@@ -43,7 +43,7 @@
                 <p class="product-price">{$product.price}</p>
                 {hook h='displayProductPriceBlock' product=$product type="unit_price"}
                 {foreach from=$product.attributes item="property_value" key="property"}
-                  <span>{$property}: <strong>{$property_value}</strong></span><br>
+                  <span>{$property}<strong>: {$property_value}</strong></span><br>
                 {/foreach}
                 <span>{l s='Quantity:' d='Shop.Theme.Checkout'}&nbsp;<strong>{$product.cart_quantity}</strong></span>
               </div>

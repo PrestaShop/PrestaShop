@@ -14,7 +14,7 @@
       padding: .5rem;
 
       &.cart-total {
-        background-color: #F1F1F1;
+        background-color: $gray-light;
         padding: .5rem;
         .label,
         .value {
@@ -149,7 +149,7 @@
     + button {
       margin-top: -4px;
       text-transform: capitalize;
-      border: 2px solid #2fb5d2;
+      border: 2px solid $brand-primary;
     }
   }
   .cart-summary-line .label,
