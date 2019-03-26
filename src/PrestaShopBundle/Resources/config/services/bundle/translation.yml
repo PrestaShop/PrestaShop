@@ -109,11 +109,18 @@ services:
             - {name: translation.loader, alias: db}
 
     prestashop.translation.legacy_file_loader:
-      class: PrestaShopBundle\Translation\Loader\LegacyFileLoader
-      arguments:
-        - "@prestashop.core.translation.locale.converter"
-      tags:
-          - {name: translation.loader, alias: legacy_files}
+        class: PrestaShopBundle\Translation\Loader\LegacyFileLoader
+        arguments:
+            - "@prestashop.core.translation.locale.converter"
+
+    prestashop.translation.legacy_file_translation_loader:
+        class: PrestaShopBundle\Translation\Loader\LegacyFileTranslationLoader
+        arguments:
+            - "@prestashop.core.translation.locale.converter"
+            - "@prestashop.translation.legacy_module.extractor"
+            - "%kernel.active_modules%"
+        tags:
+            - {name: translation.loader, alias: php}
 
     prestashop.translation.theme_extractor:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractor
