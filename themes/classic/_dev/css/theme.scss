@@ -305,7 +305,6 @@
     margin-top: 1rem;
   }
   #header {
-    background: $gray-light;
     .header-nav {
       background: white;
       margin-bottom: 0.625rem;
@@ -343,13 +342,14 @@
       }
     }
     .header-top {
-      background: $gray-light;
       padding-bottom: 0;
       a[data-depth="0"] {
         color: $gray-darker;
       }
       .search-widget {
         width: 100%;
+        border-radius: 5px;
+        border: 1px solid $gray-light;
       }
     }
     &.is-open {
