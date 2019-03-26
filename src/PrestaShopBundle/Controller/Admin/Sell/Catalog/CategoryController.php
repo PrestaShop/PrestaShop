@@ -657,7 +657,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $request->request->getInt('id_category_to_move'),
                 $request->request->getInt('id_category_parent'),
                 $request->request->getInt('way'),
-                $request->request->get('categories'),
+                $request->request->get('positions'),
                 $request->request->getBoolean('found_first')
             ));
         } catch (CategoryException $e) {

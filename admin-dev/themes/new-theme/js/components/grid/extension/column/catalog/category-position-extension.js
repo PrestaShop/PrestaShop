@@ -75,7 +75,7 @@ export default class CategoryPositionExtension {
     const categoryParentId = $categoryPositionContainer.data('id-parent');
     const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
-    let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'category');
+    let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'positions');
 
     let queryParams = {
       id_category_parent: categoryParentId,
@@ -154,10 +154,9 @@ export default class CategoryPositionExtension {
       headers: {
         'cache-control': 'no-cache'
       },
-      data: params
+      data: params,
+      dataType: 'json'
     }).then((response) => {
-      response = JSON.parse(response);
-
       if (response.success) {
         showSuccessMessage(response.message);
       } else {
