@@ -171,3 +171,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.tax.tax_options_configuration'
+
+    prestashop.admin.mail_theme.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.mail_theme.configuration'
