@@ -493,6 +493,17 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Toggles cms page listing status.
      *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"}
+     * )
+     *
      * @param int $cmsId
      *
      * @return RedirectResponse
@@ -515,6 +526,17 @@ class CmsPageController extends FrameworkBundleAdminController
 
     /**
      * Disables multiple cms pages.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"}
+     * )
      *
      * @param Request $request
      *
@@ -545,6 +567,17 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Enables multiple cms pages.
      *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"}
+     * )
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -573,6 +606,17 @@ class CmsPageController extends FrameworkBundleAdminController
 
     /**
      * Deletes multiple cms pages.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to delete this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"}
+     * )
      *
      * @param Request $request
      *
@@ -604,6 +648,17 @@ class CmsPageController extends FrameworkBundleAdminController
 
     /**
      * Deletes cms page by given id.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to delete this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"}
+     * )
      *
      * @param int $cmsId
      *
