@@ -74,8 +74,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         Request $request,
         ManufacturerFilters $manufacturerFilters,
         ManufacturerAddressFilters $manufacturerAddressFilters
-    )
-    {
+    ) {
         $manufacturerGridFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer');
         $manufacturerGrid = $manufacturerGridFactory->getGrid($manufacturerFilters);
 
@@ -130,8 +129,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         try {
             /** @var ViewableManufacturer $viewableManufacturer */
             $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
-                (int)$manufacturerId,
-                (int)$this->getContextLangId()
+                (int) $manufacturerId,
+                (int) $this->getContextLangId()
             ));
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -166,7 +165,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     public function deleteAction($manufacturerId)
     {
         try {
-            $this->getCommandBus()->handle(new DeleteManufacturerCommand((int)$manufacturerId));
+            $this->getCommandBus()->handle(new DeleteManufacturerCommand((int) $manufacturerId));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
@@ -275,9 +274,9 @@ class ManufacturerController extends FrameworkBundleAdminController
     {
         try {
             /** @var EditableManufacturer $editableManufacturer */
-            $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int)$manufacturerId));
+            $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
             $this->getCommandBus()->handle(
-                new ToggleManufacturerStatusCommand((int)$manufacturerId, !$editableManufacturer->isEnabled())
+                new ToggleManufacturerStatusCommand((int) $manufacturerId, !$editableManufacturer->isEnabled())
             );
             $this->addFlash(
                 'success',
@@ -321,7 +320,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     public function deleteAddressAction($addressId)
     {
         try {
-            $this->getCommandBus()->handle(new DeleteAddressCommand((int)$addressId));
+            $this->getCommandBus()->handle(new DeleteAddressCommand((int) $addressId));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
@@ -429,7 +428,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         foreach ($manufacturerIds as $i => $manufacturerId) {
-            $manufacturerIds[$i] = (int)$manufacturerId;
+            $manufacturerIds[$i] = (int) $manufacturerId;
         }
 
         return $manufacturerIds;
@@ -449,7 +448,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         foreach ($addressIds as $i => $addressId) {
-            $addressIds[$i] = (int)$addressId;
+            $addressIds[$i] = (int) $addressId;
         }
 
         return $addressIds;
