@@ -16,14 +16,14 @@ admin_manufacturers_search:
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_create:
-  path: manufacturers/add
+  path: /new
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createManufacturer'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_view:
-  path: manufacturers/{manufacturerId}/view
+  path: /{manufacturerId}/view
   methods: GET
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:view'
@@ -32,7 +32,7 @@ admin_manufacturers_view:
     manufacturerId: \d+
 
 admin_manufacturers_edit:
-  path: manufacturers/{manufacturerId}/edit
+  path: /{manufacturerId}/edit
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:editManufacturer'
@@ -41,7 +41,7 @@ admin_manufacturers_edit:
     manufacturerId: \d+
 
 admin_manufacturers_delete:
-  path: manufacturers/{manufacturerId}/delete
+  path: /{manufacturerId}/delete
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:delete'
@@ -50,28 +50,28 @@ admin_manufacturers_delete:
     manufacturerId: \d+
 
 admin_manufacturers_bulk_delete:
-  path: manufacturers/bulk-delete
+  path: /bulk-delete
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDelete'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_bulk_enable_status:
-  path: manufacturers/bulk-enable
+  path: /bulk-enable
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkEnable'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_bulk_disable_status:
-  path: manufacturers/bulk-disable
+  path: /bulk-disable
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDisable'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_toggle_status:
-  path: manufacturers/{manufacturerId}/toggle-status
+  path: /{manufacturerId}/toggle-status
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:toggleStatus'
