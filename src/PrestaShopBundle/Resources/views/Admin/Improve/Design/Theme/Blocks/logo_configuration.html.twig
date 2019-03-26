@@ -96,8 +96,9 @@
               title="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}"
             >
           </div>
-
-          {{ ps.form_group_row(shopLogosForm.options.mail_logo, {}, {'help': headerLogoPath == mailLogoPath ? 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') : '' }) }}
+          <div class="input-in-tab">
+            {{ ps.form_group_row(shopLogosForm.options.mail_logo, {}, {'help': headerLogoPath == mailLogoPath ? 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') : '' }) }}
+          </div>
         </div>
         <div class="tab-pane" id="invoice-configuration" role="tabpanel" aria-labelledby="logo-tab">
           <p class="logo-card-description description-in-tab">
@@ -112,9 +113,9 @@
               title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
             >
           </div>
-
-
-          {{ ps.form_group_row(shopLogosForm.options.invoice_logo, {}, {'help': headerLogoPath == invoiceLogoPath ? 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') : '' }) }}
+          <div class="input-in-tab">
+            {{ ps.form_group_row(shopLogosForm.options.invoice_logo, {}, {'help': headerLogoPath == invoiceLogoPath ? 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') : '' }) }}
+          </div>
         </div>
       </div>
     {% endblock %}
