@@ -32,11 +32,7 @@
     {% for product in viewableManufacturer.manufacturerProducts %}
       <div class="card">
         <div class="card-header clearfix">
-          {% if product.combinations is not empty %}
-            <a href="{{ path('admin_product_form', {'id': product.id}) }}">{{ product.name }}</a>
-          {% else %}
-            {{ product.name }}
-          {% endif %}
+          <a href="{{ path('admin_product_form', {'id': product.id}) }}">{{ product.name }}</a>
 
           <div class="d-inline-block float-right">
             <div class="btn-group-action text-right">
