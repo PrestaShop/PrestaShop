@@ -24,36 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
- * Gets manufacturer for editing in Back Office
+ * Defines contract for EditManufacturerHandler
  */
-class GetManufacturerForEditing
+interface EditManufacturerHandlerInterface
 {
     /**
-     * @var ManufacturerId
-     */
-    private $manufacturerId;
-
-    /**
-     * @param int $manufacturerId
+     * @param EditManufacturerCommand $command
      *
-     * @throws ManufacturerConstraintException
+     * @return ManufacturerId
      */
-    public function __construct($manufacturerId)
-    {
-        $this->manufacturerId = new ManufacturerId($manufacturerId);
-    }
-
-    /**
-     * @return ManufacturerId $manufacturerId
-     */
-    public function getManufacturerId()
-    {
-        return $this->manufacturerId;
-    }
+    public function handle(EditManufacturerCommand $command);
 }

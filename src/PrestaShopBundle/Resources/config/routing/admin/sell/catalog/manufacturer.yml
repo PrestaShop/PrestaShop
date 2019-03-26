@@ -2,8 +2,9 @@ admin_manufacturers_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index'
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Manufacturer:index'
     _legacy_controller: AdminManufacturers
+#   @todo:Implement legacy links at the end of whole page migration
 
 #
 # Manufacturer routes
@@ -16,27 +17,30 @@ admin_manufacturers_search:
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_create:
-  path: manufacturers/add
+  path: /new
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createManufacturer'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
     _legacy_controller: AdminManufacturers
 
 admin_manufacturers_view:
   path: manufacturers/{manufacturerId}/view
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:viewManufacturer'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:view'
     _legacy_controller: AdminManufacturers
   requirements:
     manufacturerId: \d+
 
 admin_manufacturers_edit:
-  path: manufacturers/{manufacturerId}/edit
+  path: /{manufacturerId}/edit
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:editManufacturer'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:edit'
     _legacy_controller: AdminManufacturers
+    _legacy_link: AdminManufacturers:updatemanufacturer
+    _legacy_parameters:
+      id_manufacturer: manufacturerId
   requirements:
     manufacturerId: \d+
 

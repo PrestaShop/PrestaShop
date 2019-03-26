@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -16,44 +16,33 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
 
 /**
- * Gets manufacturer for editing in Back Office
+ * Is thrown when error occurs when uploading language image
  */
-class GetManufacturerForEditing
+class ManufacturerImageUploadingException extends ManufacturerException
 {
     /**
-     * @var ManufacturerId
+     * @var int Code is used when there are less memory than needed to upload image
      */
-    private $manufacturerId;
+    const MEMORY_LIMIT_RESTRICTION = 1;
 
     /**
-     * @param int $manufacturerId
-     *
-     * @throws ManufacturerConstraintException
+     * @var int Code is used when unexpected error occurs while uploading image
      */
-    public function __construct($manufacturerId)
-    {
-        $this->manufacturerId = new ManufacturerId($manufacturerId);
-    }
+    const UNEXPECTED_ERROR = 2;
 
     /**
-     * @return ManufacturerId $manufacturerId
+     * Code is used when image/images cannot be resized
      */
-    public function getManufacturerId()
-    {
-        return $this->manufacturerId;
-    }
+    const UNABLE_RESIZE = 3;
 }

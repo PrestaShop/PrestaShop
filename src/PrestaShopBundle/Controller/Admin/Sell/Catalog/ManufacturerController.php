@@ -43,6 +43,14 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDe
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -52,7 +60,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ManufacturerController is responsible for "Sell > Catalog > Brands & Suppliers" page.
+ * Is responsible for "Sell > Catalog > Brands & Suppliers" page.
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
@@ -115,22 +123,84 @@ class ManufacturerController extends FrameworkBundleAdminController
         );
     }
 
-    public function createManufacturerAction()
+    /**
+     * Show & process manufacturer creation.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        try {
+            $manufacturerForm = $this->getFormBuilder()->getForm();
+            $manufacturerForm->handleRequest($request);
+
+            $result = $this->getFormHandler()->handle($manufacturerForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        } catch (CoreException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/add.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'manufacturerForm' => $manufacturerForm->createView(),
+        ]);
     }
 
-    public function viewManufacturerAction()
+    /**
+     * Show & process manufacturer editing.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     * )
+     *
+     * @param int $manufacturerId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $manufacturerId)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
-    }
+        try {
+            $manufacturerForm = $this->getFormBuilder()->getFormFor((int) $manufacturerId);
+            $manufacturerForm->handleRequest($request);
 
-    public function editManufacturerAction()
-    {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+            $result = $this->getFormHandler()->handleFor((int) $manufacturerId, $manufacturerForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        } catch (CoreException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof ManufacturerNotFoundException) {
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        }
+
+        /** @var EditableManufacturer $editableManufacturer */
+        $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/edit.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'manufacturerForm' => $manufacturerForm->createView(),
+            'manufacturerName' => $editableManufacturer->getName(),
+            'logoImage' => $editableManufacturer->getLogoImage(),
+        ]);
     }
 
     /**
@@ -353,6 +423,8 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     private function getErrorMessages()
     {
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+
         return [
             DeleteManufacturerException::class => [
                 DeleteManufacturerException::FAILED_DELETE => $this->trans(
@@ -385,6 +457,32 @@ class ManufacturerController extends FrameworkBundleAdminController
                 ),
                 DeleteAddressException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            ManufacturerNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            MemoryLimitException::class => $this->trans(
+                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ',
+                    'Admin.Notifications.Error'
+            ),
+            ImageUploadException::class => $this->trans(
+                'An error occurred while uploading the image.',
+                'Admin.Notifications.Error'
+            ),
+            ImageOptimizationException::class => $this->trans(
+                'Unable to resize one or more of your pictures.',
+                'Admin.Catalog.Notification'
+            ),
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
+                        $iniConfig->getUploadMaxSizeInBytes(),
+                ]),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'
                 ),
             ],
@@ -429,5 +527,21 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         return $addressIds;
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
     }
 }

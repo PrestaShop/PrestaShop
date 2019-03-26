@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
 use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShopException;
@@ -35,7 +36,7 @@ use PrestaShopException;
 /**
  * Provides reusable methods for manufacturer command/query handlers
  */
-abstract class AbstractManufacturerHandler
+abstract class AbstractManufacturerHandler extends AbstractObjectModelHandler
 {
     /**
      * Gets legacy Manufacturer
@@ -44,7 +45,7 @@ abstract class AbstractManufacturerHandler
      *
      * @return Manufacturer
      *
-     * @throws ManufacturerNotFoundException
+     * @throws ManufacturerException
      */
     protected function getManufacturer(ManufacturerId $manufacturerId)
     {

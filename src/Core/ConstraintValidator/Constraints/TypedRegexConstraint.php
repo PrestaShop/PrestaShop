@@ -24,36 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexConstraintValidator;
+use Symfony\Component\Validator\Constraint;
 
 /**
- * Gets manufacturer for editing in Back Office
+ * Provides regex validation by type
  */
-class GetManufacturerForEditing
+class TypedRegexConstraint extends Constraint
 {
     /**
-     * @var ManufacturerId
+     * @var string
      */
-    private $manufacturerId;
+    public $message = '%s is invalid';
 
     /**
-     * @param int $manufacturerId
-     *
-     * @throws ManufacturerConstraintException
+     * @var string
      */
-    public function __construct($manufacturerId)
+    public $type;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredOptions()
     {
-        $this->manufacturerId = new ManufacturerId($manufacturerId);
+        return ['type'];
     }
 
     /**
-     * @return ManufacturerId $manufacturerId
+     * {@inheritdoc}
      */
-    public function getManufacturerId()
+    public function validatedBy()
     {
-        return $this->manufacturerId;
+        return TypedRegexConstraintValidator::class;
     }
 }
