@@ -34,6 +34,9 @@ server {
     root /path/to/prestashop;
 
     index index.php;
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
 
     # Redirect 404 errors to prestashop
     error_page 404 /index.php?controller=404;
