@@ -26,8 +26,9 @@
   <div class="row">
     {block name='order_items_table_head'}
       <h3 class="card-title h3 col-md-6 col-12">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
-      <h3 class="card-title h3 col-md-3 _desktop-title">{l s='Unit price' d='Shop.Theme.Checkout'}</h3>
-      <h3 class="card-title h3 col-md-3 _desktop-title">{l s='Total (tax incl.)' d='Shop.Theme.Checkout'}</h3>
+      <h3 class="card-title h3 col-md-2 text-md-center _desktop-title">{l s='Unit price' d='Shop.Theme.Checkout'}</h3>
+      <h3 class="card-title h3 col-md-2 text-md-center _desktop-title">{l s='Quantity' d='Shop.Theme.Checkout'}</h3>
+      <h3 class="card-title h3 col-md-2 text-md-center _desktop-title">{l s='Total products' d='Shop.Theme.Checkout'}</h3>
     {/block}
   </div>
 
@@ -88,9 +89,9 @@
           </div>
           <div class="col-sm-6 col-xs-12 qty">
             <div class="row">
-              <div class="col-xs-5 text-sm-right text-xs-left">{$product.price}</div>
-              <div class="col-xs-2">{$product.quantity}</div>
-              <div class="col-xs-5 text-xs-right bold">{$product.total}</div>
+              <div class="col-xs-4 text-sm-center text-xs-left">{$product.price}</div>
+              <div class="col-xs-4 text-sm-center">{$product.quantity}</div>
+              <div class="col-xs-4 text-sm-center text-xs-right bold">{$product.total}</div>
             </div>
           </div>
         </div>

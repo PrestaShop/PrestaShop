@@ -372,8 +372,8 @@ body#checkout {
 #order-items {
   border-right: $gray-light 1px solid;
   .h3 {
+    font-size: 1rem;
     &._desktop-title {
-      text-align: right;
       @include media-breakpoint-down(md) {
         display: none;
       }
