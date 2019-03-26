@@ -161,9 +161,13 @@
         ],
         "test-all": [
             "composer phpunit-legacy",
+            "composer unit-tests",
             "composer phpunit-admin",
             "composer phpunit-sf",
-            "composer phpunit-controllers"
+            "composer integration-tests",
+            "composer phpunit-controllers",
+            "composer phpunit-routing",
+            "composer integration-behaviour-tests"
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
