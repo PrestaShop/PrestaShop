@@ -48,6 +48,9 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
         $this->populateAddressWithData($address, $command);
 
         try {
+            if (false === $address->validateFields(false)) {
+                throw new AddressException('Address contains invalid field values');
+            }
             if (!$address->update()) {
                 throw new AddressException(
                     sprintf('Cannot update address with id "%s"', $address->id)
