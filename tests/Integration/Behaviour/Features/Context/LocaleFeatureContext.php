@@ -26,26 +26,15 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Context\Context as BehatContext;
+use Context;
 
-/**
- * PrestaShopFeatureContext provides behat hooks to perform necessary operations for testing:
- * - shop setup
- * - database reset between scenario
- * - cache clear between steps
- * - ...
- */
-abstract class AbstractPrestaShopFeatureContext implements BehatContext
+class LocaleFeatureContext extends AbstractPrestaShopFeatureContext
 {
-    const MODULES_DIRECTORY = __DIR__ . '/../../../../Resources/modules';
-
-    protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
+    /**
+     * @Given I set the translation locale to :locale
+     */
+    public function iSetTheTranslationLocaleTo($locale)
     {
-        if (!isset($fixtures[$fixtureIndex])) {
-            $fixtureNames = array_keys($fixtures);
-            $firstFixtureNames = array_splice($fixtureNames, 0, 5);
-            $firstFixtureNamesStr = implode(',', $firstFixtureNames);
-            throw new \Exception($fixtureName . ' named "' . $fixtureIndex . '" was not added in fixtures. First 5 added are: ' . $firstFixtureNamesStr);
-        }
+        Context::getContext()->getTranslator()->setLocale($locale);
     }
 }
