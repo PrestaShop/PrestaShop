@@ -27,37 +27,51 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\AbstractCmsPageHandler;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\getCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler\GetCmsPageForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult\EditableCmsPage;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShopException;
 
 /**
  * Gets cms page for editing
  */
 final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implements GetCmsPageForEditingHandlerInterface
 {
-
     /**
      * @param GetCmsPageForEditing $query
      *
      * @return EditableCmsPage
+     *
+     * @throws CmsPageException
+     * @throws CmsPageCategoryException
+     * @throws CmsPageNotFoundException
      */
     public function handle(getCmsPageForEditing $query)
     {
-        $cms = $this->getCmsPageIfExistsById($query->getCmsPageId()->getValue());
+        $cmsPageId = $query->getCmsPageId()->getValue();
+        $cms = $this->getCmsPageIfExistsById($cmsPageId);
 
-        return new EditableCmsPage(
-            (int) $cms->id_cms_category,
-            $cms->meta_title,
-            $cms->head_seo_title,
-            $cms->meta_description,
-            $cms->meta_keywords,
-            $cms->link_rewrite,
-            $cms->content,
-            $cms->indexation,
-            $cms->active,
-            $cms->getAssociatedShops()
-        );
-
+        try {
+            return new EditableCmsPage(
+                (int) $cms->id,
+                (int) $cms->id_cms_category,
+                $cms->meta_title,
+                $cms->head_seo_title,
+                $cms->meta_description,
+                $cms->meta_keywords,
+                $cms->link_rewrite,
+                $cms->content,
+                $cms->indexation,
+                $cms->active,
+                $cms->getAssociatedShops()
+            );
+        } catch (PrestaShopException $e) {
+            throw new CmsPageException(
+                sprintf('An error occurred when getting cms page for editing with id "%s"', $cmsPageId)
+            );
+        }
     }
 }

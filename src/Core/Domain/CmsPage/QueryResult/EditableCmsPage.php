@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
@@ -34,6 +36,11 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
  */
 class EditableCmsPage
 {
+    /**
+     * @var CmsPageId
+     */
+    private $cmsPageId;
+
     /**
      * @var CmsPageCategoryId
      */
@@ -85,6 +92,7 @@ class EditableCmsPage
     private $shopAssociation;
 
     /**
+     * @param int $cmsPageId
      * @param int $cmsPageCategoryId
      * @param string[] $localizedTitle
      * @param string[] $localizedMetaTitle
@@ -97,8 +105,10 @@ class EditableCmsPage
      * @param array $shopAssociation
      *
      * @throws CmsPageCategoryException
+     * @throws CmsPageException
      */
     public function __construct(
+        $cmsPageId,
         $cmsPageCategoryId,
         array $localizedTitle,
         array $localizedMetaTitle,
@@ -110,6 +120,7 @@ class EditableCmsPage
         $displayed,
         array $shopAssociation
     ) {
+        $this->cmsPageId = new CmsPageId($cmsPageId);
         $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
         $this->localizedTitle = $localizedTitle;
         $this->localizedMetaTitle = $localizedMetaTitle;
@@ -120,6 +131,14 @@ class EditableCmsPage
         $this->indexedForSearch = $indexedForSearch;
         $this->displayed = $displayed;
         $this->shopAssociation = $shopAssociation;
+    }
+
+    /**
+     * @return CmsPageId
+     */
+    public function getCmsPageId()
+    {
+        return $this->cmsPageId;
     }
 
     /**
