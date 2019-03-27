@@ -2,28 +2,28 @@ admin_profiles_index:
     path: /
     methods: GET
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:index'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profile:index'
         _legacy_controller: AdminProfiles
 
 admin_profiles_search:
     path: /
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:search'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profile:search'
         _legacy_controller: AdminProfiles
 
 admin_profiles_create:
     path: /new
     methods: [GET, POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:create'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profile:create'
         _legacy_controller: AdminProfiles
 
 admin_profiles_edit:
     path: /{profileId}/edit
     methods: [GET, POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:edit'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profile:edit'
         _legacy_controller: AdminProfiles
     requirements:
         profileId: \d+
@@ -32,7 +32,7 @@ admin_profiles_delete:
     path: /{profileId}/delete
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:delete'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profile:delete'
         _legacy_controller: AdminProfiles
     requirements:
         profileId: \d+
@@ -41,5 +41,5 @@ admin_profiles_bulk_delete:
     path: /delete/bulk
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:bulkDelete'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profile:bulkDelete'
         _legacy_controller: AdminProfiles
