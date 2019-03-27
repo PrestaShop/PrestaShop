@@ -102,6 +102,9 @@ class CmsPageType extends AbstractType
                     ]),
                 ],
                 'options' => [
+                    'attr' => [
+                        'class' => 'js-copier-source-title',
+                    ],
                     'constraints' => [
                         //@todo: typedRegexConstraint generic_name PR #12735
                         new Regex([
@@ -209,6 +212,9 @@ class CmsPageType extends AbstractType
                     ]),
                 ],
                 'options' => [
+                    'attr' => [
+                        'class' => 'js-copier-destination-friendly-url',
+                    ],
                     'constraints' => [
                         new IsUrlRewrite(),
                         new Length([

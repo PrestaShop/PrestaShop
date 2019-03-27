@@ -27,14 +27,20 @@ const $ = window.$;
 import ChoiceTree from '../../../components/form/choice-tree';
 import TaggableField from '../../../components/taggable-field';
 import TranslatableInput from '../../../components/translatable-input';
+import textToLinkRewriteCopier from '../../../components/text-to-link-rewrite-copier';
 
 $(() => {
-  new ChoiceTree('#cms_page_page_category');
+  new ChoiceTree('#cms_page_page_category_id');
   new TranslatableInput();
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,
     },
+  });
+
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input.js-copier-source-title',
+    destinationElementSelector: 'input.js-copier-destination-friendly-url',
   });
 });
