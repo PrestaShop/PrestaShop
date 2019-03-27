@@ -38,8 +38,6 @@ admin_manufacturers_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:edit'
     _legacy_controller: AdminManufacturers
-    _legacy_parameters:
-      id_manufacturer: manufacturerId
   requirements:
     manufacturerId: \d+
 
