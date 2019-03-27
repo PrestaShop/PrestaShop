@@ -91,3 +91,9 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Manufacturer\ManufacturerType'
       - '@prestashop.core.form.identifiable_object.data_provider.manufacturer_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.profile_form_builder:
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType'
+      - '@prestashop.core.form.identifiable_object.data_provider.profile_form_data_provider'
