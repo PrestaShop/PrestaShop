@@ -8,6 +8,7 @@
   <entities>
     <feature_product id="feature_product_1_4" id_feature="1" id_product="1" id_feature_value="4"/>
     <feature_product id="feature_product_1_8" id_feature="2" id_product="1" id_feature_value="8"/>
+    <feature_product id="feature_product_3_6" id_feature="1" id_product="3" id_feature_value="6"/>
     <feature_product id="feature_product_4_6" id_feature="1" id_product="4" id_feature_value="6"/>
     <feature_product id="feature_product_5_6" id_feature="1" id_product="5" id_feature_value="6"/>
     <feature_product id="feature_product_16_5" id_feature="1" id_product="16" id_feature_value="5"/>
