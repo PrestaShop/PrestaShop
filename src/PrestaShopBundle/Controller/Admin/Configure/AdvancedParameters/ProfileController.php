@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminPr
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -132,6 +134,7 @@ class ProfileController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/create.html.twig', [
             'profileForm' => $form->createView(),
+            'layoutTitle' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
         ]);
     }
 
@@ -173,8 +176,18 @@ class ProfileController extends FrameworkBundleAdminController
             }
         }
 
+        /** @var EditableProfile $editableProfiler */
+        $editableProfiler = $this->getQueryBus()->handle(new GetProfileForEditing((int) $profileId));
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/edit.html.twig', [
             'profileForm' => $form->createView(),
+            'layoutTitle' => $this->trans(
+                'Edit: %value%',
+                'Admin.Catalog.Feature',
+                [
+                    '%value%' => $editableProfiler->getLocalizedNames()[$this->getContextLangId()],
+                ]
+            ),
         ]);
     }
 
