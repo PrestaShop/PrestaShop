@@ -166,7 +166,8 @@ class Locale implements LocaleInterface
     /**
      * @return PriceSpecificationMap
      */
-    public function getPriceSpecifications(){
+    public function getPriceSpecifications()
+    {
         return $this->priceSpecifications;
     }
 }
