@@ -49,11 +49,10 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
     {
         $cms = $this->createCmsFromCommand($command);
 
-        if (false === $cms->validateFields(false)) {
-            throw new CmsPageException('Cms page contains invalid field values');
-        }
-
         try {
+            if (false === $cms->validateFields(false)) {
+                throw new CmsPageException('Cms page contains invalid field values');
+            }
             if (false === $cms->update()) {
                 throw new CannotEditCmsPageException(
                     sprintf('Failed to update cms page with id %s', $command->getCmsPageId()->getValue())
@@ -94,8 +93,8 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
             $cms->head_seo_title = $command->getLocalizedMetaTitle();
         }
 
-        if (null !== $command->getCmsPageCategory()) {
-            $cms->id_cms_category = $command->getCmsPageCategory()->getValue();
+        if (null !== $command->getCmsPageCategoryId()) {
+            $cms->id_cms_category = $command->getCmsPageCategoryId()->getValue();
         }
 
         if (null !== $command->getLocalizedMetaDescription()) {

@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageExcep
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
@@ -172,11 +173,50 @@ class CmsPageController extends FrameworkBundleAdminController
                 //todo: wait for second list to be merged and
                 return $this->redirectToRoute('admin_cms_pages_index');
             }
-        } catch (DomainException $e) {
+        } catch (CmsPageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->render('PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig', [
+            'cmsPageForm' => $form->createView(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $cmsPageId
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $cmsPageId)
+    {
+        $cmsPageId = (int) $cmsPageId;
+
+        $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId);
+        $form->handleRequest($request);
+
+        try {
+            $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
+        } catch (CmsPageException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof CmsPageNotFoundException) {
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit.html.twig', [
             'cmsPageForm' => $form->createView(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -1034,7 +1074,6 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
-<<<<<<< HEAD
      * Gets user friendly error message by exception.
      *
      * @param CmsPageException $exception
