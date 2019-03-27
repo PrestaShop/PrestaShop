@@ -63,6 +63,7 @@ class CustomerAddressPersisterCore
         }
 
         $address->id_customer = $this->customer->id;
+        $address->save();
 
         if ($address->isUsed()) {
             $old_address = new Address($address->id);
