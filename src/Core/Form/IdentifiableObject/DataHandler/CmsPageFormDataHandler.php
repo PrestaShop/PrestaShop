@@ -58,7 +58,7 @@ class CmsPageFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         /**
-         * @var CmsPageId
+         * @var CmsPageId $cmsPageId
          */
         $cmsPageId = $this->commandBus->handle(new AddCmsPageCommand(
             (int) $data['page_category'],

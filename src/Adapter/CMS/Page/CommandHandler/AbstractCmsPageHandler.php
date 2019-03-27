@@ -56,12 +56,12 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
 
             if (0 >= $cms->id) {
                 throw new CmsPageNotFoundException(
-                    sprintf('cms page has not been found with id %s', $cmsId)
+                    sprintf('Cms page with id "%s" not found', $cmsId)
                 );
             }
         } catch (PrestaShopException $exception) {
             throw new CmsPageException(
-                sprintf('An error occurred when trying to get cms pag with id %s', $cmsId)
+                sprintf('An error occurred when trying to get cms page with id %s', $cmsId)
             );
         }
 
