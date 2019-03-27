@@ -22,6 +22,28 @@
       max-width: 340px;
       .caption-description p {
         color: white;
+        @media (max-width: 767px) {
+          font-size: .875rem;
+        }
+        @media (max-width: 480px){
+          display:none;
+        }
+      }
+      .display-1{
+        @media (max-width: 767px) {
+          font-size: 1.875rem;
+        }
+        @media (max-width: 480px){
+          font-size: 1.5rem;
+        }
+      }
+      h3{
+        @media (max-width: 767px) {
+          font-size: 1rem;
+        }
+        @media (max-width: 480px){
+          font-size: .875rem;
+        }
       }
     }
     figure {
@@ -32,6 +54,10 @@
     opacity: 1;
     .icon-next,
     .icon-prev {
+      width: auto;
+      height: auto;
+      margin-top: 0;
+      top: calc(50% - 25px);
       &::before {
         content: "";
       }
@@ -46,10 +72,12 @@
       }
     }
     .icon-prev {
-      left: 1rem;
+      left: 0;
+      margin-left: 0;
     }
     .icon-next {
-      right: 2rem;
+      right: 0;
+      margin-right: 0;
     }
     &.left,
     &.right {
