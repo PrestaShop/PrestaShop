@@ -89,10 +89,10 @@ class EditableManufacturer
      * @param bool $enabled
      * @param array $localizedShortDescriptions
      * @param array $localizedDescriptions
-     * @param array $logoImage
      * @param array $localizedMetaTitles
      * @param array $localizedMetaDescriptions
      * @param array $localizedMetaKeywords
+     * @param array|null $logoImage
      * @param array $associatedShops
      */
     public function __construct(
@@ -104,7 +104,7 @@ class EditableManufacturer
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
         array $localizedMetaKeywords,
-        array $logoImage,
+        $logoImage,
         array $associatedShops
     ) {
         $this->manufacturerId = $manufacturerId;
