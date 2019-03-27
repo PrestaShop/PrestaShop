@@ -952,7 +952,7 @@ class FrontControllerCore extends Controller
 
         $context = Context::getContext();
         if (!isset($context->customer) || !$context->customer->id) {
-            return array();
+            return array((int)Group::getCurrent()->id);
         }
 
         if (!is_array(self::$currentCustomerGroups)) {
