@@ -25,8 +25,19 @@
  */
 class RangePriceCore extends ObjectModel
 {
+    /**
+     * @var int
+     */
     public $id_carrier;
+
+    /**
+     * @var float
+     */
     public $delimiter1;
+
+    /**
+     * @var float
+     */
     public $delimiter2;
 
     /**
@@ -87,7 +98,9 @@ class RangePriceCore extends ObjectModel
     /**
      * Get all available price ranges.
      *
-     * @return array Ranges
+     * @param int $id_carrier Carrier identifier
+     *
+     * @return array|false All ranges for this carrier, or false on error
      */
     public static function getRanges($id_carrier)
     {
@@ -98,6 +111,16 @@ class RangePriceCore extends ObjectModel
             ORDER BY `delimiter1` ASC');
     }
 
+    /**
+     * Check if a range exists for delimiter1 and delimiter2 by id_carrier or id_reference
+     *
+     * @param int|null $id_carrier Carrier identifier
+     * @param float $delimiter1
+     * @param float $delimiter2
+     * @param int|null $id_reference Carrier reference is the initial Carrier identifier (optional)
+     *
+     * @return int|false Total of matching ranges, or false on error
+     */
     public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -111,6 +134,16 @@ class RangePriceCore extends ObjectModel
             AND `delimiter1` = ' . (float) $delimiter1 . ' AND `delimiter2` = ' . (float) $delimiter2);
     }
 
+    /**
+     * Check if a range overlaps another range for this carrier
+     *
+     * @param int $id_carrier Carrier identifier
+     * @param float $delimiter1
+     * @param float $delimiter2
+     * @param int|null $id_rang RangePrice identifier (optional)
+     *
+     * @return int|false Total of overlapping ranges, or false on error
+     */
     public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
