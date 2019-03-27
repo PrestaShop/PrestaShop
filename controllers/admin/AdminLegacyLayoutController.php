@@ -49,6 +49,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
+        $this->className = 'LegacyLayout';
 
         // Compatibility with legacy behavior.
         // Languages can only be used in "All shops" context.
@@ -86,7 +87,11 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
         $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
+        // @todo remove once the product page has been made responsive
+        $isProductPage = ('AdminProducts' === $this->controller_name);
+
         $vars = array(
+            'viewport_scale' => $isProductPage ? '0.75' : '1',
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,

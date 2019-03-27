@@ -29,6 +29,9 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\Products;
 use Configuration;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
+/**
+ * behat equivalent : Scenarii/Cart/Calculation/Product/gift_wrapping.feature
+ */
 class CartGiftWrappingTest extends AbstractCartCalculationTest
 {
     const GIFT_WRAPPING_PRICE = 5.3;

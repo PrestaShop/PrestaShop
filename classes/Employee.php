@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
 /**
  * Class EmployeeCore.
@@ -340,8 +341,8 @@ class EmployeeCore extends ObjectModel
             return false;
         }
 
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+        /** @var Hashing $crypto */
+        $crypto = ServiceLocator::get(Hashing::class);
 
         $passwordHash = $result['passwd'];
         $shouldCheckPassword = null !== $plaintextPassword;

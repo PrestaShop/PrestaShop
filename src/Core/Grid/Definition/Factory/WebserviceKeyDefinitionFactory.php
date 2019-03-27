@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -67,15 +68,18 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * WebserviceKeyDefinitionFactory constructor.
      *
+     * @param HookDispatcherInterface $hookDispatcher
      * @param array $statusChoices
      * @param $resetActionUrl
      * @param $redirectionUrl
      */
     public function __construct(
+        HookDispatcherInterface $hookDispatcher,
         array $statusChoices,
         $resetActionUrl,
         $redirectionUrl
     ) {
+        parent::__construct($hookDispatcher);
         $this->statusChoices = $statusChoices;
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;

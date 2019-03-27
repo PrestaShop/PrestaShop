@@ -30,6 +30,9 @@ use Configuration;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Tools;
 
+/**
+ * behat equivalent : Scenarii/Cart/Calculation/RoundingMode/*.feature
+ */
 class RoundingModeTest extends AbstractCartCalculationTest
 {
     /**

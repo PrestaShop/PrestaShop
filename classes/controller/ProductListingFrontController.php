@@ -396,7 +396,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * @param ProductSearchQuery $query
      * @param ProductSearchResult $result
      *
-     * @return an array that makes rendering the pagination very easy
+     * @return array An array that makes rendering the pagination very easy
      */
     protected function getTemplateVarPagination(
         ProductSearchQuery $query,
@@ -406,7 +406,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $pagination
             ->setPage($query->getPage())
             ->setPagesCount(
-                ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
+                (int) ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
             );
 
         $totalItems = $result->getTotalProductsCount();

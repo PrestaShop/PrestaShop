@@ -607,6 +607,11 @@ services:
         arguments:
             - '@=service("prestashop.core.form.choice_provider.import_match_configuration").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
+
+    form.type.common.country_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\CountryChoiceType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.country_by_id'
         tags:
             - { name: form.type }
 
@@ -649,6 +654,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType'
         arguments:
             - "@=service('prestashop.adapter.form.choice_provider.shop_tree_choice_provider').getChoices()"
+            - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
         tags:
             - { name: form.type }
 
@@ -733,7 +739,7 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.international.tax:
+    form.type.international.tax_options:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
       arguments:
         - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_USE_ECOTAX")'
@@ -741,3 +747,38 @@ services:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
       tags:
         - { name: form.type }
+
+    form.type.contact:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
+        arguments:
+          - '@prestashop.bundle.form.data_transformer.default_language_to_filled_array'
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
+
+    form.type.cms_page_category:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.international.tax:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType'
+        arguments:
+            - '@translator'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.manufacturer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Manufacturer\ManufacturerType'
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+        tags:
+            - { name: form.type }

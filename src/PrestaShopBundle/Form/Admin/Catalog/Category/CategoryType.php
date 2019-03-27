@@ -27,8 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -49,10 +47,6 @@ class CategoryType extends AbstractCategoryType
                 // when using CategoryType to edit category
                 // user should not be able to select that category as parent
                 'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : [],
-            ])
-            ->add('description', TranslatableType::class, [
-                'type' => TextareaType::class,
-                'required' => false,
             ])
         ;
     }

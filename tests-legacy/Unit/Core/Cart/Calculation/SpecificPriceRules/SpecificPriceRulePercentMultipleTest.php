@@ -26,6 +26,9 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
+/**
+ * behat equivalent : Scenarii/Cart/Calculation/SpecificPriceRule/percent_multiple.feature
+ */
 class SpecificPriceRulePercentMultipleTest extends AbstractSpecificPriceRuleTest
 {
     const SPECIFIC_PRICE_RULES_FIXTURES = [

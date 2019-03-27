@@ -62,7 +62,7 @@ class CmsPageCategoryId
      *
      * @throws CmsPageCategoryException
      */
-    public function assertIsIntegerAndLargerThenZero($cmsPageCategoryId)
+    private function assertIsIntegerAndLargerThenZero($cmsPageCategoryId)
     {
         if (!is_int($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
             throw new CmsPageCategoryException(

@@ -55,12 +55,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function canonicalRedirection($canonical_url = '')
     {
         if (Validate::isLoadedObject($this->product)) {
-            if (!$this->product->hasCombinations()) {
+            if (!$this->product->hasCombinations() ||
+                !$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
+                //Invalid combination we redirect to the canonical url (with attribute id)
                 unset($_GET['id_product_attribute']);
-            } elseif (!$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
-                $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
+            } else {
+                //Only redirect to canonical (parent product without combination) when the requested combination is not valid
+                //In this case we are in a valid combination url and we must display it with redirection for SEO purpose
+                return;
             }
-            $idProductAttribute = $this->getIdProductAttributeByRequest();
+
+            //Note: we NEED these 6 arguments to have $ipa=null or else a parameter will be added
+            //id_product_attribute=0 and force the redirection
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -68,7 +74,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 null,
                 null,
                 null,
-                $idProductAttribute
+                null
             ));
         }
     }
@@ -276,9 +282,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $customization_fields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
             if (is_array($customization_fields)) {
                 foreach ($customization_fields as &$customization_field) {
-                    if ($customization_field['type'] == 0) {
+                    if ($customization_field['type'] == Product::CUSTOMIZE_FILE) {
                         $customization_field['key'] = 'pictures_' . $this->product->id . '_' . $customization_field['id_customization_field'];
-                    } elseif ($customization_field['type'] == 1) {
+                    } elseif ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
                         $customization_field['key'] = 'textFields_' . $this->product->id . '_' . $customization_field['id_customization_field'];
                     }
                 }

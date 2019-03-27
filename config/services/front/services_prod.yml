@@ -1,10 +1,7 @@
 imports:
-  - { resource: ../common.yml }
+    - { resource: ../common.yml }
 
 services:
-    hashing:
-        class: PrestaShop\PrestaShop\Core\Crypto\Hashing
-
     prestashop.core.filter.front_end_object.main:
         class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\MainFilter
         arguments:

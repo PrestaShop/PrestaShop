@@ -9,3 +9,7 @@ _categories:
 _suppliers:
     resource: "suppliers.yml"
     prefix: /suppliers/
+
+_manufacturers:
+    resource: "manufacturer.yml"
+    prefix: /brands

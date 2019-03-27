@@ -148,6 +148,8 @@ class SurvivalTest extends WebTestCase
             'admin_languages_create' => ['Add new language', 'admin_languages_create'],
             'admin_metas_index' => ['Meta', 'admin_metas_index'],
             'admin_metas_create' => ['Add new meta', 'admin_metas_create'],
+            'admin_contacts_index' => ['Contacts', 'admin_contacts_index'],
+            'admin_contacts_create' => ['Add new contact', 'admin_contacts_create'],
         ];
     }
 

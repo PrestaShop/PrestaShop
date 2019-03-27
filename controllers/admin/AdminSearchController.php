@@ -75,7 +75,15 @@ class AdminSearchControllerCore extends AdminController
                     /* Handle customer ID */
                     if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
                         if (($customer = new Customer($this->query)) && Validate::isLoadedObject($customer)) {
-                            Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer=' . (int) $customer->id . '&viewcustomer' . '&token=' . Tools::getAdminToken('AdminCustomers' . (int) Tab::getIdFromClassName('AdminCustomers') . (int) $this->context->employee->id));
+                            Tools::redirectAdmin($this->context->link->getAdminLink(
+                                'AdminCustomers',
+                                true,
+                                [],
+                                [
+                                    'id_customer' => $customer->id,
+                                    'viewcustomer' => 1,
+                                ]
+                            ));
                         }
                     }
 

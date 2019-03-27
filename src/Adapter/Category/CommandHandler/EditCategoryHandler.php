@@ -30,6 +30,7 @@ use Category;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
@@ -57,20 +58,67 @@ final class EditCategoryHandler extends AbstractCategoryHandler implements EditC
             );
         }
 
+        $this->updateCategoryFromCommandData($category, $command);
+
+        return new CategoryId((int) $category->id);
+    }
+
+    /**
+     * Updates legacy object model with data from command
+     *
+     * @param Category $category
+     * @param EditCategoryCommand $command
+     */
+    private function updateCategoryFromCommandData(Category $category, EditCategoryCommand $command)
+    {
+        if (null !== $command->isActive()) {
+            $category->active = $command->isActive();
+        }
+
         if (null !== $command->getParentCategoryId()) {
             $category->id_parent = $command->getParentCategoryId();
         }
 
-        $this->populateCategoryWithCommandData($category, $command);
+        if (null !== $command->getLocalizedNames()) {
+            $category->name = $command->getLocalizedNames();
+        }
+
+        if (null !== $command->getLocalizedLinkRewrites()) {
+            $category->link_rewrite = $command->getLocalizedLinkRewrites();
+        }
+
+        if (null !== $command->getLocalizedDescriptions()) {
+            $category->description = $command->getLocalizedDescriptions();
+        }
+
+        if (null !== $command->getLocalizedMetaTitles()) {
+            $category->meta_title = $command->getLocalizedMetaTitles();
+        }
+
+        if (null !== $command->getLocalizedMetaDescriptions()) {
+            $category->meta_description = $command->getLocalizedMetaDescriptions();
+        }
+
+        if (null !== $command->getLocalizedMetaKeywords()) {
+            $category->meta_keywords = $command->getLocalizedMetaKeywords();
+        }
+
+        if (null !== $command->getAssociatedGroupIds()) {
+            $category->groupBox = $command->getAssociatedGroupIds();
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->addShopAssociation($command->getAssociatedShopIds());
+        }
+
+        if (false === $category->validateFields(false)) {
+            throw new CategoryException('Invalid data when updating category');
+        }
 
         if (false === $category->update()) {
             throw new CannotEditCategoryException(
                 sprintf('Failed to edit Category with id "%s".', $category->id)
             );
         }
-
-        $this->uploadImages($category, $command);
-
-        return new CategoryId((int) $category->id);
     }
 }

@@ -199,12 +199,14 @@ class AdminAddressesControllerCore extends AdminController
         }
         if ($id_customer) {
             $customer = new Customer((int) $id_customer);
-            $token_customer = Tools::getAdminToken('AdminCustomers' . (int) (Tab::getIdFromClassName('AdminCustomers')) . (int) $this->context->employee->id);
         }
 
         $this->tpl_form_vars = array(
             'customer' => isset($customer) ? $customer : null,
-            'tokenCustomer' => isset($token_customer) ? $token_customer : null,
+            'customer_view_url' => $this->context->link->getAdminLink('AdminCustomers', true, [], [
+                'viewcustomer' => 1,
+                'id_customer' => $id_customer,
+            ]),
             'back_url' => urldecode(Tools::getValue('back')),
         );
 

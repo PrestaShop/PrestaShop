@@ -30,6 +30,8 @@ if (!defined('_PS_ADMIN_DIR_')) {
 if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
+define('_PS_ROOT_DIR_', __DIR__ . '/../..');
+define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
 
 require_once dirname(__FILE__) . '/../../config/config.inc.php';
 

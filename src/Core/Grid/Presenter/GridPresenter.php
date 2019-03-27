@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
  * Class GridPresenter is responsible for presenting grid.
@@ -62,6 +63,7 @@ final class GridPresenter implements GridPresenterInterface
             'id' => $definition->getId(),
             'name' => $definition->getName(),
             'filter_form' => $filterForm->createView(),
+            'form_prefix' => '',
             'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),
             'actions' => [
@@ -86,6 +88,10 @@ final class GridPresenter implements GridPresenterInterface
                 'is_empty_state' => empty($filterForm->getData()) && $data->getRecords()->count() === 0,
             ],
         ];
+
+        if ($searchCriteria instanceof Filters) {
+            $presentedGrid['form_prefix'] = $searchCriteria->getFilterId();
+        }
 
         $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', [
             'presented_grid' => &$presentedGrid,

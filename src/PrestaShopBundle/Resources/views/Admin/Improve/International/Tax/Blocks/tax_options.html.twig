@@ -83,6 +83,10 @@
           </div>
         </div>
       {% endif %}
+
+      {% block tax_options_rest %}
+        {{ form_rest(taxOptionsForm) }}
+      {% endblock %}
     </div>
   </div>
   <div class="card-footer">

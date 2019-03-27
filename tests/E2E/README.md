@@ -50,7 +50,7 @@ npm install
 This command line does it for you but you need a mysql server available with the right to create a database:
 
 ```bash
-php install/index_cli.php --language=en \
+php install-dev/index_cli.php --language=en \
                           --country=fr \
                           --domain=localhost \
                           --db_server=localhostr \
