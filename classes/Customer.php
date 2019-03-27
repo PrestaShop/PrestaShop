@@ -751,7 +751,6 @@ class CustomerCore extends ObjectModel
         // Check that customers password hasn't changed since last login
         $context = Context::getContext();
         if ($passwordHash != $context->cookie->__get('passwd')) {
-            $context->customer->logout();
             return false;
         }
 
