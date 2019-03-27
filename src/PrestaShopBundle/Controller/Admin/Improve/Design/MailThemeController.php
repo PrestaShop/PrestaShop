@@ -47,7 +47,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Show mail theme settings and generation page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -56,8 +56,7 @@ class MailThemeController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-        $defaultMailTheme = $this->configuration->get('PS_MAIL_THEME');
-        $generateThemeMailsForm = $this->createForm(GenerateMailsType::class, ['theme' => $defaultMailTheme]);
+        $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
 
         return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
@@ -73,7 +72,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Manage generation form post and generate mails.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -85,14 +84,19 @@ class MailThemeController extends FrameworkBundleAdminController
         $generateThemeMailsForm->handleRequest($request);
 
         if ($generateThemeMailsForm->isSubmitted()) {
-            $data = $generateThemeMailsForm->getData();
+            if (!$generateThemeMailsForm->isValid()) {
+                $this->flashErrors($this->getFormErrorsForJS($generateThemeMailsForm));
 
+                return $this->redirectToRoute('admin_mail_theme_index');
+            }
+
+            $data = $generateThemeMailsForm->getData();
             try {
                 /** @var GenerateMailTemplatesService $generator */
                 $generator = $this->get('prestashop.service.generate_mail_templates');
                 //Overwrite theme folder if selected
                 if (!empty($data['theme'])) {
-                    $themeFolder = $this->getParameter('kernel.project_dir') . '/themes/' . $data['theme'];
+                    $themeFolder = $this->getParameter('themes_dir') . $data['theme'];
                     $generator
                         ->setCoreMailsFolder($themeFolder . '/mails')
                         ->setModulesMailFolder($themeFolder . '/modules')
@@ -137,7 +141,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Save mail theme configuration
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -151,8 +155,13 @@ class MailThemeController extends FrameworkBundleAdminController
         $form = $formHandler->getForm()->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $errors = $formHandler->save($form->getData());
+            if (!$form->isValid()) {
+                $this->flashErrors($this->getFormErrorsForJS($form));
 
+                return $this->redirectToRoute('admin_mail_theme_index');
+            }
+
+            $errors = $formHandler->save($form->getData());
             if (empty($errors)) {
                 $this->addFlash(
                     'success',
