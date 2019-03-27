@@ -32,8 +32,8 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
 use Symfony\Component\Yaml\Yaml;
 
 $container_builder = new ContainerBuilder();
-$container = $container_builder->build();
-ServiceLocator::setServiceContainerInstance($container);
+$legacyContainer = $container_builder->build();
+ServiceLocator::setServiceContainerInstance($legacyContainer);
 
 if (!file_exists(_PS_CACHE_DIR_)) {
     @mkdir(_PS_CACHE_DIR_);
