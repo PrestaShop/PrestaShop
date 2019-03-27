@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
-use PrestaShop\PrestaShop\Core\Search\Filters\ProfilesFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -50,11 +50,11 @@ class ProfileController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param ProfilesFilters $filters
+     * @param ProfileFilters $filters
      *
      * @return Response
      */
-    public function indexAction(ProfilesFilters $filters)
+    public function indexAction(ProfileFilters $filters)
     {
         $profilesGridFactory = $this->get('prestashop.core.grid.factory.profiles');
 
@@ -85,7 +85,7 @@ class ProfileController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.profiles');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.profile');
         $definitionFactory = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -208,7 +208,7 @@ class ProfileController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $profileIds = $request->request->get('profiles_bulk');
+        $profileIds = $request->request->get('profile_bulk');
 
         try {
             $deleteProfilesCommand = new BulkDeleteProfileCommand($profileIds);

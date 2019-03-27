@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 /**
  * Class ProfilesFilters is responsible for providing default filter values for Profiles grid.
  */
-final class ProfilesFilters extends Filters
+final class ProfileFilters extends Filters
 {
     /**
      * {@inheritdoc}
