@@ -33,6 +33,9 @@
 </template>
 
 <script>
+  /**
+   * @deprecated since 1.7.6, use app/components/checkbox.vue instead
+   */
   export default {
     props: {
       id: {
