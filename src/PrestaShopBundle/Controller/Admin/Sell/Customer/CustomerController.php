@@ -150,6 +150,7 @@ class CustomerController extends AbstractAdminController
             'customerForm' => $customerForm->createView(),
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,
+            'displayInIframe' => $request->query->has('submitFormAjax'),
         ]);
     }
 
