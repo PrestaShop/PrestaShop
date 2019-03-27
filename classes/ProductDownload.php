@@ -257,7 +257,7 @@ class ProductDownloadCore extends ObjectModel
         }
         $key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
 
-        return  _PS_BASE_URL_ . __PS_BASE_URI__ . 'index.php?controller=get-file&key=' . $key;
+        return Context::getContext()->link->getPageLink('get-file&key=' . $key);
     }
 
     /**

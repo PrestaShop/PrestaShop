@@ -25,6 +25,13 @@
  */
 @trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
 
+/**
+ * @deprecated
+ * Opens a backup file for download
+ *
+ * -> Duplicated in Symfony (route: admin_backup_download)
+ */
+
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
