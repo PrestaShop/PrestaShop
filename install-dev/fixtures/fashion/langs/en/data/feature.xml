@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <entity_feature>
-  <feature id="Compositions">
+  <feature id="Composition">
     <name>Composition</name>
   </feature>
-  <feature id="Properties">
-    <name>Properties</name>
+  <feature id="Property">
+    <name>Property</name>
   </feature>
 </entity_feature>
