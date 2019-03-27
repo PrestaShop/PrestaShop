@@ -1,6 +1,6 @@
 # Modern theme
 
-This theme was generated based on the MJML templates as they offer great responsiveness and guaranty that
+This theme was generated based on MJML templates as they offer great responsiveness and ensure that
 your templates will be readable in most mail viewers and mail web applications.
 
 The source MJML templates and the tool allowing to compile/convert them as twig templates can be found at:
