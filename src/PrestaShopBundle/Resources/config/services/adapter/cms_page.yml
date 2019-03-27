@@ -14,8 +14,8 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand'
 
-  prestashop.adapter.cms_page.query_handler.edit_cms_page_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\EditCmsPageHandler'
+  prestashop.adapter.cms_page.query_handler.get_cms_page_for_editing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler\GetCmsPageForEditingHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing'

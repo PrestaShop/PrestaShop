@@ -13,7 +13,7 @@ admin_cms_pages_create:
         _legacy_controller: AdminCmsContent
 
 admin_cms_pages_edit:
-  path: /new
+  path: /{cmsPageId}/edit
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:edit'

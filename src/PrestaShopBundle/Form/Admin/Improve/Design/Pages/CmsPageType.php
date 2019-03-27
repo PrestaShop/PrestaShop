@@ -80,7 +80,7 @@ class CmsPageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('page_category', MaterialChoiceTreeType::class, [
+            ->add('page_category_id', MaterialChoiceTreeType::class, [
                 'required' => false,
                 'choices_tree' => $this->allCmsCategories,
                 'choice_value' => 'id_cms_category',

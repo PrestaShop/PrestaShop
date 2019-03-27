@@ -35,7 +35,7 @@
 
       {% set invalidCharsHint = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>={}' %}
 
-      {{ ps.form_group_row(cmsPageForm.page_category, {}, {
+      {{ ps.form_group_row(cmsPageForm.page_category_id, {}, {
         'label': 'Page category'|trans({}, 'Admin.Design.Feature'),
       }) }}
 
