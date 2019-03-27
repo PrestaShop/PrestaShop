@@ -25,7 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShop\PrestaShop\Core\Localization\Specification\Factory as SpecificationFactory;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 class LocalizationPackCore
 {
@@ -372,36 +372,30 @@ class LocalizationPackCore
         return true;
     }
 
-    protected function setCurrencyCldrData(Currency $currency, Language $lang)
+    /**
+     * @param Currency $currency
+     * @param Language $defaultLang
+     */
+    protected function setCurrencyCldrData(Currency $currency, Language $defaultLang)
     {
         $context = Context::getContext();
         $container = isset($context->controller) ? $context->controller->getContainer() : null;
         if (null === $container) {
             $container = SymfonyContainer::getInstance();
         }
-        /** @var \PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository $localeRepo */
-        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
-        /** @var \PrestaShop\PrestaShop\Core\Localization\Locale\Repository $localeRepo */
-        $localeRepo = $container->get('prestashop.core.localization.locale.repository');
-        /** @var \PrestaShop\PrestaShop\Core\Localization\Currency\Repository $currencyRepo */
-        $currencyRepo = $container->get('prestashop.core.localization.currency.repository');
 
-        $cldrCurrency = $currencyRepo->getCurrency($currency->iso_code, $lang->locale);
-        $cldrLocale = $localeRepoCLDR->getLocale($lang->locale);
-        $priceSpecification = (new SpecificationFactory())->buildPriceSpecification(
-            $lang->locale,
-            $cldrLocale,
-            $cldrCurrency,
-            $localeRepo->isNumberGroupingUsed(),
-            $localeRepo->getCurrencyDisplayType()
-        );
-        $currency->precision = (int) $priceSpecification->getMaxFractionDigits();
-        $symbol = (string) $priceSpecification->getCurrencySymbol();
+        /** @var LocaleRepository $localeRepoCLDR */
+        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $cldrLocale = $localeRepoCLDR->getLocale($defaultLang->locale);
+        $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
+
+        $symbol = (string) $cldrCurrency->getSymbol();
         if (empty($symbol)) {
             $symbol = $currency->iso_code;
         }
-        $currency->sign = $symbol;
         $currency->symbol = $symbol;
+        $currency->sign = $symbol;
+        $currency->precision = (int) $cldrCurrency->getDecimalDigits();
     }
 
     /**
@@ -434,7 +428,46 @@ class LocalizationPackCore
             $this->iso_code_lang = $attributes['iso_code'];
         }
 
+        // refreshed localized currency data
+        $this->refreshLocalizedCurrenciesData();
+
         return !count($this->_errors);
+    }
+
+    protected function refreshLocalizedCurrenciesData()
+    {
+        /** @var Currency[] $currencies */
+        $currencies = Currency::getCurrencies(true, false, true);
+        $languages = Language::getLanguages();
+        $context = Context::getContext();
+        $container = isset($context->controller) ? $context->controller->getContainer() : null;
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
+        }
+        /** @var LocaleRepository $localeRepoCLDR */
+        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        foreach ($currencies as $currency) {
+            $this->refreshLocalizedCurrencyData($currency, $languages, $localeRepoCLDR);
+            $currency->save();
+        }
+    }
+
+    protected function refreshLocalizedCurrencyData(Currency $currency, array $languages, LocaleRepository $localeRepoCLDR)
+    {
+        $symbolsByLang = [];
+        foreach ($languages as $languageData) {
+            $language = new Language($languageData['id_lang']);
+            $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+            $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
+
+            $symbol = (string) $cldrCurrency->getSymbol();
+            if (empty($symbol)) {
+                $symbol = $currency->iso_code;
+            }
+            // symbol is localized
+            $symbolsByLang[$language->id] = $symbol;
+        }
+        $currency->symbol = $symbolsByLang;
     }
 
     /**
