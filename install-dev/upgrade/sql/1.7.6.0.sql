@@ -24,5 +24,5 @@ ALTER TABLE `PREFIX_admin_filter`
 ;
 
 /* Module Manager tab should be the first tab in Modules Tab */
-UPDATE `PREFIX__tab` SET `position` = 0 WHERE `class_name` = 'AdminModulesSf' AND `position`= 1;
-UPDATE `PREFIX__tab` SET `position` = 1 WHERE `class_name` = 'AdminParentModulesCatalog' AND `position`= 0;
+UPDATE `PREFIX_tab` SET `position` = 0 WHERE `class_name` = 'AdminModulesSf' AND `position`= 1;
+UPDATE `PREFIX_tab` SET `position` = 1 WHERE `class_name` = 'AdminParentModulesCatalog' AND `position`= 0;
