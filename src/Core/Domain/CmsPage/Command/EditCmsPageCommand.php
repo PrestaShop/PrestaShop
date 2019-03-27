@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
@@ -92,6 +93,7 @@ class EditCmsPageCommand
 
     /**
      * @param int $cmsPageId
+     *
      * @throws CmsPageException
      */
     public function __construct($cmsPageId)
@@ -108,18 +110,6 @@ class EditCmsPageCommand
     }
 
     /**
-     * @param CmsPageId $cmsPageId
-     *
-     * @return self
-     */
-    public function setCmsPageId($cmsPageId)
-    {
-        $this->cmsPageId = $cmsPageId;
-
-        return $this;
-    }
-
-    /**
      * @return CmsPageCategoryId|null
      */
     public function getCmsPageCategoryId()
@@ -128,13 +118,15 @@ class EditCmsPageCommand
     }
 
     /**
-     * @param CmsPageCategoryId|null $cmsPageCategoryId
+     * @param int|null $cmsPageCategoryId
      *
      * @return self
+     *
+     * @throws CmsPageCategoryException
      */
     public function setCmsPageCategoryId($cmsPageCategoryId)
     {
-        $this->cmsPageCategoryId = $cmsPageCategoryId;
+        $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
 
         return $this;
     }

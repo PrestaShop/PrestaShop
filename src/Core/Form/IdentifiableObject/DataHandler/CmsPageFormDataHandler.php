@@ -28,10 +28,15 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 
-class CmsPageFormDataHandler implements FormDataHandlerInterface
+/**
+ * {@inheritdoc}
+ */
+final class CmsPageFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
@@ -58,10 +63,10 @@ class CmsPageFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         /**
-         * @var CmsPageId $cmsPageId
+         * @var CmsPageId
          */
         $cmsPageId = $this->commandBus->handle(new AddCmsPageCommand(
-            (int) $data['page_category'],
+            (int) $data['page_category_id'],
             $data['title'],
             $data['meta_title'],
             $data['meta_description'],
@@ -79,13 +84,42 @@ class CmsPageFormDataHandler implements FormDataHandlerInterface
     /**
      * Update object with form data.
      *
-     * @param int $id
+     * @param int $cmsPageId
      * @param array $data
      *
      * @return int ID of identifiable object
+     *
+     * @throws CmsPageException
+     * @throws CmsPageCategoryException
      */
-    public function update($id, array $data)
+    public function update($cmsPageId, array $data)
     {
-        // TODO: Implement update() method.
+        $editCmsPageCommand = new EditCmsPageCommand((int) $cmsPageId);
+        $this->fillCommandWithData($editCmsPageCommand, $data);
+
+        /** @var CmsPageId $cmsPageId */
+        $cmsPageId = $this->commandBus->handle($editCmsPageCommand);
+
+        return $cmsPageId->getValue();
+    }
+
+    /**
+     * @param EditCmsPageCommand $command
+     * @param array $data
+     *
+     * @throws CmsPageCategoryException
+     */
+    private function fillCommandWithData(EditCmsPageCommand $command, array $data)
+    {
+        $command->setCmsPageCategoryId((int) $data['page_category_id']);
+        $command->setLocalizedTitle($data['title']);
+        $command->setLocalizedMetaTitle($data['meta_title']);
+        $command->setLocalizedMetaDescription($data['meta_description']);
+        $command->setLocalizedMetaKeyword($data['meta_keyword']);
+        $command->setLocalizedFriendlyUrl($data['friendly_url']);
+        $command->setLocalizedContent($data['content']);
+        $command->setIsIndexedForSearch($data['is_indexed_for_search']);
+        $command->setIsDisplayed($data['is_displayed']);
+        $command->setShopAssociation($data['shop_association']);
     }
 }

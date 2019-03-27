@@ -144,7 +144,7 @@ class EditableCmsPage
     /**
      * @return CmsPageCategoryId
      */
-    public function getCmsPageCategory()
+    public function getCmsPageCategoryId()
     {
         return $this->cmsPageCategoryId;
     }
