@@ -172,6 +172,10 @@ final class Currency implements CurrencyInterface
             );
         }
 
-        return $this->symbols[$type];
+        if (isset($this->symbols[$type])) {
+            return $this->symbols[$type];
+        }
+
+        return $this->symbols[CurrencyInterface::SYMBOL_TYPE_DEFAULT];
     }
 }
