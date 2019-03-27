@@ -43,7 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * This controller is used to preview mail templates from new theme. It uses the
  * same service used by the generator so it is a handy way to debug them.
  */
-class MailLayoutController extends FrameworkBundleAdminController
+final class MailLayoutController extends FrameworkBundleAdminController
 {
     /**
      * @param string $theme
@@ -93,19 +93,16 @@ class MailLayoutController extends FrameworkBundleAdminController
     {
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get(ThemeCatalogInterface::class);
-        try {
-            /** @var ThemeInterface $theme */
-            $theme = $themeCatalog->getByName($themeName);
-        } catch (InvalidArgumentException $e) {
-            throw new InvalidArgumentException($e->getMessage());
-        }
+        /** @var ThemeInterface $theme */
+        $theme = $themeCatalog->getByName($themeName);
 
         /** @var LayoutInterface $layout */
         $layout = null;
         /* @var LayoutInterface $layoutInterface */
         foreach ($theme->getLayouts() as $layoutInterface) {
-            if ($layoutInterface->getName() == $layoutName &&
-                (empty($module) || $layoutInterface->getModuleName() == $module)) {
+            if ($layoutInterface->getName() == $layoutName
+                && (empty($module) || $layoutInterface->getModuleName() == $module)
+            ) {
                 $layout = $layoutInterface;
                 break;
             }
