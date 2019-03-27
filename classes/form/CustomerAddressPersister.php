@@ -58,23 +58,20 @@ class CustomerAddressPersisterCore
 
     public function save(Address $address, $token)
     {
-        if (!$this->authorizeChange($address, $token)) {
-            return false;
-        }
-
-        $address->id_customer = $this->customer->id;
-        $address->save();
-
         if ($address->isUsed()) {
             $old_address = new Address($address->id);
             $address->id = $address->id_address = null;
+
+            if (!$address->save()) {
+                return false;
+            }
 
             $this->cart->updateAddressId(
                 $old_address->id,
                 $address->id
             );
 
-            return $address->save() && $old_address->delete();
+            return $old_address->delete();
         }
 
         return $address->save();
