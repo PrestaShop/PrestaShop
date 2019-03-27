@@ -51,24 +51,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
     protected $localeRepository;
 
     private static $isCacheClear = false;
-
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-
-        global $kernel;
-        if (null === $kernel && null !== self::$kernel) {
-            $kernel = self::$kernel;
-        } elseif (null !== $kernel && null === self::$kernel) {
-            self::$kernel = $kernel;
-        } else {
-            $kernel = new AppKernel('test', true);
-            $kernel->boot();
-            self::$kernel = $kernel;
-        }
-
-        self::installTestedLanguagePacks();
-    }
+    private static $firstInitDone = false;
 
     protected function setUp()
     {
@@ -76,6 +59,13 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
         if (!self::$isCacheClear) {
             $this->clearCache();
             self::$isCacheClear = true;
+        }
+
+        // This code was originally present in setUpBeforeClass(), but moved here
+        // as we need the symfony kernel only instanciated in the parent setUp()
+        if (!self::$firstInitDone) {
+            self::installTestedLanguagePacks();
+            self::$firstInitDone = true;
         }
 
         $this->localeRepository = $this->container->get(self::SERVICE_LOCALE_REPOSITORY);
@@ -273,7 +263,9 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             $xmlContent = (new LocalizationWarmer(_PS_VERSION_, $country))
                 ->warmUp($cacheDir);
 
-            (new LocalizationPack())->loadLocalisationPack($xmlContent, false, true);
+            $localizationPack = new LocalizationPack();
+            $localizationPack->loadLocalisationPack($xmlContent, false, true);
+            $localizationPack->loadLocalisationPack($xmlContent, ['languages']);
         }
     }
 
