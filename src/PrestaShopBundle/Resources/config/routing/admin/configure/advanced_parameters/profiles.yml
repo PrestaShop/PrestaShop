@@ -21,7 +21,7 @@ admin_profiles_create:
 
 admin_profiles_edit:
     path: /{profileId}/edit
-    methods: GET
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Profiles:edit'
         _legacy_controller: AdminProfiles
