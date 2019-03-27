@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufactu
 
 /**
  * Defines contract for GetManufacturerForEditingHandler
->>>>>>> 324c887cde... Implemented data provider for manufacturerForm and enabled javascript in manufacturer edit page
  */
 interface GetManufacturerForEditingHandlerInterface
 {
