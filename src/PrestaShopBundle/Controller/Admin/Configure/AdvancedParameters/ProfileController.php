@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
@@ -116,13 +117,17 @@ class ProfileController extends FrameworkBundleAdminController
         $form = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder')->getForm();
         $form->handleRequest($request);
 
-        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
-        $handlerResult = $formHandler->handle($form);
+        try {
+            $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
+            $handlerResult = $formHandler->handle($form);
 
-        if (null !== $handlerResult->getIdentifiableObjectId()) {
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_profiles_index');
+                return $this->redirectToRoute('admin_profiles_index');
+            }
+        } catch (ProfileException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/create.html.twig', [
@@ -149,15 +154,23 @@ class ProfileController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder');
 
-        $form = $formBuilder->getFormFor((int) $profileId);
-        $form->handleRequest($request);
+        try {
+            $form = $formBuilder->getFormFor((int) $profileId);
+            $form->handleRequest($request);
 
-        $handlerResult = $formHandler->handleFor((int) $profileId, $form);
+            $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
-        if (null !== $handlerResult->getIdentifiableObjectId()) {
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_profiles_index');
+                return $this->redirectToRoute('admin_profiles_index');
+            }
+        } catch (ProfileException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof ProfileNotFoundException) {
+                return $this->redirectToRoute('admin_profiles_index');
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/edit.html.twig', [
@@ -239,7 +252,7 @@ class ProfileController extends FrameworkBundleAdminController
                 'For security reasons, you cannot delete the Administrator\'s profile.',
                 'Admin.Advparameters.Notification'
             ),
-            ProfileException::class => $this->trans(
+            FailedToDeleteProfileException::class => $this->trans(
                 'An error occurred while deleting the object.',
                 'Admin.Notifications.Error'
             ),
