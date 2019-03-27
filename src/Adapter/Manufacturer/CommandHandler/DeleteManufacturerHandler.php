@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder\DeleteManufacturerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\DeleteManufacturerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 
 /**

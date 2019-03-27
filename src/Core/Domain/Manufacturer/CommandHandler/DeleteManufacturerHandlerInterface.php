@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHanlder;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 
 /**
- * Defines contract for ToggleManufacturerStatusHandler
+ * Defines contract for DeleteManufacturerHandler
  */
-interface ToggleManufacturerStatusHandlerInterface
+interface DeleteManufacturerHandlerInterface
 {
     /**
-     * @param ToggleManufacturerStatusCommand $command
+     * @param DeleteManufacturerCommand $command
      */
-    public function handle(ToggleManufacturerStatusCommand $command);
+    public function handle(DeleteManufacturerCommand $command);
 }

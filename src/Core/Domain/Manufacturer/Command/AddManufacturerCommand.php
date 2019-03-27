@@ -73,31 +73,31 @@ class AddManufacturerCommand
 
     /**
      * @param string $name
-     * @param string[]|null $localizedShortDescriptions
-     * @param string[]|null $localizedDescriptions
-     * @param string[]|null $localizedMetaTitles
-     * @param string[]|null $localizedMetaDescriptions
-     * @param string[]|null $localizedMetaKeywords
      * @param bool $enabled
+     * @param string[] $localizedShortDescriptions
+     * @param string[] $localizedDescriptions
+     * @param string[] $localizedMetaTitles
+     * @param string[] $localizedMetaDescriptions
+     * @param string[] $localizedMetaKeywords
      * @param array $shopAssociation
      */
     public function __construct(
         $name,
-        $enabled = false,
-        array $localizedShortDescriptions = null,
-        array $localizedDescriptions = null,
-        array $localizedMetaTitles = null,
-        array $localizedMetaDescriptions = null,
-        array $localizedMetaKeywords = null,
-        array $shopAssociation = []
+        $enabled,
+        array $localizedShortDescriptions,
+        array $localizedDescriptions,
+        array $localizedMetaTitles,
+        array $localizedMetaDescriptions,
+        array $localizedMetaKeywords,
+        array $shopAssociation
     ) {
         $this->name = $name;
+        $this->enabled = $enabled;
         $this->localizedShortDescriptions = $localizedShortDescriptions;
         $this->localizedDescriptions = $localizedDescriptions;
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
         $this->localizedMetaKeywords = $localizedMetaKeywords;
-        $this->enabled = $enabled;
         $this->shopAssociation = $shopAssociation;
     }
 
@@ -110,7 +110,7 @@ class AddManufacturerCommand
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedShortDescriptions()
     {
@@ -118,7 +118,7 @@ class AddManufacturerCommand
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedDescriptions()
     {
@@ -126,7 +126,7 @@ class AddManufacturerCommand
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedMetaTitles()
     {
@@ -134,7 +134,7 @@ class AddManufacturerCommand
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedMetaDescriptions()
     {
@@ -142,7 +142,7 @@ class AddManufacturerCommand
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedMetaKeywords()
     {
