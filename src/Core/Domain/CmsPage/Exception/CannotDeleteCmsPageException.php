@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,34 +19,38 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
-
-/**
- * Class CmsPageCategoryFilters defines default filters for cms page category grid.
- */
-final class CmsPageCategoryFilters extends Filters
+class CannotDeleteCmsPageException extends CmsPageException
 {
-    protected $filterId = CmsPageCategoryDefinitionFactory::GRID_ID;
+    /**
+     * @var int
+     */
+    private $cmsPageId;
 
     /**
-     * {@inheritdoc}
+     * @param int $cmsPageId
+     * @param string $message
+     * @param int $code
+     * @param null $previous
      */
-    public static function getDefaults()
+    public function __construct($cmsPageId, $message = '', $code = 0, $previous = null)
     {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'position',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
+        parent::__construct($message, $code, $previous);
+
+        $this->cmsPageId = $cmsPageId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCmsPageId()
+    {
+        return $this->cmsPageId;
     }
 }

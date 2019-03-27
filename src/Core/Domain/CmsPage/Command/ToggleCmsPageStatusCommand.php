@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,34 +19,41 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Command;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 
 /**
- * Class CmsPageCategoryFilters defines default filters for cms page category grid.
+ * Changes the status of cms page.
  */
-final class CmsPageCategoryFilters extends Filters
+class ToggleCmsPageStatusCommand
 {
-    protected $filterId = CmsPageCategoryDefinitionFactory::GRID_ID;
+    /**
+     * @var CmsPageId
+     */
+    private $cmsPageId;
 
     /**
-     * {@inheritdoc}
+     * @param int $cmsPageId
+     *
+     * @throws CmsPageException
      */
-    public static function getDefaults()
+    public function __construct($cmsPageId)
     {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'position',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
+        $this->cmsPageId = new CmsPageId($cmsPageId);
+    }
+
+    /**
+     * @return CmsPageId
+     */
+    public function getCmsPageId()
+    {
+        return $this->cmsPageId;
     }
 }

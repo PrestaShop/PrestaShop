@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,34 +19,34 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 
 /**
- * Class CmsPageCategoryId is responsible for providing identificator for cms page category
+ * Class which holds the cms page id value.
  */
-class CmsPageCategoryId
+class CmsPageId
 {
     /**
      * @var int
      */
-    private $cmsPageCategoryId;
+    private $cmsPageId;
 
     /**
-     * @param int $cmsPageCategoryId
+     * @param int $cmsPageId
      *
-     * @throws CmsPageCategoryException
+     * @throws CmsPageException
      */
-    public function __construct($cmsPageCategoryId)
+    public function __construct($cmsPageId)
     {
-        $this->assertIsIntegerGreaterThanZero($cmsPageCategoryId);
-        $this->cmsPageCategoryId = (int) $cmsPageCategoryId;
+        $this->assertIsIntegerGreaterThanZero($cmsPageId);
+        $this->cmsPageId = $cmsPageId;
     }
 
     /**
@@ -54,21 +54,21 @@ class CmsPageCategoryId
      */
     public function getValue()
     {
-        return $this->cmsPageCategoryId;
+        return $this->cmsPageId;
     }
 
     /**
      * Validates that the value is integer and is greater than zero.
      *
-     * @param int $cmsPageCategoryId
+     * @param int $cmsPageId
      *
-     * @throws CmsPageCategoryException
+     * @throws CmsPageException
      */
-    private function assertIsIntegerGreaterThanZero($cmsPageCategoryId)
+    private function assertIsIntegerGreaterThanZero($cmsPageId)
     {
-        if (!is_int($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
-            throw new CmsPageCategoryException(
-                sprintf('Invalid cms page category id %s supplied', var_export($cmsPageCategoryId, true))
+        if (!is_int($cmsPageId) || 0 >= $cmsPageId) {
+            throw new CmsPageException(
+                sprintf('Invalid cms page id %s supplied', var_export($cmsPageId, true))
             );
         }
     }

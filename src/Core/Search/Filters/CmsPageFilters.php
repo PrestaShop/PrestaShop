@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,22 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
-/**
- * Class CmsPageCategoryFilters defines default filters for cms page category grid.
- */
-final class CmsPageCategoryFilters extends Filters
+final class CmsPageFilters extends Filters
 {
-    protected $filterId = CmsPageCategoryDefinitionFactory::GRID_ID;
+    protected $filterId = CmsPageDefinitionFactory::GRID_ID;
 
     /**
      * {@inheritdoc}

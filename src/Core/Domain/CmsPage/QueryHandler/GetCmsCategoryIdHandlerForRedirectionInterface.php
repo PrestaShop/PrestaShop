@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,34 +19,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
- * Class CmsPageCategoryFilters defines default filters for cms page category grid.
+ * Defines contract for GetCmsCategoryIdHandlerForRedirection.
  */
-final class CmsPageCategoryFilters extends Filters
+interface GetCmsCategoryIdHandlerForRedirectionInterface
 {
-    protected $filterId = CmsPageCategoryDefinitionFactory::GRID_ID;
-
     /**
-     * {@inheritdoc}
+     * @param GetCmsCategoryIdForRedirection $query
+     *
+     * @return CmsPageCategoryId
      */
-    public static function getDefaults()
-    {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'position',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
-    }
+    public function handle(GetCmsCategoryIdForRedirection $query);
 }

@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 use CMSCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler\GetCmsPageParentCategoryIdForRedirectionHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
@@ -48,27 +47,11 @@ final class GetCmsPageParentCategoryIdForRedirectionHandler implements GetCmsPag
      */
     public function handle(GetCmsPageParentCategoryIdForRedirection $query)
     {
-        $parentId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
         try {
             $entity = new CMSCategory($query->getCmsPageCategoryId()->getValue());
-
-            if (0 >= $entity->id) {
-                throw new CmsPageCategoryNotFoundException(
-                    sprintf(
-                        'Unable to retrieve cms page category for redirection with id %s',
-                        $query->getCmsPageCategoryId()->getValue()
-                    )
-                );
-            }
-
             $parentId = (int) $entity->id_parent;
         } catch (PrestaShopException $e) {
-            throw new CmsPageCategoryException(
-                sprintf(
-                    'An unexpected error occurred when retrieving cms page category for redirection with id %s',
-                    $query->getCmsPageCategoryId()->getValue()
-                )
-            );
+            $parentId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
         }
 
         return new CmsPageCategoryId($parentId);
