@@ -92,7 +92,7 @@ final class MailLayoutController extends FrameworkBundleAdminController
     private function renderLayout($themeName, $layoutName, $type, $locale = '', $module = '')
     {
         /** @var ThemeCatalogInterface $themeCatalog */
-        $themeCatalog = $this->get(ThemeCatalogInterface::class);
+        $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
         /** @var ThemeInterface $theme */
         $theme = $themeCatalog->getByName($themeName);
 
@@ -129,7 +129,7 @@ final class MailLayoutController extends FrameworkBundleAdminController
         }
 
         /** @var MailTemplateRendererInterface $renderer */
-        $renderer = $this->get(MailTemplateRendererInterface::class);
+        $renderer = $this->get('prestashop.core.mail_template.mail_template_renderer');
 
         switch ($type) {
             case MailTemplateInterface::HTML_TYPE:
