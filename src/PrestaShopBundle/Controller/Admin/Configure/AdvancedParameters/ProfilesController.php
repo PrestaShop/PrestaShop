@@ -104,15 +104,18 @@ class ProfilesController extends FrameworkBundleAdminController
     /**
      * Show profile's create page
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminProfiles', [
-            'addprofile' => 1,
-        ]);
+        $form = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder')->getForm();
+        $form->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/create.html.twig', [
+            'profileForm' => $form->createView(),
+        ]);
     }
 
     /**
