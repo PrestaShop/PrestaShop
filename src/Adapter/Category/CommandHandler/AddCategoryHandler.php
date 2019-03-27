@@ -99,6 +99,10 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
             throw new CategoryConstraintException('Invalid category data');
         }
 
+        if (false === $category->validateFieldsLang(false)) {
+            throw new CategoryConstraintException('Invalid category data');
+        }
+
         if (false === $category->add()) {
             throw new CannotAddCategoryException('Failed to add new category.');
         }
