@@ -32,18 +32,28 @@ import SubmitRowActionExtension from '../../../components/grid/extension/action/
 import SubmitBulkExtension from '../../../components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '../../../components/grid/extension/bulk-action-checkbox-extension';
 import ExportToSqlManagerExtension from '../../../components/grid/extension/export-to-sql-manager-extension';
+import TranslatableInput from '../../../components/translatable-input';
+import TaggableField from '../../../components/taggable-field';
 
 const $ = window.$;
 
 $(() => {
-  const addressGrid = new Grid('manufacturer_address');
+  const manufacturerGrid = new Grid('manufacturer');
 
-  addressGrid.addExtension(new ExportToSqlManagerExtension());
-  addressGrid.addExtension(new ReloadListActionExtension());
-  addressGrid.addExtension(new SortingExtension());
-  addressGrid.addExtension(new FiltersResetExtension());
-  addressGrid.addExtension(new ColumnTogglingExtension());
-  addressGrid.addExtension(new SubmitRowActionExtension());
-  addressGrid.addExtension(new SubmitBulkExtension());
-  addressGrid.addExtension(new BulkActionCheckboxExtension());
+  manufacturerGrid.addExtension(new ExportToSqlManagerExtension());
+  manufacturerGrid.addExtension(new ReloadListActionExtension());
+  manufacturerGrid.addExtension(new SortingExtension());
+  manufacturerGrid.addExtension(new FiltersResetExtension());
+  manufacturerGrid.addExtension(new ColumnTogglingExtension());
+  manufacturerGrid.addExtension(new SubmitRowActionExtension());
+  manufacturerGrid.addExtension(new SubmitBulkExtension());
+  manufacturerGrid.addExtension(new BulkActionCheckboxExtension());
+
+  new TranslatableInput();
+  new TaggableField({
+    tokenFieldSelector: 'input.js-taggable-field',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
 });
