@@ -51,6 +51,10 @@ class SymfonyIntegrationTestCase extends KernelTestCase
 
         $this->bootKernel();
         $this->container = self::$kernel->getContainer();
+
+        // Global var for SymfonyContainer
+        global $kernel;
+        $kernel = self::$kernel;
     }
 
     protected function tearDown()

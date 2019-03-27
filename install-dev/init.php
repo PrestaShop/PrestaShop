@@ -81,6 +81,7 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     } else {
         $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
     }
+    global $kernel;
     $kernel = new AppKernel($env, _PS_MODE_DEV_);
     $kernel->loadClassCache();
     $kernel->boot();
