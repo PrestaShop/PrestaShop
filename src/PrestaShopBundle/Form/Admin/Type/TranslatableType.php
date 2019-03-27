@@ -33,6 +33,7 @@ use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class TranslatableType adds translatable inputs with custom inner type to forms.
@@ -45,11 +46,44 @@ class TranslatableType extends AbstractType
     private $locales;
 
     /**
-     * @param array $locales
+     * @var UrlGeneratorInterface
      */
-    public function __construct(array $locales)
-    {
+    private $urlGenerator;
+
+    /**
+     * @var bool indicates whether to save the selected form language or not
+     */
+    private $saveFormLocaleChoice;
+
+    /**
+     * @var string default form language ID
+     */
+    private $defaultFormLanguageId;
+
+    /**
+     * @var int default language of the shop, used as a fallback when default form language is not set
+     */
+    private $defaultShopLanguageId;
+
+    /**
+     * @param array $locales
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param bool $saveFormLocaleChoice
+     * @param int $defaultFormLanguageId
+     * @param int $defaultShopLanguageId
+     */
+    public function __construct(
+        array $locales,
+        UrlGeneratorInterface $urlGenerator,
+        $saveFormLocaleChoice,
+        $defaultFormLanguageId,
+        $defaultShopLanguageId
+    ) {
         $this->locales = $locales;
+        $this->urlGenerator = $urlGenerator;
+        $this->saveFormLocaleChoice = $saveFormLocaleChoice;
+        $this->defaultFormLanguageId = $defaultFormLanguageId;
+        $this->defaultShopLanguageId = $defaultShopLanguageId;
     }
 
     /**
@@ -75,8 +109,14 @@ class TranslatableType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['locales'] = $options['locales'];
-        $view->vars['default_locale'] = reset($options['locales']);
+        $view->vars['default_locale'] = $this->getDefaultLocale($options['locales']);
         $view->vars['hide_locales'] = 1 >= count($options['locales']);
+
+        if ($this->saveFormLocaleChoice) {
+            $view->vars['change_form_language_url'] = $this->urlGenerator->generate(
+                'admin_employees_change_form_language'
+            );
+        }
 
         $this->setErrorsByLocale($view, $form, $options['locales']);
     }
@@ -244,5 +284,33 @@ class TranslatableType extends AbstractType
     private function doesErrorFormAndCurrentFormMatches(FormInterface $errorForm, FormInterface $currentForm)
     {
         return $errorForm === $currentForm;
+    }
+
+    /**
+     * Get default locale.
+     *
+     * @param array $locales
+     *
+     * @return array
+     */
+    private function getDefaultLocale(array $locales)
+    {
+        if ($this->defaultFormLanguageId) {
+            // Searching for a locale that matches default form language
+            foreach ($locales as $locale) {
+                if ($locale['id_lang'] == $this->defaultFormLanguageId) {
+                    return $locale;
+                }
+            }
+        }
+
+        // Searching for locale that matches default shop language
+        foreach ($locales as $locale) {
+            if ($locale['id_lang'] == $this->defaultShopLanguageId) {
+                return $locale;
+            }
+        }
+
+        return reset($locales);
     }
 }

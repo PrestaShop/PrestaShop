@@ -24,12 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Interface for services that handle command which edits employee.
+ */
+interface EditEmployeeHandlerInterface
+{
+    /**
+     * @param EditEmployeeCommand $command
+     *
+     * @return EmployeeId
+     */
+    public function handle(EditEmployeeCommand $command);
+}

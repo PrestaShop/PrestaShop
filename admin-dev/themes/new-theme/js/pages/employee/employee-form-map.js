@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -24,12 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+/**
+ * Defines all selectors that are used in employee add/edit form.
+ */
+export default {
+  shopChoiceTree: '#employee_shop_association',
+  profileSelect: '#employee_profile',
+  defaultPageSelect: '#employee_default_page',
+  addonsConnectForm: '#addons-connect-form',
+  addonsLoginButton: '#addons_login_btn',
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
-
-header('Location: ../../../../../../../../');
-exit;
+  // selectors related to "change password" form control
+  changePasswordInputsBlock: '.js-change-password-block',
+  showChangePasswordBlockButton: '.js-change-password',
+  hideChangePasswordBlockButton: '.js-change-password-cancel',
+  generatePasswordButton: '#employee_change_password_generate_password_button',
+  oldPasswordInput: '#employee_change_password_old_password',
+  newPasswordInput: '#employee_change_password_new_password_first',
+  confirmNewPasswordInput: '#employee_change_password_new_password_second',
+  generatedPasswordDisplayInput: '#employee_change_password_generated_password',
+  passwordStrengthFeedbackContainer: '.js-password-strength-feedback',
+}

@@ -1781,6 +1781,9 @@ class AdminControllerCore extends Controller
             'display_header_javascript' => $this->display_header_javascript,
             'display_footer' => $this->display_footer,
             'js_def' => Media::getJsDef(),
+            'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
+                'action' => 'toggleMenu',
+            ]),
         ));
 
         // Use page title from meta_title if it has been set else from the breadcrumbs array
@@ -2707,6 +2710,14 @@ class AdminControllerCore extends Controller
             __PS_BASE_URI__ . $this->admin_webpath . '/public/bundle.js',
         ));
 
+        Media::addJsDef([
+            'changeFormLanguageUrl' => $this->context->link->getAdminLink(
+                'AdminEmployees',
+                true,
+                [],
+                ['action' => 'formLanguage']
+            ),
+        ]);
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
         Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
         Media::addJsDef(array('baseAdminDir' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/'));

@@ -24,12 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Adapter\Employee;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Employee\NavigationMenuTogglerInterface;
 
-header('Location: ../../../../../../../');
-exit;
+/**
+ * Class NavigationMenuToggler handles collapsing/expanding the navigation for context employee.
+ */
+final class NavigationMenuToggler implements NavigationMenuTogglerInterface
+{
+    /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * @param LegacyContext $legacyContext
+     */
+    public function __construct(LegacyContext $legacyContext)
+    {
+        $this->legacyContext = $legacyContext;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toggleNavigationMenuInCookies($shouldCollapse)
+    {
+        $this->legacyContext->getContext()->cookie->collapse_menu = (int) $shouldCollapse;
+        $this->legacyContext->getContext()->cookie->write();
+    }
+}

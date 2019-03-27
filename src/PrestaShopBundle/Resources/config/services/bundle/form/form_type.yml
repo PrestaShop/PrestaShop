@@ -647,6 +647,10 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
         arguments:
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+            - '@router.default'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
+            - "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
         tags:
             - { name: form.type }
 
@@ -780,5 +784,33 @@ services:
         arguments:
             - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
+        tags:
+            - { name: form.type }
+
+    prestashop.bundle.form.admin.configure.advanced_parameters.employee.employee:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.change_password:
+        class: 'PrestaShopBundle\Form\Admin\Type\ChangePasswordType'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.addons_connect:
+        class: 'PrestaShopBundle\Form\Admin\Type\AddonsConnectType'
+        arguments:
+            - '@=service("prestashop.adapter.admin.data_provider.addons").isAddonsAuthenticated()'
+            - '@=service("prestashop.adapter.admin.data_provider.addons").getAddonsEmail()["username_addons"]'
         tags:
             - { name: form.type }

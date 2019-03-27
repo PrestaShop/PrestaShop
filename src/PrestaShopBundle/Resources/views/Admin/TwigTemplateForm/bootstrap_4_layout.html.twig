@@ -659,6 +659,9 @@
         <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
                 type="button"
                 data-toggle="dropdown"
+                {% if change_form_language_url is defined %}
+                  data-change-language-url="{{ form.vars.change_form_language_url }}"
+                {% endif %}
                 aria-haspopup="true"
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
