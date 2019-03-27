@@ -70,6 +70,7 @@ class GenerateMailsType extends TranslatorAwareType
         $builder
             ->add('mailTheme', ChoiceType::class, [
                 'choices' => $this->mailThemes,
+                'data' => $this->getConfiguration()->get('PS_MAIL_THEME'),
             ])
             ->add('language', ChoiceType::class, [
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
