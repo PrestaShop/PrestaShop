@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
@@ -39,18 +39,18 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
  */
 final class MailThemeConfiguration implements DataConfigurationInterface
 {
-    /** @var Configuration */
+    /** @var ConfigurationInterface */
     private $configuration;
 
     /** @var ThemeCatalogInterface */
     private $themeCatalog;
 
     /**
-     * @param Configuration $configuration
+     * @param ConfigurationInterface $configuration
      * @param ThemeCatalogInterface $themeCatalog
      */
     public function __construct(
-        Configuration $configuration,
+        ConfigurationInterface $configuration,
         ThemeCatalogInterface $themeCatalog
     ) {
         $this->configuration = $configuration;
