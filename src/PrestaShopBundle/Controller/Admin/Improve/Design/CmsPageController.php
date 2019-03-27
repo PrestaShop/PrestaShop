@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
@@ -125,7 +124,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 //todo: wait for second list to be merged and
                 return $this->redirectToRoute('admin_cms_pages_index');
             }
-        } catch (CmsPageException $e) {
+        } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -160,7 +159,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_cms_pages_index');
             }
-        } catch (CmsPageException $e) {
+        } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof CmsPageNotFoundException) {
