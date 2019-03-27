@@ -104,6 +104,9 @@ class ProfilesController extends FrameworkBundleAdminController
     /**
      * Show profile's create page
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
+     *
      * @param Request $request
      *
      * @return Response
@@ -134,6 +137,7 @@ class ProfilesController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param int $profileId
      * @param Request $request
