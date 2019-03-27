@@ -24,48 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 
 /**
- * Provides data for Profile form
+ * Interface for service that gets Profile data for editing
  */
-final class ProfileFormDataProvider implements FormDataProviderInterface
+interface GetProfileForEditingHandlerInterface
 {
     /**
-     * @var CommandBusInterface
+     * @param GetProfileForEditing $query
+     *
+     * @return mixed
      */
-    private $queryBus;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     */
-    public function __construct(CommandBusInterface $queryBus)
-    {
-        $this->queryBus = $queryBus;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData($profileId)
-    {
-        /** @var EditableProfile $editableProfile */
-        $editableProfile = $this->queryBus->handle(new GetProfileForEditing($profileId));
-
-        return [
-            'name' => $editableProfile->getLocalizedNames(),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData()
-    {
-        return [];
-    }
+    public function handle(GetProfileForEditing $query);
 }
