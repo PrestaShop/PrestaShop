@@ -154,6 +154,8 @@ class SurvivalTest extends WebTestCase
             'admin_employees_create' => ['Add new employee', 'admin_employees_create'],
             'admin_cms_pages_index' => ['Cms page', 'admin_cms_pages_index'],
             'admin_cms_pages_category_create' => ['Add new cms category page', 'admin_cms_pages_category_create'],
+            'admin_profiles_index' => ['Profiles', 'admin_profiles_index'],
+            'admin_profiles_create' => ['Add new profile', 'admin_profiles_create'],
         ];
     }
 
