@@ -104,11 +104,11 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
-    prestashop.core.grid.definition.factory.profiles:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfilesGridDefinitionFactory'
+    prestashop.core.grid.definition.factory.profile:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfileGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'profiles', 'action': 'index'})"
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'profile', 'action': 'index'})"
             - "@=service('router').generate('admin_profiles_index')"
             - '@prestashop.core.grid.action.row.accessibility_checker.delete_profile'
         public: true

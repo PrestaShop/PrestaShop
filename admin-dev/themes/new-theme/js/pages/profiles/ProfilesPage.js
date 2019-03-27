@@ -40,7 +40,7 @@ import TranslatableInput from "../../components/translatable-input";
  */
 export default class ProfilesPage {
   constructor() {
-    const profilesGrid = new Grid('profiles');
+    const profilesGrid = new Grid('profile');
 
     profilesGrid.addExtension(new ReloadListActionExtension());
     profilesGrid.addExtension(new ExportToSqlManagerExtension());
