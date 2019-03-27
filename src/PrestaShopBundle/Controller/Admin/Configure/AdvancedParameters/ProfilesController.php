@@ -113,6 +113,15 @@ class ProfilesController extends FrameworkBundleAdminController
         $form = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder')->getForm();
         $form->handleRequest($request);
 
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
+        $handlerResult = $formHandler->handle($form);
+
+        if (null !== $handlerResult->getIdentifiableObjectId()) {
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_profiles_index');
+        }
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/create.html.twig', [
             'profileForm' => $form->createView(),
         ]);
@@ -127,17 +136,29 @@ class ProfilesController extends FrameworkBundleAdminController
      * )
      *
      * @param int $profileId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($profileId)
+    public function editAction($profileId, Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminProfiles', [
-            'id_profile' => $profileId,
-            'updateprofile' => 1,
-        ]);
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder');
 
-        return $this->redirect($legacyLink);
+        $form = $formBuilder->getFormFor((int) $profileId);
+        $form->handleRequest($request);
+
+        $handlerResult = $formHandler->handleFor((int) $profileId, $form);
+
+        if (null !== $handlerResult->getIdentifiableObjectId()) {
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_profiles_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/edit.html.twig', [
+            'profileForm' => $form->createView(),
+        ]);
     }
 
     /**
