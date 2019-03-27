@@ -147,8 +147,8 @@ $product-description-height: 70px;
       }
       &.online-only {
         font-size: $font-size-xs;
-        margin-top: 13rem;
-        margin-left: 8.688rem;
+        top: 12.5rem;
+        left: inherit;
         &::before{
           content:"\E30A";
           font-family: 'Material Icons';

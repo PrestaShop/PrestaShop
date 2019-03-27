@@ -494,8 +494,8 @@ li.product-flag {
     top: 0;
     @include box-shadow-light;
     &.online-only {
-      top: 21.3rem;
-      right: -.7rem;
+      top: 25rem;
+      right: 0;
       z-index: 1;
       font-size: $font-size-xs;
       &::before{
