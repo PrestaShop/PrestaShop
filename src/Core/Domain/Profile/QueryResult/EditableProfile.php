@@ -24,48 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 
 /**
- * Provides data for Profile form
+ * Transfers editable Profile data
  */
-final class ProfileFormDataProvider implements FormDataProviderInterface
+class EditableProfile
 {
     /**
-     * @var CommandBusInterface
+     * @var ProfileId
      */
-    private $queryBus;
+    private $profileId;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @var string[] As langId => name
      */
-    public function __construct(CommandBusInterface $queryBus)
+    private $localizedNames;
+
+    /**
+     * @param ProfileId $profileId
+     * @param string[] $localizedNames
+     */
+    public function __construct(ProfileId $profileId, array $localizedNames)
     {
-        $this->queryBus = $queryBus;
+        $this->profileId = $profileId;
+        $this->localizedNames = $localizedNames;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ProfileId
      */
-    public function getData($profileId)
+    public function getProfileId()
     {
-        /** @var EditableProfile $editableProfile */
-        $editableProfile = $this->queryBus->handle(new GetProfileForEditing($profileId));
-
-        return [
-            'name' => $editableProfile->getLocalizedNames(),
-        ];
+        return $this->profileId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function getDefaultData()
+    public function getLocalizedNames()
     {
-        return [];
+        return $this->localizedNames;
     }
 }

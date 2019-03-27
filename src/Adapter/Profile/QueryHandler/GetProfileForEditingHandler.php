@@ -24,48 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Adapter\Profile\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Profile\QueryHandler\GetProfileForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+use Profile;
 
 /**
- * Provides data for Profile form
+ * Gets Profile for editing using legacy object model
  */
-final class ProfileFormDataProvider implements FormDataProviderInterface
+final class GetProfileForEditingHandler implements GetProfileForEditingHandlerInterface
 {
     /**
-     * @var CommandBusInterface
+     * {@inheritdoc}
      */
-    private $queryBus;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     */
-    public function __construct(CommandBusInterface $queryBus)
+    public function handle(GetProfileForEditing $query)
     {
-        $this->queryBus = $queryBus;
+        $profile = $this->getProfile($query->getProfileId());
+
+        return new EditableProfile(
+            $query->getProfileId(),
+            $profile->name
+        );
     }
 
     /**
-     * {@inheritdoc}
+     * @param ProfileId $profileId
+     *
+     * @return Profile
+     * @throws ProfileNotFoundException
      */
-    public function getData($profileId)
+    private function getProfile(ProfileId $profileId)
     {
-        /** @var EditableProfile $editableProfile */
-        $editableProfile = $this->queryBus->handle(new GetProfileForEditing($profileId));
+        $profile = new Profile($profileId->getValue());
 
-        return [
-            'name' => $editableProfile->getLocalizedNames(),
-        ];
-    }
+        if ($profile->id !== $profileId->getValue()) {
+            throw new ProfileNotFoundException(
+                sprintf('Profile with id "%s" was not found', $profileId->getValue())
+            );
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData()
-    {
-        return [];
+        return $profile;
     }
 }
