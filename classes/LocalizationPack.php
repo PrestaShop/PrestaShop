@@ -372,7 +372,8 @@ class LocalizationPackCore
         return true;
     }
 
-    protected function setCurrencyCldrData(Currency $currency, Language $lang){
+    protected function setCurrencyCldrData(Currency $currency, Language $lang)
+    {
         $context = Context::getContext();
         $container = isset($context->controller) ? $context->controller->getContainer() : null;
         if (null === $container) {
