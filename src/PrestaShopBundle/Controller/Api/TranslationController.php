@@ -170,8 +170,8 @@ class TranslationController extends ApiController
             $translationService = $this->container->get('prestashop.service.translation');
             $response = [];
             foreach ($translations as $translation) {
-                if (!array_key_exists('theme', $translation)) {
-                    $translation['theme'] = null;
+                if (!array_key_exists('theme', $translation) || empty($translation['theme'])) {
+                    $translation['theme'] = $this->getSelectedTheme();
                 }
 
                 try {
@@ -315,7 +315,7 @@ class TranslationController extends ApiController
     private function getNormalTree($lang, $type, $selected, $search = null)
     {
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $this->getSelectedTheme());
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected, $search);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $this->getSelectedTheme(), $search);
 
         return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
     }
