@@ -3280,7 +3280,14 @@ abstract class ModuleCore implements ModuleInterface
 
     private function getWidgetHooks()
     {
-        return array_values(Hook::getHooks(false, true));
+        $hooks = array_values(Hook::getHooks(false, true));
+        $registeredHookList = Hook::getHookModuleList();
+
+        foreach ($hooks as &$hook) {
+            $hook['registered'] = !empty($registeredHookList[$hook['id_hook']][$this->id]);
+        }
+
+        return $hooks;
     }
 
     /**
@@ -3296,6 +3303,7 @@ abstract class ModuleCore implements ModuleInterface
 
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = array();
+        $registeredHookList = Hook::getHookModuleList();
         foreach ($hooks_list as &$current_hook) {
             $hook_name = $current_hook['name'];
             $retro_hook_name = Hook::getRetroHookName($hook_name);
@@ -3306,7 +3314,7 @@ abstract class ModuleCore implements ModuleInterface
                     'name' => $hook_name,
                     'description' => $current_hook['description'],
                     'title' => $current_hook['title'],
-                    'registered' => (int) $this->isRegisteredInHook($hook_name),
+                    'registered' => !empty($registeredHookList[$current_hook['id_hook']][$this->id]),
                 );
             }
         }
