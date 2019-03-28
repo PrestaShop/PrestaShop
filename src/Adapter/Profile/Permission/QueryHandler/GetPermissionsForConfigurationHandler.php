@@ -168,8 +168,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         $maxNestingLevel = 32;
         if ($nestingLevel > $maxNestingLevel) {
             throw new RuntimeException(sprintf(
-                'Maximum nesting level of "%s" reached in "%s"'
-                , $maxNestingLevel,
+                'Maximum nesting level of "%s" reached in "%s"', $maxNestingLevel,
                 __METHOD__
             ));
         }
