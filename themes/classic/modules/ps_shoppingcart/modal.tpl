@@ -58,9 +58,8 @@
               {/if}
               <p><span><strong>{l s='Total products:' d='Shop.Theme.Checkout'}</strong></span>&nbsp;<span><strong>{$cart.subtotals.products.value}</strong></span></p>
               <p><span>{l s='Total shipping:' d='Shop.Theme.Checkout'}</span>&nbsp;<span><strong>{$cart.subtotals.shipping.value} {hook h='displayCheckoutSubtotalDetails' subtotal=$cart.subtotals.shipping}</strong></span></p>
-              {* <p><span><strong>{l s='Total:' d='Shop.Theme.Checkout'}</strong></span>&nbsp;<span><strong>{$cart.totals.total.value} {$cart.labels.tax_short}</strong></span></p> *}
 
-              {if $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
+              {if $cart.totals.total_including_tax.value != $cart.totals.total_excluding_tax.value && $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
                 <p><span>{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>&nbsp;<span>{$cart.totals.total.value}</span></p>
                 <p class="product-total"><span><strong> {$cart.totals.total_including_tax.label}</strong></span>&nbsp;<span><strong>{$cart.totals.total_including_tax.value}</strong></span></p>
                 {else}

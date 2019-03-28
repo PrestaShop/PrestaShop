@@ -48,11 +48,7 @@
   </div>
 
   <div class="card-block cart-summary-totals">
-    {* <div class="cart-summary-line">
-      <span class="label">{$cart.totals.total.label} {$cart.labels.tax_short}</span>
-      <span class="value">{$cart.totals.total.value}</span>
-    </div> *}
-    {if $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
+    {if $cart.totals.total_including_tax.value != $cart.totals.total_excluding_tax.value && $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
     <div class="cart-summary-line">
       <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
       <span class="value">{$cart.totals.total.value}</span>
