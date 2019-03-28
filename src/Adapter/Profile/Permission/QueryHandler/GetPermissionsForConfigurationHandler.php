@@ -45,6 +45,11 @@ use Tab;
 final class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigurationHandlerInterface
 {
     /**
+     * @internal Max nesting level for building tabs tree
+     */
+    const MAX_NESTING_LEVEL = 12;
+
+    /**
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
@@ -165,10 +170,9 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      */
     private function buildTabsTree(array &$tabs, $parentId = 0, $nestingLevel = 1)
     {
-        $maxNestingLevel = 32;
-        if ($nestingLevel > $maxNestingLevel) {
+        if (self::MAX_NESTING_LEVEL < $nestingLevel) {
             throw new RuntimeException(sprintf(
-                'Maximum nesting level of "%s" reached in "%s"', $maxNestingLevel,
+                'Maximum nesting level of "%s" reached in "%s"', self::MAX_NESTING_LEVEL,
                 __METHOD__
             ));
         }
