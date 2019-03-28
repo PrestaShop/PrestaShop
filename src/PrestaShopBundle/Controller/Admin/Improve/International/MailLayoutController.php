@@ -130,6 +130,8 @@ final class MailLayoutController extends FrameworkBundleAdminController
 
         /** @var MailTemplateRendererInterface $renderer */
         $renderer = $this->get('prestashop.core.mail_template.mail_template_renderer');
+        //Special case for preview, we fill the mail variables
+        $renderer->addTransformation($this->get('prestashop.core.mail_template.transformation.mail_variables'));
 
         switch ($type) {
             case MailTemplateInterface::HTML_TYPE:
