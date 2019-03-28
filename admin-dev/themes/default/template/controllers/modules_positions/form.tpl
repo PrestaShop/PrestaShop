@@ -53,13 +53,14 @@
 				<select name="id_hook"{if !$hooks|@count} disabled="disabled"{/if}>
 					{if !$hooks}
 						<option value="0">{l s='Select a module above before choosing from available hooks' d='Admin.Design.Help'}</option>
+						<optgroup id="hooks_unregistered" label="{l s='Available hooks' d='Admin.Design.Feature'}"></optgroup>
+						<optgroup id="hooks_registered" label="{l s='Already registered hooks' d='Admin.Design.Feature'}" disabled></optgroup>
 					{else}
 						{foreach $hooks as $hook}
 							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
 						{/foreach}
 					{/if}
 				</select>
-				<div class="help-block">* {l s='Hook already registered' d='Admin.Design.Help'}</div>
 			</div>
 		</div>
 		<div class="form-group">
