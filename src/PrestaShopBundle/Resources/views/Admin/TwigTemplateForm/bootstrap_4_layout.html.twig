@@ -702,11 +702,28 @@
 
 {% block file_widget %}
   <div class="custom-file">
-    {# todo: test multiple files upload after new PrestaShop Ui kit is updated #}
-    {# todo: check translations #}
-    {{ form_widget(form, {'attr': { 'data-multiple-files-text': 'files'|trans({}, 'Admin.Global') }}) }}
+    {% set attr = attr|merge({
+      class: (attr.class|default('') ~ ' custom-file-input')|trim,
+      'data-multiple-files-text': '%count% files'|trans({}, 'Admin.Global'),
+      'data-locale': get_context_iso_code()
+    }) -%}
+
+    {{ form_widget(form, {'attr': attr}) }}
+
     <label class="custom-file-label" for="{{ form.vars.id }}">
-      {{ form.vars.attr.placeholder is defined ? form.vars.attr.placeholder : 'Choose file'|trans({}, 'Shop.Theme.Actions') }}
+      {% set attributes = form.vars.attr %}
+
+      {% if (attributes.placeholder is not defined) %}
+
+        {% if (attributes.multiple is not defined) %}
+          {{ 'Choose file'|trans({}, 'Shop.Theme.Actions') }}
+        {% else %}
+          {{ 'Choose files'|trans({}, 'Shop.Theme.Actions') }}
+        {% endif %}
+
+      {% else %}
+        {{ attributes.placeholder }}
+      {% endif %}
     </label>
   </div>
 {% endblock %}
