@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermiss
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Profile;
+use RuntimeException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Tab;
 
@@ -158,11 +159,21 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     /**
      * @param array $tabs
      * @param int $parentId
+     * @param int $nestingLevel
      *
      * @return array
      */
-    private function buildTabsTree(array &$tabs, $parentId = 0)
+    private function buildTabsTree(array &$tabs, $parentId = 0, $nestingLevel = 1)
     {
+        $maxNestingLevel = 32;
+        if ($nestingLevel > $maxNestingLevel) {
+            throw new RuntimeException(sprintf(
+                'Maximum nesting level of "%s" reached in "%s"'
+                , $maxNestingLevel,
+                __METHOD__
+            ));
+        }
+
         $children = [];
 
         foreach ($tabs as &$tab) {
@@ -170,7 +181,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
             if ((int) $tab['id_parent'] === (int) $parentId) {
                 $children[$id] = $tab;
-                $children[$id]['children'] = $this->buildTabsTree($tabs, $id);
+                $children[$id]['children'] = $this->buildTabsTree($tabs, $id, $nestingLevel++);
             }
         }
 
