@@ -165,6 +165,8 @@ $(function(){
 
 		var $this = $(this);
 		var hook_select = $("select[name='id_hook']");
+		var optgroup_unregistered = hook_select.find('optgroup#hooks_unregistered');
+		var optgroup_registered = hook_select.find('optgroup#hooks_registered');
 
 		if ($this.val() != 0)
 		{
@@ -198,9 +200,8 @@ $(function(){
 							if(jsonData[current_hook].description != '')
 								hook_description = ' ('+jsonData[current_hook].description+')';
 							var is_registered = jsonData[current_hook].registered;
-							var disabled = is_registered ? "disabled" : "";
-							var flag = is_registered ? "*" : "";
-							hook_select.append('<option value="'+jsonData[current_hook].id_hook+'" '+ disabled + '>'+flag+jsonData[current_hook].name+hook_description+'</option>');
+							var optgroup = is_registered ? optgroup_registered : optgroup_unregistered;
+							optgroup.append('<option value="'+jsonData[current_hook].id_hook+'">'+jsonData[current_hook].name+hook_description+'</option>');
 						}
 
 						hook_select.prop('disabled', false);
