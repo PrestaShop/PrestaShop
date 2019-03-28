@@ -96,7 +96,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
                 if (!isset($combinations[$attributeId])) {
                     $combinations[$attributeId] = [
                         'reference' => $combination['reference'],
-                        'ean13' => $combination['upc'],
+                        'ean13' => $combination['ean13'],
                         'upc' => $combination['upc'],
                         'quantity' => $combination['quantity'],
                         'attributes' => '',
