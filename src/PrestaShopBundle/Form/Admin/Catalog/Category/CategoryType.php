@@ -26,41 +26,15 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class CategoryType.
  */
 class CategoryType extends AbstractCategoryType
 {
-    /**
-     * @var int
-     */
-    private $rootCategoryId;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $customerGroupChoices
-     * @param FeatureInterface $multistoreFeature
-     * @param int $rootCategoryId
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        array $customerGroupChoices,
-        FeatureInterface $multistoreFeature,
-        $rootCategoryId
-    ) {
-        parent::__construct($translator, $locales, $customerGroupChoices, $multistoreFeature);
-
-        $this->rootCategoryId = $rootCategoryId;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -70,7 +44,7 @@ class CategoryType extends AbstractCategoryType
 
         // Root category is always disabled
         $disabledCategories = [
-            $this->rootCategoryId,
+            $this->getConfiguration()->getInt('PS_ROOT_CATEGORY'),
         ];
 
         if (null !== $options['id_category']) {
