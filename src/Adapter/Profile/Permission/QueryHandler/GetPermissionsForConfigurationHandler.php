@@ -180,7 +180,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
             if ((int) $tab['id_parent'] === (int) $parentId) {
                 $children[$id] = $tab;
-                $children[$id]['children'] = $this->buildTabsTree($tabs, $id, $nestingLevel++);
+                $children[$id]['children'] = $this->buildTabsTree($tabs, $id, $nestingLevel + 1);
             }
         }
 
