@@ -45,7 +45,7 @@ final class AddProfileHandler implements AddProfileHandlerInterface
         $profile = new Profile();
         $profile->name = $command->getLocalizedNames();
 
-        if (false === $profile->validateFields(false)) {
+        if (false === $profile->validateFieldsLang(false)) {
             throw new ProfileException('Cannot create Profile because it containts invalid data');
         }
 

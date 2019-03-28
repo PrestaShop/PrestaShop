@@ -46,11 +46,11 @@ final class EditProfileHandler implements EditProfileHandlerInterface
         $profile = $this->getProfile($command->getProfileId());
         $profile->name = $command->getLocalizedNames();
 
-        if (false === $profile->validateFields(false)) {
+        if (false === $profile->validateFieldsLang(false)) {
             throw new ProfileException('Cannot edit Profile because it containts invalid data');
         }
 
-        if (false === $profile->add()) {
+        if (false === $profile->update()) {
             throw new ProfileException('Failed to edit Profile');
         }
     }

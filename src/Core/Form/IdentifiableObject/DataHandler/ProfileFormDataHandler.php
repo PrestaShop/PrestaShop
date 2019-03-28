@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\AddProfileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Command\EditProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 
 /**
@@ -65,6 +66,6 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
     public function update($profileId, array $data)
     {
         /** @var ProfileId $profileId */
-        $this->bus->handle(new AddProfileCommand($data['name']));
+        $this->bus->handle(new EditProfileCommand($profileId, $data['name']));
     }
 }
