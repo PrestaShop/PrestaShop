@@ -22,3 +22,7 @@ ALTER TABLE `PREFIX_admin_filter`
   DROP INDEX IF EXISTS `search_idx`,
 	ADD UNIQUE INDEX `admin_filter_search_id_idx` (`employee`, `shop`, `controller`, `action`, `filter_id`)
 ;
+
+/* Module Manager tab should be the first tab in Modules Tab */
+UPDATE `PREFIX_tab` SET `position` = 0 WHERE `class_name` = 'AdminModulesSf' AND `position`= 1;
+UPDATE `PREFIX_tab` SET `position` = 1 WHERE `class_name` = 'AdminParentModulesCatalog' AND `position`= 0;
