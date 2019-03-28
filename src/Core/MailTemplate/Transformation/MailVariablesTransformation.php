@@ -68,9 +68,9 @@ class MailVariablesTransformation extends AbstractTransformation
         $templateVars['{lastname}'] = 'Doe';
         $templateVars['{email}'] = 'john.doe@unknown.com';
 
-        foreach ($templateVars as $placeholder => $value) {
-            $templateContent = preg_replace('/'.$placeholder.'/', $value, $templateContent);
-        }
+        $search = array_keys($templateVars);
+        $replacement = array_values($templateVars);
+        $templateContent = str_replace($search, $replacement, $templateContent);
 
         return $templateContent;
     }
@@ -82,28 +82,28 @@ class MailVariablesTransformation extends AbstractTransformation
     {
         $templateVars = [];
 
+        $context = $this->legacyContext->getContext();
         $imageDir = $this->configuration->get('_PS_IMG_DIR_');
-        $baseUrl = $this->legacyContext->getContext()->link->getBaseLink();
+        $baseUrl = $context->link->getBaseLink();
 
         //Logo url
-        if (!empty($this->configuration->get('PS_LOGO_MAIL'))
-            && file_exists($imageDir . $this->configuration->get('PS_LOGO_MAIL'))
-        ) {
-            $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $this->configuration->get('PS_LOGO_MAIL');
+        $logoMail = $this->configuration->get('PS_LOGO_MAIL');
+        $logo = $this->configuration->get('PS_LOGO');
+        if (!empty($logoMail) && file_exists($imageDir . $logoMail)) {
+            $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $logoMail;
         } else {
-            if (!empty($this->configuration->get('PS_LOGO'))
-                && file_exists($imageDir . $this->configuration->get('PS_LOGO'))) {
-                $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $this->configuration->get('PS_LOGO');
+            if (!empty($logo) && file_exists($imageDir . $logo)) {
+                $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $logo;
             } else {
                 $templateVars['{shop_logo}'] = '';
             }
         }
 
-        $templateVars['{shop_name}'] = $this->legacyContext->getContext()->shop->name;
-        $templateVars['{shop_url}'] = $this->legacyContext->getContext()->link->getPageLink('index',true);
-        $templateVars['{my_account_url}'] = $this->legacyContext->getContext()->link->getPageLink('my-account',true);
-        $templateVars['{guest_tracking_url}'] = $this->legacyContext->getContext()->link->getPageLink('guest-tracking', true);
-        $templateVars['{history_url}'] = $this->legacyContext->getContext()->link->getPageLink('history', true);
+        $templateVars['{shop_name}'] = $context->shop->name;
+        $templateVars['{shop_url}'] = $context->link->getPageLink('index',true);
+        $templateVars['{my_account_url}'] = $context->link->getPageLink('my-account',true);
+        $templateVars['{guest_tracking_url}'] = $context->link->getPageLink('guest-tracking', true);
+        $templateVars['{history_url}'] = $context->link->getPageLink('history', true);
         $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
 
         return $templateVars;
