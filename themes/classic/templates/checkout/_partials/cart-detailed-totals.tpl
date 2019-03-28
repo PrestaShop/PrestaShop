@@ -48,10 +48,25 @@
   </div>
 
   <div class="card-block cart-summary-totals">
+    {* <div class="cart-summary-line">
+      <span class="label">{$cart.totals.total.label} {$cart.labels.tax_short}</span>
+      <span class="value">{$cart.totals.total.value}</span>
+    </div> *}
+    {if $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
+    <div class="cart-summary-line">
+      <span class="label"><strong>{l s='Subtotal:' d='Shop.Theme.Checkout'}</strong></span>
+      <span class="value"><strong>{$cart.totals.total.value}</strong></span>
+    </div>
+    <div class="cart-summary-line cart-total">
+      <span class="label">{$cart.totals.total_including_tax.label}</span>
+      <span class="value">{$cart.totals.total_including_tax.value}</span>
+    </div>
+    {else}
     <div class="cart-summary-line cart-total">
       <span class="label">{$cart.totals.total.label} {$cart.labels.tax_short}</span>
       <span class="value">{$cart.totals.total.value}</span>
     </div>
+    {/if}
     <div class="cart-summary-line">
       <span class="label sub">{$cart.subtotals.tax.label}</span>
       <span class="value sub">{$cart.subtotals.tax.value}</span>
