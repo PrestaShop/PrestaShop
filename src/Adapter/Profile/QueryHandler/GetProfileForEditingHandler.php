@@ -55,6 +55,7 @@ final class GetProfileForEditingHandler implements GetProfileForEditingHandlerIn
      * @param ProfileId $profileId
      *
      * @return Profile
+     *
      * @throws ProfileNotFoundException
      */
     private function getProfile(ProfileId $profileId)

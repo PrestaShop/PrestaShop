@@ -65,7 +65,7 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
      */
     public function update($profileId, array $data)
     {
-        /** @var ProfileId $profileId */
+        /* @var ProfileId $profileId */
         $this->bus->handle(new EditProfileCommand($profileId, $data['name']));
     }
 }

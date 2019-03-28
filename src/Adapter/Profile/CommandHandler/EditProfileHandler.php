@@ -59,6 +59,7 @@ final class EditProfileHandler implements EditProfileHandlerInterface
      * @param ProfileId $profileId
      *
      * @return Profile
+     *
      * @throws ProfileNotFoundException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
