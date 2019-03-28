@@ -108,10 +108,21 @@
             </tr>
           {/if}
         {/foreach}
-        <tr class="total-value font-weight-bold">
-          <td><span class="text-uppercase">{$totals.total.label}</span> {$labels.tax_short}</td>
+        {if $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
+        <tr>
+          <td><span class="text-uppercase">{$totals.total.label}&nbsp;{$cart.labels.tax_short}</span></td>
           <td>{$totals.total.value}</td>
         </tr>
+        <tr class="total-value font-weight-bold">
+          <td><span class="text-uppercase">{$totals.total_including_tax.label}</span></td>
+          <td>{$totals.total_including_tax.value}</td>
+        </tr>
+        {else}
+        <tr class="total-value font-weight-bold">
+          <td><span class="text-uppercase">{$totals.total.label}&nbsp;{$cart.labels.tax_short}</span></td>
+          <td>{$totals.total.value}</td>
+        </tr>
+        {/if}
         {if $subtotals.tax.label !== null}
           <tr class="sub taxes">
             <td>{$subtotals.tax.label}</td>
