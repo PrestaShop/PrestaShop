@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddRootCategoryHandlerInterface;
@@ -37,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 /**
  * Class AddRootCategoryHandler.
  */
-final class AddRootCategoryHandler extends AbstractCategoryHandler implements AddRootCategoryHandlerInterface
+final class AddRootCategoryHandler extends AbstractObjectModelHandler implements AddRootCategoryHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -101,16 +102,20 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        if ($command->getAssociatedShopIds()) {
-            $this->addShopAssociation($command->getAssociatedShopIds());
+        if (false === $category->validateFields(false)) {
+            throw new CategoryException('Invalid data for root category creation');
         }
 
-        if (false === $category->validateFields(false)) {
+        if (false === $category->validateFieldsLang(false)) {
             throw new CategoryException('Invalid data for root category creation');
         }
 
         if (false === $category->save()) {
             throw new CannotAddCategoryException('Failed to create root category');
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
 
         return $category;

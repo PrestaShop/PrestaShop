@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
@@ -39,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
  *
  * @internal
  */
-final class EditCategoryHandler extends AbstractCategoryHandler implements EditCategoryHandlerInterface
+final class EditCategoryHandler extends AbstractObjectModelHandler implements EditCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -108,10 +109,14 @@ final class EditCategoryHandler extends AbstractCategoryHandler implements EditC
         }
 
         if ($command->getAssociatedShopIds()) {
-            $this->addShopAssociation($command->getAssociatedShopIds());
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
 
         if (false === $category->validateFields(false)) {
+            throw new CategoryException('Invalid data when updating category');
+        }
+
+        if (false === $category->validateFieldsLang(false)) {
             throw new CategoryException('Invalid data when updating category');
         }
 

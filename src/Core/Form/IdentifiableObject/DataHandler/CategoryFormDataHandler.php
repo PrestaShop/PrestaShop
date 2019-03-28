@@ -137,7 +137,10 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedMetaDescriptions($data['meta_description']);
         $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
-        $command->setAssociatedShopIds($data['shop_association']);
+
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
 
         return $command;
     }
@@ -162,7 +165,10 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedMetaDescriptions($data['meta_description']);
         $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
-        $command->setAssociatedShopIds($data['shop_association']);
+
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
 
         return $command;
     }
