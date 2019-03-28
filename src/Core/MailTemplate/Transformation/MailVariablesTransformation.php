@@ -59,7 +59,7 @@ class MailVariablesTransformation extends AbstractTransformation
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function apply($templateContent, array $templateVariables)
     {
@@ -68,9 +68,7 @@ class MailVariablesTransformation extends AbstractTransformation
         $templateVars['{lastname}'] = 'Doe';
         $templateVars['{email}'] = 'john.doe@unknown.com';
 
-        $search = array_keys($templateVars);
-        $replacement = array_values($templateVars);
-        $templateContent = str_replace($search, $replacement, $templateContent);
+        $templateContent = strtr($templateContent, $templateVars);
 
         return $templateContent;
     }
@@ -100,8 +98,8 @@ class MailVariablesTransformation extends AbstractTransformation
         }
 
         $templateVars['{shop_name}'] = $context->shop->name;
-        $templateVars['{shop_url}'] = $context->link->getPageLink('index',true);
-        $templateVars['{my_account_url}'] = $context->link->getPageLink('my-account',true);
+        $templateVars['{shop_url}'] = $context->link->getPageLink('index', true);
+        $templateVars['{my_account_url}'] = $context->link->getPageLink('my-account', true);
         $templateVars['{guest_tracking_url}'] = $context->link->getPageLink('guest-tracking', true);
         $templateVars['{history_url}'] = $context->link->getPageLink('history', true);
         $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
