@@ -367,6 +367,7 @@ class AdminGroupsControllerCore extends AdminController
                         ),
                     ),
                     'hint' => $this->trans('Customers in this group can view prices.', array(), 'Admin.Shopparameters.Help'),
+                    'desc' => $this->trans('Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.', array(), 'Admin.Shopparameters.Help'),
                 ),
                 array(
                     'type' => 'group_discount_category',

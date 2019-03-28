@@ -23,15 +23,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TranslatableInput from '../../components/translatable-input';
-import StockManagementOptionHandler from './stock-management-option-handler';
-import CatalogModeOptionHandler from './catalog-mode-option-handler';
-import * as pageMap from './product-preferences-page-map';
-
 const $ = window.$;
 
-$(() => {
-  new TranslatableInput();
-  new StockManagementOptionHandler();
-  new CatalogModeOptionHandler(pageMap);
-});
+class CatalogModeOptionHandler {
+  constructor(pageMap) {
+    this.pageMap = Object.assign({
+      catalogModeField: 'input[name="form[general][catalog_mode]"]',
+      selectedCatalogModeField: 'input[name="form[general][catalog_mode]"]:checked',
+      catalogModeOptions: '.catalog-mode-option'
+    }, pageMap);
+    this.handle(0);
+
+    $(this.pageMap.catalogModeField).on('change', () => this.handle(600));
+  }
+
+  handle(fadeLength) {
+    const catalogModeVal = $(this.pageMap.selectedCatalogModeField).val();
+    const catalogModeEnabled = parseInt(catalogModeVal);
+
+    let catalogOptions = $(this.pageMap.catalogModeOptions);
+    if (catalogModeEnabled) {
+      catalogOptions.show(fadeLength);
+    } else {
+      catalogOptions.hide(fadeLength / 2);
+    }
+  }
+}
+
+export default CatalogModeOptionHandler;

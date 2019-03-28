@@ -23,15 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TranslatableInput from '../../components/translatable-input';
-import StockManagementOptionHandler from './stock-management-option-handler';
-import CatalogModeOptionHandler from './catalog-mode-option-handler';
-import * as pageMap from './product-preferences-page-map';
-
-const $ = window.$;
-
-$(() => {
-  new TranslatableInput();
-  new StockManagementOptionHandler();
-  new CatalogModeOptionHandler(pageMap);
-});
+export default {
+  catalogModeField: 'input[name="form[general][catalog_mode]"]',
+  selectedCatalogModeField: 'input[name="form[general][catalog_mode]"]:checked',
+  catalogModeOptions: '.catalog-mode-option'
+};
