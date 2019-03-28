@@ -26,9 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class CategoryType.
@@ -36,17 +38,50 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class CategoryType extends AbstractCategoryType
 {
     /**
+     * @var int
+     */
+    private $rootCategoryId;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param array $customerGroupChoices
+     * @param FeatureInterface $multistoreFeature
+     * @param int $rootCategoryId
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        array $customerGroupChoices,
+        FeatureInterface $multistoreFeature,
+        $rootCategoryId
+    ) {
+        parent::__construct($translator, $locales, $customerGroupChoices, $multistoreFeature);
+
+        $this->rootCategoryId = $rootCategoryId;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
+        // Root category is always disabled
+        $disabledCategories = [
+            $this->rootCategoryId,
+        ];
+
+        if (null !== $options['id_category']) {
+            // when using CategoryType to edit category
+            // user should not be able to select that category as parent
+            $disabledCategories[] = $options['id_category'];
+        }
+
         $builder
             ->add('id_parent', CategoryChoiceTreeType::class, [
-                // when using CategoryType to edit category
-                // user should not be able to select that category as parent
-                'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : [],
+                'disabled_values' => $disabledCategories,
             ])
         ;
     }
