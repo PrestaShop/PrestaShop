@@ -173,6 +173,10 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_metas_set_up_urls_save' => ['/configure/shop/seo-urls/set-up-urls', 'AdminMeta', 'submitOptionsmeta'],
             'admin_metas_generate_robots_text_file' => ['/configure/shop/seo-urls/generate/robots', 'AdminMeta', 'submitRobots'],
 
+            'admin_permissions_index' => ['/configure/advanced/permissions/', 'AdminAccess'],
+            'admin_permissions_update_tab_permissions' => ['/configure/advanced/permissions/update-tab-permissions', 'AdminAccess', 'updateAccess'],
+            'admin_permissions_update_module_permissions' => ['/configure/advanced/permissions/update-tab-permissions', 'AdminAccess', 'updateModuleAccess'],
+
             //'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
             //'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],
 
