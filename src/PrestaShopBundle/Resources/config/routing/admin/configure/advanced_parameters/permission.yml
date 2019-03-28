@@ -12,6 +12,7 @@ admin_permissions_update_tab_permissions:
   defaults:
     _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:updateTabPermissions
     _legacy_controller: AdminAccess
+    _legacy_link: AdminAccess:updateAccess
 
 admin_permissions_update_module_permissions:
   path: /update-module-permissions
