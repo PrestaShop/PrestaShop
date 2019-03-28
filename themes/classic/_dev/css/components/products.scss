@@ -482,43 +482,46 @@
   width: 100%;
 }
 li.product-flag {
-    display: block;
-    position: absolute;
-    background: $brand-primary;
-    font-weight: 700;
-    padding: 0.3125rem 0.4375rem;
-    text-transform: uppercase;
-    color: white;
-    margin-top: $small-space;
-    z-index: 2;
-    top: 0;
-    @include box-shadow-light;
-    &.online-only {
-      top: 25rem;
-      right: 0;
-      z-index: 1;
-      font-size: $font-size-xs;
-      &::before{
-        content:"\E30A";
-        font-family: 'Material Icons';
-        vertical-align: middle;
-        margin: 0.3125rem;
-      }
+  display: block;
+  position: absolute;
+  background: $brand-primary;
+  font-weight: 700;
+  padding: 0.3125rem 0.4375rem;
+  text-transform: uppercase;
+  color: white;
+  margin-top: $small-space;
+  z-index: 2;
+  top: 0;
+  @include box-shadow-light;
+  &:not(.discount),
+  &:not(.on-sale) {
+      margin-top: 3.75rem;
+  }
+  &.online-only {
+    top: 25.5rem;
+    right: 0;
+    z-index: 1;
+    font-size: $font-size-xs;
+    margin-top: 0;
+    &::before{
+      content:"\E30A";
+      font-family: 'Material Icons';
+      vertical-align: middle;
+      margin: 0.3125rem;
     }
-    &.discount {
-      display: none;
-    }
-    &.on-sale {
-      background: $brand-secondary;
-      width: 100%;
-      text-align: center;
-      margin: 0;
-      left:0;
-      top:0;
-    }
-    &:not(.discount):not(.on-sale)~li.product-flag {
-        margin-top: 3.75rem;
-    }
+  }
+  &.discount {
+    display: none;
+  }
+  &.on-sale {
+    background: $brand-secondary;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    left:0;
+    top:0;
+    margin-top: 0;
+  } 
 }
 
 .product-customization {
