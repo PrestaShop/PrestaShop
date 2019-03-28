@@ -80,9 +80,7 @@ export default class CategoryPositionExtension {
     let queryParams = {
       id_category_parent: categoryParentId,
       id_category_to_move: categoryId,
-      way: way,
-      ajax: 1,
-      action: 'updatePositions'
+      way: way
     };
 
     if (positions.indexOf('_0&') !== -1) {
