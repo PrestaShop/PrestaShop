@@ -168,7 +168,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      *
      * @return array
      */
-    private function buildTabsTree(array &$tabs, $parentId = 0, $nestingLevel = 1)
+    private function buildTabsTree(array &$tabs, $parentId = 0, $nestingLevel = 0)
     {
         if (self::MAX_NESTING_LEVEL < $nestingLevel) {
             throw new RuntimeException(sprintf(
