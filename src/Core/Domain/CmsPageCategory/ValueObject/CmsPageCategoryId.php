@@ -44,18 +44,6 @@ class CmsPageCategoryId
     private $cmsPageCategoryId;
 
     /**
-     * Creates root Cms Page Category ID
-     *
-     * @return CmsPageCategoryId
-     *
-     * @throws CmsPageCategoryException
-     */
-    public static function createRoot()
-    {
-        return new self(self::ROOT_CMS_PAGE_CATEGORY_ID);
-    }
-
-    /**
      * @param int $cmsPageCategoryId
      *
      * @throws CmsPageCategoryException
