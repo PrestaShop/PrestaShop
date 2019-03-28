@@ -230,6 +230,9 @@ class ProfileCore extends ObjectModel
                 $role['slug'],
                 $matches
             );
+            if (empty($matches['classname'])) {
+                continue;
+            }
             $accessPerTab[$matches['classname']][array_search('1', $role)] = '1';
         }
 
