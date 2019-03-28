@@ -165,8 +165,8 @@ $(function(){
 
 		var $this = $(this);
 		var hook_select = $("select[name='id_hook']");
-		var optgroup_unregistered = hook_select.find('optgroup#hooks_unregistered');
-		var optgroup_registered = hook_select.find('optgroup#hooks_registered');
+		var optgroup_unregistered = $('#hooks_unregistered');
+		var optgroup_registered = $('#hooks_registered');
 
 		if ($this.val() != 0)
 		{
