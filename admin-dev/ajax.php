@@ -184,7 +184,7 @@ elseif (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
  * -> Duplicated in Symfony
  */
 elseif (Tools::isSubmit('getNotifications')) {
-    $notification = new Notification;
+    $notification = new Notification();
     echo json_encode($notification->getLastElements());
 }
 
