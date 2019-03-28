@@ -54,7 +54,10 @@ class TypedRegexConstraintValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'string');
         }
 
-        if (!preg_match($this->getPattern($constraint->type), $value)) {
+        $pattern = $this->getPattern($constraint->type);
+        $value = $this->sanitize($value, $constraint->type);
+
+        if (!$this->match($pattern, $constraint->type, $value)) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameter('%s', $this->formatValue($value))
@@ -64,6 +67,8 @@ class TypedRegexConstraintValidator extends ConstraintValidator
     }
 
     /**
+     * Returns regex pattern that depends on type
+     *
      * @param string $type
      *
      * @return string
@@ -71,8 +76,14 @@ class TypedRegexConstraintValidator extends ConstraintValidator
     private function getPattern($type)
     {
         $typePatterns = [
+            'name' => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
             'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
             'generic_name' => $this->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
+            'city_name' => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
+            'address' => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
+            'post_code' => '/^[a-zA-Z 0-9-]+$/',
+            'phone_number' => '/^[+0-9. ()\/-]*$/',
+            'message' => '/[<>{}]/i',
         ];
 
         if (isset($typePatterns[$type])) {
@@ -101,5 +112,45 @@ class TypedRegexConstraintValidator extends ConstraintValidator
         }
 
         return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
+    }
+
+    /**
+     * Responsible for sanitizing the string depending on type. (eg. applying  stripslashes())
+     *
+     * @param string $value
+     * @param string $type
+     *
+     * @return string
+     */
+    private function sanitize($value, $type)
+    {
+        if ($type === 'name') {
+            $value = stripslashes($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Responsible for applying preg_match depending on type.
+     * preg_match returns 1 if the pattern
+     * matches given subject, 0 if it does not, or FALSE
+     * if an error occurred.
+     *
+     * @param $pattern
+     * @param $type
+     * @param $value
+     *
+     * @return false|int
+     */
+    private function match($pattern, $type, $value)
+    {
+        $typesToInverseMatching = ['message'];
+
+        if (in_array($type, $typesToInverseMatching, true)) {
+            return !preg_match($pattern, $value);
+        }
+
+        return preg_match($pattern, $value);
     }
 }

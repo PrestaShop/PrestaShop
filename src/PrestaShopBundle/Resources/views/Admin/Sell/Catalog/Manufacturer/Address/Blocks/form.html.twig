@@ -86,12 +86,12 @@
       }) }}
 
       {% set otherHint %}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>{}' }}
       {% endset %}
 
       {{ ps.form_group_row(addressForm.other, {}, {
         'label': 'Other'|trans({}, 'Admin.Global'),
-        'hint': otherHint
+        'help': otherHint
       }) }}
 
       {% block manufacturer_address_form_rest %}

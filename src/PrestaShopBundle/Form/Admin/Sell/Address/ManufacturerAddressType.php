@@ -26,15 +26,15 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Defines form for address create/edit actions (Sell > Catalog > Brands & Suppliers)
@@ -94,7 +94,6 @@ class ManufacturerAddressType extends AbstractType
     {
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
-                'disabled' => $options['is_editing'],
                 'choices' => $this->getManufacturersChoiceList(),
                 'translation_domain' => false,
                 'placeholder' => false,
@@ -103,59 +102,107 @@ class ManufacturerAddressType extends AbstractType
             ->add('last_name', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
                     ]),
-                    new Regex([
-                        //@todo: TypedRegexConstraint isName from another PR #12735
-                        'pattern' => '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u',
+                    new TypedRegexConstraint([
+                        'type' => 'name',
+                    ]),
+                    new Length([
+                        'max' => 255,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 255],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
             ->add('first_name', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
                     ]),
-                    new Regex([
-                        //@todo: TypedRegexConstraint isName from another PR #12735
-                        'pattern' => '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u',
+                    new TypedRegexConstraint([
+                        'type' => 'name',
+                    ]),
+                    new Length([
+                        'max' => 255,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 255],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
             ->add('address', TextType::class, [
                 'constraints' => [
-                    new Regex([
-                        //@todo: TypedRegexConstraint isAddress (double check)
-                        'pattern' => '/^[^!<>?=+@{}_$%]*$/u',
+                    new TypedRegexConstraint([
+                        'type' => 'address',
+                    ]),
+                    new Length([
+                        'max' => 128,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 128],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
             ->add('address2', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new Regex([
-                        //@todo: TypedRegexConstraint isAddress another PR #12735
-                        'pattern' => '/^[^!<>?=+@{}_$%]*$/u',
+                    new TypedRegexConstraint([
+                        'type' => 'address',
+                    ]),
+                    new Length([
+                        'max' => 128,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 128],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
             ->add('post_code', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    //@todo: TypedRegexConstraint isPostcode another PR #12735
-                    new Regex([
-                        'pattern' => '/^[a-zA-Z 0-9-]+$/',
+                    new TypedRegexConstraint([
+                        'type' => 'post_code',
+                    ]),
+                    new Length([
+                        'max' => 12,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 12],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
-            //@todo: TypedRegexConstraint isCityName another PR #12735
             ->add('city', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
                     ]),
-                    new Regex([
-                        'pattern' => '/^[^!<>;?=+@#"°{}_$%]*$/u',
+                    new TypedRegexConstraint([
+                        'type' => 'city_name',
+                    ]),
+                    new Length([
+                        'max' => 64,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 64],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
@@ -165,7 +212,9 @@ class ManufacturerAddressType extends AbstractType
                 'translation_domain' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
@@ -179,27 +228,48 @@ class ManufacturerAddressType extends AbstractType
             ->add('home_phone', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new Regex([
-                        //@todo: TypedRegexConstraint isPhoneNumber another PR #12735
-                        'pattern' => '/^[+0-9. ()\/-]*$/',
+                    new TypedRegexConstraint([
+                        'type' => 'phone_number',
+                    ]),
+                    new Length([
+                        'max' => 32,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 32],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
             ->add('mobile_phone', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new Regex([
-                        //@todo: TypedRegexConstraint isPhoneNumber another PR #12735
-                        'pattern' => '/^[+0-9. ()\/-]*$/',
+                    new TypedRegexConstraint([
+                        'type' => 'phone_number',
+                    ]),
+                    new Length([
+                        'max' => 32,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 32],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
             ->add('other', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new Regex([
-                        //@todo: TypedRegexConstraint isMessage another PR #12735
-                        'pattern' => '/[<>{}]/i',
+                    new TypedRegexConstraint([
+                        'type' => 'message',
+                    ]),
+                    new Length([
+                        'max' => 300,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 300],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])
@@ -207,19 +277,8 @@ class ManufacturerAddressType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        //@todo: double check if on edit allowed to change manufacturer, if yes, this code can be deleted
-        $resolver->setDefaults([
-            'is_editing' => false,
-        ]);
-    }
-
-    /**
      * Get manufacturers array for choice list
-     * List is modified to enable selecting no manufacturer
+     * List is modified to enable selecting -no manufacturer-
      *
      * @return array
      */
