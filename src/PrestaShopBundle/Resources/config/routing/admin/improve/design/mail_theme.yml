@@ -22,6 +22,14 @@ admin_mail_theme_save_configuration:
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:saveConfiguration
 
+admin_mail_theme_preview:
+  path: /preview/{themeName}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:previewTheme
+    _legacy_controller: AdminMailTheme
+    _legacy_link: AdminMailTheme:previewTheme
+
 # Preview layout routes
 admin_mail_theme_preview_layout:
   path: /preview/{locale}/{theme}/{layout}.{type}
@@ -29,6 +37,7 @@ admin_mail_theme_preview_layout:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:previewLayout
     _legacy_controller: AdminMailTheme
+    _legacy_link: AdminMailTheme:previewLayout
     module: ''
 
 admin_mail_theme_preview_module_layout:
@@ -37,18 +46,21 @@ admin_mail_theme_preview_module_layout:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:previewLayout
     _legacy_controller: AdminMailTheme
+    _legacy_link: AdminMailTheme:previewModuleLayout
 
 admin_mail_theme_raw_layout:
-  path: /preview/{locale}/{theme}/{layout}.{type}
+  path: /raw/{locale}/{theme}/{layout}.{type}
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:rawLayout
     _legacy_controller: AdminMailTheme
+    _legacy_link: AdminMailTheme:rawLayout
     module: ''
 
 admin_mail_theme_raw_module_layout:
-  path: /preview/{locale}/{theme}/{module}/{layout}.{type}
+  path: /raw/{locale}/{theme}/{module}/{layout}.{type}
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:rawLayout
+    _legacy_link: AdminMailTheme:rawModuleLayout
     _legacy_controller: AdminMailTheme
