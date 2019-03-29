@@ -118,21 +118,31 @@ class MailThemeController extends FrameworkBundleAdminController
 
                 $generator->generateMailTemplates($data['mail_theme'], $data['language'], $data['overwrite']);
 
-                $flashMessage = 'Successfully generated mail templates for theme %s with locale %s';
                 if ($data['overwrite']) {
-                    $flashMessage = 'Successfully overrode mail templates for theme %s with locale %s';
+                    $this->addFlash(
+                        'success',
+                        $this->trans(
+                            'Successfully overrode mail templates for theme %s with locale %s',
+                            'Admin.Notifications.Success',
+                            [
+                                $data['mail_theme'],
+                                $data['language']
+                            ]
+                        )
+                    );
+                } else {
+                    $this->addFlash(
+                        'success',
+                        $this->trans(
+                            'Successfully generated mail templates for theme %s with locale %s',
+                            'Admin.Notifications.Success',
+                            [
+                                $data['mail_theme'],
+                                $data['language']
+                            ]
+                        )
+                    );
                 }
-                $this->addFlash(
-                    'success',
-                    $this->trans(
-                        sprintf(
-                            $flashMessage,
-                            $data['mail_theme'],
-                            $data['language']
-                        ),
-                        'Admin.Notifications.Success'
-                    )
-                );
             } catch (CoreException $e) {
                 $this->flashErrors([
                     $this->trans(
@@ -181,7 +191,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 $this->addFlash(
                     'success',
                     $this->trans(
-                        'Successfully saved mail theme configuration.',
+                        'Mail theme configuration saved successfully',
                         'Admin.Notifications.Success'
                     )
                 );
