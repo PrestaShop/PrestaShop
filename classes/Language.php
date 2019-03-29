@@ -734,15 +734,15 @@ class LanguageCore extends ObjectModel
      *
      * @return false|string|null
      */
-    public static function getIdByLocale($locale, $no_cache = false)
+    public static function getIdByLocale($locale, $noCache = false)
     {
         $key = 'Language::getIdByLocale_' . $locale;
-        if ($no_cache || !Cache::isStored($key)) {
-            $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'');
+        if ($noCache || !Cache::isStored($key)) {
+            $idLang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'');
 
-            Cache::store($key, $id_lang);
+            Cache::store($key, $idLang);
 
-            return $id_lang;
+            return $idLang;
         }
 
         return Cache::retrieve($key);
