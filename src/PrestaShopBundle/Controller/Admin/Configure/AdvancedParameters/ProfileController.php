@@ -29,9 +29,12 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
-use PrestaShop\PrestaShop\Core\Search\Filters\ProfilesFilters;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -43,18 +46,18 @@ use Symfony\Component\HttpFoundation\Response;
  * Class ProfilesController is responsible for displaying the
  * "Configure > Advanced parameters > Team > Profiles" page.
  */
-class ProfilesController extends FrameworkBundleAdminController
+class ProfileController extends FrameworkBundleAdminController
 {
     /**
      * Show profiles listing page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param ProfilesFilters $filters
+     * @param ProfileFilters $filters
      *
      * @return Response
      */
-    public function indexAction(ProfilesFilters $filters)
+    public function indexAction(ProfileFilters $filters)
     {
         $profilesGridFactory = $this->get('prestashop.core.grid.factory.profiles');
 
@@ -85,7 +88,7 @@ class ProfilesController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.profiles');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.profile');
         $definitionFactory = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -104,15 +107,37 @@ class ProfilesController extends FrameworkBundleAdminController
     /**
      * Show profile's create page
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
+     *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminProfiles', [
-            'addprofile' => 1,
-        ]);
+        $form = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder')->getForm();
+        $form->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+        try {
+            $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
+            $handlerResult = $formHandler->handle($form);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_profiles_index');
+            }
+        } catch (ProfileException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/create.html.twig', [
+            'profileForm' => $form->createView(),
+            'layoutTitle' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
+            'help_link' => $this->generateSidebarLink('AdminProfiles'),
+            'enableSidebar' => true,
+        ]);
     }
 
     /**
@@ -122,19 +147,52 @@ class ProfilesController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param int $profileId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($profileId)
+    public function editAction($profileId, Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminProfiles', [
-            'id_profile' => $profileId,
-            'updateprofile' => 1,
-        ]);
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder');
 
-        return $this->redirect($legacyLink);
+        try {
+            $form = $formBuilder->getFormFor((int) $profileId);
+            $form->handleRequest($request);
+
+            $handlerResult = $formHandler->handleFor((int) $profileId, $form);
+
+            if (null !== $handlerResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_profiles_index');
+            }
+        } catch (ProfileException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof ProfileNotFoundException) {
+                return $this->redirectToRoute('admin_profiles_index');
+            }
+        }
+
+        /** @var EditableProfile $editableProfiler */
+        $editableProfiler = $this->getQueryBus()->handle(new GetProfileForEditing((int) $profileId));
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/edit.html.twig', [
+            'profileForm' => $form->createView(),
+            'layoutTitle' => $this->trans(
+                'Edit: %value%',
+                'Admin.Catalog.Feature',
+                [
+                    '%value%' => $editableProfiler->getLocalizedNames()[$this->getContextLangId()],
+                ]
+            ),
+            'help_link' => $this->generateSidebarLink('AdminProfiles'),
+            'enableSidebar' => true,
+        ]);
     }
 
     /**
@@ -180,7 +238,7 @@ class ProfilesController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $profileIds = $request->request->get('profiles_bulk');
+        $profileIds = $request->request->get('profile_bulk');
 
         try {
             $deleteProfilesCommand = new BulkDeleteProfileCommand($profileIds);
@@ -211,7 +269,7 @@ class ProfilesController extends FrameworkBundleAdminController
                 'For security reasons, you cannot delete the Administrator\'s profile.',
                 'Admin.Advparameters.Notification'
             ),
-            ProfileException::class => $this->trans(
+            FailedToDeleteProfileException::class => $this->trans(
                 'An error occurred while deleting the object.',
                 'Admin.Notifications.Error'
             ),

@@ -33,13 +33,14 @@ import SubmitGridExtension from "../../components/grid/extension/submit-grid-act
 import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
+import TranslatableInput from "../../components/translatable-input";
 
 /**
  * Responsible for actions in Profiles listing page.
  */
 export default class ProfilesPage {
   constructor() {
-    const profilesGrid = new Grid('profiles');
+    const profilesGrid = new Grid('profile');
 
     profilesGrid.addExtension(new ReloadListActionExtension());
     profilesGrid.addExtension(new ExportToSqlManagerExtension());
@@ -50,5 +51,7 @@ export default class ProfilesPage {
     profilesGrid.addExtension(new SubmitBulkExtension());
     profilesGrid.addExtension(new BulkActionCheckboxExtension());
     profilesGrid.addExtension(new SubmitRowActionExtension());
+
+    new TranslatableInput();
   }
 }

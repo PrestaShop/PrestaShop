@@ -184,6 +184,13 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_webservice_status_toggle' => ['/configure/advanced/webservice/status/42', 'AdminWebservice', 'status', ['id_webservice_account' => 42]],
             'admin_webservice_bulk_enable' => ['/configure/advanced/webservice/status/bulk/enable', 'AdminWebservice', 'submitBulkenableSelectionwebservice_account'],
             'admin_webservice_bulk_disable' => ['/configure/advanced/webservice/status/bulk/disable', 'AdminWebservice', 'submitBulkdisableSelectionwebservice_account'],*/
+
+            'admin_profiles_index' => ['/configure/advanced/profiles/', 'AdminProfiles'],
+            'admin_profiles_search' => ['/configure/advanced/profiles/', 'AdminProfiles', 'submitFilterprofile'],
+            'admin_profiles_create' => ['/configure/advanced/profiles/new', 'AdminProfiles', 'addprofile'],
+            'admin_profiles_edit' => ['/configure/advanced/profiles/1000/edit', 'AdminProfiles', 'updateprofile', ['id_profile' => 1000]],
+            'admin_profiles_bulk_delete' => ['/configure/advanced/profiles/delete/bulk', 'AdminProfiles', 'submitBulkdeleteprofile'],
+            'admin_profiles_delete' => ['/configure/advanced/profiles/12/delete', 'AdminProfiles', 'deleteprofile', ['id_profile' => 12]],
         ];
     }
 
