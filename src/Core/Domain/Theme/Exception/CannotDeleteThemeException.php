@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 /**
- * Class CannotDeleteUsedThemeException
+ * Thrown when fails to delete theme
  */
 class CannotDeleteThemeException extends ThemeException
 {

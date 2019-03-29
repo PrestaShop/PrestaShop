@@ -27,9 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 /**
- * Class ThemeConstraintException
+ * Thrown when theme constraints are violated
  */
 class ThemeConstraintException extends ThemeException
 {
+    /**
+     * When trying to change theme in multi-shop context
+     */
     const RESTRICTED_ONLY_FOR_SINGLE_SHOP = 1;
 }

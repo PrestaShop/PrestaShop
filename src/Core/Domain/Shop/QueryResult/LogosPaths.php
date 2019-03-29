@@ -24,10 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Theme\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult;
 
-
-class Logo
+/**
+ * Holds data of header, email, invoice and favicon logos paths
+ */
+class LogosPaths
 {
     /**
      * @var string

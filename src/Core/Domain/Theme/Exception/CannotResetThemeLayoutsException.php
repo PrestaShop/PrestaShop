@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 /**
- * Class CannotResetThemeLayoutsException
+ * Thrown when fails to reset theme layout
  */
 class CannotResetThemeLayoutsException extends ThemeException
 {

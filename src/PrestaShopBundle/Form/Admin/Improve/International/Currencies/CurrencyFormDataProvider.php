@@ -64,7 +64,7 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
     public function getData()
     {
         return [
-            'exchange_rates' => [
+            'currency_exchange_rate' => [
                 'live_exchange_rate' => 0 !== (int) $this->cronExchangeRate,
             ],
         ];
@@ -77,7 +77,7 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        $command = new ToggleExchangeRateAutomatizationCommand($data['exchange_rates']['live_exchange_rate']);
+        $command = new ToggleExchangeRateAutomatizationCommand($data['currency_exchange_rate']['live_exchange_rate']);
         $this->commandBus->handle($command);
 
         return [];

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 /**
- * Class CannotEnableThemeException
+ * Thrown when fails to enable theme
  */
 class CannotEnableThemeException extends ThemeException
 {
