@@ -117,6 +117,8 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -149,7 +151,9 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_cms_pages_index"
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to add this."
      * )
      *
      * @param Request $request
@@ -186,6 +190,13 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
+     *  @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param Request $request
      * @param $cmsPageId
      *
