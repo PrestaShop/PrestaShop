@@ -766,7 +766,7 @@ class CmsPageController extends FrameworkBundleAdminController
         try {
             $cmsCategoryId = $this->getQueryBus()->handle(new GetCmsCategoryIdForRedirection((int) $cmsPageId));
         } catch (CmsPageException $e) {
-            $cmsCategoryId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
+            $cmsCategoryId = CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
         }
 
         return $this->redirectToIndexPageById($cmsCategoryId->getValue());
@@ -783,7 +783,7 @@ class CmsPageController extends FrameworkBundleAdminController
     {
         $routeParameters = [];
 
-        if ($cmsPageCategoryId !== CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID) {
+        if ($cmsPageCategoryId !== CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID) {
             $routeParameters = [
                 'id_cms_category' => $cmsPageCategoryId,
             ];

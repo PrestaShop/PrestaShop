@@ -28,9 +28,9 @@ namespace PrestaShop\PrestaShop\Core\CMS;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\BreadcrumbTree;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Class CmsPageViewDataProvider provides cms page view data for cms listing page.
@@ -58,7 +58,7 @@ final class CmsPageViewDataProvider implements CmsPageViewDataProviderInterface
     public function getView($cmsCategoryParentId)
     {
         return [
-            'root_category_id' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
+            'root_category_id' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
             'breadcrumb_tree' => $this->getBreadcrumbTree($cmsCategoryParentId),
         ];
     }

@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\AbstractCmsPageHandler
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler\GetCmsCategoryIdHandlerForRedirectionInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
@@ -48,7 +47,7 @@ final class GetCmsCategoryIdForRedirectionHandler extends AbstractCmsPageHandler
             $cms = $this->getCmsPageIfExistsById($query->getCmsPageId()->getValue());
             $categoryId = (int) $cms->id_cms_category;
         } catch (CmsPageException $exception) {
-            $categoryId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
+            $categoryId = CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
         }
 
         return new CmsPageCategoryId($categoryId);
