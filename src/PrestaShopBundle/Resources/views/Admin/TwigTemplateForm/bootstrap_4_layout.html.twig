@@ -712,18 +712,7 @@
 
     <label class="custom-file-label" for="{{ form.vars.id }}">
       {% set attributes = form.vars.attr %}
-
-      {% if (attributes.placeholder is not defined) %}
-
-        {% if (attributes.multiple is not defined) %}
-          {{ 'Choose file'|trans({}, 'Shop.Theme.Actions') }}
-        {% else %}
-          {{ 'Choose files'|trans({}, 'Shop.Theme.Actions') }}
-        {% endif %}
-
-      {% else %}
-        {{ attributes.placeholder }}
-      {% endif %}
+      {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
     </label>
   </div>
 {% endblock %}
