@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\AddonsConnectType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -44,7 +44,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email as EmployeeEmail;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Email as EmployeeEmail;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 

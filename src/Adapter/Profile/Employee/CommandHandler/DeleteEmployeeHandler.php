@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\DeleteEmployeeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\CannotDeleteEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\DeleteEmployeeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
 
 /**
  * Class DeleteEmployeeHandler.

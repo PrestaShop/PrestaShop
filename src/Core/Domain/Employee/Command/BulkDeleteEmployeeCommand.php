@@ -24,31 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 /**
- * Class BulkUpdateEmployeeStatusHandler.
+ * Class BulkDeleteEmployeeCommand.
  */
-final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler implements BulkUpdateEmployeeStatusHandlerInterface
+class BulkDeleteEmployeeCommand
 {
     /**
-     * {@inheritdoc}
+     * @var EmployeeId[]
      */
-    public function handle(BulkUpdateEmployeeStatusCommand $command)
+    private $employeeIds;
+
+    /**
+     * @param int[] $employeeIds
+     */
+    public function __construct(array $employeeIds)
     {
-        foreach ($command->getEmployeeIds() as $employeeId) {
-            $employee = new Employee($employeeId->getValue());
+        $this->setEmployeeIds($employeeIds);
+    }
 
-            $this->assertEmployeeWasFoundById($employeeId, $employee);
-            $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
-            $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
+    /**
+     * @return EmployeeId[]
+     */
+    public function getEmployeeIds()
+    {
+        return $this->employeeIds;
+    }
 
-            $employee->active = $command->getStatus()->isEnabled();
-            $employee->save();
+    /**
+     * @param int[] $employeeIds
+     */
+    private function setEmployeeIds(array $employeeIds)
+    {
+        foreach ($employeeIds as $employeeId) {
+            $this->employeeIds[] = new EmployeeId($employeeId);
         }
     }
 }
