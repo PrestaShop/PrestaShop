@@ -310,13 +310,9 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             $profilePermissionsForModules[$profile['id']] = Module::getModulesAccessesByIdProfile($profile['id']);
 
             uasort($profilePermissionsForModules[$profile['id']], function ($a, $b) {
-                if (!isset($a['name'])) {
-                    $a['name'] = '';
-                }
-
-                if (!isset($b['name'])) {
-                    $b['name'] = '';
-                }
+                // For the reference https://github.com/PrestaShop/PrestaShop/pull/12428/files#r267703322
+                $a['name'] = isset($a['name']) ? $a['name'] : '';
+                $b['name'] = isset($b['name']) ? $b['name'] : '';
 
                 return strnatcmp($a['name'], $b['name']);
             });
