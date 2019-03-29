@@ -3196,7 +3196,7 @@ class imageLib
   {
 
     //Ouverture du fichier en mode binaire
-    if (! $f1 = fopen($filename, "rb")) {
+    if (!$f1 = fopen($filename, "rb")) {
         return false;
     }
 
