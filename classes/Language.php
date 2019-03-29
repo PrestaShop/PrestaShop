@@ -1122,6 +1122,15 @@ class LanguageCore extends ObjectModel
     {
         $locale = $lang_pack['locale'];
         $sfContainer = SymfonyContainer::getInstance();
+        if (null === $sfContainer) {
+            $errors[] = Context::getContext()->getTranslator()->trans(
+                'Could not generate emails because Symfony container is unavailable',
+                array(),
+                'Admin.International.Notification'
+            );
+            return;
+        }
+
         /** @var MailThemeGenerator $mailGenerator */
         $mailGenerator = $sfContainer->get('prestashop.service.mail_theme_generator');
         $mailTheme = Configuration::get('PS_MAIL_THEME');
