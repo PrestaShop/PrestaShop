@@ -108,6 +108,7 @@
         "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony/symfony": ">=3.4.8",
         "tecnickcom/tcpdf": "^6.2.12",
+        "tijsverkoyen/css-to-inline-styles": "^2.2",
         "twig/twig": "^1.0||^2.0"
     },
     "conflict": {
