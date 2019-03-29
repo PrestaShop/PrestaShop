@@ -704,7 +704,7 @@
   <div class="custom-file">
     {% set attr = attr|merge({
       class: (attr.class|default('') ~ ' custom-file-input')|trim,
-      'data-multiple-files-text': '%count% files'|trans({}, 'Admin.Global'),
+      'data-multiple-files-text': '%count% file(s)'|trans({}, 'Admin.Global'),
       'data-locale': get_context_iso_code()
     }) -%}
 
