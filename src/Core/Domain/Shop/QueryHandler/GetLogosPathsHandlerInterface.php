@@ -24,12 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Theme\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths;
+use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
 
 /**
- * This query is responsible for using withing query bus to call its handler which returns theme logo, email, invoice
- * and favicon logos.
+ * Interface for service which handles GetLogos query
  */
-class GetThemeLogos
+interface GetLogosPathsHandlerInterface
 {
+    /**
+     * @param GetLogosPaths $query
+     *
+     * @return LogosPaths
+     */
+    public function handle(GetLogosPaths $query);
 }

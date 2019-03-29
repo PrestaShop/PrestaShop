@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Form\DTO;
 
 /**
  * Shop restriction object holds the shop ids for which restriction is being applied and the fields which are impacted

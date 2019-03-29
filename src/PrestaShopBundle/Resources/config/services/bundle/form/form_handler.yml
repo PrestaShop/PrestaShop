@@ -302,7 +302,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.currency.form_data_provider'
             -
-              'exchange_rates': 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+              'currency_exchange_rate': 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
             - 'Currency'
 
     prestashop.admin.shop_logos_settings.form_handler:
@@ -312,9 +312,8 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.improve.design.theme.shop_logos.form_data_provider'
             -
-              'options': 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
+              'shop_logos': 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
             - 'ShopLogo'
-
 
   # Entity form handler
     prestashop.admin.request_sql.form_handler:

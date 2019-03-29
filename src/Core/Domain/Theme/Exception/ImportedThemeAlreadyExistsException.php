@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
 
 /**
- * Class ImportedThemeAlreadyExistsException
+ * Thrown when trying to import already existing theme
  */
 class ImportedThemeAlreadyExistsException extends ThemeException
 {

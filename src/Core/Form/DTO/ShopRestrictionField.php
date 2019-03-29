@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Form\DTO;
 
 /**
  * Holds the field name for which the multi-store restriction checkbox has been checked or unchecked and the status if it

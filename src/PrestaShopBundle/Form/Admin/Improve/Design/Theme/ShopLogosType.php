@@ -26,11 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
-use FormInterface;
-use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
-use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestrictionField;
+use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
+use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestrictionField;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionCheckboxType;
-use PrestaShopBundle\Form\Admin\Type\ShopRestrictionSwitchType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;

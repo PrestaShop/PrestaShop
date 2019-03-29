@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 /**
- * Class CannotAdaptThemeToRTLLanguagesException
+ * Thrown when fails to adapt to RTL languages
  */
 class CannotAdaptThemeToRTLLanguagesException extends ThemeException
 {

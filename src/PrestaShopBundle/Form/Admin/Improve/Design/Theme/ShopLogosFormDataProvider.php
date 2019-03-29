@@ -31,8 +31,11 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\MultiStoreSettingsFormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
+use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
 
+/**
+ * {@inheritdoc}
+ */
 final class ShopLogosFormDataProvider implements FormDataProviderInterface
 {
     /**
@@ -63,7 +66,7 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
     public function getData()
     {
         return [
-            'options' => $this->themeMultiStoreSettingsFormDataProvider->getData(),
+            'shop_logos' => $this->themeMultiStoreSettingsFormDataProvider->getData(),
         ];
     }
 

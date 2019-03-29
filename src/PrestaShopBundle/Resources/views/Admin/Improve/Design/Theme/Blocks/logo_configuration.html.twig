@@ -1,34 +1,34 @@
 {#**
-  * 2007-2018 PrestaShop
-  *
-  * NOTICE OF LICENSE
-  *
-  * This source file is subject to the Open Software License (OSL 3.0)
-  * that is bundled with this package in the file LICENSE.txt.
-  * It is also available through the world-wide-web at this URL:
-  * https://opensource.org/licenses/OSL-3.0
-  * If you did not receive a copy of the license and are unable to
-  * obtain it through the world-wide-web, please send an email
-  * to license@prestashop.com so we can send you a copy immediately.
-  *
-  * DISCLAIMER
-  *
-  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-  * versions in the future. If you wish to customize PrestaShop for your
-  * needs please refer to http://www.prestashop.com for more information.
-  *
-  * @author    PrestaShop SA <contact@prestashop.com>
-  * @copyright 2007-2018 PrestaShop SA
-  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
-  * International Registered Trademark & Property of PrestaShop SA
-  *#}
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 <div class="card-group">
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
     {% block card_title %}
-      {{ form_widget(shopLogosForm.options.header_logo_is_restricted_to_shop) }} {{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}
+      {{ form_widget(shopLogosForm.shop_logos.header_logo_is_restricted_to_shop) }} {{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}
     {% endblock %}
     {% block card_content %}
       <p class="logo-card-description">
@@ -44,7 +44,7 @@
         >
       </div>
 
-      {{ ps.form_group_row(shopLogosForm.options.header_logo) }}
+      {{ ps.form_group_row(shopLogosForm.shop_logos.header_logo) }}
     {% endblock %}
   {% endembed %}
 
@@ -52,7 +52,7 @@
     {% block card_title %}
       <ul class="nav nav-pills" role="tablist">
         <li class="nav-item">
-          {{ form_widget(shopLogosForm.options.mail_logo_is_restricted_to_shop) }}
+          {{ form_widget(shopLogosForm.shop_logos.mail_logo_is_restricted_to_shop) }}
           <a class="nav-link active show d-inline-block"
              id="mail-tab"
              data-toggle="tab"
@@ -66,7 +66,7 @@
           </a>
         </li>
         <li class="nav-item">
-          {{ form_widget(shopLogosForm.options.invoice_logo_is_restricted_to_shop) }}
+          {{ form_widget(shopLogosForm.shop_logos.invoice_logo_is_restricted_to_shop) }}
           <a class="nav-link d-inline-block"
              id="invoice-tab"
              data-toggle="tab"
@@ -97,7 +97,7 @@
             >
           </div>
           <div class="input-in-tab">
-            {{ ps.form_group_row(shopLogosForm.options.mail_logo, {}, {'help': headerLogoPath == mailLogoPath ? 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') : '' }) }}
+            {{ ps.form_group_row(shopLogosForm.shop_logos.mail_logo, {}, {'help': headerLogoPath == mailLogoPath ? 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') : '' }) }}
           </div>
         </div>
         <div class="tab-pane" id="invoice-configuration" role="tabpanel" aria-labelledby="logo-tab">
@@ -114,7 +114,7 @@
             >
           </div>
           <div class="input-in-tab">
-            {{ ps.form_group_row(shopLogosForm.options.invoice_logo, {}, {'help': headerLogoPath == invoiceLogoPath ? 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') : '' }) }}
+            {{ ps.form_group_row(shopLogosForm.shop_logos.invoice_logo, {}, {'help': headerLogoPath == invoiceLogoPath ? 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') : '' }) }}
           </div>
         </div>
       </div>
@@ -123,7 +123,7 @@
 
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
     {% block card_title %}
-      {{ form_widget(shopLogosForm.options.favicon_is_restricted_to_shop) }} {{ 'Favicon'|trans({}, 'Admin.Design.Feature') }}
+      {{ form_widget(shopLogosForm.shop_logos.favicon_is_restricted_to_shop) }} {{ 'Favicon'|trans({}, 'Admin.Design.Feature') }}
     {% endblock %}
     {% block card_content %}
       <p class="logo-card-description">
@@ -141,7 +141,7 @@
 
       <div class="form-group row">
         <div class="col-sm">
-          {{ ps.form_widget_with_error(shopLogosForm.options.favicon) }}
+          {{ ps.form_widget_with_error(shopLogosForm.shop_logos.favicon) }}
           <small class="form-text">
             {{ 'Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!'|trans({'[1]': '<a href="https://addons.prestashop.com/create-favicon.php?pab=1" target="_blank">', '[/1]': '</a>'}, 'Admin.Design.Help')|raw }}
           </small>

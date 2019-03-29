@@ -27,11 +27,11 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
-use PrestaShop\PrestaShop\Core\Form\ValueObject\ShopRestriction;
+use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class UploadLogosCommand
+ * Uploads logo image files
  */
 class UploadLogosCommand
 {
