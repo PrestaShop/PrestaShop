@@ -123,6 +123,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     public function handleRequest(array $requestParams = array())
     {
         if (isset($requestParams['delivery_option'])) {
+            $this->setComplete(false);
             $this->getCheckoutSession()->setDeliveryOption(
                 $requestParams['delivery_option']
             );
@@ -139,7 +140,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             $this->getCheckoutSession()->setMessage($requestParams['delivery_message']);
         }
 
-        if ($this->step_is_reachable && isset($requestParams['confirmDeliveryOption'])) {
+        if ($this->isReachable() && isset($requestParams['confirmDeliveryOption'])) {
             // we're done if
             // - the step was reached (= all previous steps complete)
             // - user has clicked on "continue"
@@ -147,8 +148,12 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             // - the is a selected delivery option
             // - the module associated to the delivery option confirms
             $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
-            $this->step_is_complete =
-                !empty($deliveryOptions) && $this->getCheckoutSession()->getSelectedDeliveryOption() && $this->isModuleComplete($requestParams);
+            $this->setNextStepAsCurrent();
+            $this->setComplete(
+                !empty($deliveryOptions)
+                && $this->getCheckoutSession()->getSelectedDeliveryOption()
+                && $this->isModuleComplete($requestParams)
+            );
         }
 
         $this->setTitle($this->getTranslator()->trans('Shipping Method', array(), 'Shop.Theme.Checkout'));

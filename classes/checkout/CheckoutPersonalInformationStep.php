@@ -47,7 +47,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
     public function handleRequest(array $requestParameters = array())
     {
         // personal info step is always reachable
-        $this->step_is_reachable = true;
+        $this->setReachable(true);
 
         $this->registerForm
             ->fillFromCustomer(
@@ -60,23 +60,25 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         if (isset($requestParameters['submitCreate'])) {
             $this->registerForm->fillWith($requestParameters);
             if ($this->registerForm->submit()) {
-                $this->step_is_complete = true;
+                $this->setNextStepAsCurrent();
+                $this->setComplete(true);
             } else {
-                $this->step_is_complete = false;
+                $this->setComplete(false);
                 $this->setCurrent(true);
                 $this->getCheckoutProcess()->setHasErrors(true)->setNextStepReachable();
             }
         } elseif (isset($requestParameters['submitLogin'])) {
             $this->loginForm->fillWith($requestParameters);
             if ($this->loginForm->submit()) {
-                $this->step_is_complete = true;
+                $this->setNextStepAsCurrent();
+                $this->setComplete(true);
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
                 $this->show_login_form = true;
             }
         } elseif (array_key_exists('login', $requestParameters)) {
             $this->show_login_form = true;
-            $this->step_is_current = true;
+            $this->setCurrent(true);
         }
 
         $this->logged_in = $this
@@ -85,7 +87,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
             ->customerHasLoggedIn();
 
         if ($this->logged_in && !$this->getCheckoutSession()->getCustomer()->is_guest) {
-            $this->step_is_complete = true;
+            $this->setComplete(true);
         }
 
         $this->setTitle(
