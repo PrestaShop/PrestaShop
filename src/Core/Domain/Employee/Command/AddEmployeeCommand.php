@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Adds new employee with given data

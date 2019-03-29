@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;

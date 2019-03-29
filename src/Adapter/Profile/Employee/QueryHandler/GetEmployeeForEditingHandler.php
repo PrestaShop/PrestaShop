@@ -27,13 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EditableEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Handles command that gets employee for editing.

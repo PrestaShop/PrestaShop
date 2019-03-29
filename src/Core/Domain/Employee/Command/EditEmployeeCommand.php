@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Edit employee with given data.
@@ -169,13 +169,13 @@ class EditEmployeeCommand
     }
 
     /**
-     * @param Email $email
+     * @param string $email
      *
      * @return EditEmployeeCommand
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = new Email($email);
 
         return $this;
     }

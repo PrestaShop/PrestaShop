@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
@@ -133,7 +132,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         $command = (new EditEmployeeCommand($id))
             ->setFirstName(new FirstName($data['firstname']))
             ->setLastName(new LastName($data['lastname']))
-            ->setEmail(new Email($data['email']))
+            ->setEmail($data['email'])
             ->setIsSubscribedToNewsletter((bool) $data['optin'])
             ->setDefaultPageId((int) $data['default_page'])
             ->setLanguageId((int) $data['language'])
