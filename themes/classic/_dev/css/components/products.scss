@@ -493,10 +493,6 @@ li.product-flag {
   z-index: 2;
   top: 0;
   @include box-shadow-light;
-  &:not(.discount),
-  &:not(.on-sale) {
-      margin-top: 3.75rem;
-  }
   &.online-only {
     top: 25.5rem;
     right: 0;
@@ -513,6 +509,9 @@ li.product-flag {
   &.discount {
     display: none;
   }
+  &:not(.discount):not(.on-sale)~li.product-flag {
+    margin-top: 3.75rem;
+  }
   &.on-sale {
     background: $brand-secondary;
     width: 100%;
@@ -520,8 +519,8 @@ li.product-flag {
     margin: 0;
     left:0;
     top:0;
-    margin-top: 0;
-  } 
+    margin-top: 0 !important;
+  }
 }
 
 .product-customization {

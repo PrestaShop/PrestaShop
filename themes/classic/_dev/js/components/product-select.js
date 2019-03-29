@@ -49,7 +49,7 @@ export default class ProductSelect {
     });
 
     if($onsale.length && $('#product').length){
-      $('.new').css('top',$onsale.height() + FLAG_MARGIN);
+      $('.new').css('top',$onsale.height() + 2 * FLAG_MARGIN);
     }
     if ($('.js-modal-product-images li').length <= MAX_THUMBS) {
       $arrows.css('opacity', '.2');

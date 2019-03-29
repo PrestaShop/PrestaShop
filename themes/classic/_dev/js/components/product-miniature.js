@@ -33,11 +33,11 @@ export default class ProductMinitature {
       const newElems = $(element).find('.new');
 
       if (discountElems.length) {
-        newElems.css('top', discountElems.height() * 2 + FLAG_MARGIN);
+        newElems.css('top', discountElems.height() * 1.5 + FLAG_MARGIN);
         discountElems.css('top', -$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
 
         if ($(element).find('.pack').length) {
-          $(element).find('.pack').css('top', discountElems.height() * 2 + FLAG_MARGIN);
+          $(element).find('.pack').css('top', discountElems.height() * 1.5 + FLAG_MARGIN);
         }
       }
 
