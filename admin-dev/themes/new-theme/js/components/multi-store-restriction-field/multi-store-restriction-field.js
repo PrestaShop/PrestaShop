@@ -49,7 +49,7 @@ export default class MultiStoreRestrictionField {
   /**
    * Toggles the checkbox field and enables or disables its related field.
    *
-   * @param e
+   * @param {Event} e
    * @private
    */
   _multiStoreRestrictionCheckboxFieldChangeEvent(e) {
@@ -61,7 +61,7 @@ export default class MultiStoreRestrictionField {
   /**
    * Mass updates multi-store checkbox fields - it enables or disabled the switch and after that it calls the function
    * which handles the toggle update related form field by its current state.
-   * @param e
+   * @param {Event} e
    * @private
    */
   _multiStoreRestrictionSwitchFieldChangeEvent(e) {

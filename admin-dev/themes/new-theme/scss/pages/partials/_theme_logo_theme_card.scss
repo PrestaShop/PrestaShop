@@ -10,7 +10,7 @@
 @mixin card-width() {
   max-width: 24.1875rem;
 
-  @include media-breakpoint-down(sm){
+  @include media-breakpoint-down(sm) {
     max-width: 100%;
   }
 }
@@ -69,7 +69,6 @@
     .actions-container {
       width: 100%;
       text-align: center;
-
       position: absolute;
       top: 80%;
       left: 50%;
