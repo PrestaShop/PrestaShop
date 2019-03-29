@@ -203,4 +203,4 @@ services:
   prestashop.core.form.choice_provider.mail_themes:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailThemeChoiceProvider'
     arguments:
-      - '@PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface'
+      - '@prestashop.core.mail_template.theme_catalog'
