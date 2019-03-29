@@ -24,31 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler;
 
-use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
 
 /**
- * Class BulkUpdateEmployeeStatusHandler.
+ * Interface ToggleEmployeeStatusHandlerInterface.
  */
-final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler implements BulkUpdateEmployeeStatusHandlerInterface
+interface ToggleEmployeeStatusHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param ToggleEmployeeStatusCommand $command
      */
-    public function handle(BulkUpdateEmployeeStatusCommand $command)
-    {
-        foreach ($command->getEmployeeIds() as $employeeId) {
-            $employee = new Employee($employeeId->getValue());
-
-            $this->assertEmployeeWasFoundById($employeeId, $employee);
-            $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
-            $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
-
-            $employee->active = $command->getStatus()->isEnabled();
-            $employee->save();
-        }
-    }
+    public function handle(ToggleEmployeeStatusCommand $command);
 }

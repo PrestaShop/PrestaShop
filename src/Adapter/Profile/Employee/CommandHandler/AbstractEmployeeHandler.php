@@ -29,11 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 use Context;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\CannotDeleteWarehouseManagerException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteWarehouseManagerException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use Warehouse;
 
 /**
