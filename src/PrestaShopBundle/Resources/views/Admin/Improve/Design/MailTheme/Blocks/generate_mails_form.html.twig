@@ -59,7 +59,7 @@
             <label class="form-control-label">
               {{ ps.label_with_help(
                 ('Select the theme you want to overwrite'|trans),
-              ('Core email templates are stored in the mails folder but can be overriden by theme proper mails folder. Use this option to overwrite mails from a theme.'|trans({}, 'Admin.MailTheme.Help'))
+              ('Core email templates are stored in the mails folder but can be overriden by theme proper mails folder. Use this option to overwrite mails from a theme.'|trans({}, 'Admin.Design.Help'))
               ) }}
             </label>
             <div class="col-sm">
@@ -71,7 +71,7 @@
           <div class="form-group row">
             {{ ps.label_with_help(
               ('Overwrite templates'|trans),
-            ('By default, existing email template files are not modified to avoid erase your modifications. Enable this option to force the overwrite.'|trans({}, 'Admin.MailTheme.Help'))
+            ('By default, existing email template files are not modified to avoid erase your modifications. Enable this option to force the overwrite.'|trans({}, 'Admin.Design.Help'))
             ) }}
             <div class="col-sm">
               {{ form_errors(generateMailsForm.overwrite) }}
