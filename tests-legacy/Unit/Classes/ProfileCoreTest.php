@@ -31,12 +31,41 @@ use Profile;
 
 class ProfileCoreTest extends TestCase
 {
+    private $accessType = [
+        'view',
+        'add',
+        'edit',
+        'delete',
+    ];
+
     public function testGetAccess()
     {
-        $filePath = __DIR__ . '/../../resources/fixtures/dumped_Profile_getProfileAccesses.json';
-        $this->assertSame(
-            json_decode(file_get_contents($filePath), true),
-            Profile::getProfileAccesses(2, 'id_tab')
-        );
+        $idProfile = 2;
+        foreach (Profile::getProfileAccesses($idProfile, 'id_tab') as $tab) {
+            /*
+            Expected:
+            Array &13 (
+                'id_tab' => '5'
+                'class_name' => 'AdminInvoices'
+                'id_profile' => 2
+                'view' => '1'
+                'add' => '1'
+                'edit' => '1'
+                'delete' => '1'
+            )
+            */
+
+            $this->assertTrue(is_array($tab));
+
+            $this->assertArrayHasKey('id_tab', $tab);
+            $this->assertFalse(empty($tab['class_name']));
+            $this->assertSame($idProfile, $tab['id_profile']);
+
+            // For each access type, we expect "granted" or "refused" boolean values
+            foreach ($this->accessType as $type) {
+                $this->assertArrayHasKey($type, $tab);
+                $this->assertTrue(in_array($tab[$type], ['0', '1']));
+            }
+        }
     }
 }
