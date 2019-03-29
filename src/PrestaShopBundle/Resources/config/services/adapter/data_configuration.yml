@@ -245,4 +245,4 @@ services:
       class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailThemeConfiguration'
       arguments:
         - '@prestashop.adapter.legacy.configuration'
-        - '@PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface'
+        - '@prestashop.core.mail_template.theme_catalog'
