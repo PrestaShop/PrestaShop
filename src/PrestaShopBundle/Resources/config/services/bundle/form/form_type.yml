@@ -772,7 +772,6 @@ services:
         tags:
             - { name: form.type }
 
-<<<<<<< HEAD
     form.type.international.tax:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType'
         arguments:

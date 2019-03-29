@@ -46,6 +46,7 @@ class CmsPageCategoryId
     public function __construct($cmsPageCategoryId)
     {
         $this->assertIsIntegerGreaterThanZero($cmsPageCategoryId);
+        $this->cmsPageCategoryId = $cmsPageCategoryId;
     }
 
     /**
