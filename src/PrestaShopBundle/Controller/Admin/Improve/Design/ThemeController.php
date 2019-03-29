@@ -209,7 +209,7 @@ class ThemeController extends AbstractAdminController
         $importThemeForm = $this->createForm(ImportThemeType::class);
         $importThemeForm->handleRequest($request);
 
-        if ($importThemeForm->isSubmitted()) {
+        if ($importThemeForm->isSubmitted() && $importThemeForm->isValid()) {
             $data = $importThemeForm->getData();
             $importSource = null;
 
