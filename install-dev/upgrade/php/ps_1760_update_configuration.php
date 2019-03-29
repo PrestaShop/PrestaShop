@@ -29,6 +29,6 @@
  */
 function ps_1760_update_configuration()
 {
-    Configuration::updateValue('PS_MAIL_THEME', 'classic');
+    Configuration::updateValue('PS_MAIL_THEME', 'modern');
     Configuration::updateValue('PS_CATALOG_MODE_WITH_PRICES', 0);
 }
