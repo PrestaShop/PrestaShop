@@ -30,17 +30,17 @@ use ArrayIterator;
 use IteratorAggregate;
 
 /**
- * Class CmsPageCategoriesForBreadcrumb is a DTO which is used in building cms page categories breadcrumb.
+ * Transfers CMS Page Categories used for breadrumb
  */
-class BreadcrumbTree implements IteratorAggregate
+class Breadcrumb implements IteratorAggregate
 {
     /**
-     * @var BreadcrumbTreeItem[]
+     * @var BreadcrumbItem[]
      */
     private $cmsPageCategories;
 
     /**
-     * @param BreadcrumbTreeItem[] $cmsPageCategories
+     * @param BreadcrumbItem[] $cmsPageCategories
      */
     public function __construct(array $cmsPageCategories)
     {

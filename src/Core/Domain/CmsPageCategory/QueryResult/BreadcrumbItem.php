@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 /**
  * Class CmsPageCategory is responsible for providing cms page id and name combination.
  */
-class BreadcrumbTreeItem
+class BreadcrumbItem
 {
     /**
      * @var CmsPageCategoryId
