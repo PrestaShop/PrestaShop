@@ -126,7 +126,7 @@ class CheckoutProcessCore implements RenderableInterface
 
     public function getDataToPersist()
     {
-        $data = array();
+        $data = [];
         foreach ($this->getSteps() as $step) {
             $defaultStepData = array(
                 'step_is_reachable' => $step->isReachable(),
@@ -165,6 +165,7 @@ class CheckoutProcessCore implements RenderableInterface
 
                 break;
             }
+
             if (!$step->isComplete()) {
                 break;
             }

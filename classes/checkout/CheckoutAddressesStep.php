@@ -67,7 +67,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         if (array_key_exists('use_same_address', $requestParams)) {
             $this->use_same_address = (bool) $requestParams['use_same_address'];
             if (!$this->use_same_address) {
-                $this->step_is_current = true;
+                $this->setComplete(true);
             }
         }
 
@@ -96,7 +96,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                     $this->use_same_address = true;
                 }
             }
-            $this->step_is_current = true;
+            $this->setCurrent(true);
         }
 
         // Can't really hurt to set the firstname and lastname.
@@ -108,7 +108,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         if (isset($requestParams['saveAddress'])) {
             $saved = $this->addressForm->fillWith($requestParams)->submit();
             if (!$saved) {
-                $this->step_is_current = true;
+                $this->setCurrent(true);
                 $this->getCheckoutProcess()->setHasErrors(true);
                 if ($requestParams['saveAddress'] === 'delivery') {
                     $this->show_delivery_address_form = true;
@@ -131,7 +131,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             }
         } elseif (isset($requestParams['newAddress'])) {
             // while a form is open, do not go to next step
-            $this->step_is_current = true;
+            $this->setCurrent(true);
             if ($requestParams['newAddress'] === 'delivery') {
                 $this->show_delivery_address_form = true;
             } else {
@@ -141,7 +141,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->form_has_continue_button = $this->use_same_address;
         } elseif (isset($requestParams['editAddress'])) {
             // while a form is open, do not go to next step
-            $this->step_is_current = true;
+            $this->setCurrent(true);
             if ($requestParams['editAddress'] === 'delivery') {
                 $this->show_delivery_address_form = true;
             } else {
@@ -178,10 +178,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             }
         }
 
-        if (!$this->step_is_complete) {
-            $this->step_is_complete = isset($requestParams['confirm-addresses']) &&
+        if (isset($requestParams['confirm-addresses'])) {
+            $this->setNextStepAsCurrent();
+            $this->setComplete(
                 $this->getCheckoutSession()->getIdAddressInvoice() &&
-                $this->getCheckoutSession()->getIdAddressDelivery();
+                $this->getCheckoutSession()->getIdAddressDelivery()
+            );
         }
 
         $addresses_count = $this->getCheckoutSession()->getCustomerAddressesCount();
@@ -190,7 +192,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->show_delivery_address_form = true;
         } elseif ($addresses_count < 2 && !$this->use_same_address) {
             $this->show_invoice_address_form = true;
-            $this->step_is_complete = false;
+            $this->setComplete(false);
         }
 
         if ($this->show_invoice_address_form) {
