@@ -178,7 +178,11 @@
 
     .bulk-row {
       font-size: 12px;
+      font-weight: 600;
       border-bottom: .125rem solid #25b9d7;
+      font-family: Open-sans, sans-serif;
+      padding-bottom: 10px;
+      white-space: nowrap;
     }
   }
 </style>
