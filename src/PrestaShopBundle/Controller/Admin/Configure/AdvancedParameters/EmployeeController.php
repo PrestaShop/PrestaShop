@@ -163,10 +163,11 @@ class EmployeeController extends FrameworkBundleAdminController
     public function bulkStatusUpdateAction(Request $request, $newStatus)
     {
         $employeeIds = $request->request->get('employee_employee_bulk');
+        $isEnabled = $newStatus === 'enabled';
 
         try {
             $this->getCommandBus()->handle(
-                new BulkUpdateEmployeeStatusCommand($employeeIds, new EmployeeStatus($newStatus))
+                new BulkUpdateEmployeeStatusCommand($employeeIds, $isEnabled)
             );
 
             $this->addFlash(
