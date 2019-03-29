@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeStatus;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
