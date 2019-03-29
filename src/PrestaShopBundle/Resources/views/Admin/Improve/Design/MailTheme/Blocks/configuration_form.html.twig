@@ -29,7 +29,7 @@
       {{ form_start(mailThemeConfigurationForm, {'action': path('admin_mail_theme_save_configuration')}) }}
       <div class="card">
         <h3 class="card-header">
-          <i class="material-icons">settings</i> {{ 'Configuration'|trans }}
+          <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Admin.Global') }}
         </h3>
 
         <div class="card-block row">
