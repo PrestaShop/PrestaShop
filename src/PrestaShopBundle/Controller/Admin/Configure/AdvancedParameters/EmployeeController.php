@@ -136,7 +136,7 @@ class EmployeeController extends FrameworkBundleAdminController
     public function toggleStatusAction($employeeId)
     {
         try {
-            $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand(new EmployeeId($employeeId)));
+            $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand((int) $employeeId));
 
             $this->addFlash(
                 'success',
@@ -194,7 +194,7 @@ class EmployeeController extends FrameworkBundleAdminController
     public function deleteAction($employeeId)
     {
         try {
-            $this->getCommandBus()->handle(new DeleteEmployeeCommand(new EmployeeId($employeeId)));
+            $this->getCommandBus()->handle(new DeleteEmployeeCommand((int) $employeeId));
 
             $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         } catch (EmployeeException $e) {

@@ -129,13 +129,13 @@ class EditEmployeeCommand
     }
 
     /**
-     * @param FirstName $firstName
+     * @param string $firstName
      *
      * @return EditEmployeeCommand
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = $firstName;
+        $this->firstName = new FirstName($firstName);
 
         return $this;
     }
@@ -149,13 +149,13 @@ class EditEmployeeCommand
     }
 
     /**
-     * @param LastName $lastName
+     * @param string $lastName
      *
      * @return EditEmployeeCommand
      */
     public function setLastName($lastName)
     {
-        $this->lastName = $lastName;
+        $this->lastName = new LastName($lastName);
 
         return $this;
     }
@@ -309,13 +309,13 @@ class EditEmployeeCommand
     }
 
     /**
-     * @param Password $plainPassword
+     * @param string $plainPassword
      *
      * @return EditEmployeeCommand
      */
-    public function setPlainPassword(Password $plainPassword)
+    public function setPlainPassword($plainPassword)
     {
-        $this->plainPassword = $plainPassword;
+        $this->plainPassword = new Password($plainPassword);
 
         return $this;
     }

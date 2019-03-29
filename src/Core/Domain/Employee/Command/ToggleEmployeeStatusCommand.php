@@ -39,11 +39,11 @@ class ToggleEmployeeStatusCommand
     private $employeeId;
 
     /**
-     * @param EmployeeId $employeeId
+     * @param int $employeeId
      */
-    public function __construct(EmployeeId $employeeId)
+    public function __construct($employeeId)
     {
-        $this->employeeId = $employeeId;
+        $this->employeeId = new EmployeeId($employeeId);
     }
 
     /**

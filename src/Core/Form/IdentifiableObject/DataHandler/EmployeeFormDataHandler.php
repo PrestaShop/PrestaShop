@@ -130,8 +130,8 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data)
     {
         $command = (new EditEmployeeCommand($id))
-            ->setFirstName(new FirstName($data['firstname']))
-            ->setLastName(new LastName($data['lastname']))
+            ->setFirstName($data['firstname'])
+            ->setLastName($data['lastname'])
             ->setEmail($data['email'])
             ->setIsSubscribedToNewsletter((bool) $data['optin'])
             ->setDefaultPageId((int) $data['default_page'])
@@ -147,10 +147,10 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
                     $id
                 );
 
-                $command->setPlainPassword(new Password($data['change_password']['new_password']));
+                $command->setPlainPassword($data['change_password']['new_password']);
             }
         } elseif (isset($data['password'])) {
-            $command->setPlainPassword(new Password($data['password']));
+            $command->setPlainPassword($data['password']);
         }
 
         if (isset($data['shop_association'])) {
