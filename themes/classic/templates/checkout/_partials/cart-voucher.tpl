@@ -71,7 +71,7 @@
             </li>
           {/foreach}
           </ul>
-        {/if}
+          {/if}
           <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">
             {l s='Close' d='Shop.Theme.Checkout'}
           </a>
