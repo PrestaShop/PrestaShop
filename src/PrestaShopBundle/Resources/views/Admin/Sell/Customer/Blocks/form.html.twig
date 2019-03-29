@@ -123,7 +123,7 @@
         </div>
       </div>
       <div class="card-footer">
-        {% if displayInIframe == true %}
+        {% if (displayInIframe is defined and displayInIframe == true) %}
           <a href="javascript:window.history.back();" class="btn btn-outline-secondary">
         {% else %}
           <a href="{{ path('admin_customers_index') }}" class="btn btn-outline-secondary">
