@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
+use PrestaShopBundle\Service\MailTheme\MailThemeGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -77,8 +77,8 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
 
         $output->writeln(sprintf('Exporting mail with theme %s for language %s', $themeName, $locale));
 
-        /** @var GenerateMailTemplatesService $generator */
-        $generator = $this->getContainer()->get('prestashop.service.generate_mail_templates');
+        /** @var MailThemeGenerator $generator */
+        $generator = $this->getContainer()->get('prestashop.service.mail_theme_generator');
         $generator
             ->setCoreMailsFolder(!empty($coreOutputFolder) ? $coreOutputFolder : $generator->getCoreMailsFolder())
             ->setModulesMailFolder(!empty($modulesOutputFolder) ? $modulesOutputFolder : $generator->getModulesMailFolder())

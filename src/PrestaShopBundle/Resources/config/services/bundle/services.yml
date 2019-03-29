@@ -108,8 +108,8 @@ services:
         arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']
 
     # Mail generator service
-    prestashop.service.generate_mail_templates:
-        class: PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService
+    prestashop.service.mail_theme_generator:
+        class: PrestaShopBundle\Service\MailTheme\MailThemeGenerator
         arguments:
           - '@prestashop.core.admin.lang.repository'
           - '@prestashop.core.mail_template.theme_catalog'
