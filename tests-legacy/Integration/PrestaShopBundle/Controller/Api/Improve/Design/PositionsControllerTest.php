@@ -27,6 +27,7 @@
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api\Improve\Design;
 
 use Cache;
+use Db;
 use Hook;
 use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
 use Module;
@@ -51,6 +52,12 @@ class PositionsControllerTest extends WebTestCase
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
+
+        // Unregister all modules hooked on displayHome
+        Db::getInstance()->execute('
+            DELETE FROM `' . _DB_PREFIX_ . 'hook_module`
+            WHERE `id_hook` = '. (int) Hook::getIdByName('displayHome')
+        );
 
         //We use modules present in tests-legacy/resources/modules to be independent with the external API
         //We install two modules that are not present in the test db to be sure every step of the install performs correctly
