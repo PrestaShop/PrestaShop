@@ -144,6 +144,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Description', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'description',
+                    'sortable' => false,
                 ])
             )
             ->add(
@@ -174,7 +175,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                             'field' => 'position',
                             'id_field' => 'id_category',
                             'id_parent_field' => 'id_parent',
-                            'update_route' => 'AdminCategories',
+                            'update_route' => 'admin_categories_update_position',
                         ])
                 )
                 ->addBefore('id_category', new DraggableColumn('position_drag'))

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
@@ -38,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
  *
  * @internal
  */
-final class AddCategoryHandler extends AbstractCategoryHandler implements AddCategoryHandlerInterface
+final class AddCategoryHandler extends AbstractObjectModelHandler implements AddCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -91,16 +92,20 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        if ($command->getAssociatedShopIds()) {
-            $this->addShopAssociation($command->getAssociatedShopIds());
+        if (false === $category->validateFields(false)) {
+            throw new CategoryConstraintException('Invalid category data');
         }
 
-        if (false === $category->validateFields(false)) {
+        if (false === $category->validateFieldsLang(false)) {
             throw new CategoryConstraintException('Invalid category data');
         }
 
         if (false === $category->add()) {
             throw new CannotAddCategoryException('Failed to add new category.');
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
 
         return $category;

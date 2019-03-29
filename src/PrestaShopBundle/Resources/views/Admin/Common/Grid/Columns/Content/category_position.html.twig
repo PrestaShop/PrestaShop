@@ -29,7 +29,7 @@
          data-id="{{ record[column.options.id_field] }}"
          data-id-parent="{{ record[column.options.id_parent_field] }}"
          data-position="{{ record[column.options.field] }}"
-         data-position-update-url="{{ getAdminLink(column.options.update_route) }}"
+         data-position-update-url="{{ path(column.options.update_route) }}"
          data-pagination-offset="{{ grid.pagination.offset }}"
     >
     <span class="js-position position">

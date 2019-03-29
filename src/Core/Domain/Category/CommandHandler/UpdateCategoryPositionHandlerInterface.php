@@ -24,12 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Interface for service that updates category position
+ */
+interface UpdateCategoryPositionHandlerInterface
+{
+    /**
+     * @param UpdateCategoryPositionCommand $command
+     */
+    public function handle(UpdateCategoryPositionCommand $command);
+}
