@@ -134,7 +134,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
         $qb->andWhere('cs.`id_shop` IN (:shops)');
-        $qb->andWhere('cl.`id_lang` = (:lang)');
+        $qb->andWhere('cl.`id_lang` = :lang');
         $qb->andWhere('c.`deleted` = 0');
 
         $qb->setParameter('shops', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
