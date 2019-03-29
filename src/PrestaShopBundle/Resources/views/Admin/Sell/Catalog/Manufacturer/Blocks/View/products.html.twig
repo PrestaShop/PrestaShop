@@ -89,18 +89,9 @@
             <table class="table">
               <thead>
                 <tr>
-                  {% if product.reference is not empty %}
-                    <th>{{ 'Ref:'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  {% endif %}
-
-                  {% if product.ean13 is not empty %}
-                    <th>{{ 'EAN13:'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  {% endif %}
-
-                  {% if product.upc is not empty %}
-                    <th>{{ 'UPC:'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                  {% endif %}
-
+                  <th>{{ 'Ref:'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                  <th>{{ 'EAN13:'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                  <th>{{ 'UPC:'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   {% if isStockManagementEnabled %}
                     <th>{{ 'Qty:'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   {% endif %}
@@ -108,18 +99,9 @@
               </thead>
               <tbody>
                 <tr>
-                  {% if product.reference is not empty %}
-                    <td>{{ product.reference }}</td>
-                  {% endif %}
-
-                  {% if product.ean13 is not empty %}
-                    <td>{{ product.ean13 }}</td>
-                  {% endif %}
-
-                  {% if product.upc is not empty %}
-                    <td>{{  product.upc }}</td>
-                  {% endif %}
-
+                  <td>{{ product.reference }}</td>
+                  <td>{{ product.ean13 }}</td>
+                  <td>{{  product.upc }}</td>
                   {% if isStockManagementEnabled %}
                     <td>{{ product.quantity }}</td>
                   {% endif %}
