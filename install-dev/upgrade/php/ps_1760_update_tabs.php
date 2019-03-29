@@ -52,14 +52,4 @@ function ps_1760_update_tabs()
             'UPDATE `'._DB_PREFIX_.'tab` SET `active`= 1 WHERE `class_name` = "' . $className . '"'
         );
     }
-
-    // STEP 2: Reorder module menu links
-    $adminParentModuleTabId = Db::getInstance()->getValue(
-        'SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminParentModulesSf"'
-    );
-    foreach (array('AdminModulesSf', 'AdminParentModulesCatalog', 'AdminModules') as $key => $className) {
-        Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'tab` SET `id_parent`= ' . (int) $adminParentModuleTabId . ', position = '. $key . ' WHERE `class_name` = "' . $className . '"'
-        );
-    }
 }
