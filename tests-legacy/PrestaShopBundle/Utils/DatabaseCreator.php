@@ -64,6 +64,8 @@ class DatabaseCreator
         ));
         $install->installFixtures();
         $install->installTheme();
+        $language = new \Language(1);
+        \Context::getContext()->language = $language;
         $install->installModules();
 
         DatabaseDump::create();
