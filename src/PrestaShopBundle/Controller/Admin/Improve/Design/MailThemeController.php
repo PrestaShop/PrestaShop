@@ -67,15 +67,18 @@ class MailThemeController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
+        /** @var ThemeCatalogInterface $themeCatalog */
+        $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
+        $mailThemes = $themeCatalog->listThemes();
 
         return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Mail Theme', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailThemeConfigurationForm' => $this->getMailThemeFormHandler()->getForm()->createView(),
             'generateMailsForm' => $generateThemeMailsForm->createView(),
+            'mailThemes' => $mailThemes,
         ]);
     }
 
@@ -188,6 +191,32 @@ class MailThemeController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_mail_theme_index');
+    }
+
+    /**
+     * @param Request $request
+     * @param string $themeName
+     *
+     * @return Response
+     *
+     * @throws InvalidArgumentException
+     */
+    public function previewThemeAction(Request $request, $themeName)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        /** @var ThemeCatalogInterface $themeCatalog */
+        $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
+        /** @var ThemeInterface $mailTheme */
+        $mailTheme = $themeCatalog->getByName($themeName);
+
+        return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/preview.html.twig', [
+            'layoutHeaderToolbarBtn' => [],
+            'layoutTitle' => $this->trans('Preview Theme %s', 'Admin.Navigation.Menu', [$mailTheme->getName()]),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'mailTheme' => $mailTheme,
+        ]);
     }
 
     /**
