@@ -357,7 +357,7 @@
 								<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="60" height="60" />
 							</span>
 						</li>
-						<li class="text-left text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{l s='Welcome back' d='Admin.Navigation.Header'} {$employee->firstname}</li>
+						<li class="text-left text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{l s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</li>
 						<li class="employee-wrapper-profile"><a class="admin-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"><i class="material-icons">settings</i> {l s='Your profile' d='Admin.Navigation.Header'}</a></li>
 						<li class="divider"></li>
 						<li><a href="{l s='https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17
