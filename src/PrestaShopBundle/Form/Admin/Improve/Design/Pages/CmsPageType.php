@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -40,7 +41,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Defines Improve > Design > Pages cms page form
@@ -106,14 +106,8 @@ class CmsPageType extends AbstractType
                         'class' => 'js-copier-source-title',
                     ],
                     'constraints' => [
-                        //@todo: typedRegexConstraint generic_name PR #12735
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [],
-                                'Admin.Notifications.Error'
-                            ),
+                        new TypedRegexConstraint([
+                            'type' => 'generic_name',
                         ]),
                         new Length([
                             'max' => 255,
@@ -130,14 +124,8 @@ class CmsPageType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        //@todo: typedRegexConstraint generic_name PR #12735
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [],
-                                'Admin.Notifications.Error'
-                            ),
+                        new TypedRegexConstraint([
+                            'type' => 'generic_name',
                         ]),
                         new Length([
                             'max' => 255,
@@ -154,14 +142,8 @@ class CmsPageType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        //@todo: typedRegexConstraint generic_name PR #12735
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [],
-                                'Admin.Notifications.Error'
-                            ),
+                        new TypedRegexConstraint([
+                            'type' => 'generic_name',
                         ]),
                     ],
                 ],
@@ -175,14 +157,8 @@ class CmsPageType extends AbstractType
                         'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
                     ],
                     'constraints' => [
-                        //@todo: typedRegexConstraint generic_name PR #12735
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [],
-                                'Admin.Notifications.Error'
-                            ),
+                        new TypedRegexConstraint([
+                            'type' => 'generic_name',
                         ]),
                         new Length([
                             'max' => 512,
@@ -237,15 +213,6 @@ class CmsPageType extends AbstractType
                             'message' => $this->translator->trans(
                                 '%s is invalid.',
                                 [],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]),
-                        new Length([
-                            //@todo: according to legacy. Is there a reason for this???
-                            'max' => 3999999999999,
-                            'maxMessage' => $this->translator->trans(
-                                'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 3999999999999],
                                 'Admin.Notifications.Error'
                             ),
                         ]),

@@ -174,7 +174,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_cms_pages_index');
             }
         } catch (DomainException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getCmsPageErrorByExceptionType($e));
         }
 
         return $this->render('PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig', [
@@ -209,7 +209,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_cms_pages_index');
             }
         } catch (DomainException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getCmsPageErrorByExceptionType($e));
 
             if ($e instanceof CmsPageNotFoundException) {
                 return $this->redirectToRoute('admin_cms_pages_index');
@@ -762,11 +762,6 @@ class CmsPageController extends FrameworkBundleAdminController
         return $redirectResponse;
     }
 
-    public function editCmsAction()
-    {
-        //todo: implement
-    }
-
     /**
      * Gets cms page category form builder.
      *
@@ -1076,11 +1071,11 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Gets user friendly error message by exception.
      *
-     * @param CmsPageException $exception
+     * @param DomainException $exception
      *
      * @return string
      */
-    private function getCmsPageErrorByExceptionType(CmsPageException $exception)
+    private function getCmsPageErrorByExceptionType(DomainException $exception)
     {
         $exceptionTypeDictionary = [
             CannotToggleCmsPageException::class => $this->trans(
@@ -1114,15 +1109,5 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->getFallbackErrorMessage($exceptionType, $exception->getCode());
-    }
-
-    /**
-     * Gets user friendly error messages
-     *
-     * @return array
-     */
-    private function getErrorMessages()
-    {
-        return [];
     }
 }
