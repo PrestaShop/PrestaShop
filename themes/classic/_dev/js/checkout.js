@@ -55,9 +55,9 @@ function toggleImage() {
   $('.card-block .cart-summary-products p a').on('click', function (icon) {
     icon = $(this).find('i.material-icons');
     if (icon.text() == "expand_more") { 
-      icon.text("expand_less"); 
+      icon.text('expand_less'); 
     } else { 
-      icon.text("expand_more"); 
+      icon.text('expand_more'); 
     }
   });
 }
