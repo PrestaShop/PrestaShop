@@ -177,12 +177,16 @@
     }
 
     .bulk-row {
-      font-size: 12px;
-      font-weight: 600;
-      border-bottom: .125rem solid #25b9d7;
-      font-family: Open-sans, sans-serif;
       padding-bottom: 10px;
-      white-space: nowrap;
+      border-bottom: .125rem solid #25b9d7;
+      strong {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: Open-sans, sans-serif;
+        white-space: nowrap;
+        padding-bottom: 5px;
+      }
     }
   }
 </style>
