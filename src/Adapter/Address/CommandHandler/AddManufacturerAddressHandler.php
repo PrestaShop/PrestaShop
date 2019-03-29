@@ -50,7 +50,7 @@ final class AddManufacturerAddressHandler implements AddManufacturerAddressHandl
         $address = $this->createAddressFromCommand($command);
 
         try {
-            if (false === $address->validateFields(false) || false === $address->validateLangs(false)) {
+            if (false === $address->validateFields(false) || false === $address->validateFieldsLang(false)) {
                 throw new AddressException('Address contains invalid field values');
             }
             if (false === $address->add()) {
