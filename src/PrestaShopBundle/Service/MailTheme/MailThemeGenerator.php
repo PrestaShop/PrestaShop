@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\MailTemplate;
+namespace PrestaShopBundle\Service\MailTheme;
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
  * It is also defined as a Symfony service with default parameters so that mails
  * are exported in the appropriate folders.
  */
-class GenerateMailTemplatesService
+class MailThemeGenerator
 {
     /** @var LanguageRepositoryInterface */
     private $languageRepository;
