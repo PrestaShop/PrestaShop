@@ -50,7 +50,7 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
         $cms = $this->createCmsFromCommand($command);
 
         try {
-            if (false === $cms->validateFields(false)) {
+            if (false === $cms->validateFields(false) || false === $cms->validateFieldsLang(false)) {
                 throw new CmsPageException('Cms page contains invalid field values');
             }
             if (false === $cms->update()) {
