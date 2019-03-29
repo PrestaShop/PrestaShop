@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeStatus;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 /**
@@ -35,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 class BulkUpdateEmployeeStatusCommand
 {
     /**
-     * @var EmployeeStatus
+     * @var bool
      */
     private $status;
 
@@ -46,9 +45,9 @@ class BulkUpdateEmployeeStatusCommand
 
     /**
      * @param int[] $employeeIds
-     * @param EmployeeStatus $status
+     * @param bool $status
      */
-    public function __construct(array $employeeIds, EmployeeStatus $status)
+    public function __construct(array $employeeIds, $status)
     {
         $this->status = $status;
 
@@ -56,7 +55,7 @@ class BulkUpdateEmployeeStatusCommand
     }
 
     /**
-     * @return EmployeeStatus
+     * @return bool
      */
     public function getStatus()
     {

@@ -47,7 +47,7 @@ final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler impl
             $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
             $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
 
-            $employee->active = $command->getStatus()->isEnabled();
+            $employee->active = $command->getStatus();
             $employee->save();
         }
     }
