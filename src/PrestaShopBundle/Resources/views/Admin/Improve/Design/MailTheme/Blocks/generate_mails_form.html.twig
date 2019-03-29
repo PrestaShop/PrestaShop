@@ -29,7 +29,7 @@
     {{ form_start(generateMailsForm, {'action': path('admin_mail_theme_generate')}) }}
     <div class="card">
       <h3 class="card-header">
-        <i class="material-icons">email</i> {{ 'Generate mails'|trans }}
+        <i class="material-icons">email</i> {{ 'Generate emails'|trans }}
       </h3>
 
       <div class="card-block row">
@@ -37,7 +37,7 @@
 
           <div class="form-group row">
             <label class="form-control-label">
-              {{ 'Select your mail theme'|trans }}
+              {{ 'Select your email theme'|trans }}
             </label>
             <div class="col-sm">
               {{ form_errors(generateMailsForm.mailTheme) }}
@@ -58,8 +58,8 @@
           <div class="form-group row">
             <label class="form-control-label">
               {{ ps.label_with_help(
-                ('Select a theme you want to overwrite'|trans),
-              ('Core mail templates are stored in the mails folder but can be overriden by theme proper mails folder. Use this option to overwrite mails from a theme.'|trans({}, 'Admin.MailTheme.Help'))
+                ('Select the theme you want to overwrite'|trans),
+              ('Core email templates are stored in the mails folder but can be overriden by theme proper mails folder. Use this option to overwrite mails from a theme.'|trans({}, 'Admin.MailTheme.Help'))
               ) }}
             </label>
             <div class="col-sm">
@@ -71,7 +71,7 @@
           <div class="form-group row">
             {{ ps.label_with_help(
               ('Overwrite templates'|trans),
-            ('By default existing mail template files are not modified to avoid erase your modifications, enable this option to force overriding them.'|trans({}, 'Admin.MailTheme.Help'))
+            ('By default, existing email template files are not modified to avoid erase your modifications. Enable this option to force the overwrite.'|trans({}, 'Admin.MailTheme.Help'))
             ) }}
             <div class="col-sm">
               {{ form_errors(generateMailsForm.overwrite) }}
@@ -86,7 +86,7 @@
         <div class="d-flex justify-content-end">
           <button class="btn btn-primary">
             <i class="material-icons">email</i>
-            <span>{{ 'Generate mails'|trans({}, 'Admin.Actions') }}</span>
+            <span>{{ 'Generate emails'|trans({}, 'Admin.Actions') }}</span>
           </button>
         </div>
       </div>
