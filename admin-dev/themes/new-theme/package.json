@@ -75,17 +75,16 @@
     "path": "^0.12.7",
     "postcss-cssnext": "^2.10.0",
     "postcss-loader": "^3.0.0",
-    "prestakit": "^1.0.4",
-    "sass-loader": "^7.1.0",
+    "prestakit": "^1.1.0",
+    "sass-loader": "^6.0.7",
     "sinon": "^2.4.1",
     "sinon-chai": "^2.14.0",
     "style-loader": "^0.23.0",
     "tablednd": "^1.0.3",
     "uglify-save-license": "^0.4.1",
-    "uglifyjs-webpack-plugin": "^2.1.2",
+    "uglifyjs-webpack-plugin": "^1.3.0",
     "vue-loader": "^11",
     "vue-style-loader": "^4.1.2",
-    "webpack": "^2.7",
-    "webpack-cli": "^3.1.0"
+    "webpack": "^2.7"
   }
 }
