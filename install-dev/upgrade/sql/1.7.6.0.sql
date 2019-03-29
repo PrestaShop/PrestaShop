@@ -27,5 +27,25 @@ ALTER TABLE `PREFIX_admin_filter`
 UPDATE `PREFIX_tab` SET `position` = 0 WHERE `class_name` = 'AdminModulesSf' AND `position`= 1;
 UPDATE `PREFIX_tab` SET `position` = 1 WHERE `class_name` = 'AdminParentModulesCatalog' AND `position`= 0;
 
+/* Fix Problem with missing lang entries in Configuration */
+INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`)
+SELECT `id_configuration`, l.`id_lang`, `value`
+  FROM `PREFIX_configuration` c
+  JOIN `PREFIX_lang_shop` l on l.`id_shop` = COALESCE(c.`id_shop`, 1)
+  WHERE `name` IN (
+      'PS_DELIVERY_PREFIX',
+      'PS_INVOICE_PREFIX',
+      'PS_INVOICE_LEGAL_FREE_TEXT',
+      'PS_INVOICE_FREE_TEXT',
+      'PS_RETURN_PREFIX',
+      'PS_SEARCH_BLACKLIST',
+      'PS_CUSTOMER_SERVICE_SIGNATURE',
+      'PS_MAINTENANCE_TEXT',
+      'PS_LABEL_IN_STOCK_PRODUCTS',
+      'PS_LABEL_OOS_PRODUCTS_BOA',
+      'PS_LABEL_OOS_PRODUCTS_BOD'
+      )
+  AND NOT EXISTS (SELECT 1 FROM `PREFIX_configuration_lang` WHERE `id_configuration` = c.`id_configuration`);
+
 /* PHP:ps_1760_update_configuration(); */;
 /* PHP:ps_1760_update_tabs(); */;
