@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\CMS;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\BreadcrumbTree;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\Breadcrumb;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
@@ -68,7 +68,7 @@ final class CmsPageViewDataProvider implements CmsPageViewDataProviderInterface
      *
      * @param int $cmsCategoryParentId
      *
-     * @return BreadcrumbTree|array
+     * @return Breadcrumb|array
      *
      * @throws CmsPageCategoryException
      */
