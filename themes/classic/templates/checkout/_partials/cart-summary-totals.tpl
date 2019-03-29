@@ -34,12 +34,12 @@
       <span class="label">{$cart.totals.total_including_tax.label}</span>
       <span class="value">{$cart.totals.total_including_tax.value}</span>
     </div>
-    {else}
+  {else}
     <div class="cart-summary-line cart-total">
       <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
       <span class="value">{$cart.totals.total.value}</span>
     </div>
-    {/if}
+  {/if}
   {/block}
 
   {block name='cart_summary_tax'}
