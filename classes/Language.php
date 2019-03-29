@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProces
 use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
+use PrestaShopBundle\Service\MailTheme\MailThemeGenerator;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class LanguageCore extends ObjectModel
@@ -1122,8 +1122,8 @@ class LanguageCore extends ObjectModel
     {
         $locale = $lang_pack['locale'];
         $sfContainer = SymfonyContainer::getInstance();
-        /** @var GenerateMailTemplatesService $mailGenerator */
-        $mailGenerator = $sfContainer->get('prestashop.service.generate_mail_templates');
+        /** @var MailThemeGenerator $mailGenerator */
+        $mailGenerator = $sfContainer->get('prestashop.service.mail_theme_generator');
         $mailTheme = Configuration::get('PS_MAIL_THEME');
         try {
             $mailGenerator->generateMailTemplates($mailTheme, $locale, true);

@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\MailTemplate\GenerateMailTemplatesService;
+use PrestaShopBundle\Service\MailTheme\MailThemeGenerator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -105,8 +105,8 @@ class MailThemeController extends FrameworkBundleAdminController
 
             $data = $generateThemeMailsForm->getData();
             try {
-                /** @var GenerateMailTemplatesService $generator */
-                $generator = $this->get('prestashop.service.generate_mail_templates');
+                /** @var MailThemeGenerator $generator */
+                $generator = $this->get('prestashop.service.mail_theme_generator');
                 //Overwrite theme folder if selected
                 if (!empty($data['theme'])) {
                     $themeFolder = $this->getParameter('themes_dir') . $data['theme'];
