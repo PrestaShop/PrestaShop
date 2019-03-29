@@ -28,14 +28,14 @@
 
     <div class="col-8 row">
       <div class="text-center" :class="getClasses(types, bulkType === 'view')" v-for="bulk, bulkType in types">
+        <strong>{{ bulk.label }}</strong>
+        <br>
         <ps-checkbox
           v-model="status"
           @change="updateBulk(bulkType)"
           :value="bulkType"
           :disabled="bulk.value !== true"
         />
-        <br>
-        <strong>{{ bulk.label }}</strong>
       </div>
     </div>
   </div>
