@@ -170,7 +170,7 @@ class TranslationController extends ApiController
             $translationService = $this->container->get('prestashop.service.translation');
             $response = [];
             foreach ($translations as $translation) {
-                if (!array_key_exists('theme', $translation) || empty($translation['theme'])) {
+                if (empty($translation['theme'])) {
                     $translation['theme'] = $this->getSelectedTheme();
                 }
 
