@@ -2854,6 +2854,7 @@ class AdminOrdersControllerCore extends AdminController
 
         $this->context->smarty->assign(array(
             'payment_modules' => $payment_modules,
+	    'PS_CATALOG_MODE' => Configuration::get('PS_CATALOG_MODE')
         ));
 
         die(Tools::jsonEncode(array(
