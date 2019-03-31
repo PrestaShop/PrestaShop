@@ -31,6 +31,7 @@ const $ = window.$;
 $(document).ready(() => {
   new CountryStateSelectionToggler(
     ManufacturerAddressMap.manufacturerAddressCountrySelect,
+    ManufacturerAddressMap.manufacturerAddressStateSelect,
     ManufacturerAddressMap.manufacturerAddressStateBlock
   );
 });

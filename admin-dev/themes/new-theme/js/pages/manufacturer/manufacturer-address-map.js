@@ -25,5 +25,6 @@
 
 export default {
   manufacturerAddressCountrySelect: '#manufacturer_address_id_country',
+  manufacturerAddressStateSelect: '#manufacturer_address_id_state',
   manufacturerAddressStateBlock: '.js-manufacturer-address-state',
 };

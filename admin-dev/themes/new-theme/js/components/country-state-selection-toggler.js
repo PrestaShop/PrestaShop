@@ -26,7 +26,7 @@
 const $ = window.$;
 
 /**
- * Displays or hides State selection block depending on selected country.
+ * Displays, fills or hides State selection block depending on selected country.
  *
  * Usage:
  *
@@ -44,11 +44,12 @@ const $ = window.$;
  *
  * In JS:
  *
- * new CountryStateSelectionToggler('#id_country', '.js-state-selection-block');
+ * new CountryStateSelectionToggler('#id_country', '#id_state', '.js-state-selection-block');
  */
 export default class CountryStateSelectionToggler {
-  constructor(countryInputSelector, stateSelectionBlockSelector) {
+  constructor(countryInputSelector, countryStateSelector, stateSelectionBlockSelector) {
     this.$stateSelectionBlock = $(stateSelectionBlockSelector);
+    this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
 
     this.$countryInput.on('change', () => this._toggle());
@@ -80,6 +81,11 @@ export default class CountryStateSelectionToggler {
       }
 
       this.$stateSelectionBlock.fadeIn();
+      this.$countryStateSelector.empty();
+      var _this = this;
+      $.each(response.states, function(index, value) {
+        _this.$countryStateSelector.append($('<option></option>').attr('value', value).text(index));
+      })
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
