@@ -193,7 +193,6 @@ class CurrencyCore extends ObjectModel
 
             $this->iso_code_num = $this->numeric_iso_code;
 
-            $this->format = '';
             $this->blank = 1;
             $this->decimals = 1;
         }
