@@ -126,7 +126,7 @@ class MailThemeController extends FrameworkBundleAdminController
                             'Admin.Notifications.Success',
                             [
                                 $data['mail_theme'],
-                                $data['language']
+                                $data['language'],
                             ]
                         )
                     );
@@ -138,7 +138,7 @@ class MailThemeController extends FrameworkBundleAdminController
                             'Admin.Notifications.Success',
                             [
                                 $data['mail_theme'],
-                                $data['language']
+                                $data['language'],
                             ]
                         )
                     );
