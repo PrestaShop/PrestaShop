@@ -166,7 +166,7 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('position' === $filterName) {
                 $modifiedPositionFilter = $this->getModifiedPositionFilter($value);
-                $qb->andWhere('cc.`' . $filterName . '` = :' . $filterName);
+                $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $modifiedPositionFilter);
                 continue;
             }
