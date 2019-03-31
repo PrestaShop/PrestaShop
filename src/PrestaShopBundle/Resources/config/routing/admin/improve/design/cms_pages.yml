@@ -121,3 +121,10 @@ admin_cms_pages_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:bulkDeleteCmsPage'
     _legacy_controller: AdminCmsContent
+
+admin_cms_pages_update_position:
+  path: /update-position
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:updateCmsPosition'
+    _legacy_controller: AdminCmsContent

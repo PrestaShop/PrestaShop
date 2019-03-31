@@ -83,4 +83,5 @@ $(() => {
   cmsGrid.addExtension(new BulkActionCheckboxExtension());
   cmsGrid.addExtension(new SubmitBulkExtension());
   cmsGrid.addExtension(new SubmitRowActionExtension());
+  cmsGrid.addExtension(new PositionExtension());
 });
