@@ -143,4 +143,6 @@ services:
         arguments:
           - '@prestashop.core.query_bus'
           - '@request_stack'
+          - '@prestashop.adapter.shop.context'
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
