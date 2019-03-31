@@ -564,6 +564,6 @@ class AdminDashboardControllerCore extends AdminController
             'pl' => 'https://www.prestashop.com/pl/kontakt?utm_source=back-office&utm_medium=links&utm_campaign=help-center-pl&utm_content=download17',
         ];
 
-        return $links[$languageCode] ?: $links['en'];
+        return isset($links[$languageCode]) ? $links[$languageCode] : $links['en'];
     }
 }
