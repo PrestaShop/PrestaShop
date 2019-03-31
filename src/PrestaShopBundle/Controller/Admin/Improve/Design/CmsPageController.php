@@ -384,8 +384,6 @@ class CmsPageController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"id_cms_category"}
      * )
      *
-     * @param int $cmsCategoryId
-     *
      * @return RedirectResponse
      *
      * @throws CmsPageCategoryException
