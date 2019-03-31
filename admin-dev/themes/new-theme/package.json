@@ -75,7 +75,7 @@
     "path": "^0.12.7",
     "postcss-cssnext": "^2.10.0",
     "postcss-loader": "^3.0.0",
-    "prestakit": "^1.0.4",
+    "prestakit": "^1.1.0",
     "sass-loader": "^7.1.0",
     "sinon": "^2.4.1",
     "sinon-chai": "^2.14.0",
