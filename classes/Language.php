@@ -1128,6 +1128,7 @@ class LanguageCore extends ObjectModel
                 array(),
                 'Admin.Notifications.Error'
             );
+
             return;
         }
 
