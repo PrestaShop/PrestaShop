@@ -115,7 +115,7 @@ final class GridPresenter implements GridPresenterInterface
         $positionColumn = $this->getOrderingPosition($grid);
         if (null !== $positionColumn) {
             array_unshift($columns, [
-                'id' => $positionColumn->getId(),
+                'id' => $positionColumn->getId() . '_handle',
                 'name' => $positionColumn->getName(),
                 'type' => 'position_handle',
                 'options' => $positionColumn->getOptions(),
