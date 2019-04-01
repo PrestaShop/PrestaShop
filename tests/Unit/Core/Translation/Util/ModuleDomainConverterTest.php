@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Translation\Util\ModuleDomainConverter;
 
 /**
- * @doc ./vendor/bin/phpunit
+ * @doc ./vendor/bin/phpunit --config  tests/Unit/phpunit.xml --filter ModuleDomainConverterTest
  */
 class ModuleDomainConverterTest extends TestCase
 {
