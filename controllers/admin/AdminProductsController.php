@@ -3331,6 +3331,7 @@ class AdminProductsControllerCore extends AdminController
             if (!$forceJson) {
                 return $this->ajaxRender(implode(PHP_EOL, $results));
             }
+
             return $this->ajaxRender(json_encode($results));
         }
         if ($items) {
@@ -3386,8 +3387,10 @@ class AdminProductsControllerCore extends AdminController
                     );
                 }
             }
+
             return $this->ajaxRender(json_encode(array_values($results)));
         }
+
         return $this->ajaxRender(json_encode([]));
     }
 }
