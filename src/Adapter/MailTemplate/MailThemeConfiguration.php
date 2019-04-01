@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 
 /**
  * Class MailThemeConfiguration is used to save Mail Theme settings
@@ -93,9 +92,6 @@ final class MailThemeConfiguration implements DataConfigurationInterface
             throw new InvalidArgumentException('Default theme can not be empty');
         }
 
-        /** @var ThemeInterface $theme */
-        $theme = $this->themeCatalog->getByName($configuration['defaultTheme']);
-
-        return null !== $theme;
+        return null !== $this->themeCatalog->getByName($configuration['defaultTheme']);
     }
 }
