@@ -197,7 +197,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                             'id_field' => 'id_cms_category',
                             'position_field' => 'position',
                             'update_method' => 'POST',
-                            'update_route' => 'admin_cms_pages_update_position_cms_category',
+                            'update_route' => 'admin_cms_pages_category_update_position',
                             'record_route_params' => [
                                 'id_parent' => 'id_cms_category',
                             ],
