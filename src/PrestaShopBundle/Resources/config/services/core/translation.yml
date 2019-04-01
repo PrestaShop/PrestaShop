@@ -5,4 +5,9 @@ services:
     prestashop.core.translation.locale.converter:
         class: 'PrestaShop\PrestaShop\Core\Translation\Locale\Converter'
         arguments:
-          - '%translations_dir%/../legacy-to-standard-locales.json'
+            - '%translations_dir%/../legacy-to-standard-locales.json'
+
+    prestashop.core.translation.util.module_domain_converter:
+        class: 'PrestaShop\PrestaShop\Core\Translation\Util\ModuleDomainConverter'
+        arguments:
+            - '%kernel.active_modules%'
