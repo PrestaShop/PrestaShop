@@ -467,6 +467,7 @@ class LocalizationPackCore
      * @param Currency $currency
      * @param array $languages
      * @param LocaleRepository $localeRepoCLDR
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
