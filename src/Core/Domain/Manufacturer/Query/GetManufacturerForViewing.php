@@ -24,13 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
- * Base exception for Manufacturer subdomain
+ * Get manufacturer information for viewing
  */
-class ManufacturerException extends DomainException
+class GetManufacturerForViewing
 {
+    /**
+     * @var ManufacturerId
+     */
+    private $manufacturerId;
+
+    /**
+     * @var LanguageId Language in which manufacturer is returned
+     */
+    private $languageId;
+
+    /**
+     * @param int $manufacturerId
+     * @param int $languageId
+     */
+    public function __construct($manufacturerId, $languageId)
+    {
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
+        $this->languageId = new LanguageId($languageId);
+    }
+
+    /**
+     * @return ManufacturerId
+     */
+    public function getManufacturerId()
+    {
+        return $this->manufacturerId;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId()
+    {
+        return $this->languageId;
+    }
 }

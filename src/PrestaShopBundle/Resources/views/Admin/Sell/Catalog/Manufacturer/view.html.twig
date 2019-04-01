@@ -1,6 +1,5 @@
-<?php
-/**
- * 2007-2019 PrestaShop and Contributors
+{#**
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +15,32 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+{% block content %}
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/Blocks/View/addresses.html.twig' %}
+    </div>
+  </div>
 
-/**
- * Base exception for Manufacturer subdomain
- */
-class ManufacturerException extends DomainException
-{
-}
+  <div class="row mt-3">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/Blocks/View/products.html.twig' %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/manufacturer.bundle.js') }}"></script>
+{% endblock %}

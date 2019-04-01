@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCom
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
@@ -49,7 +50,6 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDe
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -57,6 +57,8 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationExcepti
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -66,7 +68,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Is responsible for "Sell > Catalog > Brands & Suppliers" page.
+ * Manages "Sell > Catalog > Brands & Suppliers > Brands" page
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
@@ -161,6 +163,37 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'manufacturerForm' => $manufacturerForm->createView(),
+        ]);
+    }
+
+    /**
+     * View single manufacturer details
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $manufacturerId
+     *
+     * @return Response
+     */
+    public function viewAction($manufacturerId)
+    {
+        try {
+            /** @var ViewableManufacturer $viewableManufacturer */
+            $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
+                (int) $manufacturerId,
+                (int) $this->getContextLangId()
+            ));
+        } catch (ManufacturerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_manufacturers_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig', [
+            'layoutTitle' => $viewableManufacturer->getName(),
+            'viewableManufacturer' => $viewableManufacturer,
+            'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
         ]);
     }
 

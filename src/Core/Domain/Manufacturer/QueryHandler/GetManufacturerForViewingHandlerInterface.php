@@ -24,13 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 
 /**
- * Base exception for Manufacturer subdomain
+ * Interface for service that handles gettting manufacturer for viewing query
  */
-class ManufacturerException extends DomainException
+interface GetManufacturerForViewingHandlerInterface
 {
+    /**
+     * @param GetManufacturerForViewing $query
+     *
+     * @return ViewableManufacturer
+     */
+    public function handle(GetManufacturerForViewing $query);
 }
