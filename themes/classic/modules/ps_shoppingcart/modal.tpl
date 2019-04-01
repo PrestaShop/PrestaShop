@@ -43,7 +43,7 @@
                 <p class="product-price">{$product.price}</p>
                 {hook h='displayProductPriceBlock' product=$product type="unit_price"}
                 {foreach from=$product.attributes item="property_value" key="property"}
-                  <span>{$property}<strong>: {$property_value}</strong></span><br>
+                  <span>{$property}:<strong> {$property_value}</strong></span><br>
                 {/foreach}
                 <span>{l s='Quantity:' d='Shop.Theme.Checkout'}&nbsp;<strong>{$product.cart_quantity}</strong></span>
               </div>
@@ -56,18 +56,18 @@
               {else}
                 <p class="cart-products-count">{l s='There is %product_count% item in your cart.' sprintf=['%product_count%' =>$cart.products_count] d='Shop.Theme.Checkout'}</p>
               {/if}
-              <p><span><strong>{l s='Total products:' d='Shop.Theme.Checkout'}</strong></span>&nbsp;<span><strong>{$cart.subtotals.products.value}</strong></span></p>
-              <p><span>{l s='Total shipping:' d='Shop.Theme.Checkout'}</span>&nbsp;<span><strong>{$cart.subtotals.shipping.value} {hook h='displayCheckoutSubtotalDetails' subtotal=$cart.subtotals.shipping}</strong></span></p>
+              <p><span class="label">{l s='Subtotal:' d='Shop.Theme.Checkout'}</span>&nbsp;<span class="value">{$cart.subtotals.products.value}</span></p>
+              <p><span>{l s='Shipping:' d='Shop.Theme.Checkout'}</span>&nbsp;<span class="value">{$cart.subtotals.shipping.value} {hook h='displayCheckoutSubtotalDetails' subtotal=$cart.subtotals.shipping}</span></p>
 
               {if $cart.totals.total_including_tax.value != $cart.totals.total_excluding_tax.value && $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
                 <p><span>{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>&nbsp;<span>{$cart.totals.total.value}</span></p>
-                <p class="product-total"><span><strong> {$cart.totals.total_including_tax.label}</strong></span>&nbsp;<span><strong>{$cart.totals.total_including_tax.value}</strong></span></p>
+                <p class="product-total"><span class="label">{$cart.totals.total_including_tax.label}</span>&nbsp;<span class="value">{$cart.totals.total_including_tax.value}</span></p>
               {else}
-                <p class="product-total"><span><strong>{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</strong></span>&nbsp;<span><strong>{$cart.totals.total.value}</strong></span></p>
+                <p class="product-total"><span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>&nbsp;<span class="value">{$cart.totals.total.value}</span></p>
               {/if}
 
               {if $cart.subtotals.tax}
-                <p class="no-spacing">{$cart.subtotals.tax.label}&nbsp;<strong>{$cart.subtotals.tax.value}</strong></p>
+                <p class="product-tax">{$cart.subtotals.tax.label}&nbsp;<span class="value">{$cart.subtotals.tax.value}</span></p>
               {/if}
               
               <div class="cart-content-btn">
