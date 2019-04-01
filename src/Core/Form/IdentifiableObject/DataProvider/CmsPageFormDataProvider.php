@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult\EditableCmsPage;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * {@inheritdoc}
@@ -89,7 +89,7 @@ class CmsPageFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'page_category_id' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
+            'page_category_id' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
             'shop_association' => $this->contextShopIds,
             'is_indexed_for_search' => false,
             'is_displayed' => false,
