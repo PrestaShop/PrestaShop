@@ -123,6 +123,22 @@
 
       {{ renderhook('displayBackOfficeCategory') }}
 
+      <div class="form-group row">
+        <label class="form-control-label"></label>
+        <div class="col-sm">
+          <h2>{{ 'Search Engine Optimization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+          <p class="subtitle">
+            {{ 'Improve your ranking and how your product page will appear in search engines results.'|trans({}, 'Admin.Catalog.Feature') }}
+          </p>
+
+          <div id="categorySeoPreviewCard" class="seo-preview-card">
+            <div class="seo-preview-title"></div>
+            <div class="seo-preview-url"></div>
+            <div class="seo-preview-description"></div>
+          </div>
+        </div>
+      </div>
+
       {{ ps.form_group_row(categoryForm.meta_title, {}, {
         'label': 'Meta title'|trans({}, 'Admin.Global'),
         'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'

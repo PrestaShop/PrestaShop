@@ -1,0 +1,43 @@
+.seo-preview-card {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: 2px;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, .12);
+  background-color: #ffffff;
+  border: solid 1px #e7e7e7;
+  padding: 30px;
+  max-width: 700px;
+
+  .seo-preview-title {
+    color: #1A0DAB;
+    cursor: pointer;
+    font-family: arial, regular;
+    font-size: 18px;
+    font-weight: normal;
+    text-align: left;
+    text-decoration: none;
+    visibility: visible;
+    white-space: nowrap;
+  }
+
+  .seo-preview-url {
+    color: #006621;
+    font-family: arial, regular;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 24px;
+    text-align: left;
+    visibility: visible;
+  }
+
+  .seo-preview-description {
+    color: #545454;
+    font-family: arial, regular;
+    font-size: 13px;
+    font-weight: normal;
+    text-align: left;
+    visibility: visible;
+    word-wrap: break-word;
+  }
+}

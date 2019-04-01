@@ -43,6 +43,7 @@ import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copie
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
 import TaggableField from "../../components/taggable-field";
+import SeoPreviewCard from "../../components/seo-preview-card";
 
 const $ = window.$;
 
@@ -90,4 +91,11 @@ $(() => {
 
   new ChoiceTree('#root_category_id_parent');
   new ChoiceTree('#root_category_shop_association').enableAutoCheckChildren();
+
+  new SeoPreviewCard(
+    '#categorySeoPreviewCard',
+    'input[name^="category[meta_title]',
+    'input[name^="category[link_rewrite]',
+    'textarea[name^="category[meta_description]',
+  );
 });
