@@ -509,9 +509,6 @@ li.product-flag {
   &.discount {
     display: none;
   }
-  &:not(.discount):not(.on-sale)~li.product-flag {
-    margin-top: 3.75rem;
-  }
   &.on-sale {
     background: $brand-secondary;
     width: 100%;
