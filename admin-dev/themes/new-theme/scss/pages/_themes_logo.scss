@@ -1,4 +1,7 @@
 #themes-logo-page {
+  @import "partials/theme_logo_configuration";
+  @import "partials/theme_logo_theme_card";
+
   #adapt_theme_to_rtl_languages_theme_to_adapt {
     width: 18.75rem;
   }
@@ -32,9 +35,6 @@
   .btn-tertiary:hover {
     background-color: #363a41;
   }
-
-  @import "partials/theme_logo_configuration";
-  @import "partials/theme_logo_theme_card";
 
   .layout-configuration {
     .inner-content {
