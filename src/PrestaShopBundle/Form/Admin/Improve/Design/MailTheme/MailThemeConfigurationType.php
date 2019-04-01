@@ -31,7 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class MailThemeSettingsType is used to create the form allowing to define mail
+ * Class MailThemeConfigurationType is used to create the form allowing to define mail
  * theme settings (for now just the defaultTheme).
  */
 class MailThemeConfigurationType extends AbstractType

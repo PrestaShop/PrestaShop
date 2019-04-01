@@ -68,7 +68,7 @@ class MailTemplateGenerator
      * @param LanguageInterface $language
      * @param string $coreOutputFolder
      * @param string $modulesOutputFolder
-     * @param bool $overwriteTemplates
+     * @param bool $overwriteTemplates [default=false]
      *
      * @throws FileNotFoundException
      */
