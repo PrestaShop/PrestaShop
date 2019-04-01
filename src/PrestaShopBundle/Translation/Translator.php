@@ -40,5 +40,15 @@ class Translator extends BaseTranslator
     {
         parent::addResource($format, $resource, $locale, $domain);
         parent::addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+
+        $enabledModules = $this->container->getParameter('kernel.active_modules');
+        $moduleDir = $this->container->getParameter('modules_dir');
+
+        foreach ($enabledModules as $module) {
+            $translationFile = $moduleDir . '/' . $module . '/translations/' . $locale . '.php';
+            if (file_exists($translationFile)) {
+                parent::addResource('php', $translationFile, $locale, $domain);
+            }
+        }
     }
 }

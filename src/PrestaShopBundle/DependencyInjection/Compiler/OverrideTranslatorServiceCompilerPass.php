@@ -28,6 +28,7 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * On Symfony 3.x, the parameters like `translator.class` are not used anymore and cannot override the original services.
@@ -41,9 +42,13 @@ class OverrideTranslatorServiceCompilerPass implements CompilerPassInterface
         $definition = $container->getDefinition('translator.default');
         $definition->setClass($container->getParameter('translator.class'));
 
-        if (!in_array($container->getParameter('kernel.environment'), array('dev', 'test'))) {
+        // We need the complete service container when calling $translator->getContainer()
+        $definition->replaceArgument(0, new Reference('service_container'));
+
+        if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;
         }
+
         $definition = $container->getDefinition('translator.data_collector');
         $definition->setClass($container->getParameter('translator.data_collector'));
     }
