@@ -86,7 +86,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Manage generation form post and generate mails.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -171,7 +171,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Save mail theme configuration
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
