@@ -27,26 +27,44 @@
 
 namespace PrestaShopBundle\Translation;
 
+use PrestaShop\PrestaShop\Adapter\Localization\LegacyTranslator;
+use Symfony\Component\Translation\Exception\InvalidArgumentException;
+
 trait PrestaShopTranslatorTrait
 {
     public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
     public static $regexClassicParams = '/%\w+%/';
 
     /**
-     * @todo: add the right PHPDoc
+     * Translates the given message.
+     *
+     * @param string $id The message id (may also be an object that can be cast to string)
+     * @param array $parameters An array of parameters for the message
+     * @param string|null $domain The domain for the message or null to use the default
+     * @param string|null $locale The locale or null to use the default
+     *
+     * @return string The translated string
+     *
+     * @throws InvalidArgumentException If the locale contains invalid characters
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
-        if (null !== $domain) {
-            $domain = str_replace('.', '', $domain);
-        }
+        $normalizedDomain = (null !== $domain) ?
+            str_replace('.', '', $domain)
+            : null;
 
         if (isset($parameters['legacy'])) {
             $legacy = $parameters['legacy'];
             unset($parameters['legacy']);
         }
 
-        $translated = parent::trans($id, array(), $domain, $locale);
+        $translated = parent::trans($id, array(), $normalizedDomain, $locale);
+
+        // @todo to remove after the legacy translation system has ben phased out
+        if ($this->shouldFallbackToLegacyModuleTranslation($id, $normalizedDomain, $translated)) {
+            return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
+        }
+
         if (isset($legacy) && 'htmlspecialchars' === $legacy) {
             $translated = call_user_func($legacy, $translated, ENT_NOQUOTES);
         } elseif (isset($legacy)) {
@@ -63,9 +81,16 @@ trait PrestaShopTranslatorTrait
     }
 
     /**
-     * @todo: remove this function at it relies on a function not
-     * available in the trait.
-     * Also $locale is unused.
+     * Performs a reverse search in the catalogue and returns the translation key if found.
+     * AVOID USING THIS, IT PROVIDES APPROXIMATE RESULTS.
+     *
+     * @param string $translated Translated string
+     * @param string $domain Translation domain
+     * @param string|null $locale Unused
+     *
+     * @return string The translation
+     *
+     * @deprecated This method should not be used and will be removed
      */
     public function getSourceString($translated, $domain, $locale = null)
     {
@@ -84,7 +109,17 @@ trait PrestaShopTranslatorTrait
     }
 
     /**
-     * @todo: add the right PHPDoc
+     * Translates the given choice message by choosing a translation according to a number.
+     *
+     * @param string $id The message id (may also be an object that can be cast to string)
+     * @param int $number The number to use to find the index of the message
+     * @param array $parameters An array of parameters for the message
+     * @param string|null $domain The domain for the message or null to use the default
+     * @param string|null $locale The locale or null to use the default
+     *
+     * @return string The translated string
+     *
+     * @throws InvalidArgumentException If the locale contains invalid characters
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
@@ -108,5 +143,50 @@ trait PrestaShopTranslatorTrait
     {
         return (bool) preg_match_all(static::$regexSprintfParams, $string)
             && !(bool) preg_match_all(static::$regexClassicParams, $string);
+    }
+
+    /**
+     * Tries to translate the provided message using the legacy system
+     *
+     * @param string $message
+     * @param array $parameters
+     * @param string $domain
+     * @param string|null $locale
+     *
+     * @return mixed|string
+     *
+     * @throws \Exception
+     */
+    private function translateUsingLegacySystem($message, array $parameters, $domain, $locale = null)
+    {
+        $domainParts = explode('.', $domain);
+        if (count($domainParts) < 2) {
+            throw new InvalidArgumentException(sprintf('Invalid domain: "%s"', $domain));
+        }
+        $moduleName = strtolower($domainParts[1]);
+        $sourceFile = (!empty($domainParts[2])) ? strtolower($domainParts[2]) : false;
+
+        return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false);
+    }
+
+    /**
+     * Indicates if we should try and translate the provided wording using the legacy system
+     *
+     * @param string $message Message to translate
+     * @param string $domain Translation domain
+     * @param string $translated Message after first translation attempt
+     *
+     * @return bool
+     */
+    private function shouldFallbackToLegacyModuleTranslation($message, $domain, $translated)
+    {
+        return
+            $message === $translated
+            && 'Modules' === substr($domain, 0, 7)
+            && (
+                !method_exists($this, 'getCatalogue')
+                || !$this->getCatalogue()->has($message, $domain)
+            )
+            ;
     }
 }
