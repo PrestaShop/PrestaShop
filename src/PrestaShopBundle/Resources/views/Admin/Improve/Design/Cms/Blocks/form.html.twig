@@ -33,7 +33,7 @@
   <div class="card-block row">
     <div class="card-text">
 
-      {% set invalidCharsHint = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>={}' %}
+      {% set invalidCharsHint = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' %}
 
       {{ ps.form_group_row(cmsPageForm.page_category_id, {}, {
         'label': 'Page category'|trans({}, 'Admin.Design.Feature'),
@@ -41,12 +41,14 @@
 
       {{ ps.form_group_row(cmsPageForm.title, {}, {
         'label': 'Title'|trans({}, 'Admin.Global'),
-        'help': invalidCharsHint
+        'help': 'Used in the h1 page tag, and as the default title tag value.'|trans({}, 'Admin.Design.Help')
+         ~ ' ' ~ invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.meta_title, {}, {
         'label': 'Meta title'|trans({}, 'Admin.Global'),
-        'help': invalidCharsHint
+        'help': 'Used to override the title tag value. If left blank, the default title value is used.'|trans({}, 'Admin.Design.Help')
+        ~ ' ' ~ invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.meta_description, {}, {
@@ -56,11 +58,13 @@
 
       {{ ps.form_group_row(cmsPageForm.meta_keyword, {}, {
         'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-        'help': invalidCharsHint
+        'help': 'To add "tags" click in the field, write something, and then press "Enter."'|trans({}, 'Admin.Design.Help')
+        ~ ' ' ~ invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.friendly_url, {}, {
         'label': 'Friendly URL'|trans({}, 'Admin.Global'),
+        'help': 'Only letters and the hyphen (-) character are allowed.'|trans({}, 'Admin.Design.Feature')
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.content, {}, {
