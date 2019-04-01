@@ -194,9 +194,18 @@ class AdminAccessControllerCore extends AdminController
         return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int) $_GET['id_profile'] : 1;
     }
 
+    /**
+     * @param array $a module data
+     * @param array $b module data
+     *
+     * @return int
+     */
     protected function sortModuleByName($a, $b)
     {
-        return strnatcmp($a['name'], $b['name']);
+        $moduleAName = isset($a['name']) ? $a['name'] : null;
+        $moduleBName = isset($b['name']) ? $b['name'] : null;
+
+        return strnatcmp($moduleAName, $moduleBName);
     }
 
     /**

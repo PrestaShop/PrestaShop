@@ -34,7 +34,7 @@ scenario('Modify quantity and check movement for single product', () => {
     stock_common_scenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "+", "Employee Edition","SingleProduct");
     test('should go to "Stock" tab', () => client.waitForExistAndClick(Menu.Sell.Catalog.stock_tab));
     test('should set the "Search products" input', () => client.waitAndSetValue(Stock.search_input, "SingleProduct" + date_time));
-    test('should click on "Search" button', () => client.waitForExistAndClick(Stock.search_button));
+    test('should click on "Search" button', () => client.waitForExistAndClick(Stock.search_button, 1000));
     stock_common_scenarios.changeStockProductQuantity(client, Stock, 1, 4, 'checkBtn', "remove");
     stock_common_scenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "-", "Employee Edition", "SingleProduct");
   }, 'stocks');

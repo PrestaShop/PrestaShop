@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 
 /**
  * Class KpiRowFactory builds a KPI row.
+ *
+ * @deprecated since 1.7.6, will be removed in the next major version, use HookableKpiRowFactory instead.
  */
 final class KpiRowFactory implements KpiRowFactoryInterface
 {
@@ -43,6 +45,12 @@ final class KpiRowFactory implements KpiRowFactoryInterface
      */
     public function __construct(KpiInterface ...$kpis)
     {
+        @trigger_error(
+            'Using `KpiRowFactory` class is deprecated and will be removed in the next major,' .
+            'use HookableKpiRowFactory instead',
+            E_USER_DEPRECATED
+        );
+
         $this->kpis = $kpis;
     }
 

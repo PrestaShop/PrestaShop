@@ -30,6 +30,8 @@
     'icon': 'add_circle_outline'
   }
 } %}
+{% set layoutTitle = 'Languages'|trans({}, 'Admin.Global') %}
+{% set enableSidebar = true %}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
@@ -50,7 +52,7 @@
 
   {% block language_listing %}
     <div class="row">
-      <div class="col">
+      <div class="col-sm">
         {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': languageGrid } %}
       </div>
     </div>

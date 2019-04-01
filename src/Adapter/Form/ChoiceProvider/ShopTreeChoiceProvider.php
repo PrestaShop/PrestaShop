@@ -58,6 +58,11 @@ final class ShopTreeChoiceProvider implements FormChoiceProviderInterface
             foreach ($shops as $shopId) {
                 $shop = Shop::getShop($shopId['id_shop']);
 
+                // If context employee doesn't have access to a shop, $shop will be false
+                if (false === $shop) {
+                    continue;
+                }
+
                 $shopGroupChoices['children'][] = [
                     'name' => $shop['name'],
                     'id_shop' => $shop['id_shop'],

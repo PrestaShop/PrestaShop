@@ -27,28 +27,41 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Class FilterFormFactory is responsible for creating grid filter form.
  */
 final class GridFilterFormFactory implements GridFilterFormFactoryInterface
 {
-    use HookDispatcherAwareTrait;
-
     /**
      * @var FormFactoryInterface
      */
     private $formFactory;
 
     /**
-     * @param FormFactoryInterface $formFactory
+     * @var HookDispatcherInterface
      */
-    public function __construct(FormFactoryInterface $formFactory)
-    {
+    private $hookDispatcher;
+
+    /**
+     * @param FormFactoryInterface $formFactory
+     * @param HookDispatcherInterface|null $hookDispatcher
+     */
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        HookDispatcherInterface $hookDispatcher = null
+    ) {
         $this->formFactory = $formFactory;
+
+        if (null === $hookDispatcher) {
+            @trigger_error('The $hookDispatcher parameter should not be null, inject your main HookDispatcherInterface service, or NullDispatcher if you don\'t need hooks.', E_USER_DEPRECATED);
+        }
+        $this->hookDispatcher = $hookDispatcher ? $hookDispatcher : new NullDispatcher();
     }
 
     /**
@@ -70,7 +83,7 @@ final class GridFilterFormFactory implements GridFilterFormFactoryInterface
             );
         }
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridFilterFormModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridFilterFormModifier', [
             'filter_form_builder' => $formBuilder,
         ]);
 

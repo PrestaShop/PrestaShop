@@ -31,7 +31,7 @@ scenario('Generate and check a Credit slips options ', () => {
     test('should check the existence of "prefix value" ', async () => {
       await client.checkFile(global.downloadsFolderPath, global.creditSlip + '.pdf', 3000);
       if (global.existingFile) {
-        await client.pause(3000);
+        await client.pause(6000);
         await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'PrefixTest');
       }
     });

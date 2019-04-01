@@ -45,4 +45,9 @@ class LanguageConstraintException extends LanguageException
      * @var int Code is used when duplicate language ISO code in encountered when creating new language
      */
     const DUPLICATE_ISO_CODE = 3;
+
+    /**
+     * @var int Code is used when empty data is used when deleting languages
+     */
+    const EMPTY_BULK_DELETE = 4;
 }

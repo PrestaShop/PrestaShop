@@ -24,6 +24,10 @@ let defaultLocalUnitsData = {
     exchangeRate: '1.13'
   };
 
+/**
+ * This script should be moved to the campaign full when this issue will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/10744
+ **/
 scenario('"Configuration"', () => {
     scenario('Login in the Back Office', client => {
       test('should open the browser', () => client.open());

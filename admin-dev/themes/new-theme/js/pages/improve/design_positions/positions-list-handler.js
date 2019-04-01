@@ -114,6 +114,11 @@ class PositionsListHandler {
       self.modulesPositionFilterHooks();
     });
 
+    self.$hookSearch.on('keypress', (e) => {
+      const keyCode = e.keyCode || e.which;
+      return keyCode !== 13;
+    });
+
     $('.hook-checker').on('click', function() {
       $(`.hook${$(this).data('hook-id')}`).prop('checked', $(this).prop('checked'));
     });

@@ -26,11 +26,18 @@
 
 namespace LegacyTests\Unit\Controller\FrontController;
 
+use Currency;
+use Language;
+use LocalizationPack;
 use LegacyTests\TestCase\IntegrationTestCase;
 use LegacyTests\Unit\ContextMocker;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShopBundle\Cache\LocalizationWarmer;
+use ProductControllerCore;
+use ReflectionClass;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-class ProductControllerTest extends IntegrationTestCase
+class ProductControllerTest extends SymfonyIntegrationTestCase
 {
     /**
      * @var ContextMocker
@@ -39,18 +46,42 @@ class ProductControllerTest extends IntegrationTestCase
 
     private $controller;
 
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::installTestedLanguagePacks();
+    }
+
     protected function setUp()
     {
         parent::setUp();
-        $this->contextMocker = new ContextMocker();
-        $this->contextMocker->mockContext();
-        $this->controller = new \ProductControllerCore();
+        global $kernel;
+        $kernel = self::$kernel;
+        $this->controller = new ProductControllerCore();
     }
 
     protected function tearDown()
     {
+        global $kernel;
+        unset($kernel);
         parent::tearDown();
         $this->contextMocker->resetContext();
+    }
+
+    protected static function installTestedLanguagePacks()
+    {
+        $countries = [
+            'us',
+            'fr',
+        ];
+        $cacheDir  = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
+
+        foreach ($countries as $country) {
+            $xmlContent = (new LocalizationWarmer(_PS_VERSION_, $country))
+                ->warmUp($cacheDir);
+
+            (new LocalizationPack)->loadLocalisationPack($xmlContent, false, true);
+        }
     }
 
     /**
@@ -64,7 +95,7 @@ class ProductControllerTest extends IntegrationTestCase
      */
     public function invokeMethod($object, $methodName, array $parameters = array())
     {
-        $reflection = new \ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass(get_class($object));
         $method     = $reflection->getMethod($methodName);
         $method->setAccessible(true);
 
@@ -91,11 +122,11 @@ class ProductControllerTest extends IntegrationTestCase
         $specificPrices,
         $expected
     ) {
-        $class    = new \ReflectionClass(get_class($this->controller));
+        $class    = new ReflectionClass(get_class($this->controller));
         $property = $class->getProperty("context");
         $property->setAccessible(true);
 
-        $currency                  = new \Currency();
+        $currency                  = new Currency;
         $currency->active          = true;
         $currency->conversion_rate = $currencyData['conversion_rate'];
         $currency->sign            = $currencyData['sign'];
@@ -104,8 +135,9 @@ class ProductControllerTest extends IntegrationTestCase
         /** @var \Context $context */
         $context            = $property->getValue($this->controller);
         $context->currency  = $currency;
-        $language           = new \Language();
+        $language           = new Language();
         $language->iso_code = 'EN';
+        $language->locale   = 'en-US';
         $context->language  = $language;
         $result             = $this->invokeMethod(
             $this->controller,

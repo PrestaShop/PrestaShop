@@ -25,6 +25,8 @@
  */
 
 use PrestaShopBundle\Install\Upgrade;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+
 
 // Although no arguments execute the script, you can get some help if requested.
 if (isset($argv) && is_array($argv) && in_array('--help', $argv)) {
@@ -48,7 +50,7 @@ Upgrade::migrateSettingsFile();
 require_once _PS_CONFIG_DIR_.'bootstrap.php';
 
 $logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
-@mkdir($logDir, 0777, true);
+@mkdir($logDir, FileSystem::DEFAULT_MODE_FOLDER, true);
 
 $upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');
 if (isset($_GET['autoupgrade']) && $_GET['autoupgrade'] == 1) {

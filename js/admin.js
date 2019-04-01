@@ -905,7 +905,7 @@ $(document).ready(function()
 		{
 			bindSwapButton('add', 'available', 'selected', this);
 			bindSwapButton('remove', 'selected', 'available', this);
-		
+
 			$('button:submit').click(function() {
 				bindSwapSave(this);
 			});
@@ -1136,14 +1136,16 @@ function quickSelect(elt)
 
 function changeEmployeeLanguage()
 {
-	if (typeof allowEmployeeFormLang !== 'undefined' && allowEmployeeFormLang)
-		$.post("index.php", {
-			action: 'formLanguage',
-			tab: 'AdminEmployees',
-			ajax: 1,
-			token: employee_token,
-			form_language_id: id_language
-		});
+  if (typeof allowEmployeeFormLang !== 'undefined' && allowEmployeeFormLang)
+    for (var key in languages) {
+      if (id_language === languages[key]['id_lang']) {
+        $.post(changeFormLanguageUrl, {
+          language_iso_code: languages[key]['iso_code']
+        });
+
+        break;
+      }
+    }
 }
 
 function hideOtherLanguage(id)

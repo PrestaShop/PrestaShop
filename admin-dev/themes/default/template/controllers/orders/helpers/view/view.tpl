@@ -577,7 +577,7 @@
             <i class="icon-user"></i>
             {l s='Customer' d='Admin.Global'}
             <span class="badge">
-              <a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}">
+              <a href="{$link->getAdminLink('AdminCustomers', true, [], ['id_customer' => $customer->id,'viewcustomer' => 1])}">
                 {if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
                 {$gender->name|escape:'html':'UTF-8'}
                 {$customer->firstname}
@@ -625,7 +625,7 @@
 
             <div class="col-xs-6">
               <div class="form-group hidden-print">
-                <a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" class="btn btn-default btn-block">{l s='View full details...' d='Admin.Orderscustomers.Feature'}</a>
+                <a href="{$link->getAdminLink('AdminCustomers', true, [], ['id_customer' => $customer->id,'viewcustomer' => 1])}" class="btn btn-default btn-block">{l s='View full details...' d='Admin.Orderscustomers.Feature'}</a>
               </div>
               <div class="panel panel-sm">
                 <div class="panel-heading">

@@ -175,7 +175,7 @@ module.exports = {
         test('should check that the order has been placed by a guest', () => client.isExisting(OrderPage.transform_guest_customer_button));
       } else if (checkCustomer === true) {
         test('should check the customer email', () => client.checkTextValue(OrderPage.customer_email, 'pub@prestashop.com', 'contain'));
-        test('should check the "Account registered""' + dateSystem + '"', () => client.checkTextValue(OrderPage.customer_created, dateSystem, 'contain'));
+        test('should check the "Account registered" ', () => client.checkTextValue(OrderPage.customer_created, dateSystem, 'contain'));
         test('should check the "valid orders placed" ', () => client.checkTextValue(OrderPage.valid_order_placed, global.tab['valid_orders']));
         test('should check the "Total spent since registration" ', () => client.checkTextValue(OrderPage.total_registration, global.tab['total_amount'].split('€')[1], 'contain'));
       }

@@ -97,7 +97,7 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
         }
 
         $newCategoryFormBuilder->setAction(
-            $this->urlGenerator->generate('admin_category_listing_search', $queryParams)
+            $this->urlGenerator->generate('admin_categories_search', $queryParams)
         );
 
         return $newCategoryFormBuilder->getForm();

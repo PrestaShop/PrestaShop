@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
+/**
+ * Translations provider for keys not yet put in the right domain.
+ * Equivalent to so-called main "messages" domain in the Symfony ecosystem.
+ */
 class OthersProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**
@@ -35,9 +37,7 @@ class OthersProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return array(
-            '^messages*',
-        );
+        return ['^messages*'];
     }
 
     /**
@@ -45,9 +45,7 @@ class OthersProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getFilters()
     {
-        return array(
-            '#^messages*#',
-        );
+        return ['#^messages*#'];
     }
 
     /**
@@ -56,29 +54,6 @@ class OthersProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getIdentifier()
     {
         return 'others';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
     }
 
     /**

@@ -169,7 +169,7 @@ class Employee implements UserInterface, EquatableInterface
      */
     public function isEqualTo(UserInterface $user)
     {
-        if (!$user instanceof Employee) {
+        if (!$user instanceof static) {
             return false;
         }
 

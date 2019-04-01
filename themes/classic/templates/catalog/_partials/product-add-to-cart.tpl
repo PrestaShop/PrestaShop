@@ -30,7 +30,7 @@
       <div class="product-quantity clearfix">
         <div class="qty">
           <input
-            type="text"
+            type="number"
             name="qty"
             id="quantity_wanted"
             value="{$product.quantity_wanted}"
@@ -70,7 +70,7 @@
         {/if}
       </span>
     {/block}
-    
+
     {block name='product_minimal_quantity'}
       <p class="product-minimal-quantity">
         {if $product.minimal_quantity > 1}

@@ -388,6 +388,11 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Get MySQL table columns data.
      *
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_sql_requests_index"
+     * )
+     *
      * @param string $mySqlTableName Database table name
      *
      * @return JsonResponse

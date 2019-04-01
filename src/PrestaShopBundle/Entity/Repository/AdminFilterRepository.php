@@ -53,6 +53,22 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
+     * @param int $employeeId
+     * @param int $shopId
+     * @param string $filterId
+     *
+     * @return AdminFilter|null
+     */
+    public function findByEmployeeAndFilterId($employeeId, $shopId, $filterId)
+    {
+        return $this->findOneBy([
+            'employee' => $employeeId ?: 0,
+            'shop' => $shopId ?: 0,
+            'filterId' => $filterId,
+        ]);
+    }
+
+    /**
      * @param $employeeId
      * @param $shopId
      * @param $controller
@@ -83,17 +99,79 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * @param $employeeId
-     * @param $shopId
-     * @param $filters
-     * @param $controller
-     * @param $action
+     * @param string $filterId
      *
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createOrUpdateByEmployeeAndRouteParams($employeeId, $shopId, $filters, $controller, $action)
+    public function removeByFilterId($filterId)
     {
+        $adminFilter = $this->findOneBy([
+            'filterId' => $filterId,
+        ]);
+
+        if (null === $adminFilter) {
+            return;
+        }
+
+        $this->getEntityManager()->remove($adminFilter);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Persist (create or update) filters into database using employee and uuid
+     *
+     * @param int $employeeId
+     * @param int $shopId
+     * @param array $filters
+     * @param string $filterId
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function createOrUpdateByEmployeeAndFilterId(
+        $employeeId,
+        $shopId,
+        array $filters,
+        $filterId
+    ) {
+        $adminFilter = $this->findOneBy([
+            'employee' => $employeeId,
+            'shop' => $shopId,
+            'filterId' => $filterId,
+        ]);
+
+        $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
+
+        $adminFilter
+            ->setController('')
+            ->setAction('')
+            ->setFilterId($filterId)
+            ->setEmployee($employeeId)
+            ->setShop($shopId)
+            ->setFilter(json_encode($filters))
+        ;
+
+        $this->getEntityManager()->persist($adminFilter);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Persist (create or update) filters into database using employee and controller name and its action name.
+     *
+     * @param int $employeeId
+     * @param int $shopId
+     * @param array $filters
+     * @param string $controller
+     * @param string $action
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function createOrUpdateByEmployeeAndRouteParams(
+        $employeeId,
+        $shopId,
+        $filters,
+        $controller,
+        $action
+    ) {
         $adminFilter = $this->findOneBy([
             'employee' => $employeeId,
             'shop' => $shopId,
@@ -103,14 +181,16 @@ class AdminFilterRepository extends EntityRepository
 
         $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
 
-        $adminFilter->setAction($action)
+        $adminFilter
             ->setController($controller)
+            ->setAction($action)
+            ->setFilterId('')
             ->setEmployee($employeeId)
             ->setShop($shopId)
-            ->setFilter(json_encode($filters));
+            ->setFilter(json_encode($filters))
+        ;
 
         $this->getEntityManager()->persist($adminFilter);
-
         $this->getEntityManager()->flush();
     }
 }

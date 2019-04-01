@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
+use Configuration;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ToggleCurrencyStatusHandlerInterface;
@@ -33,10 +34,14 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCur
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShopException;
+use Shop;
 
 /**
  * Class ToggleCurrencyStatusHandler is responsible for toggling currency status.
+ *
+ * @internal
  */
 final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerInterface
 {
@@ -71,13 +76,9 @@ final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerIn
             );
         }
 
-        if ($entity->active && $command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
-            throw new CannotDisableDefaultCurrencyException(
-                sprintf(
-                    'Currency with id "%s" is the default currency and cannot be disabled.',
-                    $command->getCurrencyId()->getValue()
-                )
-            );
+        if ($entity->active) {
+            $this->assertDefaultCurrencyIsNotBeingDisabled($entity);
+            $this->assertDefaultCurrencyIsNotBeingDisabledFromAnyShop($entity);
         }
 
         try {
@@ -97,6 +98,58 @@ final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerIn
                 ),
                 0,
                 $e
+            );
+        }
+    }
+
+    /**
+     * @param Currency $currency
+     *
+     * @throws CannotDisableDefaultCurrencyException
+     */
+    private function assertDefaultCurrencyIsNotBeingDisabled(Currency $currency)
+    {
+        if ((int) $currency->id === $this->defaultCurrencyId) {
+            throw new CannotDisableDefaultCurrencyException(
+                sprintf(
+                    'Currency with id "%s" is the default currency and cannot be disabled.',
+                    $currency->id
+                )
+            );
+        }
+    }
+
+    /**
+     * @param Currency $currency
+     *
+     * @throws DefaultCurrencyInMultiShopException
+     */
+    private function assertDefaultCurrencyIsNotBeingDisabledFromAnyShop(Currency $currency)
+    {
+        $allShopIds = Shop::getShops(false, null, true);
+
+        foreach ($allShopIds as $shopId) {
+            $shopDefaultCurrencyId = (int) Configuration::get(
+                'PS_CURRENCY_DEFAULT',
+                null,
+                null,
+                $shopId
+            );
+
+            if ((int) $currency->id !== $shopDefaultCurrencyId) {
+                continue;
+            }
+
+            $shop = new Shop($shopId);
+            throw new DefaultCurrencyInMultiShopException(
+                $currency->name,
+                $shop->name,
+                sprintf(
+                    'Currency with id %s cannot be disabled from shop with id %s because its the default currency.',
+                    $currency->id,
+                    $shopId
+                ),
+                DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY
             );
         }
     }

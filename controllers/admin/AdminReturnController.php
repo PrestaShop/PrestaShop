@@ -167,7 +167,10 @@ class AdminReturnControllerCore extends AdminController
 
         $this->tpl_form_vars = array(
             'customer' => new Customer($this->object->id_customer),
-            'url_customer' => 'index.php?tab=AdminCustomers&id_customer=' . (int) $this->object->id_customer . '&viewcustomer&token=' . Tools::getAdminToken('AdminCustomers' . (int) (Tab::getIdFromClassName('AdminCustomers')) . (int) $this->context->employee->id),
+            'url_customer' => $this->context->link->getAdminLink('AdminCustomers', true, [], [
+                'id_customer' => $this->object->id_customer,
+                'viewcustomer' => 1,
+            ]),
             'text_order' => $this->trans(
                 'Order #%id% from %date%',
                 array(

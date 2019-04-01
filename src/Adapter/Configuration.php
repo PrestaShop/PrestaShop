@@ -101,6 +101,11 @@ class Configuration extends ParameterBag implements ConfigurationInterface
             return constant($key);
         }
 
+        //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
+        if (!ConfigurationLegacy::configurationIsLoaded()) {
+            ConfigurationLegacy::loadConfiguration();
+        }
+
         // if the key is multi lang related, we return an array with the value per language.
         // getInt() meaning probably getInternational()
         if (ConfigurationLegacy::isLangKey($key)) {

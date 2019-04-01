@@ -40,7 +40,8 @@ module.exports = {
     parent_category: '(//*[@id="categories-tree"]//span[contains(.,"%NAME")]//input)[1]',
     search_no_results: '//*[@id="table-category"]//td[@class="list-empty"]',
     category_name: '//*[@id="table-category"]//tr[%ID]//td[3]',
-    category_view_button: '//*[@id="table-category"]//tr[%ID]//td[7]//a[@title="View"]'
+    category_view_button: '//*[@id="table-category"]//tr[%ID]//td[7]//a[@title="View"]',
+    category_id_column:'//*[@id="table-category"]//tr[%ID]//td[2]',
 
   }
 };

@@ -48,12 +48,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'currency';
+
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'currency';
+        return self::GRID_ID;
     }
 
     /**
@@ -152,7 +154,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'attr' => [
                     'placeholder' => $this->trans('ISO code', [], 'Admin.International.Feature'),
                 ],
-            ])
+                ])
                 ->setAssociatedColumn('iso_code')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
@@ -164,10 +166,9 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'currency',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_currencies_index',
                 ])

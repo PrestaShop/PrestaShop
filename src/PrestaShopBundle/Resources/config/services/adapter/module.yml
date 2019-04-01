@@ -57,7 +57,7 @@ services:
             - "@event_dispatcher"
 
     prestashop.adapter.presenter.module:
-        class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
+        class: PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
         arguments: ["@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price"]
 
     prestashop.adapter.module.data_provider.tab_module_list:

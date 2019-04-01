@@ -28,6 +28,9 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 
 use Configuration;
 
+/**
+ * behat equivalent : Scenarii/Cart/Calculation/Carrier/carrier.feature
+ */
 class CarrierTest extends AbstractCarrierTest
 {
     /**

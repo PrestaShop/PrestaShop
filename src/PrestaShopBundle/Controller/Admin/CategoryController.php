@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,10 +49,12 @@ class CategoryController extends FrameworkBundleAdminController
     public function addSimpleCategoryFormAction(Request $request)
     {
         $response = new JsonResponse();
+        $commandBus = $this->get('prestashop.core.command_bus');
         $tools = $this->get('prestashop.adapter.tools');
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $shopList = $shopContext->getShops(false, true);
         $currentIdShop = $shopContext->getContextShopID();
+        $defaultLanguageId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_LANG_DEFAULT');
 
         $form = $this->createFormBuilder()
             ->add('category', SimpleCategory::class)
@@ -60,25 +65,43 @@ class CategoryController extends FrameworkBundleAdminController
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $_POST = [
-                'submitAddcategory' => 1,
-                'name_1' => $data['category']['name'],
-                'id_parent' => $data['category']['id_parent'],
-                'link_rewrite_1' => $tools->link_rewrite($data['category']['name']),
-                'active' => 1,
-                'checkBoxShopAsso_category' => $currentIdShop ? [$currentIdShop => $currentIdShop] : $shopList,
+            $localizedName = [
+                $defaultLanguageId => $data['category']['name'],
             ];
 
-            $adminCategoryController = $this->get('prestashop.adapter.admin.controller.category')->getInstance();
-            if ($category = $adminCategoryController->processAdd()) {
-                $response->setData(['category' => $category]);
-            }
+            $command = new AddCategoryCommand(
+                $localizedName,
+                [$defaultLanguageId => $tools->linkRewrite($data['category']['name'])],
+                true,
+                (int) $data['category']['id_parent']
+            );
 
-            if ($request->query->has('id_product')) {
-                $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-                $product = $productAdapter->getProduct($request->query->get('id_product'));
-                $product->addToCategories($category->id);
-                $product->save();
+            $command->setAssociatedShopIds($currentIdShop ? [$currentIdShop => $currentIdShop] : $shopList);
+
+            try {
+                /** @var CategoryId $categoryId */
+                $categoryId = $commandBus->handle($command);
+
+                if ($categoryId->getValue()) {
+                    $response->setData(
+                        [
+                            'category' => [
+                                'id' => $categoryId->getValue(),
+                                'id_parent' => $data['category']['id_parent'],
+                                'name' => $localizedName,
+                            ],
+                        ]
+                    );
+
+                    if ($request->query->has('id_product')) {
+                        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+                        $product = $productAdapter->getProduct($request->query->get('id_product'));
+                        $product->addToCategories($categoryId->getValue());
+                        $product->save();
+                    }
+                }
+            } catch (CategoryException $e) {
+                // @todo error handling should be implemented.
             }
         } else {
             $response->setStatusCode(400);

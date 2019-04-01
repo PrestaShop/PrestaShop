@@ -300,7 +300,7 @@ class AdminProductWrapper
             $isThisAnUpdate
         );
 
-        if (false === $validationResult) {
+        if (false === $validationResult || count($this->errors)) {
             return $this->errors;
         }
 
@@ -675,7 +675,7 @@ class AdminProductWrapper
                     )
                 );
 
-                if ($customization['type'] == 0) {
+                if ($customization['type'] == Product::CUSTOMIZE_FILE) {
                     ++$countFieldFile;
                 } else {
                     ++$countFieldText;

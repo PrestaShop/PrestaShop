@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
 use PrestaShop\PrestaShop\Adapter\Entity\Tag;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShopDatabaseException;
 use PrestashopInstallerException;
 
@@ -712,7 +713,7 @@ class XmlLoader
                             )
                         );
                     }
-                    @chmod($target_file, 0644);
+                    @chmod($target_file, FileSystem::DEFAULT_MODE_FILE);
                 } elseif (!ImageManager::resize(
                     $from_path . $identifier . '.' . $extension,
                     $target_file,
@@ -768,7 +769,7 @@ class XmlLoader
 
             return;
         }
-        @chmod($dst_path . '.' . $image->image_format, 0644);
+        @chmod($dst_path . '.' . $image->image_format, FileSystem::DEFAULT_MODE_FILE);
 
         $types = ImageType::getImagesTypes('products');
         foreach ($types as $type) {
@@ -796,7 +797,7 @@ class XmlLoader
                         )
                     );
                 }
-                @chmod($target_file, 0644);
+                @chmod($target_file, FileSystem::DEFAULT_MODE_FILE);
             } elseif (!ImageManager::resize($path . $identifier . '.jpg', $target_file, $type['width'], $type['height'])) {
                 // Resize the image if no cache was prepared in fixtures
                 $this->setError(

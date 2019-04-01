@@ -43,7 +43,7 @@ module.exports = {
     Design: {
       design_form: '//*[@id="configuration_form"]',
       catalog_theme: '//div[contains(@class, "addons-catalog-theme")]/div[1]',
-      configuration_fieldset: '//*[@id="configuration_fieldset_appearance"]',
+      configuration_fieldset: '//*[@id="configuration_fieldset_appearance"] | //*[@id="main-div"]//form[@name="shop_logos"]',
       cms_category_form: '//*[@id="form-cms_category"]',
       position_module_form: '//*[@id="module-positions-form"]',
       image_type_form: '//*[@id="form-image_type"]',
@@ -62,8 +62,8 @@ module.exports = {
     },
     International: {
       localization_pack_select: '//*[@id="main-div"]//form[@name="import_localization_pack"]',
-      languages_form: '//*[@id="form-lang"]',
-      currency_form: '//*[@id="form-currency"]',
+      languages_form: '//*[@id="form-lang"] | //*[@id="language_grid"]',
+      currency_form: '//*[@id="form-currency"] | //*[@id="currency_grid_table"]',
       geolocation_by_address: '//*[@id="main-div"]/div[@class="content-div  with-tabs"]//form',
       zone_form: '//*[@id="form-zone"]',
       country_form: '//*[@id="form-country"]',
@@ -102,7 +102,7 @@ module.exports = {
       permissions_form: '//*[@id="access_form"]',
       request_sql_form: '//*[@id="sql_request_grid_panel"]', //database page
       log_form: '//*[@id="logs_grid_panel"]',
-      webservice_form: '//*[@id="form-webservice_account"]',
+      webservice_form: '//*[@id="form-webservice_account"] | //*[@id="webservice_key_grid"]',
       multistore_form: '//*[@id="form-shop_group"]',
       backup_filter_form: '//*[@id="backup_filter_form"]',
     }

@@ -37,6 +37,8 @@ class DispatcherCore
     const FC_ADMIN = 2;
     const FC_MODULE = 3;
 
+    const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*';
+
     /**
      * @var Dispatcher
      */
@@ -56,7 +58,7 @@ class DispatcherCore
             'rule' => '{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_category'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -66,7 +68,7 @@ class DispatcherCore
             'rule' => 'supplier/{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_supplier'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -76,7 +78,7 @@ class DispatcherCore
             'rule' => 'brand/{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_manufacturer'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -86,7 +88,7 @@ class DispatcherCore
             'rule' => 'content/{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_cms'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -96,7 +98,7 @@ class DispatcherCore
             'rule' => 'content/category/{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_cms_category'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -118,7 +120,7 @@ class DispatcherCore
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_product'),
                 'id_product_attribute' => array('regexp' => '[0-9]+', 'param' => 'id_product_attribute'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*', 'param' => 'rewrite'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN, 'param' => 'rewrite'),
                 'ean13' => array('regexp' => '[0-9\pL]*'),
                 'category' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'categories' => array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
@@ -139,7 +141,7 @@ class DispatcherCore
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_category'),
                 /* Selected filters is used by the module blocklayered */
                 'selected_filters' => array('regexp' => '.*', 'param' => 'selected_filters'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),

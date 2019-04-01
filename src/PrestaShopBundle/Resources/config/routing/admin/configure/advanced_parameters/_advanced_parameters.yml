@@ -28,7 +28,7 @@ _sql_manager:
 
 _webservice:
     resource: "webservice.yml"
-    prefix: /webservice/
+    prefix: /webservice-keys/
 
 _backup:
     resource: "backup.yml"

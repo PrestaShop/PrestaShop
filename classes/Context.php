@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Symfony\Component\Filesystem\Filesystem;
@@ -68,6 +69,13 @@ class ContextCore
 
     /** @var Currency */
     public $currency;
+
+    /**
+     * Current locale instance.
+     *
+     * @var Locale
+     */
+    public $currentLocale;
 
     /** @var Tab */
     public $tab;
@@ -370,7 +378,7 @@ class ContextCore
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if (count($translator->getCatalogue($locale)->all())) {
+        if ($locale === '' || count($translator->getCatalogue($locale)->all())) {
             $this->translator = $translator;
 
             return $translator;

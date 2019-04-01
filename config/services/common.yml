@@ -1,0 +1,18 @@
+parameters:
+    mail_themes_uri: "/mails/themes"
+
+imports:
+    - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/cldr.yml }
+    - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/data_provider_common.yml }
+    - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/common.yml }
+
+services:
+    hashing:
+        class: PrestaShop\PrestaShop\Core\Crypto\Hashing
+
+    prestashop.database.naming_strategy:
+        class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
+        arguments: ['%database_prefix%']
+
+    annotation_reader:
+        class: Doctrine\Common\Annotations\AnnotationReader

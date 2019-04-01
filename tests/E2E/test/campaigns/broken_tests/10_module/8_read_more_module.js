@@ -10,6 +10,10 @@ const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonModule = require('../../common_scenarios/module');
 let promise = Promise.resolve();
 
+/**
+ * This script should be moved to the campaign full when this issue will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/9722
+ **/
 scenario('Check the click on "Read more" button', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());

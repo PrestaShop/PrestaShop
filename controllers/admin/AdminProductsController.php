@@ -1056,7 +1056,7 @@ class AdminProductsControllerCore extends AdminController
         $text_count = 0;
         if (is_array($current_customization)) {
             foreach ($current_customization as $field) {
-                if ($field['type'] == 1) {
+                if ($field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
                     ++$text_count;
                 } else {
                     ++$files_count;

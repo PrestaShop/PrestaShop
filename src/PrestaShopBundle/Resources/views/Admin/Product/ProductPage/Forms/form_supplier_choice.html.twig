@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% if form.suppliers|length > 0 %}
-  <div id="custom_fields">
+  <div id="form_step6_suppliers_custom_fields">
     <h2>{{ form.suppliers.vars.label }}</h2>
     <div class="row mb-1">
       <div class="col-md-12">
@@ -52,7 +52,7 @@
             <thead class="thead-default">
             <tr>
               <th width="70%">{{ 'Choose the suppliers associated with this product'|trans({}, 'Admin.Catalog.Feature') }}</th>
-              <th width=30%">{{ 'Default supplier'|trans({}, 'Admin.Catalog.Feature') }}</th>
+              <th width="30%">{{ 'Default supplier'|trans({}, 'Admin.Catalog.Feature') }}</th>
             </tr>
             </thead>
             <tbody>

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,6 +36,8 @@ use Symfony\Component\HttpFoundation\Response;
 class AlertsController extends ModuleAbstractController
 {
     /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @return Response
      */
     public function indexAction()

@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * @property Order $object
@@ -251,6 +252,7 @@ class AdminOrdersControllerCore extends AdminController
         }
 
         $this->context->smarty->assign(array(
+            'customersSearchUrl' => SymfonyContainer::getInstance()->get('router')->generate('admin_customers_search'),
             'recyclable_pack' => (int) Configuration::get('PS_RECYCLABLE_PACK'),
             'gift_wrapping' => (int) Configuration::get('PS_GIFT_WRAPPING'),
             'cart' => $cart,

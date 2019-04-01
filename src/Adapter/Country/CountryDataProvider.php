@@ -30,7 +30,7 @@ use Configuration;
 use Country;
 
 /**
- * This class will provide data from DB / ORM about Country.
+ * This class will provide data from DB / ORM about Country
  */
 class CountryDataProvider
 {
@@ -46,7 +46,7 @@ class CountryDataProvider
      */
     public function getCountries($id_lang, $active = false, $contain_states = false, $list_states = true)
     {
-        return Country::getCountries($id_lang, $active = false, $contain_states = false, $list_states = true);
+        return Country::getCountries($id_lang, $active, $contain_states, $list_states);
     }
 
     /**

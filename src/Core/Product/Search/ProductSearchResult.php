@@ -28,13 +28,36 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 class ProductSearchResult
 {
+    /**
+     * @var array
+     */
     private $products = [];
+    /**
+     * @var
+     */
     private $totalProductsCount;
+    /**
+     * @var
+     */
     private $facetCollection;
+    /**
+     * @var
+     */
     private $encodedFacets;
+    /**
+     * @var array
+     */
     private $availableSortOrders = [];
+    /**
+     * @var
+     */
     private $currentSortOrder;
 
+    /**
+     * @param array $products
+     *
+     * @return $this
+     */
     public function setProducts(array $products)
     {
         $this->products = $products;
@@ -42,11 +65,19 @@ class ProductSearchResult
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getProducts()
     {
         return $this->products;
     }
 
+    /**
+     * @param $totalProductsCount
+     *
+     * @return $this
+     */
     public function setTotalProductsCount($totalProductsCount)
     {
         $this->totalProductsCount = $totalProductsCount;
@@ -54,11 +85,19 @@ class ProductSearchResult
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getTotalProductsCount()
     {
         return $this->totalProductsCount;
     }
 
+    /**
+     * @param FacetCollection $facetCollection
+     *
+     * @return $this
+     */
     public function setFacetCollection(FacetCollection $facetCollection)
     {
         $this->facetCollection = $facetCollection;
@@ -66,11 +105,19 @@ class ProductSearchResult
         return $this;
     }
 
+    /**
+     * @return FacetCollection
+     */
     public function getFacetCollection()
     {
         return $this->facetCollection;
     }
 
+    /**
+     * @param $encodedFacets
+     *
+     * @return $this
+     */
     public function setEncodedFacets($encodedFacets)
     {
         $this->encodedFacets = $encodedFacets;
@@ -78,11 +125,19 @@ class ProductSearchResult
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getEncodedFacets()
     {
         return $this->encodedFacets;
     }
 
+    /**
+     * @param SortOrder $sortOrder
+     *
+     * @return $this
+     */
     public function addAvailableSortOrder(SortOrder $sortOrder)
     {
         $this->availableSortOrders[] = $sortOrder;
@@ -90,11 +145,19 @@ class ProductSearchResult
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getAvailableSortOrders()
     {
         return $this->availableSortOrders;
     }
 
+    /**
+     * @param array $sortOrders
+     *
+     * @return $this
+     */
     public function setAvailableSortOrders(array $sortOrders)
     {
         $this->availableSortOrders = [];
@@ -106,6 +169,11 @@ class ProductSearchResult
         return $this;
     }
 
+    /**
+     * @param SortOrder $currentSortOrder
+     *
+     * @return $this
+     */
     public function setCurrentSortOrder(SortOrder $currentSortOrder)
     {
         $this->currentSortOrder = $currentSortOrder;
@@ -113,6 +181,9 @@ class ProductSearchResult
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getCurrentSortOrder()
     {
         return $this->currentSortOrder;

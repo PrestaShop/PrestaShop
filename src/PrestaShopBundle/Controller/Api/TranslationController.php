@@ -27,12 +27,15 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
+use Symfony\Component\Validator\Constraints\Locale;
 
 class TranslationController extends ApiController
 {
@@ -59,28 +62,39 @@ class TranslationController extends ApiController
             $queryParamsCollection = $this->queryParams->fromRequest($request);
             $queryParams = $queryParamsCollection->getQueryParams();
 
+            /** @var TranslationService $translationService */
             $translationService = $this->container->get('prestashop.service.translation');
 
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
-            $theme = $request->attributes->get('theme');
-
+            $theme = $request->attributes->get('theme', $this->getSelectedTheme());
+            $module = $request->query->get('module');
             $search = $request->query->get('search');
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search);
+            $icuLocale = Converter::toPrestaShopLocale($locale);
+            $validationErrors = $this->container->get('validator')->validate($icuLocale, [
+                new Locale(),
+            ]);
+
+            // If the locale is invalid, no need to call the translation provider.
+            if ($locale !== 'default' && count($validationErrors) > 0) {
+                throw UnsupportedLocaleException::invalidLocale($locale);
+            }
+
+            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
             $info = array(
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             );
 
             $catalog['info'] = array_merge(
                 $catalog['info'],
-                array(
+                [
                     'locale' => $locale,
                     'domain' => $domain,
                     'theme' => $theme,
                     'total_translations' => count($catalog['data']),
                     'total_missing_translations' => 0,
-                )
+                ]
             );
 
             foreach ($catalog['data'] as $message) {
@@ -156,8 +170,8 @@ class TranslationController extends ApiController
             $translationService = $this->container->get('prestashop.service.translation');
             $response = [];
             foreach ($translations as $translation) {
-                if (!array_key_exists('theme', $translation)) {
-                    $translation['theme'] = null;
+                if (empty($translation['theme'])) {
+                    $translation['theme'] = $this->getSelectedTheme();
                 }
 
                 try {
@@ -300,8 +314,8 @@ class TranslationController extends ApiController
      */
     private function getNormalTree($lang, $type, $selected, $search = null)
     {
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected, $search);
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $this->getSelectedTheme());
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $this->getSelectedTheme(), $search);
 
         return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
     }
@@ -316,13 +330,14 @@ class TranslationController extends ApiController
      */
     private function getModulesTree($lang, $type, $selected, $search = null)
     {
-        $moduleProvider = $this->container->get('prestashop.translation.module_provider');
+        $locale = $this->translationService->langToLocale($lang);
+        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
         $moduleProvider->setModuleName($selected);
 
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
+        $treeBuilder = new TreeBuilder($locale, $this->getSelectedTheme());
         $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $type, null, $search);
+        return $this->getCleanTree($treeBuilder, $catalogue, $type, null, $search, $selected);
     }
 
     /**
@@ -332,17 +347,26 @@ class TranslationController extends ApiController
      * @param $catalogue
      * @param $type
      * @param $selected
-     * @param null $search
+     * @param string|null $search
+     * @param string|null $module
      *
      * @return array
      */
-    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null)
+    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null, $module = null)
     {
-        $selected = ('mails' === $type && 'subject' === $selected ? false : $selected);
-
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $selected, $search);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $this->getSelectedTheme(), $search, $module);
 
         return $translationsTree;
+    }
+
+    /**
+     * @return \PrestaShop\PrestaShop\Core\Addon\Theme\Theme
+     *
+     * @todo: When the theme will be selectable in the form, this function should be updated accordingly.
+     */
+    private function getSelectedTheme()
+    {
+        return $this->container->get('prestashop.adapter.legacy.context')->getContext()->shop->theme->getName();
     }
 }

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Meta;
 
 use Db;
 use DbQuery;
+use Meta;
 use PrestaShop\PrestaShop\Core\Meta\MetaDataProviderInterface;
 
 /**
@@ -53,5 +54,82 @@ class MetaDataProvider implements MetaDataProviderInterface
         }
 
         return $idMeta;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultMetaPageNameById($metaId)
+    {
+        $query = new DbQuery();
+        $query->select('`page`');
+        $query->from('meta');
+        $query->where('`id_meta`=' . (int) $metaId);
+        $query->where('`page` NOT LIKE "module-%"');
+        $result = Db::getInstance()->getValue($query);
+
+        return is_string($result) ? $result : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getModuleMetaPageNameById($metaId)
+    {
+        $query = new DbQuery();
+        $query->select('`page`');
+        $query->from('meta');
+        $query->where('`id_meta`=' . (int) $metaId);
+        $query->where('`page` LIKE "module-%"');
+
+        $result = Db::getInstance()->getValue($query);
+
+        return is_string($result) ? $result : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultMetaPageNamesExcludingFilled()
+    {
+        $pages = Meta::getPages(true);
+
+        $result = [];
+        foreach ($pages as $pageName => $fileName) {
+            if (!$this->isModuleFile($fileName)) {
+                $result[$pageName] = $fileName;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNotConfiguredModuleMetaPageNames()
+    {
+        $pages = Meta::getPages(true);
+
+        $result = [];
+        foreach ($pages as $pageName => $fileName) {
+            if ($this->isModuleFile($fileName)) {
+                $result[$pageName] = $fileName;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Checks whenever the file contains module file pattern.
+     *
+     * @param string $fileName
+     *
+     * @return bool
+     */
+    private function isModuleFile($fileName)
+    {
+        return 0 === strncmp($fileName, 'module-', 7);
     }
 }

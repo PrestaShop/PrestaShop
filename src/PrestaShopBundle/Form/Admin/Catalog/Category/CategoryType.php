@@ -42,12 +42,22 @@ class CategoryType extends AbstractCategoryType
     {
         parent::buildForm($builder, $options);
 
+        // Root category is always disabled
+        $disabledCategories = [
+            $this->getConfiguration()->getInt('PS_ROOT_CATEGORY'),
+        ];
+
+        if (null !== $options['id_category']) {
+            // when using CategoryType to edit category
+            // user should not be able to select that category as parent
+            $disabledCategories[] = $options['id_category'];
+        }
+
         $builder
             ->add('id_parent', CategoryChoiceTreeType::class, [
-                // when using CategoryType to edit category
-                // user should not be able to select that category as parent
-                'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : [],
-            ]);
+                'disabled_values' => $disabledCategories,
+            ])
+        ;
     }
 
     /**

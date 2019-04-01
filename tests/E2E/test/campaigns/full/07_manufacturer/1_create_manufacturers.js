@@ -72,7 +72,8 @@ scenario('Create "Brand"', () => {
 
   scenario('Check brand in Front Office', client => {
     test('should go to the Front Office', () => client.switchWindow(1));
-    test('should click on "Brands" link to display all brands', () => client.waitForExistAndClick(SiteMapPageFO.nav_brands_link));
+    test('should click on "Sitemap" link on the footer', () => client.scrollWaitForExistAndClick(AccessPageFO.sitemap));
+    test('should click on "Brands" link to display all brands', () => client.waitForExistAndClick(SiteMapPageFO.brands_link));
     test('should click on "1 product" link related to the created brand', () => client.waitForExistAndClick(SiteMapPageFO.brand_product_link.replace('%NAME', 'PrestaShop' + date_time)));
     test('should check the existence of the created product', () => client.waitForVisible(SiteMapPageFO.list_product_link.replace('%TEXT', date_time)));
     test('should go to the Back Office', () => client.switchWindow(0));

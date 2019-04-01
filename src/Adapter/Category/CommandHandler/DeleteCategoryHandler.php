@@ -52,6 +52,7 @@ final class DeleteCategoryHandler extends AbstractDeleteCategoryHandler implemen
 
         if (!$category->id) {
             throw new CategoryNotFoundException(
+                $command->getCategoryId(),
                 sprintf('Category with id %s cannot be found.', var_export($categoryIdValue, true))
             );
         }

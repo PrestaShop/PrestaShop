@@ -41,6 +41,15 @@
       {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': currencyGrid }) }}
     </div>
   </div>
+
+  {% block exchange_rates_block %}
+    <div class="row">
+      <div class="col-lg-6 col-md-8">
+        {{ include('@PrestaShop/Admin/Improve/International/Currency/Blocks/exchange_rates.html.twig', {'exchangeRatesForm': currencySettingsForm.exchange_rates}) }}
+      </div>
+    </div>
+  {% endblock %}
+
 {% endblock %}
 
 {% block javascripts %}

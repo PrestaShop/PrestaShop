@@ -345,7 +345,7 @@ class CustomizationCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = ' . (int) $this->id_product . '
 			AND id_customization = ' . (int) $this->id . '
-			AND cf.type = 1')) {
+			AND cf.type = ' . (int) Product::CUSTOMIZE_TEXTFIELD)) {
             return array();
         }
 
@@ -366,7 +366,7 @@ class CustomizationCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = ' . (int) $this->id_product . '
 			AND id_customization = ' . (int) $this->id . '
-			AND cf.type = 0')) {
+			AND cf.type = ' . (int) Product::CUSTOMIZE_FILE)) {
             return array();
         }
 
@@ -392,10 +392,10 @@ class CustomizationCore extends ObjectModel
         Db::getInstance()->execute('
 		DELETE FROM `' . _DB_PREFIX_ . 'customized_data`
 		WHERE id_customization = ' . (int) $this->id . '
-		AND type = 1');
+		AND type = ' . (int) Product::CUSTOMIZE_TEXTFIELD);
         foreach ($values as $value) {
             $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
-				VALUES (' . (int) $this->id . ', 1, ' . (int) $value['id_customization_field'] . ', \'' . pSQL($value['value']) . '\')';
+				VALUES (' . (int) $this->id . ', ' . (int) Product::CUSTOMIZE_TEXTFIELD . ', ' . (int) $value['id_customization_field'] . ', \'' . pSQL($value['value']) . '\')';
 
             if (!Db::getInstance()->execute($query)) {
                 return false;

@@ -935,8 +935,6 @@ class FrontControllerCore extends Controller
      */
     public function initHeader()
     {
-        /* @see P3P Policies (https://www.w3.org/TR/P3P/) */
-        header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
     }
 
     /**
@@ -1528,6 +1526,7 @@ class FrontControllerCore extends Controller
 
         return array(
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
+            'display_prices_tax_incl' => (bool) (new TaxConfiguration())->includeTaxes(),
             'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
             'is_b2b' => (bool) Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool) Configuration::isCatalogMode(),

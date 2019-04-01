@@ -126,7 +126,7 @@
                 data-up-url="{$product.up_quantity_url}"
                 data-update-url="{$product.update_quantity_url}"
                 data-product-id="{$product.id_product}"
-                type="text"
+                type="number"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
                 min="{$product.minimal_quantity}"

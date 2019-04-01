@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 
 use CSSJanus;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
 use Tools;
 
@@ -243,6 +244,6 @@ class StylesheetGenerator
             );
         }
 
-        @chmod($rtlFilePath, 0644);
+        @chmod($rtlFilePath, FileSystem::DEFAULT_MODE_FILE);
     }
 }

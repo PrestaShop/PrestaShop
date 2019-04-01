@@ -169,7 +169,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $suppliersToDelete = $request->request->get('suppliers_bulk');
+        $suppliersToDelete = $request->request->get('supplier_bulk');
 
         try {
             $suppliersToDelete = array_map(function ($item) { return (int) $item; }, $suppliersToDelete);
@@ -204,7 +204,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function bulkDisableAction(Request $request)
     {
-        $suppliersToDisable = $request->request->get('suppliers_bulk');
+        $suppliersToDisable = $request->request->get('supplier_bulk');
 
         try {
             $suppliersToDisable = array_map(function ($item) { return (int) $item; }, $suppliersToDisable);
@@ -238,7 +238,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function bulkEnableAction(Request $request)
     {
-        $suppliersToEnable = $request->request->get('suppliers_bulk');
+        $suppliersToEnable = $request->request->get('supplier_bulk');
 
         try {
             $suppliersToEnable = array_map(function ($item) { return (int) $item; }, $suppliersToEnable);

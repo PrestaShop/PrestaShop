@@ -39,9 +39,10 @@ import DeleteCategoriesBulkActionExtension from "../../components/grid/extension
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
 import TextWithLengthCounter from "../../components/form/text-with-length-counter";
-import NameToLinkRewriteCopier from "./name-to-link-rewrite-copier";
+import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copier";
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
+import TaggableField from "../../components/taggable-field";
 
 const $ = window.$;
 
@@ -64,8 +65,25 @@ $(() => {
   new TranslatableInput();
   new ChoiceTable();
   new TextWithLengthCounter();
-  new NameToLinkRewriteCopier();
+
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input[name^="category[name]"]',
+    destinationElementSelector: 'input[name^="category[link_rewrite]"]',
+  });
+
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input[name^="root_category[name]"]',
+    destinationElementSelector: 'input[name^="root_category[link_rewrite]"]',
+  });
+
   new FormSubmitButton();
+
+  new TaggableField({
+    tokenFieldSelector: 'input.js-taggable-field',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
 
   new ChoiceTree('#category_id_parent');
   new ChoiceTree('#category_shop_association').enableAutoCheckChildren();

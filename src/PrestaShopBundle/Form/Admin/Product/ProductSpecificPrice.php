@@ -164,7 +164,9 @@ class ProductSpecificPrice extends CommonAbstractType
                 'sp_id_customer',
                 TypeaheadCustomerCollectionType::class,
                 [
-                    'remote_url' => $this->context->getAdminLink('AdminCustomers', true) . '&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
+                    // "%QUERY" is appended to url in order to avoid "%" sign being encoded into "%25",
+                    // it used as a placeholder to replace with actual query in JS
+                    'remote_url' => $this->router->generate('admin_customers_search', ['sf2' => 1]) . '&customer_search=%QUERY',
                     'mapping_value' => 'id_customer',
                     'mapping_name' => 'fullname_and_email',
                     'placeholder' => $this->translator->trans('All customers', [], 'Admin.Global'),
@@ -252,7 +254,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 [
                     'label' => $this->translator->trans('Reduction type', [], 'Admin.Catalog.Feature'),
                     'choices' => [
-                        '€' => 'amount',
+                        $this->currency->getSign() => 'amount',
                         $this->translator->trans('%', [], 'Admin.Global') => 'percentage',
                     ],
                     'required' => true,

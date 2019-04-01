@@ -1,0 +1,33 @@
+services:
+  _defaults:
+    public: true
+
+  # Command handlers
+
+  prestashop.adapter.address.command_handler.delete_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\DeleteAddressHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand' }
+
+  prestashop.adapter.address.command_handler.bulk_delete_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\BulkDeleteAddressHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand' }
+
+  prestashop.adapter.address.command_handler.add_manufacturer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\AddManufacturerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand'
+
+  prestashop.adapter.address.command_handler.edit_manufacturer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditManufacturerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand'
+
+  prestashop.adapter.address.query_handler.get_manufacturer_address_for_editing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetManufacturerAddressForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing'

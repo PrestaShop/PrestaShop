@@ -31,33 +31,41 @@
 
 {% block content %}
   {% block categories_kpis %}
-    <div class="col-md-12">
-      <div class="card">
-        <div class="row">
-          {{ render(controller(
-            'PrestaShopBundle:Admin\\Common:renderKpiRow',
-            { 'kpiRow': categoriesKpi }
-          )) }}
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="row">
+            {{ render(controller(
+              'PrestaShopBundle:Admin\\Common:renderKpiRow',
+              { 'kpiRow': categoriesKpi }
+            )) }}
+          </div>
         </div>
       </div>
     </div>
   {% endblock %}
 
   {% block categories_breadcrumb %}
-    {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/breadcrumb.html.twig' %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/breadcrumb.html.twig' %}
+      </div>
+    </div>
   {% endblock %}
 
   {% block categories_listing %}
-    <div class="col-md-12">
-      {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': categoriesGrid} %}
-        {% block grid_panel_footer %}
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/listing_panel_footer.html.twig' %}
-        {% endblock %}
+    <div class="row">
+      <div class="col">
+        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': categoriesGrid} %}
+          {% block grid_panel_footer %}
+            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/listing_panel_footer.html.twig' %}
+          {% endblock %}
 
-        {% block grid_panel_extra_content %}
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
-        {% endblock %}
-      {% endembed %}
+          {% block grid_panel_extra_content %}
+            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
+          {% endblock %}
+        {% endembed %}
+      </div>
     </div>
   {% endblock %}
 {% endblock %}

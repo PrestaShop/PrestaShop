@@ -1,3 +1,6 @@
+imports:
+  - { resource: ./common.yml }
+
 services:
     _defaults:
         public: true
@@ -48,14 +51,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
         arguments: ['%kernel.root_dir%/config/parameters.php']
 
-    prestashop.adapter.legacy.configuration:
-        class: PrestaShop\PrestaShop\Adapter\Configuration
-
     prestashop.adapter.legacy.kpi_configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
-
-    prestashop.adapter.legacy.context:
-        class: PrestaShop\PrestaShop\Adapter\LegacyContext
 
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger
@@ -90,9 +87,6 @@ services:
     # Other adapters
     prestashop.adapter.shop.context:
         class: PrestaShop\PrestaShop\Adapter\Shop\Context
-
-    prestashop.adapter.tools:
-        class: PrestaShop\PrestaShop\Adapter\Tools
 
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager

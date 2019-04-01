@@ -92,6 +92,12 @@ module.exports = {
     payment_method: '//*[@id="order-details"]//li[2]',
     product_details_tab: '//*[@id="main"]//a[@href="#product-details"]',
     product_available_quantity_span: '//*[@id="main"]//div[contains(@class,"product-quantities")]//span',
+    product_name_link: '//*[@id="main"]//li[@class="cart-item"]//a[@class="label"]',
+    product_customization_link: '(//*[@id="main"]//a[text()="Product customization"])[%I]',
+    product_customization_modal: '(//div[contains(@class,"product-customization-line")]/div[%R])[%I]',
+    product_customization_modal_image: '//div[contains(@class,"product-customization-line")]//img',
+    product_customization_close_modal_button: '(//button[@class="close"])[%I]',
+    customization_error_message: '//*[@id="notifications"]//article[contains(@class,"alert-danger")]/ul/li',
   },
   CustomerAccount: {
     order_history_button: '//*[@id="history-link"]',
@@ -106,6 +112,7 @@ module.exports = {
     add_message_block: '//*[@id="content"]/section[@class="order-message-form box"]',
     message_input: '//*[@id="content"]//textarea[@name="msgText"]',
     send_button: '//*[@id="content"]//button[@name="submitMessage"]',
-    success_panel: '//*[@id="notifications"]//article[@class="alert alert-success"]'
+    success_panel: '//*[@id="notifications"]//article[@class="alert alert-success"]',
+    product_name:'//*[@id="order-products"]//td[1]//a[contains(text(),"%PRODUCTNAME")]'
   }
 };

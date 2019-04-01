@@ -26,38 +26,40 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\Form\FormInterface;
-use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -89,6 +91,7 @@ class CustomerController extends AbstractAdminController
         $customerGrid = $customerGridFactory->getGrid($filters);
 
         $deleteCustomerForm = $this->createForm(DeleteCustomersType::class);
+        $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -97,6 +100,7 @@ class CustomerController extends AbstractAdminController
             'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
             'deleteCustomersForm' => $deleteCustomerForm->createView(),
+            'helperCardDocumentationLink' => $helperBlockLinkProvider->getLink('customer'),
         ]);
     }
 
@@ -126,6 +130,16 @@ class CustomerController extends AbstractAdminController
             if ($customerId = $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
+                if ($request->query->has('submitFormAjax')) {
+                    /** @var ViewableCustomer $customerInformation */
+                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+
+                    return $this->render('@PrestaShop/Admin/Sell/Customer/modal_create_success.html.twig', [
+                        'customerId' => $customerId,
+                        'customerEmail' => $customerInformation->getPersonalInformation()->getEmail(),
+                    ]);
+                }
+
                 return $this->redirectToRoute('admin_customers_index');
             }
         } catch (CustomerException $e) {
@@ -136,6 +150,7 @@ class CustomerController extends AbstractAdminController
             'customerForm' => $customerForm->createView(),
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,
+            'displayInIframe' => $request->query->has('submitFormAjax'),
         ]);
     }
 
@@ -159,14 +174,17 @@ class CustomerController extends AbstractAdminController
                 'is_password_required' => false,
             ];
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
-                ->getFormFor((int) $customerId, [], $customerFormOptions)
-            ;
+                ->getFormFor((int) $customerId, [], $customerFormOptions);
             $customerForm->handleRequest($request);
 
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
+                if ($request->query->has('back')) {
+                    return $this->redirect(urldecode($request->query->get('back')));
+                }
+
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_customers_index');
@@ -327,6 +345,35 @@ class CustomerController extends AbstractAdminController
         }
 
         return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Search for customers by query.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function searchAction(Request $request)
+    {
+        $query = $request->query->get('customer_search');
+        $phrases = explode(' ', $query);
+        $isRequestFromLegacyPage = !$request->query->has('sf2');
+
+        $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+
+        // if call is made from legacy page
+        // it will return response so legacy can understand it
+        if ($isRequestFromLegacyPage) {
+            return $this->json([
+                'found' => !empty($customers),
+                'customers' => $customers,
+            ]);
+        }
+
+        return $this->json($customers);
     }
 
     /**
@@ -734,8 +781,7 @@ class CustomerController extends AbstractAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('customer_' . date('Y-m-d_His') . '.csv')
-        ;
+            ->setFileName('customer_' . date('Y-m-d_His') . '.csv');
     }
 
     /**

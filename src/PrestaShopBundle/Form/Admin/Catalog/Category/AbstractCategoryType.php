@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -38,6 +40,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Class AbstractCategoryType.
@@ -79,14 +83,32 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                'error_bubbling' => false,
                 'type' => TextType::class,
-            ])
-            ->add('active', SwitchType::class, [
-                'required' => false,
-                'data' => true,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>;=#{}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
             ])
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
+                'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
+            ])
+            ->add('active', SwitchType::class, [
                 'required' => false,
             ])
             ->add('cover_image', FileType::class, [
@@ -101,28 +123,71 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('meta_title', TranslatableType::class, [
                 'type' => TextWithLengthCounterType::class,
+                'required' => false,
                 'options' => [
-                    'max_length' => 70,
+                    'max_length' => 255,
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
-                'type' => TextareaType::class,
+                'required' => false,
+                'type' => TextWithLengthCounterType::class,
                 'options' => [
                     'required' => false,
+                    'input' => 'textarea',
+                    'max_length' => 512,
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
                 ],
             ])
             ->add('meta_keyword', TranslatableType::class, [
-                'type' => TextType::class,
+                'required' => false,
                 'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                    'attr' => [
+                        'class' => 'js-taggable-field',
+                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
+                    ],
                     'required' => false,
                 ],
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'type' => TextType::class,
+                'error_bubbling' => false,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[_a-zA-Z0-9\-]+$/',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
             ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'choices' => $this->customerGroupChoices,
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ]);
 
         if ($this->multistoreFeature->isUsed()) {

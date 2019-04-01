@@ -1,8 +1,0 @@
-services:
-  _defaults:
-    public: true
-
-  prestashop.core.localization.cldr.repository:
-    class: 'PrestaShop\PrestaShop\Core\Cldr\Repository'
-    arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"

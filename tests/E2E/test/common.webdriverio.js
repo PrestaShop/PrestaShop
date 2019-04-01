@@ -132,10 +132,11 @@ function initCommands(client) {
       .waitForExistAndClick(selector.logo_home_page);
   });
 
-  client.addCommand('switchWindow', function (id) {
+  client.addCommand('switchWindow', function (id, pause = 0) {
     return client
       .getTabIds()
       .then(ids => client.switchTab(ids[id]))
+      .pause(pause)
       .refresh();
   });
 
@@ -183,7 +184,7 @@ module.exports = {
       options.port = global.selenium_port;
     }
     fs.readFile(debugFile, 'utf8', (err, content) => {
-        global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(");")).split(', ')[1]) === 'true' ? true : false;
+      global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(");")).split(', ')[1]) === 'true' ? true : false;
     });
     client = webdriverio.remote(options);
     initCommands(client);

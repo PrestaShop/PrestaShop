@@ -24,7 +24,11 @@ services:
 
     prestashop.twig.extension.layout:
         class: PrestaShopBundle\Twig\LayoutExtension
-        arguments: ["@prestashop.adapter.legacy.context", "%kernel.environment%"]
+        arguments:
+          - "@prestashop.adapter.legacy.context"
+          - "%kernel.environment%"
+          - "@prestashop.adapter.legacy.configuration"
+          - "@prestashop.adapter.data_provider.currency"
         tags:
             - { name: twig.extension }
 
@@ -56,5 +60,12 @@ services:
         arguments:
             - '@twig'
             - '@prestashop.static_cache.adapter'
+        tags:
+            - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.documentation_link_provider_extension:
+        class: 'PrestaShopBundle\Twig\Extension\DocumentationLinkExtension'
+        arguments:
+            - '@prestashop.core.util.helper_card.documentation_link_provider'
         tags:
             - { name: twig.extension }

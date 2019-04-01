@@ -33,20 +33,22 @@ import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-act
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ChoiceTree from "../../components/form/choice-tree";
+import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 
 const $ = window.$;
 
 $(document).ready(() => {
-  const languageGrid = new Grid('language');
+  const grid = new Grid('language');
 
-  languageGrid.addExtension(new ReloadListActionExtension());
-  languageGrid.addExtension(new ExportToSqlManagerExtension());
-  languageGrid.addExtension(new FiltersResetExtension());
-  languageGrid.addExtension(new SortingExtension());
-  languageGrid.addExtension(new LinkRowActionExtension());
-  languageGrid.addExtension(new SubmitBulkExtension());
-  languageGrid.addExtension(new SubmitRowActionExtension());
-  languageGrid.addExtension(new BulkActionCheckboxExtension());
+  grid.addExtension(new ReloadListActionExtension());
+  grid.addExtension(new ExportToSqlManagerExtension());
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new SortingExtension());
+  grid.addExtension(new LinkRowActionExtension());
+  grid.addExtension(new SubmitBulkExtension());
+  grid.addExtension(new SubmitRowActionExtension());
+  grid.addExtension(new BulkActionCheckboxExtension());
+  grid.addExtension(new ColumnTogglingExtension());
 
   // needed for shop association input in form
   new ChoiceTree('#language_shop_association').enableAutoCheckChildren();

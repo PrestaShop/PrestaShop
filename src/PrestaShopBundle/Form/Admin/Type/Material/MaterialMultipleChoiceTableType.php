@@ -72,6 +72,8 @@ class MaterialMultipleChoiceTableType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['choices'] = $options['choices'];
+        $view->vars['scrollable'] = $options['scrollable'];
+        $view->vars['headers_to_disable'] = $options['headers_to_disable'];
     }
 
     /**
@@ -95,13 +97,24 @@ class MaterialMultipleChoiceTableType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([
-            'multiple_choices',
-            'choices',
-        ]);
+        $resolver
+            ->setRequired([
+                'multiple_choices',
+                'choices',
+                // in some cases we want to disable
+                // header for columns
+                'headers_to_disable',
+            ])
+            ->setDefaults([
+                'scrollable' => true,
+                'headers_to_disable' => [],
+            ])
+        ;
 
         $resolver->setAllowedTypes('choices', 'array');
         $resolver->setAllowedTypes('multiple_choices', 'array');
+        $resolver->setAllowedTypes('scrollable', 'bool');
+        $resolver->setAllowedTypes('headers_to_disable', 'array');
     }
 
     /**

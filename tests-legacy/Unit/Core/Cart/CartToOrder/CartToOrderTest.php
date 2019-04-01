@@ -48,6 +48,9 @@ class CartToOrderTest extends CartTaxesTest
     {
         parent::setUp();
 
+        global $kernel;
+        $kernel = new \AppKernel('test', true);
+        $kernel->boot();
         $this->previousConfigurationMailMethod = Configuration::get('PS_MAIL_METHOD');
         Configuration::set('PS_MAIL_METHOD', Mail::METHOD_DISABLE);
     }

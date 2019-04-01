@@ -1,6 +1,6 @@
 /**
  * This script is based on the scenario described in this test link
- * [id="PS-48"][Name="Add a new manufacturer adresse"]
+ * [id="PS-48"][Name="Add a new manufacturer address"]
  **/
 
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
@@ -43,7 +43,7 @@ scenario('Create "Brand address"', () => {
   scenario('Check the created brand', client => {
     test('should search for the created brand', () => client.searchByValue(Brands.filter_name_input, Brands.brand_search_button, brandData.name + date_time));
     test('should verify that addresses is equal to "1"', () => client.checkTextValue(Brands.brand_column.replace('%TR', 1).replace('%COL', 5), '1'));
-    test('should click on "Reset" button', () => client.waitForExistAndClick(Brands.brand_reset_button));
+    test('should verify that the table contains only one address', () => client.waitForExistAndClick(Brands.brand_reset_button));
   }, 'common_client');
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from Back Office', () => client.signOutBO());

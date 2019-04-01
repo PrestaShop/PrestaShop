@@ -42,7 +42,10 @@ let productData = [{
     filename: ['Ps Category']
   }
 }];
-
+/**
+ * This script should be moved to the campaign full when this issues will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/11054 && https://github.com/PrestaShop/PrestaShop/issues/9607
+ **/
 scenario('Create, sort, filter, delete and check "Files" in the Back Office', () => {
   scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());

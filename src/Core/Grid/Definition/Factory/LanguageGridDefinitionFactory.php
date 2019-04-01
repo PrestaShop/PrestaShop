@@ -52,32 +52,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var string
-     */
-    private $resetUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectUrl;
-
-    /**
-     * @param string $resetUrl
-     * @param string $redirectUrl
-     */
-    public function __construct($resetUrl, $redirectUrl)
-    {
-        $this->resetUrl = $resetUrl;
-        $this->redirectUrl = $redirectUrl;
-    }
+    const GRID_ID = 'language';
 
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'language';
+        return self::GRID_ID;
     }
 
     /**
@@ -158,7 +140,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_lang',
-                    'route' => 'admin_languages_index',
+                    'route' => 'admin_languages_toggle_status',
                     'route_param_name' => 'languageId',
                 ])
             )
@@ -187,7 +169,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
-                                'route' => 'admin_languages_index',
+                                'route' => 'admin_languages_delete',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
                             ])
@@ -277,13 +259,15 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
              ->add(
                  (new Filter('actions', SearchAndResetType::class))
                  ->setTypeOptions([
-                     'attr' => [
-                         'data-url' => $this->resetUrl,
-                         'data-redirect' => $this->redirectUrl,
+                     'reset_route' => 'admin_common_reset_search_by_filter_id',
+                     'reset_route_params' => [
+                         'filterId' => self::GRID_ID,
                      ],
+                     'redirect_route' => 'admin_languages_index',
                  ])
                  ->setAssociatedColumn('actions')
-             );
+             )
+        ;
     }
 
     /**
@@ -319,21 +303,27 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_languages_index',
+                    'submit_route' => 'admin_languages_bulk_toggle_status',
+                    'route_params' => [
+                        'status' => 'enable',
+                    ],
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_languages_index',
+                    'submit_route' => 'admin_languages_bulk_toggle_status',
+                    'route_params' => [
+                        'status' => 'disable',
+                    ],
                 ])
             )
             ->add(
                 (new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_languages_index',
+                    'submit_route' => 'admin_languages_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             );

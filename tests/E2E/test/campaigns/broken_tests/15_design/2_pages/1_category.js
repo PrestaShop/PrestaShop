@@ -59,6 +59,10 @@ let pageData = {
   page_content: 'page content'
 };
 
+/**
+ * This script should be moved to the campaign full when this issue will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/9712
+ **/
 scenario('Create, edit and delete "CATEGORIES"', () => {
 
   scenario('Login in the Back Office', client => {

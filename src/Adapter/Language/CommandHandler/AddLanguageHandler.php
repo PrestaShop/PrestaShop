@@ -85,7 +85,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
     private function addShopAssociation(Language $language, AddLanguageCommand $command)
     {
         $this->associateWithShops(
-            (int) $language->id,
+            $language,
             $command->getShopAssociation()
         );
     }

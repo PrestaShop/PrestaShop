@@ -96,7 +96,8 @@ class PrestaShopExceptionCore extends Exception
         }
         // Log the error in the disk
         $this->logError();
-        exit;
+        //We only need the error code 1 in cli context
+        exit((int) ToolsCore::isPHPCLI());
     }
 
     /**
