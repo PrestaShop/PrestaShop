@@ -39,10 +39,10 @@
   display: none;
 }
 #close-search:checked ~ ul.ui-autocomplete.ui-front.ui-widget-content {
-  display: none !important;
+  display: none;
 }
 
-ul{
+ul {
   &.ui-autocomplete.ui-front {
     &.ui-widget-content {
       border: none;
@@ -61,7 +61,7 @@ ul{
             border-radius: 0;
             background: $gray-light-third !important;
           }
-          &.ui-state-focus{
+          &.ui-state-focus {
             margin: 0 !important;
             border: 0 !important;
             background: $btn-warning-color;
