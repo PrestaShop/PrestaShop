@@ -65,7 +65,7 @@ export default class CountryStateSelectionToggler {
    *
    * @private
    */
-  _toggle(isFirstToggle) {
+  _toggle(isFirstToggle = false) {
     $.ajax({
       url: this.$countryInput.data('states-url'),
       method: 'GET',
