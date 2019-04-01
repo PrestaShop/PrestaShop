@@ -175,4 +175,4 @@ services:
     prestashop.admin.mail_theme.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeFormDataProvider'
         arguments:
-            - '@prestashop.adapter.mail_theme.configuration'
+            - '@prestashop.core.mail_theme.configuration'

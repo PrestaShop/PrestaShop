@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 
 /**
  * Class MailThemeConfiguration is used to save Mail Theme settings

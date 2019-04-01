@@ -241,8 +241,8 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.adapter.tax.ecotax.ecotax_resetter'
 
-    prestashop.adapter.mail_theme.configuration:
-      class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailThemeConfiguration'
+    prestashop.core.mail_theme.configuration:
+      class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailThemeConfiguration'
       arguments:
         - '@prestashop.adapter.legacy.configuration'
         - '@prestashop.core.mail_template.theme_catalog'

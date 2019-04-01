@@ -1112,15 +1112,15 @@ class LanguageCore extends ObjectModel
     }
 
     /**
-     * This method has been introduce in Language out of conveniency but, if you can, prefer
+     * This method has been introduced in Language out of convenience but, if you can, prefer
      * using the GenerateMailTemplatesService or MailTemplateGenerator services.
      *
-     * @param array $lang_pack
+     * @param array $langPack
      * @param array $errors
      */
-    public static function generateEmailsLanguagePack($lang_pack, &$errors = array())
+    public static function generateEmailsLanguagePack($langPack, &$errors = array())
     {
-        $locale = $lang_pack['locale'];
+        $locale = $langPack['locale'];
         $sfContainer = SymfonyContainer::getInstance();
         if (null === $sfContainer) {
             $errors[] = Context::getContext()->getTranslator()->trans(
