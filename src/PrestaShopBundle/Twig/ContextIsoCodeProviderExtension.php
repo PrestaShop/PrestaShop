@@ -1,4 +1,5 @@
-/*!
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -15,59 +16,49 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *
  */
 
-.form-horizontal {
+namespace PrestaShopBundle\Twig;
 
-  .card-block {
-    justify-content: center;
-    padding: 1.875rem $card-spacer-x;
-    &.row {
-      margin: 0; // used to override negative margins brought by .row
+/**
+ * Provides context language iso code
+ */
+class ContextIsoCodeProviderExtension extends \Twig_Extension
+{
+    /**
+     * @var string
+     */
+    private $isoCode;
+
+    /**
+     * @param $isoCode
+     */
+    public function __construct($isoCode)
+    {
+        $this->isoCode = $isoCode;
     }
-  }
 
-  .card-text {
-    @extend .col-sm-10;
-  }
-
-  .form-group.row {
-    margin-bottom: 1.2rem;
-
-    // label column in forms
-    > .form-control-label:first-of-type {
-      @extend .col-sm-4;
-      @extend .col-form-label;
-
-      @include media-breakpoint-up('sm') {
-        text-align: right;
-        padding-right: 25px;
-      }
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions()
+    {
+        return [
+            new \Twig_SimpleFunction('get_context_iso_code', [$this, 'getIsoCode']),
+        ];
     }
-  }
 
-  // make ps-switch align with label
-  .ps-switch:not(.ps-switch-lg) {
-    @include media-breakpoint-up('sm') {
-      margin-top: 5px;
+    /**
+     * @return string
+     */
+    public function getIsoCode()
+    {
+        return $this->isoCode;
     }
-  }
-
-  // small size form controls
-  .size-small {
-    width: 150px;
-  }
-
-  .custom-file {
-    input {
-      outline: none;
-    }
-  }
 }
