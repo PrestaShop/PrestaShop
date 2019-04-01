@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% trans_default_domain 'Admin.Design.Feature' %}
 
 {% block mailThemeConfigurationFormBlock %}
   <div class="row justify-content-center">
@@ -39,7 +38,7 @@
             <div class="form-group row">
               <label class="form-control-label">
                 {{ ps.label_with_help(
-                  ('Select your default email theme'|trans),
+                  ('Select your default email theme'|trans({}, 'Admin.Design.Feature')),
                   ('This won\'t regenerate email templates, it only sets the default email theme for future generation (when a language is installed for example).'|trans({}, 'Admin.Design.Help'))
                 ) }}
               </label>
