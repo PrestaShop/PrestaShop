@@ -67,7 +67,7 @@ admin_manufacturers_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDelete'
     _legacy_controller: AdminManufacturers
-    _legacy_link: submitBulkdeletemanufacturer
+    _legacy_link: AdminManufacturers:submitBulkdeletemanufacturer
 
 admin_manufacturers_bulk_enable_status:
   path: /bulk-enable
