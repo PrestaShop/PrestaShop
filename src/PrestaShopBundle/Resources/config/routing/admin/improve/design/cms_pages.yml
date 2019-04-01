@@ -8,7 +8,7 @@ admin_cms_pages_index:
 
 admin_cms_pages_search:
   path: /search
-  methods: GET
+  methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:search'
     _legacy_controller: AdminCmsContent
