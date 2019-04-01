@@ -723,6 +723,7 @@ class ToolsCore
      * Return the CLDR associated with the context or given language_code.
      *
      * @see Tools::getContextLocale
+     * @deprecated since PrestaShop 1.7.6.0
      *
      * @param Context|null $context
      * @param null $language_code
