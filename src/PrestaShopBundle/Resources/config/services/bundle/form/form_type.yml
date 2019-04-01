@@ -717,6 +717,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.theme_zip").getChoices()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
