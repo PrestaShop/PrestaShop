@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
@@ -40,7 +42,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\MailTheme\MailThemeGenerator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -105,18 +106,24 @@ class MailThemeController extends FrameworkBundleAdminController
 
             $data = $generateThemeMailsForm->getData();
             try {
-                /** @var MailThemeGenerator $generator */
-                $generator = $this->get('prestashop.service.mail_theme_generator');
+                /** @var GenerateThemeMailsCommand $generateCommand */
+                $generateCommand = new GenerateThemeMailsCommand(
+                    $data['mailTheme'],
+                    $data['language'],
+                    $data['overwrite']
+                );
                 //Overwrite theme folder if selected
                 if (!empty($data['theme'])) {
                     $themeFolder = $this->getParameter('themes_dir') . $data['theme'];
-                    $generator
+                    $generateCommand
                         ->setCoreMailsFolder($themeFolder . '/mails')
                         ->setModulesMailFolder($themeFolder . '/modules')
                     ;
                 }
 
-                $generator->generateMailTemplates($data['mail_theme'], $data['language'], $data['overwrite']);
+                /** @var CommandBusInterface $commandBus */
+                $commandBus = $this->get('prestashop.core.command_bus');
+                $commandBus->handle($generateCommand);
 
                 if ($data['overwrite']) {
                     $this->addFlash(
@@ -125,7 +132,7 @@ class MailThemeController extends FrameworkBundleAdminController
                             'Successfully overrode mail templates for theme %s with locale %s',
                             'Admin.Notifications.Success',
                             [
-                                $data['mail_theme'],
+                                $data['mailTheme'],
                                 $data['language'],
                             ]
                         )
@@ -137,7 +144,7 @@ class MailThemeController extends FrameworkBundleAdminController
                             'Successfully generated mail templates for theme %s with locale %s',
                             'Admin.Notifications.Success',
                             [
-                                $data['mail_theme'],
+                                $data['mailTheme'],
                                 $data['language'],
                             ]
                         )
@@ -148,7 +155,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     $this->trans(
                         sprintf(
                             'Could not generate mail templates for theme %s with locale %s',
-                            $data['mail_theme'],
+                            $data['mailTheme'],
                             $data['language']
                         ),
                         'Admin.Notifications.Error'

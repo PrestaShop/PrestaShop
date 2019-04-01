@@ -29,8 +29,9 @@ use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProces
 use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Service\MailTheme\MailThemeGenerator;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 
 class LanguageCore extends ObjectModel
 {
@@ -1132,11 +1133,21 @@ class LanguageCore extends ObjectModel
             return;
         }
 
-        /** @var MailThemeGenerator $mailGenerator */
-        $mailGenerator = $sfContainer->get('prestashop.service.mail_theme_generator');
         $mailTheme = Configuration::get('PS_MAIL_THEME');
+        /** @var GenerateThemeMailsCommand $generateCommand */
+        $generateCommand = new GenerateThemeMailsCommand(
+            $mailTheme,
+            $locale,
+            false
+        );
+        $generateCommand
+            ->setCoreMailsFolder(!empty($coreOutputFolder) ? $coreOutputFolder : '')
+            ->setModulesMailFolder(!empty($modulesOutputFolder) ? $modulesOutputFolder : '')
+        ;
+        /** @var CommandBusInterface $commandBus */
+        $commandBus = $sfContainer->get('prestashop.core.command_bus');
         try {
-            $mailGenerator->generateMailTemplates($mailTheme, $locale, false);
+            $commandBus->handle($generateCommand);
         } catch (CoreException $e) {
             $errors[] = Context::getContext()->getTranslator()->trans(
                 'Cannot generate mail templates: %s.',

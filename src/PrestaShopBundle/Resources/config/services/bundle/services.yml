@@ -106,13 +106,3 @@ services:
     prestashop.core.product.csv_exporter:
         class: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
         arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']
-
-    # Mail generator service
-    prestashop.service.mail_theme_generator:
-        class: PrestaShopBundle\Service\MailTheme\MailThemeGenerator
-        arguments:
-          - '@prestashop.core.admin.lang.repository'
-          - '@prestashop.core.mail_template.theme_catalog'
-          - '@prestashop.core.mail_template.generator'
-          - '%kernel.project_dir%/mails'
-          - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
