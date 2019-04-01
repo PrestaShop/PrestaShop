@@ -28,12 +28,12 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\AddEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\AddEmployeeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmailAlreadyUsedException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\AddEmployeeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 

@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
 
 /**
  * Class BulkUpdateEmployeeStatusHandler.
@@ -47,7 +47,7 @@ final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler impl
             $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
             $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
 
-            $employee->active = $command->getStatus()->isEnabled();
+            $employee->active = $command->getStatus();
             $employee->save();
         }
     }

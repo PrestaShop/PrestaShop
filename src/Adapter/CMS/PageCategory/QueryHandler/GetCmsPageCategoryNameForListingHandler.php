@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler\GetCmsPageCategoryNameForListingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -82,6 +82,6 @@ final class GetCmsPageCategoryNameForListingHandler implements GetCmsPageCategor
             $categoryIdFromRequest = $currentRequest->query->getInt('id_cms_category');
         }
 
-        return $categoryIdFromRequest ?: CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
+        return $categoryIdFromRequest ?: CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
     }
 }

@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler\GetCmsPageParentCategoryIdForRedirectionHandlerInterface;
@@ -51,7 +50,7 @@ final class GetCmsPageParentCategoryIdForRedirectionHandler implements GetCmsPag
             $entity = new CMSCategory($query->getCmsPageCategoryId()->getValue());
             $parentId = (int) $entity->id_parent;
         } catch (PrestaShopException $e) {
-            $parentId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
+            $parentId = CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
         }
 
         return new CmsPageCategoryId($parentId);
