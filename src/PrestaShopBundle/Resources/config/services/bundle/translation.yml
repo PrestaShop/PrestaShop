@@ -118,7 +118,7 @@ services:
         arguments:
             - "@prestashop.core.translation.locale.converter"
             - "@prestashop.translation.legacy_module.extractor"
-            - "@prestashop.core.translation.util.module_domain_converter%"
+            - "@prestashop.core.translation.util.module_domain_converter"
         tags:
             - {name: translation.loader, alias: php}
 
