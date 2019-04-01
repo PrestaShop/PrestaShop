@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% trans_default_domain 'Admin.Design.Feature' %}
 
 {% block generateMailsFormBlock %}
 <div class="row justify-content-center">
@@ -30,7 +29,7 @@
     {{ form_start(generateMailsForm, {'action': path('admin_mail_theme_generate')}) }}
     <div class="card">
       <h3 class="card-header">
-        <i class="material-icons">email</i> {{ 'Generate emails'|trans }}
+        <i class="material-icons">email</i> {{ 'Generate emails'|trans({}, 'Admin.Design.Feature') }}
       </h3>
 
       <div class="card-block row">
@@ -38,7 +37,7 @@
 
           <div class="form-group row">
             <label class="form-control-label">
-              {{ 'Select your email theme'|trans }}
+              {{ 'Select your email theme'|trans({}, 'Admin.Design.Feature') }}
             </label>
             <div class="col-sm">
               {{ form_errors(generateMailsForm.mailTheme) }}
@@ -59,7 +58,7 @@
           <div class="form-group row">
             <label class="form-control-label">
               {{ ps.label_with_help(
-                ('Select the theme you want to overwrite'|trans),
+                ('Select the theme you want to overwrite'|trans({}, 'Admin.Design.Feature')),
               ('Core email templates are stored in the mails folder but can be overriden by theme proper mails folder. Use this option to overwrite mails from a theme.'|trans({}, 'Admin.Design.Help'))
               ) }}
             </label>
@@ -71,7 +70,7 @@
 
           <div class="form-group row">
             {{ ps.label_with_help(
-              ('Overwrite templates'|trans),
+              ('Overwrite templates'|trans({}, 'Admin.Design.Feature')),
             ('By default, existing email template files are not modified to avoid deleting any modification you may have done. Enable this option to force the overwrite.'|trans({}, 'Admin.Design.Help'))
             ) }}
             <div class="col-sm">

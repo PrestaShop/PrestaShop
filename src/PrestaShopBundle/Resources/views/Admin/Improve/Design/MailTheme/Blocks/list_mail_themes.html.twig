@@ -22,14 +22,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% trans_default_domain 'Admin.Design.Feature' %}
 
 {% block generateMailsFormBlock %}
   <div class="row justify-content-center">
     <div class="col-xl-10">
       <div class="card">
         <h3 class="card-header">
-          <i class="material-icons">email</i> {{ 'Mail themes'|trans }}
+          <i class="material-icons">email</i> {{ 'Mail themes'|trans({}, 'Admin.Design.Feature') }}
         </h3>
 
         <div class="card-block">
@@ -38,11 +37,11 @@
               <thead class="thead-default">
                 <tr class="column-headers">
                   <th scope="col">
-                    {{ 'Name'|trans }}
+                    {{ 'Name'|trans({}, 'Admin.Global') }}
                   </th>
                   <th scope="col">
                     <div class="grid-actions-header-text">
-                      {{ 'Actions'|trans }}
+                      {{ 'Actions'|trans({}, 'Admin.Global') }}
                     </div>
                   </th>
                 </tr>
