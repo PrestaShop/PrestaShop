@@ -42,9 +42,6 @@ class OverrideTranslatorServiceCompilerPass implements CompilerPassInterface
         $definition = $container->getDefinition('translator.default');
         $definition->setClass($container->getParameter('translator.class'));
 
-        // We need the complete service container when calling $translator->getContainer()
-        $definition->replaceArgument(0, new Reference('service_container'));
-
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;
         }
