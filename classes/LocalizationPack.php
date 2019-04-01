@@ -434,6 +434,15 @@ class LocalizationPackCore
         return !count($this->_errors);
     }
 
+    /**
+     * This method aims to update localized data in currencies from CLDR reference.
+     * Eg currency symbol used depends on language, so it has to be updated when adding a new language
+     * Use-case: adding a new language should trigger all currencies update
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     */
     protected function refreshLocalizedCurrenciesData()
     {
         /** @var Currency[] $currencies */
@@ -452,6 +461,16 @@ class LocalizationPackCore
         }
     }
 
+    /**
+     * This method aims to update localized data in currency from CLDR reference.
+     *
+     * @param Currency $currency
+     * @param array $languages
+     * @param LocaleRepository $localeRepoCLDR
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     */
     protected function refreshLocalizedCurrencyData(Currency $currency, array $languages, LocaleRepository $localeRepoCLDR)
     {
         $symbolsByLang = [];
