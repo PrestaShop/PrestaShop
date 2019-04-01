@@ -73,7 +73,7 @@ services:
     prestashop.twig.extension.context_iso_code_provider_extension:
       class: PrestaShopBundle\Twig\ContextIsoCodeProviderExtension
       arguments:
-        - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
+        - "@=service('prestashop.adapter.legacy.context').getContext().language ? service('prestashop.adapter.legacy.context').getContext().language.iso_code : 'en'"
       properties:
         logger: "@logger"
         translator: "@translator"
