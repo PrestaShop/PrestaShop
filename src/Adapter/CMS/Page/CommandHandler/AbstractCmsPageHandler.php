@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
 use CMS;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
 use PrestaShopException;
@@ -36,7 +37,7 @@ use PrestaShopException;
  *
  * @internal
  */
-abstract class AbstractCmsPageHandler
+abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
 {
     /**
      * Gets cms object if it exists. If it does not exist it throws exceptions.

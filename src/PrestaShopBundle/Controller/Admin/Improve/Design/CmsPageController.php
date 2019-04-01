@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageExcep
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
@@ -116,6 +117,8 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -141,6 +144,96 @@ class CmsPageController extends FrameworkBundleAdminController
                 'id_cms_category',
             ]
         );
+    }
+
+    /**
+     * Creates cms page
+     *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to add this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        $formBuilder = $this->getCmsPageFormBuilder();
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        try {
+            $result = $this->getCmsPageFormHandler()->handle($form);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
+                //todo: wait for second list to be merged and
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getCmsPageErrorByExceptionType($e));
+        }
+
+        return $this->render('PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig', [
+            'cmsPageForm' => $form->createView(),
+            'cmsCategoryParentId' => $request->get('id_cms_category'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
+    }
+
+    /**
+     *  @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     * @param $cmsPageId
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $cmsPageId)
+    {
+        $cmsPageId = (int) $cmsPageId;
+
+        $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId);
+        $form->handleRequest($request);
+
+        try {
+            $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getCmsPageErrorByExceptionType($e));
+
+            if ($e instanceof CmsPageNotFoundException) {
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit.html.twig', [
+            'cmsPageForm' => $form->createView(),
+            'cmsCategoryParentId' => $request->get('id_cms_category'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -682,11 +775,6 @@ class CmsPageController extends FrameworkBundleAdminController
         return $redirectResponse;
     }
 
-    public function editCmsAction()
-    {
-        //todo: implement
-    }
-
     /**
      * Gets cms page category form builder.
      *
@@ -809,6 +897,22 @@ class CmsPageController extends FrameworkBundleAdminController
         );
 
         return $cmsPageCategoryParentId;
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getCmsPageFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.cms_page_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getCmsPageFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.cms_page_form_handler');
     }
 
     /**
@@ -980,11 +1084,11 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Gets user friendly error message by exception.
      *
-     * @param CmsPageException $exception
+     * @param DomainException $exception
      *
      * @return string
      */
-    private function getCmsPageErrorByExceptionType(CmsPageException $exception)
+    private function getCmsPageErrorByExceptionType(DomainException $exception)
     {
         $exceptionTypeDictionary = [
             CannotToggleCmsPageException::class => $this->trans(

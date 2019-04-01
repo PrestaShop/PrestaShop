@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -24,13 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 
 /**
- * Base exception for cms page sub-domain
+ * Gets object which transfers cms page data for editing
  */
-class CmsPageException extends DomainException
+class GetCmsPageForEditing
 {
+    /**
+     * @var CmsPageId
+     */
+    private $cmsPageId;
+
+    /**
+     * @param int $cmsPageId
+     *
+     * @throws CmsPageException
+     */
+    public function __construct($cmsPageId)
+    {
+        $this->cmsPageId = new CmsPageId($cmsPageId);
+    }
+
+    /**
+     * @return CmsPageId
+     */
+    public function getCmsPageId()
+    {
+        return $this->cmsPageId;
+    }
 }

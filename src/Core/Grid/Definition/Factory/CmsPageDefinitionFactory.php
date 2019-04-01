@@ -164,7 +164,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_cms_pages_edit',
-                                'route_param_name' => 'cmsId',
+                                'route_param_name' => 'cmsPageId',
                                 'route_param_field' => 'id_cms',
                             ])
                         )

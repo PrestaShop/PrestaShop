@@ -1,6 +1,5 @@
-<?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +15,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -24,13 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
+const $ = window.$;
+import ChoiceTree from '../../../components/form/choice-tree';
+import TaggableField from '../../../components/taggable-field';
+import TranslatableInput from '../../../components/translatable-input';
+import textToLinkRewriteCopier from '../../../components/text-to-link-rewrite-copier';
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+$(() => {
+  new ChoiceTree('#cms_page_page_category_id');
+  new TranslatableInput();
+  new TaggableField({
+    tokenFieldSelector: 'input.js-taggable-field',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
 
-/**
- * Base exception for cms page sub-domain
- */
-class CmsPageException extends DomainException
-{
-}
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input.js-copier-source-title',
+    destinationElementSelector: 'input.js-copier-destination-friendly-url',
+  });
+});

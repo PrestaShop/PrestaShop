@@ -24,13 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 
 /**
- * Base exception for cms page sub-domain
+ * Defines contract for EditCmsPageHandler.
  */
-class CmsPageException extends DomainException
+interface EditCmsPageHandlerInterface
 {
+    /**
+     * @param EditCmsPageCommand $command
+     *
+     * @return CmsPageId
+     */
+    public function handle(EditCmsPageCommand $command);
 }

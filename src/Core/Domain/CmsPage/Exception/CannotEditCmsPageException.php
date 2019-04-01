@@ -26,11 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-
-/**
- * Base exception for cms page sub-domain
- */
-class CmsPageException extends DomainException
+class CannotEditCmsPageException extends CmsPageException
 {
 }
