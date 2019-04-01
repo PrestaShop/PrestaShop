@@ -161,11 +161,21 @@ class TranslateCore
      * @param null $sprintf
      * @param bool $js
      * @param string|null $locale
+     * @param bool $fallback [default=true] If true, this method falls back to the new translation system if no translation is found
      *
      * @return mixed|string
+     *
+     * @throws Exception
      */
-    public static function getModuleTranslation($module, $originalString, $source, $sprintf = null, $js = false, $locale = null)
-    {
+    public static function getModuleTranslation(
+        $module,
+        $originalString,
+        $source,
+        $sprintf = null,
+        $js = false,
+        $locale = null,
+        $fallback = true
+    ) {
         global $_MODULES, $_MODULE, $_LANGADM;
 
         static $langCache = array();
@@ -276,7 +286,7 @@ class TranslateCore
          * Native modules working on both 1.6 & 1.7 are translated in messages.xlf
          * So we need to check in the Symfony catalog for translations
          */
-        if ($ret === $originalString) {
+        if ($ret === $originalString && $fallback) {
             $ret = Context::getContext()->getTranslator()->trans($originalString, $sprintf_for_trans, null, $locale);
         }
 
