@@ -229,7 +229,7 @@ class ManufacturerAddressType extends AbstractType
                 'required' => false,
                 'translation_domain' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $countryIdForStateChoices
+                    'id_country' => $countryIdForStateChoices,
                 ]),
             ])
             ->add('home_phone', TextType::class, [
