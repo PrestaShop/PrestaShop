@@ -9,11 +9,11 @@ Feature: Legacy Translation System in the Modules
   Scenario: Access to trans() function in a Module
     Given I install the module "translations"
     And I have a legacy translation for "Hello World" in locale "fr" in the module "translations"
-    And I set the translation locale to "fr"
+    And I set the translation locale to "fr-FR"
     Then the Module translated version of "Hello World" using domain "Modules.Translations" should be "Bonjour le monde"
 
   Scenario: Access to trans() function in a Twig template
     Given I install the module "translations"
     And I have a legacy translation for "Hello World" in locale "fr" in the module "translations"
-    And I set the translation locale to "fr"
+    And I set the translation locale to "fr-FR"
     Then the Twig translated version of "Hello World" using domain "Modules.Translations" should be "Bonjour le monde"

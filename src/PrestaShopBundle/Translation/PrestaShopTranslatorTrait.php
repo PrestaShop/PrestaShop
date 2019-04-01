@@ -49,6 +49,10 @@ trait PrestaShopTranslatorTrait
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
+        if ('Modules' === substr($domain, 0, 7)) {
+            return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
+        }
+
         $normalizedDomain = (null !== $domain) ?
             str_replace('.', '', $domain)
             : null;
@@ -163,8 +167,13 @@ trait PrestaShopTranslatorTrait
         if (count($domainParts) < 2) {
             throw new InvalidArgumentException(sprintf('Invalid domain: "%s"', $domain));
         }
+
         $moduleName = strtolower($domainParts[1]);
         $sourceFile = (!empty($domainParts[2])) ? strtolower($domainParts[2]) : false;
+
+        if ($sourceFile === false) {
+            $sourceFile = $moduleName;
+        }
 
         return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false);
     }
