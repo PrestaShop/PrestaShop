@@ -176,4 +176,23 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     {
         return $this;
     }
+
+    /**
+     * Find next step and mark it as current
+     */
+    public function setNextStepAsCurrent()
+    {
+        $steps = $this->getCheckoutProcess()->getSteps();
+        $next = false;
+        foreach ($steps as $step) {
+            if ($next === true) {
+                $step->step_is_current = true;
+                break;
+            }
+
+            if ($step === $this) {
+                $next = true;
+            }
+        }
+    }
 }
