@@ -147,6 +147,9 @@
       margin-right: 0.25rem;
       font-size: 0.875rem;
     }
+    @include media-breakpoint-down(md) {
+      left: 0;
+    }
   }
 
   .help-box {
@@ -760,14 +763,11 @@
 }
 
 .page-sidebar-closed:not(.mobile) {
-    .product-page {
-        .product-footer {
-            left: $size-navbar-width-mini;
-            @media (max-width:63.99875em) {
-                left: 0;
-            }
-        }
-    }
+  .product-page {
+      .product-footer {
+          left: $size-navbar-width-mini;
+      }
+  }
 }
 
 .popover-title {
