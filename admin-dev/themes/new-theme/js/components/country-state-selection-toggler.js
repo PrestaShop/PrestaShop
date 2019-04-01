@@ -55,7 +55,7 @@ export default class CountryStateSelectionToggler {
     this.$countryInput.on('change', () => this._toggle());
 
     // toggle on page load
-    this._toggle();
+    this._toggle(true);
 
     return {};
   }
@@ -65,7 +65,7 @@ export default class CountryStateSelectionToggler {
    *
    * @private
    */
-  _toggle() {
+  _toggle(isFirstToggle) {
     $.ajax({
       url: this.$countryInput.data('states-url'),
       method: 'GET',
@@ -81,11 +81,14 @@ export default class CountryStateSelectionToggler {
       }
 
       this.$stateSelectionBlock.fadeIn();
-      this.$countryStateSelector.empty();
-      var _this = this;
-      $.each(response.states, function(index, value) {
-        _this.$countryStateSelector.append($('<option></option>').attr('value', value).text(index));
-      })
+
+      if (isFirstToggle === false) {
+        this.$countryStateSelector.empty();
+        var _this = this;
+        $.each(response.states, function (index, value) {
+          _this.$countryStateSelector.append($('<option></option>').attr('value', value).text(index));
+        })
+      }
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);

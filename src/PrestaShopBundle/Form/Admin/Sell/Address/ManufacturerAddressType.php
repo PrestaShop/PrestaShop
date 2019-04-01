@@ -32,6 +32,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -92,6 +93,12 @@ class ManufacturerAddressType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($options['country_id'] !== 0) {
+            $countryIdForStateChoices = $options['country_id'];
+        } else {
+            $countryIdForStateChoices = $this->contextCountryId;
+        }
+
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
                 'choices' => $this->getManufacturersChoiceList(),
@@ -222,7 +229,7 @@ class ManufacturerAddressType extends AbstractType
                 'required' => false,
                 'translation_domain' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $this->contextCountryId,
+                    'id_country' => $countryIdForStateChoices
                 ]),
             ])
             ->add('home_phone', TextType::class, [
@@ -287,5 +294,18 @@ class ManufacturerAddressType extends AbstractType
         $this->manufacturerChoices['--'] = 0;
 
         return $this->manufacturerChoices;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'country_id' => 0,
+            ])
+            ->setAllowedTypes('country_id', 'integer')
+        ;
     }
 }
