@@ -33,6 +33,7 @@ export default class ProductSelect {
     let $thumbnails = $('.js-modal-product-images');
     let $onsale =  $('.on-sale');
     let $pack = $('.pack');
+    let $new = $('.new');
 
     $('body').on('click','.js-modal-thumb', (event) => {
       if($('.js-modal-thumb').hasClass('selected')){
@@ -50,7 +51,7 @@ export default class ProductSelect {
     });
 
     if($onsale.length && $('#product').length){
-      $('.new').css('top',$onsale.height() + 1 * FLAG_MARGIN);
+      $new.css('top',$onsale.height() + 1 * FLAG_MARGIN);
       $pack.css('top',$onsale.height() + 1 * FLAG_MARGIN);
     }
 
