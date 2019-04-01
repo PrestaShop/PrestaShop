@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command;
 
-
 class GenerateThemeMailsCommand
 {
     /** @var string */
@@ -77,6 +76,7 @@ class GenerateThemeMailsCommand
     public function setThemeName($themeName)
     {
         $this->themeName = $themeName;
+
         return $this;
     }
 
