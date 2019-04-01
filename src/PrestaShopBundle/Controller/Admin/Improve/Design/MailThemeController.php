@@ -114,7 +114,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 );
                 //Overwrite theme folder if selected
                 if (!empty($data['theme'])) {
-                    $themeFolder = $this->getParameter('themes_dir') . $data['theme'];
+                    $themeFolder = $this->getParameter('themes_dir') . '/' . $data['theme'];
                     $generateCommand
                         ->setCoreMailsFolder($themeFolder . '/mails')
                         ->setModulesMailFolder($themeFolder . '/modules')
