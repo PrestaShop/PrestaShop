@@ -79,7 +79,7 @@ class GenerateThemeMailsHandler implements GenerateThemeMailsHandlerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function handle(GenerateThemeMailsCommand $command)
     {
