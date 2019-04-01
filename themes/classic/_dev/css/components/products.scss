@@ -366,7 +366,7 @@
   }
   .product-price {
     color: $gray-dark;
-
+    display: block;
     @include media-breakpoint-down(sm) {
       padding: 0 .5rem;
     } 
@@ -387,10 +387,12 @@
         font-size: 1rem;
         color: $btn-tertiary-color;
       }
-      &.no-spacing {
+      &.product-tax {
         display: inherit;
+        font-size: .875rem;
       }
-      strong {
+      .label,
+      .value {
         font-weight: 600;
       }
     }
