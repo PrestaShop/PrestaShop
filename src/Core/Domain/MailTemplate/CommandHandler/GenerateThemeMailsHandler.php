@@ -24,25 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\MailTheme;
+namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 
 /**
- * This a useful and easy to use service to generate mail templates. It only has
- * string parameters and therefore can be easily called via a command, controller
- * or any other service without much knowledge of the MailTemplate architecture.
- *
- * It is also defined as a Symfony service with default parameters so that mails
- * are exported in the appropriate folders.
+ * Class GenerateThemeMailsHandler handles a GenerateThemeMailsCommand, it is able
+ * to transform raw string information contained in the command object from the command
+ * into real objects necessary for the MailTemplateGenerator (get LanguageInterface, ThemeInterface).
+ * It also manages the default output folder if they are not overridden by the command.
  */
-class MailThemeGenerator
+class GenerateThemeMailsHandler implements GenerateThemeMailsHandlerInterface
 {
     /** @var LanguageRepositoryInterface */
     private $languageRepository;
@@ -54,30 +52,50 @@ class MailThemeGenerator
     private $generator;
 
     /** @var string */
-    private $coreMailsFolder;
+    private $defaultCoreMailsFolder;
 
     /** @var string */
-    private $modulesMailFolder;
+    private $defaultModulesMailFolder;
 
     /**
      * @param LanguageRepositoryInterface $languageRepository
      * @param ThemeCatalogInterface $themeCatalog
      * @param MailTemplateGenerator $generator
-     * @param string $coreMailsFolder
-     * @param string $modulesMailFolder
+     * @param string $defaultCoreMailsFolder
+     * @param string $defaultModulesMailFolder
      */
     public function __construct(
         LanguageRepositoryInterface $languageRepository,
         ThemeCatalogInterface $themeCatalog,
         MailTemplateGenerator $generator,
-        $coreMailsFolder,
-        $modulesMailFolder
+        $defaultCoreMailsFolder,
+        $defaultModulesMailFolder
     ) {
         $this->languageRepository = $languageRepository;
         $this->themeCatalog = $themeCatalog;
         $this->generator = $generator;
-        $this->coreMailsFolder = $coreMailsFolder;
-        $this->modulesMailFolder = $modulesMailFolder;
+        $this->defaultCoreMailsFolder = $defaultCoreMailsFolder;
+        $this->defaultModulesMailFolder = $defaultModulesMailFolder;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function handle(GenerateThemeMailsCommand $command)
+    {
+        /** @var LanguageInterface $language */
+        $language = $this->languageRepository->getByLocaleOrIsoCode($command->getLanguage());
+        if (null === $language) {
+            throw new InvalidArgumentException(sprintf('Could not find Language for locale: %s', $command->getLanguage()));
+        }
+
+        /** @var ThemeInterface $theme */
+        $theme = $this->themeCatalog->getByName($command->getThemeName());
+
+        $coreMailsFolder = !empty($command->getCoreMailsFolder()) ? $command->getCoreMailsFolder() : $this->defaultCoreMailsFolder;
+        $modulesMailFolder = !empty($command->getModulesMailFolder()) ? $command->getModulesMailFolder() : $this->defaultModulesMailFolder;
+
+        $this->generator->generateTemplates($theme, $language, $coreMailsFolder, $modulesMailFolder, $command->overwriteTemplates());
     }
 
     /**
@@ -100,45 +118,5 @@ class MailThemeGenerator
         $theme = $this->themeCatalog->getByName($themeName);
 
         $this->generator->generateTemplates($theme, $language, $this->coreMailsFolder, $this->modulesMailFolder, $overwriteTemplates);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCoreMailsFolder()
-    {
-        return $this->coreMailsFolder;
-    }
-
-    /**
-     * @param string $coreMailsFolder
-     *
-     * @return $this
-     */
-    public function setCoreMailsFolder($coreMailsFolder)
-    {
-        $this->coreMailsFolder = $coreMailsFolder;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getModulesMailFolder()
-    {
-        return $this->modulesMailFolder;
-    }
-
-    /**
-     * @param string $modulesMailFolder
-     *
-     * @return $this
-     */
-    public function setModulesMailFolder($modulesMailFolder)
-    {
-        $this->modulesMailFolder = $modulesMailFolder;
-
-        return $this;
     }
 }
