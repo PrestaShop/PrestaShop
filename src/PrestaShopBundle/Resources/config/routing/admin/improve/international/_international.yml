@@ -25,3 +25,7 @@ _tax:
 _mail_layout:
   resource: "mail_layout.yml"
   prefix: /mail-layout/
+
+_state:
+    resource: "state.yml"
+    prefix: /states/

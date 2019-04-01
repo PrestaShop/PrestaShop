@@ -38,16 +38,17 @@ import TaggableField from '../../components/taggable-field';
 const $ = window.$;
 
 $(() => {
-  const manufacturerGrid = new Grid('manufacturer');
-
-  manufacturerGrid.addExtension(new ExportToSqlManagerExtension());
-  manufacturerGrid.addExtension(new ReloadListActionExtension());
-  manufacturerGrid.addExtension(new SortingExtension());
-  manufacturerGrid.addExtension(new FiltersResetExtension());
-  manufacturerGrid.addExtension(new ColumnTogglingExtension());
-  manufacturerGrid.addExtension(new SubmitRowActionExtension());
-  manufacturerGrid.addExtension(new SubmitBulkExtension());
-  manufacturerGrid.addExtension(new BulkActionCheckboxExtension());
+  ['manufacturer', 'manufacturer_address'].forEach((gridName) => {
+    const grid = new Grid(gridName);
+    grid.addExtension(new ExportToSqlManagerExtension());
+    grid.addExtension(new ReloadListActionExtension());
+    grid.addExtension(new SortingExtension());
+    grid.addExtension(new FiltersResetExtension());
+    grid.addExtension(new ColumnTogglingExtension());
+    grid.addExtension(new SubmitRowActionExtension());
+    grid.addExtension(new SubmitBulkExtension());
+    grid.addExtension(new BulkActionCheckboxExtension());
+  });
 
   new TranslatableInput();
   new TaggableField({

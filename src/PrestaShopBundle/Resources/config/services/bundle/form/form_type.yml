@@ -823,3 +823,14 @@ services:
         - '@=service("prestashop.adapter.multistore_feature").isUsed()'
       tags:
         - { name: form.type }
+
+    form.type.manufacturer_address:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
+      arguments:
+        - '@=service("prestashop.adapter.form.choice_provider.manufacturer_name_by_id").getChoices()'
+        - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+        - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+        - '@translator'
+      tags:
+        - { name: form.type }
