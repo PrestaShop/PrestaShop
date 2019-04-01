@@ -66,69 +66,6 @@ elseif (Tools::isSubmit('ajaxProductPackItems')) {
 }
 
 /**
- * Search for a category
- *
- * -> TODO in Symfony stack
- */
-if (Tools::isSubmit('searchCategory')) {
-    $q = Tools::getValue('q');
-    $limit = Tools::getValue('limit');
-    $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
-		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
-		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
-		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
-		GROUP BY c.id_category
-		ORDER BY c.`position`
-		LIMIT '.(int)$limit
-    );
-    if ($results) {
-        foreach ($results as $result) {
-            echo trim($result['name']).'|'.(int)$result['id_category']."\n";
-        }
-    }
-}
-
-/**
- * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
- * Not moved / Not duplicated
- */
-if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
-    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
-    die(json_encode($children_categories));
-}
-
-/**
- * Search for a category
- *
- * -> Moved to legacy
- */
-if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
-    $import = new AdminImportController();
-
-    $fields = array_map(function ($elem) {
-        return ['field' => $elem];
-    }, $import->getAvailableFields(true));
-    echo json_encode($fields);
-}
-
-/**
- * Get all parents of a given category
- *
- * -> Moved to legacy
- */
-if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
-    $category = new Category((int)$id_category);
-    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
-    $output = array();
-    foreach ($results as $result) {
-        $output[] = $result;
-    }
-
-    die(json_encode($output));
-}
-
-/**
  * Get all zones stored on the shop
  * Json content with an html attribute in it.
  *
@@ -196,4 +133,53 @@ elseif (Tools::isSubmit('getNotifications')) {
 elseif (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
     $notification = new Notification();
     echo $notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType'));
+}
+
+/**
+ * Search for a category
+ *
+ * -> TODO in Symfony stack
+ */
+elseif (Tools::isSubmit('searchCategory')) {
+    $q = Tools::getValue('q');
+    $limit = Tools::getValue('limit');
+    $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
+		FROM `'._DB_PREFIX_.'category` c
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
+		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
+		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
+		GROUP BY c.id_category
+		ORDER BY c.`position`
+		LIMIT '.(int)$limit
+    );
+    if ($results) {
+        foreach ($results as $result) {
+            echo trim($result['name']).'|'.(int)$result['id_category']."\n";
+        }
+    }
+}
+
+/**
+ * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
+ * Not moved / Not duplicated
+ */
+elseif (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
+    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
+    echo json_encode($children_categories);
+}
+
+/**
+ * Get all parents of a given category
+ *
+ * -> TODO in Symfony stack
+ */
+elseif (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
+    $category = new Category((int)$id_category);
+    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
+    $output = array();
+    foreach ($results as $result) {
+        $output[] = $result;
+    }
+
+    echo json_encode($output);
 }
