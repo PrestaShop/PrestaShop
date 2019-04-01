@@ -166,6 +166,15 @@ class ManufacturerController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * View single manufacturer details
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $manufacturerId
+     *
+     * @return Response
+     */
     public function viewAction($manufacturerId)
     {
         try {
