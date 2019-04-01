@@ -49,7 +49,7 @@ function ps_1760_update_tabs()
     foreach ($moduleTabsToBeAdded as $className => $tabDetails) {
         add_new_tab_17($className, $tabDetails['translations'], 0, false, $tabDetails['parent']);
         Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'tab` SET `active`= 1 WHERE `class_name` = "' . $className . '"'
+            'UPDATE `'._DB_PREFIX_.'tab` SET `active`= 1 WHERE `class_name` = "' . pSQL($className) . '"'
         );
     }
 }
