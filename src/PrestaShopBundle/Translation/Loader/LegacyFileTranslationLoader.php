@@ -30,10 +30,9 @@ namespace PrestaShopBundle\Translation\Loader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use PrestaShopBundle\Translation\Exception\UnsupportedModuleException;
 use PrestaShopBundle\Translation\Exception\LegacyFileFormattingException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
-use Symfony\Component\DependencyInjection\Container;
+use PrestaShop\PrestaShop\Core\Translation\Util\ModuleDomainConverterInterface;
 
 /**
  * Able to convert old translation files (in translations/<shopLocale>.php) into
@@ -52,9 +51,9 @@ final class LegacyFileTranslationLoader implements LoaderInterface
     private $localeConverter;
 
     /**
-     * @var array the list of active modules
+     * @var ModuleDomainConverterInterface the module domain converter
      */
-    private $modulesList;
+    private $moduleDomainConverter;
 
     /**
      * @var LegacyModuleExtractorInterface the module extractor able to parse all files of a module
@@ -65,11 +64,11 @@ final class LegacyFileTranslationLoader implements LoaderInterface
     public function __construct(
         Converter $converter,
         LegacyModuleExtractorInterface $moduleExtractor,
-        array $modulesList
+        ModuleDomainConverterInterface $moduleDomainConverter
     ) {
         $this->localeConverter = $converter;
         $this->moduleExtractor = $moduleExtractor;
-        $this->modulesList = $modulesList;
+        $this->moduleDomainConverter = $moduleDomainConverter;
     }
 
     /**
@@ -80,12 +79,15 @@ final class LegacyFileTranslationLoader implements LoaderInterface
         // Each legacy file declare this variable to store the translations
         $_MODULE = [];
 
-        // get module name from Domain (needs to be extracted)
-        $catalogue = $this->moduleExtractor->extract($this->getModuleNameFromDomain($domain), $locale);
-
         if (!file_exists($path)) {
             throw UnsupportedLocaleException::fileNotFound($path, $locale);
         }
+
+        // get module name from Domain (needs to be extracted)
+        $catalogue = $this->moduleExtractor->extract(
+            $this->moduleDomainConverter->getModuleFromDomain($domain),
+            $locale
+        );
 
         // Load a global array $_MODULE
         include_once $path;
@@ -125,16 +127,5 @@ final class LegacyFileTranslationLoader implements LoaderInterface
         }
 
         return $matches['id'][0];
-    }
-
-    private function getModuleNameFromDomain($domain)
-    {
-        foreach ($this->modulesList as $module) {
-            if ('Modules' . Container::camelize($module) === $domain) {
-                return $module;
-            }
-        }
-
-        throw UnsupportedModuleException::moduleNotFound($domain);
     }
 }
