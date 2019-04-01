@@ -1136,7 +1136,7 @@ class LanguageCore extends ObjectModel
         $mailGenerator = $sfContainer->get('prestashop.service.mail_theme_generator');
         $mailTheme = Configuration::get('PS_MAIL_THEME');
         try {
-            $mailGenerator->generateMailTemplates($mailTheme, $locale, true);
+            $mailGenerator->generateMailTemplates($mailTheme, $locale, false);
         } catch (CoreException $e) {
             $errors[] = Context::getContext()->getTranslator()->trans(
                 'Cannot generate mail templates: %s.',

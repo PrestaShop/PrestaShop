@@ -36,6 +36,9 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
  */
 class MailThemeChoiceProvider implements FormChoiceProviderInterface
 {
+    /** @var array */
+    private $choices;
+
     /** @var ThemeCatalogInterface */
     private $themeCatalog;
 
@@ -52,15 +55,18 @@ class MailThemeChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        /** @var ThemeCollectionInterface $collection */
-        $collection = $this->themeCatalog->listThemes();
+        if (null === $this->choices) {
+            $this->choices = [];
 
-        $choices = [];
-        /** @var ThemeInterface $theme */
-        foreach ($collection as $theme) {
-            $choices[$theme->getName()] = $theme->getName();
+            /** @var ThemeCollectionInterface $collection */
+            $collection = $this->themeCatalog->listThemes();
+
+            /** @var ThemeInterface $theme */
+            foreach ($collection as $theme) {
+                $this->choices[$theme->getName()] = $theme->getName();
+            }
         }
 
-        return $choices;
+        return $this->choices;
     }
 }

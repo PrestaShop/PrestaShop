@@ -204,6 +204,10 @@ class MailThemeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Preview the list of layouts for a defined theme
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param string $themeName
      *
@@ -280,6 +284,9 @@ class MailThemeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Dynamically display an email template, this is usually used by the MailGenerator but this action
+     * allows to display preview before generating the file (handy when you are developing an email theme)
+     *
      * @param string $themeName
      * @param string $layoutName
      * @param string $type
