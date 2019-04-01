@@ -100,6 +100,14 @@
             </table>
 
         </div>
+
+        <div class="card-footer">
+          <a href="{{ path('admin_mail_theme_index', params|default({})) }}" class="btn btn-outline-secondary">
+            <i class="material-icons">arrow_back</i>
+            {{ 'Back to configuration'|trans({}, 'Admin.Actions') }}
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
