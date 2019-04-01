@@ -137,7 +137,7 @@ class ThemeController extends AbstractAdminController
         if ($logosUploadForm->isSubmitted()) {
             $data = $logosUploadForm->getData();
             try {
-                $this->getShopLogosFormHandler()->save($data['options']);
+                $this->getShopLogosFormHandler()->save($data['shop_logos']);
 
                 $this->addFlash(
                     'success',
@@ -256,6 +256,7 @@ class ThemeController extends AbstractAdminController
     {
         try {
             $this->getCommandBus()->handle(new EnableThemeCommand(new ThemeName($themeName)));
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleEnableThemeException($e));
 
