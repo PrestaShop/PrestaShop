@@ -114,7 +114,7 @@ admin_manufacturer_addresses_create:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createAddress'
     _legacy_controller: AdminManufacturers
-    _legacy_link: :addaddress
+    _legacy_link: AdminManufacturers:addaddress
 
 admin_manufacturer_addresses_edit:
   path: addresses/{addressId}/edit
