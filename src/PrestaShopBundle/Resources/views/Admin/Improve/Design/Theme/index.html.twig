@@ -114,7 +114,7 @@
                   {% block button_container %}
                     <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
                       <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}" />
-                      <button type="submit" class="btn action-button" {{ (not isSingleShopContext) ? 'disabled' : '' }}>
+                      <button type="button" class="btn action-button js-display-use-theme-modal" {{ (not isSingleShopContext) ? 'disabled' : '' }}>
                         <i class="material-icons">
                           present_to_all
                         </i>
@@ -132,6 +132,8 @@
                   {% endblock %}
                 {% endembed %}
               {% endfor %}
+
+              {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/use_theme_modal.html.twig' %}
             {% endif %}
 
             {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_catalog_card.html.twig' %}
