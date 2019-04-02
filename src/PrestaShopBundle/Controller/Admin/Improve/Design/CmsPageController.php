@@ -223,10 +223,9 @@ class CmsPageController extends FrameworkBundleAdminController
     {
         $cmsPageId = (int) $cmsPageId;
 
-        $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId);
-        $form->handleRequest($request);
-
         try {
+            $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId);
+            $form->handleRequest($request);
             $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -332,11 +331,11 @@ class CmsPageController extends FrameworkBundleAdminController
     public function editCmsCategoryAction($cmsCategoryId, Request $request)
     {
         $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
-        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
-        $cmsPageCategoryForm->handleRequest($request);
         $cmsCategoryParentId = null;
 
         try {
+            $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+            $cmsPageCategoryForm->handleRequest($request);
             $result = $this->getCmsPageCategoryFormHandler()->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -991,6 +990,10 @@ class CmsPageController extends FrameworkBundleAdminController
     private function getErrorMessages()
     {
         return [
+            CmsPageNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
             CannotToggleCmsPageException::class => $this->trans(
                 'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
