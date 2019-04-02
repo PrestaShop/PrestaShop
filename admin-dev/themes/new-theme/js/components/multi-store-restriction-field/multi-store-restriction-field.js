@@ -78,12 +78,17 @@ export default class MultiStoreRestrictionField {
 
   /**
    * Changes related form fields state to disabled or enabled.
+   * It also toggles class disabled since for some fields
+   * this class is used instead of the native disabled attribute.
+   *
    * @param {jquery} $targetElement
    * @param {boolean} isDisabled
    * @private
    */
   _toggleSourceFieldByTargetElement($targetElement, isDisabled) {
     const targetValue = $targetElement.data('shopRestrictionTarget');
-    $(`[data-shop-restriction-source="${targetValue}"]`).prop('disabled', isDisabled);
+    const $sourceFieldSelector = $(`[data-shop-restriction-source="${targetValue}"]`);
+    $sourceFieldSelector.prop('disabled', isDisabled);
+    $sourceFieldSelector.toggleClass('disabled', isDisabled);
   }
 }
