@@ -22,3 +22,45 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+const $ = window.$;
+
+/**
+ * This handler displays use theme modal and handles the submit form logic.
+ */
+export default class UseThemeHandler {
+  constructor() {
+    $(document).on('click', '.js-display-use-theme-modal', e => this._displayUseThemeModal(e));
+  }
+
+  /**
+   * Displays modal with its own event handling.
+   *
+   * @param e
+   * @private
+   */
+  _displayUseThemeModal(e) {
+    const $modal = $('#use_theme_modal');
+
+    $modal.modal('show');
+
+    this._submitForm($modal, e);
+  }
+
+  /**
+   * Submits form by adding click event listener for modal and calling original form event.
+   *
+   * @param $modal
+   * @param originalButtonEvent
+   *
+   * @private
+   */
+  _submitForm($modal, originalButtonEvent) {
+    const $formButton = $(originalButtonEvent.currentTarget);
+
+    $modal.on('click', '.js-submit-use-theme', () => {
+      const $form = $formButton.closest('form');
+      $form.submit();
+    });
+  }
+}
