@@ -74,7 +74,7 @@ const textToLinkRewriteCopier = ({ sourceElementSelector, destinationElementSele
       const langId = getLanguageIdByElement($nameInput);
       let elementToModifySelector = null !== langId ? `${destinationElementSelector}[data-lang-id="${langId}"]` : destinationElementSelector;
 
-      $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8'));
+      $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8')).trigger('input');
     })
 };
 
