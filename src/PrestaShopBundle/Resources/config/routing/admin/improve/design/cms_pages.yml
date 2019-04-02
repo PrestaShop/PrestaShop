@@ -175,3 +175,4 @@ admin_cms_pages_update_position:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:updateCmsPosition'
     _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:updatecms
