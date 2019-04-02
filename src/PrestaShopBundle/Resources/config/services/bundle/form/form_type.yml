@@ -755,7 +755,6 @@ services:
       tags:
         - { name: form.type }
 
-<<<<<<< HEAD
     form.type.contact:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
         arguments:
