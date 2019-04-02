@@ -1,4 +1,4 @@
-/**
+{#**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,46 +21,30 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-const $ = window.$;
+{% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  'id': 'delete_theme_modal'
+} %}
+  {% block header %}
+      <div class="modal-header">
+        <h4 class="modal-title">{{ 'Delete this theme?'|trans({}, 'Admin.Design.Feature') }}</h4>
+      </div>
+  {% endblock %}
 
-/**
- * This handler displays delete theme modal and handles the submit action.
- */
-export default class DeleteThemeHandler {
-  constructor() {
-    $(document).on('click', '.js-display-delete-theme-modal', e => this._displayDeleteThemeModal(e));
-  }
+  {% block footer %}
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-lg"
+        data-dismiss="modal">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </button>
 
-  /**
-   * Displays modal with its own event handling.
-   *
-   * @param e
-   * @private
-   */
-  _displayDeleteThemeModal(e) {
-    const $modal = $('#delete_theme_modal');
+      <button type="button" class="btn btn-tertiary js-submit-delete-theme btn-lg">
+        {{ 'Yes'|trans({}, 'Admin.Global') }}
+      </button>
+    </div>
+  {% endblock %}
 
-    $modal.modal('show');
-
-    this._submitForm($modal, e);
-  }
-
-  /**
-   * Submits form by adding click event listener for modal and calling original form event.
-   *
-   * @param $modal
-   * @param originalButtonEvent
-   *
-   * @private
-   */
-  _submitForm($modal, originalButtonEvent) {
-    const $formButton = $(originalButtonEvent.currentTarget);
-
-    $modal.on('click', '.js-submit-delete-theme', () => {
-      const $form = $formButton.closest('form');
-      $form.submit();
-    });
-  }
-}
+{% endembed %}

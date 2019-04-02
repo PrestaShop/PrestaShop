@@ -123,7 +123,7 @@
                     </form>
                     <form action="{{ path('admin_themes_delete', {'themeName': theme.name}) }}" method="post" class="d-inline">
                       <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}" />
-                      <button class="btn delete-button">
+                      <button type="button" class="btn delete-button js-display-delete-theme-modal">
                         <i class="material-icons">
                           delete
                         </i>
@@ -134,6 +134,7 @@
               {% endfor %}
 
               {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/use_theme_modal.html.twig' %}
+              {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/delete_theme_modal.html.twig' %}
             {% endif %}
 
             {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_catalog_card.html.twig' %}
