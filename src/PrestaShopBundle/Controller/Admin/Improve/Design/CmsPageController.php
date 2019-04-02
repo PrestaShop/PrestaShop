@@ -492,7 +492,6 @@ class CmsPageController extends FrameworkBundleAdminController
             'parentId' => $cmsCategoryParentId,
         ];
 
-
         $positionDefinition = $this->get('prestashop.core.grid.cms_page.position_definition');
         $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
 
