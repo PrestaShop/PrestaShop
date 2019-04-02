@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Language;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -70,6 +71,9 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
+                    new TypedRegexConstraint([
+                        'type' => 'generic_name',
+                    ]),
                 ],
             ])
             ->add('iso_code', TextType::class, [
@@ -77,9 +81,8 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
-                    new Regex([
-                        'pattern' => IsoCode::PATTERN,
-                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    new TypedRegexConstraint([
+                        'type' => 'language_iso_code',
                     ]),
                 ],
             ])
@@ -88,9 +91,8 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
-                    new Regex([
-                        'pattern' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
-                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    new TypedRegexConstraint([
+                        'type' => 'language_code',
                     ]),
                 ],
             ])
@@ -100,6 +102,9 @@ class LanguageType extends AbstractType
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
                     new Regex([
+                        // We can't really check if this is valid or not,
+                        // because this is a string and you can write whatever you want in it.
+                        // That's why only < et > are forbidden (HTML).
                         'pattern' => '/^[^<>]+$/',
                         'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
