@@ -170,7 +170,12 @@ class CmsPageController extends FrameworkBundleAdminController
     public function createAction(Request $request)
     {
         $formBuilder = $this->getCmsPageFormBuilder();
-        $form = $formBuilder->getForm();
+        $categoryParentId = $request->query->get('id_cms_category');
+        $formData = [];
+        if ($categoryParentId) {
+            $formData['page_category_id'] = $categoryParentId;
+        }
+        $form = $formBuilder->getForm($formData);
         $form->handleRequest($request);
 
         try {
@@ -200,7 +205,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig', [
             'cmsPageForm' => $form->createView(),
-            'cmsCategoryParentId' => $request->get('id_cms_category'),
+            'cmsCategoryParentId' => $categoryParentId,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
