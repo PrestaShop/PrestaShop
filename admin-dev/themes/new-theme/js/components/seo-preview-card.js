@@ -41,6 +41,8 @@ export default class SeoPreviewCard {
     $(titleInputSelector).on('input', (event) => this._changeHandler(event));
     $(urlInputSelector).on('input', (event) => this._changeHandler(event));
     $(descriptionInputSelector).on('input', (event) => this._changeHandler(event));
+
+    this._refreshCard(this.$card.data('lang-id'));
   }
 
   _changeHandler(event) {

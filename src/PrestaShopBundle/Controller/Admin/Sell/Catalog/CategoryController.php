@@ -139,6 +139,7 @@ class CategoryController extends FrameworkBundleAdminController
             'allowMenuThumbnailsUpload' => true,
             'categoryForm' => $categoryForm->createView(),
             'defaultGroups' => $defaultGroups,
+            'contextLangId' => $this->getContextLangId(),
         ]);
     }
 
@@ -184,6 +185,7 @@ class CategoryController extends FrameworkBundleAdminController
             'allowMenuThumbnailsUpload' => true,
             'rootCategoryForm' => $rootCategoryForm->createView(),
             'defaultGroups' => $defaultGroups,
+            'contextLangId' => $this->getContextLangId(),
         ]);
     }
 
