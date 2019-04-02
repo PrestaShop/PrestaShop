@@ -101,6 +101,10 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
             $language->active = $command->isActive();
         }
 
+        if (false === $language->validateFields(false)) {
+            throw new LanguageException('Cannot add language with invalid data');
+        }
+
         if (false === $language->update()) {
             throw new LanguageException(
                 sprintf('Cannot update language with id "%s"', $language->id)
