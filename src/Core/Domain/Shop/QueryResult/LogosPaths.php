@@ -63,7 +63,6 @@ class LogosPaths
         $invoiceLogoPath,
         $faviconPath
     ) {
-
         $this->headerLogoPath = $headerLogoPath;
         $this->mailLogoPath = $mailLogoPath;
         $this->invoiceLogoPath = $invoiceLogoPath;

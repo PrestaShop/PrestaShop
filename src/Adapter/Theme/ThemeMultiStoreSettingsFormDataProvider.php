@@ -55,7 +55,6 @@ final class ThemeMultiStoreSettingsFormDataProvider implements MultiStoreSetting
         $isShopFeatureUsed,
         $isSingleShopContext
     ) {
-
         $this->isShopFeatureUsed = $isShopFeatureUsed;
         $this->isSingleShopContext = $isSingleShopContext;
     }

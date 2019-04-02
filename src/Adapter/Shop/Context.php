@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
-use Configuration;
 use Context as LegacyContext;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;

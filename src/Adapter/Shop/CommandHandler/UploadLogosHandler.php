@@ -29,12 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler\UploadLogosHandlerInterface;
-use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
-use Shop;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Validate;
 
 /**
  * Class UploadLogosHandler

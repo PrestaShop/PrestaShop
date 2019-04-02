@@ -104,14 +104,13 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
      * If shop_restriction argument exists in the post this means that certain shop restrictions are applied.
      * It filters and drops the values which are not being selected for editing for specific shop.
      *
-     * @param array $data - form data.
+     * @param array $data - form data
      *
      * @return array
      */
     private function geFilteredFieldsByShopRestriction(array $data)
     {
         if (!isset($data['shop_restriction'])) {
-
             return $data;
         }
 

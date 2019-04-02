@@ -153,13 +153,12 @@ class ShopLogosType extends AbstractType
      * for which fields the checkbox has been clicked.
      *
      * @param FormBuilderInterface $builder
-     * @param string $suffix - helps to find multi shop checkbox field.
+     * @param string $suffix - helps to find multi shop checkbox field
      */
     private function transformMultiStoreFields(FormBuilderInterface $builder, $suffix)
     {
         $builder->addModelTransformer(new CallbackTransformer(
             function ($form) {
-
                 return $form;
             },
             function ($form) use ($suffix) {
@@ -189,7 +188,7 @@ class ShopLogosType extends AbstractType
      * The fields which does not have checked checkbox are being disabled by default
      *
      * @param FormBuilderInterface $builder
-     * @param string $suffix - helps to find multi shop checkbox field.
+     * @param string $suffix - helps to find multi shop checkbox field
      */
     private function disableAllShopContextFields(FormBuilderInterface $builder, $suffix)
     {
@@ -223,7 +222,7 @@ class ShopLogosType extends AbstractType
      * javascript events.
      *
      * @param FormBuilderInterface $builder
-     * @param string $suffix - helps to find multi shop checkbox field.
+     * @param string $suffix - helps to find multi shop checkbox field
      */
     private function setShopRestrictionSource(FormBuilderInterface $builder, $suffix)
     {
