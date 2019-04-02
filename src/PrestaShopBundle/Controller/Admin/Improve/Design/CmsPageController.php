@@ -38,6 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageExcep
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult\EditableCmsPage;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
@@ -167,14 +170,21 @@ class CmsPageController extends FrameworkBundleAdminController
 
         try {
             $result = $this->getCmsPageFormHandler()->handle($form);
+            $cmsPageId = $result->getIdentifiableObjectId();
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if (null !== $cmsPageId) {
                 $this->addFlash(
                     'success',
                     $this->trans('Successful creation.', 'Admin.Notifications.Success')
                 );
-                //todo: wait for second list to be merged and
-                return $this->redirectToRoute('admin_cms_pages_index');
+                if (!$request->request->has('save-and-preview')) {
+                    return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
+                }
+
+                return $this->redirectToRoute('admin_cms_pages_edit', [
+                    'cmsPageId' => $cmsPageId,
+                    'open_preview' => 1,
+                ]);
             }
         } catch (DomainException $e) {
             $this->addFlash('error', $this->getCmsPageErrorByExceptionType($e));
@@ -217,8 +227,19 @@ class CmsPageController extends FrameworkBundleAdminController
                     $this->trans('Successful update.', 'Admin.Notifications.Success')
                 );
 
-                return $this->redirectToRoute('admin_cms_pages_index');
+                if ($request->request->has('save-and-preview')) {
+                    return $this->redirectToRoute('admin_cms_pages_edit', [
+                        'cmsPageId' => $cmsPageId,
+                        'open_preview' => 1,
+                    ]);
+                }
+
+                return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
             }
+
+            /** @var EditableCmsPage $editableCmsPage */
+            $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
+            $previewUrl = $editableCmsPage->getPreviewUrl();
         } catch (DomainException $e) {
             $this->addFlash('error', $this->getCmsPageErrorByExceptionType($e));
 
@@ -232,6 +253,7 @@ class CmsPageController extends FrameworkBundleAdminController
             'cmsCategoryParentId' => $request->get('id_cms_category'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'previewUrl' => $previewUrl,
         ]);
     }
 

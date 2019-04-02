@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\AbstractCmsPageHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
@@ -40,6 +41,16 @@ use PrestaShopException;
  */
 final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implements GetCmsPageForEditingHandlerInterface
 {
+    /**
+     * @var Context
+     */
+    private $context;
+
+    public function __construct(Context $context)
+    {
+        $this->context = $context;
+    }
+
     /**
      * @param GetCmsPageForEditing $query
      *
@@ -66,8 +77,9 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
                 $cms->content,
                 $cms->indexation,
                 $cms->active,
-                $cms->getAssociatedShops()
-            );
+                $cms->getAssociatedShops(),
+                $preview_url = $this->context->link->getCMSLink($cms, null, null, $this->context->language->id)
+        );
         } catch (PrestaShopException $e) {
             throw new CmsPageException(
                 sprintf('An error occurred when getting cms page for editing with id "%s"', $cmsPageId)
