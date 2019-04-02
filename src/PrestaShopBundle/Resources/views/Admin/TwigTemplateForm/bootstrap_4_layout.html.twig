@@ -708,7 +708,7 @@
       'data-locale': get_context_iso_code()
     }) -%}
 
-    {% if attr.disabled %}
+    {% if attr.disabled is defined and attr.disabled %}
       {% set attr = attr|merge({
         class: attr.class ~ ' disabled'
       }) %}
