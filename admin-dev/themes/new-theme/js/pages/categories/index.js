@@ -97,5 +97,7 @@ $(() => {
     'input[name^="category[meta_title]',
     'input[name^="category[link_rewrite]',
     'textarea[name^="category[meta_description]',
+    'input[name^="category[name]',
+    'textarea[name^="category[description]'
   );
 });

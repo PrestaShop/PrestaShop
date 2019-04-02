@@ -26,7 +26,7 @@
 const $ = window.$;
 
 /**
- * Component is used to preview SEO results
+ * Component is used to preview SEO results.
  *
  * Usage: Define HTML for SEO card preview with ID and "data-id-lang" attribute
  * that is used as default language in which SEO results are displayed.
@@ -51,17 +51,24 @@ export default class SeoPreviewCard {
     seoPreviewCardSelector,
     titleInputSelector,
     urlInputSelector,
-    descriptionInputSelector
+    descriptionInputSelector,
+    fallbackTitleInputSelector,
+    fallbackDescriptionInputSelector,
   ) {
     this.$card = $(seoPreviewCardSelector);
 
     this.titleInputSelector = titleInputSelector;
     this.urlInputSelector = urlInputSelector;
     this.descriptionInputSelector = descriptionInputSelector;
+    this.fallbackTitleInputSelector = fallbackTitleInputSelector;
+    this.fallbackDescriptionInputSelector = fallbackDescriptionInputSelector;
 
     $(titleInputSelector).on('input', (event) => this._changeHandler(event));
     $(urlInputSelector).on('input', (event) => this._changeHandler(event));
     $(descriptionInputSelector).on('input', (event) => this._changeHandler(event));
+
+    $(fallbackTitleInputSelector).on('input', (event) => this._changeHandler(event));
+    $(fallbackDescriptionInputSelector).on('input', (event) => this._changeHandler(event));
 
     this._refreshCard(this.$card.data('lang-id'));
 
@@ -104,6 +111,10 @@ export default class SeoPreviewCard {
   _getDescription(langId) {
     let descritpion = this._getLocalizedValue(this.descriptionInputSelector, langId);
 
+    if (0 === descritpion.length) {
+      descritpion = this._getLocalizedValue(this.fallbackDescriptionInputSelector, langId);
+    }
+
     if (descritpion.length > 150) {
       descritpion = descritpion.substr(0, 150) + '...';
     }
@@ -120,6 +131,10 @@ export default class SeoPreviewCard {
    */
   _getTitle(langId) {
     let title = this._getLocalizedValue(this.titleInputSelector, langId);
+
+    if (0 === title.length) {
+      title = this._getLocalizedValue(this.fallbackTitleInputSelector, langId);
+    }
 
     if (title.length > 70) {
       title = title.substr(0, 70) + '...';
@@ -150,6 +165,8 @@ export default class SeoPreviewCard {
    * @private
    */
   _getLocalizedValue(inputSelector, langId) {
-    return $(inputSelector + '[' + langId + ']').val();
+    const $input = $(inputSelector + '[' + langId + ']');
+
+    return $input.val();
   }
 }
