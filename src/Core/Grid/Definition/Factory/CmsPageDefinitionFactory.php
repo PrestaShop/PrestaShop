@@ -209,7 +209,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                             'update_method' => 'POST',
                             'update_route' => 'admin_cms_pages_update_position',
                             'record_route_params' => [
-                                'id_parent' => 'id_cms_category',
+                                'id_cms_category' => 'id_cms_category',
                             ],
                         ])
                 );

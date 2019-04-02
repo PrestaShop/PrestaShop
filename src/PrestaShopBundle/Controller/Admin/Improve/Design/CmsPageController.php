@@ -429,7 +429,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function updateCmsCategoryPositionAction(Request $request)
     {
         $cmsCategoryParentId = $request->query->getInt('id_cms_category') ?:
-            CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID
+            CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID
         ;
 
         $positionsData = [
@@ -484,7 +484,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function updateCmsPositionAction(Request $request)
     {
         $cmsCategoryParentId = $request->query->getInt('id_cms_category') ?:
-            CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID
+            CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID
         ;
 
         $positionsData = [

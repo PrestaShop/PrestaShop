@@ -79,6 +79,7 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select('c.`id_cms`, cl.`link_rewrite`, c.`active`, c.`position`, cl.`meta_title`, cl.`head_seo_title`')
+            ->addSelect('c.`id_cms_category`')
             ->groupBy('c.`id_cms`')
         ;
 
