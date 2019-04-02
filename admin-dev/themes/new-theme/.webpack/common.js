@@ -28,7 +28,7 @@ module.exports = {
     sql_manager: './js/pages/sql-manager',
     catalog_product: './js/pages/catalog/product',
     backup: './js/pages/backup',
-    categories: './js/pages/categories',
+    category: './js/pages/category',
     module_card: './js/app/pages/module-card',
     translation_settings: './js/pages/translation-settings',
     webservice: './js/pages/webservice',
@@ -50,6 +50,7 @@ module.exports = {
     form_popover_error: './js/components/form/form-popover-error',
     manufacturer: './js/pages/manufacturer',
     manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    category_form: './js/pages/category/form.js',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
