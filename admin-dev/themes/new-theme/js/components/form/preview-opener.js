@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,15 +21,28 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+const $ = window.$;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/form.html.twig', {}) }}
-      <span class="js-preview-url" data-preview-url="{{ previewUrl }}"></span>
-    </div>
-  </div>
-{% endblock %}
+/**
+ * Responsible for opening another page with specified url.
+ * For example used in 'Save and preview' cms page create/edit actions
+ */
+export default class PreviewOpener {
+  constructor ({previewUrlSelector}) {
+    this.previewUrl = $(previewUrlSelector).data('preview-url');
+    this.open();
+  }
+
+  /**
+   * Opens new page of provided url if query contains specific parameters
+   */
+  open() {
+    const urlParams = new URLSearchParams(location.search);
+
+    if (this.previewUrl && urlParams.has('open_preview')) {
+      window.open(this.previewUrl, '_blank');
+    }
+  }
+}

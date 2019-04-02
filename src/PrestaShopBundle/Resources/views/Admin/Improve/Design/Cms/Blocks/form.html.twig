@@ -98,7 +98,10 @@
       </a>
     </div>
     <div class="d-inline-flex float-right">
-      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      <button type="submit" class="btn btn-primary" name="save-and-preview">
+        {{ 'Save & preview'|trans({}, 'Admin.Actions') }}
+      </button>
+      <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
     </div>
   </div>
 
