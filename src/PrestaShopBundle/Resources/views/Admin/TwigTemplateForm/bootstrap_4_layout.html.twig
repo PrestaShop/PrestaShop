@@ -708,6 +708,12 @@
       'data-locale': get_context_iso_code()
     }) -%}
 
+    {% if attr.disabled %}
+      {% set attr = attr|merge({
+        class: attr.class ~ ' disabled'
+      }) %}
+    {% endif %}
+
     {{ form_widget(form, {'attr': attr}) }}
 
     <label class="custom-file-label" for="{{ form.vars.id }}">
