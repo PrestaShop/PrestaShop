@@ -131,7 +131,12 @@
             {{ 'Improve your ranking and how your product page will appear in search engines results.'|trans({}, 'Admin.Catalog.Feature') }}
           </p>
 
-          <div id="categorySeoPreviewCard" class="seo-preview-card" data-lang-id="{{ contextLangId }}">
+          <div id="categorySeoPreviewCard"
+               class="seo-preview-card"
+               data-lang-id="{{ contextLangId }}"
+               data-seo-preview-url-generator="{{ path('admin_categories_generate_seo_preview_url') }}"
+               data-resource-id="{{ categoryId|default('') }}"
+          >
             <div class="seo-preview-title"></div>
             <div class="seo-preview-url"></div>
             <div class="seo-preview-description"></div>

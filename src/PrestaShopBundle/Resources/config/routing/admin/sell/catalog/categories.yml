@@ -142,3 +142,10 @@ admin_categories_update_position:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:updatePosition
         _legacy_controller: AdminCategories
         _legacy_link: AdminCategories:updatePositions
+
+admin_categories_generate_seo_preview_url:
+    path: /generate-seo-preview-url
+    methods: [GET]
+    defaults:
+      _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:generateSeoPreviewUrl
+      _legacy_controller: AdminCategories

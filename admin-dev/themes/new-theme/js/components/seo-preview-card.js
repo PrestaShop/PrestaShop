@@ -31,7 +31,11 @@ const $ = window.$;
  * Usage: Define HTML for SEO card preview with ID and "data-id-lang" attribute
  * that is used as default language in which SEO results are displayed.
  *
- * <div id="mySeoPreviewCard" data-lang-id="1">
+ * <div id="mySeoPreviewCard"
+ *      class="seo-preview-card"
+ *      data-lang-id="1"
+ *      data-seo-preview-url-generator="/admin-dev/generate-seo-preview-url"
+ * >
  *  <div class="seo-preview-title"></div>
  *  <div class="seo-preview-url"></div>
  *  <div class="seo-preview-description"></div>
@@ -41,9 +45,11 @@ const $ = window.$;
  *
  * new SeoPreviewCard(
  *    '#mySeoPreviewCard',                            // SEO preview card selector
- *    'input[name^="category[meta_title]',            // Title input selector for SEO preview title
+ *    'input[name^="category[meta_title]',            // Meta name input selector for SEO preview name
  *    'input[name^="category[link_rewrite]',          // Friendly url input selector for SEO preview url
- *    'textarea[name^="category[meta_description]',   // Description input selector for SEO preview title
+ *    'textarea[name^="category[meta_description]',   // Meta description input selector for SEO preview title,
+ *    'input[name^="category[name]',                  // Name that is used when Meta name is empty
+ *    'textarea[name^="category[description]'         // Description is used when Meta description is empty
  * );
  */
 export default class SeoPreviewCard {
@@ -96,9 +102,24 @@ export default class SeoPreviewCard {
    * @private
    */
   _refreshCard(langId) {
-    this.$card.find('.seo-preview-title').text(this._getTitle(langId));
-    this.$card.find('.seo-preview-url').text(this._getUrl(langId));
-    this.$card.find('.seo-preview-description').text(this._getDescription(langId));
+    if (this.request) {
+      this.request.abort();
+    }
+
+    this.request = $.ajax(this.$card.data('seo-preview-url-generator'), {
+      data: {
+        'category_id': this.$card.data('resource-id'),
+        'lang_id': langId,
+        'link_rewrite': this._getUrl(langId),
+      },
+      contentType: 'json',
+    });
+
+    this.request.then((response) => {
+      this.$card.find('.seo-preview-title').text(this._getTitle(langId));
+      this.$card.find('.seo-preview-url').text(response.preview_url);
+      this.$card.find('.seo-preview-description').text(this._getDescription(langId));
+    });
   }
 
   /**
@@ -165,8 +186,6 @@ export default class SeoPreviewCard {
    * @private
    */
   _getLocalizedValue(inputSelector, langId) {
-    const $input = $(inputSelector + '[' + langId + ']');
-
-    return $input.val();
+    return $(inputSelector + '[' + langId + ']').val();
   }
 }

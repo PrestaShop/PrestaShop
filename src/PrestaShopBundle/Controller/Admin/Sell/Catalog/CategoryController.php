@@ -250,6 +250,7 @@ class CategoryController extends FrameworkBundleAdminController
             'editCategoryForm' => $categoryForm->createView(),
             'editableCategory' => $editableCategory,
             'defaultGroups' => $defaultGroups,
+            'categoryId' => $categoryId,
         ]);
     }
 
@@ -312,6 +313,7 @@ class CategoryController extends FrameworkBundleAdminController
             'editRootCategoryForm' => $rootCategoryForm->createView(),
             'editableCategory' => $editableCategory,
             'defaultGroups' => $defaultGroups,
+            'categoryId' => $categoryId,
         ]);
     }
 
@@ -672,6 +674,17 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->json([
             'success' => true,
             'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+        ]);
+    }
+
+    public function generateSeoPreviewUrlAction(Request $request)
+    {
+        $categoryId = $request->query->getInt('category_id');
+        $langId = $request->query->getInt('lang_id');
+        $friendlyUrl = $request->query->get('link_rewrite');
+
+        return $this->json([
+            'preview_url' => $this->getContext()->link->getCategoryLink($categoryId, $friendlyUrl, $langId),
         ]);
     }
 
