@@ -35,4 +35,15 @@ interface UrlProviderInterface
      * @return string
      */
     public function getUrl();
+
+    /**
+     * Provides URL to Front Office category page
+     *
+     * @param int $categoryId
+     * @param string $linkRewrite
+     * @param int $langId
+     *
+     * @return string
+     */
+    public function getCategoryUrl($categoryId, $linkRewrite, $langId);
 }

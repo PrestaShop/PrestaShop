@@ -36,14 +36,7 @@ import CategoryPositionExtension from "../../components/grid/extension/column/ca
 import AsyncToggleColumnExtension from "../../components/grid/extension/column/common/async-toggle-column-extension";
 import DeleteCategoryRowActionExtension from "../../components/grid/extension/action/row/category/delete-category-row-action-extension";
 import DeleteCategoriesBulkActionExtension from "../../components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension";
-import TranslatableInput from "../../components/translatable-input";
-import ChoiceTable from "../../components/choice-table";
-import TextWithLengthCounter from "../../components/form/text-with-length-counter";
-import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copier";
-import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
-import TaggableField from "../../components/taggable-field";
-import SeoPreviewCard from "../../components/seo-preview-card";
 
 const $ = window.$;
 
@@ -63,41 +56,5 @@ $(() => {
   categoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   categoriesGrid.addExtension(new DeleteCategoriesBulkActionExtension());
 
-  new TranslatableInput();
-  new ChoiceTable();
-  new TextWithLengthCounter();
-
-  textToLinkRewriteCopier({
-    sourceElementSelector: 'input[name^="category[name]"]',
-    destinationElementSelector: 'input[name^="category[link_rewrite]"]',
-  });
-
-  textToLinkRewriteCopier({
-    sourceElementSelector: 'input[name^="root_category[name]"]',
-    destinationElementSelector: 'input[name^="root_category[link_rewrite]"]',
-  });
-
   new FormSubmitButton();
-
-  new TaggableField({
-    tokenFieldSelector: 'input.js-taggable-field',
-    options: {
-      createTokensOnBlur: true,
-    },
-  });
-
-  new ChoiceTree('#category_id_parent');
-  new ChoiceTree('#category_shop_association').enableAutoCheckChildren();
-
-  new ChoiceTree('#root_category_id_parent');
-  new ChoiceTree('#root_category_shop_association').enableAutoCheckChildren();
-
-  new SeoPreviewCard(
-    '#categorySeoPreviewCard',
-    'input[name^="category[meta_title]',
-    'input[name^="category[link_rewrite]',
-    'textarea[name^="category[meta_description]',
-    'input[name^="category[name]',
-    'textarea[name^="category[description]'
-  );
 });

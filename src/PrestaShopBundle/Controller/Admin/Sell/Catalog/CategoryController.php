@@ -681,10 +681,14 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $categoryId = $request->query->getInt('category_id');
         $langId = $request->query->getInt('lang_id');
-        $friendlyUrl = $request->query->get('link_rewrite');
+        $linkRewrite = $request->query->get('link_rewrite');
 
         return $this->json([
-            'preview_url' => $this->getContext()->link->getCategoryLink($categoryId, $friendlyUrl, $langId),
+            'preview_url' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getCategoryUrl(
+                $categoryId,
+                $linkRewrite,
+                $langId
+            ),
         ]);
     }
 

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\Url;
 
+use Category;
 use Link;
 use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 
@@ -53,5 +54,13 @@ final class BaseUrlProvider implements UrlProviderInterface
     public function getUrl()
     {
         return $this->link->getBaseLink();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCategoryUrl($categoryId, $linkRewrite, $langId)
+    {
+        return $this->link->getCategoryLink(new Category($categoryId), $linkRewrite, $langId);
     }
 }

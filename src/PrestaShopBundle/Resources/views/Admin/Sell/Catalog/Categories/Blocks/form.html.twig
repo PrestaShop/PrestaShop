@@ -26,7 +26,7 @@
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block category_form_block %}
-{{ form_start(categoryForm) }}
+{{ form_start(categoryForm, {'attr': {'id': 'categoryForm'}}) }}
 <div class="card">
   <h3 class="card-header">
     {{ 'Category'|trans({}, 'Admin.Catalog.Feature') }}
