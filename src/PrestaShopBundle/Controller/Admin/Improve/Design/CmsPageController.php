@@ -95,9 +95,15 @@ class CmsPageController extends FrameworkBundleAdminController
                 ->get('prestashop.core.cms_page.data_provider.cms_page_view')
                 ->getView($cmsCategoryParentId)
             ;
-        } catch (CmsPageCategoryNotFoundException $exception) {
-            return $this->redirectToRoute('admin_cms_pages_index');
         } catch (CmsPageCategoryException $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            if ($exception instanceof CmsPageCategoryNotFoundException) {
+                return $this->redirectToRoute('admin_cms_pages_index');
+            }
         }
 
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
@@ -186,7 +192,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 ]);
             }
         } catch (DomainException $e) {
-            $this->addFlash('error', $this->getCmsPageErrorByExceptionType($e));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages())
+            );
         }
 
         return $this->render('PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig', [
@@ -240,7 +249,10 @@ class CmsPageController extends FrameworkBundleAdminController
             $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
             $previewUrl = $editableCmsPage->getPreviewUrl();
         } catch (DomainException $e) {
-            $this->addFlash('error', $this->getCmsPageErrorByExceptionType($e));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages())
+            );
 
             if ($e instanceof CmsPageNotFoundException) {
                 return $this->redirectToRoute('admin_cms_pages_index');
@@ -289,7 +301,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
             }
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Cms/create_category.html.twig', [
@@ -329,14 +344,16 @@ class CmsPageController extends FrameworkBundleAdminController
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
             }
-
             $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
-        } catch (CmsPageCategoryNotFoundException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
-
-            return $this->redirectToParentIndexPage((int) $cmsCategoryId);
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            if ($exception instanceof CmsPageCategoryNotFoundException) {
+                return $this->redirectToParentIndexPage((int) $cmsCategoryId);
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit_category.html.twig', [
@@ -378,7 +395,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $redirectResponse;
@@ -421,7 +441,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $redirectResponse;
@@ -516,7 +539,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $this->redirectToParentIndexPage((int) $cmsCategoryId);
@@ -558,7 +584,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $this->redirectToParentIndexPageByCategoryBulkIds($cmsCategoriesToEnable);
@@ -598,7 +627,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $this->redirectToParentIndexPageByCategoryBulkIds($cmsCategoriesToDisable);
@@ -632,7 +664,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $this->redirectToParentIndexPageByCmsPageId($cmsId);
@@ -672,7 +707,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $this->redirectToParentIndexPageByBulkIds($cmsPagesToDisable);
@@ -712,7 +750,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $this->redirectToParentIndexPageByBulkIds($cmsPagesToDisable);
@@ -754,7 +795,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $redirectResponse;
@@ -790,7 +834,10 @@ class CmsPageController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (CmsPageException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
         }
 
         return $redirectResponse;
@@ -937,181 +984,13 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handles commands exceptions and formats to user friendly error message.
+     * Provides translatable error messages for exceptions
      *
-     * @param DomainException $exception
-     *
-     * @return string
+     * @return array
      */
-    private function handleException(DomainException $exception)
+    private function getErrorMessages()
     {
-        $errorMessage = $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
-        $statusCode = $exception->getCode();
-
-        if ($exception instanceof CmsPageCategoryException && 0 === $statusCode) {
-            $errorMessage = $this->getCmsPageCategoryErrorByExceptionType($exception);
-        }
-
-        if ($exception instanceof CmsPageCategoryException && 0 !== $statusCode) {
-            $errorMessage = $this->getCmsPageCategoryErrorByExceptionTypeAndCode($exception);
-        }
-
-        if ($exception instanceof CmsPageException && 0 === $statusCode) {
-            $errorMessage = $this->getCmsPageErrorByExceptionType($exception);
-        }
-
-        return $errorMessage;
-    }
-
-    /**
-     * Gets error by exception type.
-     *
-     * @param CmsPageCategoryException $exception
-     *
-     * @return string
-     */
-    private function getCmsPageCategoryErrorByExceptionType(CmsPageCategoryException $exception)
-    {
-        $exceptionTypeDictionary = [
-            CmsPageCategoryNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
-                'Admin.Notifications.Error'
-            ),
-            CannotToggleCmsPageCategoryStatusException::class => $this->trans(
-                'An error occurred while updating the status.',
-                'Admin.Notifications.Error'
-            ),
-        ];
-
-        if ($exception instanceof CannotDeleteCmsPageCategoryException) {
-            return $this->trans(
-                'Can\'t delete #%id%',
-                'Admin.Notifications.Error',
-                [
-                    '%id%' => $exception->getCmsPageCategoryId(),
-                ]
-            );
-        }
-
-        $exceptionType = get_class($exception);
-        if (isset($exceptionTypeDictionary[$exceptionType])) {
-            return $exceptionTypeDictionary[$exceptionType];
-        }
-
-        return $this->getFallbackErrorMessage($exceptionType, $exception->getCode());
-    }
-
-    /**
-     * Gets exception of cms page category by its type and status code.
-     *
-     * @param CmsPageCategoryException $exception
-     *
-     * @return string
-     */
-    private function getCmsPageCategoryErrorByExceptionTypeAndCode(CmsPageCategoryException $exception)
-    {
-        $exceptionTypeDictionary = [
-            CmsPageCategoryConstraintException::class => [
-                CmsPageCategoryConstraintException::INVALID_BULK_DATA => $this->trans(
-                    'You must select at least one element to delete.',
-                    'Admin.Notifications.Error'
-                ),
-                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT => $this->trans('The page Category cannot be moved here.', 'Admin.Design.Notification'),
-                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Name', 'Admin.Global')),
-                        ]
-                    ),
-                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Friendly URL', 'Admin.Global')),
-                        ]
-                    ),
-                CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Name', 'Admin.Global')),
-                        ]
-                    ),
-                CmsPageCategoryConstraintException::INVALID_LINK_REWRITE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Friendly URL', 'Admin.Global')),
-                        ]
-                    ),
-                CmsPageCategoryConstraintException::INVALID_META_TITLE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Meta title', 'Admin.Global')),
-                        ]
-                    ),
-                CmsPageCategoryConstraintException::INVALID_DESCRIPTION => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Description', 'Admin.Global')),
-                        ]
-                    ),
-                CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Meta description', 'Admin.Global')),
-                        ]
-                    ),
-                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Meta keywords', 'Admin.Global')),
-                        ]
-                    ),
-            ],
-        ];
-
-        $exceptionType = get_class($exception);
-        $statusCode = $exception->getCode();
-
-        if (isset($exceptionTypeDictionary[$exceptionType][$statusCode])) {
-            return $exceptionTypeDictionary[$exceptionType][$statusCode];
-        }
-
-        return $this->getFallbackErrorMessage($exceptionType, $statusCode);
-    }
-
-    /**
-     * Gets user friendly error message by exception.
-     *
-     * @param DomainException $exception
-     *
-     * @return string
-     */
-    private function getCmsPageErrorByExceptionType(DomainException $exception)
-    {
-        $exceptionTypeDictionary = [
+        return [
             CannotToggleCmsPageException::class => $this->trans(
                 'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
@@ -1124,24 +1003,113 @@ class CmsPageController extends FrameworkBundleAdminController
                 'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
             ),
+            CannotDeleteCmsPageException::class => [
+                CannotDeleteCmsPageException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                CannotDeleteCmsPageException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CmsPageCategoryConstraintException::class => [
+                CmsPageCategoryConstraintException::INVALID_BULK_DATA => $this->trans(
+                    'You must select at least one element to delete.',
+                    'Admin.Notifications.Error'
+                ),
+                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT => $this->trans('The page Category cannot be moved here.', 'Admin.Design.Notification'),
+                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Name', 'Admin.Global')),
+                    ]
+                ),
+                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Friendly URL', 'Admin.Global')),
+                    ]
+                ),
+                CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Name', 'Admin.Global')),
+                    ]
+                ),
+                CmsPageCategoryConstraintException::INVALID_LINK_REWRITE => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Friendly URL', 'Admin.Global')),
+                    ]
+                ),
+                CmsPageCategoryConstraintException::INVALID_META_TITLE => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Meta title', 'Admin.Global')),
+                    ]
+                ),
+                CmsPageCategoryConstraintException::INVALID_DESCRIPTION => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Description', 'Admin.Global')),
+                    ]
+                ),
+                CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Meta description', 'Admin.Global')),
+                    ]
+                ),
+                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Meta keywords', 'Admin.Global')),
+                    ]
+                ),
+            ],
+            CmsPageCategoryNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotToggleCmsPageCategoryStatusException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+            CannotDeleteCmsPageCategoryException::class => [
+                CannotDeleteCmsPageCategoryException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                CannotDeleteCmsPageCategoryException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
-
-        if ($exception instanceof CannotDeleteCmsPageException) {
-            return $this->trans(
-                'Can\'t delete #%id%',
-                'Admin.Notifications.Error',
-                [
-                    '%id%' => $exception->getCmsPageId(),
-                ]
-            );
-        }
-
-        $exceptionType = get_class($exception);
-
-        if (isset($exceptionTypeDictionary[$exceptionType])) {
-            return $exceptionTypeDictionary[$exceptionType];
-        }
-
-        return $this->getFallbackErrorMessage($exceptionType, $exception->getCode());
     }
 }

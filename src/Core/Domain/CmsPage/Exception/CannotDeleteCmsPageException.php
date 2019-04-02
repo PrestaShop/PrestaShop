@@ -29,28 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception;
 class CannotDeleteCmsPageException extends CmsPageException
 {
     /**
-     * @var int
+     * When fails to delete single cms page
      */
-    private $cmsPageId;
+    const FAILED_DELETE = 10;
 
     /**
-     * @param int $cmsPageId
-     * @param string $message
-     * @param int $code
-     * @param null $previous
+     * When fails to delete cms pages on bulk action
      */
-    public function __construct($cmsPageId, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-
-        $this->cmsPageId = $cmsPageId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCmsPageId()
-    {
-        return $this->cmsPageId;
-    }
+    const FAILED_BULK_DELETE = 20;
 }
