@@ -302,7 +302,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.currency.form_data_provider'
             -
-              'currency_exchange_rate': 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+              'exchange_rates': 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
             - 'Currency'
 
     prestashop.admin.shop_logos_settings.form_handler:
