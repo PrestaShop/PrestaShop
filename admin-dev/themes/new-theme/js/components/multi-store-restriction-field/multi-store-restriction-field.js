@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import multiStoreRestrictionFieldMap from "./multi-store-restriction-field-map";
+import multiStoreRestrictionFieldMap from './multi-store-restriction-field-map';
 
 const $ = window.$;
 
@@ -32,18 +32,17 @@ const $ = window.$;
  */
 export default class MultiStoreRestrictionField {
   constructor() {
-
     $(document).on(
       'change',
       multiStoreRestrictionFieldMap.multiStoreRestrictionCheckbox,
-      (e) => this._multiStoreRestrictionCheckboxFieldChangeEvent(e)
+      e => this._multiStoreRestrictionCheckboxFieldChangeEvent(e)
     );
 
     $(document).on(
       'change',
       multiStoreRestrictionFieldMap.multiStoreRestrictionSwitch,
-      (e) => this._multiStoreRestrictionSwitchFieldChangeEvent(e)
-    )
+      e => this._multiStoreRestrictionSwitchFieldChangeEvent(e)
+    );
   }
 
   /**
@@ -59,14 +58,15 @@ export default class MultiStoreRestrictionField {
   }
 
   /**
-   * Mass updates multi-store checkbox fields - it enables or disabled the switch and after that it calls the function
+   * Mass updates multi-store checkbox fields - it enables or disabled the switch and after that
+   * it calls the function
    * which handles the toggle update related form field by its current state.
    * @param {Event} e
    * @private
    */
   _multiStoreRestrictionSwitchFieldChangeEvent(e) {
     const $currentItem = $(e.currentTarget);
-    const isSelected = 1 === parseInt($currentItem.val());
+    const isSelected = 1 === parseInt($currentItem.val(), 10);
     const targetFormName = $currentItem.data('targetFormName');
 
     $(`form[name="${targetFormName}"]`).find(multiStoreRestrictionFieldMap.multiStoreRestrictionCheckbox).each((index, el) => {
