@@ -1,3 +1,5 @@
+import PreviewOpener from '../../../components/form/preview-opener';
+
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -37,6 +39,10 @@ $(() => {
     options: {
       createTokensOnBlur: true,
     },
+  });
+
+  new PreviewOpener({
+    previewUrlSelector: '.js-preview-url',
   });
 
   textToLinkRewriteCopier({
