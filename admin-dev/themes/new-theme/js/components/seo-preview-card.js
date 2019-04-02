@@ -25,6 +25,27 @@
 
 const $ = window.$;
 
+/**
+ * Component is used to preview SEO results
+ *
+ * Usage: Define HTML for SEO card preview with ID and "data-id-lang" attribute
+ * that is used as default language in which SEO results are displayed.
+ *
+ * <div id="mySeoPreviewCard" data-lang-id="1">
+ *  <div class="seo-preview-title"></div>
+ *  <div class="seo-preview-url"></div>
+ *  <div class="seo-preview-description"></div>
+ * </div>
+ *
+ * JS: In Javascript you have to enable component.
+ *
+ * new SeoPreviewCard(
+ *    '#mySeoPreviewCard',                            // SEO preview card selector
+ *    'input[name^="category[meta_title]',            // Title input selector for SEO preview title
+ *    'input[name^="category[link_rewrite]',          // Friendly url input selector for SEO preview url
+ *    'textarea[name^="category[meta_description]',   // Description input selector for SEO preview title
+ * );
+ */
 export default class SeoPreviewCard {
   constructor(
     seoPreviewCardSelector,
@@ -43,20 +64,43 @@ export default class SeoPreviewCard {
     $(descriptionInputSelector).on('input', (event) => this._changeHandler(event));
 
     this._refreshCard(this.$card.data('lang-id'));
+
+    return {};
   }
 
+  /**
+   * Handles even when meta data is changed
+   *
+   * @param {Event} event
+   *
+   * @private
+   */
   _changeHandler(event) {
     const langId = $(event.currentTarget).data('lang-id');
 
     this._refreshCard(langId);
   }
 
+  /**
+   * Refresh SEO preview card with latest data
+   *
+   * @param {String} langId
+   *
+   * @private
+   */
   _refreshCard(langId) {
     this.$card.find('.seo-preview-title').text(this._getTitle(langId));
     this.$card.find('.seo-preview-url').text(this._getUrl(langId));
     this.$card.find('.seo-preview-description').text(this._getDescription(langId));
   }
 
+  /**
+   * Gets description in given language
+   *
+   * @param {String} langId
+   *
+   * @private
+   */
   _getDescription(langId) {
     let descritpion = this._getLocalizedValue(this.descriptionInputSelector, langId);
 
@@ -67,6 +111,13 @@ export default class SeoPreviewCard {
     return descritpion;
   }
 
+  /**
+   * Gets title in given language
+   *
+   * @param {String} langId
+   *
+   * @private
+   */
   _getTitle(langId) {
     let title = this._getLocalizedValue(this.titleInputSelector, langId);
 
@@ -77,10 +128,27 @@ export default class SeoPreviewCard {
     return title;
   }
 
+  /**
+   * Gets URL for given language
+   *
+   * @param {String} langId
+   *
+   * @private
+   */
   _getUrl(langId) {
     return this._getLocalizedValue(this.urlInputSelector, langId);
   }
 
+  /**
+   *
+   *
+   * @param {String} inputSelector
+   * @param {String} langId
+   *
+   * @return {String}
+   *
+   * @private
+   */
   _getLocalizedValue(inputSelector, langId) {
     return $(inputSelector + '[' + langId + ']').val();
   }
