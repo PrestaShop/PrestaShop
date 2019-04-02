@@ -125,9 +125,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'type' => TextWithLengthCounterType::class,
                 'required' => false,
                 'options' => [
-                    'attr' => [
-                        'class' => 'serp-watched-title',
-                    ],
                     'max_length' => 255,
                     'constraints' => [
                         new Regex([
