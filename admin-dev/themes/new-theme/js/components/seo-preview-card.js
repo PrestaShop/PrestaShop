@@ -61,8 +61,6 @@ export default class SeoPreviewCard {
     fallbackTitleInputSelector,
     fallbackDescriptionInputSelector,
   ) {
-    console.log(titleInputSelector);
-
     this.$card = $(seoPreviewCardSelector);
 
     this.titleInputSelector = titleInputSelector;
