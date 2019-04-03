@@ -40,6 +40,9 @@ class ManufacturerAddressGridDataFactory implements GridDataFactoryInterface
      */
     private $manufacturerAddressDataFactory;
 
+    /**
+     * @param GridDataFactoryInterface $manufacturerAddressDataFactory
+     */
     public function __construct(GridDataFactoryInterface $manufacturerAddressDataFactory)
     {
         $this->manufacturerAddressDataFactory = $manufacturerAddressDataFactory;
