@@ -164,6 +164,7 @@
             "composer integration-tests",
             "composer phpunit-controllers",
             "composer phpunit-routing",
+            "composer integration-tests",
             "composer integration-behaviour-tests"
         ],
         "phpunit-legacy": [

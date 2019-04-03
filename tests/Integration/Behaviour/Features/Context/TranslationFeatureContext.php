@@ -73,11 +73,11 @@ class TranslationFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then the Module translated version of :key using domain :domain should be :value
+     * @Then the module translated version of :key using domain :domain should be :value using locale :locale
      */
-    public function theModuleTranslatedVersionOfUsingDomainShouldBe($key, $domain, $value)
+    public function theModuleTranslatedVersionOfUsingDomainShouldBeUsingLocale($key, $domain, $value, $locale)
     {
-        $translatedValue = Context::getContext()->getTranslator()->trans($key, [], $domain);
+        $translatedValue = Context::getContext()->getTranslator()->trans($key, [], $domain, $locale);
 
         if ($translatedValue !== $value) {
             throw new \Exception(sprintf('The translation is wrong for key "%s": expected "%s" and retrieved "%s"',
@@ -89,11 +89,12 @@ class TranslationFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then the Twig translated version of :key using domain :domain should be :value
+     * @Then the Twig translated version of :key using domain :domain should be :value using locale :locale
      */
-    public function theTwigTranslatedVersionOfUsingDomainShouldBe($key, $domain, $value)
+    public function theTwigTranslatedVersionOfUsingDomainShouldBeUsingLocale($key, $domain, $value, $locale)
     {
-        $translatedValue = $this::getContainer()->get('translator')->trans($key, [], $domain);
+        $translator = $this::getContainer()->get('translator');
+        $translatedValue = $translator->trans($key, [], $domain, 'fr-FR');
 
         if ($translatedValue !== $value) {
             throw new \Exception(sprintf('The translation is wrong for key "%s": expected "%s" and retrieved "%s"',

@@ -132,6 +132,7 @@ services:
         arguments:
             - "@prestashop.translation.extractor.php"
             - "@prestashop.translation.extractor.smarty"
+            - "@prestashop.core.translation.util.module_domain_converter"
             - "%modules_dir%"
 
     prestashop.translation.dumper.xliff:

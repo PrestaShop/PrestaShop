@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Loader;
 
+use PrestaShop\PrestaShop\Core\Translation\Util\ModuleDomainConverter;
 use PrestaShopBundle\Translation\Exception\UnsupportedModuleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Loader\LegacyFileTranslationLoader;
@@ -37,14 +38,14 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class LegacyFileTranslationLoaderTest extends KernelTestCase
 {
-    const DOMAIN_MODULES = 'ModulesSomeModule';
+    const DOMAIN_MODULES = 'Modules.SomeModule';
 
     public function testExtract()
     {
         $localeConverter = self::$kernel->getContainer()->get('prestashop.core.translation.locale.converter');
         $moduleExtractor = $this->getModuleExtractor();
-        $modulesList = ['some_module'];
-        $extractor = new LegacyFileTranslationLoader($localeConverter, $moduleExtractor, $modulesList);
+        $moduleConverter = $this->getModuleDomainConverter();
+        $extractor = new LegacyFileTranslationLoader($localeConverter, $moduleExtractor, $moduleConverter);
         $catalogue = $extractor->load($this->getTranslationsFolder() . 'fr.php', 'fr-FR', self::DOMAIN_MODULES);
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
@@ -65,8 +66,8 @@ class LegacyFileTranslationLoaderTest extends KernelTestCase
 
         $localeConverter = self::$kernel->getContainer()->get('prestashop.core.translation.locale.converter');
         $moduleExtractor = $this->getModuleExtractor();
-        $modulesList = ['some_module'];
-        $extractor = new LegacyFileTranslationLoader($localeConverter, $moduleExtractor, $modulesList);
+        $moduleConverter = $this->getModuleDomainConverter();
+        $extractor = new LegacyFileTranslationLoader($localeConverter, $moduleExtractor, $moduleConverter);
 
         $extractor->load($this->getTranslationsFolder() . 'fr.php', 'fr-FR', 'SomeModule');
     }
@@ -104,6 +105,16 @@ class LegacyFileTranslationLoaderTest extends KernelTestCase
     }
 
     /**
+     * We need only one module for the module domain converter.
+     *
+     * @return ModuleDomainConverter
+     */
+    private function getModuleDomainConverter()
+    {
+        return new ModuleDomainConverter(['some_module']);
+    }
+
+    /**
      * We have updated the path to the module to point to the "some_module" modules folder.
      *
      * @return LegacyModuleExtractor
@@ -112,7 +123,8 @@ class LegacyFileTranslationLoaderTest extends KernelTestCase
     {
         $phpExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.php');
         $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
+        $moduleConverter = $this->getModuleDomainConverter();
 
-        return new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getFakeModulesFolder());
+        return new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $moduleConverter, $this->getFakeModulesFolder());
     }
 }

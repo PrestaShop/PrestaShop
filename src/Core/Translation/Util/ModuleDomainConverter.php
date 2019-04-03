@@ -56,11 +56,7 @@ final class ModuleDomainConverter implements ModuleDomainConverterInterface
     public function getModuleFromDomain($domain)
     {
         foreach ($this->activeModules as $module) {
-            $guessedDomain = $this->getDomainFromModule($module);
-            if (
-                $guessedDomain === $domain ||
-                levenshtein($guessedDomain, $domain) < 2
-            ) {
+            if ($this->getDomainFromModule($module) === $domain) {
                 return $module;
             }
         }

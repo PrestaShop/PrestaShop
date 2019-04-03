@@ -33,5 +33,3 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\TranslationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\LocaleFeatureContext
-
