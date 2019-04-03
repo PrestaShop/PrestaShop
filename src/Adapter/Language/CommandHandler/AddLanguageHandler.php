@@ -106,6 +106,10 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         $language->is_rtl = $command->isRtl();
         $language->active = $command->isActive();
 
+        if (false === $language->validateFields(false)) {
+            throw new LanguageException('Cannot add language with invalid data');
+        }
+
         if (false === $language->add()) {
             throw new LanguageException(
                 sprintf('Failed to add new language "%s"', $command->getName())

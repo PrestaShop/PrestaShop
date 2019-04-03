@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -84,6 +85,8 @@ class TypedRegexConstraintValidator extends ConstraintValidator
             'post_code' => '/^[a-zA-Z 0-9-]+$/',
             'phone_number' => '/^[+0-9. ()\/-]*$/',
             'message' => '/[<>{}]/i',
+            'language_iso_code' => IsoCode::PATTERN,
+            'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
         ];
 
         if (isset($typePatterns[$type])) {
