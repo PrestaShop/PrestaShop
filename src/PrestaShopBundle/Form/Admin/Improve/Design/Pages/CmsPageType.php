@@ -86,7 +86,6 @@ class CmsPageType extends AbstractType
                 'choice_value' => 'id_cms_category',
             ])
             ->add('title', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage([
                         'message' => $this->translator->trans(
@@ -172,7 +171,6 @@ class CmsPageType extends AbstractType
                 ],
             ])
             ->add('friendly_url', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage([
                         'message' => $this->translator->trans(

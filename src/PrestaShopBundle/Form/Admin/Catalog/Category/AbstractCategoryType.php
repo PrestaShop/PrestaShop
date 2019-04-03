@@ -83,7 +83,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     {
         $builder
             ->add('name', TranslatableType::class, [
-                'error_bubbling' => false,
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
@@ -167,7 +166,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'type' => TextType::class,
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
