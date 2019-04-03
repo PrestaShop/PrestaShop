@@ -49,6 +49,7 @@ class ConfigurationMap
     {
         $this->closedCardConfiguration = [
             ShowcaseCard::SEO_URLS_CARD => sprintf(self::CLOSED_TEMPLATE, 'SEO_URLS'),
+            ShowcaseCard::CMS_PAGES_CARD => sprintf(self::CLOSED_TEMPLATE, 'CMS_PAGES'),
         ];
     }
 
