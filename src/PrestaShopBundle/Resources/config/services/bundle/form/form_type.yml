@@ -646,7 +646,7 @@ services:
     form.type.common.translatable:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
         arguments:
-            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+            - "@=service('prestashop.adapter.legacy.context').getLanguages(false)"
             - '@router.default'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
             - "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
