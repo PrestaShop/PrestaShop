@@ -29,3 +29,9 @@ services:
           'es': 'http://doc.prestashop.com/display/PS17/Gestionar+Proveedores'
           'it': 'http://doc.prestashop.com/display/PS17/Gestire+Fornitori'
           '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+Suppliers'
+        'cms_pages':
+          'en': 'http://doc.prestashop.com/display/PS17/Pages+-+Managing+Static+Content'
+          'fr': 'http://doc.prestashop.com/display/PS17/Gerer+votre+contenu+statique+grace+aux+pages'
+          'es': 'http://doc.prestashop.com/display/PS17/Paginas+-+Gestionar+el+Contenido+Estatico'
+          'it': 'http://doc.prestashop.com/display/PS17/Pagine+-+Gestione+Contenuti+Statici'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Pages+-+Managing+Static+Content'

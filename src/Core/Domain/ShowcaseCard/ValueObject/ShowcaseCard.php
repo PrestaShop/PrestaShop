@@ -40,10 +40,16 @@ class ShowcaseCard
     const SEO_URLS_CARD = 'seo-urls_card';
 
     /**
+     * Card shown in Improve -> Design -> Pages
+     */
+    const CMS_PAGES_CARD = 'cms-pages_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
         self::SEO_URLS_CARD => true,
+        self::CMS_PAGES_CARD => true,
     ];
 
     /**
