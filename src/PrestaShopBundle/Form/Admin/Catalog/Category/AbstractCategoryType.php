@@ -40,6 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -124,11 +125,21 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'type' => TextWithLengthCounterType::class,
                 'required' => false,
                 'options' => [
-                    'max_length' => 255,
+                    'max_length' => 70,
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                        new Length([
+                            'max' => 70,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => 70,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
@@ -139,11 +150,21 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'options' => [
                     'required' => false,
                     'input' => 'textarea',
-                    'max_length' => 512,
+                    'max_length' => 160,
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                        new Length([
+                            'max' => 160,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => 160,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
