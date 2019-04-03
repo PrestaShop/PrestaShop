@@ -55,6 +55,11 @@ class ShowcaseCard
     const EMPLOYEES_CARD = 'employees_card';
 
     /**
+     * Card shown in Improve -> Design -> Pages
+     */
+    const CMS_PAGES_CARD = 'cms-pages_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
@@ -62,6 +67,7 @@ class ShowcaseCard
         self::CATEGORIES_CARD => true,
         self::CUSTOMERS_CARD => true,
         self::EMPLOYEES_CARD => true,
+        self::CMS_PAGES_CARD => true,
     ];
 
     /**

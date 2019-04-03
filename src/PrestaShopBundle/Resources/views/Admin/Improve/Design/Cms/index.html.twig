@@ -40,6 +40,13 @@
 %}
 
 {% block content %}
+
+  <div class="row">
+    <div class="col-sm">
+      {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/showcase_card.html.twig' %}
+    </div>
+  </div>
+
   {% block cms_page_category_breadcrumb %}
     {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/breadcrumb.html.twig' %}
   {% endblock %}
