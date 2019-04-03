@@ -6235,7 +6235,7 @@ class ProductCore extends ObjectModel
     public static function getAttributesParams($id_product, $id_product_attribute)
     {
         if ($id_product_attribute == 0) {
-            return array();
+            return [];
         }
         $id_lang = (int) Context::getContext()->language->id;
         $cache_id = 'Product::getAttributesParams_' . (int) $id_product . '-' . (int) $id_product_attribute . '-' . (int) $id_lang;
