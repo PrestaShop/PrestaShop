@@ -43,7 +43,7 @@
                 <p class="product-price">{$product.price}</p>
                 {hook h='displayProductPriceBlock' product=$product type="unit_price"}
                 {foreach from=$product.attributes item="property_value" key="property"}
-                <span>{$l s='%label%:' sprintf=['%label%' => $property] d='Shop.Theme.Global'}<strong> {$property_value}</strong></span><br>
+                <span>{l s='%label%:' sprintf=['%label%' => $property] d='Shop.Theme.Global'}<strong> {$property_value}</strong></span><br>
                 {/foreach}
                 <span>{l s='Quantity:' d='Shop.Theme.Checkout'}&nbsp;<strong>{$product.cart_quantity}</strong></span>
               </div>
@@ -69,7 +69,7 @@
               {if $cart.subtotals.tax}
                 <p class="product-tax">{$cart.subtotals.tax.label}&nbsp;<span class="value">{$cart.subtotals.tax.value}</span></p>
               {/if}
-              
+
               <div class="cart-content-btn">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{l s='Continue shopping' d='Shop.Theme.Actions'}</button>
                 <a href="{$cart_url}" class="btn btn-primary"><i class="material-icons rtl-no-flip">&#xE876;</i>{l s='Proceed to checkout' d='Shop.Theme.Actions'}</a>
