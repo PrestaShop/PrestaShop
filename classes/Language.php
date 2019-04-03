@@ -30,7 +30,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 
 class LanguageCore extends ObjectModel
@@ -1137,13 +1137,11 @@ class LanguageCore extends ObjectModel
         }
 
         $mailTheme = Configuration::get('PS_MAIL_THEME');
-        /** @var GenerateThemeMailsCommand $generateCommand */
-        $generateCommand = new GenerateThemeMailsCommand(
+        /** @var GenerateThemeMailTemplatesCommand $generateCommand */
+        $generateCommand = new GenerateThemeMailTemplatesCommand(
             $mailTheme,
             $locale,
-            false,
-            !empty($coreOutputFolder) ? $coreOutputFolder : '',
-            !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
+            false
         );
         /** @var CommandBusInterface $commandBus */
         $commandBus = $sfContainer->get('prestashop.core.command_bus');

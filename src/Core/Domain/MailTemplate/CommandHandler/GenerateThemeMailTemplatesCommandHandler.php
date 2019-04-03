@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
@@ -35,12 +35,11 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 
 /**
- * Class GenerateThemeMailsHandler handles a GenerateThemeMailsCommand, it is able
- * to transform raw string information contained in the command object from the command
- * into real objects necessary for the MailTemplateGenerator (get LanguageInterface, ThemeInterface).
- * It also manages the default output folder if they are not overridden by the command.
+ * Class GenerateThemeMailTemplatesCommandHandler generates email templates with parameters provided
+ * by GenerateThemeMailTemplatesCommand. If no output folders are defined by the command its output
+ * folders are the default ones.
  */
-class GenerateThemeMailsHandler implements GenerateThemeMailsHandlerInterface
+class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTemplatesCommandHandlerInterface
 {
     /** @var LanguageRepositoryInterface */
     private $languageRepository;
@@ -81,7 +80,7 @@ class GenerateThemeMailsHandler implements GenerateThemeMailsHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(GenerateThemeMailsCommand $command)
+    public function handle(GenerateThemeMailTemplatesCommand $command)
     {
         /** @var LanguageInterface $language */
         $language = $this->languageRepository->getOneByLocaleOrIsoCode($command->getLanguage());
@@ -92,8 +91,8 @@ class GenerateThemeMailsHandler implements GenerateThemeMailsHandlerInterface
         /** @var ThemeInterface $theme */
         $theme = $this->themeCatalog->getByName($command->getThemeName());
 
-        $coreMailsFolder = !empty($command->getCoreMailsFolder()) ? $command->getCoreMailsFolder() : $this->defaultCoreMailsFolder;
-        $modulesMailFolder = !empty($command->getModulesMailFolder()) ? $command->getModulesMailFolder() : $this->defaultModulesMailFolder;
+        $coreMailsFolder = $command->getCoreMailsFolder() ?: $this->defaultCoreMailsFolder;
+        $modulesMailFolder = $command->getModulesMailFolder() ?: $this->defaultModulesMailFolder;
 
         $this->generator->generateTemplates($theme, $language, $coreMailsFolder, $modulesMailFolder, $command->overwriteTemplates());
     }

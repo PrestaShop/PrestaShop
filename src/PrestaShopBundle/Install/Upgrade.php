@@ -74,7 +74,7 @@ namespace PrestaShopBundle\Install {
     use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
     use PrestaShop\PrestaShop\Core\Cldr\Update;
     use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-    use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
+    use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
     use PrestaShop\PrestaShop\Core\Exception\CoreException;
     use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
     use RandomLib;
@@ -764,8 +764,8 @@ namespace PrestaShopBundle\Install {
             }
 
             $mailTheme = Configuration::get('PS_MAIL_THEME');
-            /** @var GenerateThemeMailsCommand $generateCommand */
-            $generateCommand = new GenerateThemeMailsCommand(
+            /** @var GenerateThemeMailTemplatesCommand $generateCommand */
+            $generateCommand = new GenerateThemeMailTemplatesCommand(
                 $mailTheme,
                 $locale,
                 false,

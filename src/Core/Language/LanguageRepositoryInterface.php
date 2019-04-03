@@ -33,7 +33,7 @@ namespace PrestaShop\PrestaShop\Core\Language;
 interface LanguageRepositoryInterface
 {
     /**
-     * Returns a LanguageInterface which locale matches the provided one.
+     * Returns a LanguageInterface whose locale matches the provided one.
      *
      * @param string $locale
      *
@@ -51,7 +51,7 @@ interface LanguageRepositoryInterface
     public function getOneByIsoCode($isoCode);
 
     /**
-     * Returns a LanguageInterface which locale matches the provided one,
+     * Returns a LanguageInterface whose locale matches the provided one,
      * if no one is found try matching by isoCode (splitting the locale if
      * necessary).
      *

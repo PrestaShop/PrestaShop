@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 
 /**
  * Interface GenerateThemeMailsHandlerInterface
  */
-interface GenerateThemeMailsHandlerInterface
+interface GenerateThemeMailTemplatesCommandHandlerInterface
 {
     /**
-     * @param GenerateThemeMailsCommand $command
+     * @param GenerateThemeMailTemplatesCommand $command
      */
-    public function handle(GenerateThemeMailsCommand $command);
+    public function handle(GenerateThemeMailTemplatesCommand $command);
 }
