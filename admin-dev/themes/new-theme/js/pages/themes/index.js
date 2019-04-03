@@ -22,10 +22,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import ResetThemeLayoutsHandler from "./reset-theme-layouts-handler";
+import ResetThemeLayoutsHandler from './reset-theme-layouts-handler';
+import UseThemeHandler from './use-theme-handler';
+import MultiStoreRestrictionField from '../../components/multi-store-restriction-field/multi-store-restriction-field';
+import DeleteThemeHandler from './delete-theme-handler';
 
 const $ = window.$;
 
 $(() => {
   new ResetThemeLayoutsHandler();
+  new MultiStoreRestrictionField();
+  new UseThemeHandler();
+  new DeleteThemeHandler();
 });

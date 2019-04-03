@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensio
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class UploadLogosCommand
+ * Uploads logo image files
  */
 class UploadLogosCommand
 {

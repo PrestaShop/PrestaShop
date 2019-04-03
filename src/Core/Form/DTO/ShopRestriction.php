@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,43 +19,52 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+namespace PrestaShop\PrestaShop\Core\Form\DTO;
 
 /**
- * Thrown when trying to import already existing theme
+ * Shop restriction object holds the shop ids for which restriction is being applied and the fields which are impacted
+ * by the certain shop restriction.
  */
-class ImportedThemeAlreadyExistsException extends ThemeException
+class ShopRestriction
 {
     /**
-     * @var ThemeName
+     * @var int[]
      */
-    private $themeName;
+    private $shopIds;
 
     /**
-     * @param ThemeName $themeName
-     * @param string $message
-     * @param int $code
-     * @param null $previous
+     * @var ShopRestrictionField[]
      */
-    public function __construct(ThemeName $themeName, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
+    private $shopRestrictionFields;
 
-        $this->themeName = $themeName;
+    /**
+     * @param int[] $shopIds
+     * @param ShopRestrictionField[] $shopRestrictionFields
+     */
+    public function __construct(array $shopIds, array $shopRestrictionFields)
+    {
+        $this->shopIds = $shopIds;
+        $this->shopRestrictionFields = $shopRestrictionFields;
     }
 
     /**
-     * @return ThemeName
+     * @return int[]
      */
-    public function getThemeName()
+    public function getShopIds()
     {
-        return $this->themeName;
+        return $this->shopIds;
+    }
+
+    /**
+     * @return ShopRestrictionField[]
+     */
+    public function getShopRestrictionFields()
+    {
+        return $this->shopRestrictionFields;
     }
 }

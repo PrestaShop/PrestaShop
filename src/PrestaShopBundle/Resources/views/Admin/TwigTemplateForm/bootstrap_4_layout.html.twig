@@ -707,6 +707,12 @@
       'data-locale': get_context_iso_code()
     }) -%}
 
+    {% if attr.disabled is defined and attr.disabled %}
+      {% set attr = attr|merge({
+        class: attr.class ~ ' disabled'
+      }) %}
+    {% endif %}
+
     {{ form_widget(form, {'attr': attr}) }}
 
     <label class="custom-file-label" for="{{ form.vars.id }}">
@@ -714,4 +720,21 @@
       {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
     </label>
   </div>
+{% endblock file_widget %}
+
+{% block shop_restriction_checkbox_widget %}
+  {% if form.vars.attr.is_allowed_to_display %}
+    <div class="md-checkbox md-checkbox-inline">
+      <label>
+        {% set type = type|default('checkbox') %}
+        <input
+          class="js-multi-store-restriction-checkbox"
+          type="{{ type }}"
+          {{ block('widget_attributes') }}
+          value="{{ value }}"
+        >
+        <i class="md-checkbox-control"></i>
+      </label>
+    </div>
+  {% endif %}
 {% endblock %}

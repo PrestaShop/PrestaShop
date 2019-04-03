@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -24,44 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class AdaptToRTLLanguagesType is used as a form to select theme to adapt Right-to-Left languages.
+ * This class displays customized checkbox which is used for shop restriction functionality.
  */
-class AdaptThemeToRTLLanguagesType extends AbstractType
+class ShopRestrictionCheckboxType extends AbstractType
 {
     /**
-     * @var array
+     * {@inheritdoc}
      */
-    private $themeChoices;
-
-    /**
-     * @param string[] $themeChoices
-     */
-    public function __construct(array $themeChoices)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $this->themeChoices = $themeChoices;
+        $isChecked = $form->getData();
+
+        if ($isChecked) {
+            $view->vars['attr']['checked'] = true;
+        }
+
+        parent::buildView($view, $form, $options);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $builder
-            ->add('theme_to_adapt', ChoiceType::class, [
-                'choices' => $this->themeChoices,
-            ])
-            ->add('generate_rtl_css', SwitchType::class, [
-                'required' => false,
-                'data' => false,
-            ])
-        ;
+        $resolver->setDefaults([
+            'required' => false,
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return CheckboxType::class;
     }
 }

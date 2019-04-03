@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,16 +19,23 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
+namespace PrestaShop\PrestaShop\Core\Form;
 
 /**
- * Thrown when fails to reset theme layout
+ * Providers additional settings required for multi store form functionality.
  */
-class CannotResetThemeLayoutsException extends ThemeException
+interface MultiStoreSettingsFormDataProviderInterface
 {
+    /**
+     * Gets data which are used in form data providers.
+     *
+     * @return array - they key is the form type field name and the value is true or false. If true, then the multi shop
+     *               checkbox value is selected and otherwise.
+     */
+    public function getData();
 }

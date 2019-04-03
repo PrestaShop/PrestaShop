@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,43 +19,52 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+namespace PrestaShop\PrestaShop\Core\Form\DTO;
 
 /**
- * Thrown when trying to import already existing theme
+ * Holds the field name for which the multi-store restriction checkbox has been checked or unchecked and the status if it
+ * was restricted or not.
  */
-class ImportedThemeAlreadyExistsException extends ThemeException
+class ShopRestrictionField
 {
     /**
-     * @var ThemeName
+     * @var string
      */
-    private $themeName;
+    private $fieldName;
 
     /**
-     * @param ThemeName $themeName
-     * @param string $message
-     * @param int $code
-     * @param null $previous
+     * @var bool
      */
-    public function __construct(ThemeName $themeName, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
+    private $isRestrictedToContextShop;
 
-        $this->themeName = $themeName;
+    /**
+     * @param string $fieldName
+     * @param bool $isRestrictedToContextShop
+     */
+    public function __construct($fieldName, $isRestrictedToContextShop)
+    {
+        $this->fieldName = $fieldName;
+        $this->isRestrictedToContextShop = $isRestrictedToContextShop;
     }
 
     /**
-     * @return ThemeName
+     * @return string
      */
-    public function getThemeName()
+    public function getFieldName()
     {
-        return $this->themeName;
+        return $this->fieldName;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRestrictedToContextShop()
+    {
+        return $this->isRestrictedToContextShop;
     }
 }

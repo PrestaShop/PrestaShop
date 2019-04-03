@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,43 +19,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Shop\Logo;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths;
+use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
 
 /**
- * Interface LogoProviderInterface
+ * Interface for service which handles GetLogos query
  */
-interface LogoProviderInterface
+interface GetLogosPathsHandlerInterface
 {
     /**
-     * Get path to context's shop logo.
+     * @param GetLogosPaths $query
      *
-     * @return string
+     * @return LogosPaths
      */
-    public function getHeaderLogo();
-
-    /**
-     * Get path to context's shop mail logo.
-     *
-     * @return string
-     */
-    public function getMailLogoPath();
-
-    /**
-     * Get path to context's shop invoice logo.
-     *
-     * @return string
-     */
-    public function getInvoiceLogoPath();
-
-    /**
-     * Get path to context's shop favicon.
-     *
-     * @return string
-     */
-    public function getFaviconPath();
+    public function handle(GetLogosPaths $query);
 }
