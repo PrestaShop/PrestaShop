@@ -283,7 +283,7 @@ class MailThemeController extends FrameworkBundleAdminController
     {
         $renderedLayout = $this->renderLayout($theme, $layout, $type, $locale, $module);
 
-        $response = new Response($renderedLayout, 200, [
+        $response = new Response($renderedLayout, Response::HTTP_OK, [
             'Content-Type' => 'text/plain',
         ]);
 
