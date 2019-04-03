@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
 use Context;
+use Language;
 
 class LocaleFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -55,6 +56,7 @@ class LocaleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function iSetTheTranslationLocaleTo($locale)
     {
+        Context::getContext()->language = new Language(Language::getIdByIso($locale));
         Context::getContext()->getTranslator()->setLocale($locale);
         $this::getContainer()->get('translator')->setLocale($locale);
     }
