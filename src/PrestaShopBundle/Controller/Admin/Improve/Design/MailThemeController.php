@@ -233,7 +233,7 @@ class MailThemeController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/preview.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Preview Theme %s', 'Admin.Navigation.Menu', [$mailTheme->getName()]),
+            'layoutTitle' => $this->trans('Preview Theme %s', 'Admin.Design.Feature', [$mailTheme->getName()]),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailTheme' => $mailTheme,
