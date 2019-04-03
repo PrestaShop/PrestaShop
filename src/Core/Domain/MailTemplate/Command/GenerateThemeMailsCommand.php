@@ -26,6 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command;
 
+/**
+ * Class GenerateThemeMailsCommand generates email theme's templates for a specific
+ * language. If folders are not overridden in the command then MailTemplateGenerator
+ * will use the default output folders (in mails folder).
+ */
 class GenerateThemeMailsCommand
 {
     /** @var string */
@@ -47,17 +52,21 @@ class GenerateThemeMailsCommand
      * @param string $themeName
      * @param string $language
      * @param bool $overwriteTemplates
+     * @param string $coreMailsFolder
+     * @param string $modulesMailFolder
      */
     public function __construct(
         $themeName,
         $language,
-        $overwriteTemplates = false
+        $overwriteTemplates = false,
+        $coreMailsFolder = '',
+        $modulesMailFolder = ''
     ) {
-        $this
-            ->setThemeName($themeName)
-            ->setLanguage($language)
-            ->setOverwriteTemplates($overwriteTemplates)
-        ;
+        $this->themeName = $themeName;
+        $this->language = $language;
+        $this->overwriteTemplates = $overwriteTemplates;
+        $this->coreMailsFolder = $coreMailsFolder;
+        $this->modulesMailFolder = $modulesMailFolder;
     }
 
     /**
@@ -69,35 +78,11 @@ class GenerateThemeMailsCommand
     }
 
     /**
-     * @param string $themeName
-     *
-     * @return GenerateThemeMailsCommand
-     */
-    public function setThemeName($themeName)
-    {
-        $this->themeName = $themeName;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getLanguage()
     {
         return $this->language;
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return GenerateThemeMailsCommand
-     */
-    public function setLanguage($language)
-    {
-        $this->language = $language;
-
-        return $this;
     }
 
     /**
@@ -109,18 +94,6 @@ class GenerateThemeMailsCommand
     }
 
     /**
-     * @param bool $overwriteTemplates
-     *
-     * @return GenerateThemeMailsCommand
-     */
-    public function setOverwriteTemplates($overwriteTemplates)
-    {
-        $this->overwriteTemplates = $overwriteTemplates;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getCoreMailsFolder()
@@ -129,34 +102,10 @@ class GenerateThemeMailsCommand
     }
 
     /**
-     * @param string $coreMailsFolder
-     *
-     * @return GenerateThemeMailsCommand
-     */
-    public function setCoreMailsFolder($coreMailsFolder)
-    {
-        $this->coreMailsFolder = $coreMailsFolder;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getModulesMailFolder()
     {
         return $this->modulesMailFolder;
-    }
-
-    /**
-     * @param string $modulesMailFolder
-     *
-     * @return GenerateThemeMailsCommand
-     */
-    public function setModulesMailFolder($modulesMailFolder)
-    {
-        $this->modulesMailFolder = $modulesMailFolder;
-
-        return $this;
     }
 }
