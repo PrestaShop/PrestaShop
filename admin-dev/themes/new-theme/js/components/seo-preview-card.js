@@ -106,13 +106,12 @@ export default class SeoPreviewCard {
       this.request.abort();
     }
 
-    this.request = $.ajax(this.$card.data('seo-preview-url-generator'), {
+    this.request = $.getJSON(this.$card.data('seo-preview-url-generator'), {
       data: {
         'category_id': this.$card.data('resource-id'),
         'lang_id': langId,
         'link_rewrite': this._getUrl(langId),
       },
-      contentType: 'json',
     });
 
     this.request.then((response) => {
