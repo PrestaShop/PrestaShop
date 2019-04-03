@@ -55,6 +55,7 @@ class TranslationFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function iHaveALegacyTranslationForInLocaleInTheModule($translation, $locale, $module)
     {
+        global $_MODULE;
         $translationFile = self::MODULES_DIRECTORY . '/' . $module . '/translations/' . $locale . '.php';
 
         if (file_exists($translationFile)) {
