@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Language;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -70,7 +70,7 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'generic_name',
                     ]),
                 ],
@@ -80,7 +80,7 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'language_iso_code',
                     ]),
                 ],
@@ -90,7 +90,7 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'language_code',
                     ]),
                 ],
