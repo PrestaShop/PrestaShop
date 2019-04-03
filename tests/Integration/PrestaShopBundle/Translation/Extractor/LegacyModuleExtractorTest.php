@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Extractor;
 
+use PrestaShop\PrestaShop\Core\Translation\Util\ModuleDomainConverter;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -39,19 +40,21 @@ class LegacyModuleExtractorTest extends KernelTestCase
     /**
      * @var string Domain name of the modules translations
      */
-    const DOMAIN_NAME = 'ModulesSomeModule';
+    const DOMAIN_NAME = 'Modules.SomeModule';
+
+    /**
+     * @var LegacyModuleExtractor the legacy module extractor
+     */
+    private $legacyModuleExtractor;
 
     /**
      * @cover extract
      */
     public function testLegacyModuleExtractorShouldReturnACatalogue()
     {
-        self::bootKernel();
-        $phpExtractor = new PhpExtractor();
-        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
-        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleFolder());
-
-        $catalogue = $extractor->extract('some_module', 'fr-FR');
+        $catalogue = $this->legacyModuleExtractor
+            ->extract('some_module', 'fr-FR')
+        ;
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
     }
@@ -61,12 +64,9 @@ class LegacyModuleExtractorTest extends KernelTestCase
      */
     public function testExtractedCatalogueContainsTheExpectedTranslations()
     {
-        self::bootKernel();
-        $phpExtractor = new PhpExtractor();
-        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
-        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleFolder());
-
-        $catalogue = $extractor->extract('some_module', 'fr-FR');
+        $catalogue = $this->legacyModuleExtractor
+            ->extract('some_module', 'fr-FR')
+        ;
         $this->assertCount(5, $catalogue->all(self::DOMAIN_NAME));
         $this->assertTrue($catalogue->has(
             'An error occured, please check your zip file',
@@ -79,6 +79,26 @@ class LegacyModuleExtractorTest extends KernelTestCase
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        self::bootKernel();
+        $phpExtractor = new PhpExtractor();
+        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
+        $moduleDomainConverter = new ModuleDomainConverter(['some_module']);
+        $this->legacyModuleExtractor = new LegacyModuleExtractor(
+            $phpExtractor,
+            $smartyExtractor,
+            $moduleDomainConverter,
+            $this->getModuleFolder()
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function tearDown()
     {
         self::$kernel->shutdown();

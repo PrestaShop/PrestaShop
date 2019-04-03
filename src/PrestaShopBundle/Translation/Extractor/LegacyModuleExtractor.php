@@ -27,8 +27,8 @@
 
 namespace PrestaShopBundle\Translation\Extractor;
 
+use PrestaShop\PrestaShop\Core\Translation\Util\ModuleDomainConverterInterface;
 use Symfony\Component\Translation\Extractor\ExtractorInterface;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -53,6 +53,11 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
     private $modulesDirectory;
 
     /**
+     * @var ModuleDomainConverterInterface the module domain converter
+     */
+    private $moduleDomainConverter;
+
+    /**
      * @param ExtractorInterface $phpExtractor
      * @param ExtractorInterface $smartyExtractor
      * @param string $modulesDirectory
@@ -60,10 +65,12 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
     public function __construct(
         ExtractorInterface $phpExtractor,
         ExtractorInterface $smartyExtractor,
+        ModuleDomainConverterInterface $moduleDomainConverter,
         $modulesDirectory
     ) {
         $this->phpExtractor = $phpExtractor;
         $this->smartyExtractor = $smartyExtractor;
+        $this->moduleDomainConverter = $moduleDomainConverter;
         $this->modulesDirectory = $modulesDirectory;
     }
 
@@ -77,7 +84,7 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
         $this->smartyExtractor->extract($this->modulesDirectory . '/' . $moduleName, $catalogueForExtraction);
 
         $catalogue = new MessageCatalogue($locale);
-        $catalogue->add($catalogueForExtraction->all('messages'), 'Modules' . Container::camelize($moduleName));
+        $catalogue->add($catalogueForExtraction->all('messages'), $this->moduleDomainConverter->getDomainFromModule($moduleName));
 
         return $catalogue;
     }

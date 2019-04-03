@@ -169,11 +169,7 @@ trait PrestaShopTranslatorTrait
         }
 
         $moduleName = strtolower($domainParts[1]);
-        $sourceFile = (!empty($domainParts[2])) ? strtolower($domainParts[2]) : false;
-
-        if ($sourceFile === false) {
-            $sourceFile = $moduleName;
-        }
+        $sourceFile = (!empty($domainParts[2])) ? strtolower($domainParts[2]) : $moduleName;
 
         return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false);
     }

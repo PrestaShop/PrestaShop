@@ -28,7 +28,6 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * On Symfony 3.x, the parameters like `translator.class` are not used anymore and cannot override the original services.
