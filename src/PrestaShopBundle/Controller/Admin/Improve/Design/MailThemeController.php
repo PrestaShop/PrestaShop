@@ -129,7 +129,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     $this->addFlash(
                         'success',
                         $this->trans(
-                            'Successfully overrode email templates for theme %s with locale %s',
+                            'Successfully overwrote email templates for theme %s with locale %s',
                             'Admin.Notifications.Success',
                             [
                                 $data['mailTheme'],
