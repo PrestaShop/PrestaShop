@@ -28,7 +28,7 @@
 {{ form_start(cmsPageForm) }}
 <div class="card">
   <div class="card-header">
-    {{ 'Page'|trans({}, 'Admin.Global') }}
+    {{ 'Page'|trans({}, 'Admin.Shopparameters.Feature') }}
   </div>
   <div class="card-block row">
     <div class="card-text">
@@ -58,13 +58,13 @@
 
       {{ ps.form_group_row(cmsPageForm.meta_keyword, {}, {
         'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-        'help': 'To add "tags" click in the field, write something, and then press "Enter."'|trans({}, 'Admin.Design.Help')
+        'help': 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help')
         ~ ' ' ~ invalidCharsHint
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.friendly_url, {}, {
         'label': 'Friendly URL'|trans({}, 'Admin.Global'),
-        'help': 'Only letters and the hyphen (-) character are allowed.'|trans({}, 'Admin.Design.Feature')
+        'help': 'Only letters and the hyphen (-) character are allowed.'|trans({}, 'Admin.Design.Help')
       }) }}
 
       {{ ps.form_group_row(cmsPageForm.content, {}, {
