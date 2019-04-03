@@ -84,7 +84,7 @@ class GenerateThemeMailsHandler implements GenerateThemeMailsHandlerInterface
     public function handle(GenerateThemeMailsCommand $command)
     {
         /** @var LanguageInterface $language */
-        $language = $this->languageRepository->getByLocaleOrIsoCode($command->getLanguage());
+        $language = $this->languageRepository->getOneByLocaleOrIsoCode($command->getLanguage());
         if (null === $language) {
             throw new InvalidArgumentException(sprintf('Could not find Language for locale: %s', $command->getLanguage()));
         }
@@ -96,27 +96,5 @@ class GenerateThemeMailsHandler implements GenerateThemeMailsHandlerInterface
         $modulesMailFolder = !empty($command->getModulesMailFolder()) ? $command->getModulesMailFolder() : $this->defaultModulesMailFolder;
 
         $this->generator->generateTemplates($theme, $language, $coreMailsFolder, $modulesMailFolder, $command->overwriteTemplates());
-    }
-
-    /**
-     * @param string $themeName
-     * @param string $locale
-     * @param bool $overwriteTemplates
-     *
-     * @throws InvalidArgumentException
-     * @throws FileNotFoundException
-     */
-    public function generateMailTemplates($themeName, $locale, $overwriteTemplates = false)
-    {
-        /** @var LanguageInterface $language */
-        $language = $this->languageRepository->getByLocaleOrIsoCode($locale);
-        if (null === $language) {
-            throw new InvalidArgumentException(sprintf('Could not find Language for locale: %s', $locale));
-        }
-
-        /** @var ThemeInterface $theme */
-        $theme = $this->themeCatalog->getByName($themeName);
-
-        $this->generator->generateTemplates($theme, $language, $this->coreMailsFolder, $this->modulesMailFolder, $overwriteTemplates);
     }
 }

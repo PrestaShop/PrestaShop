@@ -61,7 +61,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function getByLocale($locale)
+    public function getOneByLocale($locale)
     {
         return $this->searchLanguage(self::LOCALE, $locale);
     }
@@ -69,7 +69,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function getByIsoCode($isoCode)
+    public function getOneByIsoCode($isoCode)
     {
         return $this->searchLanguage(self::ISO_CODE, $isoCode);
     }
@@ -77,13 +77,13 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function getByLocaleOrIsoCode($locale)
+    public function getOneByLocaleOrIsoCode($locale)
     {
-        $language = $this->getByLocale($locale);
+        $language = $this->getOneByLocale($locale);
         if (!$language) {
             $localeParts = explode('-', $locale);
             $isoCode = strtolower($localeParts[0]);
-            $language = $this->getByIsoCode($isoCode);
+            $language = $this->getOneByIsoCode($isoCode);
         }
 
         return $language;

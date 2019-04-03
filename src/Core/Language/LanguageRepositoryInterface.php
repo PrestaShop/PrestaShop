@@ -39,7 +39,7 @@ interface LanguageRepositoryInterface
      *
      * @return LanguageInterface
      */
-    public function getByLocale($locale);
+    public function getOneByLocale($locale);
 
     /**
      * Returns a LanguageInterface which isoCode matches the provided one.
@@ -48,7 +48,7 @@ interface LanguageRepositoryInterface
      *
      * @return LanguageInterface
      */
-    public function getByIsoCode($isoCode);
+    public function getOneByIsoCode($isoCode);
 
     /**
      * Returns a LanguageInterface which locale matches the provided one,
@@ -59,5 +59,5 @@ interface LanguageRepositoryInterface
      *
      * @return LanguageInterface
      */
-    public function getByLocaleOrIsoCode($locale);
+    public function getOneByLocaleOrIsoCode($locale);
 }
