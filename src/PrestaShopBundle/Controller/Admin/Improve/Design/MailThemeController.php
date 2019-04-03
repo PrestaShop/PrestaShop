@@ -106,20 +106,23 @@ class MailThemeController extends FrameworkBundleAdminController
 
             $data = $generateThemeMailsForm->getData();
             try {
+                $coreMailsFolder = '';
+                $modulesMailFolder = '';
+                //Overwrite theme folder if selected
+                if (!empty($data['theme'])) {
+                    $themeFolder = $this->getParameter('themes_dir') . '/' . $data['theme'];
+                    $coreMailsFolder = $themeFolder . '/mails';
+                    $modulesMailFolder = $themeFolder . '/modules';
+                }
+
                 /** @var GenerateThemeMailsCommand $generateCommand */
                 $generateCommand = new GenerateThemeMailsCommand(
                     $data['mailTheme'],
                     $data['language'],
-                    $data['overwrite']
+                    $data['overwrite'],
+                    $coreMailsFolder,
+                    $modulesMailFolder
                 );
-                //Overwrite theme folder if selected
-                if (!empty($data['theme'])) {
-                    $themeFolder = $this->getParameter('themes_dir') . '/' . $data['theme'];
-                    $generateCommand
-                        ->setCoreMailsFolder($themeFolder . '/mails')
-                        ->setModulesMailFolder($themeFolder . '/modules')
-                    ;
-                }
 
                 /** @var CommandBusInterface $commandBus */
                 $commandBus = $this->get('prestashop.core.command_bus');

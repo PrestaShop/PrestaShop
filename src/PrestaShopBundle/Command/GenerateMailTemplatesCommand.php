@@ -82,12 +82,10 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
         $generateCommand = new GenerateThemeMailsCommand(
             $themeName,
             $locale,
-            $overwrite
+            $overwrite,
+            !empty($coreOutputFolder) ? $coreOutputFolder : '',
+            !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
         );
-        $generateCommand
-            ->setCoreMailsFolder(!empty($coreOutputFolder) ? $coreOutputFolder : '')
-            ->setModulesMailFolder(!empty($modulesOutputFolder) ? $modulesOutputFolder : '')
-        ;
         /** @var CommandBusInterface $commandBus */
         $commandBus = $this->getContainer()->get('prestashop.core.command_bus');
         $commandBus->handle($generateCommand);

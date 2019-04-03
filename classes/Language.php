@@ -731,6 +731,12 @@ class LanguageCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
+    /**
+     * @param string $iso
+     *
+     * @return array|bool
+     * @throws Exception
+     */
     public static function getLangDetails($iso)
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
@@ -1113,13 +1119,10 @@ class LanguageCore extends ObjectModel
     }
 
     /**
-     * This method has been introduced in Language out of convenience but, if you can, prefer
-     * using the GenerateMailTemplatesService or MailTemplateGenerator services.
-     *
      * @param array $langPack
      * @param array $errors
      */
-    public static function generateEmailsLanguagePack($langPack, &$errors = array())
+    private static function generateEmailsLanguagePack($langPack, &$errors = array())
     {
         $locale = $langPack['locale'];
         $sfContainer = SymfonyContainer::getInstance();
@@ -1138,12 +1141,10 @@ class LanguageCore extends ObjectModel
         $generateCommand = new GenerateThemeMailsCommand(
             $mailTheme,
             $locale,
-            false
+            false,
+            !empty($coreOutputFolder) ? $coreOutputFolder : '',
+            !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
         );
-        $generateCommand
-            ->setCoreMailsFolder(!empty($coreOutputFolder) ? $coreOutputFolder : '')
-            ->setModulesMailFolder(!empty($modulesOutputFolder) ? $modulesOutputFolder : '')
-        ;
         /** @var CommandBusInterface $commandBus */
         $commandBus = $sfContainer->get('prestashop.core.command_bus');
         try {
@@ -1161,7 +1162,7 @@ class LanguageCore extends ObjectModel
      * @param array $lang_pack
      * @param array $errors
      *
-     * @deprecated This method is deprecated since 1.7.6.0 use Language::generateEmailsLanguagePack instead or even better use GenerateMailTemplatesService
+     * @deprecated This method is deprecated since 1.7.6.0 use GenerateThemeMailsCommand instead
      */
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
