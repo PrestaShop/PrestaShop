@@ -325,6 +325,8 @@ class Number implements NumberInterface
     }
 
     /**
+     * @deprecated https://github.com/PrestaShop/PrestaShop/issues/13168
+     *
      * @param int $maxFractionDigits
      */
     public function setMaxFractionDigits($maxFractionDigits)
