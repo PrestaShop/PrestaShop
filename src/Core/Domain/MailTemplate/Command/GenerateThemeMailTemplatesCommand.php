@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command;
  * language. If folders are not overridden in the command then MailTemplateGenerator
  * will use the default output folders (in mails folder).
  */
-class GenerateThemeMailsCommand
+class GenerateThemeMailTemplatesCommand
 {
     /** @var string */
     private $themeName;
@@ -52,8 +52,8 @@ class GenerateThemeMailsCommand
      * @param string $themeName
      * @param string $language
      * @param bool $overwriteTemplates
-     * @param string $coreMailsFolder
-     * @param string $modulesMailFolder
+     * @param string $coreMailsFolder Output folder for core emails (if left empty the default mails folder will be used)
+     * @param string $modulesMailFolder Output folder for modules emails (if left empty the module mails folder will be used)
      */
     public function __construct(
         $themeName,

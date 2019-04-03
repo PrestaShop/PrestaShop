@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
@@ -115,8 +115,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     $modulesMailFolder = $themeFolder . '/modules';
                 }
 
-                /** @var GenerateThemeMailsCommand $generateCommand */
-                $generateCommand = new GenerateThemeMailsCommand(
+                $generateCommand = new GenerateThemeMailTemplatesCommand(
                     $data['mailTheme'],
                     $data['language'],
                     $data['overwrite'],

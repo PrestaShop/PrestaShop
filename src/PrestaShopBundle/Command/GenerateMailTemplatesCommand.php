@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -78,13 +78,13 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
 
         $output->writeln(sprintf('Exporting mail with theme %s for language %s', $themeName, $locale));
 
-        /** @var GenerateThemeMailsCommand $generateCommand */
-        $generateCommand = new GenerateThemeMailsCommand(
+        /** @var GenerateThemeMailTemplatesCommand $generateCommand */
+        $generateCommand = new GenerateThemeMailTemplatesCommand(
             $themeName,
             $locale,
             $overwrite,
-            !empty($coreOutputFolder) ? $coreOutputFolder : '',
-            !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
+            $coreOutputFolder ?: '',
+            $modulesOutputFolder ?: ''
         );
         /** @var CommandBusInterface $commandBus */
         $commandBus = $this->getContainer()->get('prestashop.core.command_bus');
