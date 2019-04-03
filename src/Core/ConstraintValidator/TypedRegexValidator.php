@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -36,15 +36,15 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 /**
  * Validates specific regex pattern for provided type
  */
-class TypedRegexConstraintValidator extends ConstraintValidator
+class TypedRegexValidator extends ConstraintValidator
 {
     /**
      * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof TypedRegexConstraint) {
-            throw new UnexpectedTypeException($constraint, TypedRegexConstraint::class);
+        if (!$constraint instanceof TypedRegex) {
+            throw new UnexpectedTypeException($constraint, TypedRegex::class);
         }
 
         if (null === $value || '' === $value) {

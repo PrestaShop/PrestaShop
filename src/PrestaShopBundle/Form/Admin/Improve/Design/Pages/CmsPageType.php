@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -106,7 +106,7 @@ class CmsPageType extends AbstractType
                         'class' => 'js-copier-source-title',
                     ],
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -124,7 +124,7 @@ class CmsPageType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -142,7 +142,7 @@ class CmsPageType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                     ],
@@ -157,7 +157,7 @@ class CmsPageType extends AbstractType
                         'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
                     ],
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([

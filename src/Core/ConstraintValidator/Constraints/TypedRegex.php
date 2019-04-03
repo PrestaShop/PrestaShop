@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexConstraintValidator;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * Provides regex validation by type
  */
-class TypedRegexConstraint extends Constraint
+class TypedRegex extends Constraint
 {
     /**
      * @var string
@@ -57,6 +57,6 @@ class TypedRegexConstraint extends Constraint
      */
     public function validatedBy()
     {
-        return TypedRegexConstraintValidator::class;
+        return TypedRegexValidator::class;
     }
 }

@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -113,7 +113,7 @@ class ManufacturerAddressType extends AbstractType
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
                     ]),
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'name',
                     ]),
                     new Length([
@@ -133,7 +133,7 @@ class ManufacturerAddressType extends AbstractType
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
                     ]),
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'name',
                     ]),
                     new Length([
@@ -148,7 +148,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('address', TextType::class, [
                 'constraints' => [
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'address',
                     ]),
                     new Length([
@@ -164,7 +164,7 @@ class ManufacturerAddressType extends AbstractType
             ->add('address2', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'address',
                     ]),
                     new Length([
@@ -180,7 +180,7 @@ class ManufacturerAddressType extends AbstractType
             ->add('post_code', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'post_code',
                     ]),
                     new Length([
@@ -200,7 +200,7 @@ class ManufacturerAddressType extends AbstractType
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
                     ]),
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'city_name',
                     ]),
                     new Length([
@@ -235,7 +235,7 @@ class ManufacturerAddressType extends AbstractType
             ->add('home_phone', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'phone_number',
                     ]),
                     new Length([
@@ -251,7 +251,7 @@ class ManufacturerAddressType extends AbstractType
             ->add('mobile_phone', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'phone_number',
                     ]),
                     new Length([
@@ -267,7 +267,7 @@ class ManufacturerAddressType extends AbstractType
             ->add('other', TextType::class, [
                 'required' => false,
                 'constraints' => [
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'message',
                     ]),
                     new Length([
