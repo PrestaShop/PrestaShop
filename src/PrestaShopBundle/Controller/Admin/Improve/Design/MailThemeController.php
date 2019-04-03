@@ -339,7 +339,7 @@ class MailThemeController extends FrameworkBundleAdminController
             $locale = $this->getContext()->language->locale;
         }
         /** @var LanguageInterface $language */
-        $language = $languageRepository->getByLocaleOrIsoCode($locale);
+        $language = $languageRepository->getOneByLocaleOrIsoCode($locale);
         if (null === $language) {
             throw new InvalidArgumentException(sprintf('Could not find Language with locale or isoCode %s', $locale));
         }
