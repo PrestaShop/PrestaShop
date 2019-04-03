@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Language;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
