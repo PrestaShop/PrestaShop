@@ -40,12 +40,12 @@ final class LocalizedConfiguration implements LocalizedConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key, $shopId = null, $shopGroupId = null)
+    public function get($key, $default = '', $shopId = null)
     {
         $configuration = [];
 
         foreach (Language::getIDs(false) as $langId) {
-            $configuration[$langId] = Configuration::get($key, $langId, $shopGroupId, $shopId);
+            $configuration[$langId] = Configuration::get($key, $langId, null, $shopId);
         }
 
         return $configuration;
