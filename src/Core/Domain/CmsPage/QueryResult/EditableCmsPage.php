@@ -108,7 +108,7 @@ class EditableCmsPage
      * @param bool $indexedForSearch
      * @param bool $displayed
      * @param array $shopAssociation
-     * @param $previewUrl
+     * @param string $previewUrl
      *
      * @throws CmsPageCategoryException
      * @throws CmsPageException

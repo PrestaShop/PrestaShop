@@ -30,7 +30,7 @@ const $ = window.$;
  * For example used in 'Save and preview' cms page create/edit actions
  */
 export default class PreviewOpener {
-  constructor ({previewUrlSelector}) {
+  constructor (previewUrlSelector) {
     this.previewUrl = $(previewUrlSelector).data('preview-url');
     this.open();
   }

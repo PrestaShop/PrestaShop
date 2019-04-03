@@ -41,9 +41,7 @@ $(() => {
     },
   });
 
-  new PreviewOpener({
-    previewUrlSelector: '.js-preview-url',
-  });
+  new PreviewOpener('.js-preview-url');
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input.js-copier-source-title',
