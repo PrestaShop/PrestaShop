@@ -38,7 +38,7 @@ services:
       - '@prestashop.adapter.legacy.context'
 
   prestashop.core.mail_template.command_handler.generate_theme_mails_handler:
-    class: 'PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler\GenerateThemeMailsHandler'
+    class: 'PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler\GenerateThemeMailTemplatesCommandHandler'
     arguments:
       - '@prestashop.core.admin.lang.repository'
       - '@prestashop.core.mail_template.theme_catalog'
@@ -48,4 +48,4 @@ services:
     public: true
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailsCommand
+        command: PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand
