@@ -35,10 +35,10 @@ interface LocalizedConfigurationInterface
      * Get localized configuration
      *
      * @param string $key
+     * @param string $default
      * @param int|null $shopId
-     * @param int|null $shopGroupId
      *
      * @return string
      */
-    public function get($key, $shopId = null, $shopGroupId = null);
+    public function get($key, $default = '', $shopId = null);
 }
