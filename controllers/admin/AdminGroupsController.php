@@ -367,6 +367,7 @@ class AdminGroupsControllerCore extends AdminController
                         ),
                     ),
                     'hint' => $this->trans('Customers in this group can view prices.', array(), 'Admin.Shopparameters.Help'),
+                    'desc' => $this->trans('Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.', array(), 'Admin.Shopparameters.Help'),
                 ),
                 array(
                     'type' => 'group_discount_category',
@@ -633,7 +634,11 @@ class AdminGroupsControllerCore extends AdminController
         $href = self::$currentIndex . '&' . $this->identifier . '=' . $id . '&update' . $this->table . '&token=' . ($token != null ? $token : $this->token);
 
         if ($this->display == 'view') {
-            $href = Context::getContext()->link->getAdminLink('AdminCustomers') . '&id_customer=' . (int) $id . '&updatecustomer&back=' . urlencode($href);
+            $href = Context::getContext()->link->getAdminLink('AdminCustomers', true, [], [
+                'id_customer' => $id,
+                'updatecustomer' => 1,
+                'back' => urlencode($href),
+            ]);
         }
 
         $tpl->assign(array(

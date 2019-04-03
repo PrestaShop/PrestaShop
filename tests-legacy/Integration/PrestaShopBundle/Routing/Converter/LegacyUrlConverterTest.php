@@ -154,8 +154,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_metas_index' => ['/configure/shop/seo-urls/', 'AdminMeta'],
             'admin_metas_search' => ['/configure/shop/seo-urls/', 'AdminMeta', 'submitFiltermeta'],
             'admin_metas_create' => ['/configure/shop/seo-urls/new', 'AdminMeta', 'addmeta'],
-            'admin_metas_edit' => ['/configure/shop/seo-urls/edit/1000', 'AdminMeta', 'updatemeta', ['id_meta' => 1000]],
-            'admin_metas_delete' => ['/configure/shop/seo-urls/delete/1000', 'AdminMeta', 'deletemeta', ['id_meta' => 1000]],
+            'admin_metas_edit' => ['/configure/shop/seo-urls/1000/edit', 'AdminMeta', 'updatemeta', ['id_meta' => 1000]],
+            'admin_metas_delete' => ['/configure/shop/seo-urls/1000/delete', 'AdminMeta', 'deletemeta', ['id_meta' => 1000]],
             'admin_metas_delete_bulk' => ['/configure/shop/seo-urls/delete', 'AdminMeta', 'submitBulkdeletemeta'],
             'admin_metas_save_options' => ['/configure/shop/seo-urls/options', 'AdminMeta', 'submitOptionsmeta'],
             'admin_metas_generate_robots_text_file' => ['/configure/shop/seo-urls/generate/robots', 'AdminMeta', 'submitRobots'],
@@ -184,6 +184,13 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_webservice_status_toggle' => ['/configure/advanced/webservice/status/42', 'AdminWebservice', 'status', ['id_webservice_account' => 42]],
             'admin_webservice_bulk_enable' => ['/configure/advanced/webservice/status/bulk/enable', 'AdminWebservice', 'submitBulkenableSelectionwebservice_account'],
             'admin_webservice_bulk_disable' => ['/configure/advanced/webservice/status/bulk/disable', 'AdminWebservice', 'submitBulkdisableSelectionwebservice_account'],*/
+
+            'admin_profiles_index' => ['/configure/advanced/profiles/', 'AdminProfiles'],
+            'admin_profiles_search' => ['/configure/advanced/profiles/', 'AdminProfiles', 'submitFilterprofile'],
+            'admin_profiles_create' => ['/configure/advanced/profiles/new', 'AdminProfiles', 'addprofile'],
+            'admin_profiles_edit' => ['/configure/advanced/profiles/1000/edit', 'AdminProfiles', 'updateprofile', ['id_profile' => 1000]],
+            'admin_profiles_bulk_delete' => ['/configure/advanced/profiles/delete/bulk', 'AdminProfiles', 'submitBulkdeleteprofile'],
+            'admin_profiles_delete' => ['/configure/advanced/profiles/12/delete', 'AdminProfiles', 'deleteprofile', ['id_profile' => 12]],
         ];
     }
 

@@ -30,12 +30,15 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Helper used to retrieve a Symfony Catalogue object.
+ */
 trait TranslationFinderTrait
 {
     /**
-     * @param $paths
-     * @param $locale
-     * @param null $pattern
+     * @param array $paths a list of paths when we can look for translations
+     * @param string $locale the Symfony (not the PrestaShop one) locale
+     * @param string|null $pattern a regular expression
      *
      * @return MessageCatalogue
      *
@@ -51,19 +54,22 @@ trait TranslationFinderTrait
             $finder->name($pattern);
         }
         $translationFiles = $finder->files()->notName('index.php')->in($paths);
+
         if (count($translationFiles) === 0) {
             throw new \Exception('There is no translation file available.');
         }
 
         foreach ($translationFiles as $file) {
-            if (strpos($file->getBasename('.xlf'), $locale) !== false) {
-                $domain = $file->getBasename('.xlf');
-            } else {
-                $domain = $file->getBasename('.xlf') . '.' . $locale;
-            }
+            if ('xlf' === $file->getExtension()) {
+                if (strpos($file->getBasename('.xlf'), $locale) !== false) {
+                    $domain = $file->getBasename('.xlf');
+                } else {
+                    $domain = $file->getBasename('.xlf') . '.' . $locale;
+                }
 
-            $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
-            $messageCatalogue->addCatalogue($fileCatalogue);
+                $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
+                $messageCatalogue->addCatalogue($fileCatalogue);
+            }
         }
 
         return $messageCatalogue;

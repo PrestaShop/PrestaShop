@@ -118,9 +118,6 @@ class ControllerTest extends TestCase
             array('AdminStatusesController'),
             array('AdminZonesController'),
             array('AdminLoginController'),
-            array('AdminCustomersController'),
-            array('AdminProfilesController'),
-            array('AdminCustomersController'),
             array('AdminQuickAccessesController'),
             array('AdminCustomerThreadsController'),
             array('AdminManufacturersController'),
@@ -130,7 +127,6 @@ class ControllerTest extends TestCase
             array('AdminStoresController'),
             array('AdminSuppliersController'),
             array('AdminAttributesGroupsController'),
-            array('AdminEmployeesController'),
             array('AdminNotFoundController'),
             array('AdminFeaturesController'),
             array('AdminOrderMessageController'),
@@ -139,7 +135,6 @@ class ControllerTest extends TestCase
             array('AdminTagsController'),
             array('AdminOrdersController'),
             array('AdminShopController'),
-            array('AdminTaxesController'),
             array('AdminCartRulesController'),
             array('AdminGroupsController'),
             array('AdminOutstandingController'),
@@ -150,7 +145,6 @@ class ControllerTest extends TestCase
             array('AdminShopUrlController'),
             array('AdminStatesController'),
             array('AdminStatsController'),
-            array('AdminContactsController'),
             array('AdminLegacyLayoutController'),
         );
     }

@@ -27,6 +27,8 @@
 namespace LegacyTests\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
 
 /**
@@ -40,11 +42,22 @@ class SearchProviderTest extends TestCase
 
     protected function setUp()
     {
-        $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
-            ->getMock();
+        $loader = $this->getMockBuilder(LoaderInterface::class)
+            ->getMock()
+        ;
+        $externalSystemProvider = $this->getMockBuilder(ExternalModuleLegacySystemProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
         self::$resourcesDir = __DIR__.'/../../resources/translations';
-        $this->provider = new SearchProvider($loader, self::$resourcesDir);
+        $this->provider = new SearchProvider(
+            $loader,
+            $externalSystemProvider,
+            self::$resourcesDir,
+            '',
+            ''
+        );
 
         $this->provider->setDomain('AdminActions');
     }

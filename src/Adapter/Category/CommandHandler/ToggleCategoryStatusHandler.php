@@ -51,6 +51,7 @@ final class ToggleCategoryStatusHandler implements ToggleCategoryStatusHandlerIn
 
         if (!$entity->id) {
             throw new CategoryNotFoundException(
+                $command->getCategoryId(),
                 sprintf('Category with id "%s" was not found', $command->getCategoryId()->getValue())
             );
         }

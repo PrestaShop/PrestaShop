@@ -26,6 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -104,43 +108,98 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Display the Contact creation form.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_contacts_index",
+     *     message="You do not have permission to add this."
+     * )
      *
-     * @return RedirectResponse
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminContacts', [
-            'addcontact' => 1,
-        ]);
+        $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
+        $contactForm = $contactFormBuilder->getForm();
+        $contactForm->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+        try {
+            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
+            $result = $contactFormHandler->handle($contactForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_contacts_index');
+            }
+        } catch (DomainException $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/create.html.twig', [
+            'contactForm' => $contactForm->createView(),
+        ]);
     }
 
     /**
      * Display the contact edit form.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_contacts_index",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param int $contactId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($contactId)
+    public function editAction($contactId, Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminContacts', [
-            'id_contact' => $contactId,
-            'updatecontact' => 1,
-        ]);
+        $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
+        $contactForm = $contactFormBuilder->getFormFor((int) $contactId);
 
-        return $this->redirect($legacyLink);
+        $contactForm->handleRequest($request);
+
+        try {
+            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
+            $result = $contactFormHandler->handleFor((int) $contactId, $contactForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_contacts_index');
+            }
+        } catch (DomainException $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/edit.html.twig', [
+            'contactForm' => $contactForm->createView(),
+        ]);
     }
 
     /**
      * Delete a contact.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_contacts")
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_contacts_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @DemoRestricted(redirectRoute="admin_contacts_index")
      *
      * @param int $contactId
      *
@@ -165,8 +224,13 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Bulk delete contacts.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_contacts")
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_contacts_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @DemoRestricted(redirectRoute="admin_contacts_index")
      *
      * @param Request $request
      *
@@ -187,5 +251,71 @@ class ContactsController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_contacts_index');
+    }
+
+    /**
+     * @param DomainException $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(DomainException $e)
+    {
+        return [
+            ContactNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            ContactConstraintException::class => [
+                ContactConstraintException::INVALID_SHOP_ASSOCIATION => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Shop association', 'Admin.Global')
+                        ),
+                    ]
+                ),
+                ContactConstraintException::INVALID_TITLE => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Title', 'Admin.Global')
+                        ),
+                    ]
+                ),
+                ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE => $this->trans(
+                    'The field %field_name% is required at least in your default language.',
+                    'Admin.Notifications.Error',
+                    [
+                        '%field_name%' => $this->trans('Title', 'Admin.Global'),
+                    ]
+                ),
+                ContactConstraintException::INVALID_DESCRIPTION => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Description', 'Admin.Global')
+                        ),
+                    ]
+                ),
+            ],
+            DomainConstraintException::class => [
+                DomainConstraintException::INVALID_EMAIL => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Email address', 'Admin.Global')
+                        ),
+                    ]
+                ),
+            ],
+        ];
     }
 }

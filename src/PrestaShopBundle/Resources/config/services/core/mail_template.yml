@@ -2,8 +2,8 @@ services:
   _defaults:
     public: true
 
-  PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface: '@prestashop.core.mail_template.theme_folder_catalog'
-  PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface: '@prestashop.adapter.mail_template.twig_renderer'
+  prestashop.core.mail_template.mail_template_renderer: '@prestashop.adapter.mail_template.twig_renderer'
+  prestashop.core.mail_template.theme_catalog: '@prestashop.core.mail_template.theme_folder_catalog'
 
   prestashop.core.mail_template.theme_folder_catalog:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog'
@@ -22,7 +22,7 @@ services:
   prestashop.core.mail_template.generator:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator'
     arguments:
-      - '@PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface'
+      - '@prestashop.core.mail_template.mail_template_renderer'
       - '@logger'
 
   prestashop.core.mail_template.transformation.css_inline:
@@ -30,3 +30,9 @@ services:
 
   prestashop.core.mail_template.transformation.html_textify:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation'
+
+  prestashop.core.mail_template.transformation.mail_variables:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransformation'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.legacy.context'

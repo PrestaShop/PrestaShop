@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -57,11 +58,16 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     private $redirectionUrl;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetSearchUrl
      * @param string $redirectionUrl
      */
-    public function __construct($resetSearchUrl, $redirectionUrl)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        $resetSearchUrl,
+        $redirectionUrl
+    ) {
+        parent::__construct($hookDispatcher);
         $this->resetSearchUrl = $resetSearchUrl;
         $this->redirectionUrl = $redirectionUrl;
     }

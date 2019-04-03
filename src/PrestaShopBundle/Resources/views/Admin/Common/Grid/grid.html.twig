@@ -24,18 +24,18 @@
  *#}
 
 <div class="row grid js-grid" id="{{ grid.id }}_grid" data-grid-id="{{ grid.id }}">
-  <div class="col">
+  <div class="col-sm">
     {% block grid_header_row %}
       <div class="row">
         {% block grid_bulk_actions_block %}
-          <div class="col">
+          <div class="col-sm">
             <div class="row">
-              <div class="col">
+              <div class="col-sm">
                 {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {'grid': grid}) }}
               </div>
             </div>
             <div class="row">
-              <div class="col">
+              <div class="col-sm">
                 {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {'grid': grid}) }}
               </div>
             </div>
@@ -46,7 +46,7 @@
 
     {% block grid_table_row %}
       <div class="row">
-        <div class="col">
+        <div class="col-sm">
           {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': grid}) }}
         </div>
       </div>

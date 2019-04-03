@@ -32,19 +32,41 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * This class is responsible of managing filters of Listing pages.
  */
-abstract class Filters extends ParameterBag implements SearchCriteriaInterface
+class Filters extends ParameterBag implements SearchCriteriaInterface
 {
-    public function __construct(array $filters = [])
+    /** @var string */
+    protected $filterId = '';
+
+    /**
+     * @param array $filters
+     * @param string $filterId
+     */
+    public function __construct(array $filters = [], $filterId = '')
     {
         parent::__construct($filters);
+        $this->filterId = !empty($filterId) ? $filterId : $this->filterId;
     }
 
     /**
-     * @return array Define the default filters configuration
+     * @return Filters
+     */
+    public static function buildDefaults()
+    {
+        return new static(static::getDefaults());
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public static function getDefaults()
     {
-        return [];
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => null,
+            'sortOrder' => null,
+            'filters' => [],
+        ];
     }
 
     /**
@@ -85,5 +107,25 @@ abstract class Filters extends ParameterBag implements SearchCriteriaInterface
     public function getFilters()
     {
         return $this->get('filters');
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilterId()
+    {
+        return $this->filterId;
+    }
+
+    /**
+     * @param string $filterId
+     *
+     * @return $this
+     */
+    public function setFilterId($filterId)
+    {
+        $this->filterId = $filterId;
+
+        return $this;
     }
 }

@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Define contract to retrieve translations.
+ */
 interface ProviderInterface
 {
     /**

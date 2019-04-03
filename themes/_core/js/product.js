@@ -142,7 +142,7 @@ function updateProduct(event, eventType, updateUrl) {
       data: {
         ajax: 1,
         action: 'refresh',
-        quantity_wanted: $quantityWantedInput.val()
+        quantity_wanted: eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val()
       },
       dataType: 'json',
       beforeSend() {

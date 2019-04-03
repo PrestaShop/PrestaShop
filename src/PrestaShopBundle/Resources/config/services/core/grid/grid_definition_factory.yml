@@ -5,9 +5,10 @@ services:
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
         abstract: true
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
         calls:
             - [setTranslator, ['@translator']]
-            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.definition.factory.logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
@@ -91,9 +92,6 @@ services:
     prestashop.core.grid.definition.factory.language:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'language', 'action': 'index'})"
-            - "@=service('router').generate('admin_languages_index')"
         public: true
 
     prestashop.core.grid.definition.factory.currency:
@@ -106,11 +104,11 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
-    prestashop.core.grid.definition.factory.profiles:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfilesGridDefinitionFactory'
+    prestashop.core.grid.definition.factory.profile:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfileGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'profiles', 'action': 'index'})"
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'profile', 'action': 'index'})"
             - "@=service('router').generate('admin_profiles_index')"
             - '@prestashop.core.grid.action.row.accessibility_checker.delete_profile'
         public: true
@@ -119,5 +117,30 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
+          - '@request_stack'
+          - '@prestashop.adapter.shop.context'
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        public: true
+
+    prestashop.core.grid.definition.factory.tax:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.manufacturer:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.manufacturer_address:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.cms_page:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@prestashop.core.query_bus'
           - '@request_stack'
         public: true

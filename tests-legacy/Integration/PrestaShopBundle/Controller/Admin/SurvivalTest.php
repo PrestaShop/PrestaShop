@@ -148,6 +148,16 @@ class SurvivalTest extends WebTestCase
             'admin_languages_create' => ['Add new language', 'admin_languages_create'],
             'admin_metas_index' => ['Meta', 'admin_metas_index'],
             'admin_metas_create' => ['Add new meta', 'admin_metas_create'],
+            'admin_contacts_index' => ['Contacts', 'admin_contacts_index'],
+            'admin_contacts_create' => ['Add new contact', 'admin_contacts_create'],
+            'admin_employees_index' => ['Employees', 'admin_employees_index'],
+            'admin_employees_create' => ['Add new employee', 'admin_employees_create'],
+            'admin_cms_pages_index' => ['Cms page', 'admin_cms_pages_index'],
+            'admin_cms_pages_category_create' => ['Add new cms category page', 'admin_cms_pages_category_create'],
+            'admin_profiles_index' => ['Profiles', 'admin_profiles_index'],
+            'admin_profiles_create' => ['Add new profile', 'admin_profiles_create'],
+            'admin_taxes_index' => ['Taxes', 'admin_taxes_index'],
+            'admin_taxes_create' => ['Add new tax', 'admin_taxes_create'],
         ];
     }
 

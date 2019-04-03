@@ -52,8 +52,12 @@
 </div>
 {% endmacro %}
 
-{% macro label_with_help(label, help, class = '') %}
-<label class="form-control-label {{ class }}">
+{% macro label_with_help(label, help, class = '', for = '', isRequired = false) %}
+<label{% if for is not empty %} for="{{ for }}"{% endif %} class="form-control-label {{ class }}">
+  {% if isRequired %}
+    <span class="text-danger">*</span>
+  {% endif %}
+
   {{ label }}
   <span
     class="help-box"
@@ -65,11 +69,12 @@
 {% endmacro %}
 
 {# Table column headers with sorting indicators #}
-{% macro sortable_column_header(title, sortColumnName, orderBy, sortOrder) %}
-  {% set sortOrder, orderBy = sortOrder|default(''), orderBy|default('') %}
-    <div
+{% macro sortable_column_header(title, sortColumnName, orderBy, sortOrder, prefix) %}
+  {% set sortOrder, orderBy, prefix = sortOrder|default(''), orderBy|default, prefix|default('') %}
+  <div
       class="ps-sortable-column"
       data-sort-col-name="{{ sortColumnName }}"
+      data-sort-prefix="{{ prefix }}"
       {% if orderBy == sortColumnName %}
         data-sort-is-current="true"
         data-sort-direction="{{ sortOrder == 'desc' ? 'desc' : 'asc' }}"
@@ -103,7 +108,7 @@
   {% set attr = vars.attr|default({}) %}
   {% set errors = [] %}
 
-  {% if not form.vars.valid  %}
+  {% if form.vars.valid is defined and not form.vars.valid  %}
     {% for parentError in form.vars.errors %}
       {% set errors = errors|merge([parentError.message]) %}
     {% endfor %}
@@ -163,13 +168,16 @@
           {% endset %}
       {% endif %}
 
+      <template class="js-popover-error-content" data-id="{{ form.vars.id }}">
+        {{ popoverErrorContent }}
+      </template>
+
       {% set errorPopover %}
         <span
           data-toggle="form-popover-error"
+          data-id="{{ form.vars.id }}"
           data-placement="bottom"
-          data-html="true"
           data-template='<div class="popover form-popover-error" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
-          data-content='{{ popoverErrorContent }}'
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
@@ -199,7 +207,6 @@
             {% endfor %}
           </div>
       {% endif %}
-
     </div>
   {% endif %}
 {% endmacro %}
@@ -208,7 +215,7 @@
   Helper function to render most common structure for single input
   @param form - form view to render
   @param vars - custom vars that are passed to form_widget
-  @param form - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
+  @param extraVars - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
  #}
 {% macro form_group_row(form, vars, extraVars) %}
   {% import '@PrestaShop/Admin/macros.html.twig' as self %}
@@ -219,8 +226,14 @@
     {% set extraVars = extraVars|default({}) %}
 
     {% if extraVars.label is defined %}
+      {% set isRequired = form.vars.required|default(false) %}
+
+      {% if extraVars.required is defined %}
+        {% set isRequired = extraVars.required %}
+      {% endif %}
+
       <label for="{{ form.vars.id }}" class="form-control-label">
-        {% if form.vars.required %}
+        {% if isRequired %}
           <span class="text-danger">*</span>
         {% endif %}
         {{ extraVars.label }}

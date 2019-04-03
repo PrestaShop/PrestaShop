@@ -26,33 +26,50 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 
-class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+/**
+ * Able to search translations for a specific translation domains across
+ * multiple sources
+ */
+class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface, UseModuleInterface
 {
-    private $domain;
+    /**
+     * @var string the "modules" directory path
+     */
+    private $modulesDirectory;
 
     /**
-     * Set domain.
-     *
-     * @param $domain
-     *
-     * @return $this
+     * @var ExternalModuleLegacySystemProvider
      */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
+    private $externalModuleLegacySystemProvider;
 
-        return $this;
+    public function __construct(
+        LoaderInterface $databaseLoader,
+        ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider,
+        $resourceDirectory,
+        $modulesDirectory
+    ) {
+        $this->modulesDirectory = $modulesDirectory;
+        $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
+
+        parent::__construct($databaseLoader, $resourceDirectory);
     }
 
     /**
      * Get domain.
      *
+     * @deprecated since 1.7.6, to be removed in the next major
+     *
      * @return mixed
      */
     public function getDomain()
     {
+        @trigger_error(
+            __METHOD__ . ' function is deprecated and will be removed in the next major',
+            E_USER_DEPRECATED
+        );
+
         return $this->domain;
     }
 
@@ -61,9 +78,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return array(
-            '^' . $this->getDomain(),
-        );
+        return ['^' . $this->domain];
     }
 
     /**
@@ -71,9 +86,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getFilters()
     {
-        return array(
-            '#^' . $this->getDomain() . '#',
-        );
+        return ['#^' . $this->domain . '#'];
     }
 
     /**
@@ -87,21 +100,17 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     /**
      * {@inheritdoc}
      */
+    public function getDefaultResourceDirectory()
+    {
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+    }
+
     public function getDefaultCatalogue($empty = true)
     {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
+        try {
+            $defaultCatalogue = parent::getDefaultCatalogue($empty);
+        } catch (\Exception $e) {
+            $defaultCatalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty);
         }
 
         return $defaultCatalogue;
@@ -110,8 +119,47 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     /**
      * {@inheritdoc}
      */
-    public function getDefaultResourceDirectory()
+    public function getXliffCatalogue()
     {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+        try {
+            $xliffCatalogue = parent::getXliffCatalogue();
+        } catch (\Exception $e) {
+            $xliffCatalogue = $this->externalModuleLegacySystemProvider->getXliffCatalogue();
+        }
+
+        return $xliffCatalogue;
+    }
+
+    /**
+     * @deprecated since 1.7.6, to be removed in the next major
+     *
+     * @return string
+     */
+    public function getModuleDirectory()
+    {
+        @trigger_error(
+            __METHOD__ . ' function is deprecated and will be removed in the next major',
+            E_USER_DEPRECATED
+        );
+
+        return $this->modulesDirectory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocale($locale)
+    {
+        $this->externalModuleLegacySystemProvider->setLocale($locale);
+
+        return parent::setLocale($locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setModuleName($moduleName)
+    {
+        $this->externalModuleLegacySystemProvider->setModuleName($moduleName);
     }
 }

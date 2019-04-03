@@ -49,7 +49,7 @@
 {% block material_choice_tree_item_widget %}
   {% set has_children = choice[choice_children] is defined %}
 
-  <li class="{% if selected_values is not empty and has_children %}expanded{% elseif has_children %}collapsed{% endif %}">
+  <li class="{% if choice.has_selected_children %}expanded{% elseif has_children %}collapsed{% endif %}">
     {% if multiple %}
       {{ block('material_choice_tree_item_checkbox_widget') }}
     {% else %}
@@ -76,8 +76,8 @@
                  name="{{ form.vars.full_name }}[]"
                  value="{{ choice[choice_value] }}"
                  {% if choice[choice_value] in selected_values %}checked{% endif %}
-                 {% if choice[choice_value] in disabled_values %}disabled{% endif %}
                {% endif %}
+               {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
         >
         <i class="md-checkbox-control"></i>
         {{ choice[choice_label] }}
@@ -93,7 +93,7 @@
              name="{{ form.vars.full_name }}"
              value="{{ choice[choice_value] }}"
              {% if choice[choice_value] in selected_values %}checked{% endif %}
-             {% if choice[choice_value] in disabled_values %}disabled{% endif %}
+             {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
       >
       {{ choice[choice_label] }}
     </label>

@@ -37,12 +37,12 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class SqlTranslationLoader implements LoaderInterface
 {
     /**
-     * @var Theme
+     * @var Theme the theme
      */
     protected $theme;
 
     /**
-     * @param $theme
+     * @param Theme $theme the theme
      *
      * @return $this
      */
@@ -95,10 +95,10 @@ class SqlTranslationLoader implements LoaderInterface
     }
 
     /**
-     * @param $translations
-     * @param $catalogue
+     * @param array $translations the list of translations
+     * @param MessageCatalogueInterface $catalogue the Message Catalogue
      */
-    protected function addTranslationsToCatalogue($translations, MessageCatalogueInterface $catalogue)
+    protected function addTranslationsToCatalogue(array $translations, MessageCatalogueInterface $catalogue)
     {
         foreach ($translations as $translation) {
             $catalogue->set($translation['key'], $translation['translation'], $translation['domain']);

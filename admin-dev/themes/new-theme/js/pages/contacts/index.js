@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ContactsPage from "./ContactsPage";
+import ContactsPage from './ContactsPage';
 
 const $ = window.$;
 

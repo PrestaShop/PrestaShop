@@ -47,6 +47,7 @@ class GeneralType extends TranslatorAwareType
     {
         $builder
             ->add('catalog_mode', SwitchType::class)
+            ->add('catalog_mode_with_prices', SwitchType::class)
             ->add('new_days_number', IntegerType::class, [
                 'required' => false,
             ])

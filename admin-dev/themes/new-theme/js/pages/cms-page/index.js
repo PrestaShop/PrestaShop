@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,6 +34,10 @@ import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-act
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import PositionExtension from '../../components/grid/extension/position-extension';
+import ChoiceTree from '../../components/form/choice-tree';
+import TranslatableInput from '../../components/translatable-input';
+import textToLinkRewriteCopier from '../../components/text-to-link-rewrite-copier';
+import TaggableField from "../../components/taggable-field";
 
 const $ = window.$;
 
@@ -50,4 +54,33 @@ $(() => {
   cmsCategory.addExtension(new SubmitRowActionExtension());
   cmsCategory.addExtension(new ColumnTogglingExtension());
   cmsCategory.addExtension(new PositionExtension());
+
+  textToLinkRewriteCopier({
+    sourceElementSelector: 'input[name^="cms_page_category[name]"]',
+    destinationElementSelector: 'input[name^="cms_page_category[friendly_url]"]',
+  });
+
+  new ChoiceTree('#cms_page_category_parent_category');
+
+  const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
+  shopChoiceTree.enableAutoCheckChildren();
+
+  new TranslatableInput();
+
+  new TaggableField({
+    tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
+
+  const cmsGrid = new Grid('cms_page');
+  cmsGrid.addExtension(new ReloadListActionExtension());
+  cmsGrid.addExtension(new ExportToSqlManagerExtension());
+  cmsGrid.addExtension(new FiltersResetExtension());
+  cmsGrid.addExtension(new SortingExtension());
+  cmsGrid.addExtension(new ColumnTogglingExtension());
+  cmsGrid.addExtension(new BulkActionCheckboxExtension());
+  cmsGrid.addExtension(new SubmitBulkExtension());
+  cmsGrid.addExtension(new SubmitRowActionExtension());
 });

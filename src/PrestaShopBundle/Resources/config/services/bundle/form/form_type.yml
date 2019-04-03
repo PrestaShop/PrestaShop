@@ -607,6 +607,11 @@ services:
         arguments:
             - '@=service("prestashop.core.form.choice_provider.import_match_configuration").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
+
+    form.type.common.country_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\CountryChoiceType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.country_by_id'
         tags:
             - { name: form.type }
 
@@ -642,6 +647,10 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
         arguments:
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+            - '@router.default'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
+            - "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
         tags:
             - { name: form.type }
 
@@ -649,6 +658,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType'
         arguments:
             - "@=service('prestashop.adapter.form.choice_provider.shop_tree_choice_provider').getChoices()"
+            - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
         tags:
             - { name: form.type }
 
@@ -707,6 +717,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.theme_zip").getChoices()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
@@ -733,11 +745,94 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.international.tax:
+    form.type.international.tax_options:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
       arguments:
         - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_USE_ECOTAX")'
         - '@=service("prestashop.core.form.choice_provider.tax_address_type_choice_provider")'
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
+      tags:
+        - { name: form.type }
+
+    form.type.contact:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
+        arguments:
+          - '@prestashop.bundle.form.data_transformer.default_language_to_filled_array'
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
+
+    form.type.cms_page_category:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.international.tax:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType'
+        arguments:
+            - '@translator'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.manufacturer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Manufacturer\ManufacturerType'
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+        tags:
+            - { name: form.type }
+
+    prestashop.bundle.form.admin.configure.advanced_parameters.employee.employee:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.change_password:
+        class: 'PrestaShopBundle\Form\Admin\Type\ChangePasswordType'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.addons_connect:
+        class: 'PrestaShopBundle\Form\Admin\Type\AddonsConnectType'
+        arguments:
+            - '@=service("prestashop.adapter.admin.data_provider.addons").isAddonsAuthenticated()'
+            - '@=service("prestashop.adapter.admin.data_provider.addons").getAddonsEmail()["username_addons"]'
+        tags:
+            - { name: form.type }
+
+    form.type.cms_page:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
+      arguments:
+        - '@translator'
+        - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
+        - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      tags:
+        - { name: form.type }
+
+    form.type.manufacturer_address:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
+      arguments:
+        - '@=service("prestashop.adapter.form.choice_provider.manufacturer_name_by_id").getChoices()'
+        - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+        - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+        - '@translator'
       tags:
         - { name: form.type }

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -33,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class CmsPageCategoryFilters extends Filters
 {
+    protected $filterId = CmsPageCategoryDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */

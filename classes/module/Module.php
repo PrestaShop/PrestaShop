@@ -1960,7 +1960,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
-     * @param string|null $locale Give a context for the translation
+     * @param string|null $locale Locale to translate to
      *
      * @return string Translation
      */
@@ -1970,7 +1970,14 @@ abstract class ModuleCore implements ModuleInterface
             return $string;
         }
 
-        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
+        return Translate::getModuleTranslation(
+            $this,
+            $string,
+            ($specific) ? $specific : $this->name,
+            null,
+            false,
+            $locale
+        );
     }
 
     /**
@@ -3273,7 +3280,14 @@ abstract class ModuleCore implements ModuleInterface
 
     private function getWidgetHooks()
     {
-        return array_values(Hook::getHooks(false, true));
+        $hooks = array_values(Hook::getHooks(false, true));
+        $registeredHookList = Hook::getHookModuleList();
+
+        foreach ($hooks as &$hook) {
+            $hook['registered'] = !empty($registeredHookList[$hook['id_hook']][$this->id]);
+        }
+
+        return $hooks;
     }
 
     /**
@@ -3289,6 +3303,7 @@ abstract class ModuleCore implements ModuleInterface
 
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = array();
+        $registeredHookList = Hook::getHookModuleList();
         foreach ($hooks_list as &$current_hook) {
             $hook_name = $current_hook['name'];
             $retro_hook_name = Hook::getRetroHookName($hook_name);
@@ -3299,6 +3314,7 @@ abstract class ModuleCore implements ModuleInterface
                     'name' => $hook_name,
                     'description' => $current_hook['description'],
                     'title' => $current_hook['title'],
+                    'registered' => !empty($registeredHookList[$current_hook['id_hook']][$this->id]),
                 );
             }
         }

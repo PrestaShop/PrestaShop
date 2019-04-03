@@ -378,7 +378,7 @@ class ContextCore
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if (count($translator->getCatalogue($locale)->all())) {
+        if ($locale === '' || count($translator->getCatalogue($locale)->all())) {
             $this->translator = $translator;
 
             return $translator;

@@ -676,7 +676,7 @@ class AdminProductWrapper
                     )
                 );
 
-                if ($customization['type'] == 0) {
+                if ($customization['type'] == Product::CUSTOMIZE_FILE) {
                     ++$countFieldFile;
                 } else {
                     ++$countFieldText;

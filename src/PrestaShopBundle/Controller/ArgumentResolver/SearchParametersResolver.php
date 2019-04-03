@@ -41,6 +41,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * If an action inject instance of Filters, this class is responsible of
  * creating it from available sources.
+ *
+ * @deprecated Use FiltersBuilderResolver instead
  */
 class SearchParametersResolver implements ArgumentValueResolverInterface
 {
@@ -109,52 +111,17 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
-        $filtersClass = $argument->getType();
         list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
-
+        $filtersClass = $argument->getType();
         /** @var Filters $filters */
-        $filters = new $filtersClass($filtersClass::getDefaults());
+        $filters = $this->buildDefaultFilters($filtersClass);
 
-        //Override with saved filters if present
         if ($request->isMethod('GET')) {
-            /** @var Filters $savedFilters */
-            $savedFilters = $this->searchParameters->getFiltersFromRepository(
-                $this->employee->getId(),
-                $this->shopId,
-                $controller,
-                $action,
-                $filtersClass
-            );
-
-            if ($savedFilters) {
-                $filters->add($savedFilters->all());
-            }
+            $this->overrideWithSavedFilters($filters, $controller, $action);
         }
 
-        //Then override with query filters if present
-        $query = $request->query;
-        $queryHasFilters = false;
-        foreach (SearchParametersInterface::FILTER_TYPES as $filterType) {
-            if ($query->has($filterType)) {
-                $queryHasFilters = true;
-                break;
-            }
-        }
-        if ($queryHasFilters) {
-            /** @var Filters $queryFilters */
-            $queryFilters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
-            $filters->add($queryFilters->all());
-
-            //Update the saved filters (which have been modified by the query)
-            $filtersToSave = $filters->all();
-            unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
-                $this->employee->getId(),
-                $this->shopId,
-                $filtersToSave,
-                $controller,
-                $action
-            );
+        if ($this->overrideWithRequest($request, $filters)) {
+            $this->persistFilters($filters, $controller, $action);
         }
 
         $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
@@ -164,20 +131,98 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     }
 
     /**
+     * @param Filters $filters
+     * @param string $controller
+     * @param string $action
+     *
+     * @return bool Indicates if filters have been overridden
+     */
+    private function overrideWithSavedFilters(Filters $filters, $controller, $action)
+    {
+        /** @var Filters $savedFilters */
+        $savedFilters = $this->searchParameters->getFiltersFromRepository(
+            $this->employee->getId(),
+            $this->shopId,
+            $controller,
+            $action,
+            get_class($filters)
+        );
+
+        if ($savedFilters) {
+            $filters->add($savedFilters->all());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Request $request
+     * @param Filters $filters
+     *
+     * @return bool Indicates if filters have been overridden
+     */
+    private function overrideWithRequest(Request $request, Filters $filters)
+    {
+        /** @var Filters $queryFilters */
+        $queryFilters = $this->searchParameters->getFiltersFromRequest($request, get_class($filters));
+        if ($queryFilters->count()) {
+            $filters->add($queryFilters->all());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Filters $filters
+     * @param string $controller
+     * @param string $action
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function persistFilters(Filters $filters, $controller, $action)
+    {
+        //Update the saved filters (which have been modified by the query)
+        $filtersToSave = $filters->all();
+        unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
+
+        $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
+            $this->employee->getId(),
+            $this->shopId,
+            $filtersToSave,
+            $controller,
+            $action
+        );
+    }
+
+    /**
+     * @param string $filtersClass
+     *
+     * @return mixed
+     */
+    private function buildDefaultFilters($filtersClass)
+    {
+        $filters = new $filtersClass($filtersClass::getDefaults());
+
+        return $filters;
+    }
+
+    /**
      * @param TokenStorageInterface $tokenStorage
      *
-     * @return Employee|void
+     * @return Employee|null
      */
     private function getEmployee(TokenStorageInterface $tokenStorage)
     {
         if (null === $token = $tokenStorage->getToken()) {
-            return;
+            return null;
         }
 
-        if (!is_object($employee = $token->getUser())) {
-            return;
-        }
+        $employee = $token->getUser();
 
-        return $employee;
+        return $employee instanceof Employee ? $employee : null;
     }
 }

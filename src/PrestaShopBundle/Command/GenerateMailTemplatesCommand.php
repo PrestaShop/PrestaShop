@@ -78,7 +78,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
         $language = $this->getLanguage($locale);
 
         /** @var ThemeCatalogInterface $themeCatalog */
-        $themeCatalog = $this->getContainer()->get(ThemeCatalogInterface::class);
+        $themeCatalog = $this->getContainer()->get('prestashop.core.mail_template.theme_catalog');
         $theme = $themeCatalog->getByName($themeName);
 
         $output->writeln(sprintf('Exporting mail with theme %s for language %s', $theme->getName(), $language->getName()));

@@ -27,15 +27,17 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditRootCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 
 /**
  * Class EditRootCategoryHandler.
  */
-final class EditRootCategoryHandler extends AbstractCategoryHandler implements EditRootCategoryHandlerInterface
+final class EditRootCategoryHandler extends AbstractObjectModelHandler implements EditRootCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -54,12 +56,61 @@ final class EditRootCategoryHandler extends AbstractCategoryHandler implements E
             );
         }
 
-        $this->populateCategoryWithCommandData($category, $command);
+        $this->updateRootCategoryFromCommandData($category, $command);
+    }
+
+    /**
+     * @param Category $category
+     * @param EditRootCategoryCommand $command
+     */
+    private function updateRootCategoryFromCommandData(Category $category, EditRootCategoryCommand $command)
+    {
+        if (null !== $command->isActive()) {
+            $category->active = $command->isActive();
+        }
+
+        if (null !== $command->getLocalizedNames()) {
+            $category->name = $command->getLocalizedNames();
+        }
+
+        if (null !== $command->getLocalizedLinkRewrites()) {
+            $category->link_rewrite = $command->getLocalizedLinkRewrites();
+        }
+
+        if (null !== $command->getLocalizedDescriptions()) {
+            $category->description = $command->getLocalizedDescriptions();
+        }
+
+        if (null !== $command->getLocalizedMetaTitles()) {
+            $category->meta_title = $command->getLocalizedMetaTitles();
+        }
+
+        if (null !== $command->getLocalizedMetaDescriptions()) {
+            $category->meta_description = $command->getLocalizedMetaDescriptions();
+        }
+
+        if (null !== $command->getLocalizedMetaKeywords()) {
+            $category->meta_keywords = $command->getLocalizedMetaKeywords();
+        }
+
+        if (null !== $command->getAssociatedGroupIds()) {
+            $category->groupBox = $command->getAssociatedGroupIds();
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
+        }
+
+        if (false === $category->validateFields(false)) {
+            throw new CategoryException('Invalid data for updating category root');
+        }
+
+        if (false === $category->validateFieldsLang(false)) {
+            throw new CategoryException('Invalid data for updating category root');
+        }
 
         if (false === $category->update()) {
             throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
         }
-
-        $this->uploadImages($category, $command);
     }
 }

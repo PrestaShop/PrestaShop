@@ -23,7 +23,7 @@ admin_metas_create:
     _legacy_link: AdminMeta:addmeta
 
 admin_metas_edit:
-  path: /edit/{metaId}
+  path: /{metaId}/edit
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:edit'
@@ -33,7 +33,7 @@ admin_metas_edit:
       id_meta: metaId
 
 admin_metas_delete:
-  path: /delete/{metaId}
+  path: /{metaId}/delete
   methods: DELETE
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:delete'
