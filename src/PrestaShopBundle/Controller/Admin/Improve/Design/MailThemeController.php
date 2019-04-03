@@ -74,7 +74,7 @@ class MailThemeController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Mail Theme', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Email Theme', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailThemeConfigurationForm' => $this->getMailThemeFormHandler()->getForm()->createView(),
@@ -129,7 +129,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     $this->addFlash(
                         'success',
                         $this->trans(
-                            'Successfully overrode mail templates for theme %s with locale %s',
+                            'Successfully overrode email templates for theme %s with locale %s',
                             'Admin.Notifications.Success',
                             [
                                 $data['mailTheme'],
@@ -141,7 +141,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     $this->addFlash(
                         'success',
                         $this->trans(
-                            'Successfully generated mail templates for theme %s with locale %s',
+                            'Successfully generated email templates for theme %s with locale %s',
                             'Admin.Notifications.Success',
                             [
                                 $data['mailTheme'],
@@ -154,7 +154,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 $this->flashErrors([
                     $this->trans(
                         sprintf(
-                            'Could not generate mail templates for theme %s with locale %s',
+                            'Cannot generate email templates for theme %s with locale %s',
                             $data['mailTheme'],
                             $data['language']
                         ),
@@ -198,7 +198,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 $this->addFlash(
                     'success',
                     $this->trans(
-                        'Mail theme configuration saved successfully',
+                        'Email theme configuration saved successfully',
                         'Admin.Notifications.Success'
                     )
                 );
@@ -326,7 +326,7 @@ class MailThemeController extends FrameworkBundleAdminController
 
         if (null === $layout) {
             throw new FileNotFoundException(sprintf(
-                'Could not find layout %s%s in theme %s',
+                'Cannot find layout %s%s in theme %s',
                 empty($module) ? '' : $module . ':',
                 $layoutName,
                 $themeName
@@ -341,7 +341,7 @@ class MailThemeController extends FrameworkBundleAdminController
         /** @var LanguageInterface $language */
         $language = $languageRepository->getOneByLocaleOrIsoCode($locale);
         if (null === $language) {
-            throw new InvalidArgumentException(sprintf('Could not find Language with locale or isoCode %s', $locale));
+            throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
         }
 
         /** @var MailTemplateRendererInterface $renderer */

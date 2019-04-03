@@ -1125,7 +1125,7 @@ class LanguageCore extends ObjectModel
         $sfContainer = SymfonyContainer::getInstance();
         if (null === $sfContainer) {
             $errors[] = Context::getContext()->getTranslator()->trans(
-                'Cannot generate emails because Symfony container is unavailable.',
+                'Cannot generate emails because the Symfony container is unavailable.',
                 array(),
                 'Admin.Notifications.Error'
             );
@@ -1150,7 +1150,7 @@ class LanguageCore extends ObjectModel
             $commandBus->handle($generateCommand);
         } catch (CoreException $e) {
             $errors[] = Context::getContext()->getTranslator()->trans(
-                'Cannot generate mail templates: %s.',
+                'Cannot generate email templates: %s.',
                 array($e->getMessage()),
                 'Admin.Notifications.Error'
             );
