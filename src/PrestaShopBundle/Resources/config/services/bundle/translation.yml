@@ -79,6 +79,7 @@ services:
             - "@prestashop.translation.legacy_file_loader"
             - "@prestashop.translation.legacy_module.extractor"
             - "@prestashop.translation.module_provider"
+            - "@prestashop.core.translation.util.module_domain_converter"
         tags:
             - { name: "ps.translation_provider" }
 

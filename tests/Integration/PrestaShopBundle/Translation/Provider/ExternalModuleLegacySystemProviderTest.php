@@ -50,19 +50,26 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $phpExtractor = $container->get('prestashop.translation.extractor.php');
         $moduleProvider = $container->get('prestashop.translation.module_provider');
         $smartyExtractor = $container->get('prestashop.translation.extractor.smarty');
-        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleDirectory());
+        $moduleDomainConverter = $container->get('prestashop.core.translation.util.module_domain_converter');
+        $extractor = new LegacyModuleExtractor(
+            $phpExtractor,
+            $smartyExtractor,
+            $moduleDomainConverter,
+            $this->getModuleDirectory()
+        );
 
         $this->provider = new ExternalModuleLegacySystemProvider(
             $databaseLoader,
             $this->getModuleDirectory(),
             $legacyFileLoader,
             $extractor,
-            $moduleProvider
+            $moduleProvider,
+            $moduleDomainConverter
         );
 
         $this->provider
             ->setModuleName('some_module')
-            ->setDomain('ModulesSomeModule')
+            ->setDomain('Modules.SomeModule')
         ;
     }
 
@@ -73,7 +80,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 
     public function testGetTranslationDomains()
     {
-        $this->assertSame(['^ModulesSomeModule*'], $this->provider->getTranslationDomains());
+        $this->assertSame(['^Modules.SomeModule*'], $this->provider->getTranslationDomains());
     }
 
     public function testGetFilters()
@@ -98,7 +105,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $legacyCatalogue = $this->provider->getXliffCatalogue();
         $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 
-        $this->assertCount(5, $legacyCatalogue->all('ModulesSomeModule'));
+        $this->assertCount(5, $legacyCatalogue->all('Modules.SomeModule'));
     }
 
     /**

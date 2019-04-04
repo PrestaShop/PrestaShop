@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Translation\Util\ModuleDomainConverter;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Exception\UnsupportedModuleException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\MessageCatalogue;
 use Exception;
 
@@ -55,6 +55,11 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     private $legacyModuleExtractor;
 
     /**
+     * @var ModuleDomainConverter the module domain converter
+     */
+    private $moduleDomainConverter;
+
+    /**
      * @var string the module name
      */
     private $moduleName;
@@ -64,11 +69,13 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         $resourceDirectory,
         LoaderInterface $legacyFileLoader,
         LegacyModuleExtractorInterface $legacyModuleExtractor,
-        SearchProviderInterface $moduleProvider
+        SearchProviderInterface $moduleProvider,
+        ModuleDomainConverter $moduleDomainConverter
     ) {
         $this->moduleProvider = $moduleProvider;
         $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
+        $this->moduleDomainConverter = $moduleDomainConverter;
 
         parent::__construct($databaseLoader, $resourceDirectory);
     }
@@ -229,6 +236,6 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     private function getModuleDomain()
     {
-        return 'Modules' . Container::camelize($this->moduleName);
+        return $this->moduleDomainConverter->getDomainFromModule($this->moduleName);
     }
 }
