@@ -138,8 +138,9 @@ class TreeBuilder
         $translationsTree = [];
 
         foreach ($catalogue as $domain => $messages) {
-            $tableisedDomain = Inflector::tableize($domain);
-            list($basename) = explode('.', $tableisedDomain);
+            $domain = $this->removeLocaleIfExistsInDomain($domain);
+            $basename = Inflector::tableize($domain);
+
             $parts = array_reverse(explode('_', $basename));
             $subtree = &$translationsTree;
 
@@ -314,5 +315,24 @@ class TreeBuilder
         }
 
         return $tree;
+    }
+
+    /**
+     * Translation domains from the Core contains the locale as suffix, but this is not the case for the modules.
+     * If the locale exists, this needs to be removed.
+     *
+     * @param string $domain
+     *
+     * @return string the well formatted domain
+     */
+    private function removeLocaleIfExistsInDomain($domain)
+    {
+        $localeRegexp = "#\w{2}-\w{2}#";
+
+        if (preg_match($localeRegexp, $domain, $matches) === 1) {
+            list($domain) = explode('.', $domain);
+        }
+
+        return $domain;
     }
 }
