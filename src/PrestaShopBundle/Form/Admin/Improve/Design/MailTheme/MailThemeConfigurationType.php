@@ -24,40 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Language;
+namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Interface LanguageRepositoryInterface allows to fetch a LanguageInterface
- * via different methods.
+ * Class MailThemeConfigurationType is used to create the form allowing to define mail
+ * theme settings (for now just the defaultTheme).
  */
-interface LanguageRepositoryInterface
+class MailThemeConfigurationType extends AbstractType
 {
-    /**
-     * Returns a LanguageInterface whose locale matches the provided one.
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface
-     */
-    public function getOneByLocale($locale);
+    /** @var array */
+    private $mailThemes;
 
     /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
-     *
-     * @param string $isoCode
-     *
-     * @return LanguageInterface
+     * @param array $mailThemes
      */
-    public function getOneByIsoCode($isoCode);
+    public function __construct(array $mailThemes)
+    {
+        $this->mailThemes = $mailThemes;
+    }
 
     /**
-     * Returns a LanguageInterface whose locale matches the provided one,
-     * if no one is found try matching by isoCode (splitting the locale if
-     * necessary).
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface
+     * {@inheritdoc}
      */
-    public function getOneByLocaleOrIsoCode($locale);
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('defaultTheme', ChoiceType::class, [
+                'choices' => $this->mailThemes,
+            ])
+        ;
+    }
 }

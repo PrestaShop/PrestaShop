@@ -24,40 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Language;
+namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
+
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Interface LanguageRepositoryInterface allows to fetch a LanguageInterface
- * via different methods.
+ * This class is responsible of managing the data manipulated using forms
+ * in "Design > Mail Theme" page.
  */
-interface LanguageRepositoryInterface
+class MailThemeFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * Returns a LanguageInterface whose locale matches the provided one.
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface
-     */
-    public function getOneByLocale($locale);
+    /** @var DataConfigurationInterface */
+    private $mailThemeConfiguration;
+
+    public function __construct(DataConfigurationInterface $mailThemeConfiguration)
+    {
+        $this->mailThemeConfiguration = $mailThemeConfiguration;
+    }
 
     /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
-     *
-     * @param string $isoCode
-     *
-     * @return LanguageInterface
+     * {@inheritdoc}
      */
-    public function getOneByIsoCode($isoCode);
+    public function getData()
+    {
+        return [
+            'configuration' => $this->mailThemeConfiguration->getConfiguration(),
+        ];
+    }
 
     /**
-     * Returns a LanguageInterface whose locale matches the provided one,
-     * if no one is found try matching by isoCode (splitting the locale if
-     * necessary).
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface
+     * {@inheritdoc}
      */
-    public function getOneByLocaleOrIsoCode($locale);
+    public function setData(array $data)
+    {
+        return $this->mailThemeConfiguration->updateConfiguration($data['configuration']);
+    }
 }

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\MailTemplate;
+namespace Tests\Integration\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
@@ -183,13 +183,49 @@ class MailTemplateGeneratorTest extends TestCase
 
         $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
-            'core/account.html' => 'account_html__fr',
-            'core/account.txt' => 'account_txt__fr',
-            'modules/followup/mails/followup_1.html' => 'followup_1_html_followup_fr',
-            'modules/followup/mails/followup_1.txt' => 'followup_1_txt_followup_fr',
-            'modules/ps_reminder/mails/productoutofstock.html' => 'productoutofstock_html_ps_reminder_fr',
-            'modules/ps_reminder/mails/productoutofstock.txt' => 'productoutofstock_txt_ps_reminder_fr',
+            'core/fr/account.html' => 'account_html__fr',
+            'core/fr/account.txt' => 'account_txt__fr',
+            'modules/followup/mails/fr/followup_1.html' => 'followup_1_html_followup_fr',
+            'modules/followup/mails/fr/followup_1.txt' => 'followup_1_txt_followup_fr',
+            'modules/ps_reminder/mails/fr/productoutofstock.html' => 'productoutofstock_html_ps_reminder_fr',
+            'modules/ps_reminder/mails/fr/productoutofstock.txt' => 'productoutofstock_txt_ps_reminder_fr',
         ];
+        $this->checkExpectedFiles($expectedFiles);
+    }
+
+    public function testOverwriteTemplates()
+    {
+        $expectedFiles = [
+            'core/fr/account.html' => 'account_html__fr',
+            'core/fr/account.txt' => 'account_txt__fr',
+            'modules/followup/mails/fr/followup_1.txt' => 'followup_1_txt_followup_fr',
+            'modules/followup/mails/fr/followup_1.html' => 'followup_1_html_followup_fr',
+            'modules/ps_reminder/mails/fr/productoutofstock.html' => 'productoutofstock_html_ps_reminder_fr',
+            'modules/ps_reminder/mails/fr/productoutofstock.txt' => 'productoutofstock_txt_ps_reminder_fr',
+        ];
+
+        $previousFiles = [];
+        $fileIndex = 0;
+        foreach ($expectedFiles as $expectedFile => $fileContent) {
+            if ($fileIndex % 2 == 0) {
+                $previousFiles[$expectedFile] = $expectedFile;
+                $filePath = implode(DIRECTORY_SEPARATOR, [$this->outputTempDir, $expectedFile]);
+                $this->fs->dumpFile($filePath, $expectedFile);
+            }
+            ++$fileIndex;
+        }
+        $this->checkExpectedFiles($previousFiles);
+        $generator = new MailTemplateGenerator($this->createRendererMock(1, 2));
+        $this->assertNotNull($generator);
+
+        $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
+        $this->checkExpectedFiles(array_merge($expectedFiles, $previousFiles));
+
+        //Now check overwriting
+        $generator = new MailTemplateGenerator($this->createRendererMock(3, 3));
+        $this->assertNotNull($generator);
+
+        $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir, true);
         $this->checkExpectedFiles($expectedFiles);
     }
 
@@ -209,25 +245,34 @@ class MailTemplateGeneratorTest extends TestCase
     }
 
     /**
+     * @param int|null $expectedHtmlRendered
+     * @param int|null $expectedTxtRendered
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateRendererInterface
      */
-    private function createRendererMock()
+    private function createRendererMock($expectedHtmlRendered = null, $expectedTxtRendered = null)
     {
         $renderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
+        if (null === $expectedHtmlRendered) {
+            $expectedHtmlRendered = $this->theme->getLayouts()->count();
+        }
         $renderer
-            ->expects($this->exactly($this->theme->getLayouts()->count()))
+            ->expects($this->exactly($expectedHtmlRendered))
             ->method('renderHtml')
             ->will($this->returnCallback(function (LayoutInterface $layout, LanguageInterface $language) {
                 return implode('_', [$layout->getName(), 'html', $layout->getModuleName(), $language->getIsoCode()]);
             }))
         ;
 
+        if (null === $expectedTxtRendered) {
+            $expectedTxtRendered = $this->theme->getLayouts()->count();
+        }
         $renderer
-            ->expects($this->exactly($this->theme->getLayouts()->count()))
+            ->expects($this->exactly($expectedTxtRendered))
             ->method('renderTxt')
             ->will($this->returnCallback(function (LayoutInterface $layout, LanguageInterface $language) {
                 return implode('_', [$layout->getName(), 'txt', $layout->getModuleName(), $language->getIsoCode()]);

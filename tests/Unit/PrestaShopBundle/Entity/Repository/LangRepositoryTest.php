@@ -55,21 +55,21 @@ class LangRepositoryTest extends TestCase
         $this->assertInstanceOf(LangRepository::class, $partialMock);
         $this->assertInstanceOf(LanguageRepositoryInterface::class, $partialMock);
 
-        $language = $partialMock->getByLocale('en-US');
+        $language = $partialMock->getOneByLocale('en-US');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en-US', $language->getLocale());
         $this->assertEquals($languageMock, $language);
 
         //Second call does not call findOneBy (cached result)
-        $language = $partialMock->getByLocale('en-US');
+        $language = $partialMock->getOneByLocale('en-US');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en-US', $language->getLocale());
         $this->assertEquals($languageMock, $language);
 
         //Third call by iso code still does not call findOneBy (cached result)
-        $language = $partialMock->getByIsoCode('en');
+        $language = $partialMock->getOneByIsoCode('en');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en', $language->getIsoCode());
@@ -88,21 +88,21 @@ class LangRepositoryTest extends TestCase
         $this->assertInstanceOf(LangRepository::class, $partialMock);
         $this->assertInstanceOf(LanguageRepositoryInterface::class, $partialMock);
 
-        $language = $partialMock->getByIsoCode('en');
+        $language = $partialMock->getOneByIsoCode('en');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en', $language->getIsoCode());
         $this->assertEquals($languageMock, $language);
 
         //Second call does not call findOneBy (cached result)
-        $language = $partialMock->getByLocale('en-US');
+        $language = $partialMock->getOneByLocale('en-US');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en', $language->getIsoCode());
         $this->assertEquals($languageMock, $language);
 
         //Third call by iso code still does not call findOneBy (cached result)
-        $language = $partialMock->getByIsoCode('en');
+        $language = $partialMock->getOneByIsoCode('en');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en', $language->getIsoCode());
@@ -137,9 +137,9 @@ class LangRepositoryTest extends TestCase
 
         for ($i = 0; $i < $consecutiveCalls; ++$i) {
             if ($i % 2 == 0) {
-                $locale = $partialMock->getByIsoCode('en');
+                $locale = $partialMock->getOneByIsoCode('en');
             } else {
-                $locale = $partialMock->getByLocale('en');
+                $locale = $partialMock->getOneByLocale('en');
             }
 
             $this->assertNull($locale);

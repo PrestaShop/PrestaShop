@@ -24,17 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function ps_1760_copy_data_from_currency_to_currency_lang()
+/**
+ * Init new configuration values
+ */
+function ps_1760_update_configuration()
 {
-    $languages = Language::getLanguages();
-    foreach ($languages as $language) {
-        Db::getInstance()->execute(
-            "INSERT INTO `" . _DB_PREFIX_ . "currency_lang` (`id_currency`, `id_lang`, `name`)
-            SELECT `id_currency`, " . (int) $language['id_lang'] . " as id_lang , `name`
-            FROM `" . _DB_PREFIX_ . "currency`
-            ON DUPLICATE KEY UPDATE
-            `name` = `" . _DB_PREFIX_ . "currency`.`name`,
-            "
-        );
-    }
+    Configuration::updateValue('PS_MAIL_THEME', 'modern');
+    Configuration::updateValue('PS_CATALOG_MODE_WITH_PRICES', 0);
 }

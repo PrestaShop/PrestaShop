@@ -55,14 +55,14 @@ class LangRepositoryTest extends KernelTestCase
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
         $availableLocales = ['en-US'];
         foreach ($availableLocales as $availableLocale) {
-            $language = $languageRepository->getByLocale($availableLocale);
+            $language = $languageRepository->getOneByLocale($availableLocale);
             $this->assertNotNull($language);
             $this->assertInstanceOf(LanguageInterface::class, $language);
         }
 
         $notAvailableLocales = ['en-UK', 'en', 'fr'];
         foreach ($notAvailableLocales as $notAvailableLocale) {
-            $language = $languageRepository->getByLocale($notAvailableLocale);
+            $language = $languageRepository->getOneByLocale($notAvailableLocale);
             $this->assertNull($language);
         }
     }
@@ -73,14 +73,14 @@ class LangRepositoryTest extends KernelTestCase
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
         $availableLocales = ['en'];
         foreach ($availableLocales as $availableLocale) {
-            $language = $languageRepository->getByIsoCode($availableLocale);
+            $language = $languageRepository->getOneByIsoCode($availableLocale);
             $this->assertNotNull($language);
             $this->assertInstanceOf(LanguageInterface::class, $language);
         }
 
         $notAvailableLocales = ['en-UK', 'fr'];
         foreach ($notAvailableLocales as $notAvailableLocale) {
-            $language = $languageRepository->getByIsoCode($notAvailableLocale);
+            $language = $languageRepository->getOneByIsoCode($notAvailableLocale);
             $this->assertNull($language);
         }
     }

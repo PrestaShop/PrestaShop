@@ -36,3 +36,16 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.legacy.context'
+
+  prestashop.core.mail_template.command_handler.generate_theme_mails_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler\GenerateThemeMailTemplatesCommandHandler'
+    arguments:
+      - '@prestashop.core.admin.lang.repository'
+      - '@prestashop.core.mail_template.theme_catalog'
+      - '@prestashop.core.mail_template.generator'
+      - '%kernel.project_dir%/mails'
+      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+    public: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand

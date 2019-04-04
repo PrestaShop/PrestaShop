@@ -177,3 +177,8 @@ services:
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.adapter.theme.theme_multi_store_settings_form_data_provider'
+
+    prestashop.admin.mail_theme.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeFormDataProvider'
+        arguments:
+            - '@prestashop.core.mail_theme.configuration'

@@ -28,6 +28,10 @@ use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 
 class LanguageCore extends ObjectModel
 {
@@ -727,6 +731,13 @@ class LanguageCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
+    /**
+     * @param string $iso
+     *
+     * @return array|bool
+     *
+     * @throws Exception
+     */
     public static function getLangDetails($iso)
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
@@ -1048,7 +1059,7 @@ class LanguageCore extends ObjectModel
         } else {
             $lang_pack = self::getLangDetails($iso);
             self::installSfLanguagePack($lang_pack['locale'], $errors);
-            self::installEmailsLanguagePack($lang_pack, $errors);
+            self::generateEmailsLanguagePack($lang_pack, $errors);
         }
 
         return count($errors) ? $errors : true;
@@ -1064,7 +1075,6 @@ class LanguageCore extends ObjectModel
         }
 
         self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
-        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'emails');
 
         return !count($errors);
     }
@@ -1109,6 +1119,50 @@ class LanguageCore extends ObjectModel
         }
     }
 
+    /**
+     * @param array $langPack
+     * @param array $errors
+     */
+    private static function generateEmailsLanguagePack($langPack, &$errors = array())
+    {
+        $locale = $langPack['locale'];
+        $sfContainer = SymfonyContainer::getInstance();
+        if (null === $sfContainer) {
+            $errors[] = Context::getContext()->getTranslator()->trans(
+                'Cannot generate emails because the Symfony container is unavailable.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+
+            return;
+        }
+
+        $mailTheme = Configuration::get('PS_MAIL_THEME');
+        /** @var GenerateThemeMailTemplatesCommand $generateCommand */
+        $generateCommand = new GenerateThemeMailTemplatesCommand(
+            $mailTheme,
+            $locale,
+            false
+        );
+        /** @var CommandBusInterface $commandBus */
+        $commandBus = $sfContainer->get('prestashop.core.command_bus');
+        try {
+            $commandBus->handle($generateCommand);
+        } catch (CoreException $e) {
+            $errors[] = Context::getContext()->getTranslator()->trans(
+                'Cannot generate email templates: %s.',
+                array($e->getMessage()),
+                'Admin.Notifications.Error'
+            );
+        }
+    }
+
+    /**
+     * @param array $lang_pack
+     * @param array $errors
+     *
+     * @deprecated This method is deprecated since 1.7.6.0 use GenerateThemeMailsCommand instead
+     */
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
         $folder = _PS_TRANSLATIONS_DIR_ . 'emails-' . $lang_pack['locale'];
@@ -1171,7 +1225,7 @@ class LanguageCore extends ObjectModel
 
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
-        self::installEmailsLanguagePack($lang_pack, $errors);
+        self::generateEmailsLanguagePack($lang_pack, $errors);
 
         return count($errors) ? $errors : true;
     }

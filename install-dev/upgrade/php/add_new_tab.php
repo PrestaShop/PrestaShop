@@ -123,14 +123,23 @@ function add_new_tab_17($className, $name, $id_parent, $returnId = false, $paren
             FROM `'._DB_PREFIX_.'tab`
             WHERE `id_tab` = "'.(int) $id_parent.'"
         ');
+    } elseif (!empty($parentTab)) {
+        $parentClassName = $parentTab;
     }
 
     foreach (array(PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE) as $role) {
         // 1- Add role
         $roleToAdd = strtoupper('ROLE_MOD_TAB_'.$className.'_'.$role);
         Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role` (`slug`)
-            VALUES ("'.$roleToAdd.'")');
+            VALUES ("'.pSQL($roleToAdd).'")');
         $newID = Db::getInstance()->Insert_ID();
+        if (!$newID) {
+            $newID = Db::getInstance()->getValue('
+                SELECT `id_authorization_role`
+                FROM `'._DB_PREFIX_.'authorization_role`
+                WHERE `slug` = "'.pSQL($roleToAdd).'"
+            ');
+        }
 
         // 2- Copy access from the parent
         if (!empty($parentClassName) && !empty($newID)) {
