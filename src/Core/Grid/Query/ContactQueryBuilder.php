@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 /**
  * Class ContactsQueryBuilder is responsible for building queries for Contacts grid data.
  */
-final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
+final class ContactQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
