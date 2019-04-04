@@ -429,7 +429,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function updateCmsCategoryPositionAction(Request $request)
     {
         $cmsCategoryParentId = $request->query->getInt('id_cms_category') ?:
-            CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID
+            CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID
         ;
 
         $positionsData = [
@@ -448,6 +448,60 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
 
             return $this->redirectToIndexPageById($cmsCategoryParentId);
+        }
+
+        $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
+
+        try {
+            $updater->update($positionUpdate);
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (PositionUpdateException $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToIndexPageById($cmsCategoryParentId);
+    }
+
+    /**
+     * Updates cms page listing position.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *      redirectRoute="admin_cms_pages_index",
+     *      redirectQueryParamsToKeep={"id_cms_category"},
+     *      message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"id_cms_category"}
+     * )
+     *
+     * @return RedirectResponse
+     *
+     * @throws CmsPageCategoryException
+     */
+    public function updateCmsPositionAction(Request $request)
+    {
+        $cmsCategoryParentId = $request->query->getInt('id_cms_category') ?:
+            CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID
+        ;
+
+        $positionsData = [
+            'positions' => $request->request->get('positions'),
+            'parentId' => $cmsCategoryParentId,
+        ];
+
+        $positionDefinition = $this->get('prestashop.core.grid.cms_page.position_definition');
+        $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
+
+        try {
+            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+        } catch (PositionDataException $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+
+            return $this->redirectToParentIndexPage($cmsCategoryParentId);
         }
 
         $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');

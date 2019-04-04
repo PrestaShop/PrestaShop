@@ -168,3 +168,11 @@ admin_cms_pages_category_update_position:
     _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:updateCmsCategoryPosition'
     _legacy_controller: AdminCmsContent
     _legacy_link: AdminCmsContent:updatecms_category
+
+admin_cms_pages_update_position:
+  path: /update-position
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:updateCmsPosition'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:updatecms
