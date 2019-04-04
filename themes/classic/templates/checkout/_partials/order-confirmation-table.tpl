@@ -110,17 +110,17 @@
         {/foreach}
         {if !$configuration.display_prices_tax_incl}
         <tr>
-          <td><span class="text-uppercase">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span></td>
-          <td>{$cart.totals.total.value}</td>
+          <td><span class="text-uppercase">{$totals.total.label}&nbsp;{$cart.labels.tax_short}</span></td>
+          <td>{$totals.total.value}</td>
         </tr>
         <tr class="total-value font-weight-bold">
-          <td><span class="text-uppercase">{$cart.totals.total_including_tax.label}</span></td>
-          <td>{$cart.totals.total_including_tax.value}</td>
+          <td><span class="text-uppercase">{$totals.total_including_tax.label}</span></td>
+          <td>{$totals.total_including_tax.value}</td>
         </tr>
         {else}
         <tr class="total-value font-weight-bold">
-          <td><span class="text-uppercase">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span></td>
-          <td>{$cart.totals.total.value}</td>
+          <td><span class="text-uppercase">{$totals.total.label}&nbsp;{$cart.labels.tax_short}</span></td>
+          <td>{$totals.total.value}</td>
         </tr>
         {/if}
         {if $subtotals.tax.label !== null}
