@@ -205,6 +205,8 @@ class Repository
     /**
      * Return a currency.
      *
+     * revise byzhou  EMail : ollzhou@163.com
+     *
      * @param string $code currency iso code
      *
      * @return array currency
@@ -213,7 +215,9 @@ class Repository
     {
         if (!$code) {
             $territory = $this->repository->territories[$this->region];
-            $code = (string) $territory->currency;
+            return array(
+              'code' => $code,
+            );
         } elseif (!$this->isCurrencyValid($code)) {
             return array(
                 'name' => $code,
