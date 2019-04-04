@@ -69,7 +69,7 @@ services:
             - '@prestashop.core.grid.query_builder.contact'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
-            - 'contacts'
+            - 'contact'
 
     prestashop.core.grid.data_provider.customer:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
