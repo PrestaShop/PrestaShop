@@ -38,5 +38,9 @@ services:
     prestashop.bundle.routing.linter.security_annotation_linter:
         class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
         arguments:
-          - '@router'
           - '@annotation_reader'
+
+    prestashop.bundle.routing.linter.admin_route_provider:
+        class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'
+        arguments:
+            - '@router'
