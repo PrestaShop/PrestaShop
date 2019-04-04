@@ -78,7 +78,7 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
                 $cms->indexation,
                 $cms->active,
                 $cms->getAssociatedShops(),
-                $preview_url = $this->context->link->getCMSLink($cms, null, null, $this->context->language->id)
+                $this->context->link->getCMSLink($cms, null, null, $this->context->language->id)
         );
         } catch (PrestaShopException $e) {
             throw new CmsPageException(
