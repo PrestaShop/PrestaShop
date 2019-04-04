@@ -66,7 +66,7 @@ services:
     prestashop.core.grid.data_provider.contacts:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
-            - '@prestashop.core.grid.query_builder.contacts'
+            - '@prestashop.core.grid.query_builder.contact'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'contacts'
