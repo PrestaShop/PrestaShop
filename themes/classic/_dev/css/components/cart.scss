@@ -9,11 +9,18 @@
 }
 .card-block {
   padding: 1.25rem 1.25rem .5rem;
+  &.checkout {
+    padding-bottom: 1.25rem;
+    padding-top: 0;
+  }
   &.cart-summary-totals {
     padding: 0 1rem 1rem;
     .cart-summary-line {
-      padding: .5rem .2rem;
-
+      padding: .5rem .2rem 0;
+      
+      &:last-child {
+        margin-bottom: 0
+      } 
       &.cart-total {
         background-color: $gray-light;
         padding: .5rem;
