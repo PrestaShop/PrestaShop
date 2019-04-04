@@ -39,7 +39,7 @@ class CheckLegacyLinksCommand extends Command
     private $legacyLinksChecker;
 
     /**
-     * @param LegacyLinksChecker $legacyLinksLinter
+     * @param LegacyLinksChecker $legacyLinksChecker
      * @param string $name
      */
     public function __construct(LegacyLinksChecker $legacyLinksChecker, $name = null)
