@@ -3,7 +3,7 @@
 set -x
 
 BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
-CURRENT_DATE="$(date +%Y-%m-%d)"
+CURRENT_DATE=$([ -z "$1" ] && date +%Y-%m-%d || echo $1)
 DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
 REPORT_PATH="${DIR_PATH}/campaigns"
