@@ -44,7 +44,7 @@
                   data-toggle="pstooltip"
                   data-placement="bottom"{/if}
                 >
-                  <i class="material-icons">{$btn.icon}</i>
+                  {if !empty($btn.icon)}<i class="material-icons">{$btn.icon}</i>{/if}
                   {$btn.desc|escape}
                 </a>
               {/if}
