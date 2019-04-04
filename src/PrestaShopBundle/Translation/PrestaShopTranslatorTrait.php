@@ -49,10 +49,6 @@ trait PrestaShopTranslatorTrait
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
-        if ('Modules' === substr($domain, 0, 7)) {
-            return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
-        }
-
         $normalizedDomain = (null !== $domain) ?
             str_replace('.', '', $domain)
             : null;
@@ -65,7 +61,7 @@ trait PrestaShopTranslatorTrait
         $translated = parent::trans($id, array(), $normalizedDomain, $locale);
 
         // @todo to remove after the legacy translation system has ben phased out
-        if ($this->shouldFallbackToLegacyModuleTranslation($id, $normalizedDomain, $translated)) {
+        if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $translated)) {
             return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
         }
 
@@ -175,7 +171,12 @@ trait PrestaShopTranslatorTrait
     }
 
     /**
-     * Indicates if we should try and translate the provided wording using the legacy system
+     * Indicates if we should try and translate the provided wording using the legacy system.
+     * Watch out, this rule conflicts with the current format of migrated modules translations:
+     * * legacy ones: Modules.<Modulename>
+     * * migrated ones: Modules.<ModuleName>.<Domain>
+     *
+     * We try to avoid infinite loop here.
      *
      * @param string $message Message to translate
      * @param string $domain Translation domain
@@ -187,7 +188,8 @@ trait PrestaShopTranslatorTrait
     {
         return
             $message === $translated
-            && 'Modules' === substr($domain, 0, 7)
+            && 'Modules.' === substr($domain, 0, 8)
+            && substr_count($domain, '.') === 1
             && (
                 !method_exists($this, 'getCatalogue')
                 || !$this->getCatalogue()->has($message, $domain)
