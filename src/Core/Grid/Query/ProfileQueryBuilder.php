@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 /**
  * Class ProfilesQueryBuilder is responsible for building queries for profiles grid data.
  */
-class ProfilesQueryBuilder extends AbstractDoctrineQueryBuilder
+final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
