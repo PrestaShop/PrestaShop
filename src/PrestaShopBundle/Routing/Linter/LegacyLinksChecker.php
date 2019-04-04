@@ -31,7 +31,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Checks if route contains _legacy_link in defaults
  */
-class LegacyLinksChecker
+final class LegacyLinksChecker
 {
     /**
      * @var RouteCollection
