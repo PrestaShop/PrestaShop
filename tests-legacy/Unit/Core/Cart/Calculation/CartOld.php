@@ -341,4 +341,15 @@ class CartOld extends Cart
 
         return Tools::ps_round((float) $order_total, $compute_precision);
     }
+
+    public function getOrderTotal(
+        $with_taxes = true,
+        $type = Cart::BOTH,
+        $products = null,
+        $id_carrier = null,
+        $use_cache = true
+    ) {
+        return $this->getOrderTotalV1($with_taxes = true, $type , $products, $id_carrier, $use_cache);
+    }
+
 }

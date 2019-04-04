@@ -284,8 +284,15 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         if (empty($this->carriers[$carrierName]->getZone((int) $this->zones[$zoneName]->id))) {
             $this->carriers[$carrierName]->addZone((int) $this->zones[$zoneName]->id);
         }
-        $rangeClass = $rangeType=='weight' ? RangeWeight::class : RangePrice::class;
-        $rangeId = $rangeClass::rangeExist($this->carriers[$carrierName]->id, $from, $to);
+        $rangeClass = $rangeType == 'weight' ? RangeWeight::class : RangePrice::class;
+        $primary = $rangeType == 'weight' ? 'id_range_weight' : 'id_range_price';
+        $rangeRows = $rangeClass::getRanges($this->carriers[$carrierName]->id);
+        $rangeId = false;
+        foreach ($rangeRows as $rangeRow) {
+            if ($rangeRow['delimiter1'] == $from) {
+                $rangeId = $rangeRow[$primary];
+            }
+        }
         if (!empty($rangeId)) {
             $range = new $rangeClass($rangeId);
         } else {
