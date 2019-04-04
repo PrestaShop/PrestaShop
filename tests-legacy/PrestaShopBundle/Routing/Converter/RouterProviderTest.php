@@ -169,6 +169,22 @@ class RouterProviderTest extends TestCase
                     'AdminCategories:create',
                 ],
             ],
+            [
+                'route_name' => 'admin_modules_create',
+                'path' => '/modules/create',
+                '_legacy_link' => [
+                    'AdminModules:add',
+                    'AdminModules:create',
+                ],
+            ],
+            [
+                'route_name' => 'awesome_modules_create',
+                'path' => '/module/awesome/modules/create',
+                '_legacy_link' => [
+                    'AdminModules:add',
+                    'AdminModules:create',
+                ],
+            ],
         ]);
         $routerProvider = new RouterProvider($router);
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'index');
@@ -194,6 +210,12 @@ class RouterProviderTest extends TestCase
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminCategories', 'add');
         $this->assertEquals('admin_categories_create', $legacyRoute->getRouteName());
+
+        $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminModules', 'create');
+        $this->assertEquals('awesome_modules_create', $legacyRoute->getRouteName());
+
+        $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminModules', 'add');
+        $this->assertEquals('awesome_modules_create', $legacyRoute->getRouteName());
     }
 
     public function testControllerNotFound()
