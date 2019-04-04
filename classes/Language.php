@@ -735,6 +735,7 @@ class LanguageCore extends ObjectModel
      * @param string $iso
      *
      * @return array|bool
+     *
      * @throws Exception
      */
     public static function getLangDetails($iso)
