@@ -48,7 +48,7 @@ services:
             - '@prestashop.core.grid.query_builder.category'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
-            - 'categories'
+            - 'category'
 
     prestashop.core.grid.data.factory.category_decorator:
         class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CategoryDataFactory'
