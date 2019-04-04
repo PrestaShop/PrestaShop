@@ -410,9 +410,7 @@ body#checkout {
       &.taxes {
         td {
           text-align: left;
-        }
-        &:last-child {
-          td {
+          .value{
             font-weight: 600;
             padding-top: 0;
           }
