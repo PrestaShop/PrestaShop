@@ -46,7 +46,6 @@ class ProfileType extends AbstractType
         $builder
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],

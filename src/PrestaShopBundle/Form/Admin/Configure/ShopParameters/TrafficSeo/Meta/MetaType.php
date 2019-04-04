@@ -167,7 +167,6 @@ class MetaType extends AbstractType
             if (isset($formData['page_name']) && 'index' !== $formData['page_name']) {
                 $form = $event->getForm();
                 $form->add('url_rewrite', TranslatableType::class, [
-                    'error_bubbling' => false,
                     'constraints' => [
                         new DefaultLanguage(),
                     ],

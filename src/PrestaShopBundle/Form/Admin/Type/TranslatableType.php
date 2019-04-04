@@ -130,6 +130,7 @@ class TranslatableType extends AbstractType
             'type' => TextType::class,
             'options' => [],
             'locales' => $this->locales,
+            'error_bubbling' => false,
         ]);
 
         $resolver->setAllowedTypes('locales', 'array');
