@@ -742,7 +742,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     private function getBulkCategoriesFromRequest(Request $request)
     {
-        $categoryIds = $request->request->get('categories_id_category');
+        $categoryIds = $request->request->get('category_id_category');
 
         if (!is_array($categoryIds)) {
             return [];
