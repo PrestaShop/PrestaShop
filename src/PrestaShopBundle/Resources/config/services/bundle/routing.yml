@@ -34,3 +34,9 @@ services:
             - ["%kernel.project_dir%/src/PrestaShopBundle/Resources/config/routing/admin"]
             - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
             - '%kernel.environment%'
+
+    prestashop.bundle.routing.linter.security_annotation_linter:
+        class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
+        arguments:
+          - '@router'
+          - '@annotation_reader'
