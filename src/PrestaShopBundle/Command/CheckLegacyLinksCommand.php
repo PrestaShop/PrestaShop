@@ -27,26 +27,26 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShopBundle\Routing\Linter\LegacyLinksChecker;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CheckLegacyLinksCommand extends ContainerAwareCommand
+class CheckLegacyLinksCommand extends Command
 {
     /**
      * @var LegacyLinksChecker
      */
-    private $legacyLinksLinter;
+    private $legacyLinksChecker;
 
     /**
      * @param LegacyLinksChecker $legacyLinksLinter
      * @param string $name
      */
-    public function __construct(LegacyLinksChecker $legacyLinksLinter, $name = null)
+    public function __construct(LegacyLinksChecker $legacyLinksChecker, $name = null)
     {
         parent::__construct($name);
 
-        $this->legacyLinksLinter = $legacyLinksLinter;
+        $this->legacyLinksChecker = $legacyLinksChecker;
     }
 
     /**
@@ -69,12 +69,9 @@ class CheckLegacyLinksCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $routes = $this->legacyLinksLinter->check();
+        $routes = $this->legacyLinksChecker->check();
         $count = count($routes);
         $output->writeln("Found $count routes missing legacy links.");
-
-        foreach ($routes as $route) {
-            $output->writeln($route);
-        }
+        $output->writeln($routes);
     }
 }

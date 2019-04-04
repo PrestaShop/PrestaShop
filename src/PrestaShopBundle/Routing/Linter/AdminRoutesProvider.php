@@ -31,7 +31,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Provides all routes that are defined for admin controllers
  */
-class AdminRoutesProvider
+final class AdminRoutesProvider
 {
     const ADMIN_CONTROLLERS_PATH = 'PrestaShopBundle\Controller\Admin';
 
