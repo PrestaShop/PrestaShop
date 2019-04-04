@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\ToggleEmployeeStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\ToggleEmployeeStatusHandlerInterface;
 
 /**
  * Class ToggleEmployeeStatusHandler encapsulates Employee status toggling using legacy Employee object model.

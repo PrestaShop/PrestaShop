@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 
 /**
- * Interface UploadCommandHandlerInterface
+ * Interface for service which handles UploadLogosCommand
  */
 interface UploadLogosHandlerInterface
 {

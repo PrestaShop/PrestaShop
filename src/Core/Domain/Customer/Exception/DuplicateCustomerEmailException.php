@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Exception is thrown when email which already exists is being used to create or update other customer

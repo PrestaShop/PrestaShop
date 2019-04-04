@@ -65,13 +65,9 @@
     width: 150px;
   }
 
-  .form-error-icon {
-    font-size: 20px;
+  .custom-file {
+    input {
+      outline: none;
+    }
   }
-
-  .clickable-avatar {
-    height: 100px;
-    width: 100px;
-  }
-
 }

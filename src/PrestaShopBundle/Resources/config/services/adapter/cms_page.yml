@@ -37,3 +37,21 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand
+
+  prestashop.adapter.cms_page.command_handler.add_cms_page_handler:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\AddCmsPageHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand
+
+  prestashop.adapter.cms_page.command_handler.edit_cms_page_handler:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\EditCmsPageHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand
+
+  prestashop.adapter.cms_page.query_handler.get_cms_page_for_editing_handler:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler\GetCmsPageForEditingHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing

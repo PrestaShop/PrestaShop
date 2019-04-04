@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception;
 
 /**
- * Is thrown when manufacturer is not found
+ * Is thrown when manufacturer is not found in Manufacturer subdomain
  */
 class ManufacturerNotFoundException extends ManufacturerException
 {

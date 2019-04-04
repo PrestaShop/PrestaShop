@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,41 +16,49 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -60,7 +68,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Is responsible for "Sell > Catalog > Brands & Suppliers" page.
+ * Manages "Sell > Catalog > Brands & Suppliers > Brands" page
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
@@ -155,6 +163,37 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'manufacturerForm' => $manufacturerForm->createView(),
+        ]);
+    }
+
+    /**
+     * View single manufacturer details
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $manufacturerId
+     *
+     * @return Response
+     */
+    public function viewAction($manufacturerId)
+    {
+        try {
+            /** @var ViewableManufacturer $viewableManufacturer */
+            $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
+                (int) $manufacturerId,
+                (int) $this->getContextLangId()
+            ));
+        } catch (ManufacturerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_manufacturers_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig', [
+            'layoutTitle' => $viewableManufacturer->getName(),
+            'viewableManufacturer' => $viewableManufacturer,
+            'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
         ]);
     }
 
@@ -340,19 +379,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function exportManufacturerAction()
-    {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
-    }
-
-    public function createManufacturerAddressAction()
-    {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
-    }
-
-    public function editManufacturerAddressAction()
+    public function exportAction()
     {
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
@@ -383,7 +410,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function exportManufacturerAddressAction()
+    public function exportAddressAction()
     {
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
@@ -414,6 +441,111 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_manufacturers_index');
+    }
+
+    /**
+     * Show & process address creation.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAddressAction(Request $request)
+    {
+        $addressFormBuilder = $this->getAddressFormBuilder();
+        $addressFormHandler = $this->getAddressFormHandler();
+
+        $formCountryId = null;
+        if ($request->request->has('manufacturer_address') && isset($request->request->get('manufacturer_address')['id_country'])) {
+            $formCountryId = (int) $request->request->get('manufacturer_address')['id_country'];
+        }
+
+        $formOptions = [];
+        if (null !== $formCountryId) {
+            $formOptions['country_id'] = $formCountryId;
+        }
+
+        $addressForm = $addressFormBuilder->getForm([], $formOptions);
+        $addressForm->handleRequest($request);
+
+        try {
+            $result = $addressFormHandler->handle($addressForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof ManufacturerConstraintException) {
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/create.html.twig', [
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Add new address', 'Admin.Orderscustomers.Feature'),
+            'addressForm' => $addressForm->createView(),
+        ]);
+    }
+
+    /**
+     * Show & process address editing.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $addressId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAddressAction(Request $request, $addressId)
+    {
+        $addressId = (int) $addressId;
+
+        $addressFormBuilder = $this->getAddressFormBuilder();
+        $addressFormHandler = $this->getAddressFormHandler();
+
+        if ($request->request->has('manufacturer_address') && isset($request->request->get('manufacturer_address')['id_country'])) {
+            $formCountryId = (int) $request->request->get('manufacturer_address')['id_country'];
+        } else {
+            /** @var EditableManufacturerAddress $address */
+            $address = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
+            $formCountryId = $address->getCountryId();
+        }
+
+        try {
+            $addressForm = $addressFormBuilder->getFormFor($addressId, [], ['country_id' => $formCountryId]);
+            $addressForm->handleRequest($request);
+
+            $result = $addressFormHandler->handleFor($addressId, $addressForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+
+            /** @var EditableManufacturerAddress $editableAddress */
+            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Brands', 'Admin.Catalog.Feature'),
+            'addressForm' => $addressForm->createView(),
+            'address' => $editableAddress->getAddress(),
+        ]);
     }
 
     /**
@@ -486,6 +618,10 @@ class ManufacturerController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            AddressNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 
@@ -543,5 +679,21 @@ class ManufacturerController extends FrameworkBundleAdminController
     private function getFormBuilder()
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getAddressFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_address_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getAddressFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_address_form_handler');
     }
 }

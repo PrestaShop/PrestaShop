@@ -38,6 +38,7 @@ class ConfigurationFilter extends HashMapWhitelistFilter
     {
         $whitelist = array(
             'display_taxes_label',
+            'display_prices_tax_incl',
             'is_catalog',
             'opt_in',
             'quantity_discount',

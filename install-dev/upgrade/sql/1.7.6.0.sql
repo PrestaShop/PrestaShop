@@ -46,3 +46,6 @@ SELECT `id_configuration`, l.`id_lang`, `value`
       'PS_LABEL_OOS_PRODUCTS_BOD'
       )
   AND NOT EXISTS (SELECT 1 FROM `PREFIX_configuration_lang` WHERE `id_configuration` = c.`id_configuration`);
+
+/* PHP:ps_1760_update_configuration(); */;
+/* PHP:ps_1760_update_tabs(); */;

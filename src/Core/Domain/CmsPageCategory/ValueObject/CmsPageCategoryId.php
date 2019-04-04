@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryE
 class CmsPageCategoryId
 {
     /**
+     * ID for the topmost Cms Page category
+     */
+    const ROOT_CMS_PAGE_CATEGORY_ID = 1;
+
+    /**
      * @var int
      */
     private $cmsPageCategoryId;
@@ -46,7 +51,7 @@ class CmsPageCategoryId
     public function __construct($cmsPageCategoryId)
     {
         $this->assertIsIntegerGreaterThanZero($cmsPageCategoryId);
-        $this->cmsPageCategoryId = (int) $cmsPageCategoryId;
+        $this->cmsPageCategoryId = $cmsPageCategoryId;
     }
 
     /**
@@ -68,7 +73,7 @@ class CmsPageCategoryId
     {
         if (!is_int($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
             throw new CmsPageCategoryException(
-                sprintf('Invalid cms page category id %s supplied', var_export($cmsPageCategoryId, true))
+                sprintf('Invalid cms page category id %s', var_export($cmsPageCategoryId, true))
             );
         }
     }

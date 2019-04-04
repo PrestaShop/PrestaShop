@@ -13,3 +13,7 @@ _theme:
 _cms_page:
     resource: "cms_pages.yml"
     prefix: /cms-pages
+
+_mail_theme:
+    resource: "mail_theme.yml"
+    prefix: /mail_theme/

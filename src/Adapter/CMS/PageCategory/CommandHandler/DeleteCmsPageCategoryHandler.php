@@ -46,7 +46,6 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
      */
     public function handle(DeleteCmsPageCategoryCommand $command)
     {
-        $parentId = null;
         try {
             $entity = new CMSCategory($command->getCmsPageCategoryId()->getValue());
 

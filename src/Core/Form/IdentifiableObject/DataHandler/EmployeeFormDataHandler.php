@@ -28,14 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\AddEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\EditEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
 
@@ -131,9 +128,9 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data)
     {
         $command = (new EditEmployeeCommand($id))
-            ->setFirstName(new FirstName($data['firstname']))
-            ->setLastName(new LastName($data['lastname']))
-            ->setEmail(new Email($data['email']))
+            ->setFirstName($data['firstname'])
+            ->setLastName($data['lastname'])
+            ->setEmail($data['email'])
             ->setIsSubscribedToNewsletter((bool) $data['optin'])
             ->setDefaultPageId((int) $data['default_page'])
             ->setLanguageId((int) $data['language'])
@@ -148,10 +145,10 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
                     $id
                 );
 
-                $command->setPlainPassword(new Password($data['change_password']['new_password']));
+                $command->setPlainPassword($data['change_password']['new_password']);
             }
         } elseif (isset($data['password'])) {
-            $command->setPlainPassword(new Password($data['password']));
+            $command->setPlainPassword($data['password']);
         }
 
         if (isset($data['shop_association'])) {

@@ -45,10 +45,11 @@ module.exports = {
     themes: './js/pages/themes',
     profiles: './js/pages/profiles',
     tax: './js/pages/tax',
-    manufacturer: './js/pages/manufacturer',
-    manufacturer_address: './js/pages/manufacturer/address',
     cms_page: './js/pages/cms-page',
+    cms_page_form: './js/pages/cms-page/form',
     form_popover_error: './js/components/form/form-popover-error',
+    manufacturer: './js/pages/manufacturer',
+    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

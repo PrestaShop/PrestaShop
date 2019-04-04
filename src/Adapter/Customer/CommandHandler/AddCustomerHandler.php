@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAcc
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Handles command that adds new customer

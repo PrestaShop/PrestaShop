@@ -100,7 +100,6 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     private function uploadHeaderLogo(UploadedFile $uploadedFile)
     {
         $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO', $uploadedFile);
-
         $this->logoUploader->updateHeader();
     }
 

@@ -74,7 +74,6 @@ class CmsPageCategoryType extends AbstractType
 
         $builder
             ->add('name', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
@@ -157,7 +156,6 @@ class CmsPageCategoryType extends AbstractType
                 ],
             ])
             ->add('friendly_url', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],

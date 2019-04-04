@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory;
 
 use Db;
 use DbQuery;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopDatabaseException;
 
 /**
@@ -67,7 +67,7 @@ class CategoriesProvider
      */
     public function getAllNestedCategories()
     {
-        return $this->collectNestedCategoriesIdsAndNames(CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID);
+        return $this->collectNestedCategoriesIdsAndNames(CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID);
     }
 
     /**

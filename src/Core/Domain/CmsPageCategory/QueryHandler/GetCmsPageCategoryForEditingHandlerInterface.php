@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\DTO\EditableCmsPageCategory;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\EditableCmsPageCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
 
 /**

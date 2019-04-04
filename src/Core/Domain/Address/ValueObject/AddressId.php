@@ -50,6 +50,14 @@ class AddressId
     }
 
     /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->addressId;
+    }
+
+    /**
      * Validates that the value is integer and is greater than zero
      *
      * @param $value
@@ -60,16 +68,9 @@ class AddressId
     {
         if (!is_int($value) || 0 >= $value) {
             throw new AddressConstraintException(
-                sprintf('Invalid address id "%s".', var_export($value, true))
+                sprintf('Invalid address id "%s".', var_export($value, true)),
+                AddressConstraintException::INVALID_ID
             );
         }
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->addressId;
     }
 }

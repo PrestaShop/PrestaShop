@@ -5,7 +5,7 @@ services:
   prestashop.core.form.choice_provider.language_by_id:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
     arguments:
-      - '@=service("prestashop.adapter.data_provider.language")'
+      - '@prestashop.adapter.data_provider.language'
 
   prestashop.core.form.choice_provider.all_languages:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider'
@@ -199,3 +199,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider'
     arguments:
       - '@=service("prestashop.adapter.data_provider.profile").getProfiles(service("prestashop.adapter.legacy.context").getLanguage().id)'
+
+  prestashop.core.form.choice_provider.mail_themes:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailThemeChoiceProvider'
+    arguments:
+      - '@prestashop.core.mail_template.theme_catalog'

@@ -23,6 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import TranslatableInput from '../../components/translatable-input';
+import TaggableField from '../../components/taggable-field';
+import FormSubmitButton from '../../components/form-submit-button';
 import Grid from '../../components/grid/grid';
 import SortingExtension from '../../components/grid/extension/sorting-extension';
 import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
@@ -32,22 +35,21 @@ import SubmitRowActionExtension from '../../components/grid/extension/action/row
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import TranslatableInput from '../../components/translatable-input';
-import TaggableField from '../../components/taggable-field';
 
 const $ = window.$;
 
 $(() => {
-  const manufacturerGrid = new Grid('manufacturer');
-
-  manufacturerGrid.addExtension(new ExportToSqlManagerExtension());
-  manufacturerGrid.addExtension(new ReloadListActionExtension());
-  manufacturerGrid.addExtension(new SortingExtension());
-  manufacturerGrid.addExtension(new FiltersResetExtension());
-  manufacturerGrid.addExtension(new ColumnTogglingExtension());
-  manufacturerGrid.addExtension(new SubmitRowActionExtension());
-  manufacturerGrid.addExtension(new SubmitBulkExtension());
-  manufacturerGrid.addExtension(new BulkActionCheckboxExtension());
+  ['manufacturer', 'manufacturer_address'].forEach((gridName) => {
+    const grid = new Grid(gridName);
+    grid.addExtension(new ExportToSqlManagerExtension());
+    grid.addExtension(new ReloadListActionExtension());
+    grid.addExtension(new SortingExtension());
+    grid.addExtension(new FiltersResetExtension());
+    grid.addExtension(new ColumnTogglingExtension());
+    grid.addExtension(new SubmitRowActionExtension());
+    grid.addExtension(new SubmitBulkExtension());
+    grid.addExtension(new BulkActionCheckboxExtension());
+  });
 
   new TranslatableInput();
   new TaggableField({
@@ -56,4 +58,6 @@ $(() => {
       createTokensOnBlur: true,
     },
   });
+
+  new FormSubmitButton();
 });

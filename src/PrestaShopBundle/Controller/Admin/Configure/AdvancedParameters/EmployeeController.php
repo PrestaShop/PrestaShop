@@ -26,26 +26,25 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmailAlreadyUsedException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidProfileException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\MissingShopAssociationException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkDeleteEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\CannotDeleteEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidEmployeeIdException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeStatus;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -136,7 +135,7 @@ class EmployeeController extends FrameworkBundleAdminController
     public function toggleStatusAction($employeeId)
     {
         try {
-            $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand(new EmployeeId($employeeId)));
+            $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand((int) $employeeId));
 
             $this->addFlash(
                 'success',
@@ -163,10 +162,11 @@ class EmployeeController extends FrameworkBundleAdminController
     public function bulkStatusUpdateAction(Request $request, $newStatus)
     {
         $employeeIds = $request->request->get('employee_employee_bulk');
+        $isEnabled = $newStatus === 'enabled';
 
         try {
             $this->getCommandBus()->handle(
-                new BulkUpdateEmployeeStatusCommand($employeeIds, new EmployeeStatus($newStatus))
+                new BulkUpdateEmployeeStatusCommand($employeeIds, $isEnabled)
             );
 
             $this->addFlash(
@@ -193,7 +193,7 @@ class EmployeeController extends FrameworkBundleAdminController
     public function deleteAction($employeeId)
     {
         try {
-            $this->getCommandBus()->handle(new DeleteEmployeeCommand(new EmployeeId($employeeId)));
+            $this->getCommandBus()->handle(new DeleteEmployeeCommand((int) $employeeId));
 
             $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         } catch (EmployeeException $e) {

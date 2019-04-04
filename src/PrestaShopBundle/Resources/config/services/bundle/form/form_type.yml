@@ -717,6 +717,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.theme_zip").getChoices()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
@@ -812,5 +814,52 @@ services:
         arguments:
             - '@=service("prestashop.adapter.admin.data_provider.addons").isAddonsAuthenticated()'
             - '@=service("prestashop.adapter.admin.data_provider.addons").getAddonsEmail()["username_addons"]'
+        tags:
+            - { name: form.type }
+
+    form.type.cms_page:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        tags:
+            - { name: form.type }
+
+    form.type.manufacturer_address:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.manufacturer_name_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+            - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+            - '@translator'
+        tags:
+            - { name: form.type }
+
+    form.type.shop_logos:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
+        arguments:
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+            - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+        tags:
+            - { name: form.type }
+
+    form.type.localization.generate_mails:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.localization.mail_theme_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }

@@ -9,7 +9,8 @@
 set -x
 
 BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
-CURRENT_DATE="$(date +%Y-%m-%d)"
+CURRENT_DATE=$([ -z "$1" ] && date +%Y-%m-%d || echo $1)
+NO_SHUTDOWN=$([ -z "$2" ] && "" || echo "yes")
 DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
 REPORT_PATH="${DIR_PATH}/campaigns"
@@ -30,6 +31,8 @@ if [ -n "$(ls ${REPORT_PATH})" ]; then
 
   # Send file, remove directory, and shutdown if everything is ok
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly && \
-  rm -rf $DIR_PATH && \
-  shutdown -h now
+  rm -rf $DIR_PATH
+  if [ -z "${NO_SHUTDOWN}" ]; then
+    shutdown -h now
+  fi
 fi
