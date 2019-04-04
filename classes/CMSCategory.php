@@ -321,7 +321,7 @@ class CMSCategoryCore extends ObjectModel
     {
         $parentCMSCategory = new CMSCategory($this->id_parent);
         if (!$parentCMSCategory) {
-            die('parent CMS Category does not exist');
+            die(Tools::displayError('parent CMS Category does not exist'));
         }
 
         return $parentCMSCategory->level_depth + 1;
