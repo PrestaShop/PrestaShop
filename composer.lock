@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a4db422579e0e8df731350a53839c3d",
+    "content-hash": "112f2aa0fb1d93c5791ff34b8f7c7e47",
     "packages": [
         {
             "name": "analog/analog",
@@ -3177,16 +3177,16 @@
         },
         {
             "name": "prestashop/graphnvd3",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/graphnvd3.git",
-                "reference": "c7f98ea792d02d60ed038fbc00f6003f19a0c91a"
+                "reference": "c4b8fa0d82d047b63be02e74e84a27f46a746065"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/graphnvd3/zipball/c7f98ea792d02d60ed038fbc00f6003f19a0c91a",
-                "reference": "c7f98ea792d02d60ed038fbc00f6003f19a0c91a",
+                "url": "https://api.github.com/repos/PrestaShop/graphnvd3/zipball/c4b8fa0d82d047b63be02e74e84a27f46a746065",
+                "reference": "c4b8fa0d82d047b63be02e74e84a27f46a746065",
                 "shasum": ""
             },
             "require": {
@@ -3205,7 +3205,7 @@
             ],
             "description": "PrestaShop module graphnvd3",
             "homepage": "https://github.com/PrestaShop/graphnvd3",
-            "time": "2017-02-22T11:02:31+00:00"
+            "time": "2019-04-03T08:19:54+00:00"
         },
         {
             "name": "prestashop/gridhtml",
