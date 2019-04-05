@@ -89,7 +89,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
 
         $localeCode = $currencyDataId->getLocaleCode();
         $currencyCode = $currencyDataId->getCurrencyCode();
-        $currencyEntity = $this->dataProvider->getCurrencyByIsoCode($currencyCode, $localeCode);
+        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeAndLocale($currencyCode, $localeCode);
 
         if (null === $currencyEntity) {
             return null;

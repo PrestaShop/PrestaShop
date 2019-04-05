@@ -257,7 +257,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_quantity" => 300,
             "name" => "Taille - L",
         );
-        $combinationDataProvider = new combinationDataProvider();
+        $combinationDataProvider = $this->container->get('prestashop.adapter.data_provider.combination');
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 
         foreach ($expectedStructureReturn as $property => $value) {

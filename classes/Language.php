@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
@@ -732,6 +731,28 @@ class LanguageCore extends ObjectModel
     }
 
     /**
+     * Return id from locale
+     *
+     * @param string $locale Locale
+     * @param bool $no_cache
+     *
+     * @return false|string|null
+     */
+    public static function getIdByLocale($locale, $noCache = false)
+    {
+        $key = 'Language::getIdByLocale_' . $locale;
+        if ($noCache || !Cache::isStored($key)) {
+            $idLang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'');
+
+            Cache::store($key, $idLang);
+
+            return $idLang;
+        }
+
+        return Cache::retrieve($key);
+    }
+
+    /**
      * @param string $iso
      *
      * @return array|bool
@@ -1329,8 +1350,7 @@ class LanguageCore extends ObjectModel
 
     public static function updateMultilangFromCldr($lang)
     {
-        $cldrRepository = new cldrRepository($lang->locale);
-        $cldrLocale = $cldrRepository->getCulture();
+        $cldrLocale = $lang->getLocale();
         $cldrFile = _PS_TRANSLATIONS_DIR_ . 'cldr/datas/main/' . $cldrLocale . '/territories.json';
 
         if (file_exists($cldrFile)) {
@@ -1484,5 +1504,15 @@ class LanguageCore extends ObjectModel
         );
 
         return $processor;
+    }
+
+    /**
+     * @return string return the language locale, or its code by default
+     */
+    public function getLocale()
+    {
+        return !empty($this->locale) ?
+            $this->locale :
+            $this->language_code;
     }
 }

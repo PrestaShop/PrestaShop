@@ -732,9 +732,6 @@ namespace PrestaShopBundle\Install {
 
                         if (empty($errorsLanguage)) {
                             Language::loadLanguages();
-
-                            $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-                            $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
                         } else {
                             $this->logError('Error updating translations', 44);
                         }
