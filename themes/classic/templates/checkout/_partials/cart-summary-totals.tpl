@@ -25,7 +25,7 @@
 <div class="card-block cart-summary-totals">
 
   {block name='cart_summary_total'}
-    {if !$configuration.display_prices_tax_incl}
+    {if $cart.totals.total_including_tax.value != $cart.totals.total_excluding_tax.value && $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
     <div class="cart-summary-line">
       <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
       <span class="value">{$cart.totals.total.value}</span>
@@ -44,7 +44,7 @@
 
   {block name='cart_summary_tax'}
     <div class="cart-summary-line">
-      <span class="label sub">{$cart.subtotals.tax.label}</span>
+      <span class="label sub">{l s='%label%:' sprintf=['%label%' => $cart.subtotals.tax.label] d='Shop.Theme.Global'}</span>
       <span class="value sub">{$cart.subtotals.tax.value}</span>
     </div>
   {/block}

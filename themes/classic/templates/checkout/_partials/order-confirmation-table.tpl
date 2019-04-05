@@ -108,7 +108,7 @@
             </tr>
           {/if}
         {/foreach}
-         {if $cart.totals.total_including_tax.value != $cart.totals.total_excluding_tax.value && $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
+         {if !$configuration.display_prices_tax_incl}
           <tr>
             <td><span class="text-uppercase">{$totals.total.label}&nbsp;{$labels.tax_short}</span></td>
             <td>{$totals.total.value}</td>
@@ -125,7 +125,7 @@
         {/if}
         {if $subtotals.tax.label !== null}
           <tr class="sub taxes">
-            <td><span class="label">{$subtotals.tax.label}</span>&nbsp;<span class="value">{$subtotals.tax.value}</span></td>
+            <td><span class="label">{l s='%label%:' sprintf=['%label%' => $subtotals.tax.label] d='Shop.Theme.Global'}</span>&nbsp;<span class="value">{$subtotals.tax.value}</span></td>
           </tr>
         {/if}
       </table>
