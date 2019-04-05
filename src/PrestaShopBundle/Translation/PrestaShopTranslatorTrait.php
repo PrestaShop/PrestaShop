@@ -61,7 +61,7 @@ trait PrestaShopTranslatorTrait
         $translated = parent::trans($id, array(), $normalizedDomain, $locale);
 
         // @todo to remove after the legacy translation system has ben phased out
-        if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $translated)) {
+        if ($this->shouldFallbackToLegacyModuleTranslation($id, $normalizedDomain, $translated)) {
             return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
         }
 
@@ -175,19 +175,19 @@ trait PrestaShopTranslatorTrait
      * Indicates if we should try and translate the provided wording using the legacy system.
      *
      * @param string $message Message to translate
-     * @param string $domain Translation domain
+     * @param string $normalizedDomain Translation domain (without dots!)
      * @param string $translated Message after first translation attempt
      *
      * @return bool
      */
-    private function shouldFallbackToLegacyModuleTranslation($message, $domain, $translated)
+    private function shouldFallbackToLegacyModuleTranslation($message, $normalizedDomain, $translated)
     {
         return
             $message === $translated
-            && 'Modules.' === substr($domain, 0, 8)
+            && 'Modules.' === substr($normalizedDomain, 0, 8)
             && (
                 !method_exists($this, 'getCatalogue')
-                || !$this->getCatalogue()->has($message, $domain)
+                || !$this->getCatalogue()->has($message, $normalizedDomain)
             )
             ;
     }
