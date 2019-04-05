@@ -77,6 +77,22 @@ class CacheProviderTest extends TestCase
                     'id_product' => 'productId',
                 ],
             ],
+            [
+                'route_name' => 'admin_categories_create',
+                'legacy_links' => [
+                    'AdminCategories:form',
+                ],
+                'legacy_parameters' => [],
+            ],
+            [
+                'route_name' => 'admin_categories_edit',
+                'legacy_links' => [
+                    'AdminCategories:form',
+                ],
+                'legacy_parameters' => [
+                    'id_category' => 'categoryId',
+                ],
+            ],
         ];
         $this->expectedCacheValue = json_encode($this->expectedFlattenArray);
 
@@ -100,6 +116,22 @@ class CacheProviderTest extends TestCase
                     'id_product' => 'productId',
                 ]
             ),
+            'admin_categories_create' => new LegacyRoute(
+                'admin_categories_create',
+                [
+                    'AdminCategories:form',
+                ],
+                []
+            ),
+            'admin_categories_edit' => new LegacyRoute(
+                'admin_categories_edit',
+                [
+                    'AdminCategories:form',
+                ],
+                [
+                    'id_category' => 'categoryId',
+                ]
+            ),
         ];
     }
 
@@ -109,24 +141,32 @@ class CacheProviderTest extends TestCase
         $cacheProvider = new CacheProvider($mockProvider, $this->buildSavingCache(), $this->buildCacheKeyGenerator());
 
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
+        $this->assertCount(4, $legacyRoutes);
         $this->assertNotEmpty($legacyRoutes['admin_products']);
         $this->assertNotEmpty($legacyRoutes['admin_products_create']);
+        $this->assertNotEmpty($legacyRoutes['admin_categories_create']);
+        $this->assertNotEmpty($legacyRoutes['admin_categories_edit']);
 
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
+        $this->assertCount(4, $legacyRoutes);
     }
 
     public function testGetFromCache()
     {
-        $cacheProvider = new CacheProvider($this->buildCachedRouterProvider(), $this->buildExistingCache(), $this->buildCacheKeyGenerator());
+        $cacheProvider = new CacheProvider(
+            $this->buildCachedRouterProvider(),
+            $this->buildExistingCache(),
+            $this->buildCacheKeyGenerator()
+        );
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
+        $this->assertCount(4, $legacyRoutes);
         $this->assertNotEmpty($legacyRoutes['admin_products']);
         $this->assertNotEmpty($legacyRoutes['admin_products_create']);
+        $this->assertNotEmpty($legacyRoutes['admin_categories_create']);
+        $this->assertNotEmpty($legacyRoutes['admin_categories_edit']);
 
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
+        $this->assertCount(4, $legacyRoutes);
     }
 
     public function testWithRealCache()
@@ -139,9 +179,11 @@ class CacheProviderTest extends TestCase
         //Just perform the test twice to be sure the result and the cache are correct
         for ($i = 0; $i < 2; $i++) {
             $legacyRoutes = $cacheProvider->getLegacyRoutes();
-            $this->assertCount(2, $legacyRoutes);
+            $this->assertCount(4, $legacyRoutes);
             $this->assertNotEmpty($legacyRoutes['admin_products']);
             $this->assertNotEmpty($legacyRoutes['admin_products_create']);
+            $this->assertNotEmpty($legacyRoutes['admin_categories_create']);
+            $this->assertNotEmpty($legacyRoutes['admin_categories_edit']);
             $this->assertTrue($cache->hasItem(self::CACHE_KEY));
             $cacheItem = $cache->getItem(self::CACHE_KEY);
             $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
@@ -156,9 +198,11 @@ class CacheProviderTest extends TestCase
 
         //Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
+        $this->assertCount(4, $legacyRoutes);
         $this->assertNotEmpty($legacyRoutes['admin_products']);
         $this->assertNotEmpty($legacyRoutes['admin_products_create']);
+        $this->assertNotEmpty($legacyRoutes['admin_categories_create']);
+        $this->assertNotEmpty($legacyRoutes['admin_categories_edit']);
     }
 
     public function testGetControllersActions()
@@ -171,9 +215,13 @@ class CacheProviderTest extends TestCase
         //Just perform the test twice to be sure the result and the cache are correct
         for ($i = 0; $i < 2; $i++) {
             $controllerActions = $cacheProvider->getControllersActions();
-            $this->assertCount(1, $controllerActions);
+            $this->assertCount(2, $controllerActions);
             $this->assertNotEmpty($controllerActions['AdminProducts']);
             $this->assertNotEmpty($controllerActions['AdminProducts']['index']);
+            $this->assertNotEmpty($controllerActions['AdminProducts']['create']);
+            $this->assertNotEmpty($controllerActions['AdminProducts']['new']);
+            $this->assertNotEmpty($controllerActions['AdminCategories']);
+            $this->assertNotEmpty($controllerActions['AdminCategories']['form']);
             $this->assertTrue($cache->hasItem(self::CACHE_KEY));
             $cacheItem = $cache->getItem(self::CACHE_KEY);
             $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
@@ -188,9 +236,13 @@ class CacheProviderTest extends TestCase
 
         //Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
         $controllerActions = $cacheProvider->getControllersActions();
-        $this->assertCount(1, $controllerActions);
+        $this->assertCount(2, $controllerActions);
         $this->assertNotEmpty($controllerActions['AdminProducts']);
         $this->assertNotEmpty($controllerActions['AdminProducts']['index']);
+        $this->assertNotEmpty($controllerActions['AdminProducts']['create']);
+        $this->assertNotEmpty($controllerActions['AdminProducts']['new']);
+        $this->assertNotEmpty($controllerActions['AdminCategories']);
+        $this->assertNotEmpty($controllerActions['AdminCategories']['form']);
     }
 
     /**
