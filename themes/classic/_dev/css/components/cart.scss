@@ -184,11 +184,13 @@
     display: block;
     text-align: center;
     padding: 1.25rem 0;
+    margin-bottom: 1.25rem;
     &[aria-expanded="true"] {
       display: none;
     }
     &.cancel-promo {
       color: $brand-primary;
+      margin-bottom: 0;
       &[aria-expanded="true"] {
         display: block;
         padding: 0;
