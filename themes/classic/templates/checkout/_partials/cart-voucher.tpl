@@ -61,16 +61,16 @@
             </div>
           {/block}
           {if $cart.discounts|count > 0}
-          <p class="block-promo promo-highlighted">
-            {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
-          </p>
-          <ul class="js-discount card-block promo-discounts">
-          {foreach from=$cart.discounts item=discount}
-            <li class="cart-summary-line">
-              <span class="label"><span class="code">{$discount.code}</span> - {$discount.name}</span>
-            </li>
-          {/foreach}
-          </ul>
+            <p class="block-promo promo-highlighted">
+              {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
+            </p>
+            <ul class="js-discount card-block promo-discounts">
+            {foreach from=$cart.discounts item=discount}
+              <li class="cart-summary-line">
+                <span class="label"><span class="code">{$discount.code}</span> - {$discount.name}</span>
+              </li>
+            {/foreach}
+            </ul>
           {/if}
           <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">
             {l s='Close' d='Shop.Theme.Checkout'}

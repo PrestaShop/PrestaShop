@@ -26,20 +26,20 @@
 
   {block name='cart_summary_total'}
     {if $cart.totals.total_including_tax.value != $cart.totals.total_excluding_tax.value && $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
-    <div class="cart-summary-line">
-      <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
-      <span class="value">{$cart.totals.total.value}</span>
-    </div>
-    <div class="cart-summary-line cart-total">
-      <span class="label">{$cart.totals.total_including_tax.label}</span>
-      <span class="value">{$cart.totals.total_including_tax.value}</span>
-    </div>
-  {else}
-    <div class="cart-summary-line cart-total">
-      <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
-      <span class="value">{$cart.totals.total.value}</span>
-    </div>
-  {/if}
+      <div class="cart-summary-line">
+        <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
+        <span class="value">{$cart.totals.total.value}</span>
+      </div>
+      <div class="cart-summary-line cart-total">
+        <span class="label">{$cart.totals.total_including_tax.label}</span>
+        <span class="value">{$cart.totals.total_including_tax.value}</span>
+      </div>
+    {else}
+      <div class="cart-summary-line cart-total">
+        <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
+        <span class="value">{$cart.totals.total.value}</span>
+      </div>
+    {/if}
   {/block}
 
   {block name='cart_summary_tax'}
