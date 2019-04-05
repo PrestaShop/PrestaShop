@@ -31,6 +31,9 @@
  */
 class TranslateCore
 {
+    public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
+    public static $regexClassicParams = '/%\w+%/';
+
     public static function getFrontTranslation($string, $class, $addslashes = false, $htmlentities = true, $sprintf = null)
     {
         global $_LANG;
@@ -344,12 +347,10 @@ class TranslateCore
      */
     public static function checkAndReplaceArgs($string, $args)
     {
-        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && null !== $args) {
-            if (!is_array($args)) {
-                $args = array($args);
-            }
-
+        if (!empty($args) && self::isSprintfString($string)) {
             return vsprintf($string, $args);
+        } elseif (!empty($args)) {
+            return strtr($string, $args);
         }
 
         return $string;
@@ -401,5 +402,16 @@ class TranslateCore
         Tools::displayAsDeprecated();
 
         return Translate::postProcessTranslation($string, array('tags' => $tags));
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return bool
+     */
+    private static function isSprintfString($string)
+    {
+        return (bool) preg_match_all(static::$regexSprintfParams, $string)
+            && !(bool) preg_match_all(static::$regexClassicParams, $string);
     }
 }
