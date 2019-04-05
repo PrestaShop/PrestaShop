@@ -42,8 +42,8 @@ class LegacyTranslator
      * @param string|false $source
      * @param null $sprintf
      * @param bool $js
-     * @param null $locale
-     * @param bool $fallback
+     * @param string|null $locale
+     * @param bool $fallback [default=true] If true, this method falls back to the new translation system if no translation is found
      *
      * @return mixed|string
      *

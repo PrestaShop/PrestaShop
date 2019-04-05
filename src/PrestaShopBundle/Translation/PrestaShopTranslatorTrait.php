@@ -167,16 +167,12 @@ trait PrestaShopTranslatorTrait
         $moduleName = strtolower($domainParts[1]);
         $sourceFile = (!empty($domainParts[2])) ? strtolower($domainParts[2]) : $moduleName;
 
+        // translate using the legacy system WITHOUT fallback to the new system (to avoid infinite loop)
         return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false);
     }
 
     /**
      * Indicates if we should try and translate the provided wording using the legacy system.
-     * Watch out, this rule conflicts with the current format of migrated modules translations:
-     * * legacy ones: Modules.<Modulename>
-     * * migrated ones: Modules.<ModuleName>.<Domain>
-     *
-     * We try to avoid infinite loop here.
      *
      * @param string $message Message to translate
      * @param string $domain Translation domain
@@ -189,7 +185,6 @@ trait PrestaShopTranslatorTrait
         return
             $message === $translated
             && 'Modules.' === substr($domain, 0, 8)
-            && substr_count($domain, '.') === 1
             && (
                 !method_exists($this, 'getCatalogue')
                 || !$this->getCatalogue()->has($message, $domain)
