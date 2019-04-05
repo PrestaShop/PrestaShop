@@ -51,7 +51,7 @@ class TranslationFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given I have a legacy translation for :translation in locale :locale in the module :module
+     * @Given there is a legacy translation for :translation in locale :locale in the module :module
      */
     public function iHaveALegacyTranslationForInLocaleInTheModule($translation, $locale, $module)
     {

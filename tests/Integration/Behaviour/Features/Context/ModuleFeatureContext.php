@@ -33,9 +33,9 @@ use Cache;
 class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @Given I install the module :module
+     * @Given the module :module is installed
      */
-    public function iInstallTheModule($module)
+    public function theModuleIsInstalled($module)
     {
         $fs = new Filesystem();
         $fs->mirror(self::MODULES_DIRECTORY . '/' . $module, _PS_MODULE_DIR_ . '/' . $module);

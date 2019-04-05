@@ -7,11 +7,11 @@ Feature: Legacy Translation System in the Modules
 
 
   Scenario: Access to trans() function in a Module
-    Given I install the module "translations"
-    And I have a legacy translation for "Hello World" in locale "fr" in the module "translations"
+    Given the module "translations" is installed
+    And there is a legacy translation for "Hello World" in locale "fr" in the module "translations"
     Then the module translated version of "Hello World" using domain "Modules.Translations" should be "Bonjour le monde" using locale "fr-FR"
 
   Scenario: Access to trans() function in a Twig template
-    Given I install the module "translations"
-    And I have a legacy translation for "Hello World" in locale "fr" in the module "translations"
+    Given the module "translations" is installed
+    And there is a legacy translation for "Hello World" in locale "fr" in the module "translations"
     Then the Twig translated version of "Hello World" using domain "Modules.Translations" should be "Bonjour le monde" using locale "fr-FR"
