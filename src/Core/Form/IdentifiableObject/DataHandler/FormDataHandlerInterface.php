@@ -36,7 +36,7 @@ interface FormDataHandlerInterface
      *
      * @param array $data
      *
-     * @return mixed
+     * @return mixed ID of identifiable object
      */
     public function create(array $data);
 
@@ -45,8 +45,6 @@ interface FormDataHandlerInterface
      *
      * @param int $id
      * @param array $data
-     *
-     * @return int ID of identifiable object
      */
     public function update($id, array $data);
 }
