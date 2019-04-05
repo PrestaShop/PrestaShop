@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 use PrestaShopBundle\Utils\FloatParser;
+use Symfony\Component\Routing\Router;
 use Product;
 use ProductDownload;
 
@@ -79,6 +80,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $productPricePriority;
     /** @var WarehouseDataProvider */
     private $warehouseAdapter;
+    /** @var Router */
+    private $router;
     /** @var array */
     private $multiShopKeys = array(
         'category_box',
@@ -190,7 +193,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         FeatureDataProvider $featureDataProvider,
         PackDataProvider $packDataProvider,
         ShopContext $shopContext,
-        TaxRuleDataProvider $taxRuleDataProvider
+        TaxRuleDataProvider $taxRuleDataProvider,
+        Router $router
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -206,6 +210,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->configuration = new Configuration();
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
+        $this->router = $router;
     }
 
     /**
@@ -709,7 +714,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
             if ($download->filename) {
                 $res['filename'] = $download->filename;
-                $res['file_download_link'] = $this->context->getAdminBaseUrl() . $download->getTextLink(true);
+                $res['file_download_link'] = $this->router->generate(
+                    'admin_product_virtual_download_file_action',
+                    ['idProduct' => $download->id_product]
+                );
             }
 
             return $res;

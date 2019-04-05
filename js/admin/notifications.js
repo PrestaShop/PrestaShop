@@ -62,10 +62,9 @@ $(document).ready(function() {
 
 function updateEmployeeNotifications() {
   $.post(
-    baseAdminDir + "ajax.php",
+    admin_notification_push_link,
     {
-      "updateElementEmployee": "1",
-      "updateElementEmployeeType": $('.notifications .nav-item.active a').attr('data-type')
+      "type": $('.notifications .nav-item.active a').attr('data-type')
     }
   );
 }
@@ -75,11 +74,10 @@ function getPush()
 	$.ajax({
 		type: 'POST',
 		headers: {"cache-control": "no-cache"},
-		url: baseAdminDir+'ajax.php?rand=' + new Date().getTime(),
+		url: admin_notification_get_link+'&rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType : 'json',
-		data: {"getNotifications" : "1"},
 		success: function(json) {
 			if (json)
 			{

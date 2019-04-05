@@ -1,5 +1,4 @@
-<?php
-/**
+{**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -22,11 +21,9 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
-
-$_GET['ajax'] = 1;
-$_GET['controller'] = 'AdminSearch';
-$_GET['action'] = 'searchCron';
-
-require_once dirname(__FILE__).'/index.php';
+ *}
+<select id="zone_to_affect" name="zone_to_affect">
+    {foreach $zones as $z}
+        <option value="{$z['id_zone']}">{$z['name']}</option>
+    {/foreach}
+</select>

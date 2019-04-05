@@ -253,7 +253,6 @@ class AdminTranslationsControllerCore extends AdminController
         );
 
         $this->toolbar_scroll = false;
-        $this->base_tpl_view = 'main.tpl';
 
         $this->content .= $this->renderKpis();
         $this->content .= parent::renderView();
@@ -3312,5 +3311,16 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         return $email_html;
+    }
+
+    /**
+     * Display the HTML content of an email.
+     */
+    public function displayAjaxEmailHTML()
+    {
+        $email = Tools::getValue('email');
+        $this->ajaxRender(
+            AdminTranslationsController::getEmailHTML($email)
+        );
     }
 }
