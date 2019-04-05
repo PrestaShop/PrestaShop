@@ -110,7 +110,7 @@ class SearchControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
         $breadcrumb['links'][] = array(
             'title' => $this->getTranslator()->trans('Search results', array(), 'Shop.Theme.Catalog'),
-            'url' => $this->context->link->getPageLink('search'),
+            'url' => $this->getCurrentUrl(),
         );
 
         return $breadcrumb;
