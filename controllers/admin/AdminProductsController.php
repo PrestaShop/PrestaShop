@@ -815,7 +815,7 @@ class AdminProductsControllerCore extends AdminController
                                 Tools::getValue('attribute_location'),
                                 Tools::getValue('attribute_upc'),
                                 Tools::getValue('attribute_minimal_quantity'),
-                                array(),
+	                            Shop::getSharedShops(Shop::getContextShopID(), SHOP::SHARE_STOCK),
                                 Tools::getValue('available_date_attribute'),
                                 Tools::getValue('attribute_isbn'),
                                 Tools::getValue('attribute_low_stock_threshold'),
