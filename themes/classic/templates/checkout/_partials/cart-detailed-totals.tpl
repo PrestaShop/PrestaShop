@@ -63,10 +63,12 @@
       <span class="value">{$cart.totals.total.value}</span>
     </div>
     {/if}
-    <div class="cart-summary-line">
-      <span class="label sub">{l s='%label%:' sprintf=['%label%' => $cart.subtotals.tax.label] d='Shop.Theme.Global'}</span>
-      <span class="value sub">{$cart.subtotals.tax.value}</span>
-    </div>
+    {if $cart.subtotals.tax}
+      <div class="cart-summary-line">
+        <span class="label sub">{l s='%label%:' sprintf=['%label%' => $cart.subtotals.tax.label] d='Shop.Theme.Global'}</span>
+        <span class="value sub">{$cart.subtotals.tax.value}</span>
+      </div>
+    {/if}
   </div>
 
   {block name='cart_voucher'}
