@@ -108,7 +108,7 @@
             </tr>
           {/if}
         {/foreach}
-        {if !$configuration.display_prices_tax_incl}
+         {if $cart.totals.total_including_tax.value != $cart.totals.total_excluding_tax.value && $cart.totals.total.value == $cart.totals.total_excluding_tax.value}
           <tr>
             <td><span class="text-uppercase">{$totals.total.label}&nbsp;{$labels.tax_short}</span></td>
             <td>{$totals.total.value}</td>
