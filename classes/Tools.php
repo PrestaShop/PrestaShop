@@ -1156,6 +1156,7 @@ class ToolsCore
      */
     public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
     {
+        header('HTTP/1.1 500 Internal Server Error', true, 500);
         if (null !== $htmlentities) {
             self::displayParameterAsDeprecated('htmlentities');
         }
@@ -3338,6 +3339,7 @@ exit;
     public static function dieOrLog($msg, $die = true)
     {
         if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)) {
+            header('HTTP/1.1 500 Internal Server Error', true, 500);
             die($msg);
         }
 

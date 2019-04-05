@@ -715,7 +715,7 @@ class LanguageCore extends ObjectModel
     public static function getIdByIso($iso_code, $no_cache = false)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
         }
 
         $key = 'Language::getIdByIso_' . $iso_code;
@@ -821,7 +821,7 @@ class LanguageCore extends ObjectModel
     public static function getLanguageCodeByIso($iso_code)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
         }
 
         return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
@@ -830,7 +830,7 @@ class LanguageCore extends ObjectModel
     public static function getLanguageByIETFCode($code)
     {
         if (!Validate::isLanguageCode($code)) {
-            die(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', array(Tools::safeOutput($code)), 'Admin.International.Notification'));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', array(Tools::safeOutput($code)), 'Admin.International.Notification')));
         }
 
         // $code is in the form of 'xx-YY' where xx is the language code
