@@ -357,7 +357,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
 
         $this->getCurrentCart()->update();
 
-        //CartRule::autoRemoveFromCart();
+        CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
     }
 
