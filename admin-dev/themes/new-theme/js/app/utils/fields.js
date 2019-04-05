@@ -24,45 +24,14 @@
  */
 
 const $ = global.$;
-// Dependencies
 
-import 'prestakit/dist/js/prestashop-ui-kit';
-import 'jquery-ui-dist/jquery-ui';
-import 'bootstrap-tokenfield';
-import 'eonasdan-bootstrap-datetimepicker';
-import 'jwerty';
-import 'magnific-popup';
-import 'dropzone';
-import 'typeahead.js/dist/typeahead.jquery';
-import 'typeahead.js/dist/bloodhound.min';
-import 'sprintf-js';
+/**
+ * Enable all datepickers.
+ */
+const initInvalidFields = () => {
+  $('input,select,textarea').on('invalid', function scroll() {
+    this.scrollIntoView(false);
+  });
+};
 
-// Plugins CSS
-import 'dropzone/dist/min/dropzone.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-
-// Theme SCSS
-import '../scss/theme.scss';
-
-// Theme Javascript
-window.Dropzone.autoDiscover = false;
-import NavBar from './nav_bar';
-
-// this needs to be ported into the UI kit
-import './clickable-dropdown';
-
-import './maintenance-page';
-import './translation-page/index';
-
-import Header from './header';
-
-new NavBar();
-new Header();
-
-import initDatePickers from './app/utils/datepicker';
-import initInvalidFields from './app/utils/fields';
-
-$(() => {
-  initDatePickers();
-  initInvalidFields();
-});
+export default initInvalidFields;
