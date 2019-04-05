@@ -168,6 +168,11 @@ services:
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'manufacturer_address'
 
+    prestashop.core.grid.data.factory.manufacturer_address_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\ManufacturerAddressGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.data.factory.manufacturer_address'
+
     prestashop.core.grid.data_provider.cms_page:
       class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
       arguments:
