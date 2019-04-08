@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexConstraintValidator;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class TypedRegexValidatorTest extends ConstraintValidatorTestCase
@@ -35,7 +35,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForNameTypeWhenValidCharactersGiven()
     {
         $value = 'goodname';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'name']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'name']));
 
         $this->assertNoViolation();
     }
@@ -45,9 +45,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForNameTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'name']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'name']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'name']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'name']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -56,7 +56,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForCatalogNameTypeWhenValidCharactersGiven()
     {
         $value = 'catalog name';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'catalog_name']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'catalog_name']));
 
         $this->assertNoViolation();
     }
@@ -66,9 +66,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForCatalogNameTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'catalog_name']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'catalog_name']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'catalog_name']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'catalog_name']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -78,7 +78,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForGenericNameTypeWhenValidCharactersGiven()
     {
         $value = 'good generic name /';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'generic_name']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'generic_name']));
 
         $this->assertNoViolation();
     }
@@ -88,9 +88,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForGenericNameTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'generic_name']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'generic_name']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'catalog_name']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'catalog_name']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -100,7 +100,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForCityNameTypeWhenValidCharactersGiven()
     {
         $value = 'London';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'city_name']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'city_name']));
 
         $this->assertNoViolation();
     }
@@ -110,9 +110,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForCityNameTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'city_name']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'city_name']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'city_name']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'city_name']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -121,7 +121,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForAddressTypeWhenValidCharactersGiven()
     {
         $value = '3197 Hillview Drive';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'address']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'address']));
 
         $this->assertNoViolation();
     }
@@ -131,9 +131,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForAddressTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'address']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'address']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'address']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'address']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -142,7 +142,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForPostCodeTypeWhenValidCharactersGiven()
     {
         $value = '94103';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'post_code']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'post_code']));
 
         $this->assertNoViolation();
     }
@@ -152,9 +152,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForPostCodeTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'post_code']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'post_code']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'post_code']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'post_code']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -163,7 +163,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForPhoneNumberTypeWhenValidCharactersGiven()
     {
         $value = '707-216-7924';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'phone_number']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'phone_number']));
 
         $this->assertNoViolation();
     }
@@ -173,9 +173,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForPhoneNumberTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'phone_number']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'phone_number']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'phone_number']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'phone_number']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -184,7 +184,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForMessageTypeWhenValidCharactersGiven()
     {
         $value = 'some random message #)F@$. ';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'message']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'message']));
 
         $this->assertNoViolation();
     }
@@ -194,9 +194,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForMessageTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'message']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'message']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'message']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'message']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -205,7 +205,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForLanguageIsoCodeTypeWhenValidCharactersGiven()
     {
         $value = 'US';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'language_iso_code']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'language_iso_code']));
 
         $this->assertNoViolation();
     }
@@ -215,9 +215,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForLanguageIsoCodeTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'language_iso_code']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'language_iso_code']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'language_iso_code']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'language_iso_code']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -226,7 +226,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForLanguageCodeTypeWhenValidCharactersGiven()
     {
         $value = 'lt-LT';
-        $this->validator->validate($value, new TypedRegexConstraint(['type' => 'language_code']));
+        $this->validator->validate($value, new TypedRegex(['type' => 'language_code']));
 
         $this->assertNoViolation();
     }
@@ -236,9 +236,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForLanguageCodeTypeWhenInvalidCharacterGiven($invalidChar)
     {
-        $this->validator->validate($invalidChar, new TypedRegexConstraint(['type' => 'language_code']));
+        $this->validator->validate($invalidChar, new TypedRegex(['type' => 'language_code']));
 
-        $this->buildViolation((new TypedRegexConstraint(['type' => 'language_code']))->message)
+        $this->buildViolation((new TypedRegex(['type' => 'language_code']))->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised()
         ;
@@ -341,6 +341,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new TypedRegexConstraintValidator();
+        return new TypedRegexValidator();
     }
 }
