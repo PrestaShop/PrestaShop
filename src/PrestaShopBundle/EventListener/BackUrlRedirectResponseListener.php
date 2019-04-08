@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 /**
  * This class allows to redirect to back url.
  */
-final class BackUrlResponseListener
+final class BackUrlRedirectResponseListener
 {
     /**
      * @var RequestStack
