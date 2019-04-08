@@ -1078,8 +1078,10 @@ class LanguageCore extends ObjectModel
                 Language::updateMultilangTable($iso);
             } else {
                 $lang_pack = self::getLangDetails($iso);
-                self::installSfLanguagePack($lang_pack['locale'], $errors);
-                self::generateEmailsLanguagePack($lang_pack, $errors);
+                if (!empty($lang_pack['locale'])) {
+                    self::installSfLanguagePack($lang_pack['locale'], $errors);
+                    self::generateEmailsLanguagePack($lang_pack, $errors);
+                }
             }
         }
 
