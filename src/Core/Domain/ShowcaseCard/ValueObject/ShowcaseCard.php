@@ -40,10 +40,16 @@ class ShowcaseCard
     const SEO_URLS_CARD = 'seo-urls_card';
 
     /**
+     * Card shown in Categories
+     */
+    const CATEGORIES_CARD = 'categories_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
         self::SEO_URLS_CARD => true,
+        self::CATEGORIES_CARD => true,
     ];
 
     /**
