@@ -126,7 +126,7 @@
         {% if (displayInIframe is defined and displayInIframe == true) %}
           <a href="javascript:window.history.back();" class="btn btn-outline-secondary">
         {% else %}
-          <a href="{{ path('admin_customers_index') }}" class="btn btn-outline-secondary">
+          <a href="{{ pathWithBackUrl('admin_customers_index') }}" class="btn btn-outline-secondary">
         {% endif %}
           <i class="material-icons">cancel</i>
           {{ 'Cancel'|trans({}, 'Admin.Actions') }}
