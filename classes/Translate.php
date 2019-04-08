@@ -31,6 +31,9 @@
  */
 class TranslateCore
 {
+    public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
+    public static $regexClassicParams = '/%\w+%/';
+
     public static function getFrontTranslation($string, $class, $addslashes = false, $htmlentities = true, $sprintf = null)
     {
         global $_LANG;
@@ -161,11 +164,21 @@ class TranslateCore
      * @param null $sprintf
      * @param bool $js
      * @param string|null $locale
+     * @param bool $fallback [default=true] If true, this method falls back to the new translation system if no translation is found
      *
      * @return mixed|string
+     *
+     * @throws Exception
      */
-    public static function getModuleTranslation($module, $originalString, $source, $sprintf = null, $js = false, $locale = null)
-    {
+    public static function getModuleTranslation(
+        $module,
+        $originalString,
+        $source,
+        $sprintf = null,
+        $js = false,
+        $locale = null,
+        $fallback = true
+    ) {
         global $_MODULES, $_MODULE, $_LANGADM;
 
         static $langCache = array();
@@ -276,7 +289,7 @@ class TranslateCore
          * Native modules working on both 1.6 & 1.7 are translated in messages.xlf
          * So we need to check in the Symfony catalog for translations
          */
-        if ($ret === $originalString) {
+        if ($ret === $originalString && $fallback) {
             $ret = Context::getContext()->getTranslator()->trans($originalString, $sprintf_for_trans, null, $locale);
         }
 
@@ -334,12 +347,10 @@ class TranslateCore
      */
     public static function checkAndReplaceArgs($string, $args)
     {
-        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && null !== $args) {
-            if (!is_array($args)) {
-                $args = array($args);
-            }
-
+        if (!empty($args) && self::isSprintfString($string)) {
             return vsprintf($string, $args);
+        } elseif (!empty($args)) {
+            return strtr($string, $args);
         }
 
         return $string;
@@ -391,5 +402,16 @@ class TranslateCore
         Tools::displayAsDeprecated();
 
         return Translate::postProcessTranslation($string, array('tags' => $tags));
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return bool
+     */
+    private static function isSprintfString($string)
+    {
+        return (bool) preg_match_all(static::$regexSprintfParams, $string)
+            && !(bool) preg_match_all(static::$regexClassicParams, $string);
     }
 }
