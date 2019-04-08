@@ -45,11 +45,17 @@ class ShowcaseCard
     const CATEGORIES_CARD = 'categories_card';
 
     /**
+     * Card shown in Customers
+     */
+    const CUSTOMERS_CARD = 'customers_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
         self::SEO_URLS_CARD => true,
         self::CATEGORIES_CARD => true,
+        self::CUSTOMERS_CARD => true,
     ];
 
     /**
