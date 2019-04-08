@@ -576,6 +576,11 @@
       <title>Add fields to the Customer form</title>
       <description>This hook returns an array of FormFields to add them to the customer registration form</description>
     </hook>
+    <hook id="additionalCustomerAddressFields">
+      <name>additionalCustomerAddressFields</name>
+      <title>Add fields to the Customer address form</title>
+      <description>This hook returns an array of FormFields to add them to the customer address registration form</description>
+    </hook>
     <hook id="addWebserviceResources">
       <name>addWebserviceResources</name>
       <title>Add extra webservice resource</title>
