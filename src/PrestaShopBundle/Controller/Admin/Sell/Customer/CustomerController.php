@@ -163,38 +163,27 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
-
         try {
             /** @var ViewableCustomer $customerInformation */
             $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
-
             $customerFormOptions = [
                 'is_password_required' => false,
             ];
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
             $customerForm->handleRequest($request);
-
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
-
             if ($result->isSubmitted() && $result->isValid()) {
-                if ($request->query->has('back')) {
-                    return $this->redirect(urldecode($request->query->get('back')));
-                }
-
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-
                 return $this->redirectToRoute('admin_customers_index');
             }
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
             if ($e instanceof CustomerNotFoundException) {
                 return $this->redirectToRoute('admin_customers_index');
             }
         }
-
         return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
             'customerForm' => $customerForm->createView(),
             'customerInformation' => $customerInformation,

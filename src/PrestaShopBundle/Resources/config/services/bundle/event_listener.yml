@@ -84,3 +84,10 @@ services:
             - '@request_stack'
         tags:
             - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+
+    prestashop.bundle.event_listener.back_url_response_listener:
+        class: PrestaShopBundle\EventListener\BackUrlResponseListener
+        arguments:
+          - '@request_stack'
+        tags:
+          - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
