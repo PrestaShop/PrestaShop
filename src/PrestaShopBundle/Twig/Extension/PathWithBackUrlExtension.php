@@ -52,7 +52,7 @@ class PathWithBackUrlExtension extends AbstractExtension
      */
     public function __construct(
         RoutingExtension $routingExtension,
-        RequestStack $requestStack
+        $requestStack
     ) {
         $this->requestStack = $requestStack;
         $this->routingExtension = $routingExtension;
