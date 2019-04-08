@@ -59,7 +59,7 @@ class BackUrlResponseListener
             return;
         }
 
-        $backUrl = $currentRequest->query->get('back');
+        $backUrl = $currentRequest->query->get('back-url');
 
         if ($backUrl) {
             $backUrlResponse = $originalResponse->setTargetUrl($backUrl);
