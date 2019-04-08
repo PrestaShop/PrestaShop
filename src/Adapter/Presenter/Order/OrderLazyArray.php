@@ -247,6 +247,26 @@ class OrderLazyArray extends AbstractLazyArray
                 Currency::getCurrencyInstance((int) $order->id_currency)
             ),
         );
+        
+        $amounts['totals']['total_including_tax'] = array(
+            'type' => 'total_including_tax',
+            'label' => $this->translator->trans('Total (tax incl.)', array(), 'Shop.Theme.Checkout'),
+            'amount' => $order->total_paid_tax_incl,
+            'value' => $this->priceFormatter->format(
+                $order->total_paid_tax_incl,
+                Currency::getCurrencyInstance((int) $order->id_currency)
+            ),
+        );
+
+        $amounts['totals']['total_excluding_tax'] = array(
+            'type' => 'total_excluding_tax',
+            'label' => $this->translator->trans('Total (tax excl.)', array(), 'Shop.Theme.Checkout'),
+            'amount' => $order->total_paid_tax_excl,
+            'value' => $this->priceFormatter->format(
+                $order->total_paid_tax_excl,
+                Currency::getCurrencyInstance((int) $order->id_currency)
+            ),
+        );
 
         return $amounts;
     }
