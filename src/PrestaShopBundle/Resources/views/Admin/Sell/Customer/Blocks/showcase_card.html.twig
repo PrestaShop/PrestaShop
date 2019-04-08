@@ -1,0 +1,45 @@
+{#**
+ * 2007-2019 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% if not isShowcaseCardClosed %}
+  <div id="customersShowcaseCard" class="showcase-card card">
+    <div class="helper-card__left helper-card__customer shape-one">
+      <img src="{{ asset('themes/new-theme/scss/img/helper-card/customer@3x.png') }}" class="img-fluid img-rtl">
+    </div>
+    <div class="helper-card__right">
+      <h2>{{ 'Administrate your customers'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
+      <p>{{ 'Taking good care of your customers starts with making sure their profiles contain all the information needed to have their packages shipped without mishap.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+      <a class="btn btn-outline-secondary" href="{{ documentation_link('customer') }}" target="_blank">
+        {{ 'Learn more'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <i class="showcase-card__close material-icons js-remove-helper-block"
+       data-card-name="{{ showcaseCardName }}"
+       data-close-url="{{ path('admin_close_showcase_card') }}"
+    >
+      close
+    </i>
+  </div>
+{% endif %}

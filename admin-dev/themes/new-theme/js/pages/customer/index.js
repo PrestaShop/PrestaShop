@@ -39,7 +39,8 @@ import DeleteCustomersBulkActionExtension
   from "../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension";
 import DeleteCustomerRowActionExtension
   from "../../components/grid/extension/action/row/customer/delete-customer-row-action-extension";
-import HelperCard from "../../components/helper-card";
+import ShowcaseCard from "../../components/showcase-card/showcase-card";
+import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
 
 const $ = window.$;
 
@@ -58,6 +59,9 @@ $(() => {
   customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
   customerGrid.addExtension(new DeleteCustomerRowActionExtension());
 
+  const showcaseCard = new ShowcaseCard('customersShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
+
   // needed for "Group access" input in Add/Edit customer forms
   new ChoiceTable();
 
@@ -66,5 +70,4 @@ $(() => {
   // where you click any row
   // and it redirects user to related page
   new LinkableItem();
-  new HelperCard();
 });
