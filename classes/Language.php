@@ -771,7 +771,7 @@ class LanguageCore extends ObjectModel
             throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
         }
 
-        return $allLanguages[$iso] ?: false;
+        return isset($allLanguages[$iso]) ? $allLanguages[$iso] : false;
     }
 
     /**
@@ -1072,15 +1072,17 @@ class LanguageCore extends ObjectModel
 
         $errors = array();
 
-        Language::downloadLanguagePack($iso, $version, $errors);
-
-        if ($install) {
-            Language::installLanguagePack($iso, $params, $errors);
-            Language::updateMultilangTable($iso);
-        } else {
-            $lang_pack = self::getLangDetails($iso);
-            self::installSfLanguagePack($lang_pack['locale'], $errors);
-            self::generateEmailsLanguagePack($lang_pack, $errors);
+        if (Language::downloadLanguagePack($iso, $version, $errors)) {
+            if ($install) {
+                Language::installLanguagePack($iso, $params, $errors);
+                Language::updateMultilangTable($iso);
+            } else {
+                $lang_pack = self::getLangDetails($iso);
+                if (!empty($lang_pack['locale'])) {
+                    self::installSfLanguagePack($lang_pack['locale'], $errors);
+                    self::generateEmailsLanguagePack($lang_pack, $errors);
+                }
+            }
         }
 
         return count($errors) ? $errors : true;
@@ -1093,9 +1095,9 @@ class LanguageCore extends ObjectModel
         $lang_pack = self::getLangDetails($iso);
         if (!$lang_pack) {
             $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', array(), 'Admin.International.Notification');
+        } else {
+            self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
         }
-
-        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
 
         return !count($errors);
     }

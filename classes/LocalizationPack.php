@@ -477,6 +477,11 @@ class LocalizationPackCore
         $symbolsByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
+            if ($language->locale === '') {
+                // Language doesn't have locale we can't install this language
+                continue;
+            }
+
             $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
             $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
 
