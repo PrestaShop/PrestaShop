@@ -32,9 +32,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
- * Response request is being modified with the url which is given by request.
+ * This class allows to redirect to back url.
  */
-class BackUrlResponseListener
+final class BackUrlResponseListener
 {
     /**
      * @var RequestStack
