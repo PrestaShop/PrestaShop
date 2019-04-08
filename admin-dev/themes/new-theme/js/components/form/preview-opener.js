@@ -27,22 +27,28 @@ const $ = window.$;
 
 /**
  * Responsible for opening another page with specified url.
- * For example used in 'Save and preview' cms page create/edit actions
+ * For example used in 'Save and preview' cms page create/edit actions.
+ *
+ * Usage: In selector element attr 'data-preview-url' provide page url.
+ * The page will be opened once provided 'open_preview' parameter in query url
  */
 export default class PreviewOpener {
   constructor (previewUrlSelector) {
     this.previewUrl = $(previewUrlSelector).data('preview-url');
-    this.disablePreview = $(previewUrlSelector).data('disable-preview');
-    this.open();
+    this._open();
+
+    return {};
   }
 
   /**
-   * Opens new page of provided url if query contains specific parameters
+   * Opens new page of provided url
+   *
+   * @private
    */
-  open() {
+  _open() {
     const urlParams = new URLSearchParams(location.search);
 
-    if (this.previewUrl && urlParams.has('open_preview') && this.disablePreview !== 1) {
+    if (this.previewUrl && urlParams.has('open_preview')) {
       window.open(this.previewUrl, '_blank');
     }
   }

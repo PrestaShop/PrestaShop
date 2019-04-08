@@ -158,9 +158,6 @@ class ManufacturerController extends FrameworkBundleAdminController
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
-        if ($request->isXmlHttpRequest()) {
-            return $this->json('test');
-        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/add.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),

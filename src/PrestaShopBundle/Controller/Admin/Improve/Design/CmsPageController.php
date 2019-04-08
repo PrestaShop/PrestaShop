@@ -227,10 +227,13 @@ class CmsPageController extends FrameworkBundleAdminController
     public function editAction(Request $request, $cmsPageId)
     {
         $cmsPageId = (int) $cmsPageId;
-        $disablePreview = false;
 
         try {
-            $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId);
+            $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId, [], [
+                'action' => $this->generateUrl('admin_cms_pages_edit', [
+                    'cmsPageId' => $cmsPageId,
+                ]),
+            ]);
             $form->handleRequest($request);
             $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
 
@@ -248,11 +251,6 @@ class CmsPageController extends FrameworkBundleAdminController
                 }
 
                 return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
-            }
-
-            /* When form is submitted, but invalid, disable opening preview page */
-            if ($result->isSubmitted()) {
-                $disablePreview = true;
             }
 
             /** @var EditableCmsPage $editableCmsPage */
@@ -275,7 +273,6 @@ class CmsPageController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'previewUrl' => $previewUrl,
-            'disablePreview' => $disablePreview,
         ]);
     }
 
@@ -1092,72 +1089,56 @@ class CmsPageController extends FrameworkBundleAdminController
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Name', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Name', 'Admin.Global')),
                     ]
                 ),
                 CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Friendly URL', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Friendly URL', 'Admin.Global')),
                     ]
                 ),
                 CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Name', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Name', 'Admin.Global')),
                     ]
                 ),
                 CmsPageCategoryConstraintException::INVALID_LINK_REWRITE => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Friendly URL', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Friendly URL', 'Admin.Global')),
                     ]
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_TITLE => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Meta title', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Meta title', 'Admin.Global')),
                     ]
                 ),
                 CmsPageCategoryConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Description', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Description', 'Admin.Global')),
                     ]
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Meta description', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Meta description', 'Admin.Global')),
                     ]
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_KEYWORDS => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf(
-                            '"%s"',
-                            $this->trans('Meta keywords', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('Meta keywords', 'Admin.Global')),
                     ]
                 ),
             ],

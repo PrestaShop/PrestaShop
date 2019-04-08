@@ -92,6 +92,8 @@ class EditableCmsPage
     private $shopAssociation;
 
     /**
+     * Url for opening FO page on save and preview action
+     *
      * @var string
      */
     private $previewUrl;

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\QueryHandler;
 
-use Context;
+use Link;
 use PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\AbstractCmsPageHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
@@ -42,13 +42,23 @@ use PrestaShopException;
 final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implements GetCmsPageForEditingHandlerInterface
 {
     /**
-     * @var Context
+     * @var Link
      */
-    private $context;
+    private $link;
 
-    public function __construct(Context $context)
+    /**
+     * @var int
+     */
+    private $langId;
+
+    /**
+     * @param Link $link
+     * @param int $langId
+     */
+    public function __construct(Link $link, $langId)
     {
-        $this->context = $context;
+        $this->link = $link;
+        $this->langId = $langId;
     }
 
     /**
@@ -78,7 +88,7 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
                 $cms->indexation,
                 $cms->active,
                 $cms->getAssociatedShops(),
-                $this->context->link->getCMSLink($cms, null, null, $this->context->language->id)
+                $this->link->getCMSLink($cms, null, null, $this->langId)
         );
         } catch (PrestaShopException $e) {
             throw new CmsPageException(
