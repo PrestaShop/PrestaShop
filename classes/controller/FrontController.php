@@ -1527,7 +1527,7 @@ class FrontControllerCore extends Controller
         return array(
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
             'display_prices_tax_incl' => (bool) (new TaxConfiguration())->includeTaxes(),
-            'tax_is_active' => (bool) Configuration::get('PS_TAX'),
+            'taxes_enabled' => (bool) Configuration::get('PS_TAX'),
             'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
             'is_b2b' => (bool) Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool) Configuration::isCatalogMode(),

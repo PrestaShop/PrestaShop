@@ -25,7 +25,7 @@
 <div class="card-block cart-summary-totals">
 
   {block name='cart_summary_total'}
-    {if !$configuration.display_prices_tax_incl && $configuration.tax_is_active}
+    {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
       <div class="cart-summary-line">
         <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
         <span class="value">{$cart.totals.total.value}</span>
@@ -36,7 +36,7 @@
       </div>
     {else}
       <div class="cart-summary-line cart-total">
-        <span class="label">{$cart.totals.total.label}&nbsp;{if $configuration.tax_is_active}{$cart.labels.tax_short}{/if}</span>
+        <span class="label">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled}{$cart.labels.tax_short}{/if}</span>
         <span class="value">{$cart.totals.total.value}</span>
       </div>
     {/if}
