@@ -82,8 +82,8 @@ services:
 
     prestashop.twig.extension.path_with_back_url_extension:
       class: PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension
-      parent: twig.extension.routing
       arguments:
+        - '@twig.extension.routing'
         - '@request_stack'
       public: true
       tags:

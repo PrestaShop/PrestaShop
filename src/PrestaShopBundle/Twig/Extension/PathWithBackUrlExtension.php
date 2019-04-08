@@ -28,13 +28,13 @@ namespace PrestaShopBundle\Twig\Extension;
 
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
  * This class adds a function to twig template which points to back url if such is found in current request.
  */
-class PathWithBackUrlExtension extends RoutingExtension
+class PathWithBackUrlExtension extends AbstractExtension
 {
     /**
      * @var RequestStack|null
@@ -42,15 +42,20 @@ class PathWithBackUrlExtension extends RoutingExtension
     private $requestStack;
 
     /**
-     * @param UrlGeneratorInterface $generator
+     * @var RoutingExtension
+     */
+    private $routingExtension;
+
+    /**
+     * @param RoutingExtension $routingExtension
      * @param RequestStack|null $requestStack
      */
     public function __construct(
-        UrlGeneratorInterface $generator,
+        RoutingExtension $routingExtension,
         RequestStack $requestStack
     ) {
-        parent::__construct($generator);
         $this->requestStack = $requestStack;
+        $this->routingExtension = $routingExtension;
     }
 
     /**
@@ -58,18 +63,13 @@ class PathWithBackUrlExtension extends RoutingExtension
      */
     public function getFunctions()
     {
-        $parentFunctions = parent::getFunctions();
-
-        return array_merge(
-            $parentFunctions,
-            [
-                new TwigFunction(
-                    'pathWithBackUrl',
-                    [$this, 'getPathWithBackUrl'],
-                    ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]
-                ),
-            ]
-        );
+        return [
+            new TwigFunction(
+                'pathWithBackUrl',
+                [$this, 'getPathWithBackUrl'],
+                ['is_safe_callback' => [$this->routingExtension, 'isUrlGenerationSafe']]
+            ),
+        ];
     }
 
     /**
@@ -83,7 +83,8 @@ class PathWithBackUrlExtension extends RoutingExtension
      */
     public function getPathWithBackUrl($name, $parameters = [], $relative = false)
     {
-        $fallbackPath = $this->getPath($name, $parameters, $relative);
+        $fallbackPath = $this->routingExtension->getPath($name, $parameters, $relative);
+
         if (null === $this->requestStack) {
             return $fallbackPath;
         }
