@@ -32,6 +32,7 @@ const $ = window.$;
 export default class PreviewOpener {
   constructor (previewUrlSelector) {
     this.previewUrl = $(previewUrlSelector).data('preview-url');
+    this.disablePreview = $(previewUrlSelector).data('disable-preview');
     this.open();
   }
 
@@ -41,7 +42,7 @@ export default class PreviewOpener {
   open() {
     const urlParams = new URLSearchParams(location.search);
 
-    if (this.previewUrl && urlParams.has('open_preview')) {
+    if (this.previewUrl && urlParams.has('open_preview') && this.disablePreview !== 1) {
       window.open(this.previewUrl, '_blank');
     }
   }

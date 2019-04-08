@@ -227,6 +227,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function editAction(Request $request, $cmsPageId)
     {
         $cmsPageId = (int) $cmsPageId;
+        $disablePreview = false;
 
         try {
             $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId);
@@ -249,6 +250,11 @@ class CmsPageController extends FrameworkBundleAdminController
                 return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
             }
 
+            /* When form is submitted, but invalid, disable opening preview page */
+            if ($result->isSubmitted()) {
+                $disablePreview = true;
+            }
+
             /** @var EditableCmsPage $editableCmsPage */
             $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
             $previewUrl = $editableCmsPage->getPreviewUrl();
@@ -269,6 +275,7 @@ class CmsPageController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'previewUrl' => $previewUrl,
+            'disablePreview' => $disablePreview,
         ]);
     }
 
