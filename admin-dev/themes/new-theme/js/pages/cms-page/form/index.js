@@ -47,4 +47,6 @@ $(() => {
     sourceElementSelector: 'input.js-copier-source-title',
     destinationElementSelector: 'input.js-copier-destination-friendly-url',
   });
+
+  new ChoiceTree('#cms_page_shop_association').enableAutoCheckChildren();
 });

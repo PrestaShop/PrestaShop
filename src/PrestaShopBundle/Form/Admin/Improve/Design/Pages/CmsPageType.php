@@ -227,6 +227,10 @@ class CmsPageType extends AbstractType
 
         if ($this->isMultiShopEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'js-shop-assoc-tree',
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
