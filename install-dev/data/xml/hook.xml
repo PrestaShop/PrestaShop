@@ -921,5 +921,10 @@
       <title>Modify filters form for DB Backup grid</title>
       <description>This hook allows to alter filters form used in DB Backup</description>
     </hook>
+    <hook id="actionProductFlagsModifier">
+      <name>actionProductFlagsModifier</name>
+      <title>Customize product labels displayed on the product list on FO</title>
+      <description>This hook allows to add and remove product labels displayed on top of product images</description>
+    </hook>
   </entities>
 </entity_hook>
