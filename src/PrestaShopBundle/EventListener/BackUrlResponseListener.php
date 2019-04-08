@@ -27,9 +27,13 @@
 namespace PrestaShopBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
+/**
+ * Response request is being modified with the url which is given by request.
+ */
 class BackUrlResponseListener
 {
     /**
@@ -61,9 +65,25 @@ class BackUrlResponseListener
 
         $backUrl = $currentRequest->query->get('back-url');
 
-        if ($backUrl) {
+        if ($backUrl && !$this->isRequestUrlEqualToResponseUrl($currentRequest, $originalResponse)) {
             $backUrlResponse = $originalResponse->setTargetUrl($backUrl);
             $event->setResponse($backUrlResponse);
         }
+    }
+
+    /**
+     * Compares if request url is equal to response url - in such case the back url should not work since the action
+     * is suppose to be kept on the same url . E.g "save and stay" button click.
+     *
+     * @param Request $currentRequest
+     * @param RedirectResponse $originalResponse
+     *
+     * @return bool
+     */
+    private function isRequestUrlEqualToResponseUrl(
+        Request $currentRequest,
+        RedirectResponse $originalResponse
+    ) {
+        return $currentRequest->getRequestUri() === $originalResponse->getTargetUrl();
     }
 }
