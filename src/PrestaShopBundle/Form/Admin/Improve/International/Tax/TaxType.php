@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
@@ -73,7 +73,7 @@ class TaxType extends AbstractType
                                 'Admin.Notifications.Error'
                             ),
                         ]),
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                     ],

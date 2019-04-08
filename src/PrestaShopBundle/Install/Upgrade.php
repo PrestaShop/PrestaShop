@@ -72,7 +72,6 @@ namespace PrestaShopBundle\Install {
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
     use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-    use PrestaShop\PrestaShop\Core\Cldr\Update;
     use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
     use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
     use PrestaShop\PrestaShop\Core\Exception\CoreException;
