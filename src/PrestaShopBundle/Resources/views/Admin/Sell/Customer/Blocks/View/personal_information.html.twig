@@ -34,7 +34,7 @@
       {{ customerInformation.personalInformation.email }}
     </a>
 
-    <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1, 'back': app.request.uri}) }}"
+    <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1, 'back-url': app.request.uri}) }}"
        class="tooltip-link float-right"
        data-toggle="pstooltip"
        title=""
