@@ -31,6 +31,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\TwigFunction;
 
+/**
+ * This class adds a function to twig template which points to back url if such is found in current request.
+ */
 class PathWithBackUrlExtension extends RoutingExtension
 {
     /**
@@ -50,6 +53,9 @@ class PathWithBackUrlExtension extends RoutingExtension
         $this->requestStack = $requestStack;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFunctions()
     {
         $parentFunctions = parent::getFunctions();
@@ -66,6 +72,15 @@ class PathWithBackUrlExtension extends RoutingExtension
         );
     }
 
+    /**
+     * Gets original path or back url path.
+     *
+     * @param string $name - route name
+     * @param array $parameters - route parameters
+     * @param bool $relative
+     *
+     * @return string
+     */
     public function getPathWithBackUrl($name, $parameters = [], $relative = false)
     {
         $fallbackPath = $this->getPath($name, $parameters, $relative);
