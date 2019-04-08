@@ -23,19 +23,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="helper-card card">
-  <div class="helper-card__left helper-card__category shape-one">
-    <img src="{{ asset('themes/new-theme/scss/img/helper-card/category@3x.png') }}" class="img-fluid img-rtl">
-  </div>
-  <div class="helper-card__right">
-    <h2>{{ 'Set categories'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-    <p>{{ 'Categories are essential, as they enable you to group equivalent products. This helps customers find their way through the variety of your catalog.'|trans({}, 'Admin.Catalog.Feature') }}</p>
-    <a class="btn btn-outline-secondary"
-       href="{{ documentation_link('category') }}"
-       target="_blank"
+{% if not isShowcaseCardClosed %}
+  <div id="categoriesShowcaseCard" class="helper-card card">
+    <div class="helper-card__left helper-card__category shape-one">
+      <img src="{{ asset('themes/new-theme/scss/img/helper-card/category@3x.png') }}" class="img-fluid img-rtl">
+    </div>
+    <div class="helper-card__right">
+      <h2>{{ 'Set categories'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+      <p>{{ 'Categories are essential, as they enable you to group equivalent products. This helps customers find their way through the variety of your catalog.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+      <a class="btn btn-outline-secondary"
+         href="{{ documentation_link('category') }}"
+         target="_blank"
+      >
+        {{ 'Learn more'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <i class="showcase-card__close material-icons js-remove-helper-block"
+       data-card-name="{{ showcaseCardName }}"
+       data-close-url="{{ path('admin_close_showcase_card') }}"
     >
-      {{ 'Learn more'|trans({}, 'Admin.Actions') }}
-    </a>
+      close
+    </i>
   </div>
-  <i class="helper-card__close material-icons js-close-helper-card">close</i>
-</div>
+{% endif %}
