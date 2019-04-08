@@ -24,21 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once __DIR__ . '/sql_indexes.php';
+ function drop_index_if_exists($indexName, $table)
+ {
+    $keyExists = Db::getInstance()->executeS('SHOW INDEX
+      FROM `' . $table . '`
+      WHERE Key_name = \'' . $indexName . '\'');
 
-function ps_1760_replace_index_of_admin_filter()
-{
-  $indexList = ['admin_filter_search_idx', 'search_idx', 'admin_filter_search_id_idx'];
-  $res = true;
-
-  // Drop indexes if they exist
-  foreach ($indexList as $index) {
-    $res &= drop_index_if_exists($index, _DB_PREFIX_ . 'admin_filter');
-  }
-
-  $res &= Db::getInstance()->execute('ALTER TABLE
-    `' . _DB_PREFIX_ . 'admin_filter`
-    ADD UNIQUE INDEX `admin_filter_search_id_idx` (`employee`, `shop`, `controller`, `action`, `filter_id`)');
-
-  return $res;
-}
+    if ($keyExists) {
+      return Db::getInstance()->execute('ALTER TABLE
+        `' . $table . '`
+        DROP KEY `' . $indexName . '`');
+    }
+    return true;
+ }
