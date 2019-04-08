@@ -40,6 +40,8 @@ import DeleteCustomersBulkActionExtension
 import DeleteCustomerRowActionExtension
   from "../../components/grid/extension/action/row/customer/delete-customer-row-action-extension";
 import HelperCard from "../../components/helper-card";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -57,6 +59,7 @@ $(() => {
   customerGrid.addExtension(new ColumnTogglingExtension());
   customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
   customerGrid.addExtension(new DeleteCustomerRowActionExtension());
+  customerGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   // needed for "Group access" input in Add/Edit customer forms
   new ChoiceTable();

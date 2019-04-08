@@ -33,6 +33,8 @@ import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-ac
 import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import ReloadListExtension from "../../components/grid/extension/reload-list-extension";
 import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -47,4 +49,5 @@ $(() => {
   supplierGrid.addExtension(new SubmitBulkActionExtension());
   supplierGrid.addExtension(new ReloadListExtension());
   supplierGrid.addExtension(new ExportToSqlManagerExtension());
+  supplierGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 });

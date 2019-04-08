@@ -23,22 +23,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-
 const $ = window.$;
 
-$(() => {
-  const backupGrid = new Grid('backup');
+/**
+ * Responsible for grid filters search and reset button availability when filter inputs changes.
+ */
+export default class FiltersSubmitButtonEnablerExtension {
 
-  backupGrid.addExtension(new BulkActionCheckboxExtension());
-  backupGrid.addExtension(new SubmitBulkExtension());
-  backupGrid.addExtension(new LinkRowActionExtension());
-  backupGrid.addExtension(new SubmitRowActionExtension());
-  backupGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-});
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  extend(grid) {
+    const $filtersRow = grid.getContainer().find('.column-filters');
+    $filtersRow.find('input, select').on('input', () => {
+      $filtersRow.find('.grid-search-button').prop('disabled', false);
+      $filtersRow.find('.js-grid-reset-button').prop('hidden', false);
+    });
+  }
+}

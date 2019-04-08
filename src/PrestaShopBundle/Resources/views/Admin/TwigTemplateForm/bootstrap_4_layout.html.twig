@@ -358,12 +358,13 @@
                 class="btn btn-primary grid-search-button d-block float-right"
                 title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
                 name="{{ full_name }}[search]"
+                {% if disable_search_button %} disabled="true" {% endif %}
         >
           <i class="material-icons">search</i>
           {{ 'Search'|trans({}, 'Admin.Actions') }}
         </button>
 
-        {% if show_reset_button %}
+          <div class="js-grid-reset-button" {% if not show_reset_button %} hidden {% endif %}>
           <div class="clearfix"></div>
             <button type="reset"
                     name="{{ full_name }}[reset]"
@@ -374,7 +375,7 @@
               <i class="material-icons">clear</i>
               {{ 'Reset'|trans({}, 'Admin.Actions') }}
             </button>
-        {% endif %}
+          </div>
     {% endspaceless %}
 {% endblock search_and_reset_widget %}
 
