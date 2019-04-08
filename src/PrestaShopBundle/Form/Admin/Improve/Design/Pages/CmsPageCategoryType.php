@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -80,7 +80,7 @@ class CmsPageCategoryType extends AbstractType
                 ],
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'catalog_name',
                         ]),
                         new Length([
@@ -115,7 +115,7 @@ class CmsPageCategoryType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -133,7 +133,7 @@ class CmsPageCategoryType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -151,7 +151,7 @@ class CmsPageCategoryType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
