@@ -23,8 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
-
 /**
  * Responsible for grid filters search and reset button availability when filter inputs changes.
  */
