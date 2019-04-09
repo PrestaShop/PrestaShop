@@ -37,7 +37,7 @@ interface EditCmsPageCategoryHandlerInterface
     /**
      * @param EditCmsPageCategoryCommand $command
      *
-     * @return CmsPageCategoryId
+     * @return void.
      */
     public function handle(EditCmsPageCategoryCommand $command);
 }

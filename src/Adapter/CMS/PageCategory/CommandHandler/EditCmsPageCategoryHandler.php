@@ -124,8 +124,6 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
                 $exception
             );
         }
-
-        return new CmsPageCategoryId((int) $cmsPageCategory->id);
     }
 
     /**

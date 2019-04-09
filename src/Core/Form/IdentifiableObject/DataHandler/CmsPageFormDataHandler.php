@@ -82,12 +82,7 @@ final class CmsPageFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * Update object with form data.
-     *
-     * @param int $cmsPageId
-     * @param array $data
-     *
-     * @return int ID of identifiable object
+     * {@inheritdoc}
      *
      * @throws CmsPageException
      * @throws CmsPageCategoryException
@@ -97,10 +92,7 @@ final class CmsPageFormDataHandler implements FormDataHandlerInterface
         $editCmsPageCommand = new EditCmsPageCommand((int) $cmsPageId);
         $this->fillCommandWithData($editCmsPageCommand, $data);
 
-        /** @var CmsPageId $cmsPageId */
-        $cmsPageId = $this->commandBus->handle($editCmsPageCommand);
-
-        return $cmsPageId->getValue();
+        $this->commandBus->handle($editCmsPageCommand);
     }
 
     /**

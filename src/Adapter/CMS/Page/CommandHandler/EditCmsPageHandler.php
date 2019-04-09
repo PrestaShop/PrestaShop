@@ -69,8 +69,6 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
                 $e
             );
         }
-
-        return new CmsPageId((int) $cms->id);
     }
 
     /**

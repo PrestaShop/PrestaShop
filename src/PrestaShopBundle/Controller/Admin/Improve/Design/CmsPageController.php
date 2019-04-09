@@ -211,7 +211,7 @@ class CmsPageController extends FrameworkBundleAdminController
         try {
             $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash(
                     'success',
                     $this->trans('Successful update.', 'Admin.Notifications.Success')
@@ -303,7 +303,7 @@ class CmsPageController extends FrameworkBundleAdminController
         try {
             $result = $this->getCmsPageCategoryFormHandler()->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
