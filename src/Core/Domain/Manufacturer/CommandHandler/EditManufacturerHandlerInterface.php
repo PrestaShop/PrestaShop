@@ -37,7 +37,7 @@ interface EditManufacturerHandlerInterface
     /**
      * @param EditManufacturerCommand $command
      *
-     * @return void.
+     * @return void
      */
     public function handle(EditManufacturerCommand $command);
 }

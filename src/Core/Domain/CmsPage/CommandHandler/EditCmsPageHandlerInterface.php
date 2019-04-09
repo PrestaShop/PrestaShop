@@ -37,7 +37,7 @@ interface EditCmsPageHandlerInterface
     /**
      * @param EditCmsPageCommand $command
      *
-     * @return void.
+     * @return void
      */
     public function handle(EditCmsPageCommand $command);
 }
