@@ -60,8 +60,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
         }
 
         $this->updateCategoryFromCommandData($category, $command);
-
-        return new CategoryId((int) $category->id);
     }
 
     /**
