@@ -116,8 +116,6 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 $exception
             );
         }
-
-        return new MetaId((int) $entity->id);
     }
 
     /**
