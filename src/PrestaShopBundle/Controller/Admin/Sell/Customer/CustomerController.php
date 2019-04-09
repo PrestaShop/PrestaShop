@@ -44,11 +44,9 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustome
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
@@ -611,7 +609,7 @@ class CustomerController extends AbstractAdminController
             try {
                 $command = new BulkDeleteCustomerCommand(
                     $customerIds,
-                    new CustomerDeleteMethod($data['delete_method'])
+                    $data['delete_method']
                 );
 
                 $this->getCommandBus()->handle($command);
@@ -653,8 +651,8 @@ class CustomerController extends AbstractAdminController
 
             try {
                 $command = new DeleteCustomerCommand(
-                    new CustomerId($customerId),
-                    new CustomerDeleteMethod($data['delete_method'])
+                    $customerId,
+                    $data['delete_method']
                 );
 
                 $this->getCommandBus()->handle($command);
