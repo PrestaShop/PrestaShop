@@ -40,10 +40,3 @@ admin_international_translations_copy_language:
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:copyLanguage
         _legacy_controller: AdminTranslations
-
-admin_international_translations_export_language:
-    path: /export-language
-    methods: [POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Translations:exportLanguage
-        _legacy_controller: AdminTranslations
