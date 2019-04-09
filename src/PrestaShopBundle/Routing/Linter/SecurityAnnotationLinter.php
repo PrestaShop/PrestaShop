@@ -81,7 +81,7 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     {
         // @todo: parsing needs to be improved & refactored into separate service
 
-        list($controller, $method) = explode('::', $route->getDefault('_controller'));
+        list($controller, $method) = explode(':', $route->getDefault('_controller'));
 
         return [
             'controller' => $controller,
