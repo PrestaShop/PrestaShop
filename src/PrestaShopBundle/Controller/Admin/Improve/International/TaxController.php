@@ -196,7 +196,7 @@ class TaxController extends FrameworkBundleAdminController
             $taxForm->handleRequest($request);
             $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_taxes_index');

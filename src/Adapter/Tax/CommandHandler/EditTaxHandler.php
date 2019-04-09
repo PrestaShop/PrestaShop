@@ -69,7 +69,5 @@ final class EditTaxHandler extends AbstractTaxHandler implements EditTaxHandlerI
                 sprintf('Cannot update tax with id "%s"', $tax->id)
             );
         }
-
-        return new TaxId((int) $tax->id);
     }
 }
