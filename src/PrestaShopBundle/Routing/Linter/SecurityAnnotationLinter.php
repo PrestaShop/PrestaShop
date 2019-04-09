@@ -39,14 +39,14 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     /**
      * @var Reader
      */
-    private $annoationReader;
+    private $annotationReader;
 
     /**
-     * @param Reader $annoationReader
+     * @param Reader $annotationReader
      */
-    public function __construct(Reader $annoationReader)
+    public function __construct(Reader $annotationReader)
     {
-        $this->annoationReader = $annoationReader;
+        $this->annotationReader = $annotationReader;
     }
 
     /**
@@ -61,7 +61,7 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
             $controllerAndMethod['method']
         );
 
-        $annotation = $this->annoationReader->getMethodAnnotation($reflection, AdminSecurity::class);
+        $annotation = $this->annotationReader->getMethodAnnotation($reflection, AdminSecurity::class);
 
         if (null === $annotation) {
             throw new LinterException(sprintf(
