@@ -35,8 +35,6 @@ interface EditManufacturerAddressHandlerInterface
 {
     /**
      * @param EditManufacturerAddressCommand $command
-     *
-     * @return void
      */
     public function handle(EditManufacturerAddressCommand $command);
 }

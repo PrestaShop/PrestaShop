@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLan
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
  * Handles command which edits language using legacy object model
