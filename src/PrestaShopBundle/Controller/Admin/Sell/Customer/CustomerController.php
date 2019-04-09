@@ -180,7 +180,7 @@ class CustomerController extends AbstractAdminController
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 if ($request->query->has('back')) {
                     return $this->redirect(urldecode($request->query->get('back')));
                 }

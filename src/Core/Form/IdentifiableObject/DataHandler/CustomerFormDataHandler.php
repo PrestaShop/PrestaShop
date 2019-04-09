@@ -87,10 +87,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
     {
         $command = $this->buildCustomerEditCommand($customerId, $data);
 
-        /** @var CustomerId $customerId */
-        $customerId = $this->bus->handle($command);
-
-        return $customerId->getValue();
+        $this->bus->handle($command);
     }
 
     /**
