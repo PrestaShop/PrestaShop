@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Routing\Linter;
 use Doctrine\Common\Annotations\Reader;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use ReflectionMethod;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -42,11 +43,18 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     private $annotationReader;
 
     /**
-     * @param Reader $annotationReader
+     * @var ControllerNameParser
      */
-    public function __construct(Reader $annotationReader)
+    private $controllerNameParser;
+
+    /**
+     * @param Reader $annotationReader
+     * @param ControllerNameParser $controllerNameParser
+     */
+    public function __construct(Reader $annotationReader, ControllerNameParser $controllerNameParser)
     {
         $this->annotationReader = $annotationReader;
+        $this->controllerNameParser = $controllerNameParser;
     }
 
     /**
@@ -79,9 +87,14 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
      */
     private function extractControllerAndMethodNamesFromRoute(Route $route)
     {
-        // @todo: parsing needs to be improved & refactored into separate service
+        $controller = $route->getDefault('_controller');
 
-        list($controller, $method) = explode(':', $route->getDefault('_controller'));
+        if (strpos($controller, '::') === false) {
+            // we need to support controllers defined as services & defined using short notation
+            $controller = $this->controllerNameParser->parse($controller);
+        }
+
+        list($controller, $method) = explode('::', $controller, 2);
 
         return [
             'controller' => $controller,
