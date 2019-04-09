@@ -37,7 +37,7 @@ interface EditContactHandlerInterface
     /**
      * @param EditContactCommand $command
      *
-     * @return ContactId
+     * @return void.
      */
     public function handle(EditContactCommand $command);
 }
