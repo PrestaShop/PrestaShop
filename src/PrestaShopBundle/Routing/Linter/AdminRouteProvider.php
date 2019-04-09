@@ -45,8 +45,16 @@ final class AdminRouteProvider
 
     public function getRoutes()
     {
-        // @todo: implement admin routes filtering
+        $adminRoutes = [];
 
-        return $this->router->getRouteCollection();
+        foreach ($this->router->getRouteCollection() as $routeName => $route) {
+            if (strpos($routeName, 'admin_') !== 0) {
+                continue;
+            }
+
+            $adminRoutes[] = $route;
+        }
+
+        return $adminRoutes;
     }
 }
