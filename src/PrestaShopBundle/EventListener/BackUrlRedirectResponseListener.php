@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -37,15 +38,24 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 final class BackUrlRedirectResponseListener
 {
     /**
+     * @var BackUrlProvider
+     */
+    private $backUrlProvider;
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
 
     /**
+     * @param BackUrlProvider $backUrlProvider
      * @param RequestStack $requestStack
      */
-    public function __construct(RequestStack $requestStack)
-    {
+    public function __construct(
+        BackUrlProvider $backUrlProvider,
+        RequestStack $requestStack
+    ) {
+        $this->backUrlProvider = $backUrlProvider;
         $this->requestStack = $requestStack;
     }
 
@@ -63,7 +73,7 @@ final class BackUrlRedirectResponseListener
             return;
         }
 
-        $backUrl = $currentRequest->query->get('back-url');
+        $backUrl = $this->backUrlProvider->getBackUrl();
 
         if ($backUrl && !$this->isRequestUrlEqualToResponseUrl($currentRequest, $originalResponse)) {
             $backUrlResponse = $originalResponse->setTargetUrl(urldecode($backUrl));

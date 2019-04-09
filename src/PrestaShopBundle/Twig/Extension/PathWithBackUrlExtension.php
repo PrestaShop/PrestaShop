@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Twig\Extension;
 
+use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -37,25 +37,25 @@ use Twig\TwigFunction;
 class PathWithBackUrlExtension extends AbstractExtension
 {
     /**
-     * @var RequestStack|null
-     */
-    private $requestStack;
-
-    /**
      * @var RoutingExtension
      */
     private $routingExtension;
 
     /**
+     * @var BackUrlProvider
+     */
+    private $backUrlProvider;
+
+    /**
      * @param RoutingExtension $routingExtension
-     * @param RequestStack|null $requestStack
+     * @param BackUrlProvider $backUrlProvider
      */
     public function __construct(
         RoutingExtension $routingExtension,
-        $requestStack
+        BackUrlProvider $backUrlProvider
     ) {
-        $this->requestStack = $requestStack;
         $this->routingExtension = $routingExtension;
+        $this->backUrlProvider = $backUrlProvider;
     }
 
     /**
@@ -85,17 +85,7 @@ class PathWithBackUrlExtension extends AbstractExtension
     {
         $fallbackPath = $this->routingExtension->getPath($name, $parameters, $relative);
 
-        if (null === $this->requestStack) {
-            return $fallbackPath;
-        }
-
-        $currentRequest = $this->requestStack->getCurrentRequest();
-
-        if (null === $currentRequest) {
-            return $fallbackPath;
-        }
-
-        $backUrl = $currentRequest->query->get('back-url');
+        $backUrl = $this->backUrlProvider->getBackUrl();
 
         if (!$backUrl) {
             return $fallbackPath;
