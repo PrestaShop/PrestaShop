@@ -37,7 +37,7 @@ interface EditCurrencyHandlerInterface
     /**
      * @param EditCurrencyCommand $command
      *
-     * @return CurrencyId
+     * @return void
      */
     public function handle(EditCurrencyCommand $command);
 }
