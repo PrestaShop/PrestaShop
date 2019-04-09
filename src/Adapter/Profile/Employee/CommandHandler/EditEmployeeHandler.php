@@ -108,8 +108,6 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         if (null !== $command->getPlainPassword() && $employee->id == $this->contextEmployeeProvider->getId()) {
             $this->updatePasswordInCookie($employee);
         }
-
-        return new EmployeeId((int) $employee->id);
     }
 
     /**

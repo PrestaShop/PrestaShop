@@ -37,7 +37,7 @@ interface EditEmployeeHandlerInterface
     /**
      * @param EditEmployeeCommand $command
      *
-     * @return EmployeeId
+     * @return void
      */
     public function handle(EditEmployeeCommand $command);
 }

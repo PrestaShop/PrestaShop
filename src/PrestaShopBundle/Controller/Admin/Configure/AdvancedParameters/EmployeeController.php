@@ -322,7 +322,7 @@ class EmployeeController extends FrameworkBundleAdminController
             $employeeForm->handleRequest($request);
             $result = $this->getEmployeeFormHandler()->handleFor((int) $employeeId, $employeeForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_employees_edit', [
