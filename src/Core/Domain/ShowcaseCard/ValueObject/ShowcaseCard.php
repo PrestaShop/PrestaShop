@@ -50,12 +50,18 @@ class ShowcaseCard
     const CUSTOMERS_CARD = 'customers_card';
 
     /**
+     * Card shown in Employees
+     */
+    const EMPLOYEES_CARD = 'employees_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
         self::SEO_URLS_CARD => true,
         self::CATEGORIES_CARD => true,
         self::CUSTOMERS_CARD => true,
+        self::EMPLOYEES_CARD => true,
     ];
 
     /**
