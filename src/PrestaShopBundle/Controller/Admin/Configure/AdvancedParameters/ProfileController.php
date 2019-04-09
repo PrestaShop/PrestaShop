@@ -165,7 +165,7 @@ class ProfileController extends FrameworkBundleAdminController
 
             $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
