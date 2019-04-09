@@ -37,7 +37,7 @@ interface EditLanguageHandlerInterface
     /**
      * @param EditLanguageCommand $command
      *
-     * @return LanguageId
+     * @return void
      */
     public function handle(EditLanguageCommand $command);
 }

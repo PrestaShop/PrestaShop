@@ -61,8 +61,6 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         $this->updateLanguageWithCommandData($language, $command);
         $this->updateShopAssociationIfChanged($language, $command);
         $this->uploadFlagImageIfChanged($language, $command);
-
-        return new LanguageId((int) $language->id);
     }
 
     /**
