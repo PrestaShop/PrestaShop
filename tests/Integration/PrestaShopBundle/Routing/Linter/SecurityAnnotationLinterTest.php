@@ -50,7 +50,7 @@ class SecurityAnnotationLinterTest extends KernelTestCase
     public function testLinterPassesWhenRouteControllerHasConfiguredAdminSecurityAnnotation()
     {
         $route = new Route('/', [
-            '_controller' => sprintf('%s:%s', TestController::class, 'indexAction'),
+            '_controller' => sprintf('%s::%s', TestController::class, 'indexAction'),
         ]);
 
         $this->securityAnnotationLinter->lint($route);
@@ -61,7 +61,7 @@ class SecurityAnnotationLinterTest extends KernelTestCase
     public function testLinterThrowsExceptionWhenRouteControllerDoesNotHaveConfiguredAdminSecutityAnnotation()
     {
         $route = new Route('/', [
-            '_controller' => sprintf('%s:%s', TestController::class, 'createAction'),
+            '_controller' => sprintf('%s::%s', TestController::class, 'createAction'),
         ]);
 
         $this->expectException(LinterException::class);

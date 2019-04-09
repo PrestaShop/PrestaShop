@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Routing\Linter;
 
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -38,11 +39,17 @@ final class AdminRouteProvider
      */
     private $router;
 
+    /**
+     * @param RouterInterface $router
+     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
 
+    /**
+     * @return Route[] As routeName => route
+     */
     public function getRoutes()
     {
         $adminRoutes = [];
@@ -52,7 +59,7 @@ final class AdminRouteProvider
                 continue;
             }
 
-            $adminRoutes[] = $route;
+            $adminRoutes[$routeName] = $route;
         }
 
         return $adminRoutes;

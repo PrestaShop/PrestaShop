@@ -26,13 +26,21 @@
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShopBundle\Routing\Linter\LinterException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Routing\Route;
 
+/**
+ * Checks if all admin routes have @AdminSecurity configured
+ */
 final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
 {
+    /**
+     * @inheritdoc
+     */
     public function configure()
     {
         $this
@@ -50,11 +58,29 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
         $securityAnnotationLinter = $this->getContainer()
             ->get('prestashop.bundle.routing.linter.security_annotation_linter');
 
+        $notConfiguredRoutes = [];
+
         /** @var Route $route */
-        foreach ($adminRouteProvider->getRoutes() as $route) {
-            $securityAnnotationLinter->lint($route);
+        foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
+            try {
+                $securityAnnotationLinter->lint($route);
+            } catch (LinterException $e) {
+                $notConfiguredRoutes[] = $routeName;
+            }
         }
 
-        $output->writeln('Admin routes has AdminSecurity configured.');
+        $io = new SymfonyStyle($input, $output);
+
+        if (!empty($notConfiguredRoutes)) {
+            $io->warning(sprintf(
+                '%s routes are not configured with @AdminSecurity annotation:',
+                count($notConfiguredRoutes)
+            ));
+            $io->listing($notConfiguredRoutes);
+
+            return;
+        }
+
+        $io->success('Admin routes has @AdminSecurity configured.');
     }
 }
