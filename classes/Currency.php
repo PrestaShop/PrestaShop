@@ -179,14 +179,23 @@ class CurrencyCore extends ObjectModel
             if (null === $idLang) {
                 $idLang = Context::getContext()->language->id;
             }
+            $defaultIdLang = Configuration::get('PS_LANG_DEFAULT', null, null, $idShop);
             if (is_array($this->symbol)) {
-                $this->sign = $this->symbol = $this->symbol[$idLang];
+                if (isset($this->symbol[$idLang])) {
+                    $this->sign = $this->symbol = $this->symbol[$idLang];
+                } else {
+                    $this->sign = $this->symbol = $this->symbol[$defaultIdLang];
+                }
             } else {
                 $this->sign = $this->symbol;
             }
 
             if (is_array($this->name)) {
-                $this->name = ucfirst($this->name[$idLang]);
+                if (isset($this->name[$idLang])) {
+                    $this->name = ucfirst($this->name[$idLang]);
+                } else {
+                    $this->name = ucfirst($this->name[$defaultIdLang]);
+                }
             } else {
                 $this->name = ucfirst($this->name);
             }
