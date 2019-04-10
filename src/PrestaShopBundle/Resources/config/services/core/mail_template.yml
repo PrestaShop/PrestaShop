@@ -43,6 +43,7 @@ services:
       - '@prestashop.core.admin.lang.repository'
       - '@prestashop.core.mail_template.theme_catalog'
       - '@prestashop.core.mail_template.generator'
+      - '@translator'
       - '%kernel.project_dir%/mails'
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
     public: true
