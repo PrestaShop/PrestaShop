@@ -61,6 +61,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
+            $this->refreshLocalizedCurrencyData($entity);
 
             if (false === $entity->add()) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
@@ -68,7 +69,6 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
 
             $this->associateWithShops($entity, $command->getShopIds());
             $this->associateConversionRateToShops($entity, $command->getShopIds());
-            $this->refreshLocalizedCurrencyData($entity);
         } catch (PrestaShopException $exception) {
             throw new CurrencyException('Failed to create new currency', 0, $exception);
         }
@@ -103,7 +103,6 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
     {
         // Following is required when installing new currency on existing languages:
         // we want to properly update the symbol in each language
-        $languages = Language::getLanguages();
         $context = Context::getContext();
         $container = isset($context->controller) ? $context->controller->getContainer() : null;
         if (null === $container) {
@@ -111,28 +110,6 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
         }
         /** @var LocaleRepository $localeRepoCLDR */
         $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
-        $symbolsByLang = $namesByLang = [];
-        foreach ($languages as $languageData) {
-            $language = new Language($languageData['id_lang']);
-            if ($language->locale === '') {
-                // Language doesn't have locale we can't install this language
-                continue;
-            }
-
-            $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
-            $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
-
-            $symbol = (string) $cldrCurrency->getSymbol();
-            if (empty($symbol)) {
-                $symbol = $currency->iso_code;
-            }
-            // symbol is localized
-            $namesByLang[$language->id] = $cldrCurrency->getDisplayName();
-            $symbolsByLang[$language->id] = $symbol;
-        }
-        $currency->name = $namesByLang;
-        $currency->symbol = $symbolsByLang;
-        $currency->save();
-
+        $currency->refreshLocalizedCurrencyData(Language::getLanguages(), $localeRepoCLDR);
     }
 }

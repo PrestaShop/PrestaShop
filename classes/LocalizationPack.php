@@ -357,15 +357,8 @@ class LocalizationPackCore
 
                     // Following is required when installing new currency on existing languages:
                     // we want to properly update the symbol in each language
-                    $languages = Language::getLanguages();
-                    $context = Context::getContext();
-                    $container = isset($context->controller) ? $context->controller->getContainer() : null;
-                    if (null === $container) {
-                        $container = SymfonyContainer::getInstance();
-                    }
-                    /** @var LocaleRepository $localeRepoCLDR */
-                    $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
-                    $this->refreshLocalizedCurrencyData($currency, $languages, $localeRepoCLDR);
+                    $localeRepoCLDR = $this->getCldrLocaleRepository();
+                    $currency->refreshLocalizedCurrencyData(Language::getLanguages(), $localeRepoCLDR);
                     $currency->save();
 
                     PaymentModule::addCurrencyPermissions($currency->id);
@@ -386,11 +379,10 @@ class LocalizationPackCore
     }
 
     /**
-     * @param Currency $currency
-     * @param Language $defaultLang
+     * @return LocaleRepository
+     * @throws Exception
      */
-    protected function setCurrencyCldrData(Currency $currency, Language $defaultLang)
-    {
+    protected function getCldrLocaleRepository(){
         $context = Context::getContext();
         $container = isset($context->controller) ? $context->controller->getContainer() : null;
         if (null === $container) {
@@ -399,6 +391,17 @@ class LocalizationPackCore
 
         /** @var LocaleRepository $localeRepoCLDR */
         $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+
+        return $localeRepoCLDR;
+    }
+
+    /**
+     * @param Currency $currency
+     * @param Language $defaultLang
+     */
+    protected function setCurrencyCldrData(Currency $currency, Language $defaultLang)
+    {
+        $localeRepoCLDR = $this->getCldrLocaleRepository();
         $cldrLocale = $localeRepoCLDR->getLocale($defaultLang->locale);
         $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
 
@@ -461,53 +464,11 @@ class LocalizationPackCore
         /** @var Currency[] $currencies */
         $currencies = Currency::getCurrencies(true, false, true);
         $languages = Language::getLanguages();
-        $context = Context::getContext();
-        $container = isset($context->controller) ? $context->controller->getContainer() : null;
-        if (null === $container) {
-            $container = SymfonyContainer::getInstance();
-        }
-        /** @var LocaleRepository $localeRepoCLDR */
-        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $localeRepoCLDR = $this->getCldrLocaleRepository();
         foreach ($currencies as $currency) {
-            $this->refreshLocalizedCurrencyData($currency, $languages, $localeRepoCLDR);
+            $currency->refreshLocalizedCurrencyData($languages, $localeRepoCLDR);
             $currency->save();
         }
-    }
-
-    /**
-     * This method aims to update localized data in currency from CLDR reference.
-     *
-     * @param Currency $currency
-     * @param array $languages
-     * @param LocaleRepository $localeRepoCLDR
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
-     */
-    protected function refreshLocalizedCurrencyData(Currency $currency, array $languages, LocaleRepository $localeRepoCLDR)
-    {
-        $symbolsByLang = $namesByLang = [];
-        foreach ($languages as $languageData) {
-            $language = new Language($languageData['id_lang']);
-            if ($language->locale === '') {
-                // Language doesn't have locale we can't install this language
-                continue;
-            }
-
-            $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
-            $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
-
-            $symbol = (string) $cldrCurrency->getSymbol();
-            if (empty($symbol)) {
-                $symbol = $currency->iso_code;
-            }
-            // symbol is localized
-            $namesByLang[$language->id] = $cldrCurrency->getDisplayName();
-            $symbolsByLang[$language->id] = $symbol;
-        }
-        $currency->name = $namesByLang;
-        $currency->symbol = $symbolsByLang;
     }
 
     /**
