@@ -64,7 +64,7 @@ class EditableCmsPage
     /**
      * @var string[]
      */
-    private $LocalizedMetaKeyword;
+    private $localizedMetaKeyword;
 
     /**
      * @var string[]
@@ -92,17 +92,25 @@ class EditableCmsPage
     private $shopAssociation;
 
     /**
+     * Url for opening FO page on save and preview action
+     *
+     * @var string
+     */
+    private $previewUrl;
+
+    /**
      * @param int $cmsPageId
      * @param int $cmsPageCategoryId
      * @param string[] $localizedTitle
      * @param string[] $localizedMetaTitle
      * @param string[] $localizedMetaDescription
-     * @param string[] $LocalizedMetaKeyword
+     * @param string[] $localizedMetaKeyword
      * @param string[] $localizedFriendlyUrl
      * @param string[] $localizedContent
      * @param bool $indexedForSearch
      * @param bool $displayed
      * @param array $shopAssociation
+     * @param string $previewUrl
      *
      * @throws CmsPageCategoryException
      * @throws CmsPageException
@@ -113,24 +121,26 @@ class EditableCmsPage
         array $localizedTitle,
         array $localizedMetaTitle,
         array $localizedMetaDescription,
-        array $LocalizedMetaKeyword,
+        array $localizedMetaKeyword,
         array $localizedFriendlyUrl,
         array $localizedContent,
         $indexedForSearch,
         $displayed,
-        array $shopAssociation
+        array $shopAssociation,
+        $previewUrl
     ) {
         $this->cmsPageId = new CmsPageId($cmsPageId);
         $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
         $this->localizedTitle = $localizedTitle;
         $this->localizedMetaTitle = $localizedMetaTitle;
         $this->localizedMetaDescription = $localizedMetaDescription;
-        $this->LocalizedMetaKeyword = $LocalizedMetaKeyword;
+        $this->localizedMetaKeyword = $localizedMetaKeyword;
         $this->localizedFriendlyUrl = $localizedFriendlyUrl;
         $this->localizedContent = $localizedContent;
         $this->indexedForSearch = $indexedForSearch;
         $this->displayed = $displayed;
         $this->shopAssociation = $shopAssociation;
+        $this->previewUrl = $previewUrl;
     }
 
     /**
@@ -178,7 +188,7 @@ class EditableCmsPage
      */
     public function getLocalizedMetaKeyword()
     {
-        return $this->LocalizedMetaKeyword;
+        return $this->localizedMetaKeyword;
     }
 
     /**
@@ -219,5 +229,13 @@ class EditableCmsPage
     public function getShopAssociation()
     {
         return $this->shopAssociation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreviewUrl()
+    {
+        return $this->previewUrl;
     }
 }
