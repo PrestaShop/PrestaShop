@@ -70,7 +70,7 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
      * @throws CmsPageCategoryException
      * @throws CmsPageNotFoundException
      */
-    public function handle(getCmsPageForEditing $query)
+    public function handle(GetCmsPageForEditing $query)
     {
         $cmsPageId = $query->getCmsPageId()->getValue();
         $cms = $this->getCmsPageIfExistsById($cmsPageId);
