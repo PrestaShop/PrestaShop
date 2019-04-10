@@ -34,6 +34,8 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
 import DisplayInCartOptionHandler from './display-in-cart-option-handler';
 import TranslatableInput from '../../components/translatable-input';
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -48,6 +50,8 @@ $(() => {
   taxGrid.addExtension(new SubmitRowActionExtension());
   taxGrid.addExtension(new SubmitBulkExtension());
   taxGrid.addExtension(new BulkActionCheckboxExtension());
+  taxGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+
   new DisplayInCartOptionHandler();
   new TranslatableInput();
 });

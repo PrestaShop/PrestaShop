@@ -33,6 +33,8 @@ import SubmitBulkActionExtension from "../../components/grid/extension/submit-bu
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 import HelperCard from "../../components/helper-card";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -47,6 +49,7 @@ $(() => {
   employeeGrid.addExtension(new SubmitBulkActionExtension());
   employeeGrid.addExtension(new SubmitRowActionExtension());
   employeeGrid.addExtension(new ColumnTogglingExtension());
+  employeeGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   new HelperCard();
 });

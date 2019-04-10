@@ -38,6 +38,8 @@ import ChoiceTree from '../../components/form/choice-tree';
 import TranslatableInput from '../../components/translatable-input';
 import textToLinkRewriteCopier from '../../components/text-to-link-rewrite-copier';
 import TaggableField from "../../components/taggable-field";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -54,6 +56,7 @@ $(() => {
   cmsCategory.addExtension(new SubmitRowActionExtension());
   cmsCategory.addExtension(new ColumnTogglingExtension());
   cmsCategory.addExtension(new PositionExtension());
+  cmsCategory.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="cms_page_category[name]"]',
@@ -84,4 +87,5 @@ $(() => {
   cmsGrid.addExtension(new SubmitBulkExtension());
   cmsGrid.addExtension(new SubmitRowActionExtension());
   cmsGrid.addExtension(new PositionExtension());
+  cmsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 });
