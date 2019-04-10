@@ -1,0 +1,41 @@
+metrics:
+
+  prestashop:
+    label: "PrestaShop"
+
+  prestashop.hook.exec:
+    label: "PrestaShop module Hook"
+    layer: ~
+    timeline: true
+    matching_calls:
+      php:
+        - callee: "=Hook::exec"
+        - callee: "=Hook::coreRenderWidget"
+
+  prestashop.module.construct:
+    label: "PrestaShop module Creation"
+    layer: ~
+    timeline: true
+    matching_calls:
+      php:
+        - callee: "|Module::__construct"
+
+  prestashop.profiling:
+    label: "PrestaShop Profiler"
+    layer: ~
+    matching_calls:
+      php:
+        - callee: "|Controller::displayProfiling"
+
+tests:
+    'PrestaShop profiling should be disabled on production environment':
+        id: 'profiling_is_disabled'
+        assertions:
+            - 'metrics.prestashop.profiling.count == 0'
+
+#    'PrestaShop debug mode should be disabled on production environment':
+#    'Each PrestaShop module should be instanciated one time':
+#        id: 'resuse_module_instances'
+#        assertions:
+#            - 'metrics.prestashop.module.construct.count == 1'
+#        path: '/.*'
