@@ -45,6 +45,33 @@ use Symfony\Component\HttpFoundation\Response;
 class CommonController extends FrameworkBundleAdminController
 {
     /**
+     * Get a summary of recent events on the shop.
+     * This includes:
+     * - Created orders
+     * - Registered customers
+     * - New messages.
+     *
+     * @return JsonResponse
+     */
+    public function notificationsAction()
+    {
+        // TODO: Use CQRS
+        return new JsonResponse((new \Notification())->getLastElements());
+    }
+
+    /**
+     * Update the last time a notification type has been seen.
+     *
+     * @param Request $request
+     */
+    public function notificationsAckAction(Request $request)
+    {
+        $type = $request->request->get('type');
+        // TODO: Use CQRS
+        return new JsonResponse((new \Notification())->updateEmployeeLastElement($type));
+    }
+
+    /**
      * This will allow you to retrieve an HTML code with a ready and linked paginator.
      *
      * To be able to use this paginator, the current route must have these standard parameters:

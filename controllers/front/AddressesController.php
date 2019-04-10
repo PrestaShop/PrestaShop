@@ -40,7 +40,7 @@ class AddressesControllerCore extends FrontController
         parent::init();
 
         if (!Validate::isLoadedObject($this->context->customer)) {
-            die($this->trans('The customer could not be found.', array(), 'Shop.Notifications.Error'));
+            die(Tools::displayError($this->trans('The customer could not be found.', array(), 'Shop.Notifications.Error')));
         }
     }
 

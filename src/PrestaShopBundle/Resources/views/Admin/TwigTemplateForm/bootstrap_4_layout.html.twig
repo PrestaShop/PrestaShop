@@ -358,12 +358,13 @@
                 class="btn btn-primary grid-search-button d-block float-right"
                 title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
                 name="{{ full_name }}[search]"
+                {% if disable_search_button %} disabled="true" {% endif %}
         >
           <i class="material-icons">search</i>
           {{ 'Search'|trans({}, 'Admin.Actions') }}
         </button>
 
-        {% if show_reset_button %}
+          <div class="js-grid-reset-button" {% if not show_reset_button %} hidden {% endif %}>
           <div class="clearfix"></div>
             <button type="reset"
                     name="{{ full_name }}[reset]"
@@ -374,7 +375,7 @@
               <i class="material-icons">clear</i>
               {{ 'Reset'|trans({}, 'Admin.Actions') }}
             </button>
-        {% endif %}
+          </div>
     {% endspaceless %}
 {% endblock search_and_reset_widget %}
 
@@ -642,7 +643,6 @@
 {% endblock material_multiple_choice_table_widget %}
 
 {% block translatable_widget -%}
-  {{ form_errors(form) }}
   <div class="input-group locale-input-group js-locale-input-group d-flex">
     {% for translateField in form %}
       {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
@@ -708,6 +708,12 @@
       'data-locale': get_context_iso_code()
     }) -%}
 
+    {% if attr.disabled is defined and attr.disabled %}
+      {% set attr = attr|merge({
+        class: attr.class ~ ' disabled'
+      }) %}
+    {% endif %}
+
     {{ form_widget(form, {'attr': attr}) }}
 
     <label class="custom-file-label" for="{{ form.vars.id }}">
@@ -715,4 +721,21 @@
       {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
     </label>
   </div>
+{% endblock file_widget %}
+
+{% block shop_restriction_checkbox_widget %}
+  {% if form.vars.attr.is_allowed_to_display %}
+    <div class="md-checkbox md-checkbox-inline">
+      <label>
+        {% set type = type|default('checkbox') %}
+        <input
+          class="js-multi-store-restriction-checkbox"
+          type="{{ type }}"
+          {{ block('widget_attributes') }}
+          value="{{ value }}"
+        >
+        <i class="md-checkbox-control"></i>
+      </label>
+    </div>
+  {% endif %}
 {% endblock %}

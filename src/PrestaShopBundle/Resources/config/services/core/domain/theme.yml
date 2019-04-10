@@ -18,6 +18,7 @@ services:
     arguments:
       - '@prestashop.core.addon.theme.theme_manager'
       - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+      - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand }
 

@@ -29,6 +29,13 @@
   <div class="row justify-content-center">
     <div class="col">
       {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/form.html.twig', {}) }}
+      <span class="js-preview-url" data-preview-url="{{ previewUrl }}"></span>
     </div>
   </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/cms_page_form.bundle.js') }}"></script>
 {% endblock %}

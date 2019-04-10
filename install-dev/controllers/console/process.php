@@ -126,6 +126,10 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             if (!$this->processPopulateDatabase()) {
                 $this->printErrors();
             }
+
+            // Deferred Kernel Init
+            $this->initKernel();
+
             if (!$this->processConfigureShop()) {
                 $this->printErrors();
             }
@@ -330,5 +334,23 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 unlink($file);
             }
         }
+    }
+
+    /**
+     * Deferred initialization of Symfony Kernel
+     */
+    private function initKernel()
+    {
+        require_once _PS_CORE_DIR_.'/config/bootstrap.php';
+
+        if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
+            $env = 'test';
+        } else {
+            $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+        }
+        global $kernel;
+        $kernel = new AppKernel($env, _PS_MODE_DEV_);
+        $kernel->loadClassCache();
+        $kernel->boot();
     }
 }

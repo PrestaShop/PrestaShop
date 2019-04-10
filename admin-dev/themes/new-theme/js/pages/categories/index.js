@@ -43,6 +43,8 @@ import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copie
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
 import TaggableField from "../../components/taggable-field";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -61,6 +63,7 @@ $(() => {
   categoriesGrid.addExtension(new AsyncToggleColumnExtension());
   categoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   categoriesGrid.addExtension(new DeleteCategoriesBulkActionExtension());
+  categoriesGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   new TranslatableInput();
   new ChoiceTable();

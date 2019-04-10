@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use PDO;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -46,6 +47,11 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextShopIds;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param Connection $connection
      * @param $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
@@ -55,12 +61,14 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        array $contextShopIds
+        array $contextShopIds,
+        $contextLangId
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextShopIds = $contextShopIds;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -71,7 +79,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`')
+            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`, cl.`name`, cl.`symbol`')
             ->groupBy('c.`id_currency`')
         ;
 
@@ -118,11 +126,19 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
                 'cs',
                 'c.`id_currency` = cs.`id_currency`'
             )
+            ->innerJoin(
+                'c',
+                $this->dbPrefix . 'currency_lang',
+                'cl',
+                'c.`id_currency` = cl.`id_currency`'
+            )
         ;
         $qb->andWhere('cs.`id_shop` IN (:shops)');
+        $qb->andWhere('cl.`id_lang` = :lang');
         $qb->andWhere('c.`deleted` = 0');
 
         $qb->setParameter('shops', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
+        $qb->setParameter('lang', $this->contextLangId, PDO::PARAM_INT);
 
         foreach ($filters as $filterName => $value) {
             if (!in_array($filterName, $allowedFilters, true)) {

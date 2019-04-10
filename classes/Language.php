@@ -24,10 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 
 class LanguageCore extends ObjectModel
 {
@@ -712,7 +715,7 @@ class LanguageCore extends ObjectModel
     public static function getIdByIso($iso_code, $no_cache = false)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
         }
 
         $key = 'Language::getIdByIso_' . $iso_code;
@@ -727,6 +730,35 @@ class LanguageCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
+    /**
+     * Return id from locale
+     *
+     * @param string $locale Locale
+     * @param bool $no_cache
+     *
+     * @return false|string|null
+     */
+    public static function getIdByLocale($locale, $noCache = false)
+    {
+        $key = 'Language::getIdByLocale_' . $locale;
+        if ($noCache || !Cache::isStored($key)) {
+            $idLang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'');
+
+            Cache::store($key, $idLang);
+
+            return $idLang;
+        }
+
+        return Cache::retrieve($key);
+    }
+
+    /**
+     * @param string $iso
+     *
+     * @return array|bool
+     *
+     * @throws Exception
+     */
     public static function getLangDetails($iso)
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
@@ -739,7 +771,7 @@ class LanguageCore extends ObjectModel
             throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
         }
 
-        return $allLanguages[$iso] ?: false;
+        return isset($allLanguages[$iso]) ? $allLanguages[$iso] : false;
     }
 
     /**
@@ -789,7 +821,7 @@ class LanguageCore extends ObjectModel
     public static function getLanguageCodeByIso($iso_code)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
         }
 
         return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
@@ -798,7 +830,7 @@ class LanguageCore extends ObjectModel
     public static function getLanguageByIETFCode($code)
     {
         if (!Validate::isLanguageCode($code)) {
-            die(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', array(Tools::safeOutput($code)), 'Admin.International.Notification'));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', array(Tools::safeOutput($code)), 'Admin.International.Notification')));
         }
 
         // $code is in the form of 'xx-YY' where xx is the language code
@@ -1040,15 +1072,17 @@ class LanguageCore extends ObjectModel
 
         $errors = array();
 
-        Language::downloadLanguagePack($iso, $version, $errors);
-
-        if ($install) {
-            Language::installLanguagePack($iso, $params, $errors);
-            Language::updateMultilangTable($iso);
-        } else {
-            $lang_pack = self::getLangDetails($iso);
-            self::installSfLanguagePack($lang_pack['locale'], $errors);
-            self::installEmailsLanguagePack($lang_pack, $errors);
+        if (Language::downloadLanguagePack($iso, $version, $errors)) {
+            if ($install) {
+                Language::installLanguagePack($iso, $params, $errors);
+                Language::updateMultilangTable($iso);
+            } else {
+                $lang_pack = self::getLangDetails($iso);
+                if (!empty($lang_pack['locale'])) {
+                    self::installSfLanguagePack($lang_pack['locale'], $errors);
+                    self::generateEmailsLanguagePack($lang_pack, $errors);
+                }
+            }
         }
 
         return count($errors) ? $errors : true;
@@ -1061,10 +1095,9 @@ class LanguageCore extends ObjectModel
         $lang_pack = self::getLangDetails($iso);
         if (!$lang_pack) {
             $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', array(), 'Admin.International.Notification');
+        } else {
+            self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
         }
-
-        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
-        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'emails');
 
         return !count($errors);
     }
@@ -1109,6 +1142,50 @@ class LanguageCore extends ObjectModel
         }
     }
 
+    /**
+     * @param array $langPack
+     * @param array $errors
+     */
+    private static function generateEmailsLanguagePack($langPack, &$errors = array())
+    {
+        $locale = $langPack['locale'];
+        $sfContainer = SymfonyContainer::getInstance();
+        if (null === $sfContainer) {
+            $errors[] = Context::getContext()->getTranslator()->trans(
+                'Cannot generate emails because the Symfony container is unavailable.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+
+            return;
+        }
+
+        $mailTheme = Configuration::get('PS_MAIL_THEME');
+        /** @var GenerateThemeMailTemplatesCommand $generateCommand */
+        $generateCommand = new GenerateThemeMailTemplatesCommand(
+            $mailTheme,
+            $locale,
+            false
+        );
+        /** @var CommandBusInterface $commandBus */
+        $commandBus = $sfContainer->get('prestashop.core.command_bus');
+        try {
+            $commandBus->handle($generateCommand);
+        } catch (CoreException $e) {
+            $errors[] = Context::getContext()->getTranslator()->trans(
+                'Cannot generate email templates: %s.',
+                array($e->getMessage()),
+                'Admin.Notifications.Error'
+            );
+        }
+    }
+
+    /**
+     * @param array $lang_pack
+     * @param array $errors
+     *
+     * @deprecated This method is deprecated since 1.7.6.0 use GenerateThemeMailsCommand instead
+     */
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
         $folder = _PS_TRANSLATIONS_DIR_ . 'emails-' . $lang_pack['locale'];
@@ -1171,7 +1248,7 @@ class LanguageCore extends ObjectModel
 
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
-        self::installEmailsLanguagePack($lang_pack, $errors);
+        self::generateEmailsLanguagePack($lang_pack, $errors);
 
         return count($errors) ? $errors : true;
     }
@@ -1275,8 +1352,7 @@ class LanguageCore extends ObjectModel
 
     public static function updateMultilangFromCldr($lang)
     {
-        $cldrRepository = new cldrRepository($lang->locale);
-        $cldrLocale = $cldrRepository->getCulture();
+        $cldrLocale = $lang->getLocale();
         $cldrFile = _PS_TRANSLATIONS_DIR_ . 'cldr/datas/main/' . $cldrLocale . '/territories.json';
 
         if (file_exists($cldrFile)) {
@@ -1430,5 +1506,15 @@ class LanguageCore extends ObjectModel
         );
 
         return $processor;
+    }
+
+    /**
+     * @return string return the language locale, or its code by default
+     */
+    public function getLocale()
+    {
+        return !empty($this->locale) ?
+            $this->locale :
+            $this->language_code;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -33,16 +33,31 @@ namespace PrestaShop\PrestaShop\Core\Language;
 interface LanguageRepositoryInterface
 {
     /**
+     * Returns a LanguageInterface whose locale matches the provided one.
+     *
      * @param string $locale
      *
      * @return LanguageInterface
      */
-    public function getByLocale($locale);
+    public function getOneByLocale($locale);
 
     /**
+     * Returns a LanguageInterface which isoCode matches the provided one.
+     *
      * @param string $isoCode
      *
      * @return LanguageInterface
      */
-    public function getByIsoCode($isoCode);
+    public function getOneByIsoCode($isoCode);
+
+    /**
+     * Returns a LanguageInterface whose locale matches the provided one,
+     * if no one is found try matching by isoCode (splitting the locale if
+     * necessary).
+     *
+     * @param string $locale
+     *
+     * @return LanguageInterface
+     */
+    public function getOneByLocaleOrIsoCode($locale);
 }

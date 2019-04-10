@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -79,6 +79,7 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select('c.`id_cms`, cl.`link_rewrite`, c.`active`, c.`position`, cl.`meta_title`, cl.`head_seo_title`')
+            ->addSelect('c.`id_cms_category`')
             ->groupBy('c.`id_cms`')
         ;
 
@@ -157,10 +158,17 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if (in_array($filterName, ['id_cms', 'active', 'position'], true)) {
+            if (in_array($filterName, ['id_cms', 'active'], true)) {
                 $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $value);
 
+                continue;
+            }
+
+            if ('position' === $filterName) {
+                $modifiedPositionFilter = $this->getModifiedPositionFilter($value);
+                $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
+                $qb->setParameter($filterName, $modifiedPositionFilter);
                 continue;
             }
 
@@ -169,5 +177,26 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         return $qb;
+    }
+
+    /**
+     * Gets modified position filter value. This is required due to in database position filter index starts from 0 and
+     * for the customer which wants to filter results the value starts from 1 instead.
+     *
+     * @param $positionFilterValue
+     *
+     * @return int|null - if null is returned then no results are found since position field does not hold null values
+     */
+    private function getModifiedPositionFilter($positionFilterValue)
+    {
+        if (!is_numeric($positionFilterValue)) {
+            return null;
+        }
+        $reducedByOneFilterValue = $positionFilterValue - 1;
+        if (0 > $reducedByOneFilterValue) {
+            return null;
+        }
+
+        return $reducedByOneFilterValue;
     }
 }

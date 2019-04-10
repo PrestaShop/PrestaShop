@@ -23,10 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div id="order-items" class="col-md-12">
-
-  {block name='order_items_table_head'}
-    <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
-  {/block}
+  <div class="row">
+    {block name='order_items_table_head'}
+      <h3 class="card-title h3 col-md-6 col-12">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
+      <h3 class="card-title h3 col-md-2 text-md-center _desktop-title">{l s='Unit price' d='Shop.Theme.Checkout'}</h3>
+      <h3 class="card-title h3 col-md-2 text-md-center _desktop-title">{l s='Quantity' d='Shop.Theme.Checkout'}</h3>
+      <h3 class="card-title h3 col-md-2 text-md-center _desktop-title">{l s='Total products' d='Shop.Theme.Checkout'}</h3>
+    {/block}
+  </div>
 
   <div class="order-confirmation-table">
 
@@ -85,9 +89,9 @@
           </div>
           <div class="col-sm-6 col-xs-12 qty">
             <div class="row">
-              <div class="col-xs-5 text-sm-right text-xs-left">{$product.price}</div>
-              <div class="col-xs-2">{$product.quantity}</div>
-              <div class="col-xs-5 text-xs-right bold">{$product.total}</div>
+              <div class="col-xs-4 text-sm-center text-xs-left">{$product.price}</div>
+              <div class="col-xs-4 text-sm-center">{$product.quantity}</div>
+              <div class="col-xs-4 text-sm-center text-xs-right bold">{$product.total}</div>
             </div>
           </div>
         </div>
@@ -100,20 +104,31 @@
           {if $subtotal.type !== 'tax' && $subtotal.label !== null}
             <tr>
               <td>{$subtotal.label}</td>
-              <td>{$subtotal.value}</td>
+              <td>{if 'discount' == $subtotal.type}-&nbsp;{/if}{$subtotal.value}</td>
             </tr>
           {/if}
         {/foreach}
-        {if $subtotals.tax.label !== null}
-          <tr class="sub">
-            <td>{$subtotals.tax.label}</td>
-            <td>{$subtotals.tax.value}</td>
+
+        {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
+          <tr>
+            <td><span class="text-uppercase">{$totals.total.label}&nbsp;{$labels.tax_short}</span></td>
+            <td>{$totals.total.value}</td>
+          </tr>
+          <tr class="total-value font-weight-bold">
+            <td><span class="text-uppercase">{$totals.total_including_tax.label}</span></td>
+            <td>{$totals.total_including_tax.value}</td>
+          </tr>
+        {else}
+          <tr class="total-value font-weight-bold">
+            <td><span class="text-uppercase">{$totals.total.label}&nbsp;{if $configuration.taxes_enabled}{$labels.tax_short}{/if}</span></td>
+            <td>{$totals.total.value}</td>
           </tr>
         {/if}
-        <tr class="font-weight-bold">
-          <td><span class="text-uppercase">{$totals.total.label}</span> {$labels.tax_short}</td>
-          <td>{$totals.total.value}</td>
-        </tr>
+        {if $subtotals.tax.label !== null}
+          <tr class="sub taxes">
+            <td><span class="label">{l s='%label%:' sprintf=['%label%' => $subtotals.tax.label] d='Shop.Theme.Global'}</span>&nbsp;<span class="value">{$subtotals.tax.value}</span></td>
+          </tr>
+        {/if}
       </table>
     {/block}
 

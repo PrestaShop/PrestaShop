@@ -227,7 +227,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         }
 
         // ToDo, replace the hook exec with HookFinder when the associated PR will be merged
-        $additionalCustomerFormFields = Hook::exec('additionalCustomerFormFields', array(), null, true);
+        $additionalCustomerFormFields = Hook::exec('additionalCustomerFormFields', ['fields' => &$format], null, true);
 
         if (is_array($additionalCustomerFormFields)) {
             foreach ($additionalCustomerFormFields as $moduleName => $additionnalFormFields) {

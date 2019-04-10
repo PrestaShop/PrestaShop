@@ -28,6 +28,8 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -38,4 +40,5 @@ $(() => {
   backupGrid.addExtension(new SubmitBulkExtension());
   backupGrid.addExtension(new LinkRowActionExtension());
   backupGrid.addExtension(new SubmitRowActionExtension());
+  backupGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 });

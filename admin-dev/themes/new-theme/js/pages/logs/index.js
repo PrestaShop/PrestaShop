@@ -29,6 +29,8 @@ import ExportToSqlManagerExtension from '../../components/grid/extension/export-
 import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
 import SortingExtension from '../../components/grid/extension/sorting-extension';
 import SubmitGridActionExtension from '../../components/grid/extension/submit-grid-action-extension';
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = global.$;
 
@@ -40,4 +42,5 @@ $(() => {
   grid.addExtension(new FiltersResetExtension());
   grid.addExtension(new SortingExtension());
   grid.addExtension(new SubmitGridActionExtension());
+  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
 });

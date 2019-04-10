@@ -137,10 +137,9 @@ export default class Header {
 
   updateEmployeeNotifications() {
     $.post(
-      baseAdminDir + "ajax.php",
+      admin_notification_push_link,
       {
-        "updateElementEmployee": "1",
-        "updateElementEmployeeType": $('.notification-center .nav-link.active').attr('data-type')
+        "type": $('.notification-center .nav-link.active').attr('data-type')
       }
     );
   }

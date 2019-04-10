@@ -27,3 +27,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
+        translation:
+            paths:
+                features: Features/Scenario/Translation
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\TranslationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
