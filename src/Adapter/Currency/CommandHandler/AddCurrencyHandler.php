@@ -46,6 +46,20 @@ use PrestaShopException;
  */
 final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
 {
+
+    /**
+     * @var LocaleRepository
+     */
+    private $localeRepoCLDR;
+
+    /**
+     * @param LocaleRepository $localeRepoCLDR
+     */
+    public function __construct(LocaleRepository $localeRepoCLDR)
+    {
+        $this->localeRepoCLDR = $localeRepoCLDR;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -61,7 +75,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
-            $this->refreshLocalizedCurrencyData($entity);
+            $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
             if (false === $entity->add()) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
@@ -92,24 +106,5 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
             );
         }
-    }
-
-    /**
-     * @param string $isoCode
-     *
-     * @throws CurrencyConstraintException
-     */
-    private function refreshLocalizedCurrencyData(Currency $currency)
-    {
-        // Following is required when installing new currency on existing languages:
-        // we want to properly update the symbol in each language
-        $context = Context::getContext();
-        $container = isset($context->controller) ? $context->controller->getContainer() : null;
-        if (null === $container) {
-            $container = SymfonyContainer::getInstance();
-        }
-        /** @var LocaleRepository $localeRepoCLDR */
-        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
-        $currency->refreshLocalizedCurrencyData(Language::getLanguages(), $localeRepoCLDR);
     }
 }
