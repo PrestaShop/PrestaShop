@@ -403,7 +403,7 @@ class CustomerController extends AbstractAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->handleCustomerException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -438,7 +438,7 @@ class CustomerController extends AbstractAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CustomerException $e) {
-            $this->handleCustomerException($e);
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -473,7 +473,7 @@ class CustomerController extends AbstractAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->handleCustomerException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -517,7 +517,7 @@ class CustomerController extends AbstractAdminController
                     $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
                 );
             } catch (CustomerException $e) {
-                $this->addFlash('error', $this->handleCustomerException($e));
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
         }
 
@@ -557,7 +557,7 @@ class CustomerController extends AbstractAdminController
 
                 $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
             } catch (CustomerException $e) {
-                $this->addFlash('error', $this->handleCustomerException($e));
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
         }
 
@@ -590,7 +590,7 @@ class CustomerController extends AbstractAdminController
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->handleCustomerException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -622,7 +622,7 @@ class CustomerController extends AbstractAdminController
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->handleCustomerException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -780,25 +780,5 @@ class CustomerController extends AbstractAdminController
                 ),
             ],
         ];
-    }
-
-    /**
-     * @param CustomerException $e
-     *
-     * @return string
-     */
-    private function handleCustomerException(CustomerException $e)
-    {
-        $type = get_class($e);
-
-        $errorMessages = [
-            CustomerNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-        ];
-
-        if (isset($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 }
