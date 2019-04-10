@@ -60,17 +60,17 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
 
             if (false === $entity->delete()) {
                 throw new CannotDeleteCmsPageCategoryException(
-                    $command->getCmsPageCategoryId()->getValue(),
                     sprintf(
-                        'Unable to delete  cms category object with id "%s"',
+                        'Unable to delete cms category object with id "%s"',
                         $command->getCmsPageCategoryId()->getValue()
-                    )
+                    ),
+                    CannotDeleteCmsPageCategoryException::FAILED_DELETE
                 );
             }
         } catch (PrestaShopException $exception) {
             throw new CmsPageCategoryException(
                 sprintf(
-                    'An error occurred when  deleting  cms category object with id "%s"',
+                    'An error occurred when deleting cms category object with id "%s"',
                     $command->getCmsPageCategoryId()->getValue()
                 ),
                 0,

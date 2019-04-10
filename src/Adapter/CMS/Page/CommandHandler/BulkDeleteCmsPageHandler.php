@@ -50,11 +50,11 @@ final class BulkDeleteCmsPageHandler extends AbstractCmsPageHandler implements B
 
                 if (false === $cms->delete()) {
                     throw new CannotDeleteCmsPageException(
-                        $cmsPageId->getValue(),
                         sprintf(
                             'An error occurred when deleting cms page with id %s',
                             $cmsPageId->getValue()
-                        )
+                        ),
+                        CannotDeleteCmsPageException::FAILED_BULK_DELETE
                     );
                 }
             }
