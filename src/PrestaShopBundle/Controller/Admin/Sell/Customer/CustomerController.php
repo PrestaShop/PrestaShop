@@ -375,108 +375,6 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * @return FormInterface
-     */
-    private function getRequiredFieldsForm()
-    {
-        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForCustomer());
-
-        return $this->createForm(RequiredFieldsType::class, ['required_fields' => $requiredFields]);
-    }
-
-    /**
-     * If customer form is submitted and groups are not selected
-     * we add empty groups to request
-     *
-     * @param Request $request
-     */
-    private function addGroupSelectionToRequest(Request $request)
-    {
-        if (!$request->isMethod(Request::METHOD_POST)) {
-            return;
-        }
-
-        if (!$request->request->has('customer')
-            || isset($request->request->get('customer')['group_ids'])
-        ) {
-            return;
-        }
-
-        $customerData = $request->request->get('customer');
-        $customerData['group_ids'] = [];
-
-        $request->request->set('customer', $customerData);
-    }
-
-    /**
-     * Get errors that can be used to translate exceptions into user friendly messages
-     *
-     * @param CustomerException $e
-     *
-     * @return array
-     */
-    private function getErrorMessages(CustomerException $e)
-    {
-        return [
-            CustomerNotFoundException::class => $this->trans(
-                'This customer does not exist.',
-                'Admin.Orderscustomers.Notification'
-            ),
-            DuplicateCustomerEmailException::class => sprintf(
-                '%s %s',
-                $this->trans('An account already exists for this email address:', 'Admin.Orderscustomers.Notification'),
-                $e instanceof DuplicateCustomerEmailException ? $e->getEmail()->getValue() : ''
-            ),
-            CustomerDefaultGroupAccessException::class => $this->trans(
-                'A default customer group must be selected in group box.',
-                'Admin.Orderscustomers.Notification'
-            ),
-            CustomerConstraintException::class => [
-                CustomerConstraintException::INVALID_PASSWORD => $this->trans(
-                    'Password should be at least %length% characters long.',
-                    'Admin.Orderscustomers.Help',
-                    ['%length%' => Password::MIN_LENGTH]
-                ),
-                CustomerConstraintException::INVALID_FIRST_NAME => $this->trans(
-                    'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('First name', 'Admin.Global'))]
-                ),
-                CustomerConstraintException::INVALID_LAST_NAME => $this->trans(
-                    'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
-                ),
-                CustomerConstraintException::INVALID_EMAIL => $this->trans(
-                    'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Email', 'Admin.Global'))]
-                ),
-                CustomerConstraintException::INVALID_BIRTHDAY => $this->trans(
-                    'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Birthday', 'Admin.Orderscustomers.Feature'))]
-                ),
-                CustomerConstraintException::INVALID_APE_CODE => $this->trans(
-                    'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('APE', 'Admin.Orderscustomers.Feature'))]
-                ),
-            ],
-            CustomerTransformationException::class => [
-                CustomerTransformationException::CUSTOMER_IS_NOT_GUEST => $this->trans(
-                    'This customer already exists as a non-guest.',
-                    'Admin.Orderscustomers.Notification'
-                ),
-                CustomerTransformationException::TRANSFORMATION_FAILED => $this->trans(
-                    'An error occurred while updating customer information.',
-                    'Admin.Orderscustomers.Notification'
-                ),
-            ],
-        ];
-    }
-
-    /**
      * Toggle customer status.
      *
      * @AdminSecurity(
@@ -783,11 +681,113 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
+     * @return FormInterface
+     */
+    private function getRequiredFieldsForm()
+    {
+        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForCustomer());
+
+        return $this->createForm(RequiredFieldsType::class, ['required_fields' => $requiredFields]);
+    }
+
+    /**
+     * If customer form is submitted and groups are not selected
+     * we add empty groups to request
+     *
+     * @param Request $request
+     */
+    private function addGroupSelectionToRequest(Request $request)
+    {
+        if (!$request->isMethod(Request::METHOD_POST)) {
+            return;
+        }
+
+        if (!$request->request->has('customer')
+            || isset($request->request->get('customer')['group_ids'])
+        ) {
+            return;
+        }
+
+        $customerData = $request->request->get('customer');
+        $customerData['group_ids'] = [];
+
+        $request->request->set('customer', $customerData);
+    }
+
+    /**
+     * Get errors that can be used to translate exceptions into user friendly messages
+     *
+     * @param CustomerException $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(CustomerException $e)
+    {
+        return [
+            CustomerNotFoundException::class => $this->trans(
+                'This customer does not exist.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            DuplicateCustomerEmailException::class => sprintf(
+                '%s %s',
+                $this->trans('An account already exists for this email address:', 'Admin.Orderscustomers.Notification'),
+                $e instanceof DuplicateCustomerEmailException ? $e->getEmail()->getValue() : ''
+            ),
+            CustomerDefaultGroupAccessException::class => $this->trans(
+                'A default customer group must be selected in group box.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            CustomerConstraintException::class => [
+                CustomerConstraintException::INVALID_PASSWORD => $this->trans(
+                    'Password should be at least %length% characters long.',
+                    'Admin.Orderscustomers.Help',
+                    ['%length%' => Password::MIN_LENGTH]
+                ),
+                CustomerConstraintException::INVALID_FIRST_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('First name', 'Admin.Global'))]
+                ),
+                CustomerConstraintException::INVALID_LAST_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
+                ),
+                CustomerConstraintException::INVALID_EMAIL => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Email', 'Admin.Global'))]
+                ),
+                CustomerConstraintException::INVALID_BIRTHDAY => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Birthday', 'Admin.Orderscustomers.Feature'))]
+                ),
+                CustomerConstraintException::INVALID_APE_CODE => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('APE', 'Admin.Orderscustomers.Feature'))]
+                ),
+            ],
+            CustomerTransformationException::class => [
+                CustomerTransformationException::CUSTOMER_IS_NOT_GUEST => $this->trans(
+                    'This customer already exists as a non-guest.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                CustomerTransformationException::TRANSFORMATION_FAILED => $this->trans(
+                    'An error occurred while updating customer information.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
+        ];
+    }
+
+    /**
      * @param CustomerException $e
      *
      * @return string
      */
-    protected function handleCustomerException(CustomerException $e)
+    private function handleCustomerException(CustomerException $e)
     {
         $type = get_class($e);
 
