@@ -330,7 +330,7 @@ class LocalizationPackCore
                 /** @var Language $defaultLang */
                 $defaultLang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
-                $currency = new Currency(null, $defaultLang->id);
+                $currency = new Currency();
                 $currency->name = (string) $attributes['name'];
                 $currency->iso_code = (string) $attributes['iso_code'];
                 $currency->iso_code_num = (int) $attributes['iso_code_num'];
@@ -352,7 +352,20 @@ class LocalizationPackCore
                         return false;
                     }
                     Cache::clear();
+                    // set default data from CLDR
                     $this->setCurrencyCldrData($currency, $defaultLang);
+
+                    // Following is required when installing new currency on existing languages:
+                    // we want to properly update the symbol in each language
+                    $languages = Language::getLanguages();
+                    $context = Context::getContext();
+                    $container = isset($context->controller) ? $context->controller->getContainer() : null;
+                    if (null === $container) {
+                        $container = SymfonyContainer::getInstance();
+                    }
+                    /** @var LocaleRepository $localeRepoCLDR */
+                    $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+                    $this->refreshLocalizedCurrencyData($currency, $languages, $localeRepoCLDR);
                     $currency->save();
 
                     PaymentModule::addCurrencyPermissions($currency->id);
