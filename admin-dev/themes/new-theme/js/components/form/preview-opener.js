@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -24,20 +23,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
+const $ = window.$;
 
 /**
- * Class CannotDeleteCmsPageCategoryException
+ * Responsible for opening another page with specified url.
+ * For example used in 'Save and preview' cms page create/edit actions.
+ *
+ * Usage: In selector element attr 'data-preview-url' provide page url.
+ * The page will be opened once provided 'open_preview' parameter in query url
  */
-class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
-{
-    /**
-     * When fails to delete single cms page category
-     */
-    const FAILED_DELETE = 10;
+export default class PreviewOpener {
+  constructor (previewUrlSelector) {
+    this.previewUrl = $(previewUrlSelector).data('preview-url');
+    this._open();
 
-    /**
-     * When fails to delete cms page categories on bulk action
-     */
-    const FAILED_BULK_DELETE = 20;
+    return {};
+  }
+
+  /**
+   * Opens new page of provided url
+   *
+   * @private
+   */
+  _open() {
+    const urlParams = new URLSearchParams(location.search);
+
+    if (this.previewUrl && urlParams.has('open_preview')) {
+      window.open(this.previewUrl, '_blank');
+    }
+  }
 }

@@ -61,11 +61,11 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
 
                 if (false === $entity->delete()) {
                     throw new CannotDeleteCmsPageCategoryException(
-                        $cmsPageCategoryId->getValue(),
                         sprintf(
                             'Unable to delete  cms category object with id "%s"',
                             $cmsPageCategoryId->getValue()
-                        )
+                        ),
+                        CannotDeleteCmsPageCategoryException::FAILED_BULK_DELETE
                     );
                 }
             }
