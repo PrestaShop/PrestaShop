@@ -117,8 +117,6 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 $exception
             );
         }
-
-        return new CurrencyId((int) $entity->id);
     }
 
     /**

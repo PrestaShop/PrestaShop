@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
  * Interface for service that implements edit language command handling
@@ -36,8 +35,6 @@ interface EditLanguageHandlerInterface
 {
     /**
      * @param EditLanguageCommand $command
-     *
-     * @return LanguageId
      */
     public function handle(EditLanguageCommand $command);
 }

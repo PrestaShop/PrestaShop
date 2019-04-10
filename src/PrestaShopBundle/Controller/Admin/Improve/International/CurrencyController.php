@@ -164,7 +164,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
             $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_currencies_index');
