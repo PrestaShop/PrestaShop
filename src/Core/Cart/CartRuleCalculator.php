@@ -100,8 +100,12 @@ class CartRuleCalculator
         // Discount (%) on the whole order
         if ($cartRule->reduction_percent && $cartRule->reduction_product == 0) {
             foreach ($this->cartRows as $cartRow) {
-                $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
-                $cartRuleData->addDiscountApplied($amount);
+                $product = $cartRow->getRowData();
+                if ((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                        || !$cartRule->reduction_exclude_special)) {
+                    $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
+                    $cartRuleData->addDiscountApplied($amount);
+                }
             }
         }
 
