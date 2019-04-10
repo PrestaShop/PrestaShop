@@ -487,7 +487,7 @@ class LocalizationPackCore
      */
     protected function refreshLocalizedCurrencyData(Currency $currency, array $languages, LocaleRepository $localeRepoCLDR)
     {
-        $symbolsByLang = [];
+        $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
             if ($language->locale === '') {
@@ -503,8 +503,10 @@ class LocalizationPackCore
                 $symbol = $currency->iso_code;
             }
             // symbol is localized
+            $namesByLang[$language->id] = $cldrCurrency->getDisplayName();
             $symbolsByLang[$language->id] = $symbol;
         }
+        $currency->name = $namesByLang;
         $currency->symbol = $symbolsByLang;
     }
 

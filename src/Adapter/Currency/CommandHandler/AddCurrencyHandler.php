@@ -26,13 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
+use Context;
 use Currency;
+use Language;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShopException;
 
 /**
@@ -64,6 +68,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
 
             $this->associateWithShops($entity, $command->getShopIds());
             $this->associateConversionRateToShops($entity, $command->getShopIds());
+            $this->refreshLocalizedCurrencyData($entity);
         } catch (PrestaShopException $exception) {
             throw new CurrencyException('Failed to create new currency', 0, $exception);
         }
@@ -87,5 +92,47 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
             );
         }
+    }
+
+    /**
+     * @param string $isoCode
+     *
+     * @throws CurrencyConstraintException
+     */
+    private function refreshLocalizedCurrencyData(Currency $currency)
+    {
+        // Following is required when installing new currency on existing languages:
+        // we want to properly update the symbol in each language
+        $languages = Language::getLanguages();
+        $context = Context::getContext();
+        $container = isset($context->controller) ? $context->controller->getContainer() : null;
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
+        }
+        /** @var LocaleRepository $localeRepoCLDR */
+        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $symbolsByLang = $namesByLang = [];
+        foreach ($languages as $languageData) {
+            $language = new Language($languageData['id_lang']);
+            if ($language->locale === '') {
+                // Language doesn't have locale we can't install this language
+                continue;
+            }
+
+            $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+            $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
+
+            $symbol = (string) $cldrCurrency->getSymbol();
+            if (empty($symbol)) {
+                $symbol = $currency->iso_code;
+            }
+            // symbol is localized
+            $namesByLang[$language->id] = $cldrCurrency->getDisplayName();
+            $symbolsByLang[$language->id] = $symbol;
+        }
+        $currency->name = $namesByLang;
+        $currency->symbol = $symbolsByLang;
+        $currency->save();
+
     }
 }
