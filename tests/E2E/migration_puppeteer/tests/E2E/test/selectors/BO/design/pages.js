@@ -1,0 +1,56 @@
+module.exports = {
+  Pages: {
+    Common: {
+      name_input: '#name_1 ',
+      meta_description_input: '#meta_description_1 ',
+      enable_display_option: ' label[for="active_on"]',
+      success_panel: '#content div.bootstrap div.success',
+      alert_panel: '#content div.bootstrap div.alert'
+    },
+    Category: {
+      add_category_button: '#page-header-desc-cms-new_cms_category ',
+      parent_category_select_option: ' select[name="id_parent"] option[contains(text(), "%CATEGORY_NAME"]',
+      parent_category_select: ' select[name="id_parent"]',
+      description_textarea: '#description_1 ',
+      meta_title_input: '#meta_title_1 ',
+      meta_keywords_input: '#meta_keywords_1 ',
+      parent_category: '#cms_category_form select[name="id_parent"]',
+      save_button: '#cms_category_form_submit_btn ',
+      name_filter: '#table-cms_category input[name="cms_categoryFilter_name"]',
+      view_button: '#table-cms_category a [title="View"]',
+      dropdown_toggle: '#table-cms_category button[data-toggle="dropdown"]',
+      edit_button: '#table-cms_category a [title="Edit"]',
+      search_name_result: '#table-cms_category td:nth-child(%ID)',
+      delete_button: '#table-cms_category a [title="Delete"]',
+      bulk_actions_button: '#bulk_action_menu_cms_category ',
+      bulk_actions_select_all_button: '#form-cms_category div.bulk-actions ul.dropdown-menu a [contains(onclick, "true"]',
+      bulk_actions_delete_button: '#form-cms_category div.bulk-actions ul.dropdown-menu a [contains(onclick, "submitBulkdeletecms_category")]',
+      bulk_actions_disable_button: '#form-cms_category div.bulk-actions ul.dropdown-menu a [contains(onclick, "submitBulkdisableSelectioncms_category")]',
+      bulk_actions_enable_button: '#form-cms_category div.bulk-actions ul.dropdown-menu a [contains(onclick, "submitBulkenableSelectioncms_category")]',
+      home_icon: '#content i.icon-home '
+    },
+    Page: {
+      page_category: ' select[name="id_cms_category"]',
+      add_new_page_button: '#page-header-desc-cms-new_cms_page ',
+      meta_keywords_input: ' div.tagify-container input',
+      delete_tag_button: ' div.tagify-container span:nth-child(%POS) a',
+      enable_indexation_option: ' label[for="indexation_on"]',
+      save_button: '#cms_form_submit_btn ',
+      save_and_preview_button: ' button[contains(name, "viewcms")]',
+      title_filter_input: ' input[name="cmsFilter_b!meta_title"]',
+      search_title_result: '#table-cms td:nth-child(%ID)',
+      edit_button: '#table-cms a [title="Edit"]',
+      dropdown_toggle: '#table-cms button[data-toggle="dropdown"]',
+      delete_button: '#table-cms a [title="Delete"]',
+      page_content: '#cms_form div.mce-tinymce mce-container mce-panel ',
+      bulk_actions_button: '#bulk_action_menu_cms ',
+      bulk_actions_select_all_button: '#form-cms div .bulk-actions ul.dropdown-menu a [contains(onclick, "true")]',
+      bulk_actions_delete_button: '#form-cms div .bulk-actions ul.dropdown-menu a [contains(onclick, "submitBulkdeletecms")]',
+      bulk_actions_disable_button: '#form-cms div .bulk-actions ul.dropdown-menu a [contains(onclick, "submitBulkdisableSelectioncms")]',
+      bulk_actions_enable_button: '#form-cms div .bulk-actions ul.dropdown-menu a [contains(onclick, "submitBulkenableSelectioncms")]',
+      reset_button: ' button[name="submitResetcms"]',
+      category_option: ' select option[contains(text(), "%CATEGORY_NAME")]',
+      cancel_button: '#cms_form_cancel_btn ',
+    }
+  }
+};
