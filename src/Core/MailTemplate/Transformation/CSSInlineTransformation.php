@@ -67,7 +67,7 @@ class CSSInlineTransformation extends AbstractTransformation
         $cssToInlineStyles = new CssToInlineStyles();
         $templateContent = $cssToInlineStyles->convert($templateContent, $cssContent);
 
-        $converter = new CssToAttributeConverter($templateContent);
+        $converter = CssToAttributeConverter::fromHtml($templateContent);
         $templateContent = $converter->convertCssToVisualAttributes()->render();
 
         return preg_replace('/@(\w+)@/', '{\1}', $templateContent);
