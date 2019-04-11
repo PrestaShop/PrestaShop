@@ -181,7 +181,7 @@ $(document).ready(function() {
 
     $('.nav-bar').overlayScrollbars({  
       scrollbars: {
-        autoHide: 'scroll'
+        autoHide: 'move'
       } 
     });
 
