@@ -47,6 +47,7 @@ $(document).ready(() => {
     $.post(getCartViewUrl, requestData).then((resp) => {
       $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
       $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
+      $('.cart-summary-subtotals-container').replaceWith(resp.cart_summary_subtotals_container);
       $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
       $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
       $('.cart-voucher').replaceWith(resp.cart_voucher);
