@@ -206,6 +206,8 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Download import sample file.
      *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_import")
+     *
      * @param $sampleName
      *
      * @return Response

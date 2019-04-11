@@ -105,6 +105,8 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer create form & handle processing of it.
      *
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return Response
@@ -154,6 +156,8 @@ class CustomerController extends AbstractAdminController
 
     /**
      * Show customer edit form & handle processing of it.
+     *
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
      *
      * @param int $customerId
      * @param Request $request
@@ -630,6 +634,8 @@ class CustomerController extends AbstractAdminController
 
     /**
      * Export filtered customers
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param CustomerFilters $filters
      *

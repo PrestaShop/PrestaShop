@@ -82,6 +82,8 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
