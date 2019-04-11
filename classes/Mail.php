@@ -294,7 +294,8 @@ class MailCore extends ObjectModel
         }
 
         /* Construct multiple recipients list if needed */
-        $message = \Swift_Message::newInstance();
+        $message = new Swift_Message();
+
         if (is_array($to) && isset($to)) {
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
@@ -347,22 +348,25 @@ class MailCore extends ObjectModel
                     return false;
                 }
 
-                $connection = \Swift_SmtpTransport::newInstance(
+                $connection = (new Swift_SmtpTransport(
                     $configuration['PS_MAIL_SERVER'],
                     $configuration['PS_MAIL_SMTP_PORT'],
                     $configuration['PS_MAIL_SMTP_ENCRYPTION']
-                )
+                ))
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD']);
             } else {
-                $connection = \Swift_MailTransport::newInstance();
+                // mail() support was removed from SwiftMailer for security reasons
+                // previously => $connection = \Swift_MailTransport::newInstance();
+                // @see https://github.com/swiftmailer/swiftmailer/issues/866
+                $connection = false;
             }
 
             if (!$connection) {
                 return false;
             }
 
-            $swift = \Swift_Mailer::newInstance($connection);
+            $swift = new Swift_Mailer($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -553,7 +557,7 @@ class MailCore extends ObjectModel
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
-            $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array(self::toPunycode($toPlugin) => $templateVars)));
+            $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin(array(self::toPunycode($toPlugin) => $templateVars)));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {
@@ -574,7 +578,7 @@ class MailCore extends ObjectModel
                 foreach ($fileAttachment as $attachment) {
                     if (isset($attachment['content'], $attachment['name'], $attachment['mime'])) {
                         $message->attach(
-                            \Swift_Attachment::newInstance()->setFilename(
+                            (new Swift_Attachment())->setFilename(
                                 $attachment['name']
                             )->setContentType($attachment['mime'])
                             ->setBody($attachment['content'])
@@ -620,7 +624,7 @@ class MailCore extends ObjectModel
             }
 
             return $send;
-        } catch (\Swift_SwiftException $e) {
+        } catch (Swift_SwiftException $e) {
             PrestaShopLogger::addLog(
                 'Swift Error: ' . $e->getMessage(),
                 3,
