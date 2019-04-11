@@ -23,6 +23,7 @@
     "magnific-popup": "^1.1.0",
     "mobile-detect": "^1.4.3",
     "moment": "^2.24.0",
+    "overlayscrollbars": "^1.6.3",
     "sprintf-js": "^1.1.2",
     "tether": "^1.4.5",
     "typeahead.js": "^0.11.1",
