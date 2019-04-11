@@ -628,12 +628,8 @@ class Reader implements ReaderInterface
             // no territory with dates means currency was never used
             return false;
         }
-        if (!$this->isCurrencyActiveSomewhere($currencyDates, $currencyActiveDateThreshold)) {
-            // currency is not active, dont store it
-            return false;
-        }
 
-        return true;
+        return $this->isCurrencyActiveSomewhere($currencyDates, $currencyActiveDateThreshold);
     }
 
     /**
