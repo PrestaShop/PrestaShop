@@ -199,7 +199,7 @@ class MetaController extends FrameworkBundleAdminController
 
             $result = $this->getMetaFormHandler()->handleFor($metaId, $metaForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_metas_index');

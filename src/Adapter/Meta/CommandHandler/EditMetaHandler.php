@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotEditMetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -116,8 +115,6 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 $exception
             );
         }
-
-        return new MetaId((int) $entity->id);
     }
 
     /**

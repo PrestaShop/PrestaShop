@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\EditCmsPageHandlerI
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEditCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 use PrestaShopException;
 
 /**
@@ -69,8 +68,6 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
                 $e
             );
         }
-
-        return new CmsPageId((int) $cms->id);
     }
 
     /**

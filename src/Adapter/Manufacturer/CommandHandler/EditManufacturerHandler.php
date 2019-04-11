@@ -68,8 +68,6 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
                 sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id)
             );
         }
-
-        return $manufacturerId;
     }
 
     /**
