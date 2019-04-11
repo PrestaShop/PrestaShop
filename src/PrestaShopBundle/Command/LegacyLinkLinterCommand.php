@@ -43,7 +43,7 @@ class LegacyLinkLinterCommand extends ContainerAwareCommand
     {
         $this
             ->setName('prestashop:linter:legacy-link')
-            ->setDescription('Returns routes where _legacy_link configurations are missing');
+            ->setDescription('Checks if _legacy_link is configured in BackOffice routes');
     }
 
     /**
