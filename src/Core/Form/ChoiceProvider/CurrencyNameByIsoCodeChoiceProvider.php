@@ -59,6 +59,7 @@ final class CurrencyNameByIsoCodeChoiceProvider implements FormChoiceProviderInt
 
             $result[$displayName] = $isoCode;
         }
+        ksort($result);
 
         return $result;
     }

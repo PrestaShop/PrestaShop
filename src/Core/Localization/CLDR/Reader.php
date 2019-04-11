@@ -51,6 +51,13 @@ class Reader implements ReaderInterface
 
     const DEFAULT_CURRENCY_DIGITS = 2;
 
+    const CURRENCY_CODE_TEST = 'XTS';
+
+    /**
+     * delay after currency deactivation to prevent currency add by list
+     */
+    const CURRENCY_ACTIVE_DELAY = 365;
+
     protected $mainXml = [];
 
     /**
@@ -509,10 +516,35 @@ class Reader implements ReaderInterface
 
         // Currencies
         $currencyData = $numbersData->currencies;
+        $currencyActiveDateThreshold = time() - self::CURRENCY_ACTIVE_DELAY * 86400;
         if (isset($currencyData->currency)) {
             $currencies = $localeData->getCurrencies();
             foreach ($currencyData->currency as $currencyNode) {
                 $currencyCode = (string) $currencyNode['type'];
+
+                // check if currency is still active in one territory
+                $isActiveSomewhere = false;
+                $currencyDates = $this->supplementalXml->supplementalData->xpath(
+                    '//region/currency[@iso4217="' . $currencyCode . '"]'
+                );
+                if (!empty($currencyDates)) {
+                    foreach ($currencyDates as $currencyDate) {
+                        if (empty($currencyDate->attributes()->to)) {
+                            // no date "to": currency is active in some territory
+                            $isActiveSomewhere = true;
+                        } else {
+                            // date "to" given: check if currency was active in near past to propose it
+                            $dateTo = \DateTime::createFromFormat('Y-m-d', $currencyDate->attributes()->to);
+                            if (false !== $dateTo && $dateTo->getTimestamp() > $currencyActiveDateThreshold) {
+                                $isActiveSomewhere = true;
+                            }
+                        }
+                    }
+                }
+                if (!$isActiveSomewhere || $currencyCode == self::CURRENCY_CODE_TEST) {
+                    // currency is not active, dont store it
+                    continue;
+                }
 
                 $currencyData = new CurrencyData();
                 $currencyData->setIsoCode($currencyCode);
