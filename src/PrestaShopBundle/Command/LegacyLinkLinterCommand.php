@@ -26,27 +26,24 @@
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShopBundle\Routing\Linter\LinterException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Routing\Route;
 
 /**
- * Checks if all admin routes have @AdminSecurity configured
+ * Checks if all admin routes are configured with _legacy_link
  */
-final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
+class LegacyLinkLinterCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
      */
-    public function configure()
+    protected function configure()
     {
         $this
-            ->setName('prestashop:linter:security-annotation')
-            ->setDescription('Checks if Back Office route controllers has configured Security annotations.')
-        ;
+            ->setName('prestashop:linter:legacy-link')
+            ->setDescription('Returns routes where _legacy_link configurations are missing');
     }
 
     /**
@@ -54,33 +51,41 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $adminRouteProvider = $this->getContainer()->get('prestashop.bundle.routing.linter.admin_route_provider');
-        $securityAnnotationLinter = $this->getContainer()
-            ->get('prestashop.bundle.routing.linter.security_annotation_linter');
-
-        $notConfiguredRoutes = [];
-
-        /** @var Route $route */
-        foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
-            try {
-                $securityAnnotationLinter->lint($route);
-            } catch (LinterException $e) {
-                $notConfiguredRoutes[] = $routeName;
-            }
-        }
-
+        $unconfiguredRoutes = $this->getUnconfiguredRoutes();
         $io = new SymfonyStyle($input, $output);
 
-        if (!empty($notConfiguredRoutes)) {
+        if (!empty($unconfiguredRoutes)) {
             $io->warning(sprintf(
-                '%s routes are not configured with @AdminSecurity annotation:',
-                count($notConfiguredRoutes)
+                '%s routes are not configured with _legacy_link:',
+                count($unconfiguredRoutes)
             ));
-            $io->listing($notConfiguredRoutes);
+            $io->listing($unconfiguredRoutes);
 
             return;
         }
 
-        $io->success('Admin routes has @AdminSecurity configured.');
+        $io->success('Admin routes has _legacy_link configured.');
+    }
+
+    /**
+     * Returns routes that are missing _legacy_link configuration
+     *
+     * @return array
+     */
+    private function getUnconfiguredRoutes()
+    {
+        $legacyLinkLinter = $this->getContainer()->get('prestashop.bundle.routing.linter.legacy_link_linter');
+        $adminRouteProvider = $this->getContainer()->get('prestashop.bundle.routing.linter.admin_route_provider');
+        $routes = $adminRouteProvider->getRoutes();
+        $unconfiguredRoutes = [];
+
+        foreach ($routes as $routeName => $route) {
+            if (true === $legacyLinkLinter->lint($route)) {
+                continue;
+            }
+            $unconfiguredRoutes[] = $routeName;
+        }
+
+        return $unconfiguredRoutes;
     }
 }

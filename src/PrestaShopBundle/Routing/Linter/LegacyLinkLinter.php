@@ -26,49 +26,27 @@
 
 namespace PrestaShopBundle\Routing\Linter;
 
-use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
 
 /**
- * Provides all routes that are defined for admin controllers
+ * Responsible for checking route _legacy_link configuration
  */
-final class AdminRoutesProvider
+final class LegacyLinkLinter implements RouteLinterInterface
 {
-    const ADMIN_CONTROLLERS_PATH = 'PrestaShopBundle\Controller\Admin';
-
     /**
-     * @var RouteCollection
-     */
-    private $allRoutes;
-
-    /**
-     * @param RouteCollection $allRoutes
-     */
-    public function __construct(RouteCollection $allRoutes)
-    {
-        $this->allRoutes = $allRoutes;
-    }
-
-    public function getRoutes()
-    {
-        $adminRoutes = new RouteCollection();
-        foreach ($this->allRoutes as $routeName => $route) {
-            if ($this->checkIfRouteIsForAdminController($route->getDefault('_controller'))) {
-                $adminRoutes->add($routeName, $route);
-            }
-        }
-
-        return $adminRoutes;
-    }
-
-    /**
-     * Checks whether the route is for admin controller
+     * Checks if _legacy_link is configured to route.
+     * Returns true if configured, false if not.
      *
-     * @param string $controllerPath
+     * @param Route $route
      *
      * @return bool
      */
-    private function checkIfRouteIsForAdminController($controllerPath)
+    public function lint(Route $route)
     {
-        return strpos($controllerPath, self::ADMIN_CONTROLLERS_PATH) === 0;
+        if ($route->hasDefault('_legacy_link')) {
+            return true;
+        }
+
+        return false;
     }
 }

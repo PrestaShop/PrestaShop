@@ -41,24 +41,10 @@ services:
           - '@annotation_reader'
           - '@controller_name_converter'
 
+    prestashop.bundle.routing.linter.legacy_link_linter:
+      class: 'PrestaShopBundle\Routing\Linter\LegacyLinkLinter'
+
     prestashop.bundle.routing.linter.admin_route_provider:
         class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'
         arguments:
             - '@router'
-
-    prestashop.bundle.routing.linter.admin_routes_provider:
-        class: 'PrestaShopBundle\Routing\Linter\AdminRoutesProvider'
-        arguments:
-            - '@=service("router").getRouteCollection()'
-
-    prestashop.bundle.routing.linter.legacy_links_checker:
-        class: 'PrestaShopBundle\Routing\Linter\LegacyLinksChecker'
-        arguments:
-          - '@=service("prestashop.bundle.routing.linter.admin_routes_provider").getRoutes()'
-
-    prestashop.command.check_legacy_links:
-        class: 'PrestaShopBundle\Command\CheckLegacyLinksCommand'
-        arguments:
-            - '@prestashop.bundle.routing.linter.legacy_links_checker'
-        tags:
-            -  { name: console.command }
