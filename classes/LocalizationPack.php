@@ -380,9 +380,11 @@ class LocalizationPackCore
 
     /**
      * @return LocaleRepository
+     *
      * @throws Exception
      */
-    protected function getCldrLocaleRepository(){
+    protected function getCldrLocaleRepository()
+    {
         $context = Context::getContext();
         $container = isset($context->controller) ? $context->controller->getContainer() : null;
         if (null === $container) {

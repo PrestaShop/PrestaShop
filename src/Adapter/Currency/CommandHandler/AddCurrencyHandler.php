@@ -44,7 +44,6 @@ use PrestaShopException;
  */
 final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
 {
-
     /**
      * @var LocaleRepository
      */

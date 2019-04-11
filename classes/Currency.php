@@ -798,5 +798,4 @@ class CurrencyCore extends ObjectModel
         $this->name = $namesByLang;
         $this->symbol = $symbolsByLang;
     }
-
 }
