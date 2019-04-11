@@ -135,7 +135,7 @@ class WebserviceController extends FrameworkBundleAdminController
         try {
             $result = $formHandler->handleFor((int) $webserviceKeyId, $form);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_webservice_keys_index');

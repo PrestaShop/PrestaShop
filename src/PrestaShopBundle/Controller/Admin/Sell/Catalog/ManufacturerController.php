@@ -217,7 +217,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
             $result = $this->getFormHandler()->handleFor((int) $manufacturerId, $manufacturerForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
@@ -524,7 +524,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');

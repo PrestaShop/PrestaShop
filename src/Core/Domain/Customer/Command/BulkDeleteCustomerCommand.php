@@ -46,12 +46,12 @@ class BulkDeleteCustomerCommand
 
     /**
      * @param int[] $customerIds
-     * @param CustomerDeleteMethod $deleteMethod
+     * @param string $deleteMethod
      */
-    public function __construct(array $customerIds, CustomerDeleteMethod $deleteMethod)
+    public function __construct(array $customerIds, $deleteMethod)
     {
         $this->setCustomerIds($customerIds);
-        $this->deleteMethod = $deleteMethod;
+        $this->deleteMethod = new CustomerDeleteMethod($deleteMethod);
     }
 
     /**

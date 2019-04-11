@@ -111,8 +111,6 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
             $data['thumbnail_image'],
             $data['menu_thumbnail_images']
         );
-
-        return $rootCategoryId;
     }
 
     /**

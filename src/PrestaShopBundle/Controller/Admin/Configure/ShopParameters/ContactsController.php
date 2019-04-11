@@ -173,7 +173,7 @@ class ContactsController extends FrameworkBundleAdminController
             $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
             $result = $contactFormHandler->handleFor((int) $contactId, $contactForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_contacts_index');

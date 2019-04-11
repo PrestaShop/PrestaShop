@@ -82,10 +82,7 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
         $command = new EditManufacturerAddressCommand((int) $addressId);
         $this->fillCommandWithData($command, $data);
 
-        /** @var AddressId $addressId */
-        $addressId = $this->commandBus->handle($command);
-
-        return $addressId->getValue();
+        $this->commandBus->handle($command);
     }
 
     /**

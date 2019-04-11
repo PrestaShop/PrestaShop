@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandle
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
  * Class EditCategoryHandler.
@@ -60,8 +59,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
         }
 
         $this->updateCategoryFromCommandData($category, $command);
-
-        return new CategoryId((int) $category->id);
     }
 
     /**

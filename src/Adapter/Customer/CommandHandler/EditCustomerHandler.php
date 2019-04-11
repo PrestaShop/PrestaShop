@@ -82,8 +82,6 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         }
 
         $customer->update();
-
-        return $customerId;
     }
 
     /**

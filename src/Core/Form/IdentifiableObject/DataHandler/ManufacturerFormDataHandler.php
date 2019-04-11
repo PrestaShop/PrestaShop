@@ -119,9 +119,7 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
 
             $command->setAssociatedShops($shopAssociation);
         }
-        /** @var ManufacturerId $manufacturerId */
-        $manufacturerId = $this->bus->handle($command);
 
-        return $manufacturerId->getValue();
+        $this->bus->handle($command);
     }
 }
