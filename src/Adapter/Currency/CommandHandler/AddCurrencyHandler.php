@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
-use Context;
 use Currency;
 use Language;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
