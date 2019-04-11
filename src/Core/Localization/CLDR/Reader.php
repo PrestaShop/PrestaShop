@@ -521,28 +521,7 @@ class Reader implements ReaderInterface
             $currencies = $localeData->getCurrencies();
             foreach ($currencyData->currency as $currencyNode) {
                 $currencyCode = (string) $currencyNode['type'];
-
-                // check if currency is still active in one territory
-                $isActiveSomewhere = false;
-                $currencyDates = $this->supplementalXml->supplementalData->xpath(
-                    '//region/currency[@iso4217="' . $currencyCode . '"]'
-                );
-                if (!empty($currencyDates)) {
-                    foreach ($currencyDates as $currencyDate) {
-                        if (empty($currencyDate->attributes()->to)) {
-                            // no date "to": currency is active in some territory
-                            $isActiveSomewhere = true;
-                        } else {
-                            // date "to" given: check if currency was active in near past to propose it
-                            $dateTo = \DateTime::createFromFormat('Y-m-d', $currencyDate->attributes()->to);
-                            if (false !== $dateTo && $dateTo->getTimestamp() > $currencyActiveDateThreshold) {
-                                $isActiveSomewhere = true;
-                            }
-                        }
-                    }
-                }
-                if (!$isActiveSomewhere || $currencyCode == self::CURRENCY_CODE_TEST) {
-                    // currency is not active, dont store it
+                if (!$this->shouldCurrencyBeReturned($currencyCode, $this->supplementalXml->supplementalData, $currencyActiveDateThreshold)) {
                     continue;
                 }
 
@@ -628,5 +607,58 @@ class Reader implements ReaderInterface
         }
 
         return $digitsSets;
+    }
+
+    /**
+     * @param string $currencyCode currency iso code
+     * @param SimpleXMLElement $supplementalData xml bloc from CLDR
+     * @param int $currencyActiveDateThreshold timestamp after which currency should be used
+     *
+     * @return bool
+     */
+    protected function shouldCurrencyBeReturned($currencyCode, SimplexmlElement $supplementalData, $currencyActiveDateThreshold)
+    {
+        // dont store test currency
+        if ($currencyCode == self::CURRENCY_CODE_TEST) {
+            return false;
+        }
+        // check if currency is still active in one territory
+        $currencyDates = $supplementalData->xpath('//region/currency[@iso4217="' . $currencyCode . '"]');
+        if (empty($currencyDates)) {
+            // no territory with dates means currency was never used
+            return false;
+        }
+        if (!$this->isCurrencyActiveSomewhere($currencyDates, $currencyActiveDateThreshold)) {
+            // currency is not active, dont store it
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * check if currency is still in use in some territory
+     *
+     * @param array $currencyDates
+     * @param int $currencyActiveDateThreshold timestamp after which currency should be used
+     *
+     * @return bool
+     */
+    protected function isCurrencyActiveSomewhere(array $currencyDates, $currencyActiveDateThreshold)
+    {
+        foreach ($currencyDates as $currencyDate) {
+            if (empty($currencyDate->attributes()->to)) {
+                // no date "to": currency is active in some territory
+                return true;
+            } else {
+                // date "to" given: check if currency was active in near past to propose it
+                $dateTo = \DateTime::createFromFormat('Y-m-d', $currencyDate->attributes()->to);
+                if (false !== $dateTo && $dateTo->getTimestamp() > $currencyActiveDateThreshold) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
