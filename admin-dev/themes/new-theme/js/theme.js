@@ -36,10 +36,12 @@ import 'dropzone';
 import 'typeahead.js/dist/typeahead.jquery';
 import 'typeahead.js/dist/bloodhound.min';
 import 'sprintf-js';
+import 'OverlayScrollbars';
 
 // Plugins CSS
 import 'dropzone/dist/min/dropzone.min.css';
 import 'magnific-popup/dist/magnific-popup.css';
+import "overlayscrollbars/css/OverlayScrollbars.css";
 
 // Theme SCSS
 import '../scss/theme.scss';
