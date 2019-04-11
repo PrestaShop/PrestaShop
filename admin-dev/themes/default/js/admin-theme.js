@@ -179,6 +179,12 @@ $(document).ready(function() {
         mobileNav(MAX_MOBILE_WIDTH);
     }
 
+    $('.nav-bar').overlayScrollbars({  
+      scrollbars: {
+        autoHide: 'scroll'
+      } 
+    });
+
     $(window).on('resize', () => {
         if ($('body').hasClass('mobile') && $(window).width() > MAX_MOBILE_WIDTH) {
             unbuildMobileMenu();
