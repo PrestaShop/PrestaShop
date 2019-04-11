@@ -78,7 +78,6 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
 
     global $kernel;
     $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
-    $kernel->loadClassCache();
     $kernel->boot();
 }
 
