@@ -107,7 +107,7 @@ export default class NavBar {
 
       $('.nav-bar').overlayScrollbars({ 
         scrollbars: {
-          autoHide: 'scroll'
+          autoHide: 'move'
         }
        });
 
