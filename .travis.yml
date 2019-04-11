@@ -24,6 +24,7 @@ dist: trusty
 php:
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   global:
@@ -36,7 +37,9 @@ env:
 matrix:
   include:
     - php: 7.2
-      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
+      env: EXTRA_DEPS=phpHigh PRESTASHOP_TEST_TYPE=unit
+    - php: 7.2
+      env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
     - stage: deploy
       php: 7.2
       before_install: skip
@@ -78,7 +81,6 @@ before_script:
     else
         composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
     fi
-
   - bash travis-scripts/install-prestashop;
 
 script:

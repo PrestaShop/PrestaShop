@@ -24,6 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.International.Feature' %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block copy_language %}
   {{ form_start(copyLanguageForm, {action: path('admin_international_translations_copy_language')}) }}

@@ -117,9 +117,6 @@ swiftmailer:
 csa_guzzle:
     profiler:
         enabled: "%kernel.debug%"
-    cache:
-        enabled: true
-        adapter: guzzle.cache
     clients:
         addons_api:
             config: # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
