@@ -74,7 +74,7 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             (bool) $customer->optin,
             (bool) $customer->newsletter,
             $customer->getGroups(),
-            $customer->id_default_group,
+            (int) $customer->id_default_group,
             (string) $customer->company,
             (string) $customer->siret,
             (string) $customer->ape,
