@@ -33,6 +33,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Routing\Route;
 
+/**
+ * Runs naming conventions linter in the CLI
+ */
 final class NamingConventionLinterCommand extends ContainerAwareCommand
 {
     /**
@@ -55,25 +58,25 @@ final class NamingConventionLinterCommand extends ContainerAwareCommand
         $namingConventionLinter = $this->getContainer()
             ->get('prestashop.bundle.routing.linter.naming_convention_linter');
 
-        $notConfiguredRoutes = [];
+        $invalidRoutes = [];
 
         /** @var Route $route */
         foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
                 $namingConventionLinter->lint($routeName, $route);
             } catch (LinterException $e) {
-                $notConfiguredRoutes[] = $routeName;
+                $invalidRoutes[] = $routeName;
             }
         }
 
         $io = new SymfonyStyle($input, $output);
 
-        if (!empty($notConfiguredRoutes)) {
+        if (!empty($invalidRoutes)) {
             $io->warning(sprintf(
                 '%s routes are not following naming conventions:',
-                count($notConfiguredRoutes)
+                count($invalidRoutes)
             ));
-            $io->listing($notConfiguredRoutes);
+            $io->listing($invalidRoutes);
 
             return;
         }
