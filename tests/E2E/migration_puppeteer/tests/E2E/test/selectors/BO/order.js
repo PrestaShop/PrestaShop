@@ -23,7 +23,7 @@ module.exports = {
     shipping_method: '#shipping_table tr > td:nth-of-type(3)',
     search_by_reference_input: '#form-order table[class*=order] input[name=orderFilter_reference]',
     search_order_button: '#submitFilterButtonorder',
-    first_order: '//*[@id="form-order"]//table//tbody//tr[1]//a',
+    first_order: '#form-order table tbody tr:nth-child(1) td[onclick]',
     transform_guest_customer_button: '//*[@id="content"]//input[@name="submitGuestToCustomer"]',
     check_order_id: '#table-cart  tr:nth-child(1)  td:nth-child(3) span',
     dropdown_button: '#table-cart  tr:nth-child(1)  td:nth-child(9) button[data-toggle*=dropdown]',

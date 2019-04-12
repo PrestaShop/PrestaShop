@@ -27,15 +27,23 @@ scenario('Modify quantity and check movement for single product', () => {
     test('should set the "Search products" input', () => client.waitAndSetValue(Stock.search_input, "SingleProduct" + date_time));
     test('should click on "Search" button', () => {
       return promise
-        .then(() => client.waitForExistAndClick(Stock.search_button))
-        .then(() => client.waitForVisible(Stock.product_selector.replace("%ProductName", "SingleProduct" + date_time)));
+          .then(() => client.waitForExistAndClick(Stock.search_button))
+          .then(() => client.checkTextContent(Stock.product_selector,"SingleProduct" + date_time,'contain'));
     });
     stock_common_scenarios.changeStockProductQuantity(client, Stock, 1, 4, 'checkBtn');
     stock_common_scenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "+", "Employee Edition","SingleProduct");
     test('should go to "Stock" tab', () => client.waitForExistAndClick(Menu.Sell.Catalog.stock_tab));
     test('should set the "Search products" input', () => client.waitAndSetValue(Stock.search_input, "SingleProduct" + date_time));
-    test('should click on "Search" button', () => client.waitForExistAndClick(Stock.search_button, 1000));
+    test('should click on "Search" button', () => {
+      return promise
+          .then(() => client.waitForExistAndClick(Stock.search_button))
+          .then(() => client.checkTextContent(Stock.product_selector,"SingleProduct" + date_time,'contain'));
+    });
     stock_common_scenarios.changeStockProductQuantity(client, Stock, 1, 4, 'checkBtn', "remove");
     stock_common_scenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "-", "Employee Edition", "SingleProduct");
+    common_scenarios.deleteProduct(AddProductPage, productData[0]);
+    scenario('Logout from the Back Office', client => {
+      test('should logout successfully from Back Office', () => client.signOutBO());
+    }, 'common_client');
   }, 'stocks');
 }, 'stocks', true);

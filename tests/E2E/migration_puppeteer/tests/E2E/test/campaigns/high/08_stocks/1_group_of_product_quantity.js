@@ -31,19 +31,11 @@ scenario('Modify quantity and check the movement of a group of product', client 
   common_scenarios.createProduct(AddProductPage, productData[1]);
 
   scenario('Modify quantity and check the movement of a group of product', client => {
-    test('should go to "Stocks" page', () => {
+    test('should go to "Stocks" page', async () => {
       return promise
-
-        .then(() => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu))
-        .then(() => client.pause(5000))
-        .then(() => client.isVisible(Stock.sort_product_icon, 2000))
-        .then(() => client.pause(5000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForVisibleAndClick(Stock.sort_product_icon);
-            client.pause(3000);
-          }
-        })
+          .then(async () => await client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu))
+          .then(async () => await page.waitForSelector(Stock.sort_product_icon))
+          .then(async () => await client.waitForVisibleAndClick(Stock.sort_product_icon))
     });
     test('should set the "Quantity" of the first product to 15', () => client.modifyProductQuantity(Stock, 2, 15));
     test('should set the "Quantity" of the second product to 50', () => client.modifyProductQuantity(Stock, 1, 50));
@@ -51,8 +43,13 @@ scenario('Modify quantity and check the movement of a group of product', client 
     test('should click on "Movements" tab', () => client.goToStockMovements(Menu, Movement));
     test('should verify the new "Quantity" and "Type" of the two changed products', () => {
       return promise
-        .then(() => client.pause(2000))
-        .then(() => client.checkOrderMovement(Movement, client));
+          .then(() => client.pause(2000))
+          .then(() => client.checkOrderMovement(Movement, client));
     });
   }, 'stocks');
+  common_scenarios.deleteProduct(AddProductPage, productData[0]);
+  common_scenarios.deleteProduct(AddProductPage, productData[1]);
+  scenario('Logout from the Back Office', client => {
+    test('should logout successfully from Back Office', () => client.signOutBO());
+  }, 'common_client');
 }, 'stocks', true);
