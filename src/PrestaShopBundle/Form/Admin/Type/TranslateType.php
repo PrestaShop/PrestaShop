@@ -33,6 +33,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a translatable form.
+ * Language selection uses tabs.
  */
 class TranslateType extends CommonAbstractType
 {
