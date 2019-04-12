@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Routing\Linter;
 
 use Doctrine\Common\Inflector\Inflector;
+use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Routing\Route;
 
@@ -65,7 +66,7 @@ final class NamingConventionLinter implements RouteLinterInterface
         ]);
 
         if ($routeName !== $expectedRouteName) {
-            throw new LinterException(sprintf('Route "%s" does not follow naming convention.', $routeName));
+            throw new NamingConventionException(sprintf('Route "%s" does not follow naming convention.', $routeName));
         }
     }
 
