@@ -151,6 +151,8 @@ class MailCore extends ObjectModel
             $idShop = Context::getContext()->shop->id;
         }
 
+        $to = Tools::strtolower($to);
+
         $keepGoing = array_reduce(
             Hook::exec(
                 'actionEmailSendBefore',
