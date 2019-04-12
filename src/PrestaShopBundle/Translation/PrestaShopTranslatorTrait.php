@@ -49,6 +49,7 @@ trait PrestaShopTranslatorTrait
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
+        $legacy = null;
         if (isset($parameters['legacy'])) {
             $legacy = $parameters['legacy'];
             unset($parameters['legacy']);
@@ -58,12 +59,12 @@ trait PrestaShopTranslatorTrait
 
         // @todo to remove after the legacy translation system has ben phased out
         if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $translated)) {
-            return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
+            return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale, $legacy);
         }
 
-        if (isset($legacy) && 'htmlspecialchars' === $legacy) {
+        if ('htmlspecialchars' === $legacy) {
             $translated = call_user_func($legacy, $translated, ENT_NOQUOTES);
-        } elseif (isset($legacy)) {
+        } elseif (null !== $legacy) {
             $translated = call_user_func($legacy, $translated);
         }
 
@@ -148,12 +149,13 @@ trait PrestaShopTranslatorTrait
      * @param array $parameters
      * @param string $domain
      * @param string|null $locale
+     * @param string|null $legacy
      *
      * @return mixed|string
      *
      * @throws \Exception
      */
-    private function translateUsingLegacySystem($message, array $parameters, $domain, $locale = null)
+    private function translateUsingLegacySystem($message, array $parameters, $domain, $locale = null, $legacy = null)
     {
         $domainParts = explode('.', $domain);
         if (count($domainParts) < 2) {
@@ -164,7 +166,18 @@ trait PrestaShopTranslatorTrait
         $sourceFile = (!empty($domainParts[2])) ? strtolower($domainParts[2]) : $moduleName;
 
         // translate using the legacy system WITHOUT fallback to the new system (to avoid infinite loop)
-        return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false);
+        $translated = (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false);
+
+        //Translate::getModuleTranslation performs a htmlspecialchars by default, which we want to cancel in this case
+        //Note: this is only cases where l is called with a domain but the key was not found
+        if (null === $legacy) {
+            $translated = htmlspecialchars_decode($translated);
+        } else if ('htmlspecialchars' !== $legacy) {
+            $translated = htmlspecialchars_decode($translated);
+            $translated = call_user_func($legacy, $translated);
+        }
+
+        return $translated;
     }
 
     /**
