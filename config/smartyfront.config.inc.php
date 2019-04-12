@@ -209,11 +209,22 @@ function smartyTranslate($params, $smarty)
                 return $params['s'];
             }
         }
-    }
 
-    if (($translation = Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d'])) !== $params['s']
-        && $params['mod'] === false) {
-        return $translation;
+        if (isset($params['sprintf']) && !is_array($params['sprintf'])) {
+            $sprintf = array($params['sprintf']);
+        } elseif (isset($params['sprintf'])) {
+            $sprintf = $params['sprintf'];
+        }
+
+        if (isset($params['htmlspecialchars']) && $params['htmlspecialchars']) {
+            $sprintf['legacy'] = 'htmlspecialchars';
+        } elseif ($params['js']) {
+            $sprintf['legacy'] = 'addslashes';
+        }
+        $translation = Context::getContext()->getTranslator()->trans($params['s'], $sprintf, $params['d']);
+        if ($translation !== $params['s']) {
+            return $translation;
+        }
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
