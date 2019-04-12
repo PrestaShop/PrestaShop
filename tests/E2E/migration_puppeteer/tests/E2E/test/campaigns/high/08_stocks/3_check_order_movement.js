@@ -47,5 +47,8 @@ scenario('Check order movement', client => {
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "-",  "Customer Order", "mvt");
   }, 'stocks');
-
+  common_scenarios.deleteProduct(AddProductPage, productData);
+  scenario('Logout from the Back Office', client => {
+    test('should logout successfully from Back Office', () => client.signOutBO());
+  }, 'common_client');
 }, 'stocks', true);
