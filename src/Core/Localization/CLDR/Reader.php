@@ -515,18 +515,28 @@ class Reader implements ReaderInterface
         }
 
         // Currencies
-        $currencyData = $numbersData->currencies;
+        $currenciesData = $numbersData->currencies;
         $currencyActiveDateThreshold = time() - self::CURRENCY_ACTIVE_DELAY * 86400;
-        if (isset($currencyData->currency)) {
+        if (isset($currenciesData->currency)) {
             $currencies = $localeData->getCurrencies();
-            foreach ($currencyData->currency as $currencyNode) {
+            foreach ($currenciesData->currency as $currencyNode) {
                 $currencyCode = (string) $currencyNode['type'];
-                if (!$this->shouldCurrencyBeReturned($currencyCode, $this->supplementalXml->supplementalData, $currencyActiveDateThreshold)) {
+                if ($currencyCode == self::CURRENCY_CODE_TEST) {
+                    // dont store test currency
                     continue;
                 }
 
                 $currencyData = new CurrencyData();
                 $currencyData->setIsoCode($currencyCode);
+
+                // check if currency is still active in one territory
+                $currencyDates = $this->supplementalXml->supplementalData->xpath('//region/currency[@iso4217="' . $currencyCode . '"]');
+                if (!empty($currencyDates) && $this->isCurrencyActiveSomewhere($currencyDates, $currencyActiveDateThreshold)) {
+                    $currencyData->setActive(true);
+                } else {
+                    // no territory with dates means currency was never used
+                    $currencyData->setActive(false);
+                }
 
                 // Symbols
                 $symbols = $currencyData->getSymbols();
