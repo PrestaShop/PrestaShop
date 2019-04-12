@@ -38,5 +38,5 @@ interface RouteLinterInterface
      *
      * @return bool True if route passes linter or False otherwise
      */
-    public function lint(Route $route);
+    public function lint($routeName, Route $route);
 }

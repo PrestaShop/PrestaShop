@@ -33,19 +33,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Routing\Route;
 
-/**
- * Checks if all admin routes have @AdminSecurity configured
- */
-final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
+final class NamingConventionLinterCommand extends ContainerAwareCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function configure()
     {
         $this
-            ->setName('prestashop:linter:security-annotation')
-            ->setDescription('Checks if Back Office route controllers has configured Security annotations.')
+            ->setName('prestashop:linter:naming-convention')
+            ->setDescription('Checks if Back Office routes and controllers follow naming convention.')
         ;
     }
 
@@ -55,15 +52,15 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $adminRouteProvider = $this->getContainer()->get('prestashop.bundle.routing.linter.admin_route_provider');
-        $securityAnnotationLinter = $this->getContainer()
-            ->get('prestashop.bundle.routing.linter.security_annotation_linter');
+        $namingConventionLinter = $this->getContainer()
+            ->get('prestashop.bundle.routing.linter.naming_convention_linter');
 
         $notConfiguredRoutes = [];
 
         /** @var Route $route */
         foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
-                $securityAnnotationLinter->lint($routeName, $route);
+                $namingConventionLinter->lint($routeName, $route);
             } catch (LinterException $e) {
                 $notConfiguredRoutes[] = $routeName;
             }
@@ -73,7 +70,7 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
 
         if (!empty($notConfiguredRoutes)) {
             $io->warning(sprintf(
-                '%s routes are not configured with @AdminSecurity annotation:',
+                '%s routes are not following naming conventions:',
                 count($notConfiguredRoutes)
             ));
             $io->listing($notConfiguredRoutes);
@@ -81,6 +78,6 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
             return;
         }
 
-        $io->success('Admin routes has @AdminSecurity configured.');
+        $io->success('Admin routes and controllers follow naming conventions.');
     }
 }
