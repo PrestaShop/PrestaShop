@@ -37,6 +37,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class TranslatableType adds translatable inputs with custom inner type to forms.
+ * Language selection uses a dropdown.
  */
 class TranslatableType extends AbstractType
 {
