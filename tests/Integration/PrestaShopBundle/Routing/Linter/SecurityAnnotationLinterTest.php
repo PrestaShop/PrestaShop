@@ -53,7 +53,7 @@ class SecurityAnnotationLinterTest extends KernelTestCase
             '_controller' => sprintf('%s::%s', TestController::class, 'indexAction'),
         ]);
 
-        $this->securityAnnotationLinter->lint($route);
+        $this->securityAnnotationLinter->lint('route_name', $route);
 
         $this->assertTrue($exceptionWasNotThrown = true);
     }
@@ -66,7 +66,7 @@ class SecurityAnnotationLinterTest extends KernelTestCase
 
         $this->expectException(LinterException::class);
 
-        $this->securityAnnotationLinter->lint($route);
+        $this->securityAnnotationLinter->lint('route_name', $route);
     }
 
     protected function tearDown()
