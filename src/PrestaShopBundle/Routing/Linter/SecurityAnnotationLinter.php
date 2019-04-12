@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Routing\Linter;
 
 use Doctrine\Common\Annotations\Reader;
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;

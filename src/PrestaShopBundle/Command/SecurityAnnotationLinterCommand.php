@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShopBundle\Routing\Linter\LinterException;
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

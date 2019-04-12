@@ -26,7 +26,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Routing\Linter;
 
-use PrestaShopBundle\Routing\Linter\LinterException;
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
