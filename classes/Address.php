@@ -235,6 +235,7 @@ class AddressCore extends ObjectModel
             return parent::delete();
         } else {
             $this->deleted = true;
+            $this->setFieldsToUpdate(['delete']);
 
             return $this->update();
         }
