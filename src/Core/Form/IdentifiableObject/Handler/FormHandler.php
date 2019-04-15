@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -134,16 +135,22 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
-        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdate' . $form->getName() . 'FormHandler', [
-            'form_data' => &$data,
-            'id' => $id,
-        ]);
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionBeforeUpdate' . Container::camelize($form->getName()) . 'FormHandler',
+            [
+                'form_data' => &$data,
+                'id' => $id,
+            ]
+        );
 
         $this->dataHandler->update($id, $data);
 
-        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate' . $form->getName() . 'FormHandler', [
-            'id' => $id,
-        ]);
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionAfterUpdate' . Container::camelize($form->getName()) . 'FormHandler',
+            [
+                'id' => $id,
+            ]
+        );
 
         return FormHandlerResult::createWithId($id);
     }
@@ -157,15 +164,21 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
-        $this->hookDispatcher->dispatchWithParameters('actionBeforeCreate' . $form->getName() . 'FormHandler', [
-            'form_data' => &$data,
-        ]);
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionBeforeCreate' . Container::camelize($form->getName()) . 'FormHandler',
+            [
+                'form_data' => &$data,
+            ]
+        );
 
         $id = $this->dataHandler->create($data);
 
-        $this->hookDispatcher->dispatchWithParameters('actionAfterCreate' . $form->getName() . 'FormHandler', [
-            'id' => $id,
-        ]);
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionAfterCreate' . Container::camelize($form->getName()) . 'FormHandler',
+            [
+                'id' => $id,
+            ]
+        );
 
         return FormHandlerResult::createWithId($id);
     }
