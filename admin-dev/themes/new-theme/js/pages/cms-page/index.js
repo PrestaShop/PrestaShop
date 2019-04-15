@@ -38,7 +38,6 @@ import ChoiceTree from '../../components/form/choice-tree';
 import TranslatableInput from '../../components/translatable-input';
 import textToLinkRewriteCopier from '../../components/text-to-link-rewrite-copier';
 import TaggableField from '../../components/taggable-field';
-import FiltersSubmitButtonEnablerExtension from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '../../components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
@@ -87,8 +86,7 @@ $(() => {
   cmsGrid.addExtension(new SubmitBulkExtension());
   cmsGrid.addExtension(new SubmitRowActionExtension());
   cmsGrid.addExtension(new PositionExtension());
-  cmsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-
+  
   const helperBlock = new ShowcaseCard('cms-pages-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
 });
