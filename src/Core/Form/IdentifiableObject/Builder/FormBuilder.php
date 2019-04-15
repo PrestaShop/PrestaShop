@@ -120,7 +120,7 @@ final class FormBuilder implements FormBuilderInterface
 
         $this->hookDispatcher->dispatchWithParameters('action' . $formBuilder->getName() . 'FormBuilderModifier', [
             'form_builder' => $formBuilder,
-            'data' => &$data,
+            'data' => $data,
             'id' => $id,
         ]);
 
