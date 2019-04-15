@@ -50,13 +50,16 @@ export default class ProductSelect {
       }
     });
 
-    if ($onsale.length && $('#product').length) {
-      $new.css('top', $onsale.height() + 1 * FLAG_MARGIN);
-      $pack.css('top', $onsale.height() + 1 * FLAG_MARGIN);
+    if ($new.length && $('#product').length) {
+      $pack.css('top', $new.height() + 2 * FLAG_MARGIN);
     }
 
-    if ($new.length && $('#product').length) {
+    if ($onsale.length && $('#product').length) {
+      $new.css('top', $onsale.height() + 1 * FLAG_MARGIN);
       $pack.css('top', $onsale.height() + 5 * FLAG_MARGIN);
+      if (!$new.length && $('#product').length) {
+        $pack.css('top', $onsale.height() + 1 * FLAG_MARGIN);
+      }
     }
 
     if ($('.js-modal-product-images li').length <= MAX_THUMBS) {
