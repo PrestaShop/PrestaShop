@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -125,19 +126,19 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'type' => TextWithLengthCounterType::class,
                 'required' => false,
                 'options' => [
-                    'max_length' => 70,
+                    'max_length' => SeoSettings::MAX_TITLE_LENGTH,
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                         new Length([
-                            'max' => 70,
+                            'max' => SeoSettings::MAX_TITLE_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
                                 'Admin.Notifications.Error',
                                 [
-                                    '%limit%' => 70,
+                                    '%limit%' => SeoSettings::MAX_TITLE_LENGTH,
                                 ]
                             ),
                         ]),
@@ -150,19 +151,19 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'options' => [
                     'required' => false,
                     'input' => 'textarea',
-                    'max_length' => 160,
+                    'max_length' => SeoSettings::MAX_DESCRIPTION_LENGTH,
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                         new Length([
-                            'max' => 160,
+                            'max' => SeoSettings::MAX_DESCRIPTION_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
                                 'Admin.Notifications.Error',
                                 [
-                                    '%limit%' => 160,
+                                    '%limit%' => SeoSettings::MAX_DESCRIPTION_LENGTH,
                                 ]
                             ),
                         ]),
