@@ -47,7 +47,7 @@ import TaggableField from "../../components/taggable-field";
 const $ = window.$;
 
 $(() => {
-  const categoriesGrid = new Grid('categories');
+  const categoriesGrid = new Grid('category');
 
   categoriesGrid.addExtension(new FiltersResetExtension());
   categoriesGrid.addExtension(new SortingExtension());
