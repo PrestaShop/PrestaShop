@@ -38,13 +38,13 @@ export default class ProductMinitature {
       var flagsTop = FLAG_MARGIN;
       var discountTop = FLAG_MARGIN;
       if (onSaleElems.length) {
-        discountTop = parseFloat(onSaleElems.outerHeight()) + FLAG_MARGIN;
+        discountTop = onSaleElems.outerHeight() + FLAG_MARGIN;
       }
 
       if (discountElems.length) {
         flagsTop = discountTop + discountElems.outerHeight() + FLAG_MARGIN;
         //Discount flag is actually in product-description div so it needs a negative top value
-        discountElems.css('top', discountTop + -$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height());
+        discountElems.css('top', discountTop + -$(element).find('.thumbnail-container').outerHeight() + $(element).find('.product-description').outerHeight());
       }
 
       //Now display flags one above the other
