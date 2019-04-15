@@ -50,7 +50,6 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,7 +64,7 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show categories listing.
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CategoryFilters $filters
@@ -102,6 +101,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to create this."
      * )
      *
@@ -147,6 +147,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to create this."
      * )
      *
@@ -192,6 +193,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -256,6 +258,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -318,6 +321,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_edit",
+     *     redirectQueryParamsToKeep={"categoryId"},
      *     message="You do not have permission to edit this."
      * )
      *
@@ -357,6 +362,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_edit",
+     *     redirectQueryParamsToKeep={"categoryId"},
      *     message="You do not have permission to edit this."
      * )
      *
@@ -398,26 +405,21 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Toggle category status.
      *
-     * @param Request $request
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
      * @param int $categoryId
      *
      * @return JsonResponse
      */
-    public function toggleStatusAction(Request $request, $categoryId)
+    public function toggleStatusAction($categoryId)
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
                 'status' => false,
                 'message' => $this->getDemoModeErrorMessage(),
-            ]);
-        }
-
-        $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
-
-        if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
-            return $this->json([
-                'status' => false,
-                'message' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
             ]);
         }
 
