@@ -237,7 +237,7 @@ class CurrencyData
     /**
      * is currency still active in some territory
      *
-     * @return bool
+     * @return bool|null
      */
     public function isActive()
     {
