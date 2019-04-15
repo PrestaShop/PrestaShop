@@ -86,7 +86,7 @@ $(() => {
   cmsGrid.addExtension(new SubmitBulkExtension());
   cmsGrid.addExtension(new SubmitRowActionExtension());
   cmsGrid.addExtension(new PositionExtension());
-  
+
   const helperBlock = new ShowcaseCard('cms-pages-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
 });
