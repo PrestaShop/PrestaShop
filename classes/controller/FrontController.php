@@ -1549,7 +1549,10 @@ class FrontControllerCore extends Controller
 
     protected function getDisplayTaxesLabel()
     {
-        return (Module::isEnabled('ps_legalcompliance') && (bool) Configuration::get('AEUC_LABEL_TAX_INC_EXC')) || $this->context->country->display_tax_label;
+        return
+            (Module::isEnabled('ps_legalcompliance') && (bool) Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
+            || (Configuration::get('PS_TAX_DISPLAY') && $this->context->country->display_tax_label)
+        ;
     }
 
     public function getTemplateVarCurrency()
