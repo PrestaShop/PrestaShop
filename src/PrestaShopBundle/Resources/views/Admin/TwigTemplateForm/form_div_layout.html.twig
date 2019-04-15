@@ -320,7 +320,7 @@
 
 {%- block form_end -%}
   {%- if not render_rest is defined or render_rest -%}
-    {{ form_rest(form) }}
+    {{ form_rest(form, { render_hook: false }) }}
   {%- endif -%}
   </form>
 {%- endblock form_end -%}
@@ -340,6 +340,10 @@
 {%- endblock form_errors -%}
 
 {%- block form_rest -%}
+  {% if render_hook is not defined or render_hook %}
+    {{ renderhook('display' ~ name ~ 'FormRest', { form: form }) }}
+  {% endif %}
+
   {% for child in form -%}
     {% if not child.rendered %}
       {{- form_row(child) -}}
