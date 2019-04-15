@@ -43,7 +43,7 @@ class ModifyQuantity extends CommonClient {
     });
     await page.$eval(selector.time_movement.replace('%P', order), el => el.innerText).then((text) => {
       if (dateAndTime !== "") {
-        expect(text).to.be.contain(dateAndTime);
+        expect(text).to.be.contains(dateAndTime);
       }
     });
     await page.$eval(selector.employee_value.replace('%P', order), el => el.innerText).then((text) => {

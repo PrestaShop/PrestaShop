@@ -897,6 +897,26 @@ class CommonClient {
     let text = await page.evaluate((selector) => {return document.querySelector(selector).innerText;},selector);
     return text;
   }
+
+  /**
+   * check validation message puppeteer
+   * @param selector
+   * @param validationText
+   * @param parameter
+   */
+  async checkElementValidation(selector, validationText, parameter = 'equal') {
+    let message = await page.evaluate((selector) => {return document.querySelector(selector).validationMessage;},selector);
+    switch (parameter) {
+      case "equal":
+        expect(message).to.be.equal(validationText);
+        break;
+      case "contain":
+        expect(message).to.contains(validationText);
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 module.exports = CommonClient;
