@@ -28,24 +28,34 @@ export default class ProductMinitature {
   init() {
     $('.js-product-miniature').each((index, element) => {
       const FLAG_MARGIN = 10;
-      const discountElems = $(element).find('.discount-product');
+      //Top on sale banner
       const onSaleElems =  $(element).find('.on-sale');
-      const newElems = $(element).find('.new');
+      //Discount flag
+      const discountElems = $(element).find('.discount-product');
+      //Flags other than on-sale, discount and online-only (which have all their way to display)
+      const flagElems = $(element).find('.product-flag:not(.on-sale):not(.discount):not(.online-only)');
+
+      var flagsTop = FLAG_MARGIN;
+      var discountTop = FLAG_MARGIN;
+      if (onSaleElems.length) {
+        discountTop = parseFloat(onSaleElems.outerHeight()) + FLAG_MARGIN;
+      }
 
       if (discountElems.length) {
-        newElems.css('top', discountElems.height() * 3 + FLAG_MARGIN);
-        discountElems.css('top', -$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
-
-        if ($(element).find('.pack').length) {
-          $(element).find('.pack').css('top', discountElems.height() * 3 + FLAG_MARGIN);
-        }
+        flagsTop = discountTop + discountElems.outerHeight() + FLAG_MARGIN;
+        //Discount flag is actually in product-description div so it needs a negative top value
+        discountElems.css('top', discountTop + -$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height());
       }
 
-      if (onSaleElems.length) {
-        discountElems.css('top', parseFloat(discountElems.css('top')) + onSaleElems.height() + FLAG_MARGIN);
-        newElems.css('top', (discountElems.height() * 3 + onSaleElems.height()) + FLAG_MARGIN * 3);
-      }
+      //Now display flags one above the other
+      flagElems.each((index, flag) => {
+        $(flag).css('top', flagsTop);
+        $(flag).css('margin-top', 0);
+        flagsTop += $(flag).outerHeight() + FLAG_MARGIN;
+      });
 
+
+      //Limit number of shown colors
       if ($(element).find('.color').length > 5) {
         let count = 0;
 
