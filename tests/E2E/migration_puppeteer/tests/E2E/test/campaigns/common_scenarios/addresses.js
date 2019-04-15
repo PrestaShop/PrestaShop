@@ -31,8 +31,8 @@ module.exports = {
       test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, date_time + addressData.email));
       test('should set "Identification number" input', () => client.waitAndSetValue(Addresses.id_number_input, addressData.id_number));
       test('should set "Address alias" input', () => client.waitAndSetValue(Addresses.address_alias_input, addressData.address_alias));
-      test('should check that the "First name" is "John"', () => client.checkAttributeValue(Addresses.first_name_input, 'value', addressData.first_name));
-      test('should check that the "Last name" is "Doe"', () => client.checkAttributeValue(Addresses.last_name_input, 'value', addressData.last_name));
+      test('should check that the "First name" is "John"', () => client.checkInputValue(Addresses.first_name_input, addressData.first_name));
+      test('should check that the "Last name" is "Doe"', () => client.checkInputValue(Addresses.last_name_input, addressData.last_name));
       test('should set "Company" input', () => client.waitAndSetValue(Addresses.company, addressData.company));
       test('should set "VAT number" input', () => client.waitAndSetValue(Addresses.VAT_number_input, addressData.vat_number));
       test('should set "Address" input', () => client.waitAndSetValue(Addresses.address_input, addressData.address + " " + date_time));
@@ -43,7 +43,7 @@ module.exports = {
       test('should set "Home phone" input', () => client.waitAndSetValue(Addresses.phone_input, addressData.home_phone));
       test('should set "Other information" input', () => client.waitAndSetValue(Addresses.other_input, addressData.other));
       test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.alert_success, 'Successful creation.','contain'));
     }, 'customer');
   },
   checkAddressRequiredInput: function (addressData, Check) {
@@ -78,7 +78,7 @@ module.exports = {
           test('should verify the appearance of the red error message', () => client.checkTextValue(BO.alert_panel, 'The other field is too long (300 chars max).', 'contain'));
           test('should set "Other information" input', () => client.waitAndSetValue(Addresses.other_input, addressData.other));
           test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
-          test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
+          test('should verify the appearance of the green validation', () => client.checkTextValue(BO.alert_success, 'Successful creation.','contain'));
         } else if (Check === "second") {
           test('should set "Other information" input', () => client.waitAndSetValue(Addresses.other_input, addressData.other));
           test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
@@ -88,7 +88,7 @@ module.exports = {
           test('should verify the appearance of the red error message', () => client.checkTextValue(BO.alert_panel, 'The company field is required.', 'contain'));
           test('should set "Company" input', () => client.waitAndSetValue(Addresses.company, addressData.company));
           test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
-          test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
+          test('should verify the appearance of the green validation', () => client.checkTextValue(BO.alert_success, 'Successful creation.','contain'));
         }
       }
     }, 'customer');
@@ -134,7 +134,7 @@ module.exports = {
       test('should set the new "Home phone" input', () => client.waitAndSetValue(Addresses.phone_input, newAddressData.home_phone));
       test('should set the new "Other information" input', () => client.waitAndSetValue(Addresses.other_input, newAddressData.other));
       test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful update.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.alert_success, 'Successful update.','contain'));
     }, 'customer');
   },
   deleteAddress: function (dataAddress) {
@@ -148,25 +148,28 @@ module.exports = {
       test('should click on "Delete" button', () => {
         return promise
           .then(() => client.waitForExistAndClick(Addresses.dropdown_toggle))
+          .then(() => client.alertAccept())
           .then(() => client.waitForExistAndClick(Addresses.delete_button));
       });
-      test('should accept the currently displayed alert dialog', () => client.alertAccept());
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.alert_success, 'Successful deletion.','contain'));
     }, 'customer');
   },
   deleteAddressWithBulkActions: function (dataAddress) {
     scenario('Delete address with bulk actions', client => {
       test('should go to the "Addresses" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.addresses_submenu));
-      test('should search for the address in the "Addresses list"', () => {
+      test('should search for the address in the "Addresses list"', async () => {
         return promise
-          .then(() => client.isVisible(Addresses.filter_by_address_input))
-          .then(() => client.search(Addresses.filter_by_address_input, dataAddress + " " + date_time));
+          .then(async () => await page.waitForSelector(Addresses.filter_by_address_input))
+          .then(async () => await client.search(Addresses.filter_by_address_input, dataAddress + " " + date_time))
+          .then(async () => await page.waitForNavigation({waitUntil:'networkidle0'}));
       });
-      test('should select the searched client', () => client.waitForExistAndClick(Addresses.select_address));
-      test('should click on the "Bulk actions" button', () => client.waitForExistAndClick(Addresses.bulk_actions_button));
-      test('should click on the "Delete selected" button', () => client.waitForExistAndClick(Addresses.bulk_actions_delete_button));
-      test('should accept the currently displayed alert dialog', () => client.alertAccept());
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nThe selection has been successfully deleted.'));
+      test('should select the searched client', async () => await client.waitForExistAndClick(Addresses.select_address));
+      test('should click on the "Bulk actions" button', async () => await client.waitForExistAndClick(Addresses.bulk_actions_button));
+      test('should click on the "Delete selected" button', async () => {
+        await client.alertAccept();
+        await client.waitForExistAndClick(Addresses.bulk_actions_delete_button);
+      });
+      test('should verify the appearance of the green validation', async () => await client.checkTextValue(BO.alert_success, 'The selection has been successfully deleted.','contain'));
     }, 'customer');
   }
 };

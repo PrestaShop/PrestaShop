@@ -40,7 +40,7 @@ module.exports = {
       });
       test('should activate "Partner offers" option ', () => client.waitForExistAndClick(Customer.Partner_offers));
       test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.alert_success_text, 'Successful creation.','contain'));
     }, 'customer');
   },
   checkCustomerBO: function (customerData) {
