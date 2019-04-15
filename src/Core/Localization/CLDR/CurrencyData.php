@@ -86,7 +86,7 @@ class CurrencyData
     /**
      * Is the currency used somewhere, or was it deactivated in all territories
      *
-     * @var bool
+     * @var bool|null
      */
     protected $active;
 

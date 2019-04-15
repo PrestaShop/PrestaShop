@@ -656,12 +656,12 @@ class Reader implements ReaderInterface
             if (empty($currencyDate->attributes()->to)) {
                 // no date "to": currency is active in some territory
                 return true;
-            } else {
-                // date "to" given: check if currency was active in near past to propose it
-                $dateTo = \DateTime::createFromFormat('Y-m-d', $currencyDate->attributes()->to);
-                if (false !== $dateTo && $dateTo->getTimestamp() > $currencyActiveDateThreshold) {
-                    return true;
-                }
+            }
+
+            // date "to" given: check if currency was active in near past to propose it
+            $dateTo = \DateTime::createFromFormat('Y-m-d', $currencyDate->attributes()->to);
+            if (false !== $dateTo && $dateTo->getTimestamp() > $currencyActiveDateThreshold) {
+                return true;
             }
         }
 
