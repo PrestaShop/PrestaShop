@@ -946,5 +946,15 @@
       <title>Define the transformation to apply on layout</title>
       <description>This hook allows to add/remove TransformationInterface used to generate an email layout</description>
     </hook>
+    <hook id="displayProductActions">
+      <name>displayProductActions</name>
+      <title>Display additional action button on the product page</title>
+      <description>This hook allow additional actions to be triggered, near the add to cart button.</description>
+    </hook>
+    <hook id="displayPersonalInformationTop">
+      <name>displayPersonalInformationTop</name>
+      <title>Content in the checkout funnel, on top of the personal information panel</title>
+      <description>Display actions or additional content in the personal details tab of the checkout funnel.</description>
+    </hook>
   </entities>
 </entity_hook>
