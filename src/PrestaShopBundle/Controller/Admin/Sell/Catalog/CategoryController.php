@@ -406,7 +406,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Toggle category status.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *
