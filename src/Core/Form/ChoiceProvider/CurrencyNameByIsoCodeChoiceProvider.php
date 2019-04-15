@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 
 /**
  * Class CurrencyNameByIsoCodeChoiceProvider is responsible for retrieving currency names from cldr library.
@@ -34,12 +35,12 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class CurrencyNameByIsoCodeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var array
+     * @var CurrencyData[]
      */
     private $cldrAllCurrencies;
 
     /**
-     * @param array $cldrAllCurrencies
+     * @param CurrencyData[] $cldrAllCurrencies
      */
     public function __construct(array $cldrAllCurrencies)
     {
@@ -53,12 +54,18 @@ final class CurrencyNameByIsoCodeChoiceProvider implements FormChoiceProviderInt
     {
         $result = [];
         foreach ($this->cldrAllCurrencies as $cldrCurrency) {
+            // filter only on active currency
+            // we dont need here currencies which were deactivated in all territories
+            if (!$cldrCurrency->isActive()) {
+                continue;
+            }
             $currencyNames = $cldrCurrency->getDisplayNames();
             $isoCode = $cldrCurrency->getIsoCode();
             $displayName = sprintf('%s (%s)', $currencyNames['default'], $isoCode);
 
             $result[$displayName] = $isoCode;
         }
+        ksort($result);
 
         return $result;
     }
