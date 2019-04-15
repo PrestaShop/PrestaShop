@@ -230,6 +230,11 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Get available entity fields.
      *
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_import"
+     * )
+     *
      * @param Request $request
      *
      * @return JsonResponse
