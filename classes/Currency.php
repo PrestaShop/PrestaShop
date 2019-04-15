@@ -1,4 +1,7 @@
 <?php
+
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -757,5 +760,42 @@ class CurrencyCore extends ObjectModel
     public static function isMultiCurrencyActivated($idShop = null)
     {
         return Currency::countActiveCurrencies($idShop) > 1;
+    }
+
+    /**
+     * This method aims to update localized data in currency from CLDR reference.
+     *
+     * @param array $languages
+     * @param LocaleRepository $localeRepoCLDR
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     */
+    public function refreshLocalizedCurrencyData(array $languages, LocaleRepository $localeRepoCLDR)
+    {
+        $symbolsByLang = $namesByLang = [];
+        foreach ($languages as $languageData) {
+            $language = new Language($languageData['id_lang']);
+            if ($language->locale === '') {
+                // Language doesn't have locale we can't install this language
+                continue;
+            }
+
+            // CLDR locale give us the CLDR reference specification
+            $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+            // CLDR currency gives data from CLDR reference, for the given language
+            $cldrCurrency = $cldrLocale->getCurrency($this->iso_code);
+
+            $symbol = (string) $cldrCurrency->getSymbol();
+            if (empty($symbol)) {
+                $symbol = $this->iso_code;
+            }
+            // symbol is localized
+            $namesByLang[$language->id] = $cldrCurrency->getDisplayName();
+            $symbolsByLang[$language->id] = $symbol;
+        }
+        $this->name = $namesByLang;
+        $this->symbol = $symbolsByLang;
     }
 }
