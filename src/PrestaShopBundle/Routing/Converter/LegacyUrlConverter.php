@@ -238,8 +238,11 @@ final class LegacyUrlConverter
     private function checkAlreadyMatchingRoute($url)
     {
         try {
-            $this->router->match(parse_url($url, PHP_URL_PATH));
-            throw new AlreadyConvertedException(sprintf('%s is already a converted url', $url));
+            $urlPath = parse_url($url, PHP_URL_PATH);
+            if (!empty($urlPath)) {
+                $this->router->match($urlPath);
+                throw new AlreadyConvertedException(sprintf('%s is already a converted url', $url));
+            }
         } catch (ExceptionInterface $e) {
         }
     }
