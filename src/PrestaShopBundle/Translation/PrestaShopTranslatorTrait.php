@@ -197,8 +197,10 @@ trait PrestaShopTranslatorTrait
      */
     private function normalizeDomain($domain)
     {
-        $normalizedDomain = (null !== $domain) ?
-            str_replace('.', '', $domain)
+        // remove up to two dots from the domain name
+        // (because legacy domain translations CAN have dots in the third part)
+        $normalizedDomain = (!empty($domain)) ?
+            preg_replace('/\./', '', $domain, 2)
             : null;
 
         return $normalizedDomain;

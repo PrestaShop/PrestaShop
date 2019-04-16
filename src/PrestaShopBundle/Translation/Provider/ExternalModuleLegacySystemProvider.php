@@ -229,6 +229,6 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     private function getModuleDomain()
     {
-        return 'Modules' . Container::camelize($this->moduleName);
+        return 'Modules' . ucfirst(str_replace('_', '', $this->moduleName));
     }
 }
