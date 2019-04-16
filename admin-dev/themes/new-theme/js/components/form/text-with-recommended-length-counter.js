@@ -53,8 +53,6 @@ export default class TextWithRecommendedLengthCounter {
     $(document).on('input', '.js-recommended-length-input', (event) => {
       const $input = $(event.currentTarget);
 
-      console.log($input.data('recommended-length-counter'));
-
       $($input.data('recommended-length-counter')).find('.js-current-length').text($input.val().length);
     });
   }
