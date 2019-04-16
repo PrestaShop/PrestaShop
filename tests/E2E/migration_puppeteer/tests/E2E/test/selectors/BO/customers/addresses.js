@@ -18,7 +18,7 @@ module.exports = {
     phone_input: '#phone',
     other_input: '#other',
     save_button: '#address_form_submit_btn',
-    filter_by_address_input: '#form-address input[name=addressFilter_address1]',
+    filter_by_address_input: '#form-address input[name="addressFilter_address1"]',
     address_value: '#form-address td:nth-of-type(%ID)',
     edit_button: '#table-address a[title="Edit"]',
     dropdown_toggle: '#table-address button[data-toggle="dropdown"]',

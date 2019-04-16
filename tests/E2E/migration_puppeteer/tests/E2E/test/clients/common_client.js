@@ -197,7 +197,7 @@ class CommonClient {
       case "contain":
         await content.waitFor(wait);
         await content.waitFor(selector);
-        await content.$eval(selector, el => el.innerText).then((text) => expect(text).to.contain(textToCheckWith));
+        await content.$eval(selector, el => el.innerText).then((text) => expect(text).to.contains(textToCheckWith));
         break;
       case "deepequal":
         await content.waitFor(wait);
@@ -781,7 +781,7 @@ class CommonClient {
     }, selector);
     switch (parameter) {
       case 'contain': {
-        expect(value).to.be.contain(textToCheckWith);
+        expect(value).to.be.contains(textToCheckWith);
         break;
       }
       case 'equal': {
