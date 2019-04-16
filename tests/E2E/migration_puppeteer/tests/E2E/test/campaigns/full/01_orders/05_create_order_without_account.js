@@ -88,7 +88,7 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should check that the message is equal to "There are 300 items in your cart."', () => client.checkTextValue(CheckoutOrderPage.modal_cart_product_count, 'There are 300 items in your cart.'));
     test('should check that the total product is equal to "4 284,00 €"', () => client.checkTextValue(CheckoutOrderPage.modal_total_products, '€4,284.00', 'contain'));
     test('should check that the total shipping is equal to "Free"', () => client.checkTextValue(CheckoutOrderPage.modal_total_shipping, 'Free', 'contain'));
-    test('should check that the total is equal to "4,284.00 € (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€4,284.00 (tax incl.)', 'contain'));
+    test('should check that the total is equal to "4,284.00 € (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total + ' span.value', '€4,284.00', 'contain'));
     test('should click on "Continue shopping" button', () => client.waitForExistAndClick(CheckoutOrderPage.continue_shopping_button, 1000));
     test('should stay on the same product page', () => client.checkTextValue(productPage.product_name, (productData[0].name + date_time).toUpperCase(), 'equal', 1000));
   }, 'common_client');
@@ -101,37 +101,27 @@ scenario('Create order by a guest from the Front Office', client => {
         await client.waitForVisibleAndClick(CatalogPage.reset_button, 2000);
       }
     });
-    test('should get the products number', async () => {
-      await client.isVisible(ProductList.pagination_products);
-      await client.getProductsNumber(ProductList.pagination_products);
-      await client.waitForSymfonyToolbar(AddProductPage, 2000);
-    });
     test('should close "catalog" menu', () => client.waitForVisibleAndClick(Menu.Sell.Catalog.catalog_menu_href, 2000));
-    test('should go to "Shop Parameters - Product Settings" page', async () => {
-      await client.pause(3000);
-      await client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu);
-    });
     test('should check the created product ' + productData[1].name + date_time + ' in the Front Office', async () => {
-      await client.getAttributeInVar(ProductSettings.Pagination.products_per_page_input, "value", "pagination");
-      global.pagination = await Number(Math.trunc(Number(global.productsNumber) / Number(global.tab['pagination'])));
       await client.switchWindow(1);
       await client.waitForExistAndClick(AccessPageFO.logo_home_page, 1000);
       await client.changeLanguage();
-      await client.scrollWaitForExistAndClick(productPage.see_all_products);
-      if (global.pagination !== 0) {
-        for (let i = 0; i <= global.pagination; i++) {
-          if (i < global.pagination) {
-            await client.isVisible(productPage.pagination_next);
-            if (global.isVisible) {
-              await client.clickPageNext(productPage.pagination_next, 3000);
-            }
-          }
+      await client.waitForExistAndClick(productPage.see_all_products);
+      let found = false ;
+      let next_isVisible = true;
+      while(!found && next_isVisible){
+        await client.isVisible(productPage.productLink.replace('%PRODUCTNAME', (productData[1].name + date_time).toLowerCase()), 2000);
+        if (global.isVisible) {
+          found = true;
+          await page.click(productPage.productLink.replace('%PRODUCTNAME', (productData[1].name + date_time).toLowerCase()));
         }
+        await client.isVisible(productPage.pagination_next);
+        if (global.isVisible) {
+          await client.clickPageNext(productPage.pagination_next, 3000);
+        }
+        else next_isVisible = false;
       }
-      await client.isVisible(productPage.productLink.replace('%PRODUCTNAME', (productData[1].name + date_time).toLowerCase()), 2000);
-      if (global.isVisible) {
-        await client.scrollWaitForExistAndClick(productPage.productLink.replace('%PRODUCTNAME', (productData[1].name + date_time).toLowerCase()), 2000);
-      }
+      expect(found).to.be.true;
     });
     test('should check that the price is equal to ' + productData[1].priceTTC, () => client.checkTextValue(productPage.product_price, productData[1].priceTTC, 'equal', 1000));
     test('should change quantity to "300" using the keyboard and push "Enter"', () => client.waitAndSetValue(productPage.first_product_quantity, '300'));
@@ -144,7 +134,7 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should check that the message is equal to "There are 600 items in your cart."', () => client.checkTextValue(CheckoutOrderPage.modal_cart_product_count, 'There are 600 items in your cart.'));
     test('should check that the total product is equal to "10,584.00€"', () => client.checkTextValue(CheckoutOrderPage.modal_total_products, '€10,584.00', 'contain'));
     test('should check that the total shipping is equal to "Free"', () => client.checkTextValue(CheckoutOrderPage.modal_total_shipping, 'Free', 'contain'));
-    test('should check that the total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€10,584.00 (tax incl.)', 'contain'));
+    test('should check that the total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total + ' span.value', '€10,584.00', 'contain'));
     test('should click on "PROCEED TO CHECKOUT" modal button', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
   }, 'product/product');
   scenario('Check all the information in the cart', client => {
@@ -300,7 +290,7 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.updateStatus('Delivered')
     });
     test('should click on "UPDATE STATUS" button', async () => {
-      await client.waitForExistAndClick(OrderPage.update_status_button, 2000);
+      await page.evaluate((selector) => {return document.querySelector(selector).click();},OrderPage.update_status_button);
       await client.pause(3000);
     });
   }, 'order');
@@ -311,8 +301,8 @@ scenario('Create order by a guest from the Front Office', client => {
   scenario('Check the movement of the "' + productData[0].name + date_time + '"', client => {
     test('should go to "Employee" page', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
     test('should get  the Employee "Name" and "Last Name"', async () => {
-      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 3), 'employee_last_name');
-      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 2), 'employee_first_name');
+      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 4), 'employee_last_name');
+      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 3), 'employee_first_name');
     });
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, '300', '-', 'Customer Order', productData[0].reference, dateSystem, productData[0].name + date_time, true);

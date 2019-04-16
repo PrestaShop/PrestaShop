@@ -65,7 +65,7 @@ module.exports = {
     modal_product_picture: '#blockcart-modal img.product-image',
     modal_product_name: '#blockcart-modal h6.product-name',
     modal_product_unit_price: '#blockcart-modal  div:nth-child(2) > p:nth-child(2)',
-    modal_product_quantity: '#blockcart-modal  div:nth-child(2) > p:nth-child(3)',
+    modal_product_quantity: '#blockcart-modal .modal-dialog span strong',
     modal_cart_product_count: '#blockcart-modal  p.cart-products-count',
     modal_total_products: '#blockcart-modal div.cart-content p:nth-child(2)',
     modal_total_shipping: '#blockcart-modal p:nth-of-type(3)',
