@@ -48,6 +48,11 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
     private $smartyExtractor;
 
     /**
+     * @var ExtractorInterface the Twig Code extractor
+     */
+    private $twigExtractor;
+
+    /**
      * @var string the "modules" directory path
      */
     private $modulesDirectory;
@@ -55,15 +60,18 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
     /**
      * @param ExtractorInterface $phpExtractor
      * @param ExtractorInterface $smartyExtractor
+     * @param ExtractorInterface $twigExtractor
      * @param string $modulesDirectory
      */
     public function __construct(
         ExtractorInterface $phpExtractor,
         ExtractorInterface $smartyExtractor,
+        ExtractorInterface $twigExtractor,
         $modulesDirectory
     ) {
         $this->phpExtractor = $phpExtractor;
         $this->smartyExtractor = $smartyExtractor;
+        $this->twigExtractor = $twigExtractor;
         $this->modulesDirectory = $modulesDirectory;
     }
 
@@ -75,10 +83,8 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
         $catalogueForExtraction = new MessageCatalogue($locale);
         $this->phpExtractor->extract($this->modulesDirectory . '/' . $moduleName, $catalogueForExtraction);
         $this->smartyExtractor->extract($this->modulesDirectory . '/' . $moduleName, $catalogueForExtraction);
+        $this->twigExtractor->extract($this->modulesDirectory . '/' . $moduleName, $catalogueForExtraction);
 
-        $catalogue = new MessageCatalogue($locale);
-        $catalogue->add($catalogueForExtraction->all('messages'), 'Modules' . Container::camelize($moduleName));
-
-        return $catalogue;
+        return $catalogueForExtraction;
     }
 }
