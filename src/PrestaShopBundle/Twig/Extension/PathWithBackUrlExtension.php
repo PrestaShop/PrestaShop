@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -47,15 +48,23 @@ class PathWithBackUrlExtension extends AbstractExtension
     private $backUrlProvider;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @param RoutingExtension $routingExtension
      * @param BackUrlProvider $backUrlProvider
+     * @param RequestStack|null $requestStack
      */
     public function __construct(
         RoutingExtension $routingExtension,
-        BackUrlProvider $backUrlProvider
+        BackUrlProvider $backUrlProvider,
+        $requestStack
     ) {
         $this->routingExtension = $routingExtension;
         $this->backUrlProvider = $backUrlProvider;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -85,12 +94,22 @@ class PathWithBackUrlExtension extends AbstractExtension
     {
         $fallbackPath = $this->routingExtension->getPath($name, $parameters, $relative);
 
-        $backUrl = $this->backUrlProvider->getBackUrl();
+        if (null === $this->requestStack) {
+            return $fallbackPath;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            return $fallbackPath;
+        }
+
+        $backUrl = $this->backUrlProvider->getBackUrl($request);
 
         if (!$backUrl) {
             return $fallbackPath;
         }
 
-        return urldecode($backUrl);
+        return $backUrl;
     }
 }

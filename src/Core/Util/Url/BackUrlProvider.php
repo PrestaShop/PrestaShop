@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\Url;
 
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * gets back url.
@@ -34,34 +34,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class BackUrlProvider
 {
     /**
-     * @var RequestStack|null
-     */
-    private $requestStack;
-
-    /**
-     * @param RequestStack|null $requestStack
-     */
-    public function __construct($requestStack)
-    {
-        $this->requestStack = $requestStack;
-    }
-
-    /**
+     * @param Request $request
+     *
      * @return string
      */
-    public function getBackUrl()
+    public function getBackUrl(Request $request)
     {
-        if (null === $this->requestStack) {
-            return '';
-        }
-
-        $currentRequest = $this->requestStack->getCurrentRequest();
-
-        if (null === $currentRequest) {
-            return '';
-        }
-
-        $backUrl = $currentRequest->query->get('back-url');
+        $backUrl = $request->query->get('back-url');
 
         return urldecode($backUrl);
     }

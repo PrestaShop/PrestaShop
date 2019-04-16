@@ -89,6 +89,5 @@ services:
         class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
         arguments:
           - '@prestashop.core.uti.back_url_provider'
-          - '@request_stack'
         tags:
           - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

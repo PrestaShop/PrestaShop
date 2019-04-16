@@ -43,37 +43,24 @@ final class BackUrlRedirectResponseListener
     private $backUrlProvider;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @param BackUrlProvider $backUrlProvider
-     * @param RequestStack $requestStack
      */
     public function __construct(
-        BackUrlProvider $backUrlProvider,
-        RequestStack $requestStack
+        BackUrlProvider $backUrlProvider
     ) {
         $this->backUrlProvider = $backUrlProvider;
-        $this->requestStack = $requestStack;
     }
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
+        $currentRequest = $event->getRequest();
         $originalResponse = $event->getResponse();
 
         if (!$originalResponse instanceof RedirectResponse) {
             return;
         }
 
-        $currentRequest = $this->requestStack->getCurrentRequest();
-
-        if (null === $currentRequest) {
-            return;
-        }
-
-        $backUrl = $this->backUrlProvider->getBackUrl();
+        $backUrl = $this->backUrlProvider->getBackUrl($currentRequest);
 
         if ($backUrl && !$this->isRequestUrlEqualToResponseUrl($currentRequest, $originalResponse)) {
             $backUrlResponse = $originalResponse->setTargetUrl(urldecode($backUrl));

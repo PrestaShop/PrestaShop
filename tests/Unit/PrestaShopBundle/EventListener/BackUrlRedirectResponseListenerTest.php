@@ -27,6 +27,7 @@
 namespace Tests\Unit\PrestaShopBundle\EventListener;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\EventListener\BackUrlRedirectResponseListener;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,11 +38,6 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class BackUrlRedirectResponseListenerTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RequestStack
-     */
-    private $requestStackMock;
-
-    /**
      * @var \PHPUnit_Framework_MockObject_MockObject|FilterResponseEvent
      */
     private $filterResponseEventMock;
@@ -49,11 +45,6 @@ class BackUrlRedirectResponseListenerTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-
-        $this->requestStackMock = $this
-            ->getMockBuilder(RequestStack::class)
-            ->getMock()
-        ;
 
         $this->filterResponseEventMock = $this
             ->getMockBuilder(FilterResponseEvent::class)
@@ -64,33 +55,34 @@ class BackUrlRedirectResponseListenerTest extends TestCase
 
     public function testItSetsResponseWithBackUrl()
     {
-        $requestMock = $this
-            ->getMockBuilder(Request::class)
+        $expectedUrl = 'http://localhost';
+
+        $backUrlProvider = $this
+            ->getMockBuilder(BackUrlProvider::class)
             ->getMock()
         ;
 
-        $requestMock->query = new ParameterBag([
-            'back-url' => 'http%3A%2F%2Flocalhost',
-        ]);
-
-        $this->requestStackMock
-            ->method('getCurrentRequest')
-            ->willReturn($requestMock)
+        $backUrlProvider
+            ->method('getBackUrl')
+            ->willReturn($expectedUrl)
         ;
-
-        $responseListener = new BackUrlRedirectResponseListener($this->requestStackMock);
-
-        $originalRedirectResponse = new RedirectResponse('https://www.prestashop.com/en');
 
         $this->filterResponseEventMock
             ->method('getResponse')
-            ->willReturn($originalRedirectResponse)
+            ->willReturn(new RedirectResponse('http://localhost.dev'))
         ;
+
+        $this->filterResponseEventMock
+            ->method('getRequest')
+            ->willReturn(new Request())
+        ;
+
+        $responseListener = new BackUrlRedirectResponseListener($backUrlProvider);
 
         $responseListener->onKernelResponse($this->filterResponseEventMock);
 
         $actual = $this->filterResponseEventMock->getResponse();
-        $expected = new RedirectResponse('http://localhost');
+        $expected = new RedirectResponse($expectedUrl);
 
         $this->assertEquals($expected, $actual);
     }
@@ -99,26 +91,15 @@ class BackUrlRedirectResponseListenerTest extends TestCase
     {
         $requestAndResponseUrl = 'http://localhost';
 
-        $requestMock = $this
-            ->getMockBuilder(Request::class)
+        $backUrlProvider = $this
+            ->getMockBuilder(BackUrlProvider::class)
             ->getMock()
         ;
 
-        $requestMock
-            ->method('getRequestUri')
-            ->willReturn($requestAndResponseUrl)
+        $backUrlProvider
+            ->method('getBackUrl')
+            ->willReturn('http://localhost-not-called.dev')
         ;
-
-        $requestMock->query = new ParameterBag([
-            'back-url' => 'http%3A%2F%2Flocalhost',
-        ]);
-
-        $this->requestStackMock
-            ->method('getCurrentRequest')
-            ->willReturn($requestMock)
-        ;
-
-        $responseListener = new BackUrlRedirectResponseListener($this->requestStackMock);
 
         $originalRedirectResponse = new RedirectResponse($requestAndResponseUrl);
 
@@ -126,6 +107,22 @@ class BackUrlRedirectResponseListenerTest extends TestCase
             ->method('getResponse')
             ->willReturn($originalRedirectResponse)
         ;
+
+        $currentRequest = $this
+            ->getMockBuilder(Request::class)
+            ->getMock();
+
+        $currentRequest
+            ->method('getRequestUri')
+            ->willReturn($requestAndResponseUrl)
+        ;
+
+        $this->filterResponseEventMock
+            ->method('getRequest')
+            ->willReturn($currentRequest)
+        ;
+
+        $responseListener = new BackUrlRedirectResponseListener($backUrlProvider);
 
         $responseListener->onKernelResponse($this->filterResponseEventMock);
 
