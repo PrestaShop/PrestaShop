@@ -49,8 +49,6 @@ class TranslationsController extends FrameworkBundleAdminController
     const controller_name = self::CONTROLLER_NAME;
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
      * @Template("@PrestaShop/Admin/Translations/overview.html.twig")
      */
     public function overviewAction()
