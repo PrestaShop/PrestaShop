@@ -27,6 +27,7 @@
 namespace Tests\Unit\PrestaShopBundle\Twig\Extension;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -46,6 +47,11 @@ class PathWithBackUrlExtensionTest extends TestCase
      * @var \PHPUnit_Framework_MockObject_MockObject|RequestStack
      */
     private $requestStackMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|BackUrlProvider
+     */
+    private $backUrlProviderMock;
 
     protected function setUp()
     {
@@ -68,11 +74,19 @@ class PathWithBackUrlExtensionTest extends TestCase
             ->getMock()
         ;
 
+        $this->backUrlProviderMock = $this
+            ->getMockBuilder(BackUrlProvider::class)
+            ->getMock()
+        ;
     }
 
     public function testItFallBacksToDefaultUrlWhenRequestStackIsNull()
     {
-        $extension = new PathWithBackUrlExtension($this->routingExtensionMock, null);
+        $extension = new PathWithBackUrlExtension(
+            $this->routingExtensionMock,
+            $this->backUrlProviderMock,
+            null
+        );
 
         $url = $extension->getPathWithBackUrl('prestashop');
 
@@ -94,35 +108,52 @@ class PathWithBackUrlExtensionTest extends TestCase
             ->willReturn($requestMock)
         ;
 
-        $extension = new PathWithBackUrlExtension($this->routingExtensionMock, $this->requestStackMock);
+        $this->backUrlProviderMock
+            ->method('getBackUrl')
+            ->willReturn('')
+        ;
+
+        $extension = new PathWithBackUrlExtension(
+            $this->routingExtensionMock,
+            $this->backUrlProviderMock,
+            $this->requestStackMock
+        );
 
         $url = $extension->getPathWithBackUrl('prestashop');
 
         $this->assertEquals(self::FALLBACK_URL, $url);
     }
 
-    public function testItReturnsUrlDecodedFallBackUrl()
+    public function testItReturnsBackUrl()
     {
+        $expectedUrl = 'http://localhost';
+
         $requestMock = $this
             ->getMockBuilder(Request::class)
             ->getMock()
         ;
 
-        $requestMock->query = new ParameterBag([
-            'back-url' => 'http%3A%2F%2Flocalhost',
-        ]);
+        $requestMock->query = new ParameterBag();
 
         $this->requestStackMock
             ->method('getCurrentRequest')
             ->willReturn($requestMock)
         ;
 
-        $extension = new PathWithBackUrlExtension($this->routingExtensionMock, $this->requestStackMock);
+        $this->backUrlProviderMock
+            ->method('getBackUrl')
+            ->willReturn($expectedUrl);
+
+        $extension = new PathWithBackUrlExtension(
+            $this->routingExtensionMock,
+            $this->backUrlProviderMock,
+            $this->requestStackMock
+        );
 
         $url = $extension->getPathWithBackUrl('prestashop');
 
         $this->assertEquals(
-            'http://localhost',
+            $expectedUrl,
             $url
         );
     }
