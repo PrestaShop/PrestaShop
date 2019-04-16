@@ -7,7 +7,7 @@ module.exports = {
     type_value_href: '#app tr:nth-of-type(%P) > td:nth-of-type(3) a',
     reference_value: '#app tr:nth-of-type(%P) > td:nth-of-type(2)',
     time_movement: '#app tr:nth-of-type(%P) > td:nth-of-type(5)',
-    sort_data_time_icon: '#app table th:nth-of-type(5) div[data-sort-direction*="asc"]',
+    sort_data_time_icon: '#app table th:nth-of-type(5) div[data-sort-direction] span.ps-sort',
     employee_value: '#app tr:nth-of-type(%P) > td:nth-of-type(6)',
     sort_data_time_icon_desc: '#app table th:nth-of-type(5) div[data-sort-direction*="desc"]',
     sort_data_time_icon_asc: '#app table th:nth-of-type(5) div[data-sort-direction*="asc"]',

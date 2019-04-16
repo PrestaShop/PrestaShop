@@ -1,23 +1,34 @@
 let promise = Promise.resolve();
 module.exports = {
-  changeStockProductQuantity: function (client, Stock, orderProduct, itemNumber, saveBtn, option = "add", productRef = "") {
-    test('should change the product quantity', () => {
+  changeStockProductQuantity: function (client, Stock, orderProduct, itemNumber, saveBtn, option = "add") {
+    test('should change the product quantity', async () => {
       promise
-          .then(() => client.getTextInVar(Stock.product_quantity.replace('%O', orderProduct), "productQuantity"));
+          .then(async () => await client.getTextInVar(Stock.product_quantity.replace('%O', orderProduct), "productQuantity"))
+          .then(async () => await page.waitForSelector(Stock.product_quantity_input.replace('%O', orderProduct)));
       if (option === "add") {
-        promise
-            .then(() => client.fillInputNumber(Stock.product_quantity_input.replace('%O', orderProduct),String(itemNumber)));
+        for(let i = 1; i<= itemNumber; i++){
+          promise
+              .then(async () => await page.waitForSelector(Stock.product_quantity_input.replace('%O', orderProduct),{visible:'true'}))
+              .then(async () => await client.waitForExistAndClick(Stock.product_quantity_input.replace('%O', orderProduct),100))
+              .then(async () => await page.waitForSelector(Stock.add_quantity_button.replace('%ITEM', orderProduct),{visible:'true'}))
+              .then(async () => await page.evaluate((selector) => {document.querySelector(selector).click();},Stock.add_quantity_button.replace('%ITEM', orderProduct)));
+        }
       } else {
-        promise
-            .then(() => client.fillInputNumber(Stock.product_quantity_input.replace('%O', orderProduct),String(itemNumber*-1)));
+        for(let i = 1; i<= itemNumber; i++){
+          promise
+              .then(async () => await page.waitForSelector(Stock.product_quantity_input.replace('%O', orderProduct),{visible:'true'}))
+              .then(async () => await client.waitForExistAndClick(Stock.product_quantity_input.replace('%O', orderProduct),100))
+              .then(async () => await page.waitForSelector(Stock.remove_quantity_button.replace('%ITEM', orderProduct),{visible:'true'}))
+              .then(async () => await page.evaluate((selector) => {document.querySelector(selector).click();},Stock.remove_quantity_button.replace('%ITEM', orderProduct)));
+        }
       }
       promise
-          .then(() => page.waitForSelector(Stock.product_quantity_modified.replace('%O', orderProduct),{visible:'true'}))
-          .then(() => page.waitForSelector(Stock.available_quantity_modified.replace('%O', orderProduct),{visible:'true'}));
+          .then(async () => await page.waitForSelector(Stock.product_quantity_modified.replace('%O', orderProduct),{visible:'true'}))
+          .then(async () => await page.waitForSelector(Stock.available_quantity_modified.replace('%O', orderProduct),{visible:'true'}));
 
       return promise
-          .then(() => client.getTextInVar(Stock.product_quantity.replace('%O', orderProduct), "productQuantity"))
-          .then(() => client.checkTextValue(Stock.product_quantity_modified.replace('%O', orderProduct), global.tab["productQuantity"].substring(18), "contain"));
+          .then(async () => await client.getTextInVar(Stock.product_quantity.replace('%O', orderProduct), "productQuantity"))
+          .then(async () => await client.checkTextValue(Stock.product_quantity_modified.replace('%O', orderProduct), global.tab["productQuantity"].substring(18), "contain"));
     });
     if (saveBtn === 'checkBtn') {
       test('should click on "Check" button', async () => {
@@ -28,9 +39,9 @@ module.exports = {
       });
       test('should check the success panel', () => {
         return promise
-            .then(() => client.waitForVisible(Stock.success_hidden_panel))
-            .then(() => {
-              client.checkTextContent(Stock.success_hidden_panel, 'Stock successfully updated');
+            .then(async () => await client.waitForVisible(Stock.success_hidden_panel))
+            .then(async () => {
+              await client.checkTextContent(Stock.success_hidden_panel, 'Stock successfully updated');
             });
       });
     }
@@ -42,10 +53,8 @@ module.exports = {
       await client.moveToObject(Stock.product_quantity_input.replace('%O', orderProduct));
       for (let i = 1; i <= itemNumber; i++) {
         await client.waitForExistAndClick(Stock.product_quantity_input.replace('%O', orderProduct));
-        await client.keys('\uE015');
-        await client.pause(1000);
+        await client.keys('ArrowDown');
       }
-      await client.pause(2000);
       await client.getTextInVar(Stock.product_quantity.replace('%O', orderProduct), "productQuantity");
       await client.checkTextValue(Stock.product_quantity_modified.replace('%O', orderProduct), global.tab["productQuantity"].substring(18), "contain");
     });
@@ -59,20 +68,19 @@ module.exports = {
     }
   },
   checkMovementHistory: function (client, Menu, Movement, movementIndex, itemNumber, option, type, reference = "", dateAndTime = "", productName = "", sort = "false") {
-    test('should go to "Movements" tab', () => {
+    test('should go to "Movements" tab', async () => {
       return promise
-          .then(() => client.goToStockMovements(Menu, Movement))
-          .then(() => client.pause(5000));
+          .then(async () => await client.goToStockMovements(Menu, Movement))
     });
     if (productName !== '' && sort === true) {
       test('should search for the movement', async () => {
         await client.isVisible(Movement.searched_product_close_icon);
         if (global.isVisible) {
-          await client.waitForExistAndClick(Movement.searched_product_close_icon);
+          await client.waitForExistAndClick(Movement.searched_product_close_icon,200);
         }
         await client.waitAndSetValue(Movement.search_input, productName);
-        await client.waitForExistAndClick(Movement.search_button);
-        await client.waitForExistAndClick(Movement.advanced_filters_button);
+        await client.waitForExistAndClick(Movement.search_button,200);
+        await client.waitForExistAndClick(Movement.advanced_filters_button,200);
         await client.isVisible(Movement.movement_type_select);
         if (global.isVisible) {
           await client.waitForExistAndClick(Movement.movement_type_select);
@@ -82,15 +90,16 @@ module.exports = {
       });
       test('should sort the movement by date', async () => {
         await client.isVisible(Movement.sort_data_time_icon_desc);
-        if (!global.isVisible) {
-          await client.waitForExistAndClick(Movement.sort_data_time_icon_asc);
-          await client.waitForExistAndClick(Movement.sort_data_time_icon_desc);
-          await page.waitForNavigation();
+        if (global.isVisible === false) {
+          await client.waitForExistAndClick(Movement.sort_data_time_icon,200);
+          await page.waitForSelector(Movement.sort_data_time_icon_desc,{visible:'true'});
         }
         else {
-          await client.waitForExistAndClick(Movement.sort_data_time_icon_desc);
-          await client.waitForExistAndClick(Movement.sort_data_time_icon_asc);
-          await page.waitForNavigation();
+          await client.waitForExistAndClick(Movement.sort_data_time_icon,200);
+          await page.waitForSelector(Movement.sort_data_time_icon_asc,{visible:'true'});
+          await client.waitForExistAndClick(Movement.sort_data_time_icon,200);
+          await page.waitForSelector(Movement.sort_data_time_icon_desc,{visible:'true'});
+
         }
       });
     }
@@ -135,8 +144,8 @@ module.exports = {
   checkAvailableAndPhysicalQuantity(client, quantity, parameter, status, Stock, order) {
     test('should check the "Physical" and "Available" column ' + status, async () => {
       let quantityToCompare = parseInt(global.tab["productQuantity"]) + quantity;
-      await client.checkTextValue(Stock.physical_column.replace('%ID', order), quantityToCompare, parameter, 3000, 'int');
-      await client.checkTextValue(Stock.available_column.replace('%ID', order), quantityToCompare, parameter, 3000, 'int');
+      await client.checkTextValue(Stock.physical_column.replace('%ID', order), String(quantityToCompare), parameter);
+      await client.checkTextValue(Stock.available_column.replace('%ID', order), String(quantityToCompare), parameter);
     });
   }
 };

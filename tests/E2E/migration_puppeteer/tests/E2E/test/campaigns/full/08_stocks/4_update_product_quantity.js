@@ -41,7 +41,7 @@ scenario('Update quantity of a product', () => {
     commonProduct.createProduct(AddProductPage, productData[i]);
   }
 
-  scenario('Increase the quantity for one product using the arrow down button and save by the "Check" sign', client => {
+  scenario('Increase the quantity for one product using the arrow up button and save by the "Check" sign', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
     stockCommonScenarios.changeStockProductQuantity(client, Stock, 1, 5, 'checkBtn');
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, +5, 'equal', 'changed', Stock, 1);
@@ -51,11 +51,11 @@ scenario('Update quantity of a product', () => {
   scenario('Decrease the quantity for one product using the arrow down and save by the "Apply new quantity" button', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
     stockCommonScenarios.changeStockProductQuantity(client, Stock, 1, 5, '', '');
-    test('should click on "Apply new quantity" button', () => client.waitForExistAndClick(Stock.group_apply_button));
-    test('should check the success panel', () => {
+    test('should click on "Apply new quantity" button', async () => await client.waitForExistAndClick(Stock.group_apply_button));
+    test('should check the success panel', async () => {
       return promise
-        .then(() => client.waitForVisible(Stock.success_hidden_panel))
-        .then(() => client.checkTextValue(Stock.success_hidden_panel,'Stock successfully updated', 'contain'));
+          .then(async () => await page.waitForSelector(Stock.success_hidden_panel))
+          .then(async () => await client.checkTextValue(Stock.success_hidden_panel,'Stock successfully updated', 'contain'));
     });
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, -5, 'equal', 'changed', Stock, 1);
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "5", "-", "Employee Edition", productData[2].reference, dateSystem, productData[2].name + date_time);
@@ -64,11 +64,11 @@ scenario('Update quantity of a product', () => {
   scenario('Change the quantity for one product entering the value in the field and save by the "Check" sign', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
     test('should set the "Quantity" of the first product to 15', () => client.modifyProductQuantity(Stock, 1, 15));
-    test('should click on "Check" button', () => client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 1)));
-    test('should check the success panel', () => {
+    test('should click on "Check" button', async () => await client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 1)));
+    test('should check the success panel', async () => {
       return promise
-        .then(() => client.waitForVisible(Stock.success_hidden_panel))
-        .then(() => client.checkTextValue(Stock.success_hidden_panel,'Stock successfully updated', 'contain'));
+          .then(async () => await client.waitForVisible(Stock.success_hidden_panel))
+          .then(async () => await client.checkTextValue(Stock.success_hidden_panel,'Stock successfully updated', 'contain'));
     });
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, +15, 'equal', 'changed', Stock, 1);
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "15", "+", "Employee Edition", productData[2].reference, dateSystem, productData[2].name + date_time);
@@ -76,28 +76,43 @@ scenario('Update quantity of a product', () => {
 
   scenario('Enter a negative quantity with keyboard for one product in the field and save by the "Check" sign', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
-    stockCommonScenarios.changeStockQuantityWithKeyboard(client, Stock, 1, 5, 'checkBtn');
+    test('should set the "Quantity" of the first product to 15', () => client.modifyProductQuantity(Stock, 1, -5));
+    test('should click on "Check" button', async () => await client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 1)));
+    test('should check the success panel', async () => {
+      return promise
+          .then(async () => await client.waitForVisible(Stock.success_hidden_panel))
+          .then(async () => await client.checkTextValue(Stock.success_hidden_panel,'Stock successfully updated', 'contain'));
+    });
+    //stockCommonScenarios.changeStockQuantityWithKeyboard(client, Stock, 1, 5, 'checkBtn');
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, -5, 'equal', 'changed', Stock, 1);
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "5", "-", "Employee Edition", productData[2].reference, dateSystem, productData[2].name + date_time);
   }, 'stocks');
 
   scenario('Enter a negative quantity with the arrow down for one product ', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
-    stockCommonScenarios.changeStockProductQuantity(client, Stock, 1, 5, 'checkBtn', "remove");
+    stockCommonScenarios.changeStockQuantityWithKeyboard(client, Stock, 1, 5, 'checkBtn');
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, -5, 'equal', 'changed', Stock, 1);
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "5", "-", "Employee Edition", productData[2].reference, dateSystem, productData[2].name + date_time);
   }, 'stocks');
 
-  scenario('Enter a decimal quantity with "." for one product in the field and save by the "Check" sign', client => {
-    stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
-    test('should set the "Quantity" of the first product to 10.5', () => client.modifyProductQuantity(Stock, 1, 10.5));
-    test('should click on "Check" button', () => client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 1)));
-    /**
-     * This scenario is based on the bug described in this ticket
-     * https://github.com/PrestaShop/PrestaShop/issues/9616
-     **/
-    test('should check the error message', () => client.checkElementValidation(Stock.edit_quantity_input, 'Veuillez saisir une valeur valide.', 'contain'));
-    stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, 0, 'equal', 'unchanged', Stock, 1);
+
+  /**
+   * To be activated after fix issue https://github.com/PrestaShop/PrestaShop/issues/9616
+   */
+  /*
+    scenario('Enter a decimal quantity with "." for one product in the field and save by the "Check" sign', client => {
+      stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
+      test('should set the "Quantity" of the first product to 10.5', async () => await client.modifyProductQuantity(Stock, 1, 10.5));
+      test('should click on "Check" button', async () => await client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 1)));
+      /**
+       * This scenario is based on the bug described in this ticket
+       * https://github.com/PrestaShop/PrestaShop/issues/9616
+       **/
+    /*test('should check the error message', async () => await client.checkElementValidation(Stock.edit_quantity_input, 'Veuillez saisir une valeur valide.', 'contain'));
+    test('should check the "Physical" and "Available" column unchanged', async () => {
+      await client.checkTextValue(Stock.physical_column.replace('%ID', '1'), global.tab["productQuantity"] + ' trending_flat ' + String((Number(global.tab["productQuantity"]) + 10.5)));
+      await client.checkTextValue(Stock.available_column.replace('%ID', '1'), global.tab["productQuantity"] + ' trending_flat ' + String((Number(global.tab["productQuantity"]) + 10.5)));
+    });
   }, 'stocks');
 
   scenario('Enter a decimal quantity with "," for one product in the field  and save by the "Check" sign', client => {
@@ -109,7 +124,7 @@ scenario('Update quantity of a product', () => {
      * This scenario is based on the bug described in this ticket
      * https://github.com/PrestaShop/PrestaShop/issues/9616
      **/
-    test('should check the error message', () => client.checkElementValidation(Stock.edit_quantity_input, 'Veuillez saisir une valeur valide.', 'contain'));
+    /*test('should check the error message', () => client.checkElementValidation(Stock.edit_quantity_input, 'Veuillez saisir une valeur valide.', 'contain'));
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, 0, 'equal', 'unchanged', Stock, 1);
   }, 'stocks');
 
@@ -122,7 +137,7 @@ scenario('Update quantity of a product', () => {
      * This scenario is based on the bug described in this ticket
      * https://github.com/PrestaShop/PrestaShop/issues/9616
      **/
-    test('should check the error message', () => client.checkElementValidation(Stock.edit_quantity_input, 'Veuillez saisir une valeur valide.', 'contain'));
+    /*test('should check the error message', () => client.checkElementValidation(Stock.edit_quantity_input, 'Veuillez saisir une valeur valide.', 'contain'));
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, 0, 'equal', 'unchanged', Stock, 1);
   }, 'stocks');
 
@@ -134,24 +149,25 @@ scenario('Update quantity of a product', () => {
      * This scenario is based on the bug described in this ticket
      * https://github.com/PrestaShop/PrestaShop/issues/9616
      **/
-    test('should check the error message', () => client.checkElementValidation(Stock.edit_quantity_input, 'Veuillez saisir une valeur valide.', 'contain'));
+    /*test('should check the error message', () => client.checkElementValidation(Stock.edit_quantity_input, 'Veuillez saisir une valeur valide.', 'contain'));
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, 0, 'equal', 'unchanged', Stock, 1);
-  }, 'stocks');
+}, 'stocks');
+*/
 
   scenario('Change the quantity for several lines  and save by the "Apply new quantity" button', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock, true);
     for (let i = 1; i <= 3; i++) {
       stockCommonScenarios.changeStockProductQuantity(client, Stock, i, 5, '');
     }
-    test('should click on "Apply new quantity" button', () => client.waitForExistAndClick(Stock.group_apply_button));
+    test('should click on "Apply new quantity" button', async () => await client.waitForExistAndClick(Stock.group_apply_button));
     test('should check the success panel', () => {
       return promise
-        .then(() => client.waitForVisible(Stock.success_hidden_panel))
-        .then(() => client.checkTextValue(Stock.success_hidden_panel,'Stock successfully updated', 'contain'));
+        .then(async () => await client.waitForVisible(Stock.success_hidden_panel))
+        .then(async () => await client.checkTextValue(Stock.success_hidden_panel,'Stock successfully updated', 'contain'));
     });
     for (let i = 1; i <= 3; i++) {
       if (i === 1) {
-        stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, +30, 'equal', 'changed', Stock, i);
+        stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, +10, 'equal', 'changed', Stock, i);
       } else {
         stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, +5, 'equal', 'changed', Stock, i);
       }
@@ -166,11 +182,11 @@ scenario('Update quantity of a product', () => {
     for (let i = 1; i <= 3; i++) {
       stockCommonScenarios.changeStockQuantityWithKeyboard(client, Stock, i, 5);
     }
-    test('should click on "Check" button', () => client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 2)));
-    test('should check the success panel', () => {
+    test('should click on "Check" button', async () => await client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 2)));
+    test('should check the success panel', async () => {
       return promise
-        .then(() => client.waitForVisible(Stock.success_hidden_panel))
-        .then(() => client.checkTextValue(Stock.success_hidden_panel, "Stock successfully updated", 'contain'));
+        .then(async () => await client.waitForVisible(Stock.success_hidden_panel))
+        .then(async () => await client.checkTextValue(Stock.success_hidden_panel, "Stock successfully updated", 'contain'));
     });
     for (let i = 1; i <= 3; i++) {
       if (i === 2) {
@@ -181,4 +197,8 @@ scenario('Update quantity of a product', () => {
     }
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "5", "-", "Employee Edition", productData[1].reference, dateSystem, productData[1].name + date_time, true);
   }, 'stocks');
+  for (let i = 0; i < 3; i++) commonProduct.deleteProduct(AddProductPage, productData[i]);
+  scenario('Logout from the Back Office', client => {
+    test('should logout successfully from Back Office', () => client.signOutBO());
+  }, 'common_client');
 }, 'stocks', true);
