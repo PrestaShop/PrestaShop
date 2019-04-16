@@ -152,7 +152,7 @@ class LayoutVariablesBuilderTest extends TestCase
             ->expects($this->once())
             ->method('dispatchWithParameters')
             ->with(
-                $this->equalTo(LayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK),
+                $this->equalTo(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK),
                 $this->callback(function (array $hookParameters) use ($expectedVariables, $mailLayout) {
                     $this->assertEquals($expectedVariables, $hookParameters['mailLayoutVariables']);
                     $this->assertInstanceOf(LayoutInterface::class, $hookParameters['mailLayout']);

@@ -17,11 +17,9 @@ CREATE TABLE `PREFIX_currency_lang` (
 /* PHP:ps_1760_copy_data_from_currency_to_currency_lang(); */;
 
 ALTER TABLE `PREFIX_admin_filter`
-	ADD `filter_id` VARCHAR (255) DEFAULT '' NOT NULL AFTER `shop`,
-  DROP INDEX IF EXISTS `admin_filter_search_idx`,
-  DROP INDEX IF EXISTS `search_idx`,
-	ADD UNIQUE INDEX `admin_filter_search_id_idx` (`employee`, `shop`, `controller`, `action`, `filter_id`)
-;
+	ADD `filter_id` VARCHAR (255) DEFAULT '' NOT NULL AFTER `shop`;
+
+/* PHP:ps_1760_replace_index_of_admin_filter */;
 
 /* Module Manager tab should be the first tab in Modules Tab */
 UPDATE `PREFIX_tab` SET `position` = 0 WHERE `class_name` = 'AdminModulesSf' AND `position`= 1;
@@ -49,3 +47,11 @@ SELECT `id_configuration`, l.`id_lang`, `value`
 
 /* PHP:ps_1760_update_configuration(); */;
 /* PHP:ps_1760_update_tabs(); */;
+
+/* Insert new hooks */
+INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
+  (NULL, 'actionListMailThemes', 'List the available email themes and layouts', 'This hook allows to add/remove available email themes (ThemeInterface) and/or to add/remove their layouts (LayoutInterface)', '1'),
+  (NULL, 'actionGetMailThemeFolder', 'Define the folder of an email theme', 'This hook allows to change the folder of an email theme (useful if you theme is in a module for example)', '1'),
+  (NULL, 'actionBuildMailLayoutVariables', 'Build the variables used in email layout rendering', 'This hook allows to change the variables used when an email layout is rendered', '1'),
+  (NULL, 'actionGetMailLayoutTransformations', 'Define the transformation to apply on layout', 'This hook allows to add/remove TransformationInterface used to generate an email layout', '1')
+;

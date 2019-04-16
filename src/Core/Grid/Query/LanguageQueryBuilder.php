@@ -31,9 +31,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class ContactsQueryBuilder is responsible for building queries for Contacts grid data.
+ * Class LanguageQueryBuilder provides query builders for languages grid.
  */
-final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
+final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -41,34 +41,18 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int
-     */
-    private $languageId;
-
-    /**
-     * @var array
-     */
-    private $contextShopsIds;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $languageId
-     * @param array $contextShopsIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $languageId,
-        array $contextShopsIds
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->languageId = $languageId;
-        $this->contextShopsIds = $contextShopsIds;
     }
 
     /**
@@ -76,16 +60,14 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb
-            ->select('c.id_contact, c.email, cl.name, cl.description')
-            ->groupBy('c.id_contact');
+        $builder = $this->getLanguageQueryBuilder($searchCriteria)
+            ->select('l.*');
 
         $this->searchCriteriaApplicator
-            ->applySorting($searchCriteria, $qb)
-            ->applyPagination($searchCriteria, $qb);
+            ->applySorting($searchCriteria, $builder)
+            ->applyPagination($searchCriteria, $builder);
 
-        return $qb;
+        return $builder;
     }
 
     /**
@@ -93,54 +75,54 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT c.id_contact)');
-
-        return $qb;
+        return $this->getLanguageQueryBuilder($searchCriteria)->select('COUNT(id_lang)');
     }
 
     /**
-     * Get generic query builder.
-     *
-     * @param array $filters
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(array $filters)
+    private function getLanguageQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    {
+        $builder = $this->connection->createQueryBuilder()
+            ->from($this->dbPrefix . 'lang', 'l');
+
+        $this->applyFilters($builder, $searchCriteria);
+
+        return $builder;
+    }
+
+    /**
+     * @param QueryBuilder $builder
+     * @param SearchCriteriaInterface $searchCriteria
+     */
+    private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria)
     {
         $allowedFilters = [
-            'id_contact',
+            'id_lang',
             'name',
-            'email',
-            'description',
+            'iso_code',
+            'language_code',
+            'date_format_lite',
+            'date_format_full',
+            'active',
         ];
 
-        $qb = $this->connection
-            ->createQueryBuilder()
-            ->from($this->dbPrefix . 'contact', 'c')
-            ->innerJoin('c', $this->dbPrefix . 'contact_lang', 'cl', 'c.id_contact = cl.id_contact')
-            ->innerJoin('c', $this->dbPrefix . 'contact_shop', 'cs', 'c.id_contact = cs.id_contact')
-            ->andWhere('cl.`id_lang`= :language')
-            ->andWhere('cs.`id_shop` IN (:shops)')
-            ->setParameter('language', $this->languageId)
-            ->setParameter('shops', $this->contextShopsIds, Connection::PARAM_INT_ARRAY);
-
-        foreach ($filters as $name => $value) {
-            if (!in_array($name, $allowedFilters, true)) {
+        foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
+            if (!in_array($filterName, $allowedFilters)) {
                 continue;
             }
 
-            if ('id_contact' === $name) {
-                $qb->andWhere('c.`id_contact` = :' . $name);
-                $qb->setParameter($name, $value);
+            if (in_array($filterName, ['id_lang', 'active'])) {
+                $builder->andWhere($filterName . ' = :' . $filterName);
+                $builder->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
-            $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%' . $value . '%');
+            $builder->andWhere($filterName . ' LIKE :' . $filterName);
+            $builder->setParameter($filterName, '%' . $filterValue . '%');
         }
-
-        return $qb;
     }
 }

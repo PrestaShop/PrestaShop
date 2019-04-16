@@ -1,4 +1,8 @@
 <?php
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -36,5 +40,19 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
             `name` = `" . _DB_PREFIX_ . "currency`.`name`,
             "
         );
+    }
+    /** @var Currency[] $currencies */
+    $currencies = Currency::getCurrencies(true, false);
+    $context = Context::getContext();
+    $container = isset($context->controller) ? $context->controller->getContainer() : null;
+    if (null === $container) {
+        $container = SymfonyContainer::getInstance();
+    }
+
+    /** @var LocaleRepository $localeRepoCLDR */
+    $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+    foreach ($currencies as $currency) {
+        $currency->refreshLocalizedCurrencyData($languages, $localeRepoCLDR);
+        $currency->save();
     }
 }

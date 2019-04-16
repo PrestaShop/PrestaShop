@@ -81,7 +81,9 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             throw new CustomerException('Customer contains invalid field values');
         }
 
-        $customer->update();
+        if (false === $customer->update()) {
+            throw new CustomerException('Failed to update customer');
+        }
     }
 
     /**

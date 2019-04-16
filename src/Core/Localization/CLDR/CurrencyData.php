@@ -84,6 +84,13 @@ class CurrencyData
     protected $symbols;
 
     /**
+     * Is the currency used somewhere, or was it deactivated in all territories
+     *
+     * @var bool|null
+     */
+    protected $active;
+
+    /**
      * Override this object's data with another CurrencyData object.
      *
      * @param CurrencyData $currencyData
@@ -100,6 +107,10 @@ class CurrencyData
 
         if (null !== $currencyData->getNumericIsoCode()) {
             $this->setNumericIsoCode($currencyData->getNumericIsoCode());
+        }
+
+        if (null !== $currencyData->isActive()) {
+            $this->setActive($currencyData->isActive());
         }
 
         if (null !== $currencyData->getDecimalDigits()) {
@@ -221,5 +232,23 @@ class CurrencyData
         $this->symbols = $symbols;
 
         return $this;
+    }
+
+    /**
+     * is currency still active in some territory
+     *
+     * @return bool|null
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive($active)
+    {
+        $this->active = (bool) $active;
     }
 }

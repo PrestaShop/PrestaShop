@@ -23,16 +23,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="helper-card card">
-  <div class="helper-card__left helper-card__team shape-one">
-    <img src="{{ asset('themes/new-theme/scss/img/helper-card/team@3x.png') }}" class="img-fluid">
+{% if not isShowcaseCardClosed %}
+  <div id="employeesShowcaseCard" class="showcase-card card">
+    <div class="helper-card__left helper-card__team shape-one">
+      <img src="{{ asset('themes/new-theme/scss/img/helper-card/team@3x.png') }}" class="img-fluid">
+    </div>
+    <div class="helper-card__right">
+      <h2>{{ 'Manage your team'|trans({}, 'Admin.Advparameters.Feature') }}</h2>
+      <p>{{ 'Create profiles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+      <a class="btn btn-outline-secondary" href="{{ helperCardDocumentationLink }}" target="_blank">
+        {{ 'Learn more'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <i class="showcase-card__close material-icons js-remove-helper-block"
+       data-card-name="{{ showcaseCardName }}"
+       data-close-url="{{ path('admin_close_showcase_card') }}"
+    >
+      close
+    </i>
   </div>
-  <div class="helper-card__right">
-    <h2>{{ 'Manage your team'|trans({}, 'Admin.Advparameters.Feature') }}</h2>
-    <p>{{ 'Create profiles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
-    <a class="btn btn-outline-secondary" href="{{ helperCardDocumentationLink }}" target="_blank">
-      {{ 'Learn more'|trans({}, 'Admin.Actions') }}
-    </a>
-  </div>
-  <i class="helper-card__close material-icons js-close-helper-card">close</i>
-</div>
+{% endif %}
