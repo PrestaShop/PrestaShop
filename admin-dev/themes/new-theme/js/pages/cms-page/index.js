@@ -37,7 +37,9 @@ import PositionExtension from '../../components/grid/extension/position-extensio
 import ChoiceTree from '../../components/form/choice-tree';
 import TranslatableInput from '../../components/translatable-input';
 import textToLinkRewriteCopier from '../../components/text-to-link-rewrite-copier';
-import TaggableField from "../../components/taggable-field";
+import TaggableField from '../../components/taggable-field';
+import ShowcaseCard from '../../components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
 const $ = window.$;
 
@@ -84,4 +86,7 @@ $(() => {
   cmsGrid.addExtension(new SubmitBulkExtension());
   cmsGrid.addExtension(new SubmitRowActionExtension());
   cmsGrid.addExtension(new PositionExtension());
+
+  const helperBlock = new ShowcaseCard('cms-pages-showcase-card');
+  helperBlock.addExtension(new ShowcaseCardCloseExtension());
 });
