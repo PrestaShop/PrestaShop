@@ -176,6 +176,7 @@ class CustomerController extends AbstractAdminController
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
                 return $this->redirectToRoute('admin_customers_index');
             }
         } catch (CustomerException $e) {
@@ -184,6 +185,7 @@ class CustomerController extends AbstractAdminController
                 return $this->redirectToRoute('admin_customers_index');
             }
         }
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
             'customerForm' => $customerForm->createView(),
             'customerInformation' => $customerInformation,

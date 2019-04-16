@@ -29,7 +29,6 @@ namespace PrestaShopBundle\EventListener;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**

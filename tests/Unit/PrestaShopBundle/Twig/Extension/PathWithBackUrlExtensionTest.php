@@ -95,7 +95,6 @@ class PathWithBackUrlExtensionTest extends TestCase
 
     public function testItFallBacksToDefaultUrlWhenBackUrlIsNotFound()
     {
-
         $requestMock = $this
             ->getMockBuilder(Request::class)
             ->getMock()

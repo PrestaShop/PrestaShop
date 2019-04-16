@@ -29,10 +29,8 @@ namespace Tests\Unit\PrestaShopBundle\EventListener;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\EventListener\BackUrlRedirectResponseListener;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 class BackUrlRedirectResponseListenerTest extends TestCase
