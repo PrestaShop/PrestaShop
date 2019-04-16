@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
+use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -123,10 +124,13 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('meta_title', TranslatableType::class, [
-                'type' => TextWithLengthCounterType::class,
+                'type' => TextWithRecommendedLengthType::class,
                 'required' => false,
                 'options' => [
-                    'max_length' => SeoSettings::MAX_TITLE_LENGTH,
+                    'recommended_length' => SeoSettings::RECOMMENDED_TITLE_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_TITLE_LENGTH,
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
@@ -147,11 +151,15 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('meta_description', TranslatableType::class, [
                 'required' => false,
-                'type' => TextWithLengthCounterType::class,
+                'type' => TextWithRecommendedLengthType::class,
                 'options' => [
                     'required' => false,
-                    'input' => 'textarea',
-                    'max_length' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                    'input_type' => 'textarea',
+                    'recommended_length' => SeoSettings::RECOMMENDED_DESCRIPTION_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                        'rows' => 3,
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',

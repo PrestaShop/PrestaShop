@@ -753,3 +753,29 @@
    </span>
   </div>
 {% endblock generatable_text_widget %}
+
+{% block text_with_recommended_length_widget %}
+  {% set attr = attr|merge({
+    'data-recommended-length-counter': '#' ~ id ~ '_recommended_length_counter',
+    'class': 'js-recommended-length-input'
+  }) -%}
+
+  {% if input_type == 'textarea' %}
+    {{- block('textarea_widget') -}}
+  {% else %}
+    {{- block('form_widget_simple') -}}
+  {% endif %}
+
+  <small class="form-text text-muted text-right"
+         id="{{ id }}_recommended_length_counter"
+  >
+    <em>
+      {{ '[1][/1] of [2][/2] characters used (recommended)'|trans({}, 'Admin.Catalog.Feature')|replace({
+        '[1]': '<span class="js-current-length">' ~ value|length,
+        '[/1]': '</span>',
+        '[2]': '<span>' ~ recommended_length,
+        '[/2]': '</span>',
+      })|raw }}
+    </em>
+  </small>
+{% endblock text_with_recommended_length_widget %}
