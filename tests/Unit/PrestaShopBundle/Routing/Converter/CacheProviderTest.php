@@ -179,7 +179,7 @@ class CacheProviderTest extends TestCase
 
         $this->assertFalse($cache->hasItem(self::CACHE_KEY));
         //Just perform the test twice to be sure the result and the cache are correct
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 2; ++$i) {
             $legacyRoutes = $cacheProvider->getLegacyRoutes();
             $this->assertCount(4, $legacyRoutes);
             $this->assertNotEmpty($legacyRoutes['admin_products']);
@@ -215,7 +215,7 @@ class CacheProviderTest extends TestCase
 
         $this->assertFalse($cache->hasItem(self::CACHE_KEY));
         //Just perform the test twice to be sure the result and the cache are correct
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 2; ++$i) {
             $controllerActions = $cacheProvider->getControllersActions();
             $this->assertCount(2, $controllerActions);
             $this->assertNotEmpty($controllerActions['AdminProducts']);
@@ -413,6 +413,7 @@ class CacheProviderTest extends TestCase
 
     /**
      * @param array $legacyRoutes
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|LegacyRouteProviderInterface
      */
     private function buildMockRouterProvider(array $legacyRoutes)
