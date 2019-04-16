@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\PrestaShopBundle\Routing\Converter;
+namespace Tests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
@@ -145,6 +145,41 @@ class RouterProviderTest extends TestCase
         $this->assertSame(['index', 'add', 'create'], $controllerActions);
     }
 
+    public function testGetActionsByControllerInsensitive()
+    {
+        $router = $this->buildMultipleRouterMock([
+            [
+                'route_name' => 'admin_products',
+                'path' => '/products',
+                '_legacy_link' => 'AdminProducts',
+            ],
+            [
+                'route_name' => 'admin_products_create',
+                'path' => '/products/create',
+                '_legacy_link' => [
+                    'AdminProducts:add',
+                    'AdminProducts:create',
+                ],
+            ],
+            [
+                'route_name' => 'admin_categories_create',
+                'path' => '/products/create',
+                '_legacy_link' => [
+                    'AdminCategories:add',
+                    'AdminCategories:create',
+                ],
+            ],
+        ]);
+        $routerProvider = new RouterProvider($router);
+        $controllerActions = $routerProvider->getActionsByController('adminproducts');
+        $this->assertCount(3, $controllerActions);
+        $this->assertSame(['index', 'add', 'create'], $controllerActions);
+
+        $controllerActions = $routerProvider->getActionsByController('adMinProDuctS');
+        $this->assertCount(3, $controllerActions);
+        $this->assertSame(['index', 'add', 'create'], $controllerActions);
+    }
+
     public function testGetLegacyRouteByAction()
     {
         $router = $this->buildMultipleRouterMock([
@@ -216,6 +251,64 @@ class RouterProviderTest extends TestCase
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminModules', 'add');
         $this->assertEquals('admin_modules_create', $legacyRoute->getRouteName());
+    }
+
+    public function testGetLegacyRouteByActionInsensitive()
+    {
+        $router = $this->buildMultipleRouterMock([
+            [
+                'route_name' => 'admin_products',
+                'path' => '/products',
+                '_legacy_link' => 'AdminProducts',
+            ],
+            [
+                'route_name' => 'admin_products_create',
+                'path' => '/products/create',
+                '_legacy_link' => [
+                    'AdminProducts:add',
+                    'AdminProducts:create',
+                ],
+            ],
+            [
+                'route_name' => 'admin_categories_create',
+                'path' => '/products/create',
+                '_legacy_link' => [
+                    'AdminCategories:add',
+                    'AdminCategories:create',
+                ],
+            ],
+            [
+                'route_name' => 'admin_modules_create',
+                'path' => '/modules/create',
+                '_legacy_link' => [
+                    'AdminModules:add',
+                    'AdminModules:create',
+                ],
+            ],
+            [
+                'route_name' => 'awesome_modules_create',
+                'path' => '/module/awesome/modules/create',
+                '_legacy_link' => [
+                    'AdminModules:add',
+                    'AdminModules:create',
+                ],
+            ],
+        ]);
+        $routerProvider = new RouterProvider($router);
+        $legacyRoute = $routerProvider->getLegacyRouteByAction('adminproducts', 'index');
+        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+
+        $legacyRoute = $routerProvider->getLegacyRouteByAction('AdMinProDucts', '');
+        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+
+        $legacyRoute = $routerProvider->getLegacyRouteByAction('ADMINPRODUCTS', 'add');
+        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+
+        $legacyRoute = $routerProvider->getLegacyRouteByAction('ADMINPRODUCTS', 'ADD');
+        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+
+        $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'Create');
+        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
     }
 
     public function testControllerNotFound()

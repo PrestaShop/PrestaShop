@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\PrestaShopBundle\Routing\Converter;
+namespace Tests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
@@ -53,6 +53,32 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertEquals('/products', $url);
     }
 
+    public function testMinifiedController()
+    {
+        $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
+        $url = $converter->convertByParameters([
+            'controller' => 'adminproducts',
+        ]);
+        $this->assertEquals('/products', $url);
+
+        $url = $converter->convertByUrl('?controller=adminproducts');
+        $this->assertEquals('/products', $url);
+    }
+
+    public function testBasicTab()
+    {
+        $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
+        $url = $converter->convertByParameters([
+            'tab' => 'AdminProducts',
+        ]);
+        $this->assertEquals('/products', $url);
+
+        $url = $converter->convertByUrl('?tab=AdminProducts');
+        $this->assertEquals('/products', $url);
+    }
+
     public function testIndexAlias()
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
@@ -64,6 +90,20 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertEquals('/products', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=index');
+        $this->assertEquals('/products', $url);
+    }
+
+    public function testTabIndexAlias()
+    {
+        $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
+        $url = $converter->convertByParameters([
+            'tab' => 'AdminProducts',
+            'action' => 'index',
+        ]);
+        $this->assertEquals('/products', $url);
+
+        $url = $converter->convertByUrl('?tab=AdminProducts&action=index');
         $this->assertEquals('/products', $url);
     }
 
@@ -92,6 +132,20 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertEquals('/products/create', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=create');
+        $this->assertEquals('/products/create', $url);
+    }
+
+    public function testTabAction()
+    {
+        $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
+        $url = $converter->convertByParameters([
+            'tab' => 'AdminProducts',
+            'action' => 'create',
+        ]);
+        $this->assertEquals('/products/create', $url);
+
+        $url = $converter->convertByUrl('?tab=AdminProducts&action=create');
         $this->assertEquals('/products/create', $url);
     }
 

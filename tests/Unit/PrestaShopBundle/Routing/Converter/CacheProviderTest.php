@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\PrestaShopBundle\Routing\Converter;
+namespace Tests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Routing\Converter\CacheKeyGeneratorInterface;
@@ -147,6 +147,7 @@ class CacheProviderTest extends TestCase
         $this->assertNotEmpty($legacyRoutes['admin_categories_create']);
         $this->assertNotEmpty($legacyRoutes['admin_categories_edit']);
 
+        //Second call is used to test cache is saved through mock expectations
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
         $this->assertCount(4, $legacyRoutes);
     }
@@ -165,6 +166,7 @@ class CacheProviderTest extends TestCase
         $this->assertNotEmpty($legacyRoutes['admin_categories_create']);
         $this->assertNotEmpty($legacyRoutes['admin_categories_edit']);
 
+        //Second call is used to test cache is saved through mock expectations
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
         $this->assertCount(4, $legacyRoutes);
     }
@@ -243,6 +245,84 @@ class CacheProviderTest extends TestCase
         $this->assertNotEmpty($controllerActions['AdminProducts']['new']);
         $this->assertNotEmpty($controllerActions['AdminCategories']);
         $this->assertNotEmpty($controllerActions['AdminCategories']['form']);
+    }
+
+    public function testGetActionsByControllerAndSaveCache()
+    {
+        $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
+        $cacheProvider = new CacheProvider($mockProvider, $this->buildSavingCache(), $this->buildCacheKeyGenerator());
+
+        $controllerActions = $cacheProvider->getActionsByController('AdminProducts');
+        $this->assertCount(3, $controllerActions);
+        $this->assertSame(['index', 'create', 'new'], $controllerActions);
+
+        //Second call is used to test cache is saved through mock expectations
+        $controllerActions = $cacheProvider->getActionsByController('AdminProducts');
+        $this->assertCount(3, $controllerActions);
+        $this->assertSame(['index', 'create', 'new'], $controllerActions);
+    }
+
+    public function testGetActionsByControllerInsensitive()
+    {
+        $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
+        $cacheProvider = new CacheProvider($mockProvider, $this->buildSavingCache(), $this->buildCacheKeyGenerator());
+
+        $controllerActions = $cacheProvider->getActionsByController('adminproducts');
+        $this->assertCount(3, $controllerActions);
+        $this->assertSame(['index', 'create', 'new'], $controllerActions);
+
+        //Second call is used to test cache is saved through mock expectations
+        $controllerActions = $cacheProvider->getActionsByController('AdMinProDucts');
+        $this->assertCount(3, $controllerActions);
+        $this->assertSame(['index', 'create', 'new'], $controllerActions);
+    }
+
+    public function testGetLegacyRouteByActionAndSaveCache()
+    {
+        $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
+        $cacheProvider = new CacheProvider($mockProvider, $this->buildSavingCache(), $this->buildCacheKeyGenerator());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminProducts', 'index');
+        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminProducts', 'list');
+        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminProducts', '');
+        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminProducts', null);
+        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminProducts', 'new');
+        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminProducts', 'create');
+        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminCategories', 'form');
+        $this->assertEquals('admin_categories_create', $legacyRoute->getRouteName());
+    }
+
+    public function testGetLegacyRouteByActionInsensitive()
+    {
+        $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
+        $cacheProvider = new CacheProvider($mockProvider, $this->buildSavingCache(), $this->buildCacheKeyGenerator());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('adminproducts', 'index');
+        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdMinProdUcts', 'list');
+        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('ADMINPRODUCTS', 'new');
+        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminProducts', 'CREATE');
+        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+
+        $legacyRoute = $cacheProvider->getLegacyRouteByAction('AdminCategories', 'Form');
+        $this->assertEquals('admin_categories_create', $legacyRoute->getRouteName());
     }
 
     /**

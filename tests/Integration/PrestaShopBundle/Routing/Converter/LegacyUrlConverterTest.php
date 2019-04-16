@@ -24,18 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Integration\PrestaShopBundle\Routing\Converter;
+namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 
-use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use Link;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use ReflectionClass;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-/**
- * @group routing
- */
-class LegacyUrlConverterTest extends LightWebTestCase
+class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 {
     /** @var Link */
     private $link;
@@ -43,7 +40,6 @@ class LegacyUrlConverterTest extends LightWebTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->initContainerInstance();
         if (!$this->link) {
             $this->link = new Link();
         }
@@ -83,6 +79,24 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
             'admin_customer_preferences' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences'],
             'admin_customer_preferences_process' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences', 'update'],
+
+            'admin_customers_index' => ['/sell/customers/', 'AdminCustomers'],
+            'admin_customers_filter' => ['/sell/customers/', 'AdminCustomers', 'submitFiltercustomer'],
+            'admin_customers_create' => ['/sell/customers/new', 'AdminCustomers', 'addcustomer'],
+            'admin_customers_edit' => ['/sell/customers/42/edit', 'AdminCustomers', 'updatecustomer', ['id_customer' => 42]],
+            'admin_customers_view' => ['/sell/customers/42/view', 'AdminCustomers', 'viewcustomer', ['id_customer' => 42]],
+            'admin_customers_save_private_note' => ['/sell/customers/42/save-private-note', 'AdminCustomers', 'updateCustomerNote', ['id_customer' => 42]],
+            'admin_customers_toggle_status' => ['/sell/customers/42/toggle-status', 'AdminCustomers', 'statuscustomer', ['id_customer' => 42]],
+            'admin_customers_transform_guest_to_customer' => ['/sell/customers/42/transform-guest-to-customer', 'AdminCustomers', 'guesttocustomer', ['id_customer' => 42]],
+            'admin_customers_toggle_newsletter_subscription' => ['/sell/customers/42/toggle-newsletter-subscription', 'AdminCustomers', 'changeNewsletterVal', ['id_customer' => 42]],
+            'admin_customers_set_required_fields' => ['/sell/customers/set-required-fields', 'AdminCustomers', 'submitFields'],
+            'admin_customers_toggle_partner_offer_subscription' => ['/sell/customers/42/toggle-partner-offer-subscription', 'AdminCustomers', 'changeOptinVal', ['id_customer' => 42]],
+            'admin_customers_delete_bulk' => ['/sell/customers/delete-bulk', 'AdminCustomers', 'submitBulkdeletecustomer'],
+            'admin_customers_delete' => ['/sell/customers/delete', 'AdminCustomers', 'deletecustomer'],
+            'admin_customers_enable_bulk' => ['/sell/customers/enable-bulk', 'AdminCustomers', 'submitBulkenableSelectioncustomer'],
+            'admin_customers_disable_bulk' => ['/sell/customers/disable-bulk', 'AdminCustomers', 'submitBulkdisableSelectioncustomer'],
+            'admin_customers_export' => ['/sell/customers/export', 'AdminCustomers', 'exportcustomer'],
+            'admin_customers_search' => ['/sell/customers/search', 'AdminCustomers', 'searchCustomers'],
 
             'admin_order_delivery_slip' => ['/sell/orders/delivery-slips/', 'AdminDeliverySlip'],
             'admin_order_delivery_slip_pdf' => ['/sell/orders/delivery-slips/pdf', 'AdminDeliverySlip', 'submitAdddelivery'],
@@ -200,10 +214,10 @@ class LegacyUrlConverterTest extends LightWebTestCase
     public static function getLegacyControllers()
     {
         return [
-            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin'],
-            ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
-            ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
-            ['/admin-dev/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
+            ['/Integration/index.php?controller=AdminLogin', 'AdminLogin'],
+            ['/Integration/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
+            ['/Integration/index.php?controller=AdminModules', 'AdminModules'],
+            ['/Integration/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
         ];
     }
 
@@ -288,6 +302,29 @@ class LegacyUrlConverterTest extends LightWebTestCase
         }
         $this->assertNull($caughtException, $caughtExceptionMessage);
         $this->assertSameUrl($expectedUrl, $convertedUrl);
+    }
+
+    public function testTabParameter()
+    {
+        /** @var LegacyUrlConverter $converter */
+        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
+        $convertedUrl = $converter->convertByParameters(['tab' => 'AdminCustomers']);
+        $this->assertSameUrl('/sell/customers/', $convertedUrl);
+
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/index.php?tab=AdminCustomers&id_customer=42&viewcustomer';
+        $convertedUrl = $converter->convertByUrl($legacyUrl);
+        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
+    }
+
+    public function testInsensitiveControllersAndActions()
+    {
+        /** @var LegacyUrlConverter $converter */
+        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
+        $convertedUrl = $converter->convertByParameters(['controller' => 'admincustomers']);
+        $this->assertSameUrl('/sell/customers/', $convertedUrl);
+
+        $convertedUrl = $converter->convertByParameters(['controller' => 'AdminCustomers', 'VIEWCUSTOMER' => '1', 'id_customer' => 42]);
+        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
     }
 
     public function testIdEqualToOne()
@@ -463,19 +500,5 @@ class LegacyUrlConverterTest extends LightWebTestCase
             $expectedUrl,
             $cleanUrl
         ));
-    }
-
-    /**
-     * Force the static property SymfonyContainer::instance so that the Link class
-     * has access to the router
-     * @throws \ReflectionException
-     */
-    private function initContainerInstance()
-    {
-        $reflectedClass = new ReflectionClass(SymfonyContainer::class);
-        $instanceProperty = $reflectedClass->getProperty('instance');
-        $instanceProperty->setAccessible(true);
-        $instanceProperty->setValue(self::$kernel->getContainer());
-        $instanceProperty->setAccessible(false);
     }
 }
