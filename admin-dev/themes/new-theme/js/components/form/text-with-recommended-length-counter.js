@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -24,30 +23,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category;
+const $ = window.$;
 
-/**
- * Defines settings for Category's SEO
- */
-final class SeoSettings
-{
-    /**
-     * Maximum length of SEO title (value is constrained by database)
-     */
-    const MAX_TITLE_LENGTH = 255;
+export default class TextWithRecommendedLengthCounter {
+  constructor() {
+    $(document).on('input', '.js-recommended-length-input', (event) => {
+      const $input = $(event.currentTarget);
 
-    /**
-     * Recommended length of SEO title
-     */
-    const RECOMMENDED_TITLE_LENGTH = 70;
+      console.log($input.data('recommended-length-counter'));
 
-    /**
-     * Maximum length of SEO description (value is constrained by database)
-     */
-    const MAX_DESCRIPTION_LENGTH = 512;
-
-    /**
-     * Recommended length of SEO description
-     */
-    const RECOMMENDED_DESCRIPTION_LENGTH = 160;
+      $($input.data('recommended-length-counter')).find('.js-current-length').text($input.val().length);
+    });
+  }
 }
