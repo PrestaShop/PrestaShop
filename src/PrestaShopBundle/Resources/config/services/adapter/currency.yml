@@ -20,6 +20,8 @@ services:
 
     prestashop.adapter.currency.command_handler.create_currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddCurrencyHandler'
+        arguments:
+            - '@prestashop.core.localization.cldr.locale_repository'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand' }
 

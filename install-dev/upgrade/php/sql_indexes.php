@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,15 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+ function drop_index_if_exists($indexName, $table)
+ {
+    $keyExists = Db::getInstance()->executeS('SHOW INDEX
+      FROM `' . $table . '`
+      WHERE Key_name = \'' . $indexName . '\'');
 
-/**
- * Manages Helper cards on page.
- */
-export default class HelperCard {
-  constructor() {
-    $(document).on('click', '.js-close-helper-card', (event) => {
-      $(event.currentTarget).closest('.helper-card').remove();
-    });
-  }
-}
+    if ($keyExists) {
+      return Db::getInstance()->execute('ALTER TABLE
+        `' . $table . '`
+        DROP KEY `' . $indexName . '`');
+    }
+    return true;
+ }

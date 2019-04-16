@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,18 +22,23 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="helper-card card">
-  <div class="helper-card__left helper-card__customer shape-one">
-    <img src="{{ asset('themes/new-theme/scss/img/helper-card/customer@3x.png') }}" class="img-fluid">
-  </div>
-  <div class="helper-card__right">
-    <h2>{{ 'Administrate your customers'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
-    <p>{{ 'Taking good care of your customers starts with making sure their profiles contain all the information needed to have their packages shipped without mishap.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-    <a class="btn btn-outline-secondary" href="{{ helperCardDocumentationLink }}" target="_blank">
-      {{ 'Learn more'|trans({}, 'Admin.Actions') }}
-    </a>
-  </div>
-  <i class="helper-card__close material-icons js-close-helper-card">close</i>
-</div>
+require_once __DIR__ . '/sql_indexes.php';
+
+function ps_1760_replace_index_of_admin_filter()
+{
+  $indexList = ['admin_filter_search_idx', 'search_idx', 'admin_filter_search_id_idx'];
+  $res = true;
+
+  // Drop indexes if they exist
+  foreach ($indexList as $index) {
+    $res &= drop_index_if_exists($index, _DB_PREFIX_ . 'admin_filter');
+  }
+
+  $res &= Db::getInstance()->execute('ALTER TABLE
+    `' . _DB_PREFIX_ . 'admin_filter`
+    ADD UNIQUE INDEX `admin_filter_search_id_idx` (`employee`, `shop`, `controller`, `action`, `filter_id`)');
+
+  return $res;
+}

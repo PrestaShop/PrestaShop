@@ -926,5 +926,35 @@
       <title>Customize product labels displayed on the product list on FO</title>
       <description>This hook allows to add and remove product labels displayed on top of product images</description>
     </hook>
+    <hook id="actionListMailThemes">
+      <name>actionListMailThemes</name>
+      <title>List the available email themes and layouts</title>
+      <description>This hook allows to add/remove available email themes (ThemeInterface) and/or to add/remove their layouts (LayoutInterface)</description>
+    </hook>
+    <hook id="actionGetMailThemeFolder">
+      <name>actionGetMailThemeFolder</name>
+      <title>Define the folder of an email theme</title>
+      <description>This hook allows to change the folder of an email theme (useful if you theme is in a module for example)</description>
+    </hook>
+    <hook id="actionBuildMailLayoutVariables">
+      <name>actionBuildMailLayoutVariables</name>
+      <title>Build the variables used in email layout rendering</title>
+      <description>This hook allows to change the variables used when an email layout is rendered</description>
+    </hook>
+    <hook id="actionGetMailLayoutTransformations">
+      <name>actionGetMailLayoutTransformations</name>
+      <title>Define the transformation to apply on layout</title>
+      <description>This hook allows to add/remove TransformationInterface used to generate an email layout</description>
+    </hook>
+    <hook id="displayProductActions">
+      <name>displayProductActions</name>
+      <title>Display additional action button on the product page</title>
+      <description>This hook allow additional actions to be triggered, near the add to cart button.</description>
+    </hook>
+    <hook id="displayPersonalInformationTop">
+      <name>displayPersonalInformationTop</name>
+      <title>Content in the checkout funnel, on top of the personal information panel</title>
+      <description>Display actions or additional content in the personal details tab of the checkout funnel.</description>
+    </hook>
   </entities>
 </entity_hook>
