@@ -25,6 +25,29 @@
 
 const $ = window.$;
 
+/**
+ * This component is implemented to work with TextWithRecommendedLengthType,
+ * but can be used as standalone component as well.
+ *
+ * Usage:
+ *
+ * Define your HTML with input and counter. Example:
+ *
+ * <input id="myInput"
+ *        class="js-recommended-length-input"
+ *        data-recommended-length-counter="#myInput_recommended_length_counter"
+ * >
+ *
+ * <div id"myInput_recommended_length_counter">
+ *  <span class="js-current-length">0</span> of 70 characters used (recommended)
+ * </div>
+ *
+ * NOTE: You must use exactly the same Classes, but IDs can be different!
+ *
+ * Then enable component in JavaScript:
+ *
+ * new TextWithRecommendedLengthCounter();
+ */
 export default class TextWithRecommendedLengthCounter {
   constructor() {
     $(document).on('input', '.js-recommended-length-input', (event) => {
