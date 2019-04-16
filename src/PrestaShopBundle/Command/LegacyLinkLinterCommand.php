@@ -64,7 +64,7 @@ class LegacyLinkLinterCommand extends ContainerAwareCommand
             return;
         }
 
-        $io->success('Admin routes has _legacy_link configured.');
+        $io->success('There is no routes without _legacy_link settings');
     }
 
     /**
