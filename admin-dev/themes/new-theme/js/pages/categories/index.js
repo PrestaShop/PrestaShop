@@ -43,6 +43,8 @@ import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copie
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
 import TaggableField from "../../components/taggable-field";
+import ShowcaseCard from "../../components/showcase-card/showcase-card";
+import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
 
 const $ = window.$;
 
@@ -61,6 +63,9 @@ $(() => {
   categoriesGrid.addExtension(new AsyncToggleColumnExtension());
   categoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   categoriesGrid.addExtension(new DeleteCategoriesBulkActionExtension());
+
+  const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
   new TranslatableInput();
   new ChoiceTable();

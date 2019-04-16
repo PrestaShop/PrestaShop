@@ -23,16 +23,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from "../../components/grid/grid";
-import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
-import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
-import SortingExtension from "../../components/grid/extension/sorting-extension";
-import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
-import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
-import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
-import HelperCard from "../../components/helper-card";
-import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import Grid from '../../components/grid/grid';
+import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkActionExtension from '../../components/grid/extension/submit-bulk-action-extension';
+import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
+import ShowcaseCard from '../../components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
 const $ = window.$;
 
@@ -48,5 +49,6 @@ $(() => {
   employeeGrid.addExtension(new SubmitRowActionExtension());
   employeeGrid.addExtension(new ColumnTogglingExtension());
 
-  new HelperCard();
+  const showcaseCard = new ShowcaseCard('employeesShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 });
