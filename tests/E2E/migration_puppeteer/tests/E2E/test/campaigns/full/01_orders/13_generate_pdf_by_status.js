@@ -44,8 +44,13 @@ scenario('Generate a PDF by status', () => {
     scenario('Get the created Orders information', client => {
       test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       for (let i = 1; i <= 2; i++) {
-        test('should go the order n°' + i, () => client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i)));
-        test('should go to "Documents" tab', () => client.waitForExistAndClick(OrderPage.documents_tab));
+        test('should go the order n°' + i, async () => {
+          await client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i));
+        });
+        test('should go to "Documents" tab', async () => {
+          await client.waitForExistAndClick(OrderPage.documents_tab);
+          await page.waitForSelector('#documents.active');
+        });
         test('should click on "Generate invoice" button', () => client.waitForExistAndClick(OrderPage.generate_invoice_button));
         test('should verify the success message', () => client.waitForVisible(OrderPage.success_msg));
         test('should get all order information', () => {
@@ -146,6 +151,7 @@ scenario('Generate a PDF by status', () => {
         } else {
           test('should change order state to "Canceled"', () => client.changeOrderState(OrderPage, 'Canceled'));
         }
+        test('should refresh the page', () => client.refresh());
         test('should go to "Documents" tab', () => client.waitForExistAndClick(OrderPage.documents_tab));
         test('should click on "Generate invoice" button', () => client.waitForExistAndClick(OrderPage.generate_invoice_button));
         test('should verify the success message', () => client.waitForVisible(OrderPage.success_msg));

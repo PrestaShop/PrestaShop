@@ -40,7 +40,7 @@ module.exports = {
     re_stock_product: 'label[for=reinjectQuantitiesRefund]',
     generate_credit_slip_checkbox: '//label[@for="generateCreditSlip"]',
     refund_products_button: 'button[name="partialRefund"]',
-    success_msg: '#content  div[class*=alert-success]:nth-child(1)',
+    success_msg: '#content  div.alert-success:nth-child(1)',
     order_date: '#content  div.col-xs-6.col-sm-3.box-stats.color3 span.value',
     order_ref: '#content  div:nth-child(4) > div.col-lg-7  div.panel-heading > span:nth-child(2)',
     product_information: '#orderProducts tr:nth-of-type(1) > td:nth-of-type(2) > a',
