@@ -31,7 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Represents that can be toggled On/Off
+ * Represents field that can be toggled On/Off
  */
 class ToggleType extends AbstractType
 {
