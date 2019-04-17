@@ -39,7 +39,7 @@ use Symfony\Component\Routing\Route;
 final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function configure()
     {
