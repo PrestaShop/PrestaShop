@@ -402,8 +402,8 @@ class ManufacturerController extends FrameworkBundleAdminController
             'id_manufacturer' => $this->trans('ID', 'Admin.Global'),
             'logo' => $this->trans('Logo', 'Admin.Global'),
             'name' => $this->trans('Name', 'Admin.Global'),
-            'addresses_count' => $this->trans('Addresses', 'Admin.Catalog.Feature'),
-            'products_count' => $this->trans('Products', 'Admin.Catalog.Feature'),
+            'addresses_count' => $this->trans('Addresses', 'Admin.Global'),
+            'products_count' => $this->trans('Products', 'Admin.Global'),
             'active' => $this->trans('Enabled', 'Admin.Global'),
         ];
 
