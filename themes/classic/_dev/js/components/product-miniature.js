@@ -35,8 +35,8 @@ export default class ProductMinitature {
       //Flags other than on-sale, discount and online-only (which have all their way to display)
       const flagElems = $(element).find('.product-flag:not(.on-sale):not(.discount):not(.online-only)');
 
-      var flagsTop = FLAG_MARGIN;
-      var discountTop = FLAG_MARGIN;
+      let flagsTop = FLAG_MARGIN;
+      let discountTop = FLAG_MARGIN;
       if (onSaleElems.length) {
         discountTop = onSaleElems.outerHeight() + FLAG_MARGIN;
       }
@@ -53,7 +53,6 @@ export default class ProductMinitature {
         $(flag).css('margin-top', 0);
         flagsTop += $(flag).outerHeight() + FLAG_MARGIN;
       });
-
 
       //Limit number of shown colors
       if ($(element).find('.color').length > 5) {
