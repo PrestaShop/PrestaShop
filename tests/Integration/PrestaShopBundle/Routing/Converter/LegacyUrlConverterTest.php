@@ -24,18 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Integration\PrestaShopBundle\Routing\Converter;
+namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 
-use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use Link;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShopBundle\Routing\Converter\Exception\AlreadyConvertedException;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use ReflectionClass;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-/**
- * @group routing
- */
-class LegacyUrlConverterTest extends LightWebTestCase
+class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 {
     /** @var Link */
     private $link;
@@ -43,7 +39,6 @@ class LegacyUrlConverterTest extends LightWebTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->initContainerInstance();
         if (!$this->link) {
             $this->link = new Link();
         }
@@ -83,6 +78,24 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
             'admin_customer_preferences' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences'],
             'admin_customer_preferences_process' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences', 'update'],
+
+            'admin_customers_index' => ['/sell/customers/', 'AdminCustomers'],
+            'admin_customers_filter' => ['/sell/customers/', 'AdminCustomers', 'submitFiltercustomer'],
+            'admin_customers_create' => ['/sell/customers/new', 'AdminCustomers', 'addcustomer'],
+            'admin_customers_edit' => ['/sell/customers/42/edit', 'AdminCustomers', 'updatecustomer', ['id_customer' => 42]],
+            'admin_customers_view' => ['/sell/customers/42/view', 'AdminCustomers', 'viewcustomer', ['id_customer' => 42]],
+            'admin_customers_save_private_note' => ['/sell/customers/42/save-private-note', 'AdminCustomers', 'updateCustomerNote', ['id_customer' => 42]],
+            'admin_customers_toggle_status' => ['/sell/customers/42/toggle-status', 'AdminCustomers', 'statuscustomer', ['id_customer' => 42]],
+            'admin_customers_transform_guest_to_customer' => ['/sell/customers/42/transform-guest-to-customer', 'AdminCustomers', 'guesttocustomer', ['id_customer' => 42]],
+            'admin_customers_toggle_newsletter_subscription' => ['/sell/customers/42/toggle-newsletter-subscription', 'AdminCustomers', 'changeNewsletterVal', ['id_customer' => 42]],
+            'admin_customers_set_required_fields' => ['/sell/customers/set-required-fields', 'AdminCustomers', 'submitFields'],
+            'admin_customers_toggle_partner_offer_subscription' => ['/sell/customers/42/toggle-partner-offer-subscription', 'AdminCustomers', 'changeOptinVal', ['id_customer' => 42]],
+            'admin_customers_delete_bulk' => ['/sell/customers/delete-bulk', 'AdminCustomers', 'submitBulkdeletecustomer'],
+            'admin_customers_delete' => ['/sell/customers/delete', 'AdminCustomers', 'deletecustomer'],
+            'admin_customers_enable_bulk' => ['/sell/customers/enable-bulk', 'AdminCustomers', 'submitBulkenableSelectioncustomer'],
+            'admin_customers_disable_bulk' => ['/sell/customers/disable-bulk', 'AdminCustomers', 'submitBulkdisableSelectioncustomer'],
+            'admin_customers_export' => ['/sell/customers/export', 'AdminCustomers', 'exportcustomer'],
+            'admin_customers_search' => ['/sell/customers/search', 'AdminCustomers', 'searchCustomers'],
 
             'admin_order_delivery_slip' => ['/sell/orders/delivery-slips/', 'AdminDeliverySlip'],
             'admin_order_delivery_slip_pdf' => ['/sell/orders/delivery-slips/pdf', 'AdminDeliverySlip', 'submitAdddelivery'],
@@ -200,10 +213,10 @@ class LegacyUrlConverterTest extends LightWebTestCase
     public static function getLegacyControllers()
     {
         return [
-            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin'],
-            ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
-            ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
-            ['/admin-dev/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
+            ['/Integration/index.php?controller=AdminLogin', 'AdminLogin'],
+            ['/Integration/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
+            ['/Integration/index.php?controller=AdminModules', 'AdminModules'],
+            ['/Integration/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
         ];
     }
 
@@ -215,31 +228,31 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     public function testLegacyWithRoute()
     {
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, ['route' => "admin_module_catalog_post"]);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, ['route' => 'admin_module_catalog_post']);
         $this->assertSameUrl('/improve/modules/catalog/recommended', $routeUrl, ['route']);
     }
 
     public function testDifferentLinkArguments()
     {
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog");
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog');
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", false);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', false);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, []);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, []);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, null);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, null);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, [], []);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, [], []);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, [], null);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, [], null);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
     }
 
@@ -290,14 +303,68 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $this->assertSameUrl($expectedUrl, $convertedUrl);
     }
 
+    public function testTabParameter()
+    {
+        /** @var LegacyUrlConverter $converter */
+        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
+        $convertedUrl = $converter->convertByParameters(['tab' => 'AdminCustomers']);
+        $this->assertSameUrl('/sell/customers/', $convertedUrl);
+
+        $convertedUrl = $converter->convertByParameters(
+            [
+                'tab' => 'AdminCustomers',
+                'controller' => 'admincustomers',
+                'id_customer' => 42,
+                'viewcustomer' => '',
+            ]
+        );
+        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
+
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/index.php?tab=AdminCustomers&id_customer=42&viewcustomer&token=932d64a68d64faff8f692d84fc0e1d89';
+        $convertedUrl = $converter->convertByUrl($legacyUrl);
+        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
+
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/index.php?tab=AdminCustomers&controller=admincustomers&id_customer=42&viewcustomer&token=932d64a68d64faff8f692d84fc0e1d89';
+        $convertedUrl = $converter->convertByUrl($legacyUrl);
+        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
+    }
+
+    public function testInsensitiveControllersAndActions()
+    {
+        /** @var LegacyUrlConverter $converter */
+        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
+        $convertedUrl = $converter->convertByParameters(['controller' => 'admincustomers']);
+        $this->assertSameUrl('/sell/customers/', $convertedUrl);
+
+        $convertedUrl = $converter->convertByParameters(['controller' => 'AdminCustomers', 'VIEWCUSTOMER' => '1', 'id_customer' => 42]);
+        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
+    }
+
     public function testIdEqualToOne()
     {
         /** @var LegacyUrlConverter $converter */
         $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
 
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminMeta') . '&id_meta=1&conf=4';
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminMeta') . '&id_meta=1&conf=4';
         $convertedUrl = $converter->convertByUrl($legacyUrl);
         $this->assertSameUrl('/configure/shop/seo-urls/?id_meta=1&conf=4', $convertedUrl);
+    }
+
+    public function testAlreadyConverted()
+    {
+        /** @var LegacyUrlConverter $converter */
+        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
+
+        $convertedUrl = $converter->convertByParameters(['controller' => 'AdminAdminPreferences']);
+        $convertedUrl .= '&controller=AdminAdminPreferences';
+        $caughtException = null;
+        try {
+            $converter->convertByUrl($convertedUrl);
+        } catch (AlreadyConvertedException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+        $this->assertTrue($convertedUrl . ' is already a converted url' == $caughtException->getMessage());
     }
 
     public function testLegacyLinkClass()
@@ -371,9 +438,11 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     /**
      * Mainly used to ensure the legacy links are not broken.
+     *
      * @param string $expectedUrl
      * @param string $controller
      * @param array|null $parameters
+     *
      * @throws \PrestaShopException
      * @throws \ReflectionException
      */
@@ -386,7 +455,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     public function testRedirectionListener()
     {
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
         $this->assertTrue($response->isRedirection());
@@ -394,9 +463,22 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $this->assertSameUrl('/configure/advanced/administration/', $location);
     }
 
+    public function testRedirectionListenerWithoutLoop()
+    {
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
+        $this->client->request('GET', $legacyUrl);
+        $response = $this->client->getResponse();
+        $this->assertTrue($response->isRedirection());
+        $location = $response->headers->get('location');
+
+        $this->client->request('GET', $location . '&controller=AdminAdminPreferences');
+        $response = $this->client->getResponse();
+        $this->assertFalse($response->isRedirection());
+    }
+
     public function testNoRedirectionListener()
     {
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminLogin');
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminUnkown');
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
         $this->assertFalse($response->isRedirection());
@@ -404,7 +486,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     public function testPostParameters()
     {
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminModulesPositions');
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminModulesPositions');
         $this->client->request('POST', $legacyUrl, ['submitAddToHook' => '']);
         $response = $this->client->getResponse();
         $this->assertFalse($response->isRedirection());
@@ -434,6 +516,22 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     private function assertSameUrl($expectedUrl, $url, array $ignoredParameters = null)
     {
+        $cleanUrl = $this->getCleanUrl($url, $ignoredParameters);
+        $this->assertTrue($expectedUrl == $cleanUrl, sprintf(
+            'Expected url %s is different with generated one: %s',
+            $expectedUrl,
+            $cleanUrl
+        ));
+    }
+
+    /**
+     * @param $url
+     * @param array|null $ignoredParameters
+     *
+     * @return string
+     */
+    private function getCleanUrl($url, array $ignoredParameters = null)
+    {
         $this->assertNotNull($url);
         $parsedUrl = parse_url($url);
         $parameters = [];
@@ -458,24 +556,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
         ]);
 
         $this->assertNotEmpty($parsedUrl['path']);
-        $this->assertTrue($expectedUrl == $cleanUrl, sprintf(
-            'Expected url %s is different with generated one: %s',
-            $expectedUrl,
-            $cleanUrl
-        ));
-    }
 
-    /**
-     * Force the static property SymfonyContainer::instance so that the Link class
-     * has access to the router
-     * @throws \ReflectionException
-     */
-    private function initContainerInstance()
-    {
-        $reflectedClass = new ReflectionClass(SymfonyContainer::class);
-        $instanceProperty = $reflectedClass->getProperty('instance');
-        $instanceProperty->setAccessible(true);
-        $instanceProperty->setValue(self::$kernel->getContainer());
-        $instanceProperty->setAccessible(false);
+        return $cleanUrl;
     }
 }
