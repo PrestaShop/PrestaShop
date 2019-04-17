@@ -28,24 +28,30 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransformation;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Mail;
 
 /**
  * Class MailThemeController manages mail theme generation, you can define the shop
@@ -218,20 +224,20 @@ class MailThemeController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
-     * @param string $themeName
+     * @param string $theme
      *
      * @return Response
      *
      * @throws InvalidArgumentException
      */
-    public function previewThemeAction(Request $request, $themeName)
+    public function previewThemeAction(Request $request, $theme)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
         /** @var ThemeInterface $mailTheme */
-        $mailTheme = $themeCatalog->getByName($themeName);
+        $mailTheme = $themeCatalog->getByName($theme);
 
         return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/preview.html.twig', [
             'layoutHeaderToolbarBtn' => [],
@@ -240,6 +246,104 @@ class MailThemeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailTheme' => $mailTheme,
         ]);
+    }
+
+    /**
+     * This action allows to send a test mail of a specific email template, however the Mail
+     * class used to send emails is not modular enough to allow sending templates on the fly.
+     * This would require either:
+     *  - a little modification of the Mail class to add an easy way to send a template content (rather than its name)
+     *  - a full refacto of the Mail class which wouldn't be coupled to static files any more
+     *
+     * These modifications will be performed in a future release so for now we can only send test emails
+     * with the current email theme using generated static files.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param string $theme
+     * @param string $layout
+     * @param string $locale
+     * @param string $module
+     *
+     * @return Response
+     *
+     * @throws InvalidArgumentException
+     */
+    public function sendTestMailAction($theme, $layout, $locale, $module = '')
+    {
+        if ($this->configuration->get('PS_MAIL_THEME') !== $theme) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot send test email for theme %theme% because it is not your current theme',
+                    'Admin.Notifications.Success',
+                    [
+                        '%theme%' => $theme,
+                    ]
+                )
+            );
+
+            return $this->redirectToRoute('admin_mail_theme_preview', ['theme' => $theme]);
+        }
+
+        /** @var ContextEmployeeProviderInterface $employeeProvider */
+        $employeeProvider = $this->get('prestashop.adapter.data_provider.employee');
+        $employeeData = $employeeProvider->getData();
+
+        /** @var LanguageRepositoryInterface $languageRepository */
+        $languageRepository = $this->get('prestashop.core.admin.lang.repository');
+        /** @var LanguageInterface $language */
+        $language = $languageRepository->getOneByLocaleOrIsoCode($locale);
+        if (null === $language) {
+            throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
+        }
+
+        if (empty($module)) {
+            $templatePath = _PS_MAIL_DIR_;
+        } else {
+            $templatePath = _PS_MODULE_DIR_ . $module . '/mails/';
+        }
+
+        $mailSent = Mail::send(
+            $language->getId(),
+            $layout,
+            $this->trans('Test email %template%', 'Admin.Design.Feature', ['%template%' => $layout]),
+            [],
+            $employeeData['email'],
+            $employeeData['firstname']. ' ' . $employeeData['lastname'],
+            $employeeData['email'],
+            $employeeData['firstname']. ' ' . $employeeData['lastname'],
+            null,
+            null,
+            $templatePath
+        );
+
+        if ($mailSent) {
+            $this->addFlash(
+                'success',
+                $this->trans(
+                    'Test email for layout %layout% was successfully sent to %email%',
+                    'Admin.Notifications.Success',
+                    [
+                        '%layout%' => $layout,
+                        '%email%' => $employeeData['email'],
+                    ]
+                )
+            );
+        } else {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot send test email for layout %layout%',
+                    'Admin.Notifications.Success',
+                    [
+                        '%layout%' => $layout,
+                    ]
+                )
+            );
+        }
+
+        return $this->redirectToRoute('admin_mail_theme_preview', ['theme' => $theme]);
     }
 
     /**
@@ -346,10 +450,15 @@ class MailThemeController extends FrameworkBundleAdminController
             throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
         }
 
+        /** @var HookDispatcher $hookDispatcher */
+        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
+        $hookDispatcher->addListener(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK, [$this, 'addLayoutVariablesListener']);
+
         /** @var MailTemplateRendererInterface $renderer */
         $renderer = $this->get('prestashop.core.mail_template.mail_template_renderer');
         //Special case for preview, we fill the mail variables
-        $renderer->addTransformation($this->get('prestashop.core.mail_template.transformation.mail_variables'));
+        $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::HTML_TYPE));
+        $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::TXT_TYPE));
 
         switch ($type) {
             case MailTemplateInterface::HTML_TYPE:
@@ -368,6 +477,57 @@ class MailThemeController extends FrameworkBundleAdminController
         }
 
         return $renderedLayout;
+    }
+
+    /**
+     * @param HookEvent $event
+     */
+    public function addLayoutVariablesListener(HookEvent $event)
+    {
+        $hookParameters = $event->getHookParameters();
+        $mailLayoutVariables = $hookParameters['mailLayoutVariables'];
+        $mailLayoutVariables['templateVars'] = $this->getTemplateVars();
+        $hookParameters['mailLayoutVariables'] = $mailLayoutVariables;
+        $event->setHookParameters($hookParameters);
+    }
+
+    /**
+     * @return array
+     */
+    private function getTemplateVars()
+    {
+        $context = $this->getContext();
+        $imageDir = $this->configuration->get('_PS_IMG_DIR_');
+        $baseUrl = $context->link->getBaseLink();
+
+        //Logo url
+        $logoMail = $this->configuration->get('PS_LOGO_MAIL');
+        $logo = $this->configuration->get('PS_LOGO');
+        if (!empty($logoMail) && file_exists($imageDir . $logoMail)) {
+            $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $logoMail;
+        } else {
+            if (!empty($logo) && file_exists($imageDir . $logo)) {
+                $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $logo;
+            } else {
+                $templateVars['{shop_logo}'] = '';
+            }
+        }
+
+        /** @var ContextEmployeeProviderInterface $employeeProvider */
+        $employeeProvider = $this->get('prestashop.adapter.data_provider.employee');
+        $employeeData = $employeeProvider->getData();
+
+        $templateVars['{firstname}'] = $employeeData['firstname'];
+        $templateVars['{lastname}'] = $employeeData['lastname'];
+        $templateVars['{email}'] = $employeeData['email'];
+        $templateVars['{shop_name}'] = $context->shop->name;
+        $templateVars['{shop_url}'] = $context->link->getPageLink('index', true);
+        $templateVars['{my_account_url}'] = $context->link->getPageLink('my-account', true);
+        $templateVars['{guest_tracking_url}'] = $context->link->getPageLink('guest-tracking', true);
+        $templateVars['{history_url}'] = $context->link->getPageLink('history', true);
+        $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
+
+        return $templateVars;
     }
 
     /**

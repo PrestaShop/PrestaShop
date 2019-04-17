@@ -31,12 +31,6 @@ services:
   prestashop.core.mail_template.transformation.html_textify:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation'
 
-  prestashop.core.mail_template.transformation.mail_variables:
-    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransformation'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.legacy.context'
-
   prestashop.core.mail_template.command_handler.generate_theme_mails_handler:
     class: 'PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler\GenerateThemeMailTemplatesCommandHandler'
     arguments:

@@ -51,4 +51,11 @@ interface ContextEmployeeProviderInterface
      * @return int
      */
     public function getLanguageId();
+
+    /**
+     *  Get context employee's data as an array
+     *
+     * @return array
+     */
+    public function getData();
 }
