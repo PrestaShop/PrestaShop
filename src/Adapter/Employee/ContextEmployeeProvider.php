@@ -78,4 +78,19 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
     {
         return (int) $this->contextEmployee->id_profile;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        return [
+            'id' => (int) $this->contextEmployee->id,
+            'profileId' => (int) $this->contextEmployee->id_profile,
+            'languageId' => (int) $this->contextEmployee->id_lang,
+            'firstname' => $this->contextEmployee->firstname,
+            'lastname' => $this->contextEmployee->lastname,
+            'email' => $this->contextEmployee->email,
+        ];
+    }
 }

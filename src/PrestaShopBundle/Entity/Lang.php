@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\LangRepository")
  */
-class Lang implements LanguageInterface
+final class Lang implements LanguageInterface
 {
     /**
      * @var int

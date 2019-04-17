@@ -26,84 +26,24 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
-
 /**
- * Class VariablesTransformation is used only for preview, it replaces the
- * {variables} present in the mail templates (this replacement is performed
- * by the Mail class in real behavior.
+ * Class MailVariablesTransformation is used only for preview, it replaces the
+ * variables present in the mail templates (this replacement is usually performed
+ * by the Mail class in real behavior).
+ * You can set the variables using the actionBuildMailLayoutVariables and setting
+ * them in the `templateVars` key.
  */
 class MailVariablesTransformation extends AbstractTransformation
 {
-    /** @var ConfigurationInterface */
-    private $configuration;
-
-    /** @var LegacyContext */
-    private $legacyContext;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     * @param LegacyContext $legacyContext
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
-     */
-    public function __construct(
-        ConfigurationInterface $configuration,
-        LegacyContext $legacyContext
-    ) {
-        parent::__construct(MailTemplateInterface::HTML_TYPE);
-        $this->configuration = $configuration;
-        $this->legacyContext = $legacyContext;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function apply($templateContent, array $templateVariables)
     {
-        $templateVars = $this->getTemplateVars();
-        $templateVars['{firstname}'] = 'John';
-        $templateVars['{lastname}'] = 'Doe';
-        $templateVars['{email}'] = 'john.doe@unknown.com';
-
-        $templateContent = strtr($templateContent, $templateVars);
-
-        return $templateContent;
-    }
-
-    /**
-     * @return array
-     */
-    private function getTemplateVars()
-    {
-        $templateVars = [];
-
-        $context = $this->legacyContext->getContext();
-        $imageDir = $this->configuration->get('_PS_IMG_DIR_');
-        $baseUrl = $context->link->getBaseLink();
-
-        //Logo url
-        $logoMail = $this->configuration->get('PS_LOGO_MAIL');
-        $logo = $this->configuration->get('PS_LOGO');
-        if (!empty($logoMail) && file_exists($imageDir . $logoMail)) {
-            $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $logoMail;
-        } else {
-            if (!empty($logo) && file_exists($imageDir . $logo)) {
-                $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $logo;
-            } else {
-                $templateVars['{shop_logo}'] = '';
-            }
+        if (!empty($templateVariables['templateVars'])) {
+            $templateContent = strtr($templateContent, $templateVariables['templateVars']);
         }
 
-        $templateVars['{shop_name}'] = $context->shop->name;
-        $templateVars['{shop_url}'] = $context->link->getPageLink('index', true);
-        $templateVars['{my_account_url}'] = $context->link->getPageLink('my-account', true);
-        $templateVars['{guest_tracking_url}'] = $context->link->getPageLink('guest-tracking', true);
-        $templateVars['{history_url}'] = $context->link->getPageLink('history', true);
-        $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
-
-        return $templateVars;
+        return $templateContent;
     }
 }
