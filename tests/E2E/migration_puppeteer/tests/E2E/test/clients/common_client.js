@@ -390,7 +390,6 @@ class CommonClient {
   }
 
   async getTextInVar(selector, globalVar, split = false, timeout = 90000) {
-    await page.waitFor(2000);
     await this.waitForExist(selector, timeout);
     if (split) {
       await page.$eval(selector, el => el.innerText).then((text) => {
