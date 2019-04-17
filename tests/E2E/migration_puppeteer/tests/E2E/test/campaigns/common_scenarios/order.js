@@ -267,6 +267,7 @@ module.exports = {
       test('should go to the orders list', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
       test('should change order state to "Payment accepted"', () => client.changeOrderState(OrderPage, 'Payment accepted'));
+      test('should refresh page', () => client.refresh());
       test('should click on "Partial refund" button', () => client.waitForExistAndClick(OrderPage.partial_refund));
       test('should set the "quantity refund" to "2"', async () => {
         await client.scrollTo(OrderPage.products_table);
@@ -430,6 +431,7 @@ module.exports = {
       test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
       test('should change order state to "' + status + '"', () => client.updateStatus(status));
       test('should click on "Update state" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+      test('should refresh page', () => client.refresh());
       test('should check that the status was updated', () => client.waitForVisible(OrderPage.status.replace('%STATUS', status)));
     }, 'order');
   },
