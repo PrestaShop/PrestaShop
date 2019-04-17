@@ -39,6 +39,8 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
     protected $controllersActions;
 
     /**
+     * This is the only method that child classes need to implement.
+     *
      * @return LegacyRoute[]
      */
     abstract public function getLegacyRoutes();
@@ -60,13 +62,14 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
     {
         $this->initControllerActions();
 
-        if (!isset($this->controllersActions[$controller])) {
+        $controllerActions = $this->getControllerActions($controller);
+        if (null === $controllerActions) {
             throw new RouteNotFoundException(
                 sprintf('Could not find a route matching for legacy controller: %s', $controller)
             );
         }
 
-        return array_keys($this->controllersActions[$controller]);
+        return array_keys($controllerActions);
     }
 
     /**
@@ -76,21 +79,20 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
     {
         $this->initControllerActions();
 
-        if (!isset($this->controllersActions[$controller])) {
+        $controllerActions = $this->getControllerActions($controller);
+        if (null === $controllerActions) {
             throw new RouteNotFoundException(
                 sprintf('Could not find a route matching for legacy controller: %s', $controller)
             );
         }
 
-        $controllerActions = $this->controllersActions[$controller];
         $action = LegacyRoute::isIndexAction($action) ? 'index' : $action;
-        if (!isset($controllerActions[$action])) {
+        $routeName = $this->getRouteName($controllerActions, $action);
+        if (null === $routeName) {
             throw new RouteNotFoundException(
                 sprintf('Could not find a route matching for legacy action: %s', $controller . ':' . $action)
             );
         }
-
-        $routeName = $this->getRouteName($controllerActions, $action);
 
         return $this->getLegacyRoutes()[$routeName];
     }
@@ -101,11 +103,18 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
      * @param array $controllerActions
      * @param string $action
      *
-     * @return string
+     * @return string|null
      */
     private function getRouteName(array $controllerActions, $action)
     {
-        $routeName = $controllerActions[$action];
+        $routeName = null;
+        foreach ($controllerActions as $controllerAction => $actionRoute) {
+            if (strtolower($controllerAction) == strtolower($action)) {
+                $routeName = $actionRoute;
+                break;
+            }
+        }
+
         if (is_array($routeName)) {
             return $routeName[0];
         }
@@ -125,5 +134,23 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
                 $this->controllersActions = array_merge_recursive($this->controllersActions, $legacyRoute->getControllersActions());
             }
         }
+    }
+
+    /**
+     * @param string $controller
+     *
+     * @return array|null
+     */
+    private function getControllerActions($controller)
+    {
+        $controllerActions = null;
+        foreach ($this->controllersActions as $listController => $actions) {
+            if (strtolower($listController) == strtolower($controller)) {
+                $controllerActions = $actions;
+                break;
+            }
+        }
+
+        return $controllerActions;
     }
 }
