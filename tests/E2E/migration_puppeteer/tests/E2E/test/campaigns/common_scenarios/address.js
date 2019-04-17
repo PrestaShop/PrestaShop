@@ -22,7 +22,7 @@ module.exports = {
       test('should set "Home phone" input', () => client.waitAndSetValue(Addresses.phone_input, "0123456789"));
       test('should set "Other information" input', () => client.waitAndSetValue(Addresses.other_input, "azerty"));
       test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.alert_success, 'Successful creation.','contain'));
     }, 'customer');
   }
 };

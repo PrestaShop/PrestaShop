@@ -83,7 +83,7 @@ scenario('Edit, delete and delete with bulk actions "Address"', () => {
     test('should click on "Set required fields for this section" button', () => client.waitForExistAndClick(Addresses.required_fields_button));
     test('should click on "company" check box button', () => client.waitForVisibleAndClick(Addresses.company_field_input));
     test('should click on "Save" button', () => client.waitForVisibleAndClick(Addresses.submit_field));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful update.'));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(BO.alert_success, 'Successful update.','contain'));
   }, 'customer');
 
   scenario('Add new address', client => {
@@ -112,20 +112,21 @@ scenario('Edit, delete and delete with bulk actions "Address"', () => {
         .then(() => client.waitForVisibleAndClick(Addresses.select_all_field_name))
         .then(() => client.waitForVisibleAndClick(Addresses.select_all_field_name));
     });
-    test('should click on "Save" button', () => client.waitForVisibleAndClick(Addresses.submit_field));
+    test('should click on "Save" button', async () => await page.click(Addresses.submit_field,{waitUntil:'networkidle0'}));
   }, 'customer');
 
   scenario('Delete the second address created', client => {
-    test('should check the address existence in the "addresses list"', () => {
+    test('should check the address existence in the "addresses list"', async () => {
       return promise
-        .then(() => client.isVisible(Addresses.filter_by_address_input))
-        .then(() => client.search(Addresses.filter_by_address_input, addressData.address + " " + date_time));
+        .then(async () => await page.waitForSelector(Addresses.filter_by_address_input,{visible:'true'}))
+        .then(async () => await client.search(Addresses.filter_by_address_input, addressData.address + " " + date_time));
     });
     test('Should click on "Delete" button of the second address', () => {
       return promise
-        .then(() => client.waitForVisibleAndClick(Addresses.dropdown_toggle))
-        .then(() => client.waitForVisibleAndClick(Addresses.delete_button))
-        .then(() => client.alertAccept());
+        .then(async () => await client.waitForVisibleAndClick(Addresses.dropdown_toggle))
+        .then(async () => await client.alertAccept())
+        .then(async () => await client.waitForVisibleAndClick(Addresses.delete_button));
+
     });
     test('should get the address ID', () => client.getTextInVar(Addresses.address_id, 'address_id'));
   }, 'customer');
@@ -157,7 +158,7 @@ scenario('Edit address', client => {
     common_scenarios.editAddress(addressData.address, editAddressData);
   }, 'customer');
 
-  scenario('Check the edited address in the Back Office', client => {
+  scenario('Check the edited address in the Front Office', client => {
     test('should go to the Front Office and refresh the page', () => {
       return promise
         .then(() => client.switchWindow(1))
@@ -178,7 +179,7 @@ scenario('Edit address', client => {
 scenario('Delete address', client => {
   common_scenarios.deleteAddress(editAddressData.address);
   scenario('Check that no results appear', client => {
-    test('should Check that no results appear', () => client.isExisting(Addresses.empty_class));
+    test('should Check that no results appear', async () => await page.waitForSelector(Addresses.empty_class,{visible:'true'}));
   }, 'customer');
   scenario('Check the deleted address in the Front Office', client => {
     test('should check that the address has been deleted in the Front Office', () => {
@@ -193,6 +194,7 @@ scenario('Delete address', client => {
     });
   }, 'customer');
 }, 'customer');
+
 
 scenario('Delete address with bulk actions', client => {
   common_scenarios.createAddress(addressData);
