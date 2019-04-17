@@ -143,6 +143,11 @@ $(document).ready(() => {
     prestashop.emit('updateFacets', '?' + form.serialize());
   });
 
+  $('#search_filters_suppliers select, #search_filters_brands select').select2({
+    minimumResultsForSearch: Infinity,
+     width: '100%'
+  })
+
   prestashop.on('updateProductList', (data) => {
     updateProductListDOM(data);
     window.scrollTo(0, 0);

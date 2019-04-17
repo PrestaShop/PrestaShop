@@ -26,6 +26,8 @@ import 'expose-loader?Tether!tether';
 import 'bootstrap/dist/js/bootstrap.min';
 import 'flexibility';
 import 'bootstrap-touchspin';
+import 'select2';
+import 'select2/dist/css/select2.min.css';
 
 import './responsive';
 import './checkout';
