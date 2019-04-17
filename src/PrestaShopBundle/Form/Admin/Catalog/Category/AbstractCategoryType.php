@@ -129,6 +129,10 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     'recommended_length' => SeoSettings::RECOMMENDED_TITLE_LENGTH,
                     'attr' => [
                         'maxlength' => SeoSettings::MAX_TITLE_LENGTH,
+                        'placeholder' => $this->trans(
+                            'To have a different title from the category name, enter it here.',
+                            'Admin.Catalog.Help'
+                        ),
                     ],
                     'constraints' => [
                         new Regex([
@@ -158,6 +162,10 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     'attr' => [
                         'maxlength' => SeoSettings::MAX_DESCRIPTION_LENGTH,
                         'rows' => 3,
+                        'placeholder' => $this->trans(
+                            'To have a different description than your category summary in search results page, write it here.',
+                            'Admin.Catalog.Help'
+                        ),
                     ],
                     'constraints' => [
                         new Regex([
