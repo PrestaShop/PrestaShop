@@ -50,7 +50,7 @@ class ProductAttachement extends CommonAbstractType
      * @param object $translator
      * @param object $legacyContext
      */
-    public function __construct($translator, $legacyContext)
+    public function __construct($translator,$legacyContext)
     {
         $this->translator = $translator;
         $this->legacyContext = $legacyContext;
