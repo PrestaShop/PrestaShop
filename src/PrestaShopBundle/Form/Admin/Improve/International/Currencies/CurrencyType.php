@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\ToggleType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -102,7 +102,7 @@ class CurrencyType extends AbstractType
                     'Admin.Notifications.Error'
                 ),
             ])
-            ->add('active', SwitchType::class, [
+            ->add('active', ToggleType::class, [
                 'required' => false,
             ])
         ;

@@ -76,7 +76,7 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
             $entity->id,
             $entity->iso_code,
             $entity->conversion_rate,
-            $entity->active,
+            (bool) $entity->active,
             $entity->getAssociatedShops()
         );
     }
