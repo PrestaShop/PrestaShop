@@ -59,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -379,10 +380,51 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function exportAction()
+    /**
+     * Export filtered manufacturers.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_manufacturers_index"
+     * )
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
+     * @param ManufacturerFilters $filters
+     *
+     * @return Response
+     */
+    public function exportAction(ManufacturerFilters $filters)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        $manufacturersGridFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer');
+        $manufacturersGrid = $manufacturersGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_manufacturer' => $this->trans('id', 'Admin.Global'),
+            'logo' => $this->trans('Logo', 'Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'addresses_count' => $this->trans('Addresses', 'Admin.Global'),
+            'products_count' => $this->trans('Products', 'Admin.Global'),
+            'active' => $this->trans('Enabled', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($manufacturersGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id' => $record['id_manufacturer'],
+                'Logo' => $record['logo'],
+                'Name' => $record['name'],
+                'Addresses' => $record['addresses_count'],
+                'Products' => $record['products_count'],
+                'Enabled' => $record['active'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('manufacturer_' . date('Y-m-d_His') . '.csv')
+            ;
     }
 
     /**
