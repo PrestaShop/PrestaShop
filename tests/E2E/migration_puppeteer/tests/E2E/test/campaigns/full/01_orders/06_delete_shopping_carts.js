@@ -48,9 +48,9 @@ scenario('Delete shopping carts', () => {
     test('should check that the cart is not ordered yet', () => client.checkTextValue(OrderPage.check_order_id, 'Non ordered'));
     test('should get the "ID" of the last shopping cart', () => client.getTextInVar(ShoppingCart.id.replace('%NUMBER', 1).replace('%COL', 2), "idShoppingCart"));
     test('should click on "Dropdown" button', () => client.waitForExistAndClick(OrderPage.dropdown_button));
-    test('should accept the confirmation alert', () => client.alertAccept());
-    test('should click on "Delete" action', () => client.waitForExistAndClick(OrderPage.delete_button));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
+    test('should accept the confirmation alert', async () => await client.alertAccept());
+    test('should click on "Delete" action', async () => await client.waitForExistAndClick(OrderPage.delete_button));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.alert_success, '×\nSuccessful deletion.'));
     test('should check that this shopping carts does not appears in the list', async () => {
       await client.searchByValue(ShoppingCart.filter_id_input, ShoppingCart.search_button, global.tab['idShoppingCart']);
       await client.checkTextValue(ShoppingCart.id.replace('%NUMBER', 1).replace('%COL', 1), 'No records found', 'contain');
