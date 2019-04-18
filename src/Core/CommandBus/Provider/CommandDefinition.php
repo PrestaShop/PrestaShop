@@ -47,9 +47,9 @@ class CommandDefinition
     private $description;
 
     /**
-     * @param $className
-     * @param $commandType
-     * @param $description
+     * @param string $className
+     * @param string $commandType
+     * @param string $description
      */
     public function __construct($className, $commandType, $description)
     {
@@ -59,7 +59,7 @@ class CommandDefinition
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getClassName()
     {
@@ -67,7 +67,7 @@ class CommandDefinition
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCommandType()
     {
@@ -75,7 +75,7 @@ class CommandDefinition
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDescription()
     {

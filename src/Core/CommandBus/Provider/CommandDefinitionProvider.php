@@ -32,10 +32,10 @@ use ReflectionException;
 /**
  * Provides all Commands & Queries with descriptions
  */
-class CommandDefinitionProvider
+final class CommandDefinitionProvider
 {
     /**
-     * @param $commandName
+     * @param string $commandName
      *
      * @return CommandDefinition
      *
@@ -50,11 +50,10 @@ class CommandDefinitionProvider
         );
     }
 
-
     /**
      * Checks whether the command is of type Query or Command by provided name
      *
-     * @param $commandName
+     * @param string $commandName
      *
      * @return string
      */
@@ -68,7 +67,7 @@ class CommandDefinitionProvider
     }
 
     /**
-     * @param $commandName
+     * @param string $commandName
      *
      * @return string|string[]|null
      *
