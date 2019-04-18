@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -26,21 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
-use Html2Text\Html2Text;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
+use DOMElement;
 
-/**
- * HTMLTextifyTransformation is used to remove any HTML tags from the template. It
- * is especially useful when no txt layout is defined and the renderer uses the html
- * layout as a base. This transformation then removes any html tags but keep the raw
- * information.
- */
-class HTMLToTextTransformation extends AbstractTransformation
+class HTMLCleanTransformation extends AbstractTransformation
 {
     public function __construct()
     {
-        parent::__construct(MailTemplateInterface::TXT_TYPE);
+        parent::__construct(MailTemplateInterface::HTML_TYPE);
     }
 
     /**
@@ -48,14 +42,43 @@ class HTMLToTextTransformation extends AbstractTransformation
      */
     public function apply($templateContent, array $templateVariables)
     {
-        $templateContent = $this->removeHtmlOnly($templateContent);
-        $templateContent = Html2Text::convert($templateContent, true);
-        $templateContent = preg_replace('/%7B(.*?)%7D/', '{\1}', $templateContent);
-        if (PHP_EOL != $templateContent[strlen($templateContent) - 1]) {
-            $templateContent .= PHP_EOL;
-        }
+        $templateContent = $this->removeTxtOnly($templateContent);
+        $templateContent = $this->removeContainer($templateContent, 'html-only');
+        $templateContent = $this->removeContainer($templateContent, 'mj-raw');
+
+        //DOMElement escapes {variables} in src of href attributes
+        $templateContent = preg_replace('/href="%7B(.*?)%7D"/', 'href="{\1}"', $templateContent);
+        $templateContent = preg_replace('/src="%7B(.*?)%7D"/', 'src="{\1}"', $templateContent);
 
         return $templateContent;
+    }
+
+    /**
+     * @param string $templateContent
+     * @param string $containerType
+     *
+     * @return string
+     */
+    private function removeContainer($templateContent, $containerType)
+    {
+        $crawler = new Crawler($templateContent);
+
+        $crawler->filter($containerType)->each(function (Crawler $crawler) {
+            foreach ($crawler as $node) {
+                /** @var DOMElement $childNode */
+                foreach ($node->childNodes as $childNode) {
+                    $node->parentNode->insertBefore($childNode->cloneNode(), $node);
+                }
+                $node->parentNode->removeChild($node);
+            }
+        });
+
+        $filteredContent = '';
+        foreach ($crawler as $domElement) {
+            $filteredContent .= $domElement->ownerDocument->saveHTML($domElement);
+        }
+
+        return $filteredContent;
     }
 
     /**
@@ -63,11 +86,11 @@ class HTMLToTextTransformation extends AbstractTransformation
      *
      * @return string
      */
-    private function removeHtmlOnly($templateContent)
+    private function removeTxtOnly($templateContent)
     {
         $crawler = new Crawler($templateContent);
 
-        $crawler->filter('html-only')->each(function (Crawler $crawler) {
+        $crawler->filter('[data-text-only=1]')->each(function (Crawler $crawler) {
             foreach ($crawler as $node) {
                 $node->parentNode->removeChild($node);
             }
