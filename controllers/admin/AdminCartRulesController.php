@@ -643,10 +643,13 @@ class AdminCartRulesControllerCore extends AdminController
         $carriers = $current_object->getAssociatedRestrictions('carrier', true, true);
         foreach ($carriers as &$carriers2) {
             foreach ($carriers2 as &$carrier) {
-                $carrier['name'] = $carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')';
                 foreach ($carrier as $field => &$value) {
-                    if ($field == 'name' && $value == '0') {
-                        $value = Configuration::get('PS_SHOP_NAME');
+                    if ($field == 'name') {
+                        if ($value == '0') {
+                            $value = Configuration::get('PS_SHOP_NAME');
+                        } else {
+                            $value = $carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')';
+                        }
                     }
                 }
             }
