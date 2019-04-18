@@ -1953,7 +1953,6 @@ class CartCore extends ObjectModel
         $cartRules = array();
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
-            //$cartRules = $this->getCartRules();
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
