@@ -166,6 +166,26 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" offers free shipping$/
+     */
+    public function cartRuleOffersFreeShipping($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->free_shipping = 1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" applies discount only when cart total is above (\d+\.\d+)$/
+     */
+    public function cartRuleAppliesBetween($cartRuleName, $min)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->minimum_amount = $min;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
      * @Then /^cart rule "(.+)" cannot be applied to my cart$/
      */
     public function cartRuleNamedCannotBeAppliedToMyCart($cartRuleName)
