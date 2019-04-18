@@ -67,7 +67,6 @@ final class CommandDefinitionParser
     }
 
     /**
-     *
      * @param string $commandName
      *
      * @return string
@@ -89,7 +88,7 @@ final class CommandDefinitionParser
          */
         $commandName = preg_replace('/ +/', ' ', $commandName);
 
-        /**
+        /*
          * Strips whitespace from the beginning and end
          */
         return trim($commandName);

@@ -42,7 +42,7 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
     public function configure()
     {
         $this
-            ->setName('prestashop:api:commands-and-queries')
+            ->setName('prestashop:list:commands-and-queries')
             ->setDescription('Lists available CQRS commands and queries')
         ;
     }

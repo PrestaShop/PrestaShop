@@ -51,6 +51,7 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
      * Gets command for each provided handler
      *
      * @param ContainerBuilder $container
+     *
      * @return string[]
      */
     private function findCommandsAndQueries(ContainerBuilder $container)
