@@ -59,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -379,10 +380,51 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function exportAction()
+    /**
+     * Export filtered manufacturers.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_manufacturers_index"
+     * )
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
+     * @param ManufacturerFilters $filters
+     *
+     * @return Response
+     */
+    public function exportAction(ManufacturerFilters $filters)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        $manufacturersGridFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer');
+        $manufacturersGrid = $manufacturersGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_manufacturer' => $this->trans('ID', 'Admin.Global'),
+            'logo' => $this->trans('Logo', 'Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'addresses_count' => $this->trans('Addresses', 'Admin.Global'),
+            'products_count' => $this->trans('Products', 'Admin.Global'),
+            'active' => $this->trans('Enabled', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($manufacturersGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_manufacturer' => $record['id_manufacturer'],
+                'logo' => $record['logo'],
+                'name' => $record['name'],
+                'addresses_count' => $record['addresses_count'],
+                'products_count' => $record['products_count'],
+                'active' => $record['active'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('manufacturer_' . date('Y-m-d_His') . '.csv')
+            ;
     }
 
     /**
@@ -410,10 +452,53 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
-    public function exportAddressAction()
+    /**
+     * Export filtered manufacturer addresses.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_manufacturers_index"
+     * )
+     * @DemoRestricted(redirectRoute="admin_manufacturers_index")
+     *
+     * @param ManufacturerAddressFilters $filters
+     *
+     * @return Response
+     */
+    public function exportAddressAction(ManufacturerAddressFilters $filters)
     {
-        //todo: implement
-        return $this->redirectToRoute('admin_manufacturers_index');
+        $addressesGridFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer_address');
+        $addressesGrid = $addressesGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_address' => $this->trans('ID', 'Admin.Global'),
+            'name' => $this->trans('Brand', 'Admin.Global'),
+            'firstname' => $this->trans('First name', 'Admin.Global'),
+            'lastname' => $this->trans('Last name', 'Admin.Global'),
+            'postcode' => $this->trans('Zip/Postal code', 'Admin.Global'),
+            'city' => $this->trans('City', 'Admin.Global'),
+            'country' => $this->trans('Country', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($addressesGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_address' => $record['id_address'],
+                'name' => $record['name'],
+                'firstname' => $record['firstname'],
+                'lastname' => $record['lastname'],
+                'postcode' => $record['postcode'],
+                'city' => $record['city'],
+                'country' => $record['country'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('address_' . date('Y-m-d_His') . '.csv')
+            ;
     }
 
     /**
