@@ -24,58 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\CommandBus\Provider;
-
-use ReflectionClass;
-use ReflectionException;
+namespace PrestaShop\PrestaShop\Core\CommandBus\Parser;
 
 /**
- * Provides all Commands & Queries with descriptions
+ * Transfers commands and queries definition data
  */
-final class CommandDefinitionProvider
+class CommandDefinition
 {
     /**
-     * @param string $commandName
-     *
-     * @return CommandDefinition
-     *
-     * @throws ReflectionException
+     * @var string
      */
-    public function getDefinition($commandName)
+    private $className;
+
+    /**
+     * @var string
+     */
+    private $commandType;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @param string $className
+     * @param string $commandType
+     * @param string $description
+     */
+    public function __construct($className, $commandType, $description)
     {
-        return new CommandDefinition(
-            $commandName,
-            $this->getType($commandName),
-            $this->getDescription($commandName)
-        );
+        $this->className = $className;
+        $this->commandType = $commandType;
+        $this->description = $description;
     }
 
     /**
-     * Checks whether the command is of type Query or Command by provided name
-     *
-     * @param string $commandName
-     *
      * @return string
      */
-    private function getType($commandName)
+    public function getClassName()
     {
-        if (strpos($commandName, '\Command\\')) {
-            return 'Command';
-        }
-
-        return 'Query';
+        return $this->className;
     }
 
     /**
-     * @param string $commandName
-     *
-     * @return string|string[]|null
-     *
-     * @throws ReflectionException
+     * @return string
      */
-    private function getDescription($commandName)
+    public function getCommandType()
     {
-        return preg_replace('/[\*\/]/', '', (new ReflectionClass($commandName))->getDocComment());
+        return $this->commandType;
+    }
 
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

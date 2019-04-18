@@ -65,6 +65,7 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
             $output->writeln('<blue>Class: </blue><info>' . $commandDefinition->getClassName() . '</info>');
             $output->writeln('<blue>Type: </blue><info>' . $commandDefinition->getCommandType() . '</info>');
             $output->writeln('<comment>' . $commandDefinition->getDescription() . '</comment>');
+            $output->writeln('');
         }
     }
 }
