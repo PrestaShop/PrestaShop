@@ -48,10 +48,7 @@ class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
     /**
      * @var LanguageDefaultFontsCatalog
      */
-    private $languageDefaultFonts = array(
-        'fa' => 'Tahoma',
-        'ar' => 'Tahoma',
-    );
+    private $languageDefaultFonts;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
