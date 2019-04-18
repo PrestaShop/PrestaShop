@@ -53,13 +53,13 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $commands = $this->getContainer()->getParameter('prestashop.commands_and_queries');
-        $commandDefinitionProvider = $this->getContainer()->get('prestashop.core.provider.command_definition_provider');
+        $commandDefinitionParser = $this->getContainer()->get('prestashop.core.provider.command_definition_provider');
 
         $outputStyle = new OutputFormatterStyle('blue', null);
         $output->getFormatter()->setStyle('blue', $outputStyle);
 
         foreach ($commands as $key => $commandName) {
-            $commandDefinition = $commandDefinitionProvider->getDefinition($commandName);
+            $commandDefinition = $commandDefinitionParser->parseDefinition($commandName);
 
             $output->writeln(++$key . '.');
             $output->writeln('<blue>Class: </blue><info>' . $commandDefinition->getClassName() . '</info>');
