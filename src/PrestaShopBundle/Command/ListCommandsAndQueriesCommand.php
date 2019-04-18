@@ -28,11 +28,9 @@ namespace PrestaShopBundle\Command;
 
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 class ListCommandsAndQueriesCommand extends ContainerAwareCommand
 {
@@ -42,7 +40,7 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
     public function configure()
     {
         $this
-            ->setName('prestashop:cqrs:available-commands')
+            ->setName('prestashop:cqrs:commands-and-queries')
             ->setDescription('Lists available CQRS commands and queries')
         ;
     }
@@ -52,65 +50,39 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $commands = $this->getContainer()->getParameter('prestashop.commands_and_queries');
+        $this->setOutputStyles($output);
 
-        $io = new SymfonyStyle($input, $output);
-        $rows = [];
+        foreach ($commands as $key => $commandName) {
+            $docComment = preg_replace('/[\*\/]/', '', (new ReflectionClass($commandName))->getDocComment());
+            $typeByName = $this->getType($commandName);
 
-        foreach ($this->getCommands() as $file) {
-            $fileName = $file->getBasename();
-            $className = str_replace('.php', '', $fileName);
-            $ns = $this->extractNamespace($file);
-            $fullClassName = $ns . '\\' . $className;
-            $class =  new ReflectionClass($fullClassName);
-
-            $docBlock = preg_replace('/[\*\/]/', '', $class->getDocComment());
-
-            $column[] = $fullClassName;
-            $rows[] = [
-                $fullClassName,
-                $docBlock
-            ];
+            $output->writeln(++$key . '.');
+            $output->writeln("<blue>Class:</blue><info>$commandName</info>");
+            $output->writeln("<blue>Type:</blue><info>$typeByName</info>");
+            $output->writeln("<comment>$docComment</comment>");
         }
-        $io->table(['class', 'description'], $rows);
-
     }
 
     /**
-     * @return Finder
+     * Checks whether the command is of type Query or Command by provided name
+     *
+     * @param $commandName
+     *
+     * @return string
      */
-    private function getCommands()
+    private function getType($commandName)
     {
-        return Finder::create()->files()->in(['./src/Core/Domain/*/Command', './src/Core/Domain/*/Query']);
+        if (strpos($commandName, 'Command')) {
+            return 'Command';
+        }
+
+        return 'Query';
     }
 
-    private function extractNamespace(SplFileInfo $file)
+    private function setOutputStyles(OutputInterface $output)
     {
-        $src = file_get_contents($file);
-        $tokens = token_get_all($src);
-        $count = count($tokens);
-        $i = 0;
-        $namespace = '';
-        $namespace_ok = false;
-        while ($i < $count) {
-            $token = $tokens[$i];
-            if (is_array($token) && $token[0] === T_NAMESPACE) {
-                // Found namespace declaration
-                while (++$i < $count) {
-                    if ($tokens[$i] === ';') {
-                        $namespace_ok = true;
-                        $namespace = trim($namespace);
-                        break;
-                    }
-                    $namespace .= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
-                }
-                break;
-            }
-            $i++;
-        }
-        if ($namespace_ok) {
-            return $namespace;
-        }
-
-        return null;
+        $outputStyle = new OutputFormatterStyle('blue', null);
+        $output->getFormatter()->setStyle('blue', $outputStyle);
     }
 }
