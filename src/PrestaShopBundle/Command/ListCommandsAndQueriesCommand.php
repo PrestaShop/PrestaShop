@@ -58,8 +58,8 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
             $typeByName = $this->getType($commandName);
 
             $output->writeln(++$key . '.');
-            $output->writeln("<blue>Class:</blue><info>$commandName</info>");
-            $output->writeln("<blue>Type:</blue><info>$typeByName</info>");
+            $output->writeln("<blue>Class: </blue><info>$commandName</info>");
+            $output->writeln("<blue>Type: </blue><info>$typeByName</info>");
             $output->writeln("<comment>$docComment</comment>");
         }
     }
