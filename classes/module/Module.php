@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -3365,10 +3366,11 @@ abstract class ModuleCore implements ModuleInterface
     {
         $moduleName = $this->name;
         $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
-        $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
+        $moduleBaseDomain = DomainHelper::buildModuleBaseDomain($moduleName);
+        $length = strlen($moduleBaseDomain);
 
         foreach ($domains as $domain) {
-            if (false !== stripos($domain, $moduleName)) {
+            if (substr($domain, 0, $length) === $moduleBaseDomain) {
                 return true;
             }
         }
