@@ -1483,7 +1483,6 @@ class CartRuleCore extends ObjectModel
 			' . (in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '') . '
 			' . ($type == 'cart_rule' ? 'AND t.id_cart_rule != ' . (int) $this->id : '') .
                 $shop_list .
-                ' GROUP BY t.id_' . $type .
                 (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '') .
                 (in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                 $sql_limit);
@@ -1498,9 +1497,8 @@ class CartRuleCore extends ObjectModel
 				' . ($i18n ? 'LEFT JOIN `' . _DB_PREFIX_ . $type . '_lang` tl ON (t.id_' . $type . ' = tl.id_' . $type . ' AND tl.id_lang = ' . (int) Context::getContext()->language->id . ')' : '') . '
 				LEFT JOIN (SELECT id_' . $type . ' FROM `' . _DB_PREFIX_ . 'cart_rule_' . $type . '` WHERE id_cart_rule = ' . (int) $this->id . ') crt ON t.id_' . ($type == 'carrier' ? 'reference' : $type) . ' = crt.id_' . $type . '
 				WHERE 1 ' . ($active_only ? ' AND t.active = 1' : '') .
-                    $shop_list .
-                    ' GROUP BY t.id_' . $type .
-                    (in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '') .
+                    $shop_list
+                    . (in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '') .
                     (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '') .
                     (in_array($type, array('country', 'group')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                     $sql_limit,
