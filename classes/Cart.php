@@ -3347,7 +3347,7 @@ class CartCore extends ObjectModel
         }
 
         if (null === $product_list) {
-            $products = $this->getProducts(false, false, null, false);
+            $products = $this->getProducts(false, false, null, true);
         } else {
             $products = $product_list;
         }
