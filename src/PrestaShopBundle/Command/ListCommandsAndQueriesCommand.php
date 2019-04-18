@@ -80,6 +80,11 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
         return 'Query';
     }
 
+    /**
+     * Sets custom output styles
+     *
+     * @param OutputInterface $output
+     */
     private function setOutputStyles(OutputInterface $output)
     {
         $outputStyle = new OutputFormatterStyle('blue', null);
