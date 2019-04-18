@@ -8,14 +8,11 @@
   padding: 1rem 0;
 }
 .card-block {
-  padding: 1.25rem 1rem .5rem;
+  padding: 1.25rem 1rem 0;
   .cart-summary-line {
     padding: {
       left: .5rem;
       right: .5rem;
-    }
-    .value {
-      font-weight: 600;
     }
   }
   &.checkout {
