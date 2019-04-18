@@ -41,9 +41,13 @@
             </ul>
           {/block}
         {/if}
-        
         <p>
-          <a class="collapse-button promo-code-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
+          <a 
+            class="collapse-button promo-code-button" 
+            data-toggle="collapse" 
+            href="#promo-code" 
+            aria-expanded="false" 
+            aria-controls="promo-code">
             {l s='Have a promo code?' d='Shop.Theme.Checkout'}
           </a>
         </p>
@@ -63,7 +67,13 @@
           {/block}
         </div>
         <p>
-          <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="false" aria-controls="promo-code">
+          <a 
+            class="collapse-button promo-code-button cancel-promo" 
+            role="button" 
+            data-toggle="collapse" 
+            data-target="#promo-code" 
+            aria-expanded="false" 
+            aria-controls="promo-code">
             {l s='Close' d='Shop.Theme.Checkout'}
           </a>
         </p>
