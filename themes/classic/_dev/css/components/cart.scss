@@ -24,9 +24,13 @@
       &:last-child {
         margin-bottom: 0
       } 
+      &.taxes {
+        margin-bottom: .313rem;
+      }
       &.cart-total {
         background-color: $gray-light;
         padding: .5rem;
+        border-radius: 2px;
         .label,
         .value {
           font-weight: bold;
@@ -185,12 +189,10 @@
   .promo-code-button {
     display: block;
     text-align: center;
+    padding-top: 1rem;
     &.cancel-promo {
       color: $brand-primary;
       margin-bottom: 0;
-      &[aria-expanded="true"] {
-        padding: 0;
-      }
     }
   }
   &.promo-highlighted {
