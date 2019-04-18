@@ -24,42 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+namespace PrestaShop\PrestaShop\Core\CommandBus\Provider;
 
 /**
- * Collects all Commands & Queries and puts them into container for later processing.
+ * Transfers commands and queries definition data
  */
-class CommandAndQueryCollectorPass implements CompilerPassInterface
+class CommandDefinition
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function process(ContainerBuilder $container)
+    private $className;
+
+    /**
+     * @var string
+     */
+    private $commandType;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @param $className
+     * @param $commandType
+     * @param $description
+     */
+    public function __construct($className, $commandType, $description)
     {
-        $commandsAndQueries = $this->findCommandsAndQueries($container);
-        $container->setParameter('prestashop.commands_and_queries', $commandsAndQueries);
+        $this->className = $className;
+        $this->commandType = $commandType;
+        $this->description = $description;
     }
 
     /**
-     * Gets command for each provided handler
-     *
-     * @param ContainerBuilder $container
-     * @return string[]
+     * @return mixed
      */
-    private function findCommandsAndQueries(ContainerBuilder $container)
+    public function getClassName()
     {
-        $handlers = $container->findTaggedServiceIds('tactician.handler');
+        return $this->className;
+    }
 
-        $commands = [];
-        foreach ($handlers as $handler) {
-            if (isset($handler[0]['command'])) {
-                $commands[] = $handler[0]['command'];
-            }
-        }
+    /**
+     * @return mixed
+     */
+    public function getCommandType()
+    {
+        return $this->commandType;
+    }
 
-        return $commands;
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

@@ -11,3 +11,6 @@ services:
         class: 'PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter'
         arguments:
             - '@tactician.commandbus.default'
+
+    prestashop.core.provider.command_definition_provider:
+      class: 'PrestaShop\PrestaShop\Core\CommandBus\Provider\CommandDefinitionProvider'

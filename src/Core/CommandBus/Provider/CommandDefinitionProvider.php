@@ -24,42 +24,59 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\DependencyInjection\Compiler;
+namespace PrestaShop\PrestaShop\Core\CommandBus\Provider;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use ReflectionClass;
+use ReflectionException;
 
 /**
- * Collects all Commands & Queries and puts them into container for later processing.
+ * Provides all Commands & Queries with descriptions
  */
-class CommandAndQueryCollectorPass implements CompilerPassInterface
+class CommandDefinitionProvider
 {
     /**
-     * {@inheritdoc}
+     * @param $commandName
+     *
+     * @return CommandDefinition
+     *
+     * @throws ReflectionException
      */
-    public function process(ContainerBuilder $container)
+    public function getDefinition($commandName)
     {
-        $commandsAndQueries = $this->findCommandsAndQueries($container);
-        $container->setParameter('prestashop.commands_and_queries', $commandsAndQueries);
+        return new CommandDefinition(
+            $commandName,
+            $this->getType($commandName),
+            $this->getDescription($commandName)
+        );
+    }
+
+
+    /**
+     * Checks whether the command is of type Query or Command by provided name
+     *
+     * @param $commandName
+     *
+     * @return string
+     */
+    private function getType($commandName)
+    {
+        if (strpos($commandName, '\Command\\')) {
+            return 'Command';
+        }
+
+        return 'Query';
     }
 
     /**
-     * Gets command for each provided handler
+     * @param $commandName
      *
-     * @param ContainerBuilder $container
-     * @return string[]
+     * @return string|string[]|null
+     *
+     * @throws ReflectionException
      */
-    private function findCommandsAndQueries(ContainerBuilder $container)
+    private function getDescription($commandName)
     {
-        $handlers = $container->findTaggedServiceIds('tactician.handler');
+        return preg_replace('/[\*\/]/', '', (new ReflectionClass($commandName))->getDocComment());
 
-        $commands = [];
-        foreach ($handlers as $handler) {
-            if (isset($handler[0]['command'])) {
-                $commands[] = $handler[0]['command'];
-            }
-        }
-
-        return $commands;
     }
 }

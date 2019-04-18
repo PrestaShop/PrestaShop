@@ -26,21 +26,23 @@
 
 namespace PrestaShopBundle\Command;
 
-use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Lists all commands and queries definitions
+ */
 class ListCommandsAndQueriesCommand extends ContainerAwareCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function configure()
     {
         $this
-            ->setName('prestashop:cqrs:commands-and-queries')
+            ->setName('prestashop:api:commands-and-queries')
             ->setDescription('Lists available CQRS commands and queries')
         ;
     }
@@ -51,43 +53,18 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $commands = $this->getContainer()->getParameter('prestashop.commands_and_queries');
-        $this->setOutputStyles($output);
+        $commandDefinitionProvider = $this->getContainer()->get('prestashop.core.provider.command_definition_provider');
 
-        foreach ($commands as $key => $commandName) {
-            $docComment = preg_replace('/[\*\/]/', '', (new ReflectionClass($commandName))->getDocComment());
-            $typeByName = $this->getType($commandName);
-
-            $output->writeln(++$key . '.');
-            $output->writeln("<blue>Class: </blue><info>$commandName</info>");
-            $output->writeln("<blue>Type: </blue><info>$typeByName</info>");
-            $output->writeln("<comment>$docComment</comment>");
-        }
-    }
-
-    /**
-     * Checks whether the command is of type Query or Command by provided name
-     *
-     * @param $commandName
-     *
-     * @return string
-     */
-    private function getType($commandName)
-    {
-        if (strpos($commandName, 'Command')) {
-            return 'Command';
-        }
-
-        return 'Query';
-    }
-
-    /**
-     * Sets custom output styles
-     *
-     * @param OutputInterface $output
-     */
-    private function setOutputStyles(OutputInterface $output)
-    {
         $outputStyle = new OutputFormatterStyle('blue', null);
         $output->getFormatter()->setStyle('blue', $outputStyle);
+
+        foreach ($commands as $key => $commandName) {
+            $commandDefinition = $commandDefinitionProvider->getDefinition($commandName);
+
+            $output->writeln(++$key . '.');
+            $output->writeln('<blue>Class: </blue><info>' . $commandDefinition->getClassName() . '</info>');
+            $output->writeln('<blue>Type: </blue><info>' . $commandDefinition->getCommandType() . '</info>');
+            $output->writeln('<comment>' . $commandDefinition->getDescription() . '</comment>');
+        }
     }
 }
