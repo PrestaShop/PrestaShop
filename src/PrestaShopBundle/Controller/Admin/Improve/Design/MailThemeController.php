@@ -316,9 +316,9 @@ class MailThemeController extends FrameworkBundleAdminController
             $this->trans('Test email %template%', 'Admin.Design.Feature', ['%template%' => $layout]),
             $mailVariables,
             $employeeData['email'],
-            $employeeData['firstname']. ' ' . $employeeData['lastname'],
+            $employeeData['firstname'] . ' ' . $employeeData['lastname'],
             $employeeData['email'],
-            $employeeData['firstname']. ' ' . $employeeData['lastname'],
+            $employeeData['firstname'] . ' ' . $employeeData['lastname'],
             null,
             null,
             $templatePath
