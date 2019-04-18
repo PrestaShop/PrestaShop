@@ -44,16 +44,8 @@
           <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
           <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;" width="17%">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
         </tr>
-        <tr>
-          <td colspan="5" style="border:1px solid #D6D4D4; text-align: center">
-            &nbsp;&nbsp;<html-only>{products}</html-only> <span data-text-only="1">{products_txt}</span>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="5" style="border:1px solid #D6D4D4;text-align: center">
-            &nbsp;&nbsp;{discounts}
-          </td>
-        </tr>
+        <html-only>{products}</html-only> <span data-text-only="1">{products_txt}</span>
+        <html-only>{discounts}</html-only> <span data-text-only="1">{discounts_txt}</span>
         <tr class="conf_body">
           <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
             <table class="table">
