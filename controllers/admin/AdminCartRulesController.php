@@ -647,9 +647,9 @@ class AdminCartRulesControllerCore extends AdminController
                     if ($field == 'name') {
                         if ($value == '0') {
                             $value = Configuration::get('PS_SHOP_NAME');
-                        } else {
-                            $value = $carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')';
                         }
+
+                        $value = $carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')';
                     }
                 }
             }
