@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
@@ -304,11 +305,16 @@ class MailThemeController extends FrameworkBundleAdminController
             $templatePath = _PS_MODULE_DIR_ . $module . '/mails/';
         }
 
+        /** @var MailPreviewVariablesBuilder $variableBuilder */
+        $variablesBuilder = $this->get('prestashop.adapter.mail_template.preview_variables_builder');
+        $mailLayout = $this->getMailLayout($theme, $layout, $module);
+        $mailVariables = $variablesBuilder->buildTemplateVariables($mailLayout);
+
         $mailSent = Mail::send(
             $language->getId(),
             $layout,
             $this->trans('Test email %template%', 'Admin.Design.Feature', ['%template%' => $layout]),
-            [],
+            $mailVariables,
             $employeeData['email'],
             $employeeData['firstname']. ' ' . $employeeData['lastname'],
             $employeeData['email'],
@@ -413,31 +419,7 @@ class MailThemeController extends FrameworkBundleAdminController
      */
     private function renderLayout($themeName, $layoutName, $type, $locale = '', $module = '')
     {
-        /** @var ThemeCatalogInterface $themeCatalog */
-        $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
-        /** @var ThemeInterface $theme */
-        $theme = $themeCatalog->getByName($themeName);
-
-        /** @var LayoutInterface $layout */
-        $layout = null;
-        /* @var LayoutInterface $layoutInterface */
-        foreach ($theme->getLayouts() as $layoutInterface) {
-            if ($layoutInterface->getName() == $layoutName
-                && $layoutInterface->getModuleName() == $module
-            ) {
-                $layout = $layoutInterface;
-                break;
-            }
-        }
-
-        if (null === $layout) {
-            throw new FileNotFoundException(sprintf(
-                'Cannot find layout %s%s in theme %s',
-                empty($module) ? '' : $module . ':',
-                $layoutName,
-                $themeName
-            ));
-        }
+        $layout = $this->getMailLayout($themeName, $layoutName, $module);
 
         /** @var LanguageRepositoryInterface $languageRepository */
         $languageRepository = $this->get('prestashop.core.admin.lang.repository');
@@ -480,54 +462,62 @@ class MailThemeController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param string $themeName
+     * @param string $layoutName
+     * @param string $module
+     *
+     * @return LayoutInterface
+     *
+     * @throws FileNotFoundException
+     * @throws InvalidArgumentException
+     */
+    private function getMailLayout($themeName, $layoutName, $module)
+    {
+        /** @var ThemeCatalogInterface $themeCatalog */
+        $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
+        /** @var ThemeInterface $theme */
+        $theme = $themeCatalog->getByName($themeName);
+
+        /** @var LayoutInterface $layout */
+        $layout = null;
+        /* @var LayoutInterface $layoutInterface */
+        foreach ($theme->getLayouts() as $layoutInterface) {
+            if ($layoutInterface->getName() == $layoutName
+                && $layoutInterface->getModuleName() == $module
+            ) {
+                $layout = $layoutInterface;
+                break;
+            }
+        }
+
+        if (null === $layout) {
+            throw new FileNotFoundException(sprintf(
+                'Cannot find layout %s%s in theme %s',
+                empty($module) ? '' : $module . ':',
+                $layoutName,
+                $themeName
+            ));
+        }
+
+        return $layout;
+    }
+
+    /**
      * @param HookEvent $event
+     *
+     * @throws \SmartyException
      */
     public function addLayoutVariablesListener(HookEvent $event)
     {
         $hookParameters = $event->getHookParameters();
         $mailLayoutVariables = $hookParameters['mailLayoutVariables'];
-        $mailLayoutVariables['templateVars'] = $this->getTemplateVars();
+
+        /** @var MailPreviewVariablesBuilder $variableBuilder */
+        $variablesBuilder = $this->get('prestashop.adapter.mail_template.preview_variables_builder');
+        $mailLayoutVariables['templateVars'] = $variablesBuilder->buildTemplateVariables($hookParameters['mailLayout']);
+
         $hookParameters['mailLayoutVariables'] = $mailLayoutVariables;
         $event->setHookParameters($hookParameters);
-    }
-
-    /**
-     * @return array
-     */
-    private function getTemplateVars()
-    {
-        $context = $this->getContext();
-        $imageDir = $this->configuration->get('_PS_IMG_DIR_');
-        $baseUrl = $context->link->getBaseLink();
-
-        //Logo url
-        $logoMail = $this->configuration->get('PS_LOGO_MAIL');
-        $logo = $this->configuration->get('PS_LOGO');
-        if (!empty($logoMail) && file_exists($imageDir . $logoMail)) {
-            $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $logoMail;
-        } else {
-            if (!empty($logo) && file_exists($imageDir . $logo)) {
-                $templateVars['{shop_logo}'] = $baseUrl . 'img/' . $logo;
-            } else {
-                $templateVars['{shop_logo}'] = '';
-            }
-        }
-
-        /** @var ContextEmployeeProviderInterface $employeeProvider */
-        $employeeProvider = $this->get('prestashop.adapter.data_provider.employee');
-        $employeeData = $employeeProvider->getData();
-
-        $templateVars['{firstname}'] = $employeeData['firstname'];
-        $templateVars['{lastname}'] = $employeeData['lastname'];
-        $templateVars['{email}'] = $employeeData['email'];
-        $templateVars['{shop_name}'] = $context->shop->name;
-        $templateVars['{shop_url}'] = $context->link->getPageLink('index', true);
-        $templateVars['{my_account_url}'] = $context->link->getPageLink('my-account', true);
-        $templateVars['{guest_tracking_url}'] = $context->link->getPageLink('guest-tracking', true);
-        $templateVars['{history_url}'] = $context->link->getPageLink('history', true);
-        $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
-
-        return $templateVars;
     }
 
     /**
