@@ -642,7 +642,15 @@ class AdminCartRulesControllerCore extends AdminController
         $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, 0, $limit);
         $carriers = $current_object->getAssociatedRestrictions('carrier', true, true);
         foreach ($carriers as &$carriers2) {
-            foreach ($carriers2 as &$carrier) {
+            $prev_id_carrier = 0;
+
+            foreach ($carriers2 as $key => &$carrier) {
+                if ($prev_id_carrier == $carrier['id_carrier']) {
+                    unset($carriers2[$key]);
+
+                    continue;
+                }
+
                 foreach ($carrier as $field => &$value) {
                     if ($field == 'name') {
                         if ($value == '0') {
@@ -652,6 +660,8 @@ class AdminCartRulesControllerCore extends AdminController
                         $value = $carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')';
                     }
                 }
+
+                $prev_id_carrier = $carrier['id_carrier'];
             }
         }
 
