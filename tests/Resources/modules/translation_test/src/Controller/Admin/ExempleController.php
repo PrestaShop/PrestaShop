@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Translations\Controller\Admin;
+namespace TranslationTest\Controller\Admin;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 
@@ -32,9 +32,10 @@ class ExempleController extends FrameworkBundleAdminController
 {
     public function indexAction()
     {
-        return $this->render('@Modules/translations/views/admin/index.html.twig', [
-            'layoutTitle' => $this->trans('Modern controller', 'Modules.Translations'),
+        return $this->render('@Modules/translations/views/templates/admin/index.html.twig', [
+            'layoutTitle' => $this->trans('Modern controller', 'Modules.Translationtest.Translationtest'),
             'help_link' => false,
         ]);
     }
 }
+
