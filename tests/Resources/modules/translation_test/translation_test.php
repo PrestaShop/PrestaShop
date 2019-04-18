@@ -28,11 +28,11 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class Translations extends Module
+class translation_test extends Module
 {
     public function __construct()
     {
-        $this->name = 'translations';
+        $this->name = 'translation_test';
         $this->version = '1.0';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
@@ -44,5 +44,14 @@ class Translations extends Module
         $this->description = 'Test the translations accross different templating engines and controllers';
 
         $this->ps_versions_compliancy = array('min' => '1.7.5.0', 'max' => _PS_VERSION_);
+    }
+
+    /**
+     * Needed to access the new BO translations page
+     * @return bool
+     */
+    public function isUsingNewTranslationSystem()
+    {
+        return true;
     }
 }

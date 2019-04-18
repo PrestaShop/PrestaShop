@@ -8,7 +8,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Translations\\": "src/"
+            "TranslationsTest\\": "src/"
         }
     },
     "license": "MIT",
