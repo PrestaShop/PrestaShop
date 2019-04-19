@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +21,27 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
+import CountryStateSelectionToggler from '../../components/country-state-selection-toggler';
+import SupplierMap from './supplier-map';
+import TranslatableInput from '../../components/translatable-input';
+import TaggableField from '../../components/taggable-field';
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+const $ = window.$;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Suppliers/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+$(document).ready(() => {
+  new CountryStateSelectionToggler(
+    SupplierMap.supplierCountrySelect,
+    SupplierMap.supplierStateSelect,
+    SupplierMap.supplierStateBlock
+  );
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/supplier_form.bundle.js') }}"></script>
-{% endblock %}
+  new TranslatableInput();
+  new TaggableField({
+    tokenFieldSelector: 'input.js-taggable-field',
+    options: {
+      createTokensOnBlur: true,
+    },
+  });
+});

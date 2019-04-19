@@ -42,6 +42,7 @@ module.exports = {
     product_page: './js/product-page/index',
     currency: './js/pages/currency',
     supplier: './js/pages/supplier',
+    supplier_form: './js/pages/supplier/supplier-form.js',
     themes: './js/pages/themes',
     profiles: './js/pages/profiles',
     tax: './js/pages/tax',
