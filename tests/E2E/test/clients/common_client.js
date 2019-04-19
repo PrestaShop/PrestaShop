@@ -57,16 +57,16 @@ class CommonClient {
               let element = document.querySelector(selector);
               element.scrollIntoView();
             }, selector)
-            .waitForVisibleAndClick(selector, 2000);
+            .scrollWaitForExistAndClick(selector, 2000);
         } else {
           this.client
-            .waitForExistAndClick(menuSelector, 2000)
+            .scrollWaitForExistAndClick(menuSelector, 2000)
             .pause(2000)
             .execute(function (selector) {
               let element = document.querySelector(selector);
               element.scrollIntoView();
             }, selector)
-            .waitForVisibleAndClick(selector);
+            .scrollWaitForExistAndClick(selector);
         }
       })
       .then(() => this.client.pause(4000));
@@ -813,7 +813,16 @@ class CommonClient {
         global.tab[value] = count.value;
       });
   }
-
+   /**
+   * get Current URL
+   * @param pause
+   * @return current url
+   */
+  getURL(pause = 0) {
+     return this.client
+     .pause(pause)
+     .url();
+    }
 }
 
 module.exports = CommonClient;
