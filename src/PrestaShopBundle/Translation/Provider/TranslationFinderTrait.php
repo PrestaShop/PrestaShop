@@ -31,6 +31,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Helper used to retrieve a Symfony Catalogue object.
@@ -83,10 +84,35 @@ trait TranslationFinderTrait
                 }
 
                 $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
-                $messageCatalogue->addCatalogue($fileCatalogue);
+                $messageCatalogue->addCatalogue(
+                    $this->removeTrailingLocaleFromDomains($fileCatalogue)
+                );
             }
         }
 
         return $messageCatalogue;
+    }
+
+    /**
+     * @param MessageCatalogueInterface $catalogue
+     *
+     * @return MessageCatalogue
+     */
+    private function removeTrailingLocaleFromDomains(MessageCatalogueInterface $catalogue)
+    {
+        $messages = $catalogue->all();
+        $locale = $catalogue->getLocale();
+        $localeSuffix = '.' . $locale;
+        $suffixLength = strlen($localeSuffix);
+
+        foreach ($catalogue->getDomains() as $domain) {
+            if (substr($domain, -$suffixLength) === $localeSuffix) {
+                $cleanDomain = substr($domain, 0 , -$suffixLength);
+                $messages[$cleanDomain] = $messages[$domain];
+                unset($messages[$domain]);
+            }
+        }
+
+        return new MessageCatalogue($locale, $messages);
     }
 }
