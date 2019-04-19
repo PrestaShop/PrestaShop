@@ -174,7 +174,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
                 // When filtering by position,
                 // value must be decreased by 1,
                 // since position value in database starts at 0,
-                // but for user display positions are insreased by 1.
+                // but for user display positions are increased by 1.
                 if (is_numeric($filterValue)) {
                     --$filterValue;
                 } else {
