@@ -40,7 +40,7 @@ class BackUrlProvider
      */
     public function getBackUrl(Request $request)
     {
-        $backUrl = $request->query->get('back-url');
+        $backUrl = $request->query->get('back');
 
         return urldecode($backUrl);
     }

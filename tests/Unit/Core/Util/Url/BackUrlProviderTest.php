@@ -38,7 +38,7 @@ class BackUrlProviderTest extends TestCase
 
         $actualResult = $backUrlProvider->getBackUrl(
             new Request([
-                'back-url' => 'http%3A%2F%2Flocalhost',
+                'back' => 'http%3A%2F%2Flocalhost',
             ])
         );
 
