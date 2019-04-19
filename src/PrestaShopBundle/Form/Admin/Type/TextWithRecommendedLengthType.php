@@ -55,6 +55,7 @@ class TextWithRecommendedLengthType extends AbstractType
         $resolver
             ->setDefaults([
                 'input_type' => 'text',
+                'compound' => false,
             ])
             ->setRequired([
                 'recommended_length',
