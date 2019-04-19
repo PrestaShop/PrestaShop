@@ -40,10 +40,12 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -121,9 +123,23 @@ class SupplierController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $supplierForm = $this->createForm(SupplierType::class);
+        try {
+            $supplierForm = $this->getFormBuilder()->getForm();
+            $supplierForm->handleRequest($request);
+
+            $result = $this->getFormHandler()->handle($supplierForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_suppliers_index');
+            }
+        } catch (CoreException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
+            //@todo: refactor exception messages
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/add.html.twig', [
             'supplierForm' => $supplierForm->createView(),
@@ -343,7 +359,7 @@ class SupplierController extends FrameworkBundleAdminController
      * @param Request $request
      * @param int $supplierId
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function viewAction(Request $request, $supplierId)
     {
@@ -500,5 +516,21 @@ class SupplierController extends FrameworkBundleAdminController
         }
 
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.supplier_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.supplier_form_handler');
     }
 }
