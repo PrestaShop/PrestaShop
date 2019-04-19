@@ -863,3 +863,13 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.supplier:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType'
+      arguments:
+        - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+        - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+        - '@translator'
+      tags:
+        - { name: form.type }
