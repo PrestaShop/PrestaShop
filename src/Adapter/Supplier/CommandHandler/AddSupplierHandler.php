@@ -113,6 +113,8 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
     }
 
     /**
+     * Validates legacy address and saves to database
+     *
      * @param Address $address
      *
      * @throws PrestaShopException
@@ -132,6 +134,8 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
     }
 
     /**
+     * Creates legacy address from given command data
+     *
      * @param AddSupplierCommand $command
      *
      * @return Address
