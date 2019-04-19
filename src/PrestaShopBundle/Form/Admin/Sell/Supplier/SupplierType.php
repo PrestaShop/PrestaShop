@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Supplier;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
@@ -68,21 +69,29 @@ class SupplierType extends AbstractType
     private $translator;
 
     /**
+     * @var bool
+     */
+    private $isMultistoreEnabled;
+
+    /**
      * @param array $countryChoices
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param $contextCountryId
      * @param TranslatorInterface $translator
+     * @param $isMultistoreEnabled
      */
     public function __construct(
         array $countryChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        $isMultistoreEnabled
     ) {
         $this->translator = $translator;
         $this->countryChoices = $countryChoices;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
+        $this->isMultistoreEnabled = $isMultistoreEnabled;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -315,6 +324,19 @@ class SupplierType extends AbstractType
                 'required' => false,
             ])
         ;
+
+        if ($this->isMultistoreEnabled) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]);
+        }
     }
 
     /**
