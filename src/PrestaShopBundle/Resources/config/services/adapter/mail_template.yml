@@ -19,7 +19,6 @@ services:
         arguments:
           - '@prestashop.core.mail_template.transformation.html_textify'
 
-
   prestashop.adapter.mail_template.preview_variables_builder:
     class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder'
     arguments:

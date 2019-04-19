@@ -30,6 +30,10 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use DOMElement;
 
+/**
+ * Class HTMLCleanTransformation removes element deisgned for txt templates (identified via data-text-only=1)
+ * It also cleans html-only and mj-raw tags and replace them by their content
+ */
 class HTMLCleanTransformation extends AbstractTransformation
 {
     public function __construct()
@@ -47,8 +51,7 @@ class HTMLCleanTransformation extends AbstractTransformation
         $templateContent = $this->removeContainer($templateContent, 'mj-raw');
 
         //DOMElement escapes {variables} in src of href attributes
-        $templateContent = preg_replace('/href="%7B(.*?)%7D"/', 'href="{\1}"', $templateContent);
-        $templateContent = preg_replace('/src="%7B(.*?)%7D"/', 'src="{\1}"', $templateContent);
+        $templateContent = preg_replace('/%7B(.*?)%7D/', '{\1}', $templateContent);
 
         return $templateContent;
     }
@@ -67,7 +70,7 @@ class HTMLCleanTransformation extends AbstractTransformation
             foreach ($crawler as $node) {
                 /** @var DOMElement $childNode */
                 foreach ($node->childNodes as $childNode) {
-                    $node->parentNode->insertBefore($childNode->cloneNode(), $node);
+                    $node->parentNode->insertBefore($childNode->cloneNode(true), $node);
                 }
                 $node->parentNode->removeChild($node);
             }
