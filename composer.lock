@@ -4748,16 +4748,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v3.0.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "0264017174e2c0af2e4792f78e0e08472539d71f"
+                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/0264017174e2c0af2e4792f78e0e08472539d71f",
-                "reference": "0264017174e2c0af2e4792f78e0e08472539d71f",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/7ca162cee5a24359a33ada3eba13f94f23c1c926",
+                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926",
                 "shasum": ""
             },
             "require": {
@@ -4803,7 +4803,7 @@
                 "prestashop",
                 "translation"
             ],
-            "time": "2019-04-15T13:37:28+00:00"
+            "time": "2019-04-19T12:27:03+00:00"
         },
         {
             "name": "prestashop/welcome",
@@ -6863,12 +6863,12 @@
             "version": "v1.6.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mikey179/vfsStream.git",
+                "url": "https://github.com/bovigo/vfsStream.git",
                 "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
+                "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
                 "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
                 "shasum": ""
             },
