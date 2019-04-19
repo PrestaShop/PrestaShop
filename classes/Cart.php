@@ -1952,7 +1952,7 @@ class CartCore extends ObjectModel
         // CART CALCULATION
         $cartRules = array();
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
-            $cartRules = $this->getCartRules();
+            $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
@@ -3347,7 +3347,7 @@ class CartCore extends ObjectModel
         }
 
         if (null === $product_list) {
-            $products = $this->getProducts(false, false, null, false);
+            $products = $this->getProducts(false, false, null, true);
         } else {
             $products = $product_list;
         }
