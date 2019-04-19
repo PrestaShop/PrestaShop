@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -47,14 +48,14 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
     private $imageUploader;
 
     /**
-     * @param CommandBusInterface $bus
+     * @param CommandBusInterface $commandBus
      * @param ImageUploaderInterface $imageUploader
      */
     public function __construct(
-        CommandBusInterface $bus,
+        CommandBusInterface $commandBus,
         ImageUploaderInterface $imageUploader
     ) {
-        $this->bus = $bus;
+        $this->bus = $commandBus;
         $this->imageUploader = $imageUploader;
     }
 
@@ -101,6 +102,49 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
      */
     public function update($supplierId, array $data)
     {
-        //@todo
+        /** @var UploadedFile $uploadedFlagImage */
+        $uploadedLogo = $data['logo'];
+        $logo = null;
+
+        if ($uploadedLogo instanceof UploadedFile) {
+            $this->imageUploader->upload($supplierId, $uploadedLogo);
+        }
+
+        $command = new EditSupplierCommand($supplierId);
+        $this->fillCommandWithData($command, $data);
+
+        $this->bus->handle($command);
+    }
+
+    /**
+     * Fills command with provided data
+     *
+     * @param EditSupplierCommand $command
+     * @param array $data
+     */
+    private function fillCommandWithData(EditSupplierCommand $command, array $data)
+    {
+        $command->setName((string) $data['name']);
+        $command->setLocalizedDescriptions($data['description']);
+        $command->setPhone($data['phone']);
+        $command->setMobilePhone($data['mobile_phone']);
+        $command->setMobilePhone($data['mobile_phone']);
+        $command->setAddress($data['address']);
+        $command->setAddress2($data['address2']);
+        $command->setPostCode($data['post_code']);
+        $command->setCity($data['city']);
+        $command->setCountryId($data['id_country']);
+        $command->setStateId($data['id_state']);
+        $command->setLocalizedMetaTitles($data['meta_title']);
+        $command->setLocalizedMetaDescriptions($data['meta_description']);
+        $command->setLocalizedMetaKeywords($data['meta_keyword']);
+        $command->setEnabled((bool) $data['is_enabled']);
+
+        if (isset($data['shop_association'])) {
+            $shopAssociation = $data['shop_association'] ?: [];
+            $shopAssociation = array_map(function ($shopId) { return (int) $shopId; }, $shopAssociation);
+
+            $command->setAssociatedShops($shopAssociation);
+        }
     }
 }
