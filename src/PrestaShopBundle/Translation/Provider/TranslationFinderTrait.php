@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -42,7 +44,7 @@ trait TranslationFinderTrait
      *
      * @return MessageCatalogue
      *
-     * @throws \Exception
+     * @throws FileNotFoundException
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
@@ -53,12 +55,25 @@ trait TranslationFinderTrait
         if (null !== $pattern) {
             $finder->name($pattern);
         }
-        $translationFiles = $finder->files()->notName('index.php')->in($paths);
 
-        if (count($translationFiles) === 0) {
-            throw new \Exception('There is no translation file available.');
+        try {
+            $translationFiles = $finder->files()->notName('index.php')->in($paths);
+        } catch (\InvalidArgumentException $e) {
+            throw new FileNotFoundException(
+                sprintf(
+                    'Could not crawl for translation files: %s',
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
         }
 
+        if (count($translationFiles) === 0) {
+            throw new FileNotFoundException('There is no translation file available.');
+        }
+
+        /** @var SplFileInfo $file */
         foreach ($translationFiles as $file) {
             if ('xlf' === $file->getExtension()) {
                 if (strpos($file->getBasename('.xlf'), $locale) !== false) {
