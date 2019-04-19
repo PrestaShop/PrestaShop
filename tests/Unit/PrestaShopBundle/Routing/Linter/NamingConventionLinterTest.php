@@ -24,27 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Routing\Linter;
+namespace Tests\Unit\PrestaShopBundle\Routing\Linter;
 
+use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\PrestaShopBundle;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use PrestaShopBundle\Routing\Linter\NamingConventionLinter;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Tests\Resources\Controller\TestController;
 
-class NamingConventionLinterTest extends KernelTestCase
+class NamingConventionLinterTest extends TestCase
 {
     /**
      * @var NamingConventionLinter
      */
     private $namingConventionLinter;
 
-    protected function setUp()
+    public function setUp()
     {
-        self::bootKernel();
-
-        $this->namingConventionLinter = self::$kernel->getContainer()
-            ->get('prestashop.bundle.routing.linter.naming_convention_linter');
+        $this->namingConventionLinter = new NamingConventionLinter($this->createControllerNameParser());
     }
 
     /**
@@ -101,8 +101,13 @@ class NamingConventionLinterTest extends KernelTestCase
         ];
     }
 
-    protected function tearDown()
+    public function createControllerNameParser()
     {
-        self::$kernel->shutdown();
+        $kernel = $this->createMock(KernelInterface::class);
+        $kernel->method('getBundles')->willReturn([
+            'prestashop' => $this->createMock(PrestaShopBundle::class),
+        ]);
+
+        return new ControllerNameParser($kernel);
     }
 }
