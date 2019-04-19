@@ -30,8 +30,11 @@ use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 
 /**
+ * Tests the extraction of wordings from a module using static code analysis
+ *
  * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="LegacyModuleExtractorTest"
  */
 class LegacyModuleExtractorTest extends KernelTestCase
@@ -39,49 +42,49 @@ class LegacyModuleExtractorTest extends KernelTestCase
     /**
      * @var string Domain name of the modules translations
      */
-    const DOMAIN_NAME = 'ModulesSomeModule';
+    const DOMAIN_NAME = 'ModulesTranslationtest';
+    const MODULE_NAME = 'translation_test';
 
     /**
-     * @cover extract
+     * @var CatalogueVerifier
      */
-    public function testLegacyModuleExtractorShouldReturnACatalogue()
+    private $catalogueVerifier;
+
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->catalogueVerifier = new CatalogueVerifier($this);
+    }
+
+    /**
+     * @param string $locale
+     * @param array $expected
+     *
+     * @cover extract
+     * @dataProvider provideTestCases
+     */
+    public function testExtractedCatalogueContainsTheExpectedWordings($locale, $expected)
     {
         self::bootKernel();
-        $phpExtractor = new PhpExtractor();
-        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
-        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleFolder());
+        $container = self::$kernel->getContainer();
 
-        $catalogue = $extractor->extract('some_module', 'fr-FR');
+        $phpExtractor = $container->get('prestashop.translation.extractor.php');
+        $smartyExtractor = $container->get('prestashop.translation.extractor.smarty.legacy');
+        $twigExtractor = $container->get('prestashop.translation.extractor.twig');
+
+        $extractor = new LegacyModuleExtractor(
+            $phpExtractor,
+            $smartyExtractor,
+            $twigExtractor,
+            $this->getModuleFolder()
+        );
+
+        $catalogue = $extractor->extract(self::MODULE_NAME, $locale);
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
-    }
 
-    /**
-     * @depends testLegacyModuleExtractorShouldReturnACatalogue
-     */
-    public function testExtractedCatalogueContainsTheExpectedTranslations()
-    {
-        self::bootKernel();
-        $phpExtractor = new PhpExtractor();
-        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty');
-        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleFolder());
-
-        $catalogue = $extractor->extract('some_module', 'fr-FR');
-        $this->assertCount(5, $catalogue->all(self::DOMAIN_NAME));
-        $this->assertTrue($catalogue->has(
-            'An error occured, please check your zip file',
-            self::DOMAIN_NAME
-        ));
-
-        $this->assertSame(
-            'The module %s has been disabled',
-            $catalogue->get('The module %s has been disabled', self::DOMAIN_NAME)
-        );
-    }
-
-    protected function tearDown()
-    {
-        self::$kernel->shutdown();
+        $this->catalogueVerifier->verify($catalogue, $expected);
     }
 
     /**
@@ -89,6 +92,40 @@ class LegacyModuleExtractorTest extends KernelTestCase
      */
     private function getModuleFolder()
     {
-        return __DIR__ . '/../../../../resources';
+        return __DIR__ . '/../../../../resources/modules';
+    }
+
+    public function provideTestCases()
+    {
+        return [
+            'French' => [
+                'fr-FR',
+                [
+                    'Modules.Translationtest.Translationtest' => [
+                        'Hello World' => "Hello World",
+                        'Modern controller' => "Modern controller",
+                        'An error occured, please check your zip file' => "An error occured, please check your zip file",
+                    ],
+                    'Modules.Translationtest.Somefile.with-things' => [
+                        'Smarty template' => "Smarty template",
+                    ]
+                ],
+            ],
+            // the locale has no impact on wordings because they are only extracted,
+            // not translated
+            'Spanish' => [
+                'es-ES',
+                [
+                    'Modules.Translationtest.Translationtest' => [
+                        'Hello World' => "Hello World",
+                        'Modern controller' => "Modern controller",
+                        'An error occured, please check your zip file' => "An error occured, please check your zip file",
+                    ],
+                    'Modules.Translationtest.Somefile.with-things' => [
+                        'Smarty template' => "Smarty template",
+                    ]
+                ],
+            ],
+        ];
     }
 }
