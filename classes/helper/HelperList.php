@@ -579,7 +579,7 @@ class HelperListCore extends Helper
         );
 
         if (!isset($this->table_id) && $this->position_identifier && (int)Tools::getValue($this->position_identifier, 1)) {
-            $this->table_id = substr($this->identifier, 3, strlen($this->identifier));
+            $this->table_id = (strlen($this->identifier) > 3)? substr($this->identifier, 3, strlen($this->identifier)) : substr($this->position_identifier, 3, strlen($this->position_identifier));
         }
 
         if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC')) {
