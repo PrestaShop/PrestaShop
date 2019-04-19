@@ -38,7 +38,6 @@ use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 {
     const MODULE_NAME = 'translation_test';
-    const DOMAIN_NAME = 'ModulesTranslationtest';
 
     /**
      * @var ExternalModuleLegacySystemProvider
@@ -85,7 +84,6 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 
         $this->provider
             ->setModuleName(self::MODULE_NAME)
-            ->setDomain(self::DOMAIN_NAME)
         ;
     }
 
