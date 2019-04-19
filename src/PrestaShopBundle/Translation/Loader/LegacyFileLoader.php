@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Translation\Loader;
 
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+use PrestaShopBundle\Translation\DomainNormalizer;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 
@@ -48,15 +49,24 @@ final class LegacyFileLoader implements LoaderInterface
     private $fileReader;
 
     /**
+     * @var DomainNormalizer
+     */
+    private $domainNormalizer;
+
+    /**
      * @param LegacyFileReader $fileReader
      */
     public function __construct(LegacyFileReader $fileReader)
     {
         $this->fileReader = $fileReader;
+        $this->domainNormalizer = new DomainNormalizer();
     }
 
     /**
      * {@inheritdoc}
+     *
+     * Note that parameter "domain" is useless, as domain is inferred from source files
+     *
      * @throws \PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException
      */
     public function load($path, $locale, $domain = 'messages')
@@ -88,6 +98,6 @@ final class LegacyFileLoader implements LoaderInterface
             $translationKey->getSource()
         );
 
-        return $newDomain;
+        return $this->domainNormalizer->normalize($newDomain);
     }
 }
