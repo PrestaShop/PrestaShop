@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
@@ -36,8 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierSta
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -116,6 +117,8 @@ class SupplierController extends FrameworkBundleAdminController
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to add this."
      * )
+     *
+     * @param Request $request
      *
      * @return Response
      */
@@ -303,16 +306,40 @@ class SupplierController extends FrameworkBundleAdminController
      *
      * @param int $supplierId
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($supplierId)
+    public function editAction(Request $request, $supplierId)
     {
-        $legacyLink = $this->getAdminLink('AdminSuppliers', [
-            'id_supplier' => $supplierId,
-            'updatesupplier' => 1,
-        ]);
+        try {
+            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId);
+            $supplierForm->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+            $result = $this->getFormHandler()->handleFor((int) $supplierId, $supplierForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_suppliers_index');
+            }
+        } catch (CoreException $e) {
+            //@todo: error messages
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
+
+            if ($e instanceof SupplierNotFoundException) {
+                return $this->redirectToRoute('admin_suppliers_index');
+            }
+        }
+
+        /** @var EditableSupplier $editableSupplier */
+        $editableSupplier = $this->getQueryBus()->handle(new GetSupplierForEditing((int) $supplierId));
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/edit.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'supplierForm' => $supplierForm->createView(),
+            'supplierName' => $editableSupplier->getName(),
+            'logoImage' => $editableSupplier->getLogoImage(),
+        ]);
     }
 
     /**

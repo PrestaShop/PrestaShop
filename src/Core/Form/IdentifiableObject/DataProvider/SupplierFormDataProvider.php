@@ -27,9 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 
 /**
- * Provides data for manufacturers add/edit forms
+ * Provides data for suppliers add/edit forms
  */
 final class SupplierFormDataProvider implements FormDataProviderInterface
 {
@@ -65,9 +68,36 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws SupplierException
      */
-    public function getData($manufacturerId)
+    public function getData($supplierId)
     {
+        /** @var EditableSupplier $editableSupplier */
+        $editableSupplier = $this->bus->handle(new GetSupplierForEditing((int) $supplierId));
+
+        $data = [
+            'name' => $editableSupplier->getName(),
+            'description' => $editableSupplier->getLocalizedDescriptions(),
+            'phone' => $editableSupplier->getPhone(),
+            'mobile_phone' => $editableSupplier->getMobilePhone(),
+            'address' => $editableSupplier->getAddress(),
+            'address2' => $editableSupplier->getAddress2(),
+            'post_code' => $editableSupplier->getPostCode(),
+            'city' => $editableSupplier->getCity(),
+            'id_country' => $editableSupplier->getCountryId(),
+            'id_state' => $editableSupplier->getStateId(),
+            'meta_title' => $editableSupplier->getLocalizedMetaTitles(),
+            'meta_description' => $editableSupplier->getLocalizedMetaDescriptions(),
+            'meta_keyword' => $editableSupplier->getLocalizedMetaKeywords(),
+            'is_enabled' => $editableSupplier->isEnabled(),
+        ];
+
+        if ($this->multistoreEnabled) {
+            $data['shop_association'] = $editableSupplier->getAssociatedShops();
+        }
+
+        return $data;
     }
 
     /**
