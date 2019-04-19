@@ -45,17 +45,17 @@ class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
         ];
 
         $expected = [
-            'Modules.Psgdpr' => [
+            'ModulesPsgdprPsgdpr' => [
                 '5966265f35dd87febf4d59029bc9ef66' => 'RGPD Officiel ',
             ],
-            'Modules.Psgdpr.Htmltemplatepsgdprmodule' => [
+            'ModulesPsgdprHtmltemplatepsgdprmodule' => [
                 '9ad5a301cfed1c7f825506bf57205ab6' => 'DONNÉES PERSONNELLES',
                 'ce114e4501d2f4e2dcea3e17b546f339' => 'This is a test',
             ],
-            'Modules.Psgdpr.Personaldata.connections-tab' => [
+            'ModulesPsgdprPersonaldata.connections-tab' => [
                 '33e29c1d042c0923008f78b46af94984' => 'Demande d\'origine',
             ],
-            'Modules.Somemodule.Somesource' => [
+            'ModulesSomemoduleSomesource' => [
                 '57f32d7d0e6672cc2b60bc7a49f91453' => 'Page consultée',
             ],
         ];
