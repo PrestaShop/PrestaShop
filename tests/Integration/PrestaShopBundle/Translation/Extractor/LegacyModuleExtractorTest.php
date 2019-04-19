@@ -101,9 +101,11 @@ class LegacyModuleExtractorTest extends KernelTestCase
             'French' => [
                 'fr-FR',
                 [
+                    'Modules.Translationtest.Admin' => [
+                        'Modern controller' => "Modern controller",
+                    ],
                     'Modules.Translationtest.Translationtest' => [
                         'Hello World' => "Hello World",
-                        'Modern controller' => "Modern controller",
                         'An error occured, please check your zip file' => "An error occured, please check your zip file",
                     ],
                     'Modules.Translationtest.Somefile.with-things' => [
@@ -116,9 +118,11 @@ class LegacyModuleExtractorTest extends KernelTestCase
             'Spanish' => [
                 'es-ES',
                 [
+                    'Modules.Translationtest.Admin' => [
+                        'Modern controller' => "Modern controller",
+                    ],
                     'Modules.Translationtest.Translationtest' => [
                         'Hello World' => "Hello World",
-                        'Modern controller' => "Modern controller",
                         'An error occured, please check your zip file' => "An error occured, please check your zip file",
                     ],
                     'Modules.Translationtest.Somefile.with-things' => [

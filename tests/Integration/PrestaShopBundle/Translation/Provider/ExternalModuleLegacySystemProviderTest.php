@@ -111,9 +111,11 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
             'French' => [
                 'fr-FR',
                 [
+                    'ModulesTranslationtestAdmin' => [
+                        'Modern controller' => 'Contrôleur moderne',
+                    ],
                     'ModulesTranslationtestTranslationtest' => [
                         'Hello World' => 'Bonjour le monde',
-                        'Modern controller' => 'Contrôleur moderne',
                     ],
                     'ModulesTranslationtestSomefile.with-things' => [
                         'Smarty template' => "Le template Smarty",

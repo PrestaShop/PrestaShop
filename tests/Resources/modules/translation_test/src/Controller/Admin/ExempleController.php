@@ -33,7 +33,7 @@ class ExempleController extends FrameworkBundleAdminController
     public function indexAction()
     {
         return $this->render('@Modules/translations/views/templates/admin/index.html.twig', [
-            'layoutTitle' => $this->trans('Modern controller', 'Modules.Translationtest.Translationtest'),
+            'layoutTitle' => $this->trans('Modern controller', 'Modules.Translationtest.Admin'),
             'help_link' => false,
         ]);
     }
