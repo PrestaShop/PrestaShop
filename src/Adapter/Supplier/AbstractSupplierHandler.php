@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
+use Address;
 use Supplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
@@ -62,5 +63,23 @@ abstract class AbstractSupplierHandler extends AbstractObjectModelHandler
         }
 
         return $supplier;
+    }
+
+    /**
+     * @param SupplierId $supplierId
+     *
+     * @return Address
+     *
+     * @throws SupplierException
+     */
+    protected function getSupplierAddress(SupplierId $supplierId)
+    {
+        try {
+            $addressId = Address::getAddressIdBySupplierId($supplierId->getValue());
+
+            return new Address($addressId);
+        } catch (PrestaShopException $e) {
+            throw new SupplierException('Failed to get supplier address', 0, $e);
+        }
     }
 }
