@@ -7,6 +7,7 @@ module.exports = Object.assign(
       action_group_button: '#product_bulk_menu ',
       action_button: '#main-div div.bulk-catalog a:nth-child(%ID)',
       green_validation: '#main-div .alert-success .alert-text p',
+      alert_success: 'div.alert-success',
       product_status_icon: '#product_catalog_list tbody tr:nth-child(%S) i.material-icons:nth-child(1)',
       name_search_input: '#product_catalog_list input[name="filter_column_name"]',
       search_button: '#product_catalog_list button[name="products_filter_submit"]',

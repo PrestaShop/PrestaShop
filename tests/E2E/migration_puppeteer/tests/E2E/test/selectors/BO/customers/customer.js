@@ -30,8 +30,8 @@ module.exports = {
     Partner_offers: 'form label[for="customer_is_partner_offers_subscribed_1"]',
     first_name_value: '#customer_grid_table tr:nth-of-type(%ID) > td:nth-of-type(4)',
     last_name_value: '#customer_grid_table tr:nth-of-type(%ID) > td:nth-of-type(5)',
-    view_button: '#customer_grid_table a[title=View]',
-    valid_orders: '#container-customer div:nth-child(1) > span.label-success',
-    total_amount: '#container-customer  div:nth-child(2)  div.panel div.col-lg-6:nth-child(1)',
+    view_button: '#customer_grid_table tbody .dropdown-menu a:nth-child(1)',
+    valid_orders: 'div.card-body:nth-child(1) span.badge-success',
+    total_amount: 'div.card-body:nth-child(1) div.col',
   }
 };

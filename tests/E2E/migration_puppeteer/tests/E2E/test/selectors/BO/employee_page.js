@@ -21,6 +21,6 @@ module.exports = {
     edit_button: '#table-employee a .edit',
     language_select: '#id_lang ',
     selected_language_option: '#id_lang option[selected="selected"]',
-    employee_column_information: '#table-employee tr:nth-of-type(1) > td:nth-of-type(%COL)',
+    employee_column_information: '#employee_grid tr:nth-of-type(1) > td:nth-of-type(%COL)',
   }
 };

@@ -7,7 +7,7 @@ class ModifyQuantity extends CommonClient {
 
   async goToStockMovements(Menu, Movement) {
     await this.waitForExistAndClick(Menu.Sell.Catalog.movement_tab);
-    await page.waitFor(Movement.variation, {timeout: 90000});
+    await page.waitForSelector(Movement.variation, {visible: 'true'});
     await this.pause(1000);
     global.isVisible = await this.isVisible(Movement.sort_data_time_icon, 2000);
     if (isVisible) {
