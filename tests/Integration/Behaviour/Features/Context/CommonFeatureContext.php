@@ -70,6 +70,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function cleanDatabaseHardPrepare()
     {
         DatabaseCreator::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
     /**

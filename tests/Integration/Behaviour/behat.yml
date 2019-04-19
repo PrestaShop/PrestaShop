@@ -6,6 +6,12 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
+        customer:
+            paths:
+                features: Features/Scenario/Customer
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
         cart:
             paths:
                 features: Features/Scenario/Cart

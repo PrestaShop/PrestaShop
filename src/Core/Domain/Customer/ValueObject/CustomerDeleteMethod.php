@@ -67,6 +67,14 @@ class CustomerDeleteMethod
     }
 
     /**
+     * @return string[]
+     */
+    public static function getAvailableMethods()
+    {
+        return [self::ALLOW_CUSTOMER_REGISTRATION, self::DENY_CUSTOMER_REGISTRATION];
+    }
+
+    /**
      * @param string $method
      */
     private function assertMethodIsDefined($method)

@@ -108,8 +108,7 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
     {
         $apeCode = null !== $command->getApeCode() ?
             $command->getApeCode()->getValue() :
-            null
-        ;
+            null;
 
         $hashedPassword = $this->hashing->hash(
             $command->getPassword()->getValue(),
