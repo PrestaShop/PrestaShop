@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -118,15 +119,15 @@ class SupplierController extends FrameworkBundleAdminController
      *     message="You do not have permission to add this."
      * )
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function createAction()
     {
-        $legacyLink = $this->getAdminLink('AdminSuppliers', [
-            'addsupplier' => 1,
-        ]);
+        $supplierForm = $this->createForm(SupplierType::class);
 
-        return $this->redirect($legacyLink);
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/add.html.twig', [
+            'supplierForm' => $supplierForm->createView(),
+        ]);
     }
 
     /**
