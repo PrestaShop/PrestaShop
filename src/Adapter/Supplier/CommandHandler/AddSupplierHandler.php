@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
+use Address;
 use DateTime;
 use PrestaShopDatabaseException;
 use PrestaShopException;
@@ -43,23 +44,31 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws SupplierException
      */
     public function handle(AddSupplierCommand $command)
     {
         $supplier = new Supplier();
-        $this->fillLegacySupplierWithData($supplier, $command);
+        $this->fillSupplierWithData($supplier, $command);
 
         try {
             if (false === $supplier->validateFields(false)) {
                 throw new SupplierException('Supplier contains invalid field values');
             }
 
+            $address = $this->createSupplierAddressFromCommand($command);
+            $this->saveSupplierAddress($address);
+
             if (!$supplier->add()) {
                 throw new SupplierException(
                     sprintf('Failed to add new supplier "%s"', $command->getName())
                 );
             }
+
             $this->addShopAssociation($supplier, $command);
+            $address->id_supplier = $supplier->id;
+            $address->update();
         } catch (PrestaShopException $e) {
             throw new SupplierException(
                 sprintf('Failed to add new supplier "%s"', $command->getName())
@@ -89,7 +98,7 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
      * @param Supplier $supplier
      * @param AddSupplierCommand $command
      */
-    private function fillLegacySupplierWithData(Supplier $supplier, AddSupplierCommand $command)
+    private function fillSupplierWithData(Supplier $supplier, AddSupplierCommand $command)
     {
         $currentDateTime = (new DateTime())->format('Y-m-d H:i:s'); //@todo: check time zone and format
 
@@ -100,7 +109,47 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
         $supplier->meta_keywords = $command->getLocalizedMetaKeywords();
         $supplier->date_add = $currentDateTime;
         $supplier->date_upd = $currentDateTime;
-        //@todo: check Supplier link_rewrite usability
         $supplier->active = $command->isEnabled();
+    }
+
+    /**
+     * @param Address $address
+     *
+     * @throws PrestaShopException
+     * @throws SupplierException
+     */
+    private function saveSupplierAddress(Address $address)
+    {
+        if (false === $address->validateFields(false)) {
+            throw new SupplierException('Supplier address contains invalid field values');
+        }
+
+        if (!$address->add()) {
+            throw new SupplierException(
+                sprintf('Failed to add new supplier address "%s"', $address->address1)
+            );
+        }
+    }
+
+    /**
+     * @param AddSupplierCommand $command
+     *
+     * @return Address
+     */
+    private function createSupplierAddressFromCommand(AddSupplierCommand $command)
+    {
+        $address = new Address();
+        $address->alias = 'supplier';
+        $address->firstname = 'supplier';
+        $address->lastname = 'supplier';
+        $address->address1 = $command->getAddress();
+        $address->address2 = $command->getAddress2();
+        $address->id_country = $command->getCountryId();
+        $address->city = $command->getCity();
+        $address->id_state = $command->getStateId();
+        $address->phone = $command->getPhone();
+        $address->phone_mobile = $command->getMobilePhone();
+
+        return $address;
     }
 }
