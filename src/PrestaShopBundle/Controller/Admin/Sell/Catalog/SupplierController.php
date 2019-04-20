@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
-use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
@@ -45,6 +44,10 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -141,8 +144,7 @@ class SupplierController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_suppliers_index');
             }
         } catch (CoreException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, []));
-            //@todo: refactor exception messages
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/add.html.twig', [
@@ -175,8 +177,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (SupplierException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -215,8 +217,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (SupplierException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -254,8 +256,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (SupplierException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -293,8 +295,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (SupplierException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -327,8 +329,7 @@ class SupplierController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_suppliers_index');
             }
         } catch (CoreException $e) {
-            //@todo: error messages
-            $this->addFlash('error', $this->getErrorMessageForException($e, []));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof SupplierNotFoundException) {
                 return $this->redirectToRoute('admin_suppliers_index');
@@ -372,8 +373,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (SupplierException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -453,33 +454,15 @@ class SupplierController extends FrameworkBundleAdminController
     }
 
     /**
-     * Gets error by exception type.
+     * Provides error messages for exceptions
      *
-     * @param Exception $exception
-     *
-     * @return string
-     *
-     * @todo use FrameworkAdminBundleController::getErrorMessageForException() instead
+     * @return array
      */
-    private function handleException(Exception $exception)
+    private function getErrorMessages()
     {
-        if (0 !== $exception->getCode()) {
-            return $this->getExceptionMessageByExceptionCode($exception);
-        }
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
 
-        return $this->getExceptionMessageByType($exception);
-    }
-
-    /**
-     * Gets by exception type
-     *
-     * @param Exception $exception
-     *
-     * @return string
-     */
-    private function getExceptionMessageByType(Exception $exception)
-    {
-        $exceptionTypeDictionary = [
+        return [
             SupplierNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
@@ -492,36 +475,6 @@ class SupplierController extends FrameworkBundleAdminController
                 'An error occurred while updating the status for an object.',
                 'Admin.Notifications.Error'
             ),
-        ];
-
-        if ($exception instanceof CannotDeleteSupplierException) {
-            return $this->trans(
-                'Can\'t delete #%id%',
-                'Admin.Notifications.Error',
-                [
-                    '%id%' => $exception->getSupplierId(),
-                ]
-            );
-        }
-
-        $exceptionType = get_class($exception);
-        if (isset($exceptionTypeDictionary[$exceptionType])) {
-            return $exceptionTypeDictionary[$exceptionType];
-        }
-
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
-    }
-
-    /**
-     * Gets exception message by exception code.
-     *
-     * @param Exception $exception
-     *
-     * @return string
-     */
-    private function getExceptionMessageByExceptionCode(Exception $exception)
-    {
-        $exceptionConstraintDictionary = [
             SupplierConstraintException::class => [
                 SupplierConstraintException::INVALID_BULK_DATA => $this->trans(
                     'You must select at least one element to delete.',
@@ -533,17 +486,38 @@ class SupplierController extends FrameworkBundleAdminController
                     'It is not possible to delete a supplier if there are pending supplier orders.',
                     'Admin.Catalog.Notification'
                 ),
+                CannotDeleteSupplierException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                CannotDeleteSupplierException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            MemoryLimitException::class => $this->trans(
+                'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ',
+                'Admin.Notifications.Error'
+            ),
+            ImageUploadException::class => $this->trans(
+                'An error occurred while uploading the image.',
+                'Admin.Notifications.Error'
+            ),
+            ImageOptimizationException::class => $this->trans(
+                'Unable to resize one or more of your pictures.',
+                'Admin.Catalog.Notification'
+            ),
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
+                    $iniConfig->getUploadMaxSizeInBytes(),
+                ]),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    'Admin.Notifications.Error'
+                ),
             ],
         ];
-
-        $exceptionType = get_class($exception);
-        $exceptionCode = $exception->getCode();
-
-        if (isset($exceptionConstraintDictionary[$exceptionType][$exceptionCode])) {
-            return $exceptionConstraintDictionary[$exceptionType][$exceptionCode];
-        }
-
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 
     /**

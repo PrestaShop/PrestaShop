@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use Address;
-use DateTime;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Supplier;
@@ -100,7 +99,7 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
      */
     private function fillSupplierWithData(Supplier $supplier, AddSupplierCommand $command)
     {
-        $currentDateTime = (new DateTime())->format('Y-m-d H:i:s'); //@todo: check time zone and format
+        $currentDateTime = date('Y-m-d H:i:s');
 
         $supplier->name = $command->getName();
         $supplier->description = $command->getLocalizedDescriptions();

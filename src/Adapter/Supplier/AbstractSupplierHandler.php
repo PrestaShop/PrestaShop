@@ -82,4 +82,18 @@ abstract class AbstractSupplierHandler extends AbstractObjectModelHandler
             throw new SupplierException('Failed to get supplier address', 0, $e);
         }
     }
+
+    protected function removeSupplier(SupplierId $supplierId)
+    {
+        $supplier = $this->getSupplier($supplierId);
+
+        try {
+            return $supplier->delete();
+        } catch (PrestaShopException $e) {
+            throw new SupplierException(sprintf(
+                'An error occurred when deleting Supplier object with id "%s".',
+                $supplier->id
+            ));
+        }
+    }
 }

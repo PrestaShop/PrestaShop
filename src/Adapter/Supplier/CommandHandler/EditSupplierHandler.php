@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use Address;
-use DateTime;
 use Supplier;
 use PrestaShop\PrestaShop\Adapter\Supplier\AbstractSupplierHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand;
@@ -67,7 +66,7 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
             }
             if (false === $address->update()) {
                 throw new SupplierException(
-                    sprintf('Cannot update supplier address with id "%s"', $supplier->id)
+                    sprintf('Cannot update supplier address with id "%s"', $address->id)
                 );
             }
         } catch (PrestaShopException $e) {
@@ -103,7 +102,7 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
         if (null !== $command->isEnabled()) {
             $supplier->active = $command->isEnabled();
         }
-        $supplier->date_upd = (new DateTime())->format('Y-m-d H:i:s'); //@todo: check time format and zone
+        $supplier->date_upd = date('Y-m-d H:i:s');
     }
 
     /**
