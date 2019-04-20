@@ -35,6 +35,7 @@ import SubmitRowActionExtension from '../../components/grid/extension/action/row
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import ChoiceTree from '../../components/form/choice-tree';
 
 const $ = window.$;
 
@@ -60,4 +61,5 @@ $(() => {
   });
 
   new FormSubmitButton();
+  new ChoiceTree('#manufacturer_shop_association').enableAutoCheckChildren();
 });
