@@ -27,14 +27,18 @@ import CountryStateSelectionToggler from '../../components/country-state-selecti
 import SupplierMap from './supplier-map';
 import TranslatableInput from '../../components/translatable-input';
 import TaggableField from '../../components/taggable-field';
+import ChoiceTree from '../../components/form/choice-tree';
 
 const $ = window.$;
 
 $(document).ready(() => {
+  const shopChoiceTree = new ChoiceTree('#supplier_shop_association');
+  shopChoiceTree.enableAutoCheckChildren();
+
   new CountryStateSelectionToggler(
     SupplierMap.supplierCountrySelect,
     SupplierMap.supplierStateSelect,
-    SupplierMap.supplierStateBlock
+    SupplierMap.supplierStateBlock,
   );
 
   new TranslatableInput();
