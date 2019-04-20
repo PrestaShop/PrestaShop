@@ -78,12 +78,12 @@ final class GetSupplierForEditingHandler extends AbstractSupplierHandler impleme
             $address->id_state,
             $address->phone,
             $address->phone_mobile,
-            $this->getLogoImage($supplierId),
             $supplier->meta_title,
             $supplier->meta_description,
             $supplier->meta_keywords,
             $supplier->active,
-            $supplier->getAssociatedShops()
+            $supplier->getAssociatedShops(),
+            $this->getLogoImage($supplierId)
         );
     }
 

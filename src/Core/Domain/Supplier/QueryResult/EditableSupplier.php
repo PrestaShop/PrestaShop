@@ -119,8 +119,6 @@ class EditableSupplier
     private $associatedShops;
 
     /**
-     * EditableSupplier constructor.
-     *
      * @param SupplierId $supplierId
      * @param string $name
      * @param string[] $localizedDescriptions
@@ -132,12 +130,12 @@ class EditableSupplier
      * @param int $stateId
      * @param string $phone
      * @param string $mobilePhone
-     * @param array $logoImage
      * @param string[] $localizedMetaTitles
      * @param string[] $localizedMetaDescriptions
      * @param string[] $localizedMetaKeywords
      * @param bool $enabled
      * @param array $associatedShops
+     * @param array|null $logoImage
      */
     public function __construct(
         SupplierId $supplierId,
@@ -151,12 +149,12 @@ class EditableSupplier
         $stateId,
         $phone,
         $mobilePhone,
-        array $logoImage,
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
         array $localizedMetaKeywords,
         $enabled,
-        array $associatedShops
+        array $associatedShops,
+        array $logoImage = null
     ) {
         $this->supplierId = $supplierId;
         $this->name = $name;
