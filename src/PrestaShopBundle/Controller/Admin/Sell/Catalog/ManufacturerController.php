@@ -172,11 +172,12 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param int $manufacturerId
      *
      * @return Response
      */
-    public function viewAction($manufacturerId)
+    public function viewAction(Request $request, $manufacturerId)
     {
         try {
             /** @var ViewableManufacturer $viewableManufacturer */
@@ -195,6 +196,8 @@ class ManufacturerController extends FrameworkBundleAdminController
             'viewableManufacturer' => $viewableManufacturer,
             'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
