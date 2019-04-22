@@ -371,9 +371,7 @@ class CartPresenter implements PresenterInterface
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
             'amount' => $shippingCost,
-            'value' => $shippingCost != 0
-                ? $this->priceFormatter->format($shippingCost)
-                : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+            'value' => $this->getShippingDisplayValue($cart, $shippingCost),
         );
 
         $subtotals['tax'] = null;
@@ -474,6 +472,41 @@ class CartPresenter implements PresenterInterface
                 ) :
                 '',
         );
+    }
+    
+    private function getShippingDisplayValue($cart, $shippingCost) 
+    {        
+        $hasFreeCarrierFirst = 0;
+        $default_country = null;
+        
+        if (isset(Context::getContext()->cookie->id_country)) {
+            $default_country = new Country(Context::getContext()->cookie->id_country);
+        }
+
+        $delivery_option_list = $cart->getDeliveryOptionList($default_country);
+
+        if (isset($delivery_option_list) && count($delivery_option_list) > 0) {
+            foreach ($delivery_option_list as $option) {
+                foreach ($option as $currentCarrier) {
+                    if ($currentCarrier['position'] == 0 && (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0)) {
+                        $hasFreeCarrierFirst = 1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        $shippingDisplayValue = '';
+
+        if ($shippingCost != 0) {
+            $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
+        } else if ($hasFreeCarrierFirst == 0) {
+            $shippingDisplayValue = $this->translator->trans('Not Calculated', array(), 'Shop.Theme.Checkout');
+        } else {
+            $shippingDisplayValue = $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
+        }
+        
+        return $shippingDisplayValue;
     }
 
     private function getTemplateVarVouchers(Cart $cart)
