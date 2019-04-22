@@ -993,13 +993,13 @@ module.exports = {
       });
     }, 'common_client');
     scenario('Check features, brand and related product in the basic settings tab', client => {
-      this.addProductFeature(client, "Compositions", 0, "Cotton");
+      this.addProductFeature(client, "Composition", 0, "Cotton");
       /**
        * This error is due to the bug described in this issue
        * https://github.com/PrestaShop/PrestaShop/issues/9680
        **/
       test('should check that the "Custom value" input is well disabled (issue #9680)', () => client.checkAttributeValue(AddProductPage.feature_custom_value.replace('%ID', 0), 'disabled', 'disabled', 'equal', 2000));
-      this.addProductFeature(client, "Paper Type", 1, '', "Azerty", "custom_value");
+      this.addProductFeature(client, "Property", 1, '', "Short sleeves", "custom_value");
       /**
        * This error is due to the bug described in this issue
        * https://github.com/PrestaShop/PrestaShop/issues/9680
@@ -1007,7 +1007,7 @@ module.exports = {
       test('should check that the "Pre-defined value" select is well disabled (issue #9680)', () => client.isExisting(AddProductPage.feature_value_select.replace('%ID', 1).replace('%V', '@disabled'), 2000));
       test('should click on "Delete" icon of the second feature', () => client.waitForExistAndClick(AddProductPage.delete_feature_icon.replace('%POS', 2)));
       test('should click on "Yes" modal button', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'Yes')));
-      this.addProductFeature(client, 'Compositions', 2, 'Wool');
+      this.addProductFeature(client, 'Composition', 2, 'Wool');
       test('should click on "SAVE"', () => client.waitForExistAndClick(AddProductPage.save_product_button));
       test('should click on "Preview" button', () => client.waitForExistAndClick(AddProductPage.preview_buttons));
       test('should go to the Front Office', async () => {
@@ -1015,10 +1015,10 @@ module.exports = {
         await client.pause(2000);
       });
       test('should click on "Product details" tab', () => client.waitForExistAndClick(productPage.product_detail_tab));
-      test('should verify that "Compositions" exist', () => {
+      test('should verify that "Composition" exist', () => {
         return promise
           .then(() => client.pause(3000))
-          .then(() => client.checkTextValue(productPage.product_feature_text.replace('%B', 'last'), 'Compositions'));
+          .then(() => client.checkTextValue(productPage.product_feature_text.replace('%B', 'last'), 'Composition'));
       });
       test('should verify that "Cotton" and "Wool" exist', () => {
         return promise
@@ -1068,9 +1068,9 @@ module.exports = {
     if (price !== 0) {
       test('should set the "Price (tax incl.)" input', () => client.waitAndSetValue(AddProductPage.product_pricing_ttc_input, price));
     }
-    test('should click on "Delete" icon from the specific price table', () => client.waitForExistAndClick(AddProductPage.specific_price_delete_button, 2000));
+    test('should click on "Delete" icon from the specific price table', () => client.scrollWaitForExistAndClick(AddProductPage.specific_price_delete_button, 50, 2000));
     test('should click on "Yes" modal button', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'Yes')));
-    test('should click on "Add a specific price" button', () => client.waitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 2000));
+    test('should click on "Add a specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 50, 2000));
   },
 
   CheckBasicSettingsPriceCategory(client) {
@@ -1527,9 +1527,9 @@ module.exports = {
       });
       test('should set the "Apply a discount of" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, '5'));
       test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.specific_price_save_button));
-      test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(AddProductPage.save_product_button));
       test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
-      test('should click on "Add a specific price" button', () => client.waitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 2000));
+      test('should click on "Add a specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 2000));
       test('should click on "Currency" select', async () => {
         await client.waitForExistAndClick(AddProductPage.specific_price_for_currency_select, 2000);
         await client.waitForVisibleAndClick(AddProductPage.specific_price_for_currency_option.replace('%C', 'Euro'));

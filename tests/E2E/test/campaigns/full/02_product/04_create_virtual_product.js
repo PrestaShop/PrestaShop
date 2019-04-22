@@ -77,7 +77,7 @@ scenario('Create virtual Product in the Back Office', () => {
       commonProductScenarios.CheckButtonsInFooterProduct('virtual', data.virtual, client);
     }, 'product/check_product');
     scenario('Check basic settings tab (Image, summary description,  feature, brand, related product)', () => {
-      scenario('Search the for created product', client => {
+      scenario('Search for the created product', client => {
         test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.products_submenu, 2000));
         test('should search for the created product', () => client.searchProductByName('copy of ' + data.virtual.name + date_time));
         test('should click on "Dropdown toggle" button', () => client.waitForExistAndClick(ProductList.dropdown_button.replace('%POS', '1')));
