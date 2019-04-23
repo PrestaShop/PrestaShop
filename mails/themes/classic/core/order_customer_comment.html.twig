@@ -22,8 +22,8 @@
               {{ 'Message from a customer'|trans({}, 'Emails.Body', locale)|raw }}
             </p>
             <span>
-              {{ 'You have received a new message regarding order with the reference'|trans({}, 'Emails.Body', locale)|raw }} <span><strong>{order_name}</strong></span>.<br /><br />
-              <span><strong>{{ 'Customer:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {firstname} {lastname} ({email})<br /><br />
+              {{ 'You have received a new message regarding order with the reference'|trans({}, 'Emails.Body', locale)|raw }} <span><strong>{order_name}</strong></span>.<br/><br/>
+              <span><strong>{{ 'Customer:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {firstname} {lastname} ({email})<br/><br/>
               {message}
             </span>
           </font>
