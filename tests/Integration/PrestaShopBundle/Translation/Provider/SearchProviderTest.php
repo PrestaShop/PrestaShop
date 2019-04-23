@@ -52,7 +52,7 @@ class SearchProviderTest extends TestCase
             ->getMock()
         ;
 
-        $resourcesDir = __DIR__.'/../../../../Resources/translations';
+        $resourcesDir = __DIR__ . '/../../../../Resources/translations';
         $this->provider = new SearchProvider(
             $loader,
             $externalSystemProvider,

@@ -133,7 +133,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultCatalogue($empty = true)
     {

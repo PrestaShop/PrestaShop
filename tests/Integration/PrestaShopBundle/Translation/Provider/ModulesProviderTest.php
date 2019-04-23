@@ -36,7 +36,6 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class ModulesProviderTest extends TestCase
 {
-
     /**
      * @var ModulesProvider
      */
@@ -64,7 +63,7 @@ class ModulesProviderTest extends TestCase
         $this->assertArrayHasKey('ModulesWirepaymentShop', $messages);
 
         $this->assertCount(15, $catalogue->all('ModulesCheckpaymentAdmin'));
-        $this->assertSame('Chèque', $catalogue->get('Payments by check','ModulesCheckpaymentAdmin'));
+        $this->assertSame('Chèque', $catalogue->get('Payments by check', 'ModulesCheckpaymentAdmin'));
 
         $this->assertCount(19, $catalogue->all('ModulesCheckpaymentShop'));
         $this->assertSame('Payer par chèque', $catalogue->get('Pay by check', 'ModulesCheckpaymentShop'));
