@@ -49,10 +49,12 @@ class CatalogueVerifier
     }
 
     /**
-     * @param MessageCatalogue $messageCatalogue
+     * Verifies that the provided catalogue contains all the strings and domains as defined in $expected
+     *
+     * @param MessageCatalogue $messageCatalogue The catalogue to test
      * @param array[] $expected An array of domainName => messages
      */
-    public function verify(MessageCatalogue $messageCatalogue, $expected)
+    public function assertCataloguesMatch(MessageCatalogue $messageCatalogue, $expected)
     {
         $domains = $messageCatalogue->getDomains();
 

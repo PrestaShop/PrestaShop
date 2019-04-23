@@ -83,7 +83,7 @@ class LegacyModuleExtractorTest extends KernelTestCase
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
 
-        $this->catalogueVerifier->verify($catalogue, $expected);
+        $this->catalogueVerifier->assertCataloguesMatch($catalogue, $expected);
     }
 
     /**

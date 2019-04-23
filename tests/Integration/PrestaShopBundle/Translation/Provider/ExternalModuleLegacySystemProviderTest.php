@@ -102,7 +102,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 
-        $this->catalogueVerifier->verify($legacyCatalogue, $expected);
+        $this->catalogueVerifier->assertCataloguesMatch($legacyCatalogue, $expected);
     }
 
     public function provideTestCases()
