@@ -55,8 +55,8 @@ module.exports = {
       test('should search for the created feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'b!name'), FeatureSubMenu.search_button, data.name + date_time));
       test('should click on "Edit" action', () => {
         return promise
-            .then(() => client.clickOnAction(FeatureSubMenu.select_option, FeatureSubMenu.update_feature_button))
-            .then(() => client.editObjectData(data));
+          .then(() => client.clickOnAction(FeatureSubMenu.select_option, FeatureSubMenu.update_feature_button))
+          .then(() => client.editObjectData(data));
       });
       test('should set the "Name" input', () => client.waitAndSetValue(FeatureSubMenu.name_input, data.name + date_time));
       test('should click on "Save" button', () => client.waitForExistAndClick(FeatureSubMenu.save_button));
@@ -83,8 +83,8 @@ module.exports = {
       test('should click on "dropdown icon" action', () => client.waitForExistAndClick(FeatureSubMenu.dropdown_option.replace('%ID', 1)));
       test('should click on "delete" btn', () => {
         return promise
-            .then(() => client.waitForVisibleAndClick(FeatureSubMenu.delete_button))
-            .then(() => client.alertAccept());
+          .then(() => client.waitForVisibleAndClick(FeatureSubMenu.delete_button))
+          .then(() => client.alertAccept());
       });
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
     }, 'attribute_and_feature');
@@ -134,8 +134,8 @@ module.exports = {
       for (let j = 0; j < (data.values.length); j++) {
         test('should verify that "' + data.values[j].toUpperCase() + '" value exist', () => {
           return promise
-              .then(() => client.searchByValue(FeatureSubMenu.value_search_input.replace('%SEARCHBY', 'value'), FeatureSubMenu.value_search_button, data.values[j]))
-              .then(() => client.checkTextValue(FeatureSubMenu.value_column.replace('%ID', 1).replace('%B', 3), data.values[j]));
+            .then(() => client.searchByValue(FeatureSubMenu.value_search_input.replace('%SEARCHBY', 'value'), FeatureSubMenu.value_search_button, data.values[j]))
+            .then(() => client.checkTextValue(FeatureSubMenu.value_column.replace('%ID', 1).replace('%B', 3), data.values[j]));
         });
       }
       test('should click on "Reset" button', () => client.waitForExistAndClick(FeatureSubMenu.value_reset_button));
