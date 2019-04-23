@@ -43,7 +43,7 @@ use Product;
 /**
  * Handles query which gets supplier for viewing
  */
-class GetSupplierForViewingHandler implements GetSupplierForViewingHandlerInterface
+final class GetSupplierForViewingHandler implements GetSupplierForViewingHandlerInterface
 {
     /**
      * @var LocaleRepository

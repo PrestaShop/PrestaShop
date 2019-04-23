@@ -23,7 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set enableSidebar = true %}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
@@ -32,10 +31,4 @@
       {% include '@PrestaShop/Admin/Sell/Catalog/Suppliers/Blocks/View/products.html.twig' %}
     </div>
   </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/supplier.bundle.js') }}"></script>
 {% endblock %}

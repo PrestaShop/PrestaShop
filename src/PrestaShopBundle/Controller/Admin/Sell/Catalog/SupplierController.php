@@ -361,6 +361,7 @@ class SupplierController extends FrameworkBundleAdminController
             'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
         ]);
     }
 
