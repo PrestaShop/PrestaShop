@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
-
 /**
- * Class CannotDeleteSupplierException
+ * Thrown when fails to delete supplier
  */
 class CannotDeleteSupplierException extends SupplierException
 {

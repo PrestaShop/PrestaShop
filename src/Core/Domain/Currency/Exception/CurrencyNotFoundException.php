@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CurrencyNotFoundException.
+ * Is thrown when required currency cannot be found
  */
 class CurrencyNotFoundException extends CurrencyException
 {

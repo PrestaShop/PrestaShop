@@ -26,9 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search\Exception;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-class InvalidSortOrderDirectionException extends Exception
+/**
+ * Thrown when sort order direction is not valid
+ */
+class InvalidSortOrderDirectionException extends CoreException
 {
     /**
      * @param string $direction the invalid direction
