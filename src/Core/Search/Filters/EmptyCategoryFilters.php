@@ -26,20 +26,24 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class CategoryFilters defines default filters for Category grid.
+ * Defines default filters for Empty Category grid.
  */
 final class EmptyCategoryFilters extends Filters
 {
+    /** @var string */
+    protected $filterId = EmptyCategoryGridDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */
     public static function getDefaults()
     {
         return [
-            'limit' => 50,
+            'limit' => 10,
             'offset' => 0,
             'orderBy' => 'name',
             'sortOrder' => 'asc',

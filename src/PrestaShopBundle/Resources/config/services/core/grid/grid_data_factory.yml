@@ -187,4 +187,4 @@ services:
         - '@prestashop.core.grid.query_builder.empty_category'
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
-        - 'monitoring_empty_category'
+        - 'empty_category'

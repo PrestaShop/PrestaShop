@@ -80,9 +80,9 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function __construct(
         Connection $connection,
         $dbPrefix,
-        DoctrineSearchCriteriaApplicator $searchCriteriaApplicator,
         $contextLangId,
         $contextShopId,
+        DoctrineSearchCriteriaApplicator $searchCriteriaApplicator,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         FeatureInterface $multistoreFeature,
         $rootCategoryId
@@ -168,7 +168,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('c.id_category = cp.id_category')
         ;
 
-        $qb->andWhere('NOT EXISTS(' . $subSelect->getSQL() .')');
+        $qb->andWhere('NOT EXISTS(' . $subSelect->getSQL() . ')');
         $qb->andWhere('c.id_category != ' . $this->rootCategoryId);
 
         foreach ($filters as $filterName => $filterValue) {
