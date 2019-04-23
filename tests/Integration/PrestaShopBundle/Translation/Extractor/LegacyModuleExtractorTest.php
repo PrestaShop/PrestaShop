@@ -91,7 +91,7 @@ class LegacyModuleExtractorTest extends KernelTestCase
      */
     private function getModuleFolder()
     {
-        return __DIR__ . '/../../../../resources/modules';
+        return __DIR__ . '/../../../../Resources/modules';
     }
 
     public function provideTestCases()

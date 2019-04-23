@@ -40,7 +40,7 @@ class LegacyFileLoaderTest extends KernelTestCase
     /**
      * @var string
      */
-    private $translationsFolder = __DIR__ . '/../../../../resources/modules/translation_test/translations/';
+    private $translationsFolder = __DIR__ . '/../../../../Resources/modules/translation_test/translations/';
 
     /**
      * @var CatalogueVerifier
