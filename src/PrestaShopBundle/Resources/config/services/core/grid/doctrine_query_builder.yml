@@ -154,3 +154,16 @@ services:
         - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
         - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       public: true
+
+    prestashop.core.grid.query_builder.empty_category:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\EmptyCategoryQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+        - '@prestashop.adapter.shop.context'
+        - '@prestashop.adapter.feature.multistore'
+        - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"
+
+      public: true

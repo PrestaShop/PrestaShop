@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\EmptyCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,14 +40,21 @@ class MonitoringController extends FrameworkBundleAdminController
      * Shows Monitoring listing page
      *
      * @param Request $request
+     * @param EmptyCategoryFilters $emptyCategoryFilters
      *
      * @return Response
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(
+        Request $request,
+        EmptyCategoryFilters $emptyCategoryFilters
+    ) {
+        $emptyCategoryGridFactory = $this->get('prestashop.core.grid.factory.monitoring.empty_category');
+        $emptyCategoryGrid = $emptyCategoryGridFactory->getGrid($emptyCategoryFilters);
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Monitoring/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'empty_category_grid' => $this->presentGrid($emptyCategoryGrid),
         ]);
     }
 }
