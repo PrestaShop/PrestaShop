@@ -14,7 +14,7 @@ File: home/mickaelandrieu/Projects/PrestaShop-17/themes/classic/modules/ps_email
     <body>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
         <source>Contact us</source>
-        <target>Contact us</target>
+        <target>Contact us!</target>
         <note>Context:
 File: home/mickaelandrieu/Projects/PrestaShop-17/themes/classic/modules/ps_contactinfo/nav.tpl:39</note>
       </trans-unit>

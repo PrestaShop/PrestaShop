@@ -32,8 +32,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
- * Able to search translations for a specific translation domains across
- * multiple sources
+ * Able to search translations for a specific translation domains across multiple sources
  */
 class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface, UseModuleInterface
 {

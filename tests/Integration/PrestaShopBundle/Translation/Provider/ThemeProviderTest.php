@@ -24,43 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\PrestaShopBundle\Translation\Provider;
+namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * @group sf
+ * Test the provider of theme translations
  */
 class ThemeProviderTest extends TestCase
 {
+    /**
+     * @var ThemeProvider
+     */
     private $provider;
-    private static $resourcesDir;
 
     protected function setUp()
     {
-        $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
+        $loader = $this->getMockBuilder(LoaderInterface::class)
             ->getMock();
 
-        self::$resourcesDir = __DIR__.'/../../resources/themes/fakeTheme2';
-        $this->provider = new ThemeProvider($loader, self::$resourcesDir);
+        $resourcesDir = __DIR__ . '/../../../../Resources/themes/fakeThemeForTranslations';
+
+        $this->provider = new ThemeProvider($loader, $resourcesDir);
         $this->provider->filesystem = new Filesystem();
     }
 
-    public function testGetMessageCatalogue()
+    public function testItExtractsCatalogueFromXliffFiles()
     {
-        // The xliff file contains 29 keys
-        $expectedReturn = $this->provider->getMessageCatalogue();
-        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
+        $catalogue = $this->provider->getMessageCatalogue();
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
         // Check integrity of translations
-        $this->assertArrayHasKey('ShopTheme.en-US', $expectedReturn->all());
-        $this->assertArrayHasKey('ShopThemeCustomerAccount.en-US', $expectedReturn->all());
-        $translations = $expectedReturn->all('ShopTheme.en-US');
+        $messages = $catalogue->all();
+        $this->assertArrayHasKey('ShopTheme', $messages);
+        $this->assertArrayHasKey('ShopThemeCustomeraccount', $messages);
 
-        $this->assertCount(29, $translations);
-        $this->assertArrayHasKey('Contact us', $translations);
-        $this->assertSame('Contact us', $translations['Contact us']);
+        $this->assertCount(29, $catalogue->all('ShopTheme'));
+        $this->assertSame('Contact us!', $catalogue->get('Contact us', 'ShopTheme'));
     }
 }

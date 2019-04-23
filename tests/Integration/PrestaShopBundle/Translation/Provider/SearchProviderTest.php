@@ -24,21 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\PrestaShopBundle\Translation\Provider;
+namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * @group sf
+ * Tests the search translations provider
  */
 class SearchProviderTest extends TestCase
 {
-    /** @see /resources/translations/en-US/AdminActions.en-US.xlf */
+    /**
+     * @var SearchProvider
+     */
     private $provider;
-    private static $resourcesDir;
 
     protected function setUp()
     {
@@ -50,30 +52,31 @@ class SearchProviderTest extends TestCase
             ->getMock()
         ;
 
-        self::$resourcesDir = __DIR__.'/../../resources/translations';
+        $resourcesDir = __DIR__.'/../../../../Resources/translations';
         $this->provider = new SearchProvider(
             $loader,
             $externalSystemProvider,
-            self::$resourcesDir,
-            '',
+            $resourcesDir,
             ''
         );
 
         $this->provider->setDomain('AdminActions');
+        $this->provider->setLocale('fr-FR');
     }
 
-    public function testGetMessageCatalogue()
+    public function testItExtractsOnlyTheSelectedCataloguesFromXliffFiles()
     {
-        // The xliff file contains 38 keys
-        $expectedReturn = $this->provider->getMessageCatalogue();
-        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
+        $catalogue = $this->provider->getMessageCatalogue();
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check that only the selected domain is in the catalogue
+        $this->assertSame(['AdminActions'], $catalogue->getDomains());
 
         // Check integrity of translations
-        $this->assertArrayHasKey('AdminActions.en-US', $expectedReturn->all());
+        $this->assertArrayHasKey('AdminActions', $catalogue->all());
 
-        $adminTranslations = $expectedReturn->all('AdminActions.en-US');
-        $this->assertCount(38, $adminTranslations);
-        $this->assertArrayHasKey('Download file', $adminTranslations);
-        $this->assertSame('Download file', $adminTranslations['Download file']);
+        $adminTranslations = $catalogue->all('AdminActions');
+        $this->assertCount(91, $adminTranslations);
+        $this->assertSame('Télécharger le fichier', $catalogue->get('Download file', 'AdminActions'));
     }
 }
