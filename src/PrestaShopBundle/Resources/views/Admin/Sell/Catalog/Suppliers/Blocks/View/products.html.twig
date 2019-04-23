@@ -38,9 +38,7 @@
           <table class="table">
             <thead>
               <tr>
-                {% if product.combinations is not empty %}
-                  <th>{{ 'Attribute name'|trans({}, 'Admin.Catalog.Feature') }}</th>
-                {% endif %}
+                <th>{{ 'Attribute name'|trans({}, 'Admin.Catalog.Feature') }}</th>
                 <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
                 <th>{{ 'Wholesale price'|trans({}, 'Admin.Catalog.Feature') }}</th>
                 <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
@@ -55,26 +53,27 @@
             {% if product.combinations is not empty %}
                 {% for combination in product.combinations %}
                   <tr>
-                    <td>{{ combination.attributes }}</td>
-                    <td>{{ combination.supplier_reference }}</td>
-                    <td>{{ combination.wholesale_price }}</td>
-                    <td>{{ combination.reference }}</td>
-                    <td>{{ combination.ean13 }}</td>
-                    <td>{{ combination.upc }}</td>
+                    <td>{{ combination.attributes|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                    <td>{{ combination.supplier_reference|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                    <td>{{ combination.wholesale_price|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                    <td>{{ combination.reference|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                    <td>{{ combination.ean13|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                    <td>{{ combination.upc|default('N/A'|trans({}, 'Admin.Global')) }}</td>
                     {% if not isAllShopContext and isStockManagementEnabled %}
-                      <td>{{ combination.quantity }}</td>
+                      <td>{{ combination.quantity|default('N/A'|trans({}, 'Admin.Global')) }}</td>
                     {% endif %}
                   </tr>
                 {% endfor %}
               {% else %}
                 <tr>
-                  <td>{{ product.supplier_reference }}</td>
-                  <td>{{ product.wholesale_price }}</td>
-                  <td>{{ product.reference }}</td>
-                  <td>{{ product.ean13 }}</td>
-                  <td>{{ product.upc }}</td>
+                  <td>{{ product.combinations|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                  <td>{{ product.supplier_reference|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                  <td>{{ product.wholesale_price|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                  <td>{{ product.reference|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                  <td>{{ product.ean13|default('N/A'|trans({}, 'Admin.Global')) }}</td>
+                  <td>{{ product.upc|default('N/A'|trans({}, 'Admin.Global')) }}</td>
                   {% if not isAllShopContext and isStockManagementEnabled %}
-                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.quantity|default('N/A'|trans({}, 'Admin.Global')) }}</td>
                   {% endif %}
                 </tr>
             {% endif %}
