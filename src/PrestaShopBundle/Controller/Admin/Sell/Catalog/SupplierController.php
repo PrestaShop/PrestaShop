@@ -75,15 +75,12 @@ class SupplierController extends FrameworkBundleAdminController
     public function indexAction(Request $request, SupplierFilters $filters)
     {
         $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
-
         $supplierGrid = $supplierGridFactory->getGrid($filters);
-
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig',
             [
-                'supplierGrid' => $gridPresenter->present($supplierGrid),
+                'supplierGrid' => $this->presentGrid($supplierGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
             ]
@@ -496,7 +493,7 @@ class SupplierController extends FrameworkBundleAdminController
                 ),
             ],
             MemoryLimitException::class => $this->trans(
-                'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ',
+                'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
                 'Admin.Notifications.Error'
             ),
             ImageUploadException::class => $this->trans(
@@ -509,11 +506,11 @@ class SupplierController extends FrameworkBundleAdminController
             ),
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
-                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
+                    'Maximum image size: %s.', 'Admin.Global', [
                     $iniConfig->getUploadMaxSizeInBytes(),
                 ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
-                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    sprintf('Image format not recognized, allowed format(s): .%s', 'gif, jpg, png'),
                     'Admin.Notifications.Error'
                 ),
             ],
