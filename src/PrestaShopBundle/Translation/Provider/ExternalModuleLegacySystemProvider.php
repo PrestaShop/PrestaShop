@@ -133,11 +133,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     }
 
     /**
-     * Returns the default (aka untranslated) catalogue
-     *
-     * @param bool $empty if true, empty the catalogue values (keep the keys)
-     *
-     * @return MessageCatalogueInterface
+     * {@inheritDoc}
      */
     public function getDefaultCatalogue($empty = true)
     {
