@@ -146,3 +146,11 @@ services:
           - '@prestashop.adapter.shop.context'
           - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
+
+    prestashop.core.grid.definition.factory.monitoring.empty_category:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - '@prestashop.adapter.shop.context'
+        - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
+      public: true
