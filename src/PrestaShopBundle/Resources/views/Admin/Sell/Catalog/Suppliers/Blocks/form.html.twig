@@ -29,7 +29,7 @@
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">local_shipping</i>
-    {{ 'Suppliers'|trans({}, 'Admin.Catalog.Feature') }}
+    {{ 'Suppliers'|trans({}, 'Admin.Global') }}
   </h3>
   <div class="card-block row">
     <div class="card-text">
@@ -115,7 +115,7 @@
       }) }}
 
       {% set keywordHint %}
-        {{ 'To add "tags", click inside the field, write something, and then press "Enter".'|trans({}, 'Admin.Catalog.Help') }}
+        {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
         {{ invalidGenericNameHint }}
       {% endset %}
 
