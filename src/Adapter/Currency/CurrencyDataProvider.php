@@ -80,7 +80,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      *
      * @param string $isoCode
      *                        An ISO 4217 currency code
-     * @param int|null $idLang
+     * @param int|null|false $idLang
      *                         Set this parameter if you want the currency in a specific language.
      *                         If null, default language will be used
      *
