@@ -48,36 +48,11 @@ class HTMLToTextTransformation extends AbstractTransformation
      */
     public function apply($templateContent, array $templateVariables)
     {
-        $templateContent = $this->removeHtmlOnly($templateContent);
         $templateContent = Html2Text::convert($templateContent, true);
-        $templateContent = preg_replace('/%7B(.*?)%7D/', '{\1}', $templateContent);
         if (PHP_EOL != $templateContent[strlen($templateContent) - 1]) {
             $templateContent .= PHP_EOL;
         }
 
         return $templateContent;
-    }
-
-    /**
-     * @param string $templateContent
-     *
-     * @return string
-     */
-    private function removeHtmlOnly($templateContent)
-    {
-        $crawler = new Crawler($templateContent);
-
-        $crawler->filter('html-only')->each(function (Crawler $crawler) {
-            foreach ($crawler as $node) {
-                $node->parentNode->removeChild($node);
-            }
-        });
-
-        $filteredContent = '';
-        foreach ($crawler as $domElement) {
-            $filteredContent .= $domElement->ownerDocument->saveHTML($domElement);
-        }
-
-        return $filteredContent;
     }
 }

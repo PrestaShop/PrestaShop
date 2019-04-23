@@ -335,12 +335,18 @@
                                     <th bgcolor="#FDFDFD">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
                                     <th bgcolor="#FDFDFD">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
                                   </tr>
-                                  <mj-raw>
-                                    <html-only>{products}</html-only> <span data-text-only="1">{products_txt}</span>
-                                  </mj-raw>
-                                  <mj-raw>
-                                    <html-only>{discounts}</html-only> <span data-text-only="1">{discounts_txt}</span>
-                                  </mj-raw>
+                                  {% if templateType == 'html' %}
+{products}
+{% endif %}
+                                  {% if templateType == 'txt' %}
+{products_txt}
+{% endif %}
+                                  {% if templateType == 'html' %}
+{discounts}
+{% endif %}
+                                  {% if templateType == 'txt' %}
+{discounts_txt}
+{% endif %}
                                   <tr class="order_summary">
                                     <td bgcolor="#FDFDFD" colspan="3" align="right">
                                       {{ 'Products'|trans({}, 'Emails.Body', locale)|raw }}
@@ -585,7 +591,14 @@
                                                 <img src="{{ mailThemesUrl }}/modern/assets/baseline-location_on-24px.png" style="width:15px;margin-right:10px">
                                                 {{ 'Delivery address'|trans({}, 'Emails.Body', locale)|raw }}
                                               </p>
-                                              <p style="border: 1px solid #DFDFDF;background-color: #FEFEFE;padding:20px;font-size:14px"> {delivery_block_html} </p>
+                                              <p style="border: 1px solid #DFDFDF;background-color: #FEFEFE;padding:20px;font-size:14px">
+                                                {% if templateType == 'html' %}
+{delivery_block_html}
+{% endif %}
+                                                {% if templateType == 'txt' %}
+{delivery_block_txt}
+{% endif %}
+                                              </p>
                                             </td>
                                             <td width="10" class="space" style="padding:7px 0"> </td>
                                           </tr>
@@ -601,7 +614,14 @@
                                                 <img src="{{ mailThemesUrl }}/modern/assets/baseline-credit_card-24px.png" style="width:25px;margin-right:10px">
                                                 {{ 'Billing address'|trans({}, 'Emails.Body', locale)|raw }}
                                               </p>
-                                              <p style="border: 1px solid #DFDFDF;background-color: #FEFEFE;padding:20px;font-size:14px"> {invoice_block_html} </p>
+                                              <p style="border: 1px solid #DFDFDF;background-color: #FEFEFE;padding:20px;font-size:14px">
+                                                {% if templateType == 'html' %}
+{invoice_block_html}
+{% endif %}
+                                                {% if templateType == 'txt' %}
+{invoice_block_txt}
+{% endif %}
+                                              </p>
                                             </td>
                                           </tr>
                                         </tbody>
