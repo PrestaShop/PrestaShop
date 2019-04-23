@@ -35,46 +35,38 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class CategoryGridDefinitionFactory builds Grid definition for Empty Categories listing
+ * Builds Grid definition for Empty Categories listing
  */
 final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'empty_category';
+
     /**
      * @var AccessibilityCheckerInterface
      */
     private $categoryForViewAccessibilityChecker;
 
     /**
-     * @var MultistoreContextCheckerInterface
-     */
-    private $multistoreContextChecker;
-
-    /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        MultistoreContextCheckerInterface $multistoreContextChecker,
         AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
     ) {
         parent::__construct($hookDispatcher);
         $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
-        $this->multistoreContextChecker = $multistoreContextChecker;
     }
 
     /**
@@ -82,7 +74,7 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
      */
     protected function getId()
     {
-        return 'empty_category';
+        return self::GRID_ID;
     }
 
     /**
@@ -104,18 +96,13 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
                         'identifier_field' => 'id_category',
-                        'bulk_field' => 'id_category',
-                        'with_bulk_field' => true,
                     ])
             )
             ->add(
-                (new LinkColumn('name'))
+                (new DataColumn('name'))
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'name',
-                        'route' => 'admin_categories_index',
-                        'route_param_name' => 'id_category',
-                        'route_param_field' => 'id_category',
                     ])
             )
             ->add(
@@ -191,10 +178,9 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                 (new Filter('actions', SearchAndResetType::class))
                     ->setAssociatedColumn('actions')
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [
-                            'controller' => 'monitoring',
-                            'action' => 'index',
+                            'filterId' => self::GRID_ID,
                         ],
                         'redirect_route' => 'admin_monitoring_index',
                     ])

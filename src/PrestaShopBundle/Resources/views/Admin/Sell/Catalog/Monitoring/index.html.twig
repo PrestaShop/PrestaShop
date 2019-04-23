@@ -29,8 +29,18 @@
   {% block empty_categories_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': empty_category_grid} %}
+        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': empty_category_grid} %}
+          {% block grid_panel_extra_content %}
+            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
+          {% endblock %}
+        {% endembed %}
       </div>
     </div>
   {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  
+  <script src="{{ asset('themes/new-theme/public/monitoring.bundle.js') }}"></script>
 {% endblock %}

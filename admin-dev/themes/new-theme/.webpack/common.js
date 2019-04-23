@@ -50,6 +50,7 @@ module.exports = {
     form_popover_error: './js/components/form/form-popover-error',
     manufacturer: './js/pages/manufacturer',
     manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    monitoring: './js/pages/monitoring'
   },
   output: {
     path: path.resolve(__dirname, '../public'),
