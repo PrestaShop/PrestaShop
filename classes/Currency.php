@@ -179,7 +179,7 @@ class CurrencyCore extends ObjectModel
         if ($this->iso_code) {
             // As the CLDR used to return a string even if in multi shop / lang,
             // We force only one string to be returned
-            if (null === $idLang) {
+            if (empty($idLang)) {
                 $idLang = Context::getContext()->language->id;
             }
             if (is_array($this->symbol)) {

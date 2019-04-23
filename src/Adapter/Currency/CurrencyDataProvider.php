@@ -94,7 +94,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
             return null;
         }
 
-        if (null === $idLang) {
+        if (empty($idLang)) {
             $idLang = $this->configuration->get('PS_LANG_DEFAULT');
         }
 
