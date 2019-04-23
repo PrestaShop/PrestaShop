@@ -46,10 +46,12 @@
               {{ 'You have selected to pay by check.'|trans({}, 'Emails.Body', locale)|raw }}
             </p>
             <span>
-              {{ 'Here are the bank details for your check:'|trans({}, 'Emails.Body', locale)|raw }}<br />
-              <span><strong>{{ 'Amount:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {total_paid}<br />
-              <span><strong>{{ 'Payable to the order of:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {check_name}<br />
-              <span><strong>{{ 'Please mail your check to:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> <html-only>{check_address_html}</html-only> <span data-text-only='1'>{check_address}</span>
+              {{ 'Here are the bank details for your check:'|trans({}, 'Emails.Body', locale)|raw }}<br/>
+              <span><strong>{{ 'Amount:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {total_paid}<br/>
+              <span><strong>{{ 'Payable to the order of:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {check_name}<br/>
+              <span><strong>{{ 'Please mail your check to:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {% if templateType == 'html' %}
+{check_address_html}
+{% endif %} <span data-text-only="1">{check_address}</span>
             </span>
           </font>
         </td>

@@ -23,7 +23,7 @@
               {{ 'Order details'|trans({}, 'Emails.Body', locale)|raw }}
             </p>
             <span>
-              <span><strong>{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}<br /><br />
+              <span><strong>{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}<br/><br/>
               <span><strong>{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {payment}
             </span>
           </font>
@@ -44,8 +44,20 @@
           <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
           <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;" width="17%">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
         </tr>
-        <html-only>{products}</html-only> <span data-text-only="1">{products_txt}</span>
-        <html-only>{discounts}</html-only> <span data-text-only="1">{discounts_txt}</span>
+        {% if templateType == 'html' %}
+{products}
+{% endif %}
+        {% if templateType == 'txt' %}
+{products_txt}
+{% endif %}
+
+        {% if templateType == 'html' %}
+{discounts}
+{% endif %}
+        {% if templateType == 'txt' %}
+{discounts_txt}
+{% endif %}
+
         <tr class="conf_body">
           <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
             <table class="table">
@@ -214,7 +226,7 @@
             </table>
           </td>
         </tr>
-        </tbody>
+        
       </table>
     </font>
   </td>
@@ -230,7 +242,7 @@
               {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
             </p>
             <span>
-              <span><strong>{{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {carrier}<br /><br />
+              <span><strong>{{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {carrier}<br/><br/>
               <span><strong>{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {payment}
             </span>
           </font>
