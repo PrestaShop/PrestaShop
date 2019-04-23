@@ -40,7 +40,6 @@ import DeleteCategoriesBulkActionExtension
   from "../../components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension";
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
-import TextWithLengthCounter from "../../components/form/text-with-length-counter";
 import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copier";
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
@@ -49,6 +48,7 @@ import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from "../../components/showcase-card/showcase-card";
 import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
+import TextWithRecommendedLengthCounter from '../../components/form/text-with-recommended-length-counter';
 
 const $ = window.$;
 
@@ -74,7 +74,7 @@ $(() => {
 
   new TranslatableInput();
   new ChoiceTable();
-  new TextWithLengthCounter();
+  new TextWithRecommendedLengthCounter();
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',
