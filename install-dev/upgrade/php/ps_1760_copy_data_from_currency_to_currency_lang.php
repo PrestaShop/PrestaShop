@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 function ps_1760_copy_data_from_currency_to_currency_lang()
 {
+    // Force cache reset of languages (load locale column)
+    ObjectModel::disableCache();
+
     $languages = Language::getLanguages();
     foreach ($languages as $language) {
         Db::getInstance()->execute(
@@ -37,7 +40,7 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
             SELECT `id_currency`, " . (int) $language['id_lang'] . " as id_lang , `name`
             FROM `" . _DB_PREFIX_ . "currency`
             ON DUPLICATE KEY UPDATE
-            `name` = `" . _DB_PREFIX_ . "currency`.`name`,
+            `name` = `" . _DB_PREFIX_ . "currency`.`name`
             "
         );
     }
@@ -55,4 +58,6 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
         $currency->refreshLocalizedCurrencyData($languages, $localeRepoCLDR);
         $currency->save();
     }
+
+    ObjectModel::enableCache();
 }

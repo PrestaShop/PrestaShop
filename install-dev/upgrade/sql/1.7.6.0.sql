@@ -16,11 +16,6 @@ CREATE TABLE `PREFIX_currency_lang` (
 
 /* PHP:ps_1760_copy_data_from_currency_to_currency_lang(); */;
 
-ALTER TABLE `PREFIX_admin_filter`
-	ADD `filter_id` VARCHAR (255) DEFAULT '' NOT NULL AFTER `shop`;
-
-/* PHP:ps_1760_replace_index_of_admin_filter */;
-
 /* Module Manager tab should be the first tab in Modules Tab */
 UPDATE `PREFIX_tab` SET `position` = 0 WHERE `class_name` = 'AdminModulesSf' AND `position`= 1;
 UPDATE `PREFIX_tab` SET `position` = 1 WHERE `class_name` = 'AdminParentModulesCatalog' AND `position`= 0;
