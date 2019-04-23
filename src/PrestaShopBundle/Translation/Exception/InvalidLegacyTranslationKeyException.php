@@ -32,7 +32,6 @@ namespace PrestaShopBundle\Translation\Exception;
  */
 class InvalidLegacyTranslationKeyException extends \Exception
 {
-
     /**
      * @var string The invalid key
      */

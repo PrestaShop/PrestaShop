@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Extractor;
 
-use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -102,15 +101,15 @@ class LegacyModuleExtractorTest extends KernelTestCase
                 'fr-FR',
                 [
                     'Modules.Translationtest.Admin' => [
-                        'Modern controller' => "Modern controller",
+                        'Modern controller' => 'Modern controller',
                     ],
                     'Modules.Translationtest.Translationtest' => [
-                        'Hello World' => "Hello World",
-                        'An error occured, please check your zip file' => "An error occured, please check your zip file",
+                        'Hello World' => 'Hello World',
+                        'An error occured, please check your zip file' => 'An error occured, please check your zip file',
                     ],
                     'Modules.Translationtest.Somefile.with-things' => [
-                        'Smarty template' => "Smarty template",
-                    ]
+                        'Smarty template' => 'Smarty template',
+                    ],
                 ],
             ],
             // the locale has no impact on wordings because they are only extracted,
@@ -119,15 +118,15 @@ class LegacyModuleExtractorTest extends KernelTestCase
                 'es-ES',
                 [
                     'Modules.Translationtest.Admin' => [
-                        'Modern controller' => "Modern controller",
+                        'Modern controller' => 'Modern controller',
                     ],
                     'Modules.Translationtest.Translationtest' => [
-                        'Hello World' => "Hello World",
-                        'An error occured, please check your zip file' => "An error occured, please check your zip file",
+                        'Hello World' => 'Hello World',
+                        'An error occured, please check your zip file' => 'An error occured, please check your zip file',
                     ],
                     'Modules.Translationtest.Somefile.with-things' => [
-                        'Smarty template' => "Smarty template",
-                    ]
+                        'Smarty template' => 'Smarty template',
+                    ],
                 ],
             ],
         ];

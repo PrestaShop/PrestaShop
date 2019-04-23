@@ -30,7 +30,6 @@ use PrestaShopBundle\Translation\Loader\LegacyTranslationKey;
 
 class LegacyTranslationKeyTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @param string $key
      * @param string $expectedModule

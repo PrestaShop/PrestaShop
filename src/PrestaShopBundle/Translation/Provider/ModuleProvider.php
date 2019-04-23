@@ -44,7 +44,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
      */
     public function getTranslationDomains()
     {
-        return ['^'. preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
+        return ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
     }
 
     /**
@@ -52,7 +52,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
      */
     public function getFilters()
     {
-        return ['#^'. preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
+        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
     }
 
     /**

@@ -48,6 +48,7 @@ class translation_test extends Module
 
     /**
      * Needed to access the new BO translations page
+     *
      * @return bool
      */
     public function isUsingNewTranslationSystem()

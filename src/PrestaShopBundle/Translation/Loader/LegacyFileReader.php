@@ -35,7 +35,6 @@ use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
  */
 class LegacyFileReader
 {
-
     /**
      * @var Converter Converts IETF language tags into two-letter language code
      */
@@ -72,5 +71,4 @@ class LegacyFileReader
 
         return $_MODULE;
     }
-
 }

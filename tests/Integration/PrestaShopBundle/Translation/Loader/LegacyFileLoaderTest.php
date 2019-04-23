@@ -48,7 +48,7 @@ class LegacyFileLoaderTest extends KernelTestCase
     private $catalogueVerifier;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -90,31 +90,31 @@ class LegacyFileLoaderTest extends KernelTestCase
                 'fr-FR',
                 [
                     'ModulesTranslationtestAdmin' => [
-                        '9e8be49b9cfd2252504e0a48ddb1c9df' => "Contrôleur moderne",
+                        '9e8be49b9cfd2252504e0a48ddb1c9df' => 'Contrôleur moderne',
                     ],
                     'ModulesTranslationtestTranslationtest' => [
-                        'b10a8db164e0754105b7a99be72e3fe5' => "Bonjour le monde",
+                        'b10a8db164e0754105b7a99be72e3fe5' => 'Bonjour le monde',
                     ],
                     'ModulesTranslationtestSomefile.with-things' => [
-                        '9e5c5556b32cabcca238e5d30f6e10c4' => "Le template Smarty",
-                    ]
+                        '9e5c5556b32cabcca238e5d30f6e10c4' => 'Le template Smarty',
+                    ],
                 ],
             ],
             'Spanish' => [
                 'es-ES',
                 [
                     'ModulesTranslationtestTranslationtest' => [
-                        'b10a8db164e0754105b7a99be72e3fe5' => "Hola mundo",
-                    ]
-                ]
+                        'b10a8db164e0754105b7a99be72e3fe5' => 'Hola mundo',
+                    ],
+                ],
             ],
             'Italian' => [
                 'it-IT',
                 [
                     'ModulesTranslationtestTranslationtest' => [
-                        'b10a8db164e0754105b7a99be72e3fe5' => "Ciao mondo",
-                    ]
-                ]
+                        'b10a8db164e0754105b7a99be72e3fe5' => 'Ciao mondo',
+                    ],
+                ],
             ],
         ];
     }

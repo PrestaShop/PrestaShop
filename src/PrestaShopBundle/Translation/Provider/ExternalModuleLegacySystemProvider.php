@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Translation\Provider;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
-use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\DomainNormalizer;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
@@ -252,7 +251,8 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      *
      * @return MessageCatalogue
      */
-    private function filterDomains(MessageCatalogueInterface $catalogue) {
+    private function filterDomains(MessageCatalogueInterface $catalogue)
+    {
         $normalizer = new DomainNormalizer();
         $newCatalogue = new MessageCatalogue($catalogue->getLocale());
 

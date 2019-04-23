@@ -118,7 +118,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
                         'Hello World' => 'Bonjour le monde',
                     ],
                     'ModulesTranslationtestSomefile.with-things' => [
-                        'Smarty template' => "Le template Smarty",
+                        'Smarty template' => 'Le template Smarty',
                     ],
                 ],
             ],

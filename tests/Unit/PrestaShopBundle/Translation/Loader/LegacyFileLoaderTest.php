@@ -32,8 +32,8 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testItInterpretsLegacyTranslationFileData() {
+    public function testItInterpretsLegacyTranslationFileData()
+    {
         $path = '/some/path/to/module/translations/';
         $locale = 'fr-FR';
         $translations = [
@@ -68,7 +68,7 @@ class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException
+     * @expectedException \PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException
      */
     public function testItThrowsAnExceptionIfKeyIsInvalid()
     {

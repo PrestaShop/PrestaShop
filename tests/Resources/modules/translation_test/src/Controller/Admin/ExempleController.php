@@ -38,4 +38,3 @@ class ExempleController extends FrameworkBundleAdminController
         ]);
     }
 }
-

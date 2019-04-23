@@ -107,7 +107,7 @@ trait TranslationFinderTrait
 
         foreach ($catalogue->getDomains() as $domain) {
             if (substr($domain, -$suffixLength) === $localeSuffix) {
-                $cleanDomain = substr($domain, 0 , -$suffixLength);
+                $cleanDomain = substr($domain, 0, -$suffixLength);
                 $messages[$cleanDomain] = $messages[$domain];
                 unset($messages[$domain]);
             }
