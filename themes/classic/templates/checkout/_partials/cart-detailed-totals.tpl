@@ -64,7 +64,7 @@
       </div>
     {/if}
     {if $cart.subtotals.tax}
-      <div class="cart-summary-line">
+      <div class="cart-summary-line taxes">
         <span class="label sub">{l s='%label%:' sprintf=['%label%' => $cart.subtotals.tax.label] d='Shop.Theme.Global'}</span>
         <span class="value sub">{$cart.subtotals.tax.value}</span>
       </div>

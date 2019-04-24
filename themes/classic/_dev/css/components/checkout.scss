@@ -274,16 +274,39 @@ body#checkout {
     padding: $medium-space;
     background-color: $gray-light;
   }
-  #cart-summary-product-list {
-    font-size: $font-size-sm;
-    img {
-      border: $gray-light 1px solid;
-      width: 3.125rem;
+  .card-block {
+    .cart-summary-products {
+      padding: {
+        left: .5rem;
+        right: .5rem;
+      }
+      #cart-summary-product-list {
+        font-size: $font-size-sm;
+        img {
+          border: $gray-light 1px solid;
+          width: 3.125rem;
+        }
+        .media-body {
+          vertical-align: middle;
+        }
+      }
     }
-    .media-body {
-      vertical-align: middle;
+
+    &.promo-discounts {
+      text-align: center;
+      margin-bottom: 2.188rem;
+      .cart-summary-line {
+        .label {
+          color: $gray;
+          .code {
+            color: $warning-second;
+            cursor: pointer;
+          }
+        }
+      }
     }
   }
+  
   #order-summary-content {
     padding-top: 0.9375rem;
     h4.h4 {
