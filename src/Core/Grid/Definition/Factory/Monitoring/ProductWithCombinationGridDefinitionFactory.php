@@ -112,7 +112,7 @@ final class ProductWithCombinationGridDefinitionFactory extends AbstractGridDefi
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_product',
-                        'route' => 'admin_monitoring_index',//@todo: implement toggle status action
+                        'route' => 'admin_monitoring_index', //@todo: implement toggle status action
                         'route_param_name' => 'id_product',
                     ])
             )
