@@ -8,22 +8,33 @@
   padding: 1rem 0;
 }
 .card-block {
-  padding: 1.25rem 1.25rem .5rem;
-  &.checkout {
-    padding-bottom: 1.25rem;
-    padding-top: 0;
+  padding: 1.25rem 1rem 0;
+  .cart-summary-line {
+    padding: {
+      left: .5rem;
+      right: .5rem;
+    }
   }
+
+  &.checkout {
+    padding-bottom: 2.188rem;
+  }
+
   &.cart-summary-totals {
-    padding: 0 1rem 1rem;
+    padding-top: 0;
     .cart-summary-line {
-      padding: .5rem .2rem 0;
-      
       &:last-child {
         margin-bottom: 0
-      } 
+      }
+
+      &.taxes {
+        margin-bottom: .313rem;
+      }
+
       &.cart-total {
         background-color: $gray-light;
         padding: .5rem;
+        border-radius: 2px;
         .label,
         .value {
           font-weight: bold;
@@ -49,7 +60,7 @@
 .cart-summary-line {
   @include clearfix;
   clear: both;
-  margin-bottom: .315rem;
+  margin-bottom: .7rem;
   .label {
     padding-left: 0;
     font-weight: normal;
@@ -90,7 +101,7 @@
   .promo-discounts {
     margin-bottom: 0;
     text-align: center;
-    padding-bottom: .5rem;
+    padding-bottom: 0;
     .cart-summary-line {
       .label {
         color: $gray;
@@ -114,7 +125,6 @@
   }
 }
 .block-promo {
-  background: $gray-lighter-second;
   .promo-code {
     padding: 1rem;
     .alert-danger {
@@ -147,9 +157,9 @@
     height: 2.5rem;
     text-indent: 0.625rem;
     width: 50%;
-    margin-right: -.24rem;
+    margin-right: -.4rem;
     + button {
-      margin-top: -4px;
+      margin-top: -3px;
       text-transform: capitalize;
       border: 2px solid $brand-primary;
     }
@@ -183,21 +193,13 @@
   .promo-code-button {
     display: block;
     text-align: center;
-    padding: 1.25rem 0;
-    margin-bottom: 1.25rem;
-    &[aria-expanded="true"] {
-      display: none;
-    }
+    padding-top: 1rem;
     &.cancel-promo {
       color: $brand-primary;
       margin-bottom: 0;
-      &[aria-expanded="true"] {
-        display: block;
-        padding: 0;
-        margin-top: 1rem;
-      }
     }
   }
+  
   &.promo-highlighted {
     padding: 1.25rem;
     padding-bottom: 0;

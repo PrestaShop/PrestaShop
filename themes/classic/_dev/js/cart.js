@@ -168,6 +168,26 @@ $(document).ready(() => {
     });
   };
 
+  //Hide 'have a code promo' text if displayed when 'close' is
+  $('.promo-code-button').each( () => {
+    let self = $('.promo-code-button'),
+        isPresent = self.length;
+        // debugger;
+     if (isPresent === 2) {
+      console.log(isPresent);
+      
+      $('.cancel-promo').on('click', () => {
+        $('.cancel-promo').hide();
+        self.not('.cancel-promo').show();
+      });
+      self.not('.cancel-promo').on('click', () => {
+          self.not('.cancel-promo').hide();
+          $('.cancel-promo').show();
+      });
+      self.not('.cancel-promo').hide();
+    }
+  });
+
   $body.on(
     'click',
     '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]',
