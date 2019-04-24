@@ -146,11 +146,27 @@ final class ProductWithCombinationQueryBuilder extends AbstractDoctrineQueryBuil
             'p',
             $this->dbPrefix . 'product_shop',
             'ps',
-            $this->multistoreContextChecker->isSingleShopContext() ?
+            $this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext() ?
                 'p.id_product = ps.id_product AND ps.id_shop = :context_shop_id' :
                 'p.id_product = ps.id_product AND ps.id_shop = p.id_shop_default'
         );
-//@todo: add query for zero quantities
+
+        $attrSubQuery = $this->connection->createQueryBuilder()
+            ->select(1)
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product = p.id_product')
+        ;
+
+        $subQuery = $this->connection->createQueryBuilder();
+        $subQuery->select('1')
+            ->from($this->dbPrefix . 'stock_available', 'stock')
+            ->andWhere('p.id_product = stock.id_product')
+            ->andWhere('EXISTS(' . $attrSubQuery->getSQL() . ')')
+            ->andWhere('IFNULL(stock.quantity, 0) <= 0')
+        ;
+
+        $qb->andWhere('EXISTS(' . $subQuery->getSQL() . ')');
+
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters, true)) {
                 continue;
