@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
- * Builds queries for empty category list data
+ * Builds query for product with combination but without quantities list data
  */
-final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
+final class ProductWithCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var int
@@ -65,11 +65,6 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     private $multistoreFeature;
 
     /**
-     * @var int
-     */
-    private $rootCategoryId;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicator $searchCriteriaApplicator
@@ -77,7 +72,6 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param int $contextShopId
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param FeatureInterface $multistoreFeature
-     * @param $rootCategoryId
      */
     public function __construct(
         Connection $connection,
@@ -86,8 +80,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextShopId,
         DoctrineSearchCriteriaApplicator $searchCriteriaApplicator,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        FeatureInterface $multistoreFeature,
-        $rootCategoryId
+        FeatureInterface $multistoreFeature
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->contextLangId = $contextLangId;
@@ -95,7 +88,6 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->multistoreFeature = $multistoreFeature;
-        $this->rootCategoryId = $rootCategoryId;
     }
 
     /**
@@ -104,7 +96,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('c.id_category, c.active, cl.name, cl.description');
+        $qb->select('p.id_product, p.reference, p.active, pl.name');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -119,7 +111,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(c.id_category)');
+        $qb->select('COUNT(p.id_product)');
 
         return $qb;
     }
@@ -133,76 +125,60 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
-        $allowedFilters = ['id_category', 'name', 'description', 'active'];
+        $allowedFilters = ['id_product', 'reference', 'name', 'active'];
 
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'category', 'c')
+            ->from($this->dbPrefix . 'product', 'p')
             ->setParameter('context_lang_id', $this->contextLangId)
             ->setParameter('context_shop_id', $this->contextShopId);
 
         $qb->leftJoin(
-            'c',
-            $this->dbPrefix . 'category_lang',
-            'cl',
+            'p',
+            $this->dbPrefix . 'product_lang',
+            'pl',
             $this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext() ?
-                'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = :context_shop_id' :
-                'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = c.id_shop_default'
+                'p.id_product = pl.id_product AND pl.id_lang = :context_lang_id AND pl.id_shop = :context_shop_id' :
+                'p.id_product = pl.id_product AND pl.id_lang = :context_lang_id AND pl.id_shop = p.id_shop_default'
         );
 
         $qb->leftJoin(
-            'c',
-            $this->dbPrefix . 'category_shop',
-            'cs',
+            'p',
+            $this->dbPrefix . 'product_shop',
+            'ps',
             $this->multistoreContextChecker->isSingleShopContext() ?
-                'c.id_category = cs.id_category AND cs.id_shop = :context_shop_id' :
-                'c.id_category = cs.id_category AND cs.id_shop = c.id_shop_default'
+                'p.id_product = ps.id_product AND ps.id_shop = :context_shop_id' :
+                'p.id_product = ps.id_product AND ps.id_shop = p.id_shop_default'
         );
-
-        $qb->leftJoin(
-            'c',
-            $this->dbPrefix . 'category_product',
-            'cp',
-            'c.`id_category` = cp.id_category'
-        );
-
-        $subSelect = $this->connection->createQueryBuilder()
-            ->select('1')
-            ->from($this->dbPrefix . 'category_product', 'cp')
-            ->andWhere('c.id_category = cp.id_category')
-        ;
-
-        $qb->andWhere('NOT EXISTS(' . $subSelect->getSQL() . ')');
-        $qb->andWhere('c.id_category != ' . $this->rootCategoryId);
-
+//@todo: add query for zero quantities
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters, true)) {
                 continue;
             }
 
-            if ('id_category' === $filterName) {
-                $qb->andWhere("c.id_category = :$filterName");
+            if ('id_product' === $filterName) {
+                $qb->andWhere("p.id_product = :$filterName");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
-            if ('name' === $filterName) {
-                $qb->andWhere("cl.name LIKE :$filterName");
+            if ('reference' === $filterName) {
+                $qb->andWhere("p.reference LIKE :$filterName");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
 
-            if ('description' === $filterName) {
-                $qb->andWhere("cl.description LIKE :$filterName");
+            if ('name' === $filterName) {
+                $qb->andWhere("pl.name LIKE :$filterName");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
 
             if ('active' === $filterName) {
-                $qb->andWhere("c.active = :$filterName");
+                $qb->andWhere("p.active = :$filterName");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
@@ -210,7 +186,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         if ($this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext()) {
-            $qb->andWhere('cs.id_shop = :context_shop_id');
+            $qb->andWhere('ps.id_shop = :context_shop_id');
         }
 
         return $qb;
