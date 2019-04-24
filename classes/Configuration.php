@@ -477,6 +477,8 @@ class ConfigurationCore extends ObjectModel
                     $result &= Db::getInstance()->execute($sql);
                 }
             } else {
+                self::clearLangValues($key);
+                
                 // If key does not exists, create it
                 if (!$configID = Configuration::getIdByName($key, $idShopGroup, $idShop)) {
                     $now = date('Y-m-d H:i:s');
@@ -540,6 +542,36 @@ class ConfigurationCore extends ObjectModel
         Configuration::set($key, $values, $idShopGroup, $idShop);
 
         return $result;
+    }
+    
+    /**
+     * @param $key
+     * @return int
+     */
+    protected static function checkExistsLangValues($key)
+    {
+        return (int)Db::getInstance()->getValue(
+            'SELECT cl.`id_configuration` FROM '._DB_PREFIX_.'configuration_lang cl
+            LEFT JOIN '._DB_PREFIX_.'configuration c ON cl.`id_configuration` = c.`id_configuration`
+            WHERE c.`name` = "'.pSQL($key).'"'
+        );
+    }
+
+    /**
+     * @param $key
+     */
+    protected static function clearLangValues($key)
+    {
+        if ($id_configuration = (int)self::checkExistsLangValues($key)) {
+            Db::getInstance()->delete(
+                'configuration',
+                'id_configuration = '.(int)$id_configuration
+            );
+            Db::getInstance()->delete(
+                'configuration_lang',
+                'id_configuration = '.(int)$id_configuration
+            );
+        }
     }
 
     /**
