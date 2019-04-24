@@ -277,7 +277,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 'error',
                 $this->trans(
                     'Cannot send test email for theme %theme% because it is not your current theme',
-                    'Admin.Notifications.Success',
+                    'Admin.Notifications.Error',
                     [
                         '%theme%' => $theme,
                     ]
@@ -341,7 +341,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 'error',
                 $this->trans(
                     'Cannot send test email for layout %layout%',
-                    'Admin.Notifications.Success',
+                    'Admin.Notifications.Error',
                     [
                         '%layout%' => $layout,
                     ]
