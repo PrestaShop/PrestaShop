@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use ReflectionException;
 
-class CommandDefinitionProviderTest extends TestCase
+class CommandDefinitionParserTest extends TestCase
 {
     public function testItProvidesCorrectClassNameWhenExistingCommandNameIsGiven()
     {

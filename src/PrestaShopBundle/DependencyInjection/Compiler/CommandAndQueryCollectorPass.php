@@ -60,8 +60,8 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
 
         $commands = [];
         foreach ($handlers as $handler) {
-            if (isset($handler[0]['command'])) {
-                $commands[] = $handler[0]['command'];
+            if (isset(current($handler)['command'])) {
+                $commands[] = current($handler)['command'];
             }
         }
 
