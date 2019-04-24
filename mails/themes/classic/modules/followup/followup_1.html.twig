@@ -18,9 +18,13 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Your cart at {shop_name}'|trans({}, 'Emails.Body', locale) }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Your cart at {shop_name}'|trans({}, 'Emails.Body', locale) }}
+              </p>
+            
+{% endif %}
             <span>
               {{ 'We noticed that during your last visit on {shop_name}, you did not complete the order you had started.'|trans({}, 'Emails.Body', locale) }}<br/> <br/>
               {{ 'Your cart has been saved, you can resume your order by visiting our shop:'|trans({}, 'Emails.Body', locale)|raw }} <span><strong><a title="{shop_name}" href="{shop_url}">{shop_url}</a></strong></span><br/><br/>
@@ -43,9 +47,13 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Your {shop_name} login details'|trans({}, 'Emails.Body', locale) }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Your {shop_name} login details'|trans({}, 'Emails.Body', locale) }}
+              </p>
+            
+{% endif %}
             <span>
               <span><strong>{{ 'Here is your coupon:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {voucher_num}<br/>
               {{ 'Enter this code in your shopping cart to get your discount.'|trans({}, 'Emails.Body', locale)|raw }}
