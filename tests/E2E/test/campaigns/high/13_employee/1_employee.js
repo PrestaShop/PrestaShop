@@ -4,6 +4,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 const welcomeScenarios = require('../../common_scenarios/welcome');
 const promise = Promise.resolve();
+global.tab = [];
 
 scenario('Create employee', client => {
   test('should open the browser', () => client.open());
@@ -24,18 +25,25 @@ scenario('Create employee', client => {
   test('should set "Password" input', () => client.waitAndSetValue(Employee.password_input, '123456789'));
   test('should choose "Permission profile" option', () => client.waitAndSelectByValue(Employee.profile_select, '4'));
   test('should click on "Save" button', () => client.waitForExistAndClick(Employee.save_button));
+  test('should verify the appearance of the green validation', () => client.checkTextValue(Employee.success_panel, 'Successful creation.'));
 }, 'common_client');
 
 scenario('Check the employee creation', client => {
   test('should search the created employee', () => client.waitAndSetValue(Employee.email_search_input, 'demo' + date_time + '@prestashop.com'));
   test('should click on "Search" button', () => client.waitForExistAndClick(Employee.search_button_team));
-  test('should check the result', () => client.checkTextValue(Employee.search_result, "1"));
+  test('should check the result', () => {
+    return promise
+      .then(() => client.waitForVisible(Employee.search_result))
+      .then(() => client.getTextInVar(Employee.search_result,'employee_number'))
+      .then(() => tab['employee_number'] = tab['employee_number'].split('(')[1].split(')')[0])
+      .then(() => expect(tab['employee_number']).to.be.equal('1'));
+  });
   test('should check that the "First name" of employee is equal to "Demo"', () => client.checkTextValue(Employee.team_employee_name, 'Demo'));
   test('should check that the "Last name" of employee is equal to "Prestashop"', () => client.checkTextValue(Employee.team_employee_last_name, 'Prestashop'));
   test('should check that the "Email" of employee is equal to "demo' + date_time + '@prestashop.com"', () => client.checkTextValue(Employee.team_employee_email, 'demo' + date_time + '@prestashop.com'));
   test('should check that the "Permission profile" of employee is equal to "Salesman"', () => client.checkTextValue(Employee.team_employee_profile, 'Salesman'));
   test('should click on "Reset" button', () => client.waitForExistAndClick(Employee.reset_search_button));
-  test('should click on "employee info" icon', () => client.waitForExistAndClick(AccessPageBO.info_employee));
+  test('should click on "employee info" icon', () => client.waitForExistAndClick(AccessPageBO.info_employee , 1000));
   test('should click on "Sign out" icon', () => client.waitForVisibleAndClick(AccessPageBO.sign_out));
   test('should logout from the Back Office', () => client.signOutBO());
 }, 'common_client');
@@ -53,10 +61,22 @@ scenario('Delete an employee', client => {
   test('should go to "Team" menu', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
   test('should search the created employee', () => client.waitAndSetValue(Employee.email_search_input, 'demo' + date_time + '@prestashop.com'));
   test('should click on "Search" button', () => client.waitForExistAndClick(Employee.search_button_team));
-  test('should check the result', () => client.checkTextValue(Employee.search_result, "1"));
+  test('should check the result', () => {
+    return promise
+      .then(() => client.waitForVisible(Employee.search_result))
+      .then(() => client.getTextInVar(Employee.search_result,'employee_number'))
+      .then(() => tab['employee_number'] = tab['employee_number'].split('(')[1].split(')')[0])
+      .then(() => expect(tab['employee_number']).to.be.equal('1'));
+  });
   test('should click dropdown-toggle button', () => client.waitForExistAndClick(Employee.dropdown_toggle));
   test('should click on "Delete" link', () => client.waitForVisibleAndClick(Employee.delete_link));
   test('should click on "OK" button in the pop-up', () => client.alertAccept());
-  test('should check the result', () => client.checkTextValue(Employee.search_result, "0"));
+  test('should check the result', () => {
+    return promise
+      .then(() => client.waitForVisible(Employee.search_result))
+      .then(() => client.getTextInVar(Employee.search_result,'employee_number'))
+      .then(() => tab['employee_number'] = tab['employee_number'].split('(')[1].split(')')[0])
+      .then(() => expect(tab['employee_number']).to.be.equal('0'));
+  });
   test('should click on "Reset" button', () => client.waitForExistAndClick(Employee.reset_search_button));
 }, 'common_client', true);
