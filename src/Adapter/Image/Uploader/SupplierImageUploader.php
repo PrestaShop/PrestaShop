@@ -46,6 +46,7 @@ final class SupplierImageUploader extends AbstractImageUploader
      */
     public function upload($supplierId, UploadedFile $image)
     {
+        $this->checkImageIsAllowedForUpload($image);
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 
         if (!$temporaryImageName) {
