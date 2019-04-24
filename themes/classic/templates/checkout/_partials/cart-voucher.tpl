@@ -41,8 +41,14 @@
             </ul>
           {/block}
         {/if}
+        
         <p>
-          <a class="collapse-button promo-code-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
+          <a 
+          class="collapse-button promo-code-button" 
+          data-toggle="collapse" 
+          href="#promo-code" 
+          aria-expanded="false" 
+          aria-controls="promo-code">
             {l s='Have a promo code?' d='Shop.Theme.Checkout'}
           </a>
         </p>
@@ -60,22 +66,31 @@
               <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>
             </div>
           {/block}
-          {if $cart.discounts|count > 0}
-            <p class="block-promo promo-highlighted">
-              {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
-            </p>
-            <ul class="js-discount card-block promo-discounts">
+        </div>
+        <p>
+          <a 
+          class="collapse-button promo-code-button cancel-promo" 
+          data-toggle="collapse" 
+          href="#promo-code" 
+          aria-expanded="false" 
+          aria-controls="promo-code">
+            {l s='Close' d='Shop.Theme.Checkout'}
+          </a>
+        </p>
+
+        {if $cart.discounts|count > 0}
+          <p class="block-promo promo-highlighted">
+            {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
+          </p>
+        {/if}
+
+        <ul class="js-discount card-block promo-discounts">
             {foreach from=$cart.discounts item=discount}
               <li class="cart-summary-line">
                 <span class="label"><span class="code">{$discount.code}</span> - {$discount.name}</span>
               </li>
             {/foreach}
             </ul>
-          {/if}
-          <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">
-            {l s='Close' d='Shop.Theme.Checkout'}
-          </a>
-        </div>
       </div>
     </div>
   {/block}
