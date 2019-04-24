@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
 use Html2Text\Html2Text;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * HTMLTextifyTransformation is used to remove any HTML tags from the template. It

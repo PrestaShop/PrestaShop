@@ -44,6 +44,12 @@ use Tools;
  */
 final class MailPreviewVariablesBuilder
 {
+    const ORDER_CONFIRMATION = 'order_conf';
+
+    const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
+    const NEW_ORDER = 'new_order';
+    const RETURN_SLIP = 'return_slip';
+
     /** @var ConfigurationInterface */
     private $configuration;
 
@@ -120,7 +126,7 @@ final class MailPreviewVariablesBuilder
         $orders = Order::getOrdersWithInformations(1);
         $order = new Order($orders[0]['id_order']);
 
-        if ('order_conf' == $mailLayout->getName()) {
+        if (self::ORDER_CONFIRMATION == $mailLayout->getName()) {
             $productTemplateList = $this->getProductList($order);
             $productListTxt = $this->getEmailTemplateContent('order_conf_product_list.txt', $productTemplateList);
             $productListHtml = $this->getEmailTemplateContent('order_conf_product_list.tpl', $productTemplateList);
@@ -138,11 +144,11 @@ final class MailPreviewVariablesBuilder
                 '{discounts}' => $cartRulesListHtml,
                 '{discounts_txt}' => $cartRulesListTxt,
             ];
-        } elseif ('ps_emailalerts' == $mailLayout->getModuleName() && 'new_order' == $mailLayout->getName()) {
+        } elseif (self::EMAIL_ALERTS_MODULE == $mailLayout->getModuleName() && self::NEW_ORDER == $mailLayout->getName()) {
             $productVariables = [
                 '{items}' => $this->getNewOrderItems($order),
             ];
-        } elseif ('ps_emailalerts' == $mailLayout->getModuleName() && 'return_slip' == $mailLayout->getName()) {
+        } elseif (self::EMAIL_ALERTS_MODULE == $mailLayout->getModuleName() && self::RETURN_SLIP == $mailLayout->getName()) {
             $productVariables = [
                 '{items}' => $this->getReturnSlipItems($order),
             ];
