@@ -82,7 +82,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      *                        An ISO 4217 currency code
      * @param int|false|null $idLang
      *                               Set this parameter if you want the currency in a specific language.
-     *                               If null, default language will be used
+     *                               If null or false, default language will be used
      *
      * @return currency|null
      *                       The asked Currency object, or null if not found
