@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.bundle.dependency_injection.provider.grid_definition_service_ids:
+    class: 'PrestaShopBundle\DependencyInjection\Provider\GridDefinitionServiceIdsProvider'

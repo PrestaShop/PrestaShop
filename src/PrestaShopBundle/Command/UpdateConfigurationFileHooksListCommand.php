@@ -26,13 +26,16 @@
 
 namespace PrestaShopBundle\Command;
 
+use DOMDocument;
+use Exception;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerDebugCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\Finder\Finder;
 
 /**
  * This command is used for listing the hook names in the configuration file.
@@ -54,48 +57,49 @@ class UpdateConfigurationFileHooksListCommand extends ContainerDebugCommand
     {
         require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
 
-        $containerBuilder = $this->getContainerBuilder();
-        $serviceDefinitions = $containerBuilder->getDefinitions();
-        $gridDefinitionServiceIds = $this->getFilteredServicesDefinitions($serviceDefinitions);
-        $hookNames = $this->getHookNamesFromGridDefinitionService($gridDefinitionServiceIds, $containerBuilder);
+        $hookNames = $this->getHookNames();
 
+        $io = new SymfonyStyle($input, $output);
 
+        try {
+            $addedHooks = $this->appendHooksInConfigurationFile($hookNames);
+        } catch (Exception $e) {
+            $io->error($e->getMessage());
+        }
 
+        if (!empty($addedHooks)) {
+            $io->title('Hooks added to configuration file');
+
+            $io->listing($addedHooks);
+
+            return;
+        }
+
+        $io->note('No new hooks have been added to configuration file');
     }
 
     /**
-     * @param Definition[] $services
-     * @param ContainerBuilder $container
-     *
      * @return array
      */
-    private function getFilteredServicesDefinitions(array $services)
+    private function getHookNames()
     {
-        $definitionStartsWith = 'prestashop.core.grid.definition';
+        $container = $this->getContainer();
+        $containerBuilder = $this->getContainerBuilder();
 
-        $filteredServiceIds = [];
-        foreach ($services as $serviceKey => $service) {
-            if ($service->isAbstract()  || $service->isPrivate()) {
-                continue;
-            }
+        $gridDefinitionIdsProvider = $container->get('prestashop.bundle.dependency_injection.provider.grid_definition_service_ids');
+        $gridDefinitionServiceIds = $gridDefinitionIdsProvider->getServiceIds($containerBuilder);
 
-            if (strpos($serviceKey, $definitionStartsWith) === 0) {
-                $filteredServiceIds[] = $serviceKey;
-            }
-        }
+        $gridDefinitionHookNames = $this->getGridDefinitionHookNames($gridDefinitionServiceIds);
 
-        return $filteredServiceIds;
+        return $gridDefinitionHookNames;
     }
 
     /**
      * @param string[] $gridDefinitionServiceIds
-     * @param ContainerBuilder $container
      *
      * @return array
-     *
-     * @throws \Exception
      */
-    private function getHookNamesFromGridDefinitionService(array $gridDefinitionServiceIds, ContainerBuilder $container)
+    private function getGridDefinitionHookNames(array $gridDefinitionServiceIds)
     {
         $hookStartsWith = 'action';
         $hookEndsWith = 'GridDefinitionModifier';
@@ -103,7 +107,7 @@ class UpdateConfigurationFileHooksListCommand extends ContainerDebugCommand
         $hookNames = [];
         foreach ($gridDefinitionServiceIds as $serviceId) {
             /** @var GridDefinitionFactoryInterface $service */
-            $service = $container->get($serviceId);
+            $service = $this->getContainer()->get($serviceId);
 
             $definition = $service->getDefinition();
 
@@ -111,6 +115,95 @@ class UpdateConfigurationFileHooksListCommand extends ContainerDebugCommand
 
             $hookName = $hookStartsWith . Container::camelize($definitionId) . $hookEndsWith;
             $hookNames[] = $hookName;
+        }
+
+        return $hookNames;
+    }
+
+    /**
+     * @param array $newHookNames
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    private function appendHooksInConfigurationFile(array $newHookNames)
+    {
+        $hookConfigurationFileLocation = $this->getContainer()->get('kernel')->getRootDir() . '/../install-dev/data/xml/';
+        $hookFileName = 'hook.xml';
+        $fullFilePath = $hookConfigurationFileLocation . $hookFileName;
+
+        $filesFinder = new Finder();
+        $filesFinder
+            ->files()
+            ->in($hookConfigurationFileLocation)
+            ->name($hookFileName)
+        ;
+
+        $hookFileContent = null;
+
+        foreach ($filesFinder as $fileInfo) {
+            $hookFileContent = $fileInfo->getContents();
+
+            break;
+        }
+
+        if (!$hookFileContent) {
+            throw new Exception(
+                sprintf('File %s has not been found', $fullFilePath)
+            );
+        }
+
+        $xmlFileContent = new SimpleXMLElement($hookFileContent);
+
+        if (!isset($xmlFileContent->entities, $xmlFileContent->entities->hook)) {
+            return [];
+        }
+
+        $existingHookNames = $this->filterExistingHookNames($xmlFileContent->entities->hook);
+
+        $addedHooks = [];
+        foreach ($newHookNames as $hookName) {
+            if (in_array($hookName, $existingHookNames)) {
+                continue;
+            }
+
+            $hook = $xmlFileContent->entities->addChild('hook');
+
+            $hook->addAttribute('id', $hookName);
+            $hook->addChild('name', $hookName);
+            $hook->addChild('title', '');
+            $hook->addChild('description', '');
+
+            $addedHooks[] = $hookName;
+        }
+
+        if (!$xmlFileContent->saveXML($fullFilePath)) {
+            throw new Exception(
+                sprintf(
+                    'Failed to save new xml content to file %s',
+                    $fullFilePath
+                )
+            );
+        }
+
+        return $addedHooks;
+    }
+
+    /**
+     * @param SimpleXMLElement $hooksFromXmlFile
+     *
+     * @return array
+     */
+    private function filterExistingHookNames(SimpleXMLElement $hooksFromXmlFile)
+    {
+        $hookNames = [];
+        foreach ($hooksFromXmlFile as $hook) {
+            if (!isset($hook->name)) {
+                continue;
+            }
+
+            $hookNames[] = $hook->name->__toString();
         }
 
         return $hookNames;
