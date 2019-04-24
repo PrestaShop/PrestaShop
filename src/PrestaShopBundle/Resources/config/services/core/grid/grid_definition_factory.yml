@@ -153,3 +153,8 @@ services:
       arguments:
         - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
       public: true
+
+    prestashop.core.grid.definition.factory.monitoring.product_with_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithCombinationGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true

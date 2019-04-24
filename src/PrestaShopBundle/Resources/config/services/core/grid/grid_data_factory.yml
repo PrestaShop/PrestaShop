@@ -181,10 +181,18 @@ services:
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'cms_page'
 
-    prestashop.core.grid.data.factory.monitoring.empty_category:
+    prestashop.core.grid.data.factory.empty_category:
       class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
       arguments:
         - '@prestashop.core.grid.query_builder.monitoring.empty_category'
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'empty_category'
+
+    prestashop.core.grid.data.factory.product_with_combination:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.monitoring.product_with_combination'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'product_with_combination'

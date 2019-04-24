@@ -26,8 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters\EmptyCategoryFilters;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithCombinationGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\EmptyCategoryFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithCombinationFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -46,22 +49,28 @@ class MonitoringController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param EmptyCategoryFilters $emptyCategoryFilters
+     * @param ProductWithCombinationFilters $productWithCombinationFilters
      *
      * @return Response
      */
     public function indexAction(
         Request $request,
-        EmptyCategoryFilters $emptyCategoryFilters
+        EmptyCategoryFilters $emptyCategoryFilters,
+        ProductWithCombinationFilters $productWithCombinationFilters
     ) {
         $emptyCategoryGridFactory = $this->get('prestashop.core.grid.grid_factory.empty_category');
         $emptyCategoryGrid = $emptyCategoryGridFactory->getGrid($emptyCategoryFilters);
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+
+        $productWithCombinationGridFactory = $this->get('prestashop.core.grid.grid_factory.product_with_combination');
+        $productWithCombinationGrid = $productWithCombinationGridFactory->getGrid($productWithCombinationFilters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Monitoring/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'empty_category_grid' => $this->presentGrid($emptyCategoryGrid),
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
+            'product_with_combination_grid' => $this->presentGrid($productWithCombinationGrid),
         ]);
     }
 
@@ -74,10 +83,15 @@ class MonitoringController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function searchEmptyCategoryAction(Request $request)
+    public function searchAction(Request $request)
     {
         $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.monitoring.empty_category';
         $filterId = EmptyCategoryGridDefinitionFactory::GRID_ID;
+
+        if ($request->request->has(ProductWithCombinationGridDefinitionFactory::GRID_ID)) {
+            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.monitoring.product_with_combination';
+            $filterId = ProductWithCombinationGridDefinitionFactory::GRID_ID;
+        }
 
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');

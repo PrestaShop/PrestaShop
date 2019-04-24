@@ -24,30 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
-
-/**
- * Defines default filters for Empty Category grid.
- */
-final class EmptyCategoryFilters extends Filters
+class ProductWithoutCombinationGridDefinitionFactory
 {
-    /** @var string */
-    protected $filterId = EmptyCategoryGridDefinitionFactory::GRID_ID;
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaults()
-    {
-        return [
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'name',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
-    }
 }
