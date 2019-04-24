@@ -53,7 +53,7 @@ class MonitoringController extends FrameworkBundleAdminController
         Request $request,
         EmptyCategoryFilters $emptyCategoryFilters
     ) {
-        $emptyCategoryGridFactory = $this->get('prestashop.core.grid.factory.monitoring.empty_category');
+        $emptyCategoryGridFactory = $this->get('prestashop.core.grid.grid_factory.empty_category');
         $emptyCategoryGrid = $emptyCategoryGridFactory->getGrid($emptyCategoryFilters);
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
 
