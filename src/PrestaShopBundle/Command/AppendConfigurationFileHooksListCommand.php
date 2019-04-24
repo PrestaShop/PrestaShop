@@ -38,9 +38,9 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 
 /**
- * This command is used for listing the hook names in the configuration file.
+ * This command is used for appending the hook names in the configuration file.
  */
-class UpdateConfigurationFileHooksListCommand extends ContainerDebugCommand
+class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
 {
     /**
      * {@inheritdoc}
@@ -49,7 +49,7 @@ class UpdateConfigurationFileHooksListCommand extends ContainerDebugCommand
     {
         $this
             ->setName('prestashop:update:configuration-file-hooks-listing')
-            ->setDescription('Updates configuration file hooks list')
+            ->setDescription('Appends configuration file hooks list')
         ;
     }
 
@@ -79,6 +79,8 @@ class UpdateConfigurationFileHooksListCommand extends ContainerDebugCommand
     }
 
     /**
+     * Gets all hooks names which need to be appended.
+     *
      * @return array
      */
     private function getHookNames()
@@ -121,6 +123,8 @@ class UpdateConfigurationFileHooksListCommand extends ContainerDebugCommand
     }
 
     /**
+     * Appends given hooks in the configuration file.
+     *
      * @param array $newHookNames
      *
      * @return array
@@ -191,6 +195,8 @@ class UpdateConfigurationFileHooksListCommand extends ContainerDebugCommand
     }
 
     /**
+     * Gets existing hook names which are already defined in the file.
+     *
      * @param SimpleXMLElement $hooksFromXmlFile
      *
      * @return array
