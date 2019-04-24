@@ -32,3 +32,9 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/manufacturer_address_form.bundle.js') }}"></script>
+{% endblock %}
