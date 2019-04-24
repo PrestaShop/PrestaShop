@@ -118,8 +118,6 @@ class StockController extends ApiController
     /**
      * @param Request $request
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
-     *
      * @return JsonResponse
      */
     public function bulkEditProductsAction(Request $request)
