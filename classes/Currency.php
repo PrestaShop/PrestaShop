@@ -787,6 +787,11 @@ class CurrencyCore extends ObjectModel
             // CLDR currency gives data from CLDR reference, for the given language
             $cldrCurrency = $cldrLocale->getCurrency($this->iso_code);
 
+            if (empty($cldrCurrency)) {
+                // If the currency is not declared in the locale, we can't proceed
+                continue;
+            }
+
             $symbol = (string) $cldrCurrency->getSymbol();
             if (empty($symbol)) {
                 $symbol = $this->iso_code;
