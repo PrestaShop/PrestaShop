@@ -31,8 +31,6 @@ use Language;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -40,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 /**
  * @internal
  */
-final class UpdateCartLanguageHandler implements UpdateCartLanguageHandlerInterface
+final class UpdateCartLanguageHandler extends AbstractCartHandler implements UpdateCartLanguageHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -77,26 +75,6 @@ final class UpdateCartLanguageHandler implements UpdateCartLanguageHandlerInterf
                 sprintf('Language with id "%s" was not found', $languageId->getValue())
             );
         }
-    }
-
-    /**
-     * @param CartId $cartId
-     *
-     * @return Cart
-     *
-     * @throws CurrencyNotFoundException
-     */
-    private function getCartObject(CartId $cartId)
-    {
-        $cart = new Cart($cartId->getValue());
-
-        if ($cartId->getValue() !== $cart->id) {
-            throw new CurrencyNotFoundException(
-                sprintf('Currency with id "%s" was not found', $cartId->getValue())
-            );
-        }
-
-        return $cart;
     }
 
     /**

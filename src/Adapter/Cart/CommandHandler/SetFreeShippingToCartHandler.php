@@ -26,19 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
-use Cart;
 use CartRule;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\SetFreeShippingToCartHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
-final class SetFreeShippingToCartHandler implements SetFreeShippingToCartHandlerInterface
+final class SetFreeShippingToCartHandler extends AbstractCartHandler implements SetFreeShippingToCartHandlerInterface
 {
     /**
      * @var TranslatorInterface
@@ -69,55 +66,35 @@ final class SetFreeShippingToCartHandler implements SetFreeShippingToCartHandler
 
         $backOfficeOrderCode = sprintf('%s%s', CartRule::BO_ORDER_CODE_PREFIX, $cart->id);
 
-        $cartRule = $this->getCartRuleForBackOfficeFreeShipping($backOfficeOrderCode);
+        $freeShippingCartRule = $this->getCartRuleForBackOfficeFreeShipping($backOfficeOrderCode);
 
-        if (false === $cartRule) {
-            $cartRule = new CartRule();
-            $cartRule->code = $backOfficeOrderCode;
-            $cartRule->name = [
+        if (false === $freeShippingCartRule) {
+            $freeShippingCartRule = new CartRule();
+            $freeShippingCartRule->code = $backOfficeOrderCode;
+            $freeShippingCartRule->name = [
                 $this->configuration->get('PS_LANG_DEFAULT') => $this->translator->trans(
                     'Free Shipping',
                     [],
                     'Admin.Orderscustomers.Feature'
                 ),
             ];
-            $cartRule->id_customer = (int) $cart->id_customer;
-            $cartRule->free_shipping = true;
-            $cartRule->quantity = 1;
-            $cartRule->quantity_per_user = 1;
-            $cartRule->minimum_amount_currency = (int) $cart->id_currency;
-            $cartRule->reduction_currency = (int) $cart->id_currency;
-            $cartRule->date_from = date('Y-m-d H:i:s');
-            $cartRule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
-            $cartRule->active = 1;
-            $cartRule->add();
+            $freeShippingCartRule->id_customer = (int) $cart->id_customer;
+            $freeShippingCartRule->free_shipping = true;
+            $freeShippingCartRule->quantity = 1;
+            $freeShippingCartRule->quantity_per_user = 1;
+            $freeShippingCartRule->minimum_amount_currency = (int) $cart->id_currency;
+            $freeShippingCartRule->reduction_currency = (int) $cart->id_currency;
+            $freeShippingCartRule->date_from = date('Y-m-d H:i:s');
+            $freeShippingCartRule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
+            $freeShippingCartRule->active = 1;
+            $freeShippingCartRule->add();
         }
 
-        $cart->removeCartRule((int) $cartRule->id);
+        $cart->removeCartRule((int) $freeShippingCartRule->id);
 
         if ($command->allowFreeShipping()) {
-            $cart->addCartRule((int) $cartRule->id);
+            $cart->addCartRule((int) $freeShippingCartRule->id);
         }
-    }
-
-    /**
-     * @param CartId $cartId
-     *
-     * @return Cart
-     *
-     * @throws CurrencyNotFoundException
-     */
-    private function getCartObject(CartId $cartId)
-    {
-        $cart = new Cart($cartId->getValue());
-
-        if ($cartId->getValue() !== $cart->id) {
-            throw new CurrencyNotFoundException(
-                sprintf('Currency with id "%s" was not found', $cartId->getValue())
-            );
-        }
-
-        return $cart;
     }
 
     /**

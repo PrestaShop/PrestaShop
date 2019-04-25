@@ -30,6 +30,11 @@ use Cart;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 
+/**
+ * Provides reusable methods for cart handlers
+ *
+ * @internal
+ */
 abstract class AbstractCartHandler
 {
     /**

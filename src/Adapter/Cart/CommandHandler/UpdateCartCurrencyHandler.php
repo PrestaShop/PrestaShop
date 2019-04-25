@@ -26,12 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
-use Cart;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -39,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 /**
  * @internal
  */
-final class UpdateCartCurrencyHandler implements UpdateCartCurrencyHandlerInterface
+final class UpdateCartCurrencyHandler extends AbstractCartHandler implements UpdateCartCurrencyHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -80,26 +78,6 @@ final class UpdateCartCurrencyHandler implements UpdateCartCurrencyHandlerInterf
         }
 
         return $currency;
-    }
-
-    /**
-     * @param CartId $cartId
-     *
-     * @return Cart
-     *
-     * @throws CurrencyNotFoundException
-     */
-    private function getCartObject(CartId $cartId)
-    {
-        $cart = new Cart($cartId->getValue());
-
-        if ($cartId->getValue() !== $cart->id) {
-            throw new CurrencyNotFoundException(
-                sprintf('Currency with id "%s" was not found', $cartId->getValue())
-            );
-        }
-
-        return $cart;
     }
 
     /**
