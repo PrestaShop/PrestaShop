@@ -70,7 +70,6 @@ scenario('Create, Edit, delete "Customer"', () => {
 
   scenario('Check that the customer information is updated in the Front Office', client => {
     test('should go to the Front Office', () => client.switchWindow(1));
-    //test('should refresh the page', () => client.refresh());
     test('should set the "Email" input', () => client.waitAndSetValue(AccessPageFO.login_input, date_time + editCustomerData.email_address));
     test('should set the "Password" input', () => client.waitAndSetValue(AccessPageFO.password_inputFO, editCustomerData.password));
     test('should click on "Sign In" button', () => client.waitForExistAndClick(AccessPageFO.login_button));
@@ -133,7 +132,6 @@ scenario('Create, Edit, delete "Customer"', () => {
         .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 1000))
         .then(() => client.waitForExistAndClick(Customer.delete_button, 1000));
     });
-    //test('should accept the currently displayed alert dialog', () => client.alertAccept());
     test('should choose the option that doesn\'t allow customers to register again with the same email address', () => client.waitForVisibleAndClick(Customer.delete_second_option));
     test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button, 2000));
     test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, 'Successful deletion.', 'equal', 2000));
