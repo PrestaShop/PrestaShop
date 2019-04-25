@@ -157,21 +157,11 @@ class ValidateCore
      */
     public static function isName($name)
     {
-        $cleanName = stripslashes($name);
-        // disallow content that looks like an url - slash character
-        if (false !== strpos($cleanName, '/')) {
-            return 0;
-        }
-        // disallow content that looks like an url - dots character
-        $dotCharacters = array('.', '。');
-        foreach ($dotCharacters as $dotCharacter) {
-            $dotPosition = strpos($cleanName, $dotCharacter);
-            if (false !== $dotPosition && isset($cleanName[$dotPosition + 1]) && ($cleanName[$dotPosition + 1] !== ' ')) {
-                return 0;
-            }
-        }
-        $validityPattern = Tools::cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u');
-        return preg_match($validityPattern, $cleanName);
+        $validityPattern = Tools::cleanNonUnicodeSupport(
+            '/^(?:[^0-9!<>,;?=+()\/\\@#"°*`{}_^$%:¤|\.。]|[\.。](?:\s|$))*$/u'
+        );
+
+        return preg_match($validityPattern, $name);
     }
 
     /**
