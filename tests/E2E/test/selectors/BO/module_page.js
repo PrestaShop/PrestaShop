@@ -61,8 +61,8 @@ module.exports = {
     //List of modules in notifications tab
     configure_module: '//*[@id="modules-list-container-notification"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
     modules_number_to_configure: '//*[@id="module-short-list-configure"]/span[1]',
-    notification_number: '//*[@id="subtab-AdminModulesNotifications"]//span[@class="notification-counter"]',
-    update_notification_number_span: '//*[@id="subtab-AdminModulesUpdates"]//span[@class="notification-counter"]',
+    notification_number: '//*[@id="subtab-AdminModulesNotifications"]//span[@class="notification-counter" and string-length(text())>0]',
+    update_notification_number_span: '//*[@id="subtab-AdminModulesUpdates"]//span[@class="notification-counter" and string-length(text())>0]',
     selection_tab: '//*[@id="head_tabs"]/a[1]',
     discover_amazon_module_button: '//*[@id="modules-list-container-all"]//a[contains(@href,"amazon-market-place")]',
     ModuleBankTransferPage: {
