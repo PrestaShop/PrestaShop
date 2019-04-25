@@ -174,6 +174,10 @@ class ValidateCoreTest extends TestCase
             array(0, '.rn'),
             array(0, 'websitecom/a'),
             array(0, 'websitecom%20a'),
+            array(0, '/a'),
+            array(0, 'John F. www.website.com'),
+            array(0, 'John F. www.website.com www.website.com'),
+            array(0, 'website._com'),
         );
     }
 

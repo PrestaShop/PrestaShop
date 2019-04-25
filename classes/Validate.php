@@ -173,11 +173,14 @@ class ValidateCore
         }
 
         // disallow content that looks like an url - dots character
-        $dotCharacters = array('.', '。');
+        $dotCharacters = array('\.', '。');
         foreach ($dotCharacters as $dotCharacter) {
-            $dotPosition = strpos($cleanName, $dotCharacter);
-            if (false !== $dotPosition && isset($cleanName[$dotPosition + 1]) && ($cleanName[$dotPosition + 1] !== ' ')) {
-                return 0;
+            $dotPositions = self::findAllDotOffsets($cleanName, $dotCharacter);
+
+            foreach ($dotPositions as $dotPosition) {
+                if (isset($cleanName[$dotPosition + 1]) && ($cleanName[$dotPosition + 1] !== ' ')) {
+                    return 0;
+                }
             }
         }
 
@@ -1257,5 +1260,28 @@ class ValidateCore
         }
 
         return true;
+    }
+
+    /**
+     * Search for dot positions in given string
+     *
+     * @param string $string
+     * @param string $dotCharacter
+     *
+     * @return array offsets of dots in given string
+     */
+    protected static function findAllDotOffsets($string, $dotCharacter)
+    {
+        $matches = array();
+
+        preg_match_all('#' . $dotCharacter . '#', $string, $matches, PREG_OFFSET_CAPTURE);
+
+        $result = current($matches);
+
+        if (empty($result)) {
+            return array();
+        }
+
+        return array_map(function ($dotPart) { return $dotPart[1];}, $result);
     }
 }
