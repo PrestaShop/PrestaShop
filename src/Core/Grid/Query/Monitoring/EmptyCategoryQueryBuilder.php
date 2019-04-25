@@ -133,19 +133,21 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
-        $allowedFilters = ['id_category', 'name', 'description', 'active'];
+        $isSingleShopContext = $this->multistoreFeature->isUsed() &&
+            $this->multistoreContextChecker->isSingleShopContext();
 
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'category', 'c')
             ->setParameter('context_lang_id', $this->contextLangId)
-            ->setParameter('context_shop_id', $this->contextShopId);
+            ->setParameter('context_shop_id', $this->contextShopId)
+            ->setParameter('root_category_id', $this->rootCategoryId);
 
         $qb->leftJoin(
             'c',
             $this->dbPrefix . 'category_lang',
             'cl',
-            $this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext() ?
+            $isSingleShopContext ?
                 'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = :context_shop_id' :
                 'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = c.id_shop_default'
         );
@@ -154,7 +156,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             'c',
             $this->dbPrefix . 'category_shop',
             'cs',
-            $this->multistoreContextChecker->isSingleShopContext() ?
+            $isSingleShopContext ?
                 'c.id_category = cs.id_category AND cs.id_shop = :context_shop_id' :
                 'c.id_category = cs.id_category AND cs.id_shop = c.id_shop_default'
         );
@@ -173,7 +175,13 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         $qb->andWhere('NOT EXISTS(' . $subSelect->getSQL() . ')');
-        $qb->andWhere('c.id_category != ' . $this->rootCategoryId);
+        $qb->andWhere('c.id_category != :root_category_id');
+
+        if ($isSingleShopContext) {
+            $qb->andWhere('cs.id_shop = :context_shop_id');
+        }
+
+        $allowedFilters = ['id_category', 'name', 'description', 'active'];
 
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters, true)) {
@@ -207,10 +215,6 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
-        }
-
-        if ($this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext()) {
-            $qb->andWhere('cs.id_shop = :context_shop_id');
         }
 
         return $qb;

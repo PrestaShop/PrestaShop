@@ -56,9 +56,7 @@ $(() => {
   emptyCategoriesGrid.addExtension(new AsyncToggleColumnExtension());
   emptyCategoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   emptyCategoriesGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-});
 
-$(() => {
   [
     'product_with_combination',
     'product_without_combination',

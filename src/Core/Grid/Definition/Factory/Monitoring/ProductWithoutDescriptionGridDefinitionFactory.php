@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -49,15 +48,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class ProductWithoutDescriptionGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'product_without_description';
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher
-    ) {
-        parent::__construct($hookDispatcher);
-    }
 
     /**
      * {@inheritdoc}
@@ -72,11 +62,7 @@ final class ProductWithoutDescriptionGridDefinitionFactory extends AbstractGridD
      */
     protected function getName()
     {
-        return $this->trans(
-            'List of products without description',
-            [],
-            'Admin.Catalog.Feature'
-        );
+        return $this->trans('List of products without description', [], 'Admin.Catalog.Feature');
     }
 
     /**

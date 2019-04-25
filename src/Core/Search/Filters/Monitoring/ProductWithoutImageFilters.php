@@ -43,7 +43,7 @@ final class ProductWithoutImageFilters extends Filters
     public static function getDefaults()
     {
         return [
-            'limit' => 50,
+            'limit' => 20,
             'offset' => 0,
             'orderBy' => 'name',
             'sortOrder' => 'asc',

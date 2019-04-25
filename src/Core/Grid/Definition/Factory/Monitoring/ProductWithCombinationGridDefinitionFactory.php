@@ -38,26 +38,16 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Builds Grid definition for Product with combinations grid
+ * Builds Grid definition for product with combination grid
  */
 final class ProductWithCombinationGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'product_with_combination';
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher
-    ) {
-        parent::__construct($hookDispatcher);
-    }
 
     /**
      * {@inheritdoc}
@@ -84,7 +74,7 @@ final class ProductWithCombinationGridDefinitionFactory extends AbstractGridDefi
      */
     protected function getColumns()
     {
-        $columns = (new ColumnCollection())
+        return (new ColumnCollection())
             ->add(
                 (new IdentifierColumn('id_product'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -123,8 +113,6 @@ final class ProductWithCombinationGridDefinitionFactory extends AbstractGridDefi
                         'actions' => $this->getRowActions(),
                     ])
             );
-
-        return $columns;
     }
 
     /**

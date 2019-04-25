@@ -141,29 +141,19 @@ class MonitoringController extends FrameworkBundleAdminController
         if ($request->request->has(ProductWithCombinationGridDefinitionFactory::GRID_ID)) {
             $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_with_combination';
             $gridId = ProductWithCombinationGridDefinitionFactory::GRID_ID;
-        }
-
-        if ($request->request->has(ProductWithoutCombinationGridDefinitionFactory::GRID_ID)) {
+        } elseif ($request->request->has(ProductWithoutCombinationGridDefinitionFactory::GRID_ID)) {
             $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_combination';
             $gridId = ProductWithoutCombinationGridDefinitionFactory::GRID_ID;
-        }
-
-        if ($request->request->has(DisabledProductGridDefinitionFactory::GRID_ID)) {
+        } elseif ($request->request->has(DisabledProductGridDefinitionFactory::GRID_ID)) {
             $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.disabled_product';
             $gridId = DisabledProductGridDefinitionFactory::GRID_ID;
-        }
-
-        if ($request->request->has(ProductWithoutImageGridDefinitionFactory::GRID_ID)) {
+        } elseif ($request->request->has(ProductWithoutImageGridDefinitionFactory::GRID_ID)) {
             $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_image';
             $gridId = ProductWithoutImageGridDefinitionFactory::GRID_ID;
-        }
-
-        if ($request->request->has(ProductWithoutDescriptionGridDefinitionFactory::GRID_ID)) {
+        } elseif ($request->request->has(ProductWithoutDescriptionGridDefinitionFactory::GRID_ID)) {
             $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_description';
             $gridId = ProductWithoutDescriptionGridDefinitionFactory::GRID_ID;
-        }
-
-        if ($request->request->has(ProductWithoutPriceGridDefinitionFactory::GRID_ID)) {
+        } elseif ($request->request->has(ProductWithoutPriceGridDefinitionFactory::GRID_ID)) {
             $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_price';
             $gridId = ProductWithoutPriceGridDefinitionFactory::GRID_ID;
         }
