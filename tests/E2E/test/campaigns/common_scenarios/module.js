@@ -336,7 +336,7 @@ module.exports = {
     test('should click on "Discover" button', () => client.waitForExistAndClick(ModulePage.discover_amazon_module_button));
     test('should verify it opens the addons Amazon market place product page in a new tab', () => {
       return promise
-        .then(() => client.switchWindow(id))
+        .then(() => client.switchWindow(id,1000))
         .then(() => client.refresh()) /**Adding refreshing page because sometimes is not well opened we have to refresh it before */
         .then(() => client.checkTextValue(ModulePage.module_name, "Amazon Market Place Module", 'contain'))
         .then(() => client.switchWindow(0));
