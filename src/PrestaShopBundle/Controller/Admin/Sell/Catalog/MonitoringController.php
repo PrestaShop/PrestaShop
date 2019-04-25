@@ -57,6 +57,8 @@ class MonitoringController extends FrameworkBundleAdminController
     /**
      * Shows Monitoring listing page
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param EmptyCategoryFilters $emptyCategoryFilters
      * @param ProductWithCombinationFilters $productWithCombinationFilters
