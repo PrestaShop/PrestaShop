@@ -10,7 +10,7 @@ module.exports = {
     password_input: '//*[@id="customer_password"]',
     days_select: '//*[@id="customer_birthday_day"]',
     month_select: '//*[@id="customer_birthday_month"]',
-    years_select: '//*[@id="customere_birthday_year"]',
+    years_select: '//*[@id="customer_birthday_year"]',
     save_button: '//*[@id="main-div"]//button[contains(text(),"Save")]',
     customer_filter_by_email_input: '//*[@id="form-customer"]//input[@name="customerFilter_email"]',
     email_address_value: '//*[@id="form-customer"]//td[%ID]',
