@@ -6,7 +6,7 @@ module.exports = {
     email_input: '#employee_email',
     password_input: '#employee_password',
     profile_select: '#employee_profile',
-    save_button: '//div[@class="card-footer"]/button[contains(text(),"Save")]',
+    save_button: '.card-footer button',
     orders_page: '//*[@id="subtab-AdminParentOrders"]/a',
     email_search_input: '#employee_email',
     search_button_team: '//button[@name="employee[actions][search]"]',
