@@ -48,7 +48,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ProductWithoutPriceGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'product_without_image';
+    const GRID_ID = 'product_without_price';
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
@@ -140,6 +140,16 @@ final class ProductWithoutPriceGridDefinitionFactory extends AbstractGridDefinit
                         'required' => false,
                         'attr' => [
                             'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                        ],
+                    ])
+            )
+            ->add(
+                (new Filter('reference', TextType::class))
+                    ->setAssociatedColumn('reference')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
                         ],
                     ])
             )
