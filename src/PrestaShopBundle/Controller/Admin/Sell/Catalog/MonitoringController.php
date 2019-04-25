@@ -26,8 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithCombinationGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutCombinationGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\DisabledProductFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\EmptyCategoryFilters;
@@ -73,7 +78,7 @@ class MonitoringController extends FrameworkBundleAdminController
         ProductWithoutDescriptionFilters $productWithoutDescriptionFilters,
         ProductWithoutPriceFilters $productWithoutPriceFilters
     ) {
-        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+        $deleteCategoryForm = $this->createForm(DeleteCategoriesType::class);
 
         $emptyCategoryGrid = $this->getEmptyCategoryGrid($emptyCategoryFilters);
         $productWithCombinationGrid = $this->getProductWithCombinationGrid($productWithCombinationFilters);
@@ -87,7 +92,7 @@ class MonitoringController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'empty_category_grid' => $this->presentGrid($emptyCategoryGrid),
-            'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
+            'delete_category_form' => $deleteCategoryForm->createView(),
             'product_with_combination_grid' => $this->presentGrid($productWithCombinationGrid),
             'product_without_combination_grid' => $this->presentGrid($productWithoutCombinationGrid),
             'disabled_product_grid' => $this->presentGrid($disabledProductGrid),
@@ -108,23 +113,66 @@ class MonitoringController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.monitoring.empty_category';
-        $filterId = EmptyCategoryGridDefinitionFactory::GRID_ID;
-
-        if ($request->request->has(ProductWithCombinationGridDefinitionFactory::GRID_ID)) {
-            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.monitoring.product_with_combination';
-            $filterId = ProductWithCombinationGridDefinitionFactory::GRID_ID;
-        }
+        $gridDefinition = $this->parseFilterRequest($request)['grid_definition'];
+        $filterId = $this->parseFilterRequest($request)['grid_id'];
 
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
         return $responseBuilder->buildSearchResponse(
-            $this->get($gridDefinitionFactory),
+            $gridDefinition,
             $request,
             $filterId,
             'admin_monitoring_index'
         );
+    }
+
+    /**
+     * Parses grid id and grid definition from request in order to recognize which grid is being filtered
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function parseFilterRequest(Request $request)
+    {
+        $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.empty_category';
+        $gridId = EmptyCategoryGridDefinitionFactory::GRID_ID;
+
+        if ($request->request->has(ProductWithCombinationGridDefinitionFactory::GRID_ID)) {
+            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_with_combination';
+            $gridId = ProductWithCombinationGridDefinitionFactory::GRID_ID;
+        }
+
+        if ($request->request->has(ProductWithoutCombinationGridDefinitionFactory::GRID_ID)) {
+            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_combination';
+            $gridId = ProductWithoutCombinationGridDefinitionFactory::GRID_ID;
+        }
+
+        if ($request->request->has(DisabledProductGridDefinitionFactory::GRID_ID)) {
+            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.disabled_product';
+            $gridId = DisabledProductGridDefinitionFactory::GRID_ID;
+        }
+
+        if ($request->request->has(ProductWithoutImageGridDefinitionFactory::GRID_ID)) {
+            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_image';
+            $gridId = ProductWithoutImageGridDefinitionFactory::GRID_ID;
+        }
+
+        if ($request->request->has(ProductWithoutDescriptionGridDefinitionFactory::GRID_ID)) {
+            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_description';
+            $gridId = ProductWithoutDescriptionGridDefinitionFactory::GRID_ID;
+        }
+
+        if ($request->request->has(ProductWithoutPriceGridDefinitionFactory::GRID_ID)) {
+            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_price';
+            $gridId = ProductWithoutPriceGridDefinitionFactory::GRID_ID;
+        }
+
+        return [
+            'grid_id' => $gridId,
+            'grid_definition' => $this->get($gridDefinition),
+        ];
     }
 
     /**

@@ -138,7 +138,7 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb->andWhere('ps.id_shop = :context_shop_id');
         }
 
-        $this->parseFilters($qb, $searchCriteria->getFilters());
+        $this->applyFilters($qb, $searchCriteria->getFilters());
 
         return $qb;
     }
@@ -147,7 +147,7 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param QueryBuilder $qb
      * @param array $filters
      */
-    private function parseFilters(QueryBuilder $qb, array $filters)
+    private function applyFilters(QueryBuilder $qb, array $filters)
     {
         $allowedFilters = ['id_product', 'reference', 'name', 'active'];
 
