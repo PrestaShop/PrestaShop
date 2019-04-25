@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryG
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Defines default filters for Empty Category grid.
+ * Defines default filters for empty category grid.
  */
 final class EmptyCategoryFilters extends Filters
 {

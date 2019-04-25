@@ -206,3 +206,11 @@ services:
         - '@prestashop.core.grid.data.factory.product_without_description'
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.grid_factory.product_without_price:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.monitoring.product_without_price'
+        - '@prestashop.core.grid.data.factory.product_without_price'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'

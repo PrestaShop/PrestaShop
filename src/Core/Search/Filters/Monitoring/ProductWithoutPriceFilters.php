@@ -26,16 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters\Monitoring;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Defines default filters for product without image grid.
+ * Defines default filters for product without price grid.
  */
-final class ProductWithoutImageFilters extends Filters
+final class ProductWithoutPriceFilters extends Filters
 {
     /** @var string */
-    protected $filterId = ProductWithoutImageGridDefinitionFactory::GRID_ID;
+    protected $filterId = ProductWithoutPriceGridDefinitionFactory::GRID_ID;
 
     /**
      * {@inheritdoc}
