@@ -813,7 +813,19 @@ class CommonClient {
         global.tab[value] = count.value;
       });
   }
-
+  /**
+   * perform a javascript click
+   * @param selector, xpath of the element
+   * @param pause
+   * @return true, if click works, false otherwise
+   */
+  waitForExistAndClickJs(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .execute(function (selector) {
+         return document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+      }, selector);
+  }
 }
 
 module.exports = CommonClient;
