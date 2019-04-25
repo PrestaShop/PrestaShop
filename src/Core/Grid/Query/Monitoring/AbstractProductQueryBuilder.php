@@ -109,6 +109,9 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     protected function getProductsCommonQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        $isSingleShopContext = $this->multistoreFeature->isUsed() &&
+            $this->multistoreContextChecker->isSingleShopContext();
+
         $qb = $this->connection
             ->createQueryBuilder()
             ->select(['p.id_product', 'p.reference', 'p.active', 'pl.name'])
@@ -120,7 +123,7 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
             'p',
             $this->dbPrefix . 'product_lang',
             'pl',
-            $this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext() ?
+            $isSingleShopContext ?
                 'p.id_product = pl.id_product AND pl.id_lang = :context_lang_id AND pl.id_shop = :context_shop_id' :
                 'p.id_product = pl.id_product AND pl.id_lang = :context_lang_id AND pl.id_shop = p.id_shop_default'
         );
@@ -129,12 +132,12 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
             'p',
             $this->dbPrefix . 'product_shop',
             'ps',
-            $this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext() ?
+            $isSingleShopContext ?
                 'p.id_product = ps.id_product AND ps.id_shop = :context_shop_id' :
                 'p.id_product = ps.id_product AND ps.id_shop = p.id_shop_default'
         );
 
-        if ($this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext()) {
+        if ($isSingleShopContext) {
             $qb->andWhere('ps.id_shop = :context_shop_id');
         }
 

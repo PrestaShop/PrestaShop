@@ -75,8 +75,8 @@ final class ProductWithoutPriceQueryBuilder extends AbstractProductQueryBuilder
             ->from($this->dbPrefix . 'specific_price', 'sp')
             ->andWhere('p.id_product = sp.id_product');
 
-        $qb->andWhere('p.price = "0.000000"')
-            ->andWhere('p.wholesale_price = "0.000000"')
+        $qb->andWhere('p.price = 0')
+            ->andWhere('p.wholesale_price = 0')
             ->andWhere('NOT EXISTS(' . $specPriceSubQuery->getSQL() . ')');
 
         return $qb;
