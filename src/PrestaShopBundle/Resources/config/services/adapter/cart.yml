@@ -34,3 +34,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand'
+
+  prestashop.adapter.command_handler.update_product_quantity_in_cart_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateProductQuantityInCartHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand'
