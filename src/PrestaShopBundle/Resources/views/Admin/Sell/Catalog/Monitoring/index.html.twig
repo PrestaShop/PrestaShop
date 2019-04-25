@@ -31,7 +31,9 @@
       <div class="col">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': empty_category_grid} %}
           {% block grid_panel_extra_content %}
-            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
+            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig'
+              with {'deleteCategoriesForm': delete_category_form }
+            %}
           {% endblock %}
         {% endembed %}
       </div>
