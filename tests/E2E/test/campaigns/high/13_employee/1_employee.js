@@ -69,7 +69,7 @@ scenario('Delete an employee', client => {
       .then(() => expect(tab['employee_number']).to.be.equal('1'));
   });
   test('should click dropdown-toggle button', () => client.waitForExistAndClick(Employee.dropdown_toggle));
-  test('should click on "Delete" link', () => client.waitForVisibleAndClick(Employee.delete_link));
+  test('should click on "Delete" link', () => client.waitForExistAndClickJs(Employee.delete_link));
   test('should click on "OK" button in the pop-up', () => client.alertAccept());
   test('should check the result', () => {
     return promise
