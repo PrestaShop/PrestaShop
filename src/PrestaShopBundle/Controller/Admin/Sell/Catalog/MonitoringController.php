@@ -113,7 +113,7 @@ class MonitoringController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $gridIdentifiers = $this->parseFilterRequest($request);
+        $gridIdentifiers = $this->identifySearchableGrid($request);
 
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
@@ -127,13 +127,13 @@ class MonitoringController extends FrameworkBundleAdminController
     }
 
     /**
-     * Parses grid id and grid definition from request in order to recognize which grid is being filtered
+     * Parses grid identifying parts from request in order to recognize which grid is being filtered
      *
      * @param Request $request
      *
      * @return array
      */
-    private function parseFilterRequest(Request $request)
+    private function identifySearchableGrid(Request $request)
     {
         $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.empty_category';
         $gridId = EmptyCategoryGridDefinitionFactory::GRID_ID;
