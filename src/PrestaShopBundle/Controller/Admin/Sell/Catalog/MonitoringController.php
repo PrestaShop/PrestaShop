@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithCombinationF
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutCombinationFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutDescriptionFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutImageFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutPriceFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -58,6 +59,7 @@ class MonitoringController extends FrameworkBundleAdminController
      * @param DisabledProductFilters $disabledProductFilters
      * @param ProductWithoutImageFilters $productWithoutImageFilters
      * @param ProductWithoutDescriptionFilters $productWithoutDescriptionFilters
+     * @param ProductWithoutPriceFilters $productWithoutPriceFilters
      *
      * @return Response
      */
@@ -68,7 +70,8 @@ class MonitoringController extends FrameworkBundleAdminController
         ProductWithoutCombinationFilters $productWithoutCombinationFilters,
         DisabledProductFilters $disabledProductFilters,
         ProductWithoutImageFilters $productWithoutImageFilters,
-        ProductWithoutDescriptionFilters $productWithoutDescriptionFilters
+        ProductWithoutDescriptionFilters $productWithoutDescriptionFilters,
+        ProductWithoutPriceFilters $productWithoutPriceFilters
     ) {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
 
@@ -78,6 +81,7 @@ class MonitoringController extends FrameworkBundleAdminController
         $disabledProductGrid = $this->getDisabledProductGrid($disabledProductFilters);
         $productWithoutImageGrid = $this->getProductWithoutImageGrid($productWithoutImageFilters);
         $productWithoutDescriptionGrid = $this->getProductWithoutDescriptionGrid($productWithoutDescriptionFilters);
+        $productWithoutPriceGrid = $this->getProductWithoutPriceGrid($productWithoutPriceFilters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Monitoring/index.html.twig', [
             'enableSidebar' => true,
@@ -89,6 +93,7 @@ class MonitoringController extends FrameworkBundleAdminController
             'disabled_product_grid' => $this->presentGrid($disabledProductGrid),
             'product_without_image_grid' => $this->presentGrid($productWithoutImageGrid),
             'product_without_description_grid' => $this->presentGrid($productWithoutDescriptionGrid),
+            'product_without_price_grid' => $this->presentGrid($productWithoutPriceGrid),
         ]);
     }
 
@@ -190,6 +195,18 @@ class MonitoringController extends FrameworkBundleAdminController
     private function getProductWithoutDescriptionGrid(ProductWithoutDescriptionFilters $filters)
     {
         $gridFactory = $this->get('prestashop.core.grid.grid_factory.product_without_description');
+
+        return $gridFactory->getGrid($filters);
+    }
+
+    /**
+     * @param ProductWithoutPriceFilters $filters
+     *
+     * @return GridInterface
+     */
+    private function getProductWithoutPriceGrid(ProductWithoutPriceFilters $filters)
+    {
+        $gridFactory = $this->get('prestashop.core.grid.grid_factory.product_without_price');
 
         return $gridFactory->getGrid($filters);
     }
