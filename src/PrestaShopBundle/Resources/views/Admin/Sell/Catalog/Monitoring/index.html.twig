@@ -45,6 +45,14 @@
       </div>
     </div>
   {% endblock %}
+
+  {% block product_without_combinations_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': product_without_combination_grid} %}
+      </div>
+    </div>
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
