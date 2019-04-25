@@ -25,8 +25,6 @@
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
-use Symfony\Component\Filesystem\Filesystem;
-use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -1188,50 +1186,12 @@ class LanguageCore extends ObjectModel
      */
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
-        $folder = _PS_TRANSLATIONS_DIR_ . 'emails-' . $lang_pack['locale'];
-        $fileSystem = new Filesystem();
-        $finder = new \Symfony\Component\Finder\Finder();
+        @trigger_error(
+            'Language::installEmailsLanguagePack() is deprecated since version 1.7.6.0 Use GenerateThemeMailsCommand instead.',
+            E_USER_DEPRECATED
+        );
 
-        if (!file_exists($folder . '.zip')) {
-            // @todo Throw exception
-            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification');
-        } else {
-            $zipArchive = new ZipArchive();
-            $zipArchive->open($folder . '.zip');
-            $zipArchive->extractTo($folder);
-            $zipArchive->close();
-
-            $coreDestPath = _PS_ROOT_DIR_ . '/mails/' . $lang_pack['iso_code'];
-            $fileSystem->mkdir($coreDestPath, PsFileSystem::DEFAULT_MODE_FOLDER);
-
-            if ($fileSystem->exists($folder . '/core')) {
-                foreach ($finder->files()->in($folder . '/core') as $coreEmail) {
-                    $fileSystem->rename(
-                        $coreEmail->getRealpath(),
-                        $coreDestPath . '/' . $coreEmail->getFileName(),
-                        true
-                    );
-                }
-            }
-
-            if ($fileSystem->exists($folder . '/modules')) {
-                foreach ($finder->directories()->in($folder . '/modules') as $moduleDirectory) {
-                    $moduleDestPath = _PS_ROOT_DIR_ . '/modules/' . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
-                    $fileSystem->mkdir($moduleDestPath, PsFileSystem::DEFAULT_MODE_FOLDER);
-
-                    $findEmails = new \Symfony\Component\Finder\Finder();
-                    foreach ($findEmails->files()->in($moduleDirectory->getRealPath()) as $moduleEmail) {
-                        $fileSystem->rename(
-                            $moduleEmail->getRealpath(),
-                            $moduleDestPath . '/' . $moduleEmail->getFileName(),
-                            true
-                        );
-                    }
-                }
-            }
-
-            Tools::deleteDirectory($folder);
-        }
+        self::generateEmailsLanguagePack($lang_pack, $errors);
     }
 
     public static function installLanguagePack($iso, $params, &$errors = array())

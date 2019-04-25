@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,20 +22,32 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Category;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+/**
+ * Defines settings for Category's SEO
+ */
+final class SeoSettings
+{
+    /**
+     * Maximum length of SEO title (value is constrained by database)
+     */
+    const MAX_TITLE_LENGTH = 255;
 
-{% block javascripts %}
-  {{ parent() }}
+    /**
+     * Recommended length of SEO title
+     */
+    const RECOMMENDED_TITLE_LENGTH = 70;
 
-  <script src="{{ asset('themes/new-theme/public/manufacturer_address_form.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * Maximum length of SEO description (value is constrained by database)
+     */
+    const MAX_DESCRIPTION_LENGTH = 512;
+
+    /**
+     * Recommended length of SEO description
+     */
+    const RECOMMENDED_DESCRIPTION_LENGTH = 160;
+}

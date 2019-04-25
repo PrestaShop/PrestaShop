@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -24,21 +23,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once __DIR__ . '/sql_indexes.php';
+const $ = window.$;
 
-function ps_1760_replace_index_of_admin_filter()
-{
-  $indexList = ['admin_filter_search_idx', 'search_idx', 'admin_filter_search_id_idx'];
-  $res = true;
+/**
+ * This component is implemented to work with TextWithRecommendedLengthType,
+ * but can be used as standalone component as well.
+ *
+ * Usage:
+ *
+ * Define your HTML with input and counter. Example:
+ *
+ * <input id="myInput"
+ *        class="js-recommended-length-input"
+ *        data-recommended-length-counter="#myInput_recommended_length_counter"
+ * >
+ *
+ * <div id"myInput_recommended_length_counter">
+ *  <span class="js-current-length">0</span> of 70 characters used (recommended)
+ * </div>
+ *
+ * NOTE: You must use exactly the same Classes, but IDs can be different!
+ *
+ * Then enable component in JavaScript:
+ *
+ * new TextWithRecommendedLengthCounter();
+ */
+export default class TextWithRecommendedLengthCounter {
+  constructor() {
+    $(document).on('input', '.js-recommended-length-input', (event) => {
+      const $input = $(event.currentTarget);
 
-  // Drop indexes if they exist
-  foreach ($indexList as $index) {
-    $res &= drop_index_if_exists($index, _DB_PREFIX_ . 'admin_filter');
+      $($input.data('recommended-length-counter')).find('.js-current-length').text($input.val().length);
+    });
   }
-
-  $res &= Db::getInstance()->execute('ALTER TABLE
-    `' . _DB_PREFIX_ . 'admin_filter`
-    ADD UNIQUE INDEX `admin_filter_search_id_idx` (`employee`, `shop`, `controller`, `action`, `filter_id`)');
-
-  return $res;
 }

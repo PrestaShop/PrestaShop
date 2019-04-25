@@ -29,10 +29,10 @@ let wrongCurrencyData = {
     name: 'CHF',
     exchangeRate: '1.86'
   },
-  successMessage = 'close\nSuccessful creation.',
+  successMessage = 'Successful creation.',
   wrongMessage = '×\n2 errors\nThe currency conversion rate cannot be equal to 0.\nThe conversion_rate field is invalid.',
-  updateSuccessMessage = 'close\nSuccessful update.',
-  deleteSuccessMessage = 'close\nSuccessful deletion.';
+  updateSuccessMessage = 'Successful update.',
+  deleteSuccessMessage = 'Successful deletion.';
 
 scenario('Create, edit, delete and live exchange rate currency', () => {
   scenario('Login in the Back Office', client => {
@@ -42,8 +42,13 @@ scenario('Create, edit, delete and live exchange rate currency', () => {
 
   scenario('Test1: create, check and sort "Currency"', () => {
     commonCurrency.accessToCurrencies();
-    commonCurrency.createCurrency(wrongMessage, wrongCurrencyData, false, false);
-    commonCurrency.createCurrency(successMessage, firstCurrencyData, false, true, false);
+    /**
+     * Behavior changed
+     * In Add currency form,, '0,86' was not accepted
+     * Now, '0,86' and '0.86' are both accepted
+     * commonCurrency.createCurrency(wrongMessage, wrongCurrencyData, false, false);
+     */
+    commonCurrency.createCurrency(successMessage, firstCurrencyData, false, true);
     commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
     scenario('Enable currency', client => {
       test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1)
