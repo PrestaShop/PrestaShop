@@ -4,6 +4,8 @@
   position: relative;
   margin: auto;
   margin-bottom: 17px;
+  display: flex;
+  flex-direction: row;
 
   &__left, &__right {
     height: 100%;
@@ -24,6 +26,10 @@
     width: 320px;
     animation: showcase-img-appearance 1s;
 
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
+
     img {
       animation: showcase-img-appearance 1.5s;
       padding: 40px;
@@ -39,6 +45,10 @@
     width: 480px;
     padding: 45px 55px 0 20px;
     font-size: 14px;
+
+    @include media-breakpoint-down(md) {
+      padding: 3.438rem 1.25rem;
+    }
 
     h2 {
       font-size: 18px;

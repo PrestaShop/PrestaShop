@@ -79,6 +79,7 @@ module.exports = {
         localization_submenu: '#subtab-AdminParentLocalization',
         languages_tab: '//*[@id="subtab-AdminLanguages"]',
         currencies_tab: '//*[@id="subtab-AdminCurrencies"]',
+        active_currencies_tab: '//*[@id="subtab-AdminCurrencies" and contains(@class,"active")]',
         geolocation_tab: '//*[@id="subtab-AdminGeolocation"]',
         locations_submenu: '#subtab-AdminParentCountries',
         countries_tab: '//*[@id="subtab-AdminCountries"]',

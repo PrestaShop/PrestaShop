@@ -80,9 +80,9 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      *
      * @param string $isoCode
      *                        An ISO 4217 currency code
-     * @param int|null $idLang
-     *                         Set this parameter if you want the currency in a specific language.
-     *                         If null, default language will be used
+     * @param int|false|null $idLang
+     *                               Set this parameter if you want the currency in a specific language.
+     *                               If null or false, default language will be used
      *
      * @return currency|null
      *                       The asked Currency object, or null if not found
@@ -94,7 +94,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
             return null;
         }
 
-        if (null === $idLang) {
+        if (empty($idLang)) {
             $idLang = $this->configuration->get('PS_LANG_DEFAULT');
         }
 
