@@ -202,3 +202,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutDescriptionQueryBuilder'
       parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
       public: true
+
+    prestashop.core.grid.query_builder.monitoring.product_without_price:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutPriceQueryBuilder'
+      parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
+      public: true
