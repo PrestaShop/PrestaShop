@@ -144,6 +144,16 @@ final class ProductWithCombinationGridDefinitionFactory extends AbstractGridDefi
                     ])
             )
             ->add(
+                (new Filter('reference', TextType::class))
+                    ->setAssociatedColumn('reference')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
+                        ],
+                    ])
+            )
+            ->add(
                 (new Filter('name', TextType::class))
                     ->setAssociatedColumn('name')
                     ->setTypeOptions([
