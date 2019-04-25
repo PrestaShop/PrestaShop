@@ -113,16 +113,15 @@ class MonitoringController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $gridDefinition = $this->parseFilterRequest($request)['grid_definition'];
-        $filterId = $this->parseFilterRequest($request)['grid_id'];
+        $gridIdentifiers = $this->parseFilterRequest($request);
 
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
         return $responseBuilder->buildSearchResponse(
-            $gridDefinition,
+            $gridIdentifiers['grid_definition'],
             $request,
-            $filterId,
+            $gridIdentifiers['grid_id'],
             'admin_monitoring_index'
         );
     }
