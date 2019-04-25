@@ -36,6 +36,12 @@ import AsyncToggleColumnExtension
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension
+  from '../../components/grid/extension/export-to-sql-manager-extension';
+import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
+import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
+import BulkActionCheckboxExtension
+  from '../../components/grid/extension/bulk-action-checkbox-extension';
 
 const $ = window.$;
 
@@ -50,4 +56,27 @@ $(() => {
   emptyCategoriesGrid.addExtension(new AsyncToggleColumnExtension());
   emptyCategoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   emptyCategoriesGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+});
+
+$(() => {
+  [
+    'product_with_combination',
+    'product_without_combination',
+    'disabled_product',
+    'product_without_image',
+    'product_without_description',
+    'product_without_price',
+  ].forEach((gridName) => {
+    const grid = new Grid(gridName);
+
+    grid.addExtension(new ExportToSqlManagerExtension());
+    grid.addExtension(new ReloadListActionExtension());
+    grid.addExtension(new SortingExtension());
+    grid.addExtension(new FiltersResetExtension());
+    grid.addExtension(new ColumnTogglingExtension());
+    grid.addExtension(new SubmitRowActionExtension());
+    grid.addExtension(new SubmitBulkExtension());
+    grid.addExtension(new BulkActionCheckboxExtension());
+    grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  });
 });
