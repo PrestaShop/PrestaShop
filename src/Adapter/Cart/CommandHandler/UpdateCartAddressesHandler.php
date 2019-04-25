@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Address;
 use Cart;
+use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartAddressesHandlerInterface;

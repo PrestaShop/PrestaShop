@@ -24,36 +24,53 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
 
-use Cart;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-
-/**
- * Provides reusable methods for cart handlers
- *
- * @internal
- */
-abstract class AbstractCartHandler
+class CartSummary
 {
     /**
-     * @param CartId $cartId
-     *
-     * @return Cart
-     *
-     * @throws CurrencyNotFoundException
+     * @var array
      */
-    protected function getCartObject(CartId $cartId)
-    {
-        $cart = new Cart($cartId->getValue());
+    private $summary;
 
-        if ($cartId->getValue() !== $cart->id) {
-            throw new CurrencyNotFoundException(
-                sprintf('Currency with id "%s" was not found', $cartId->getValue())
-            );
-        }
+    /**
+     * @var array
+     */
+    private $deliveryOptions;
 
-        return $cart;
+    /**
+     * @var array
+     */
+    private $addresses;
+
+    /**
+     * @var bool
+     */
+    private $isFreeShipping;
+
+    /**
+     * @var string
+     */
+    private $orderMessage;
+
+    /**
+     * @param array $summary
+     * @param array $deliveryOptions
+     * @param array $addresses
+     * @param bool $isFreeShipping
+     * @param string $orderMessage
+     */
+    public function __construct(
+        array $summary,
+        array $deliveryOptions,
+        array $addresses,
+        $isFreeShipping,
+        $orderMessage
+    ) {
+        $this->summary = $summary;
+        $this->deliveryOptions = $deliveryOptions;
+        $this->addresses = $addresses;
+        $this->isFreeShipping = $isFreeShipping;
+        $this->orderMessage = $orderMessage;
     }
 }

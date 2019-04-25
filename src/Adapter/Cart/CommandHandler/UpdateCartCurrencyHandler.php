@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
