@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use CartRule;
+use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\SetFreeShippingToCartHandlerInterface;

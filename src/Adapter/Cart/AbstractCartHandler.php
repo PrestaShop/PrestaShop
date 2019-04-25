@@ -24,28 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Cart;
 
-use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliveryOptionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartDeliveryOptionHandlerInterface;
+use Cart;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 
 /**
+ * Provides reusable methods for cart handlers
+ *
  * @internal
  */
-final class UpdateCartDeliveryOptionHandler extends AbstractCartHandler implements UpdateCartDeliveryOptionHandlerInterface
+abstract class AbstractCartHandler
 {
     /**
-     * {@inheritdoc}
+     * @param CartId $cartId
+     *
+     * @return Cart
+     *
+     * @throws CurrencyNotFoundException
      */
-    public function handle(UpdateCartDeliveryOptionCommand $command)
+    protected function getCartObject(CartId $cartId)
     {
-        $cart = $this->getCartObject($command->getCartId());
+        $cart = new Cart($cartId->getValue());
 
-        $cart->setDeliveryOption([
-            $cart->id_address_delivery => $command->getNewDeliveryOption(),
-        ]);
+        if ($cartId->getValue() !== $cart->id) {
+            throw new CurrencyNotFoundException(
+                sprintf('Currency with id "%s" was not found', $cartId->getValue())
+            );
+        }
 
-        $cart->save();
+        return $cart;
     }
 }
