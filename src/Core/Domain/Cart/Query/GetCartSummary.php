@@ -24,28 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Query;
 
-use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliveryOptionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartDeliveryOptionHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
 /**
- * @internal
+ * Gets cart summary for cart in Back Office.
  */
-final class UpdateCartDeliveryOptionHandler extends AbstractCartHandler implements UpdateCartDeliveryOptionHandlerInterface
+class GetCartSummary
 {
     /**
-     * {@inheritdoc}
+     * @var CartId
      */
-    public function handle(UpdateCartDeliveryOptionCommand $command)
+    private $cartId;
+
+    /**
+     * @param int $cartId
+     */
+    public function __construct($cartId)
     {
-        $cart = $this->getCartObject($command->getCartId());
+        $this->cartId = new CartId($cartId);
+    }
 
-        $cart->setDeliveryOption([
-            $cart->id_address_delivery => $command->getNewDeliveryOption(),
-        ]);
-
-        $cart->save();
+    /**
+     * @return CartId
+     */
+    public function getCartId()
+    {
+        return $this->cartId;
     }
 }
