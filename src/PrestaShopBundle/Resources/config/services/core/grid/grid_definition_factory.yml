@@ -173,3 +173,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
+
+    prestashop.core.grid.definition.factory.monitoring.product_without_description:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
