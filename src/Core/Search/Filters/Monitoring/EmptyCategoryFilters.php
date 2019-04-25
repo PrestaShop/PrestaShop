@@ -43,7 +43,7 @@ final class EmptyCategoryFilters extends Filters
     public static function getDefaults()
     {
         return [
-            'limit' => 10,
+            'limit' => 50,
             'offset' => 0,
             'orderBy' => 'name',
             'sortOrder' => 'asc',

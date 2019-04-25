@@ -28,8 +28,10 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithCombinationGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\EmptyCategoryFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithCombinationFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutCombinationFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -49,20 +51,20 @@ class MonitoringController extends FrameworkBundleAdminController
      * @param Request $request
      * @param EmptyCategoryFilters $emptyCategoryFilters
      * @param ProductWithCombinationFilters $productWithCombinationFilters
+     * @param ProductWithoutCombinationFilters $productWithoutCombinationFilters
      *
      * @return Response
      */
     public function indexAction(
         Request $request,
         EmptyCategoryFilters $emptyCategoryFilters,
-        ProductWithCombinationFilters $productWithCombinationFilters
+        ProductWithCombinationFilters $productWithCombinationFilters,
+        ProductWithoutCombinationFilters $productWithoutCombinationFilters
     ) {
-        $emptyCategoryGridFactory = $this->get('prestashop.core.grid.grid_factory.empty_category');
-        $emptyCategoryGrid = $emptyCategoryGridFactory->getGrid($emptyCategoryFilters);
+        $emptyCategoryGrid = $this->getEmptyCategoryGrid($emptyCategoryFilters);
+        $productWithCombinationGrid = $this->getProductWithCombinationGrid($productWithCombinationFilters);
+        $productWithoutCombinationGrid = $this->getProductWithoutCombinationGrid($productWithoutCombinationFilters);
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
-
-        $productWithCombinationGridFactory = $this->get('prestashop.core.grid.grid_factory.product_with_combination');
-        $productWithCombinationGrid = $productWithCombinationGridFactory->getGrid($productWithCombinationFilters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Monitoring/index.html.twig', [
             'enableSidebar' => true,
@@ -70,6 +72,7 @@ class MonitoringController extends FrameworkBundleAdminController
             'empty_category_grid' => $this->presentGrid($emptyCategoryGrid),
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
             'product_with_combination_grid' => $this->presentGrid($productWithCombinationGrid),
+            'product_without_combination_grid' => $this->presentGrid($productWithoutCombinationGrid),
         ]);
     }
 
@@ -101,5 +104,43 @@ class MonitoringController extends FrameworkBundleAdminController
             $filterId,
             'admin_monitoring_index'
         );
+    }
+
+    /**
+     * @param EmptyCategoryFilters $filters
+     *
+     * @return GridInterface
+     */
+    private function getEmptyCategoryGrid(EmptyCategoryFilters $filters)
+    {
+        $emptyCategoryGridFactory = $this->get('prestashop.core.grid.grid_factory.empty_category');
+
+        return $emptyCategoryGridFactory->getGrid($filters);
+    }
+
+    /**
+     * @param ProductWithCombinationFilters $filters
+     *
+     * @return GridInterface
+     */
+    private function getProductWithCombinationGrid(ProductWithCombinationFilters $filters)
+    {
+        $productWithCombinationGridFactory = $this->get('prestashop.core.grid.grid_factory.product_with_combination');
+
+        return $productWithCombinationGridFactory->getGrid($filters);
+    }
+
+    /**
+     * @param ProductWithoutCombinationFilters $filters
+     *
+     * @return GridInterface
+     */
+    private function getProductWithoutCombinationGrid(ProductWithoutCombinationFilters $filters)
+    {
+        $productWithoutCombinationGridFactory = $this->get(
+            'prestashop.core.grid.grid_factory.product_without_combination'
+        );
+
+        return $productWithoutCombinationGridFactory->getGrid($filters);
     }
 }

@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Category\DeleteCategoryRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -53,20 +52,12 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
     const GRID_ID = 'empty_category';
 
     /**
-     * @var AccessibilityCheckerInterface
-     */
-    private $categoryForViewAccessibilityChecker;
-
-    /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
      */
     public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
+        HookDispatcherInterface $hookDispatcher
     ) {
         parent::__construct($hookDispatcher);
-        $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
     }
 
     /**
@@ -214,10 +205,9 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                     ->setName($this->trans('View', [], 'Admin.Actions'))
                     ->setIcon('zoom_in')
                     ->setOptions([
-                        'route' => 'admin_categories_index',
+                        'route' => 'admin_categories_index', //@todo: implement view products of this category
                         'route_param_name' => 'id_category',
                         'route_param_field' => 'id_category',
-                        'accessibility_checker' => $this->categoryForViewAccessibilityChecker,
                     ])
             )
             ->add(
