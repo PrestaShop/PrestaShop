@@ -163,3 +163,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutCombinationGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
+
+    prestashop.core.grid.definition.factory.monitoring.disabled_product:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
