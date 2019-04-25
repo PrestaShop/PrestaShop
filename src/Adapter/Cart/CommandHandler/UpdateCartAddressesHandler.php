@@ -32,13 +32,11 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartAddressesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 
 /**
  * @internal
  */
-final class UpdateCartAddressesHandler implements UpdateCartAddressesHandlerInterface
+final class UpdateCartAddressesHandler extends AbstractCartHandler implements UpdateCartAddressesHandlerInterface
 {
     /**
      * @param UpdateCartAddressesCommand $command
@@ -62,26 +60,6 @@ final class UpdateCartAddressesHandler implements UpdateCartAddressesHandlerInte
 
         // @todo: Should context be changed at controller layer instead?
         \Context::getContext()->cart = $cart;
-    }
-
-    /**
-     * @param CartId $cartId
-     *
-     * @return Cart
-     *
-     * @throws CurrencyNotFoundException
-     */
-    private function getCartObject(CartId $cartId)
-    {
-        $cart = new Cart($cartId->getValue());
-
-        if ($cartId->getValue() !== $cart->id) {
-            throw new CurrencyNotFoundException(
-                sprintf('Currency with id "%s" was not found', $cartId->getValue())
-            );
-        }
-
-        return $cart;
     }
 
     /**
