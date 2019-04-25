@@ -5,7 +5,7 @@ admin_monitoring_index:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Monitoring:index'
     _legacy_controller: AdminTracking
 
-admin_monitoring__search:
+admin_monitoring_search:
   path: /
   methods: POST
   defaults:

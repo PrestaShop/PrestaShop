@@ -39,26 +39,16 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Builds Grid definition for Empty Categories listing
+ * Builds Grid definition for empty categories listing
  */
 final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'empty_category';
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher
-    ) {
-        parent::__construct($hookDispatcher);
-    }
 
     /**
      * {@inheritdoc}
@@ -81,7 +71,7 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
      */
     protected function getColumns()
     {
-        $columns = (new ColumnCollection())
+        return (new ColumnCollection())
             ->add(
                 (new IdentifierColumn('id_category'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -121,8 +111,6 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                         'actions' => $this->getRowActions(),
                     ])
             );
-
-        return $columns;
     }
 
     /**
@@ -130,7 +118,7 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
      */
     protected function getFilters()
     {
-        $filters = (new FilterCollection())
+        return (new FilterCollection())
             ->add(
                 (new Filter('id_category', TextType::class))
                     ->setAssociatedColumn('id_category')
@@ -177,8 +165,6 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                     ])
                     ->setAssociatedColumn('actions')
             );
-
-        return $filters;
     }
 
     /**

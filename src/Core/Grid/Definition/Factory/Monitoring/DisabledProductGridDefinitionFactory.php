@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -49,15 +48,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class DisabledProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'disabled_product';
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher
-    ) {
-        parent::__construct($hookDispatcher);
-    }
 
     /**
      * {@inheritdoc}
@@ -72,11 +62,7 @@ final class DisabledProductGridDefinitionFactory extends AbstractGridDefinitionF
      */
     protected function getName()
     {
-        return $this->trans(
-            'List of disabled products',
-            [],
-            'Admin.Catalog.Feature'
-        );
+        return $this->trans('List of disabled products', [], 'Admin.Catalog.Feature');
     }
 
     /**
@@ -84,7 +70,7 @@ final class DisabledProductGridDefinitionFactory extends AbstractGridDefinitionF
      */
     protected function getColumns()
     {
-        $columns = (new ColumnCollection())
+        return (new ColumnCollection())
             ->add(
                 (new IdentifierColumn('id_product'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -123,8 +109,6 @@ final class DisabledProductGridDefinitionFactory extends AbstractGridDefinitionF
                         'actions' => $this->getRowActions(),
                     ])
             );
-
-        return $columns;
     }
 
     /**
@@ -132,7 +116,7 @@ final class DisabledProductGridDefinitionFactory extends AbstractGridDefinitionF
      */
     protected function getFilters()
     {
-        $filters = (new FilterCollection())
+        return (new FilterCollection())
             ->add(
                 (new Filter('id_product', TextType::class))
                     ->setAssociatedColumn('id_product')
@@ -179,8 +163,6 @@ final class DisabledProductGridDefinitionFactory extends AbstractGridDefinitionF
                     ])
                     ->setAssociatedColumn('actions')
             );
-
-        return $filters;
     }
 
     /**
