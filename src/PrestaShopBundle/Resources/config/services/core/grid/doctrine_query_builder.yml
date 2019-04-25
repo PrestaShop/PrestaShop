@@ -192,3 +192,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\DisabledProductQueryBuilder'
       parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
       public: true
+
+    prestashop.core.grid.query_builder.monitoring.product_without_image:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutImageQueryBuilder'
+      parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
+      public: true
