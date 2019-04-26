@@ -24,27 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin;
+namespace PrestaShopBundle\Form\Admin\Login;
 
-use PrestaShopBundle\Form\Admin\Login\LoginType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class LoginController responsible for employee login page.
+ * Builds login form.
  */
-class LoginController extends FrameworkBundleAdminController
+class LoginType extends AbstractType
 {
-    public function indexAction()
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
-        $loginForm = $this->createForm(LoginType::class);
-
-        return $this->render('@PrestaShop/Admin/Login/index.html.twig', [
-            'loginForm' => $loginForm->createView(),
-            'shopName' => $this->configuration->get('PS_SHOP_NAME'),
-            'imgDir' => $this->configuration->get('_PS_IMG_'),
-            'languageIso' => $languageDataProvider->getLanguageIsoById(
-                $this->configuration->get('PS_LANG_DEFAULT')
-            ),
-        ]);
+        $builder
+            ->add('email', EmailType::class, [
+                'attr' => [
+                    'placeholder' => 'test@email.com',
+                ]
+            ])
+            ->add('password', PasswordType::class)
+        ;
     }
 }
