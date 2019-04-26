@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Login;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,6 +49,7 @@ class LoginType extends AbstractType
                 ]
             ])
             ->add('password', PasswordType::class)
+            ->add('stay_logged_in', CheckboxType::class)
         ;
     }
 }
