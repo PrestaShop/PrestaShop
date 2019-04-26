@@ -40,7 +40,7 @@ use Profile;
  *
  * @internal
  */
-final class DeleteProfileHandler implements DeleteProfileHandlerInterface
+final class DeleteProfileHandler extends AbstractProfileHandler implements DeleteProfileHandlerInterface
 {
     /**
      * @var int
@@ -64,6 +64,8 @@ final class DeleteProfileHandler implements DeleteProfileHandlerInterface
 
         try {
             $entity = new Profile($entityId);
+
+            $this->assertProfileIsNotAssignedToEmployee($entity);
 
             if ($entity->id != $entityId) {
                 throw new ProfileNotFoundException(

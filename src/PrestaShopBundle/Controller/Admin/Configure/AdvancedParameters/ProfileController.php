@@ -269,10 +269,16 @@ class ProfileController extends FrameworkBundleAdminController
                 'For security reasons, you cannot delete the Administrator\'s profile.',
                 'Admin.Advparameters.Notification'
             ),
-            FailedToDeleteProfileException::class => $this->trans(
-                'An error occurred while deleting the object.',
-                'Admin.Notifications.Error'
-            ),
+            FailedToDeleteProfileException::class => [
+                FailedToDeleteProfileException::UNEXPECTED_ERROR => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_EMPLOYEE => $this->trans(
+                    'Profile(s) assigned to employee cannot be deleted',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }

@@ -40,7 +40,7 @@ use Profile;
  *
  * @internal
  */
-final class BulkDeleteProfileHandler implements BulkDeleteProfileHandlerInterface
+final class BulkDeleteProfileHandler extends AbstractProfileHandler implements BulkDeleteProfileHandlerInterface
 {
     /**
      * @var int
@@ -79,6 +79,8 @@ final class BulkDeleteProfileHandler implements BulkDeleteProfileHandlerInterfac
                         sprintf('Cannot delete Profile with id %s', var_export($entityIdValue, true))
                     );
                 }
+
+                $this->assertProfileIsNotAssignedToEmployee($entity);
 
                 if (false === $entity->delete()) {
                     throw new FailedToDeleteProfileException(
