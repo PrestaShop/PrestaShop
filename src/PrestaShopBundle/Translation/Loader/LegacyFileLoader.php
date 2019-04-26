@@ -39,11 +39,6 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
 final class LegacyFileLoader implements LoaderInterface
 {
     /**
-     * @var string the expected format of a legacy translation key
-     */
-    const LEGACY_TRANSLATION_FORMAT = '#\<\{(?<module>[\w-]+)\}(?<theme>[\w-]+)\>(?<domain>[\w-]+)_(?<id>[\w-]+)#';
-
-    /**
      * @var LegacyFileReader
      */
     private $fileReader;
