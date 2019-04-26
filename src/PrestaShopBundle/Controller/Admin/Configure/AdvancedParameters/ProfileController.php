@@ -278,6 +278,10 @@ class ProfileController extends FrameworkBundleAdminController
                     'Profile(s) assigned to employee cannot be deleted',
                     'Admin.Notifications.Error'
                 ),
+                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE => $this->trans(
+                    'You cannot delete your own profile',
+                    'Admin.Notifications.Error'
+                ),
             ],
         ];
     }

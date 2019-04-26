@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminPr
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShopException;
 use Profile;
 
@@ -48,11 +49,18 @@ final class DeleteProfileHandler extends AbstractProfileHandler implements Delet
     private $superAdminProfileId;
 
     /**
-     * @param int $superAdminProfileId
+     * @var ContextEmployeeProviderInterface
      */
-    public function __construct($superAdminProfileId)
+    private $contextEmployeeProvider;
+
+    /**
+     * @param int $superAdminProfileId
+     * @param ContextEmployeeProviderInterface $contextEmployeeProvider
+     */
+    public function __construct($superAdminProfileId, ContextEmployeeProviderInterface $contextEmployeeProvider)
     {
         $this->superAdminProfileId = $superAdminProfileId;
+        $this->contextEmployeeProvider = $contextEmployeeProvider;
     }
 
     /**
@@ -65,13 +73,20 @@ final class DeleteProfileHandler extends AbstractProfileHandler implements Delet
         try {
             $entity = new Profile($entityId);
 
-            $this->assertProfileIsNotAssignedToEmployee($entity);
-
             if ($entity->id != $entityId) {
                 throw new ProfileNotFoundException(
                     sprintf('Profile with id %s cannot be found.', var_export($entityId, true))
                 );
             }
+
+            if ($this->contextEmployeeProvider->getProfileId() === $entity->id) {
+                throw new FailedToDeleteProfileException(
+                    sprintf('Failed to delete Profile with id %s', var_export($entityId, true)),
+                    FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE
+                );
+            }
+
+            $this->assertProfileIsNotAssignedToEmployee($entity);
 
             if ($entity->id == $this->superAdminProfileId) {
                 throw new CannotDeleteSuperAdminProfileException(
