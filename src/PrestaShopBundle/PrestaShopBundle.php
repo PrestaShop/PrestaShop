@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle;
 
+use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
@@ -63,5 +64,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
         $container->addCompilerPass(new OverrideTwigServiceCompilerPass());
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
+        $container->addCompilerPass(new CommandAndQueryCollectorPass());
     }
 }
