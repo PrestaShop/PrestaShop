@@ -1,0 +1,42 @@
+admin_catalog_price_rules_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _legacy_controller: AdminSpecificPriceRule
+
+##todo: implement create action
+admin_catalog_price_rules_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _legacy_controller: AdminSpecificPriceRule
+
+##todo: implement edit action
+admin_catalog_price_rules_edit:
+  path: /{priceRuleId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _legacy_controller: AdminSpecificPriceRule
+  requirements:
+    priceRuleId: \d+
+
+##todo: implement delete action
+admin_catalog_price_rules_delete:
+  path: /{priceRuleId}/delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _legacy_controller: AdminSpecificPriceRule
+  requirements:
+    priceRuleId: \d+
+
+##todo: implement bulk delete action
+admin_catalog_price_rules_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _legacy_controller: AdminSpecificPriceRule
