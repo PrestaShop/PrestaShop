@@ -19,7 +19,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {HomePage} = require('../../../selectors/FO/home_page');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
-let data = require('./../../../datas/product-data');
+let data = require('../../../datas/product-data');
 let common = require('../../../common.webdriverio');
 let promise = Promise.resolve();
 

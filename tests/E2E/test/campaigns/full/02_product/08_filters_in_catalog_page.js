@@ -46,7 +46,7 @@ scenario('Check the sort of products in the Back Office', client => {
     });
   }, 'product/product');
   scenario('Search products by different attributes', () => {
-    scenario('Search products  by "ID"', client => {
+    scenario('Search products by "ID"', client => {
       test('should search products by id', () => {
         return promise
           .then(() => client.isVisible(ProductList.catalogue_filter_by_id_min_input))
@@ -95,7 +95,7 @@ scenario('Check the sort of products in the Back Office', client => {
       });
       commonProduct.productList(AddProductPage, ProductList.products_column.replace('%COL', 7), 'price', client, 18, 25);
     }, 'product/product');
-    scenario('Search products  by "Minimum quantity"', client => {
+    scenario('Search products by "Minimum quantity"', client => {
       test('should search a products by minimum quantity', () => {
         return promise
           .then(() => client.isVisible(ProductList.catalogue_filter_by_quantity_min_input))
@@ -125,7 +125,7 @@ scenario('Check the sort of products in the Back Office', client => {
       });
       commonProduct.productList(AddProductPage, ProductList.products_status_icon, 'active_status', client);
     }, 'product/product');
-    scenario('Search products  by "Inactive status"', client => {
+    scenario('Search products by "Inactive status"', client => {
       test('should search products by inactive status', () => {
         return promise
           .then(() => client.waitForExistAndClick(ProductList.status_select))

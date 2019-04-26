@@ -490,7 +490,7 @@ module.exports = {
     await client.signInFO(AccessPageFO);
     await client.changeLanguage();
     await client.scrollWaitForExistAndClick(productPage.see_all_products);
-    for (let i = 0; i <= pagination; i++) {
+    for (let i = 0; i <= global.pagination; i++) {
       for (let j = 0; j < global.productInfo.length; j++) {
         await client.pause(2000);
         await client.isVisible(AccessPageFO.product_name.replace('%PAGENAME', global.productInfo[j].name.substring(0, 23)));
@@ -659,8 +659,6 @@ module.exports = {
       await client.getTextInVar(ProductList.products_column.replace('%ID', i).replace('%COL', 6), 'categoryName');
       await client.checkCategoryProduct();
     }
-    await client.waitForExistAndClick(ProductList.filter_by_category_button);
-    await client.waitForExistAndClick(ProductList.unselect_filter_link);
   },
 
   checkProductQuantity(Menu, AddProductPage, productName, quantity) {
@@ -674,7 +672,7 @@ module.exports = {
     test('should go to "Shop Parameters > Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.traffic_seo_submenu));
     test('should close symfony toolbar if it exists', () => client.waitForSymfonyToolbar(AddProductPage, 3000));
     test('should ' + enableOrDisable + ' the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', url)));
-    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 1000));
+    test('should click on "Save" button', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 1000));
     test('should go to the Front Office', () => {
       return promise
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
@@ -1029,7 +1027,7 @@ module.exports = {
         await client.closeOtherWindow(1);
         await client.switchWindow(0);
       });
-      test('should click on "Add a brand" button', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
+      test('should click on "Add a brand" button', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50, 2000));
       test('should select brand', () => {
         return promise
           .then(() => client.waitForExistAndClick(AddProductPage.product_brand_select))
@@ -1152,8 +1150,8 @@ module.exports = {
     });
     test('should set the "Price (tax incl.)" input', () => client.waitAndSetValue(AddProductPage.product_pricing_ttc_input, '8.5'));
     test('should check that the "Price (tax excl.)" is equal to "7.083333"', () => client.checkAttributeValue(AddProductPage.product_pricing_ht_input, 'value', '7.083333'));
-    test('should check that the "Price (tax incl.)" is equal to "€8.5" in the banner "Final retail price"', () => client.checkTextValue(AddProductPage.banner_tax_included_span, '€8.5', 'equal', 1000));
-    test('should check that the "Price (tax excl.)" is equal to "€7.08" in the banner "Final retail price"', () => client.checkTextValue(AddProductPage.banner_tax_excluded_span, '€7.08', 'equal', 1000));
+    test('should check that the "Price (tax incl.)" is equal to "€8.5" in the banner "Final retail price" (issue #13516 )', () => client.checkTextValue(AddProductPage.banner_tax_included_span, '€8.5', 'equal', 1000));
+    test('should check that the "Price (tax excl.)" is equal to "€7.08" in the banner "Final retail price" (issue #13516)', () => client.checkTextValue(AddProductPage.banner_tax_excluded_span, '€7.08', 'equal', 1000));
     test('should set the "Price (tax incl.)" input', () => client.waitAndSetValue(AddProductPage.product_pricing_ttc_input, '9,5'));
     test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 3000));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
@@ -1529,7 +1527,7 @@ module.exports = {
       test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.specific_price_save_button));
       test('should click on "Save" button', () => client.scrollWaitForExistAndClick(AddProductPage.save_product_button));
       test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
-      test('should click on "Add a specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 2000));
+      test('should click on "Add a specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 50, 2000));
       test('should click on "Currency" select', async () => {
         await client.waitForExistAndClick(AddProductPage.specific_price_for_currency_select, 2000);
         await client.waitForVisibleAndClick(AddProductPage.specific_price_for_currency_option.replace('%C', 'Euro'));

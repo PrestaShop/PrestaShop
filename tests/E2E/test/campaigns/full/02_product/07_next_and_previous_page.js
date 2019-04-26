@@ -24,7 +24,7 @@ scenario('Go to next & previous page', () => {
     commonProductScenarios.checkProductPaginationFO(client, productPage, 'enable', 1);
     commonProductScenarios.checkProductPaginationFO(client, productPage, 'disable', 0, 2);
     test('should enable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 1)));
-    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 1000));
+    test('should click on "Save" button', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button, 1000));
   }, 'product/product');
 
   scenario('Logout from the Back Office', client => {

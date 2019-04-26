@@ -120,7 +120,7 @@ scenario('Create order by a guest from the Front Office', client => {
       }
       await client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[1].name + date_time), 2000);
       if (global.isVisible) {
-        await client.scrollWaitForExistAndClick(productPage.productLink.replace('%PRODUCTNAME', productData[1].name + date_time), 2000);
+        await client.scrollWaitForExistAndClick(productPage.productLink.replace('%PRODUCTNAME', productData[1].name + date_time), 50, 2000);
       }
     });
     test('should check that the price is equal to ' + productData[1].priceTTC, () => client.checkTextValue(productPage.product_price, productData[1].priceTTC, 'equal', 1000));
