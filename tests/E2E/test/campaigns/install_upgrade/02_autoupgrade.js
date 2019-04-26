@@ -2,7 +2,6 @@ const {Installation} = require('../../selectors/BO/installation');
 const {AccessPageBO} = require('../../selectors/BO/access_page');
 const {ModulePage} = require('../../selectors/BO/module_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
-const {OnBoarding} = require('../../selectors/BO/onboarding.js');
 const {AccessPageFO} = require('../../selectors/FO/access_page');
 const {ShopParameters} = require('../../selectors/BO/shopParameters/shop_parameters');
 
@@ -48,10 +47,6 @@ scenario('The shop installation', () => {
 
   welcomeScenarios.findAndCloseWelcomeModal('installation');
 
-  scenario('paaaaaaaaaaaause', client => {
-    test('paaaaaaaaaaaause', () => client.pause(25000));
-  }, 'installation');
-
   scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_newproducts");
@@ -59,7 +54,7 @@ scenario('The shop installation', () => {
 
   scenario('Install " 1-Click Upgrade " From Cross selling and configure it', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "autoupgrade");
-    test('should click on "configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join("autoupgrade")));
+    test('should click on "configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_theme_button.split('%moduleTechName').join("autoupgrade")));
     test('should deactivate the shop', () => {
       return promise
         .then(() => client.waitForVisibleElement(ModulePage.confirm_maintenance_shop_icon))
