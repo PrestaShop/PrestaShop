@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
 use Cart;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 
 /**
  * Provides reusable methods for cart handlers
@@ -42,15 +42,15 @@ abstract class AbstractCartHandler
      *
      * @return Cart
      *
-     * @throws CurrencyNotFoundException
+     * @throws CartNotFoundException
      */
     protected function getCartObject(CartId $cartId)
     {
         $cart = new Cart($cartId->getValue());
 
         if ($cartId->getValue() !== $cart->id) {
-            throw new CurrencyNotFoundException(
-                sprintf('Currency with id "%s" was not found', $cartId->getValue())
+            throw new CartNotFoundException(
+                sprintf('Cart with id "%s" was not found', $cartId->getValue())
             );
         }
 
