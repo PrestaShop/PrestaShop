@@ -298,14 +298,24 @@ services:
     prestashop.admin.currency_settings.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-          - '@=service("form.factory").createBuilder()'
-          - '@prestashop.core.hook.dispatcher'
-          - '@prestashop.admin.currency.form_data_provider'
-          -
-            'exchange_rates': 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
-          - 'Currency'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.currency.form_data_provider'
+            -
+              'exchange_rates': 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+            - 'Currency'
 
-    # Entity form handler
+    prestashop.admin.shop_logos_settings.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.improve.design.theme.shop_logos.form_data_provider'
+            -
+              'shop_logos': 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
+            - 'ShopLogo'
+
+  # Entity form handler
     prestashop.admin.request_sql.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler'
         arguments:
@@ -328,3 +338,13 @@ services:
             -
               'options': 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
             - 'Tax'
+
+    prestashop.admin.mail_theme.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.mail_theme.form_data_provider'
+            -
+              'configuration': 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType'
+            - 'MailTheme'

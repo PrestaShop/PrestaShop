@@ -358,12 +358,13 @@
                 class="btn btn-primary grid-search-button d-block float-right"
                 title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
                 name="{{ full_name }}[search]"
+                {% if disable_search_button %} disabled="true" {% endif %}
         >
           <i class="material-icons">search</i>
           {{ 'Search'|trans({}, 'Admin.Actions') }}
         </button>
 
-        {% if show_reset_button %}
+          <div class="js-grid-reset-button" {% if not show_reset_button %} hidden {% endif %}>
           <div class="clearfix"></div>
             <button type="reset"
                     name="{{ full_name }}[reset]"
@@ -374,7 +375,7 @@
               <i class="material-icons">clear</i>
               {{ 'Reset'|trans({}, 'Admin.Actions') }}
             </button>
-        {% endif %}
+          </div>
     {% endspaceless %}
 {% endblock search_and_reset_widget %}
 
@@ -590,7 +591,7 @@
 
 {% block material_multiple_choice_table_widget %}
   {% spaceless %}
-    <div class="{% if scrollable %}choice-table{% endif %} table-responsive">
+    <div class="choice-table table-responsive">
       <table class="table">
         <thead>
           <tr>
@@ -643,15 +644,14 @@
 
 {% block translatable_widget -%}
   <div class="input-group locale-input-group js-locale-input-group d-flex">
-    {% set classes = attr.class|default('') %}
     {% for translateField in form %}
-      {% set innerClasses = classes ~ translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
-      {% set innerClasses = innerClasses ~ ' js-locale-' ~ translateField.vars.label %}
+      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+      {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
       {% if default_locale.id_lang != translateField.vars.name %}
-        {% set innerClasses = innerClasses ~ ' d-none' %}
+        {% set classes = classes ~ ' d-none' %}
       {% endif %}
-      <div class="{{ innerClasses }}" style="flex-grow: 1;">
-        {{ form_widget(translateField, {attr: {'data-lang-id': translateField.vars.name }}) }}
+      <div class="{{ classes }}" style="flex-grow: 1;">
+        {{ form_widget(translateField) }}
       </div>
     {% endfor %}
     {% if not hide_locales %}
@@ -659,9 +659,6 @@
         <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
                 type="button"
                 data-toggle="dropdown"
-                {% if change_form_language_url is defined %}
-                  data-change-language-url="{{ form.vars.change_form_language_url }}"
-                {% endif %}
                 aria-haspopup="true"
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
@@ -703,6 +700,46 @@
   {% endif %}
 {% endblock birthday_widget %}
 
+{% block file_widget %}
+  <div class="custom-file">
+    {% set attr = attr|merge({
+      class: (attr.class|default('') ~ ' custom-file-input')|trim,
+      'data-multiple-files-text': '%count% file(s)'|trans({}, 'Admin.Global'),
+      'data-locale': get_context_iso_code()
+    }) -%}
+
+    {% if attr.disabled is defined and attr.disabled %}
+      {% set attr = attr|merge({
+        class: attr.class ~ ' disabled'
+      }) %}
+    {% endif %}
+
+    {{ form_widget(form, {'attr': attr}) }}
+
+    <label class="custom-file-label" for="{{ form.vars.id }}">
+      {% set attributes = form.vars.attr %}
+      {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
+    </label>
+  </div>
+{% endblock file_widget %}
+
+{% block shop_restriction_checkbox_widget %}
+  {% if form.vars.attr.is_allowed_to_display %}
+    <div class="md-checkbox md-checkbox-inline">
+      <label>
+        {% set type = type|default('checkbox') %}
+        <input
+          class="js-multi-store-restriction-checkbox"
+          type="{{ type }}"
+          {{ block('widget_attributes') }}
+          value="{{ value }}"
+        >
+        <i class="md-checkbox-control"></i>
+      </label>
+    </div>
+  {% endif %}
+{% endblock %}
+
 {% block generatable_text_widget %}
   <div class="input-group">
     {{- block('form_widget') -}}
@@ -717,3 +754,29 @@
    </span>
   </div>
 {% endblock generatable_text_widget %}
+
+{% block text_with_recommended_length_widget %}
+  {% set attr = attr|merge({
+    'data-recommended-length-counter': '#' ~ id ~ '_recommended_length_counter',
+    'class': 'js-recommended-length-input'
+  }) -%}
+
+  {% if input_type == 'textarea' %}
+    {{- block('textarea_widget') -}}
+  {% else %}
+    {{- block('form_widget_simple') -}}
+  {% endif %}
+
+  <small class="form-text text-muted text-right"
+         id="{{ id }}_recommended_length_counter"
+  >
+    <em>
+      {{ '[1][/1] of [2][/2] characters used (recommended)'|trans({}, 'Admin.Catalog.Feature')|replace({
+        '[1]': '<span class="js-current-length">' ~ value|length,
+        '[/1]': '</span>',
+        '[2]': '<span>' ~ recommended_length,
+        '[/2]': '</span>',
+      })|raw }}
+    </em>
+  </small>
+{% endblock text_with_recommended_length_widget %}

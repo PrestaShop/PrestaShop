@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,22 +98,16 @@ class Factory
         CldrLocale $cldrLocale,
         Currency $currency,
         $numberGroupingUsed,
-        $currencyDisplayType,
-        $maxFractionDigits = null
+        $currencyDisplayType
     ) {
         $currencyPattern = $cldrLocale->getCurrencyPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
-
-        $precision = $maxFractionDigits;
-        if (null === $precision) {
-            $precision = (int) $currency->getDecimalPrecision();
-        }
 
         return new PriceSpecification(
             $this->getPositivePattern($currencyPattern),
             $this->getNegativePattern($currencyPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
-            $precision,
+            $this->getMaxFractionDigits($currencyPattern),
             $this->getMinFractionDigits($currencyPattern),
             $numberGroupingUsed && $this->getPrimaryGroupSize($currencyPattern) > 1,
             $this->getPrimaryGroupSize($currencyPattern),
@@ -221,6 +215,20 @@ class Factory
         $dotPos = (int) strpos($pattern, '.');
 
         return substr_count($pattern, '0', $dotPos);
+    }
+
+    /**
+     * Extract the max number of fraction digits from a number pattern (decimal, currency, percentage).
+     *
+     * @param string $pattern The formatting pattern to use for extraction (eg 0.00##)
+     *
+     * @return int The max number of fraction digits to display in the final number
+     */
+    protected function getMaxFractionDigits($pattern)
+    {
+        $dotPos = (int) strpos($pattern, '.');
+
+        return strlen(substr($pattern, $dotPos + 1));
     }
 
     /**

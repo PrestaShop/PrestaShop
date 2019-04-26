@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,11 +57,12 @@ class SupplierController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param SupplierFilters $filters
      *
      * @return Response
      */
-    public function indexAction(SupplierFilters $filters)
+    public function indexAction(Request $request, SupplierFilters $filters)
     {
         $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
 
@@ -69,9 +70,14 @@ class SupplierController extends FrameworkBundleAdminController
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig', [
-            'supplierGrid' => $gridPresenter->present($supplierGrid),
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig',
+            [
+                'supplierGrid' => $gridPresenter->present($supplierGrid),
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
+            ]
+        );
     }
 
     /**
@@ -172,7 +178,12 @@ class SupplierController extends FrameworkBundleAdminController
         $suppliersToDelete = $request->request->get('supplier_bulk');
 
         try {
-            $suppliersToDelete = array_map(function ($item) { return (int) $item; }, $suppliersToDelete);
+            $suppliersToDelete = array_map(
+                function ($item) {
+                    return (int) $item;
+                },
+                $suppliersToDelete
+            );
             $this->getCommandBus()->handle(new BulkDeleteSupplierCommand($suppliersToDelete));
 
             $this->addFlash(
@@ -207,7 +218,12 @@ class SupplierController extends FrameworkBundleAdminController
         $suppliersToDisable = $request->request->get('supplier_bulk');
 
         try {
-            $suppliersToDisable = array_map(function ($item) { return (int) $item; }, $suppliersToDisable);
+            $suppliersToDisable = array_map(
+                function ($item) {
+                    return (int) $item;
+                },
+                $suppliersToDisable
+            );
             $this->getCommandBus()->handle(new BulkDisableSupplierCommand($suppliersToDisable));
             $this->addFlash(
                 'success',
@@ -241,7 +257,12 @@ class SupplierController extends FrameworkBundleAdminController
         $suppliersToEnable = $request->request->get('supplier_bulk');
 
         try {
-            $suppliersToEnable = array_map(function ($item) { return (int) $item; }, $suppliersToEnable);
+            $suppliersToEnable = array_map(
+                function ($item) {
+                    return (int) $item;
+                },
+                $suppliersToEnable
+            );
             $this->getCommandBus()->handle(new BulkEnableSupplierCommand($suppliersToEnable));
             $this->addFlash(
                 'success',

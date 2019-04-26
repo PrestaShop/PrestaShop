@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,12 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
+use Language;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShopException;
 
 /**
@@ -42,6 +44,19 @@ use PrestaShopException;
  */
 final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
 {
+    /**
+     * @var LocaleRepository
+     */
+    private $localeRepoCLDR;
+
+    /**
+     * @param LocaleRepository $localeRepoCLDR
+     */
+    public function __construct(LocaleRepository $localeRepoCLDR)
+    {
+        $this->localeRepoCLDR = $localeRepoCLDR;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -57,6 +72,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
+            $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
             if (false === $entity->add()) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');

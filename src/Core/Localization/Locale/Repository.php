@@ -214,9 +214,9 @@ class Repository implements RepositoryInterface
                 $cldrLocale,
                 $currency,
                 $this->numberGroupingUsed,
-                $this->currencyDisplayType,
-                null // TODO : replace here with custom currency precision
+                $this->currencyDisplayType
             );
+            $thisPriceSpecification->setMaxFractionDigits((int) $currency->getDecimalPrecision());
 
             // Add the spec to the collection
             $priceSpecifications->add(
@@ -226,5 +226,21 @@ class Repository implements RepositoryInterface
         }
 
         return $priceSpecifications;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNumberGroupingUsed()
+    {
+        return $this->numberGroupingUsed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyDisplayType()
+    {
+        return $this->currencyDisplayType;
     }
 }

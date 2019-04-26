@@ -44,13 +44,14 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,7 +66,7 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show categories listing.
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CategoryFilters $filters
@@ -85,6 +86,10 @@ class CategoryController extends FrameworkBundleAdminController
 
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
 
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CATEGORIES_CARD)
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
@@ -94,6 +99,8 @@ class CategoryController extends FrameworkBundleAdminController
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
+            'showcaseCardName' => ShowcaseCard::CATEGORIES_CARD,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed,
         ]);
     }
 
@@ -102,6 +109,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to create this."
      * )
      *
@@ -147,6 +155,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to create this."
      * )
      *
@@ -192,6 +201,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -228,7 +238,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             $handlerResult = $categoryFormHandler->handleFor((int) $categoryId, $categoryForm);
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
@@ -256,6 +266,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -290,7 +301,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
@@ -318,6 +329,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_edit",
+     *     redirectQueryParamsToKeep={"categoryId"},
      *     message="You do not have permission to edit this."
      * )
      *
@@ -357,6 +370,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_categories_edit",
+     *     redirectQueryParamsToKeep={"categoryId"},
      *     message="You do not have permission to edit this."
      * )
      *
@@ -398,26 +413,21 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Toggle category status.
      *
-     * @param Request $request
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
      * @param int $categoryId
      *
      * @return JsonResponse
      */
-    public function toggleStatusAction(Request $request, $categoryId)
+    public function toggleStatusAction($categoryId)
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
                 'status' => false,
                 'message' => $this->getDemoModeErrorMessage(),
-            ]);
-        }
-
-        $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
-
-        if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
-            return $this->json([
-                'status' => false,
-                'message' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
             ]);
         }
 
@@ -742,7 +752,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     private function getBulkCategoriesFromRequest(Request $request)
     {
-        $categoryIds = $request->request->get('categories_id_category');
+        $categoryIds = $request->request->get('category_id_category');
 
         if (!is_array($categoryIds)) {
             return [];

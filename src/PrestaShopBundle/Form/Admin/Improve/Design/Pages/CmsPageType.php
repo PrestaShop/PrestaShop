@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -86,7 +86,6 @@ class CmsPageType extends AbstractType
                 'choice_value' => 'id_cms_category',
             ])
             ->add('title', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage([
                         'message' => $this->translator->trans(
@@ -106,7 +105,7 @@ class CmsPageType extends AbstractType
                         'class' => 'js-copier-source-title',
                     ],
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -124,7 +123,7 @@ class CmsPageType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -142,7 +141,7 @@ class CmsPageType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                     ],
@@ -157,7 +156,7 @@ class CmsPageType extends AbstractType
                         'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
                     ],
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -172,7 +171,6 @@ class CmsPageType extends AbstractType
                 ],
             ])
             ->add('friendly_url', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage([
                         'message' => $this->translator->trans(
@@ -229,6 +227,10 @@ class CmsPageType extends AbstractType
 
         if ($this->isMultiShopEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'js-shop-assoc-tree',
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(

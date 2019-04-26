@@ -218,8 +218,9 @@ class CustomerCore extends ObjectModel
      */
     public function __construct($id = null)
     {
-        parent::__construct($id);
+        // It sets default value for customer group even when customer does not exist
         $this->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
+        parent::__construct($id);
     }
 
     /**

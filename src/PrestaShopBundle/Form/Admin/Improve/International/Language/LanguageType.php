@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Language;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -70,6 +70,9 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
+                    new TypedRegex([
+                        'type' => 'generic_name',
+                    ]),
                 ],
             ])
             ->add('iso_code', TextType::class, [
@@ -77,9 +80,8 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
-                    new Regex([
-                        'pattern' => IsoCode::PATTERN,
-                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    new TypedRegex([
+                        'type' => 'language_iso_code',
                     ]),
                 ],
             ])
@@ -88,9 +90,8 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
-                    new Regex([
-                        'pattern' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
-                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    new TypedRegex([
+                        'type' => 'language_code',
                     ]),
                 ],
             ])
@@ -100,6 +101,9 @@ class LanguageType extends AbstractType
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
                     new Regex([
+                        // We can't really check if this is valid or not,
+                        // because this is a string and you can write whatever you want in it.
+                        // That's why only < et > are forbidden (HTML).
                         'pattern' => '/^[^<>]+$/',
                         'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),

@@ -46,17 +46,17 @@ class ProductControllerTest extends SymfonyIntegrationTestCase
 
     private $controller;
 
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-        self::installTestedLanguagePacks();
-    }
+    private static $languagesPackInstalled = false;
 
     protected function setUp()
     {
         parent::setUp();
-        global $kernel;
-        $kernel = self::$kernel;
+
+        // Done here as we require the kernel to be instanciated.
+        if (!self::$languagesPackInstalled) {
+            self::installTestedLanguagePacks();
+            self::$languagesPackInstalled = true;
+        }
         $this->controller = new ProductControllerCore();
     }
 

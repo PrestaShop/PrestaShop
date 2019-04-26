@@ -349,7 +349,7 @@ class OrderHistoryCore extends ObjectModel
 
         // changes invoice number of order ?
         if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order)) {
-            die($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification'));
+            die(Tools::displayError($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification')));
         }
 
         // the order is valid if and only if the invoice is available and the order is not cancelled

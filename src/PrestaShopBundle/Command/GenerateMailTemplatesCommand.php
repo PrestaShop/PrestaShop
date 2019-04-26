@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -27,14 +27,12 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
-use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Employee;
 
@@ -47,8 +45,9 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
             ->setDescription('Generate mail templates for a specified theme')
             ->addArgument('theme', InputArgument::REQUIRED, 'Theme to use for mail templates.')
             ->addArgument('locale', InputArgument::REQUIRED, 'Which locale to use for the templates.')
-            ->addArgument('coreOutputFolder', InputArgument::REQUIRED, 'Output folder to export core templates.')
+            ->addArgument('coreOutputFolder', InputArgument::OPTIONAL, 'Output folder to export core templates.')
             ->addArgument('modulesOutputFolder', InputArgument::OPTIONAL, 'Output folder to export modules templates (by default same as core).')
+            ->addOption('overwrite', 'o', InputOption::VALUE_OPTIONAL, 'Overwrite existing templates', false)
         ;
     }
 
@@ -62,32 +61,34 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
     {
         $themeName = $input->getArgument('theme');
         $coreOutputFolder = $input->getArgument('coreOutputFolder');
-        if (file_exists($coreOutputFolder)) {
+        if (!empty($coreOutputFolder) && file_exists($coreOutputFolder)) {
             $coreOutputFolder = realpath($coreOutputFolder);
         }
         $modulesOutputFolder = $input->getArgument('modulesOutputFolder');
-        if (null !== $modulesOutputFolder && file_exists($modulesOutputFolder)) {
+        if (!empty($modulesOutputFolder) && file_exists($modulesOutputFolder)) {
             $modulesOutputFolder = realpath($modulesOutputFolder);
         } else {
             $modulesOutputFolder = $coreOutputFolder;
         }
+        $overwrite = false !== $input->getOption('overwrite');
 
         $this->initContext();
 
         $locale = $input->getArgument('locale');
-        $language = $this->getLanguage($locale);
 
-        /** @var ThemeCatalogInterface $themeCatalog */
-        $themeCatalog = $this->getContainer()->get('prestashop.core.mail_template.theme_catalog');
-        $theme = $themeCatalog->getByName($themeName);
+        $output->writeln(sprintf('Exporting mail with theme %s for language %s', $themeName, $locale));
 
-        $output->writeln(sprintf('Exporting mail with theme %s for language %s', $theme->getName(), $language->getName()));
-        $output->writeln(sprintf('Core output folder: %s', $coreOutputFolder));
-        $output->writeln(sprintf('Modules output folder: %s', $modulesOutputFolder));
-
-        /** @var MailTemplateGenerator $catalog */
-        $generator = $this->getContainer()->get('prestashop.core.mail_template.generator');
-        $generator->generateTemplates($theme, $language, $coreOutputFolder, $modulesOutputFolder);
+        /** @var GenerateThemeMailTemplatesCommand $generateCommand */
+        $generateCommand = new GenerateThemeMailTemplatesCommand(
+            $themeName,
+            $locale,
+            $overwrite,
+            $coreOutputFolder ?: '',
+            $modulesOutputFolder ?: ''
+        );
+        /** @var CommandBusInterface $commandBus */
+        $commandBus = $this->getContainer()->get('prestashop.core.command_bus');
+        $commandBus->handle($generateCommand);
     }
 
     /**
@@ -104,30 +105,5 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
             //Even a non existing employee is fine
             $legacyContext->getContext()->employee = new Employee(42);
         }
-    }
-
-    /**
-     * @param string $locale
-     *
-     * @return LanguageInterface
-     *
-     * @throws InvalidArgumentException
-     */
-    private function getLanguage($locale)
-    {
-        /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = $this->getContainer()->get('prestashop.core.admin.lang.repository');
-        $language = $languageRepository->getByLocale($locale);
-        if (!$language) {
-            $localeParts = explode('-', $locale);
-            $isoCode = strtolower($localeParts[0]);
-            $language = $languageRepository->getByIsoCode($isoCode);
-        }
-
-        if (null === $language) {
-            throw new InvalidArgumentException(sprintf('Could not find Language for locale: %s', $locale));
-        }
-
-        return $language;
     }
 }

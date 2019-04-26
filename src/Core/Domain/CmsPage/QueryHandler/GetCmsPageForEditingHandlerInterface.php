@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\getCmsPageForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult\EditableCmsPage;
 
 /**

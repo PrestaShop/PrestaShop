@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -37,9 +38,12 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 
+/**
+ * Defines form for Improve > Design > Pages > Categories create/edit actions
+ */
 class CmsPageCategoryType extends AbstractType
 {
     use TranslatorAwareTrait;
@@ -69,22 +73,21 @@ class CmsPageCategoryType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $categoryNameValidationPattern = '/^[^<>;=#{}]*$/u';
-        $genericNameValidationPattern = '/^[^<>={}]*$/u';
-
         $builder
             ->add('name', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => $categoryNameValidationPattern,
-                            'message' => $this->trans(
-                                '%s is invalid.',
-                                [],
+                        new TypedRegex([
+                            'type' => 'catalog_name',
+                        ]),
+                        new Length([
+                            'max' => 64,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 64],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -112,11 +115,14 @@ class CmsPageCategoryType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => $genericNameValidationPattern,
-                            'message' => $this->trans(
-                                '%s is invalid.',
-                                [],
+                        new TypedRegex([
+                            'type' => 'generic_name',
+                        ]),
+                        new Length([
+                            'max' => 255,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 255],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -127,11 +133,14 @@ class CmsPageCategoryType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => $genericNameValidationPattern,
-                            'message' => $this->trans(
-                                '%s is invalid.',
-                                [],
+                        new TypedRegex([
+                            'type' => 'generic_name',
+                        ]),
+                        new Length([
+                            'max' => 512,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 512],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -142,11 +151,14 @@ class CmsPageCategoryType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => $genericNameValidationPattern,
-                            'message' => $this->trans(
-                                '%s is invalid.',
-                                [],
+                        new TypedRegex([
+                            'type' => 'generic_name',
+                        ]),
+                        new Length([
+                            'max' => 255,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 255],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -157,13 +169,20 @@ class CmsPageCategoryType extends AbstractType
                 ],
             ])
             ->add('friendly_url', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
                 'options' => [
                     'constraints' => [
                         new IsUrlRewrite(),
+                        new Length([
+                            'max' => 64,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => 64],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                     ],
                 ],
             ])

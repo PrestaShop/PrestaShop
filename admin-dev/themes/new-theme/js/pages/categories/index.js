@@ -34,20 +34,26 @@ import SubmitRowActionExtension from "../../components/grid/extension/action/row
 import LinkRowActionExtension from "../../components/grid/extension/link-row-action-extension";
 import CategoryPositionExtension from "../../components/grid/extension/column/catalog/category-position-extension";
 import AsyncToggleColumnExtension from "../../components/grid/extension/column/common/async-toggle-column-extension";
-import DeleteCategoryRowActionExtension from "../../components/grid/extension/action/row/category/delete-category-row-action-extension";
-import DeleteCategoriesBulkActionExtension from "../../components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension";
+import DeleteCategoryRowActionExtension
+  from "../../components/grid/extension/action/row/category/delete-category-row-action-extension";
+import DeleteCategoriesBulkActionExtension
+  from "../../components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension";
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
-import TextWithLengthCounter from "../../components/form/text-with-length-counter";
 import textToLinkRewriteCopier from "../../components/text-to-link-rewrite-copier";
 import ChoiceTree from "../../components/form/choice-tree";
 import FormSubmitButton from "../../components/form-submit-button";
 import TaggableField from "../../components/taggable-field";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import ShowcaseCard from "../../components/showcase-card/showcase-card";
+import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
+import TextWithRecommendedLengthCounter from '../../components/form/text-with-recommended-length-counter';
 
 const $ = window.$;
 
 $(() => {
-  const categoriesGrid = new Grid('categories');
+  const categoriesGrid = new Grid('category');
 
   categoriesGrid.addExtension(new FiltersResetExtension());
   categoriesGrid.addExtension(new SortingExtension());
@@ -61,10 +67,14 @@ $(() => {
   categoriesGrid.addExtension(new AsyncToggleColumnExtension());
   categoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   categoriesGrid.addExtension(new DeleteCategoriesBulkActionExtension());
+  categoriesGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+
+  const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
   new TranslatableInput();
   new ChoiceTable();
-  new TextWithLengthCounter();
+  new TextWithRecommendedLengthCounter();
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',

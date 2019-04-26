@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,11 +37,13 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -58,17 +60,33 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      * @var int
      */
     private $cmsCategoryParentId;
+    /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
+     * @var bool
+     */
+    private $isMultiStoreFeatureUsed;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param RequestStack $requestStack
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param bool $isMultiStoreFeatureUsed
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
+        $isMultiStoreFeatureUsed
     ) {
         parent::__construct($hookDispatcher);
         $this->setCmsPageCategoryParentId($requestStack);
+
+        $this->multistoreContextChecker = $multistoreContextChecker;
+        $this->isMultiStoreFeatureUsed = $isMultiStoreFeatureUsed;
     }
 
     /**
@@ -92,7 +110,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columnCollection = (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
                     'bulk_field' => 'id_cms_category',
@@ -117,12 +135,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Description', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'description',
-                ])
-            )
-            ->add((new DataColumn('position'))
-                ->setName($this->trans('Position', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_cms_category',
                 ])
             )
             ->add((new ToggleColumn('active'))
@@ -174,6 +186,26 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ])
             )
         ;
+
+        if ($this->isAllShopContextOrShopFeatureIsNotUsed()) {
+            $columnCollection
+                ->addAfter(
+                    'description',
+                    (new PositionColumn('position'))
+                        ->setName($this->trans('Position', [], 'Admin.Global'))
+                        ->setOptions([
+                            'id_field' => 'id_cms_category',
+                            'position_field' => 'position',
+                            'update_method' => 'POST',
+                            'update_route' => 'admin_cms_pages_category_update_position',
+                            'record_route_params' => [
+                                'id_parent' => 'id_cms_category',
+                            ],
+                        ])
+                );
+        }
+
+        return $columnCollection;
     }
 
     /**
@@ -197,7 +229,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             $actionsTypeOptions['reset_route_params']['id_cms_category'] = $this->cmsCategoryParentId;
         }
 
-        return (new FilterCollection())
+        $filterCollection = (new FilterCollection())
             ->add((new Filter('id_cms_category', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
@@ -225,15 +257,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ])
                 ->setAssociatedColumn('description')
             )
-            ->add((new Filter('position', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Position', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('position')
-            )
             ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
             )
@@ -242,6 +265,22 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setAssociatedColumn('actions')
             )
         ;
+
+        if ($this->isAllShopContextOrShopFeatureIsNotUsed()) {
+            $filterCollection
+                ->add((new Filter('position', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Position', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('position')
+                )
+            ;
+        }
+
+        return $filterCollection;
     }
 
     /**
@@ -305,5 +344,17 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
         if (null !== $request && $request->query->getInt('id_cms_category')) {
             $this->cmsCategoryParentId = $request->query->getInt('id_cms_category');
         }
+    }
+
+    /**
+     * This function is required due to in cms_category contains position column - on ideal case cms_category_shop
+     * should have this column configured instead.
+     * In such case the condition would be $this->multistoreContextChecker->isSingleShopContext()
+     *
+     * @return bool
+     */
+    private function isAllShopContextOrShopFeatureIsNotUsed()
+    {
+        return $this->multistoreContextChecker->isAllShopContext() || !$this->isMultiStoreFeatureUsed;
     }
 }

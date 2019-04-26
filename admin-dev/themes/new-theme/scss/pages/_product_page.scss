@@ -147,6 +147,9 @@
       margin-right: 0.25rem;
       font-size: 0.875rem;
     }
+    @include media-breakpoint-down(md) {
+      left: 0;
+    }
   }
 
   .help-box {
@@ -759,6 +762,14 @@
   }
 }
 
+.page-sidebar-closed:not(.mobile) {
+  .product-page {
+    .product-footer {
+      left: $size-navbar-width-mini;
+    }
+  }
+}
+
 .popover-title {
   display: none;
 }
@@ -891,7 +902,8 @@
   margin-top: 7px;
 }
 
-#related-product {
+#related-product,
+#id-product-redirected {
   // list of added related products
   .typeahead-list {
     li {
@@ -919,6 +931,7 @@
         i.delete {
           cursor: pointer;
           float: right;
+          color: $medium-gray;
         }
       }
     }

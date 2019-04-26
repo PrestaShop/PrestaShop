@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Manufacturer;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegexConstraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -88,7 +88,7 @@ class ManufacturerType extends AbstractType
                             'Admin.Notifications.Error'
                         ),
                     ]),
-                    new TypedRegexConstraint([
+                    new TypedRegex([
                         'type' => 'catalog_name',
                     ]),
                 ],
@@ -131,7 +131,7 @@ class ManufacturerType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -150,7 +150,7 @@ class ManufacturerType extends AbstractType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
@@ -173,7 +173,7 @@ class ManufacturerType extends AbstractType
                         'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
                     ],
                     'constraints' => [
-                        new TypedRegexConstraint([
+                        new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                     ],

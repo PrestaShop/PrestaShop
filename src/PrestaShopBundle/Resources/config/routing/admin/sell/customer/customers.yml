@@ -55,6 +55,10 @@ admin_customers_save_private_note:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:savePrivateNote
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:updateCustomerNote
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
 
 admin_customers_toggle_status:
   path: /{customerId}/toggle-status

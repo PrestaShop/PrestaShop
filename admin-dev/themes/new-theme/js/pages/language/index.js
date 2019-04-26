@@ -34,6 +34,8 @@ import SubmitRowActionExtension from '../../components/grid/extension/action/row
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ChoiceTree from "../../components/form/choice-tree";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -49,6 +51,7 @@ $(document).ready(() => {
   grid.addExtension(new SubmitRowActionExtension());
   grid.addExtension(new BulkActionCheckboxExtension());
   grid.addExtension(new ColumnTogglingExtension());
+  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   // needed for shop association input in form
   new ChoiceTree('#language_shop_association').enableAutoCheckChildren();

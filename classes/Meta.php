@@ -69,11 +69,11 @@ class MetaCore extends ObjectModel
     {
         $selectedPages = array();
         if (!$files = Tools::scandir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
-            die(Context::getContext()->getTranslator()->trans('Cannot scan root directory', array(), 'Admin.Notifications.Error'));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Cannot scan root directory', array(), 'Admin.Notifications.Error')));
         }
 
         if (!$overrideFiles = Tools::scandir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
-            die(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', array(), 'Admin.Notifications.Error'));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', array(), 'Admin.Notifications.Error')));
         }
 
         $files = array_values(array_unique(array_merge($files, $overrideFiles)));

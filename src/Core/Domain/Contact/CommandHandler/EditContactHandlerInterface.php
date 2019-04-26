@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
-use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
 /**
  * Interface EditContactHandlerInterface defines contract for EditContactHandler.
@@ -36,8 +35,6 @@ interface EditContactHandlerInterface
 {
     /**
      * @param EditContactCommand $command
-     *
-     * @return ContactId
      */
     public function handle(EditContactCommand $command);
 }

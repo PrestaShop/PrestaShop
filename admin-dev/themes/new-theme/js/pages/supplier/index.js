@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,6 +33,8 @@ import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-ac
 import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import ReloadListExtension from "../../components/grid/extension/reload-list-extension";
 import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -47,4 +49,5 @@ $(() => {
   supplierGrid.addExtension(new SubmitBulkActionExtension());
   supplierGrid.addExtension(new ReloadListExtension());
   supplierGrid.addExtension(new ExportToSqlManagerExtension());
+  supplierGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 });

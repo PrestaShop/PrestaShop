@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
-use PrestaShop\PrestaShop\Core\Cldr\Repository;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
  * Class CustomerGridDataFactoryDecorator decorates data from customer doctrine data factory.
@@ -43,9 +43,9 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
     private $customerDoctrineGridDataFactory;
 
     /**
-     * @var Repository
+     * @var LocaleInterface
      */
-    private $cldrRepository;
+    private $locale;
 
     /**
      * @var string
@@ -54,16 +54,16 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
 
     /**
      * @param GridDataFactoryInterface $customerDoctrineGridDataFactory
-     * @param Repository $cldrRepository
+     * @param LocaleInterface $locale
      * @param string $contextCurrencyIsoCode
      */
     public function __construct(
         GridDataFactoryInterface $customerDoctrineGridDataFactory,
-        Repository $cldrRepository,
+        LocaleInterface $locale,
         $contextCurrencyIsoCode
     ) {
         $this->customerDoctrineGridDataFactory = $customerDoctrineGridDataFactory;
-        $this->cldrRepository = $cldrRepository;
+        $this->locale = $locale;
         $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
     }
 
@@ -102,7 +102,7 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
             }
 
             if (!empty($customer['total_spent'])) {
-                $customer['total_spent'] = $this->cldrRepository->getPrice(
+                $customer['total_spent'] = $this->locale->formatPrice(
                     $customer['total_spent'],
                     $this->contextCurrencyIsoCode
                 );

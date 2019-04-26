@@ -24,7 +24,6 @@
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.1",
         "guzzlehttp/guzzle": "~5.0",
-        "icanboogie/cldr": "1.3.9",
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "^1.0.4",
         "ircmaxell/random-lib": "^1.2.0",
@@ -144,12 +143,10 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-update-cmd": [
-            "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
@@ -161,13 +158,20 @@
         ],
         "test-all": [
             "composer phpunit-legacy",
+            "composer unit-tests",
             "composer phpunit-admin",
             "composer phpunit-sf",
-            "composer phpunit-controllers"
+            "composer integration-tests",
+            "composer phpunit-controllers",
+            "composer phpunit-routing",
+            "composer integration-behaviour-tests"
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
+        ],
+        "phpunit-endpoints": [
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
         ],
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
@@ -197,8 +201,7 @@
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
-        "git-hook-uninstall": "@php .github/contrib/uninstall.php",
-        "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init"
+        "git-hook-uninstall": "@php .github/contrib/uninstall.php"
     },
     "config": {
         "platform": {

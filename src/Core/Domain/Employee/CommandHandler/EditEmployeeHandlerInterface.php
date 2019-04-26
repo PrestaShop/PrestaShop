@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 /**
  * Interface for services that handle command which edits employee.
@@ -36,8 +35,6 @@ interface EditEmployeeHandlerInterface
 {
     /**
      * @param EditEmployeeCommand $command
-     *
-     * @return EmployeeId
      */
     public function handle(EditEmployeeCommand $command);
 }

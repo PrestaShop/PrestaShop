@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,6 +35,7 @@ use Context;
 use Country;
 use Group;
 use RangePrice;
+use RangeWeight;
 use State;
 use Zone;
 
@@ -274,23 +275,31 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * Be careful: this method REPLACES shipping fees for carrier
      *
-     * @Given /^carrier "(.+)" applies shipping fees of (\d+\.\d+) in zone "(.+)" for quantities between (\d+) and (\d+)$/
+     * @Given /^carrier "(.+)" applies shipping fees of (\d+\.\d+) in zone "(.+)" for (weight|price) between (\d+) and (\d+)$/
      */
-    public function setCarrierFees($carrierName, $shippingPrice, $zoneName, $fromQuantity, $toQuantity)
+    public function setCarrierFees($carrierName, $shippingPrice, $zoneName, $rangeType, $from, $to)
     {
         $this->checkCarrierWithNameExists($carrierName);
         $this->checkZoneWithNameExists($zoneName);
         if (empty($this->carriers[$carrierName]->getZone((int) $this->zones[$zoneName]->id))) {
             $this->carriers[$carrierName]->addZone((int) $this->zones[$zoneName]->id);
         }
-        $rangeId = RangePrice::rangeExist($this->carriers[$carrierName]->id, $fromQuantity, $toQuantity);
+        $rangeClass = $rangeType == 'weight' ? RangeWeight::class : RangePrice::class;
+        $primary = $rangeType == 'weight' ? 'id_range_weight' : 'id_range_price';
+        $rangeRows = $rangeClass::getRanges($this->carriers[$carrierName]->id);
+        $rangeId = false;
+        foreach ($rangeRows as $rangeRow) {
+            if ($rangeRow['delimiter1'] == $from) {
+                $rangeId = $rangeRow[$primary];
+            }
+        }
         if (!empty($rangeId)) {
-            $range = new RangePrice($rangeId);
+            $range = new $rangeClass($rangeId);
         } else {
-            $range = new RangePrice();
+            $range = new $rangeClass();
             $range->id_carrier = $this->carriers[$carrierName]->id;
-            $range->delimiter1 = $fromQuantity;
-            $range->delimiter2 = $toQuantity;
+            $range->delimiter1 = $from;
+            $range->delimiter2 = $to;
             $range->add();
             $this->priceRanges[] = $range;
         }
