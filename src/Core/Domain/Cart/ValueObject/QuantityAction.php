@@ -34,14 +34,14 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 final class QuantityAction
 {
     /**
-     * Indicates that product quanity must be increased
+     * Indicates that product quantity must be increased
      */
-    const INCREASE_PRODUCT_QUANITYT = 'increase';
+    const INCREASE_PRODUCT_QUANTITY = 'increase';
 
     /**
-     * Indicates that product quanity must be decreased
+     * Indicates that product quantity must be decreased
      */
-    const DECREASE_PRODUCT_QUANITYT = 'decrease';
+    const DECREASE_PRODUCT_QUANTITY = 'decrease';
 
     /**
      * @var string
@@ -54,8 +54,8 @@ final class QuantityAction
     public function __construct($quantityAction)
     {
         $availableQuantityActions = [
-            self::INCREASE_PRODUCT_QUANITYT,
-            self::DECREASE_PRODUCT_QUANITYT,
+            self::INCREASE_PRODUCT_QUANTITY,
+            self::DECREASE_PRODUCT_QUANTITY,
         ];
 
         if (!in_array($quantityAction, $availableQuantityActions)) {
@@ -76,6 +76,6 @@ final class QuantityAction
      */
     public function isIncrease()
     {
-        return $this->quantityAction === self::INCREASE_PRODUCT_QUANITYT;
+        return $this->quantityAction === self::INCREASE_PRODUCT_QUANTITY;
     }
 }
