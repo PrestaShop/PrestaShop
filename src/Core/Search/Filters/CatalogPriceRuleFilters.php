@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,25 +22,32 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% set layoutHeaderToolbarBtn = {
-  add: {
-    href: path('admin_catalog_price_rules_create'),
-    desc: 'Add new cart rule'|trans({}, 'Admin.Catalog.Feature'),
-    icon: 'add_circle_outline',
-  }
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * Responsible for providing default filters for catalog price rule grid.
+ */
+final class CatalogPriceRuleFilters extends Filters
+{
+    /** @var string */
+    protected $filterId = CatalogPriceRuleGridDefinitionFactory::GRID_ID;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_specific_price_rule',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
 }
-%}
-
-{% block content %}
-  {% block catalog_price_rule_listing %}
-    <div class="row">
-      <div class="col">
-        {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': catalogPriceRuleGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}

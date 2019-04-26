@@ -13,3 +13,7 @@ _suppliers:
 _manufacturers:
     resource: "manufacturer.yml"
     prefix: /brands
+
+_catalog_price_rules:
+  resource: "catalog_price_rule.yml"
+  prefix: /price-rules

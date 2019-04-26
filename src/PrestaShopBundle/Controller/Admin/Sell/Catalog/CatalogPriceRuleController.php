@@ -26,7 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible for Sell > Catalog > Discounts > Catalog Price Rules page
@@ -34,12 +38,26 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 class CatalogPriceRuleController extends FrameworkBundleAdminController
 {
     /**
-     * Display catalog price rules listing page
+     * Displays catalog price rule listing page.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param CatalogPriceRuleFilters $catalogPriceRuleFilters
+     *
+     * @return Response
      */
-    public function indexAction()
-    {
+    public function indexAction(
+        Request $request,
+        CatalogPriceRuleFilters $catalogPriceRuleFilters
+    ) {
+        $catalogPriceRuleGridFactory = $this->get('prestashop.core.grid.grid_factory.catalog_price_rule');
+        $catalogPriceRuleGrid = $catalogPriceRuleGridFactory->getGrid($catalogPriceRuleFilters);
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/CatalogPriceRule/index.html.twig', [
-//            'catalogPriceRuleGrid' => '' @todo
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'catalogPriceRuleGrid' => $this->presentGrid($catalogPriceRuleGrid),
         ]);
     }
 }
