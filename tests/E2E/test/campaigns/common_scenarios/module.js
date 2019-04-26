@@ -338,7 +338,7 @@ module.exports = {
       return promise
         .then(() => client.switchWindow(id,1000))
         .then(() => client.refresh()) /**Adding refreshing page because sometimes is not well opened we have to refresh it before */
-        .then(() => client.checkTextValue(ModulePage.module_name, "Amazon Market Place Module", 'contain'))
+        .then(() => client.checkTextValue(ModulePage.module_name, "Amazon Market Place", 'contain'))
         .then(() => client.switchWindow(0));
     });
   },
