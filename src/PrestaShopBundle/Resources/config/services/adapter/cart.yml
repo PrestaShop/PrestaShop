@@ -64,3 +64,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand'
+
+  prestashop.adapter.command_handler.remove_product_from_cart_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\RemoveProductFromCartHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand'
