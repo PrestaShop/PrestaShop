@@ -98,4 +98,16 @@ class LanguageDataProvider
     ) {
         return Language::getFilesList($isoFrom, $themeFrom, $isoTo, $themeTo, false, false, true);
     }
+
+    /**
+     * Get language ISO code by ID.
+     *
+     * @param int $languageId
+     *
+     * @return string
+     */
+    public function getLanguageIsoById($languageId)
+    {
+        return (string) Language::getIsoById($languageId);
+    }
 }
