@@ -24,39 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Cart;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
-use Cart;
-use Context;
-use PrestaShop\PrestaShop\Adapter\Validate;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 
 /**
- * Provides reusable methods for cart handlers
- *
- * @internal
+ * Interface for service that handles product removing from cart.
  */
-abstract class AbstractCartHandler
+interface RemoveProductFromCartHandlerInterface
 {
     /**
-     * @param CartId $cartId
-     *
-     * @return Cart
-     *
-     * @throws CartNotFoundException
+     * {@inheritdoc}
      */
-    protected function getCartObject(CartId $cartId)
-    {
-        // Legacy behavior is working with context cart instead of retrieving cart from db
-        $cart = Context::getContext()->cart;
-
-        if (!Validate::isLoadedObject($cart) || $cartId->getValue() !== $cart->id) {
-            throw new CartNotFoundException(
-                sprintf('Cart with id "%s" was not found', $cartId->getValue())
-            );
-        }
-
-        return $cart;
-    }
+    public function handle(RemoveProductFromCartCommand $command);
 }
