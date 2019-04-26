@@ -40,7 +40,7 @@ interface LegacyModuleExtractorInterface
      * Note that domain names will contain separating dots.
      *
      * @param string $moduleName
-     * @param string $locale The locate used for the message catalogue. Note that wordings won't be translated in this locale.
+     * @param string $locale The locale used for the message catalogue. Note that wordings won't be translated in this locale.
      *
      * @return MessageCatalogueInterface
      */
