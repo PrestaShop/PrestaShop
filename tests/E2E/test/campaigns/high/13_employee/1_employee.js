@@ -65,7 +65,7 @@ scenario('Delete an employee', client => {
     return promise
       .then(() => client.waitForVisible(Employee.search_result))
       .then(() => client.getTextInVar(Employee.search_result,'employee_number'))
-      .then(() => tab['employee_number'] = tab['employee_number'].split('(')[1].split(')')[0])
+      .then(() => tab['employee_number'] = tab['employee_number'].match(/\d+/g)[0])
       .then(() => expect(tab['employee_number']).to.be.equal('1'));
   });
   test('should click dropdown-toggle button', () => client.waitForExistAndClick(Employee.dropdown_toggle));
