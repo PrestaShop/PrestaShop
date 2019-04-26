@@ -590,6 +590,9 @@ class AddressFormatCore extends ObjectModel
         if (empty($out)) {
             $out = $this->getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
         }
+        if (Country::isNeedDniByCountryId($idCountry) && false === strpos($out, 'dni')) {
+            $out .= "\ndni";
+        }
 
         return $out;
     }
