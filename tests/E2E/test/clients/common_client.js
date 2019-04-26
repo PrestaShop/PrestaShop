@@ -826,6 +826,30 @@ class CommonClient {
          return document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
       }, selector);
   }
+
+
+  /**
+   *  set input javascript method
+   * @param selector, the input
+   * @param value, value to set
+   * @param isXpath, selector is xpath or css selector
+   * @param pause
+   * @return {*}
+   */
+  setInputValue(selector, value, isXpath = true, pause = 0) {
+    return this.client
+        .pause(pause)
+        .execute(function (selector, value, isXpath) {
+          if(isXpath) {
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = '';
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = value;
+          }
+          else {
+            document.querySelector(selector).value = '';
+            document.querySelector(selector).value = value;
+          }
+        }, selector, value, isXpath);
+  }
 }
 
 module.exports = CommonClient;
