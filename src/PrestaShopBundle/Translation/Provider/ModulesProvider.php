@@ -45,7 +45,7 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
      */
     public function getFilters()
     {
-        return ['#^Modules[A-z]#'];
+        return ['#^Modules[A-Z]#'];
     }
 
     /**
