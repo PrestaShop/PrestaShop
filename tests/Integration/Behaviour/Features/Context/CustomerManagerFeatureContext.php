@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Gherkin\Node\TableNode;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
@@ -64,14 +65,14 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customerRegistry = [];
 
     /**
-     * @When I create a customer :customerReference with following properties:
+     * @When /^I create a customer "(.+)" with following properties:$/
      */
     public function createACustomerUsingCommand($customerReference, TableNode $table)
     {
         $data = $table->getRowsHash();
         $data = $this->formatCustomerDataIfNeeded($data);
 
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+        $commandBus = $this->getCommandBus();
 
         /** @var DefaultGroupsProviderInterface $groupProvider */
         $groupProvider = CommonFeatureContext::getContainer()->get('prestashop.adapter.group.provider.default_groups_provider');
@@ -112,7 +113,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When I attempt to create a customer :customerReference with following properties:
+     * @When /^I attempt to create a customer "(.+)" with following properties:$/
      */
     public function attemptToCreateACustomerUsingCommand($customerReference, TableNode $table)
     {
@@ -129,18 +130,16 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When I edit customer :customerReference and I change the following properties:
+     * @When /^I edit customer "(.+)" and I change the following properties:$/
      */
     public function editCustomerUsingCommand($customerReference, TableNode $table)
     {
-        if (!array_key_exists($customerReference, $this->customerRegistry)) {
-            throw new \Exception(sprintf('Cannot find customer %s in registry', $customerReference));
-        }
+        $this->assertCustomerReferenceExistsInRegistry($customerReference);
 
         $data = $table->getRowsHash();
         $data = $this->formatCustomerDataIfNeeded($data);
 
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+        $commandBus = $this->getCommandBus();
 
         $command = new EditCustomerCommand($this->customerRegistry[$customerReference]);
 
@@ -149,31 +148,27 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When I transform guest :customerReference into a customer
+     * @When /^I transform guest "(.+)" into a customer$/
      */
     public function transformGuestIntoACustomer($customerReference)
     {
-        if (!array_key_exists($customerReference, $this->customerRegistry)) {
-            throw new \Exception(sprintf('Cannot find customer %s in registry', $customerReference));
-        }
+        $this->assertCustomerReferenceExistsInRegistry($customerReference);
 
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+        $commandBus = $this->getCommandBus();
 
         $command = new TransformGuestToCustomerCommand($this->customerRegistry[$customerReference]);
         $commandBus->handle($command);
     }
 
     /**
-     * @When I delete customer :customerReference with method :methodName
+     * @When /^I delete customer "(.+)" with method "(.+)"$/
      */
     public function deleteCustomer($customerReference, $methodName)
     {
-        if (!array_key_exists($customerReference, $this->customerRegistry)) {
-            throw new \Exception(sprintf('Cannot find customer %s in registry', $customerReference));
-        }
+        $this->assertCustomerReferenceExistsInRegistry($customerReference);
         $this->validateDeleteCustomerMethod($methodName);
 
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+        $commandBus = $this->getCommandBus();
 
         $command = new DeleteCustomerCommand(
             $this->customerRegistry[$customerReference],
@@ -183,18 +178,16 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then if I query customer customer :customerReference I should get a Customer with properties:
+     * @Then /^if I query customer customer "(.+)" I should get a Customer with properties:$/
      */
     public function assertQueryCustomerProperties($customerReference, TableNode $table)
     {
         $expectedData = $table->getRowsHash();
         $expectedData = $this->formatCustomerDataIfNeeded($expectedData);
 
-        if (!array_key_exists($customerReference, $this->customerRegistry)) {
-            throw new \Exception(sprintf('Cannot find customer %s in registry', $customerReference));
-        }
+        $this->assertCustomerReferenceExistsInRegistry($customerReference);
 
-        $queryBus = CommonFeatureContext::getContainer()->get('prestashop.core.query_bus');
+        $queryBus = $this->getQueryBus();
         /** @var EditableCustomer $result */
         $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
 
@@ -207,15 +200,13 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then if I query customer customer :customerReference I should get an error ':errorMessage'
+     * @Then /^if I query customer customer "(.+)" I should get an error '(.+)'$/
      */
     public function assertQueryReturnsErrormessage($customerReference, $errorMessage)
     {
-        if (!array_key_exists($customerReference, $this->customerRegistry)) {
-            throw new \Exception(sprintf('Cannot find customer %s in registry', $customerReference));
-        }
+        $this->assertCustomerReferenceExistsInRegistry($customerReference);
 
-        $queryBus = CommonFeatureContext::getContainer()->get('prestashop.core.query_bus');
+        $queryBus = $this->getQueryBus();
         /* @var EditableCustomer $result */
         try {
             $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
@@ -233,17 +224,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @AfterScenario
-     */
-    public function assertAllErrorMessagesHaveBeenChecked()
-    {
-        if ($this->latestResult instanceof \Exception) {
-            throw $this->latestResult;
-        }
-    }
-
-    /**
-     * @Then I should be returned an error message ':message'
+     * @Then /^I should be returned an error message '(.+)'$/
      */
     public function assertGotErrorMessage($message)
     {
@@ -259,6 +240,16 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         $this->latestResult = null;
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function assertAllErrorMessagesHaveBeenChecked()
+    {
+        if ($this->latestResult instanceof \Exception) {
+            throw $this->latestResult;
+        }
     }
 
     protected function formatCustomerDataIfNeeded(array $data)
@@ -364,5 +355,33 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         return $genderId;
+    }
+
+    /**
+     * @return CommandBusInterface
+     */
+    protected function getCommandBus()
+    {
+        return CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+    }
+
+    /**
+     * @return CommandBusInterface
+     */
+    protected function getQueryBus()
+    {
+        return CommonFeatureContext::getContainer()->get('prestashop.core.query_bus');
+    }
+
+    /**
+     * @param string $customerReference
+     *
+     * @throws \Exception
+     */
+    protected function assertCustomerReferenceExistsInRegistry($customerReference)
+    {
+        if (!array_key_exists($customerReference, $this->customerRegistry)) {
+            throw new \Exception(sprintf('Cannot find customer %s in registry', $customerReference));
+        }
     }
 }
