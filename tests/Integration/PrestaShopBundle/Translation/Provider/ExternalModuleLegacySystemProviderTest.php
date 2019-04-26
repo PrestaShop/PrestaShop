@@ -146,6 +146,6 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
      */
     private function getModuleDirectory()
     {
-        return __DIR__ . '/../../../../resources/modules';
+        return __DIR__ . '/../../../../Resources/modules';
     }
 }
