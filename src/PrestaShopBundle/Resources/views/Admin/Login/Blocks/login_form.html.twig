@@ -25,40 +25,62 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-<div class="card">
-  <div class="card-block">
-    <div class="card-text">
+{{ form_start(loginForm) }}
 
-      <div class="form-group">
-        <div class="row">
-          <div class="col-sm">
-            <label for="{{ loginForm.email.vars.id }}" class="form-control-label">
-              {{ 'Email address'|trans({}, 'Admin.Global') }}
-            </label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm">
-            {{ ps.form_widget_with_error(loginForm.email) }}
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="row">
-          <div class="col-sm">
-            <label for="{{ loginForm.password.vars.id }}" class="form-control-label">
-              {{ 'Password'|trans({}, 'Admin.Global') }}
-            </label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm">
-            {{ ps.form_widget_with_error(loginForm.password) }}
-          </div>
-        </div>
-      </div>
-
+<div class="form-group">
+  <div class="row">
+    <div class="col-sm">
+      <label for="{{ loginForm.email.vars.id }}" class="form-control-label">
+        {{ 'Email address'|trans({}, 'Admin.Global') }}
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      {{ ps.form_widget_with_error(loginForm.email) }}
     </div>
   </div>
 </div>
+
+<div class="form-group">
+  <div class="row">
+    <div class="col-sm">
+      <label for="{{ loginForm.password.vars.id }}" class="form-control-label">
+        {{ 'Password'|trans({}, 'Admin.Global') }}
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      {{ ps.form_widget_with_error(loginForm.password) }}
+    </div>
+  </div>
+</div>
+
+<div class="form-group-row mt-4">
+  <button class="btn btn-primary w-100 text-uppercase">
+    {{ 'Log in'|trans({}, 'Admin.Login.Feature') }}
+  </button>
+</div>
+
+<div class="form-group row mt-3">
+  <div class="col-sm">
+      <label>
+        {{ form_widget(loginForm.stay_logged_in, {
+          material_design: true,
+          label: 'Stay logged in'|trans({}, 'Admin.Login.Feature')
+        }) }}
+      </label>
+  </div>
+  <div class="col-sm text-right">
+    <a href="#">
+      {{ 'I forgot my password'|trans({}, 'Admin.Login.Feature') }}
+    </a>
+  </div>
+</div>
+
+{% block login_form_rest %}
+  {{ form_rest(loginForm) }}
+{% endblock %}
+
+{{ form_end(loginForm) }}

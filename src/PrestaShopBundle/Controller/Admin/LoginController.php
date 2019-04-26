@@ -41,6 +41,7 @@ class LoginController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Login/index.html.twig', [
             'loginForm' => $loginForm->createView(),
             'shopName' => $this->configuration->get('PS_SHOP_NAME'),
+            'prestashopVersion' => $this->configuration->get('_PS_VERSION_'),
             'imgDir' => $this->configuration->get('_PS_IMG_'),
             'languageIso' => $languageDataProvider->getLanguageIsoById(
                 $this->configuration->get('PS_LANG_DEFAULT')
