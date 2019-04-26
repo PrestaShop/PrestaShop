@@ -24,39 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Cart;
+namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
-use Cart;
-use Context;
-use PrestaShop\PrestaShop\Adapter\Validate;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\RemoveProductFromCartHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 
 /**
- * Provides reusable methods for cart handlers
+ * Handles removing product from context cart.
  *
  * @internal
  */
-abstract class AbstractCartHandler
+final class RemoveProductFromCartHandler extends AbstractCartHandler implements RemoveProductFromCartHandlerInterface
 {
     /**
-     * @param CartId $cartId
-     *
-     * @return Cart
-     *
-     * @throws CartNotFoundException
+     * {@inheritdoc}
      */
-    protected function getCartObject(CartId $cartId)
+    public function handle(RemoveProductFromCartCommand $command)
     {
-        // Legacy behavior is working with context cart instead of retrieving cart from db
-        $cart = Context::getContext()->cart;
+        $cart = $this->getCartObject($command->getCartId());
 
-        if (!Validate::isLoadedObject($cart) || $cartId->getValue() !== $cart->id) {
-            throw new CartNotFoundException(
-                sprintf('Cart with id "%s" was not found', $cartId->getValue())
+        $removed = $cart->deleteProduct(
+            $command->getProductId()->getValue(),
+            $command->getCombinationId() ?: 0,
+            $command->getCustomizationId() ?: 0
+        );
+
+        if (!$removed) {
+            throw new CartException(
+                sprintf('Failed to remove product with id "%d" from cart', $command->getProductId()->getValue())
             );
         }
-
-        return $cart;
     }
 }
