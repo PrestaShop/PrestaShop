@@ -19,7 +19,7 @@ module.exports = {
     search_input: '//input[@id="category_name"]',
     search_button: '//button[@name="category[actions][search]"]',
     search_result: '//*[@id="category_grid"]//td[3]',
-    update_button: '//*[@id="category_grid"]//tbody//td[7]//a[@data-original-title="Edit"]',
+    update_button: '//*[@id="category_grid"]//tbody//a[@data-original-title="Edit"]',
     action_button: '//*[@id="category_grid"]//td[7]//a[@data-toggle="dropdown"]',
     delete_button: '//*[@id="category_grid"]//td[7]//a[contains(@class,"delete-category")]',
     view_button: '//*[@id="category_grid"]//td[7]//a[@data-original-title="View"]',
