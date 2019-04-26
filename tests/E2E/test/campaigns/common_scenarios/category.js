@@ -71,7 +71,7 @@ module.exports = {
     scenario('Update the created "Category"', client => {
       test('should go to "Category" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
-      test('should click on "Edit" action', () => client.scrollWaitForExistAndClick(CategorySubMenu.update_button));
+      test('should click on "Edit" action', () => client.waitForExistAndClickJs(CategorySubMenu.update_button));
       test('should set the "Name" input', () => client.waitAndSetValue(CategorySubMenu.name_input, editedCategoryData.name + date_time));
       test('should set the "Description" textarea', () => client.waitAndSetValue(CategorySubMenu.description_textarea, editedCategoryData.description + date_time));
       test('should set the "Meta title" input', () => client.waitAndSetValue(CategorySubMenu.title, editedCategoryData.meta_title));
@@ -114,7 +114,7 @@ module.exports = {
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
       test('should click on "Edit" action', () => {
         return promise
-          .then(() => client.scrollWaitForExistAndClick(CategorySubMenu.update_button))
+          .then(() => client.waitForExistAndClickJs(CategorySubMenu.update_button))
           .then(() => client.getURL(2000))
           .then((res) => global.param['id_category'] = res.value.match(/\d+/g)[0]);
       });
@@ -142,8 +142,8 @@ module.exports = {
         });
       }
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
-      test('should click on "Dropdown toggle" button', () => client.waitForExistAndClick(CategorySubMenu.action_button, 1000));
-      test('should click on "Delete" action', () => client.waitForExistAndClick(CategorySubMenu.delete_button));
+      test('should click on "Dropdown toggle" button', () => client.waitForExistAndClickJs(CategorySubMenu.action_button, 1000));
+      test('should click on "Delete" action', () => client.waitForExistAndClickJs(CategorySubMenu.delete_button));
       test('should wait for modal to exist', () => client.waitForVisible(CategorySubMenu.mode_delete_radio));
       if (deleteMode === 'delete') {
         test('should choose the delete mode radio button', () => client.scrollWaitForExistAndClick(CategorySubMenu.mode_delete_radio));
@@ -164,7 +164,7 @@ module.exports = {
     scenario('Delete category with action group', client => {
       test('should go to "Category" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
-      test('should select the category to delete', () => client.waitForExistAndClick(CategorySubMenu.select_category, 2000));
+      test('should select the category to delete', () => client.scrollWaitForVisibleAndClick(CategorySubMenu.select_category, 2000));
       test('should click on "Delete selected" action', () => client.clickOnAction(CategorySubMenu.delete_action_group_button, CategorySubMenu.action_group_button, 'delete'));
       test('should wait for modal to exist', () => client.waitForVisible(CategorySubMenu.mode_delete_radio));
       test('should click on "Delete" button', () => client.waitForExistAndClick(CategorySubMenu.second_delete_button));
