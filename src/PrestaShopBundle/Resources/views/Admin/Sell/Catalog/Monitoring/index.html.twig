@@ -29,10 +29,10 @@
   {% block empty_categories_listing %}
     <div class="row">
       <div class="col">
-        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': empty_category_grid} %}
+        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': emptyCategoryGrid} %}
           {% block grid_panel_extra_content %}
             {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig'
-              with {'deleteCategoriesForm': delete_category_form }
+              with {'deleteCategoriesForm': deleteCategoryForm }
             %}
           {% endblock %}
         {% endembed %}
@@ -43,7 +43,7 @@
   {% block product_with_combinations_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': product_with_combination_grid} %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithCombinationGrid} %}
       </div>
     </div>
   {% endblock %}
@@ -51,7 +51,7 @@
   {% block product_without_combinations_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': product_without_combination_grid} %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithoutCombinationGrid} %}
       </div>
     </div>
   {% endblock %}
@@ -59,7 +59,7 @@
   {% block disabled_product_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': disabled_product_grid} %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': disabledProductGrid} %}
       </div>
     </div>
   {% endblock %}
@@ -67,7 +67,7 @@
   {% block product_without_image_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': product_without_image_grid} %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithoutImageGrid} %}
       </div>
     </div>
   {% endblock %}
@@ -75,7 +75,7 @@
   {% block product_without_description_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': product_without_description_grid} %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithoutDescriptionGrid} %}
       </div>
     </div>
   {% endblock %}
@@ -83,7 +83,7 @@
   {% block product_without_price_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': product_without_price_grid} %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithoutPriceGrid} %}
       </div>
     </div>
   {% endblock %}

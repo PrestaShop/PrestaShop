@@ -93,14 +93,14 @@ class MonitoringController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Monitoring/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'empty_category_grid' => $this->presentGrid($emptyCategoryGrid),
-            'delete_category_form' => $deleteCategoryForm->createView(),
-            'product_with_combination_grid' => $this->presentGrid($productWithCombinationGrid),
-            'product_without_combination_grid' => $this->presentGrid($productWithoutCombinationGrid),
-            'disabled_product_grid' => $this->presentGrid($disabledProductGrid),
-            'product_without_image_grid' => $this->presentGrid($productWithoutImageGrid),
-            'product_without_description_grid' => $this->presentGrid($productWithoutDescriptionGrid),
-            'product_without_price_grid' => $this->presentGrid($productWithoutPriceGrid),
+            'emptyCategoryGrid' => $this->presentGrid($emptyCategoryGrid),
+            'deleteCategoryForm' => $deleteCategoryForm->createView(),
+            'productWithCombinationGrid' => $this->presentGrid($productWithCombinationGrid),
+            'productWithoutCombinationGrid' => $this->presentGrid($productWithoutCombinationGrid),
+            'disabledProductGrid' => $this->presentGrid($disabledProductGrid),
+            'productWithoutImageGrid' => $this->presentGrid($productWithoutImageGrid),
+            'productWithoutDescriptionGrid' => $this->presentGrid($productWithoutDescriptionGrid),
+            'productWithoutPriceGrid' => $this->presentGrid($productWithoutPriceGrid),
         ]);
     }
 
