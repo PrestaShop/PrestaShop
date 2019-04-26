@@ -344,6 +344,30 @@
   }
 }
 
+#left-column {
+  .block_newsletter,
+  #block-newsletter-label,
+  .block-newsletter-form {
+    width: 100%;
+  }
+  .block_newsletter {
+    margin-bottom: 1.563rem;
+    background: $btn-primary-color;
+  }
+
+  .block-newsletter-inputs {
+    display: flex;
+    flex-direction: column;
+    .input-wrapper {
+      order: -1;
+      margin-bottom: .5rem;
+      input {
+        border: 1px solid $gray-light-third;
+      }
+    }
+  }
+}
+
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {
   #category {
@@ -454,7 +478,10 @@
     }
   }
   #category {
-    #left-column {
+    #left-column { 
+      .block_newsletter {
+        @include box-shadow;
+      }
       #search_filters_wrapper {
         margin-left: -15px;
         margin-right: -15px;
