@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
+use Symfony\Component\DependencyInjection\Container;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
 /**
@@ -82,7 +83,7 @@ final class GridPresenter implements GridPresenterInterface
             'filters' => $searchCriteria->getFilters(),
         ];
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridPresenterModifier', [
             'presented_grid' => &$presentedGrid,
         ]);
 
