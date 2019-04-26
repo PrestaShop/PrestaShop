@@ -49,7 +49,7 @@ module.exports = {
         return promise
           .then(() => client.scrollWaitForExistAndClick(CategorySubMenu.save_button, 50))
           .then(() => client.getTextInVar(CategorySubMenu.category_number_span, "number_category"))
-          .then(() => tab['number_category'] = tab['number_category'].split('(')[1].split(')')[0]);
+          .then(() => tab['number_category'] = tab['number_category'].match(/\d+/g)[0]);
       });
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'Successful creation.','contain'));
     }, 'category');
@@ -116,7 +116,7 @@ module.exports = {
         return promise
           .then(() => client.scrollWaitForExistAndClick(CategorySubMenu.update_button))
           .then(() => client.getURL(2000))
-          .then((res) => global.param['id_category'] = res.value.split('categories/')[1].split("/")[0]);
+          .then((res) => global.param['id_category'] = res.value.match(/\d+/g)[0]);
       });
       test('should check the category name', () => client.checkAttributeValue(CategorySubMenu.name_input, 'value', categoryData.name + date_time));
       test('should check that the image is well displayed', () => client.checkImage(CategorySubMenu.image_link));
