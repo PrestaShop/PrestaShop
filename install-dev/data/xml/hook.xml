@@ -74,12 +74,14 @@
     <hook id="Header">
       <name>Header</name>
       <title>Pages html head section</title>
-      <description>This hook adds additional elements in the head section of your pages (head section of html)</description>
+      <description>This hook adds additional elements in the head section of your pages (head section of html)
+      </description>
     </hook>
     <hook id="actionCartSave">
       <name>actionCartSave</name>
       <title>Cart creation and update</title>
-      <description>This hook is displayed when a product is added to the cart or if the cart's content is modified</description>
+      <description>This hook is displayed when a product is added to the cart or if the cart's content is modified
+      </description>
     </hook>
     <hook id="actionAuthentication">
       <name>actionAuthentication</name>
@@ -159,22 +161,30 @@
     <hook id="displayAdminOrderTabOrder">
       <name>displayAdminOrderTabOrder</name>
       <title>Display new elements in Back Office, AdminOrder, panel Order</title>
-      <description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Order panel tabs</description>
+      <description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends /
+        override Order panel tabs
+      </description>
     </hook>
     <hook id="displayAdminOrderTabShip">
       <name>displayAdminOrderTabShip</name>
       <title>Display new elements in Back Office, AdminOrder, panel Shipping</title>
-      <description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Shipping panel tabs</description>
+      <description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends /
+        override Shipping panel tabs
+      </description>
     </hook>
     <hook id="displayAdminOrderContentOrder">
       <name>displayAdminOrderContentOrder</name>
       <title>Display new elements in Back Office, AdminOrder, panel Order</title>
-      <description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Order panel content</description>
+      <description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends /
+        override Order panel content
+      </description>
     </hook>
     <hook id="displayAdminOrderContentShip">
       <name>displayAdminOrderContentShip</name>
       <title>Display new elements in Back Office, AdminOrder, panel Shipping</title>
-      <description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Shipping panel content</description>
+      <description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends /
+        override Shipping panel content
+      </description>
     </hook>
     <hook id="displayFooter">
       <name>displayFooter</name>
@@ -199,7 +209,9 @@
     <hook id="displayAdminCustomersAddressesItemAction">
       <name>displayAdminCustomersAddressesItemAction</name>
       <title>Display new elements in the Back Office, tab AdminCustomers, Addresses actions</title>
-      <description>This hook launches modules when the Addresses list into the AdminCustomers tab is displayed in the Back Office</description>
+      <description>This hook launches modules when the Addresses list into the AdminCustomers tab is displayed in the
+        Back Office
+      </description>
     </hook>
     <hook id="displayOrderConfirmation">
       <name>displayOrderConfirmation</name>
@@ -259,7 +271,7 @@
     <hook id="actionOrderReturn">
       <name>actionOrderReturn</name>
       <title>Returned product</title>
-      <description>This hook is displayed when a customer returns a product </description>
+      <description>This hook is displayed when a customer returns a product</description>
     </hook>
     <hook id="displayProductAdditionalInfo">
       <name>displayProductAdditionalInfo</name>
@@ -419,7 +431,7 @@
     <hook id="actionAttributeGroupDelete">
       <name>actionAttributeGroupDelete</name>
       <title>Deleting attribute group</title>
-      <description>This hook is called while deleting an attributes  group</description>
+      <description>This hook is called while deleting an attributes group</description>
     </hook>
     <hook id="displayFeatureForm">
       <name>displayFeatureForm</name>
@@ -579,7 +591,8 @@
     <hook id="additionalCustomerAddressFields">
       <name>additionalCustomerAddressFields</name>
       <title>Add fields to the Customer address form</title>
-      <description>This hook returns an array of FormFields to add them to the customer address registration form</description>
+      <description>This hook returns an array of FormFields to add them to the customer address registration form
+      </description>
     </hook>
     <hook id="addWebserviceResources">
       <name>addWebserviceResources</name>
@@ -614,17 +627,22 @@
     <hook id="displayCarrierExtraContent">
       <name>displayCarrierExtraContent</name>
       <title>Display additional content for a carrier (e.g pickup points)</title>
-      <description>This hook calls only the module related to the carrier, in order to add options when needed</description>
+      <description>This hook calls only the module related to the carrier, in order to add options when needed
+      </description>
     </hook>
     <hook id="validateCustomerFormFields">
       <name>validateCustomerFormFields</name>
       <title>Customer registration form validation</title>
-      <description>This hook is called to a module when it has sent additional fields with additionalCustomerFormFields</description>
+      <description>This hook is called to a module when it has sent additional fields with
+        additionalCustomerFormFields
+      </description>
     </hook>
     <hook id="displayProductExtraContent">
       <name>displayProductExtraContent</name>
       <title>Display extra content on the product page</title>
-      <description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page</description>
+      <description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on
+        the product page
+      </description>
     </hook>
     <hook id="filterCmsContent">
       <name>filterCmsContent</name>
@@ -704,7 +722,9 @@
     <hook id="actionEmailSendBefore">
       <name>actionEmailSendBefore</name>
       <title>Before sending an email</title>
-      <description>This hook is used to filter the content or the metadata of an email before sending it or even prevent its sending</description>
+      <description>This hook is used to filter the content or the metadata of an email before sending it or even prevent
+        its sending
+      </description>
     </hook>
     <hook id="displayAdminProductsMainStepLeftColumnMiddle">
       <name>displayAdminProductsMainStepLeftColumnMiddle</name>
@@ -769,7 +789,9 @@
     <hook id="actionBuildFrontEndObject">
       <name>actionBuildFrontEndObject</name>
       <title>Manage elements added to the "prestashop" javascript object</title>
-      <description>This hook allows you to customize the "prestashop" javascript object that is included in all front office pages</description>
+      <description>This hook allows you to customize the "prestashop" javascript object that is included in all front
+        office pages
+      </description>
     </hook>
     <hook id="actionFrontControllerAfterInit">
       <name>actionFrontControllerAfterInit</name>
@@ -929,12 +951,16 @@
     <hook id="actionListMailThemes">
       <name>actionListMailThemes</name>
       <title>List the available email themes and layouts</title>
-      <description>This hook allows to add/remove available email themes (ThemeInterface) and/or to add/remove their layouts (LayoutInterface)</description>
+      <description>This hook allows to add/remove available email themes (ThemeInterface) and/or to add/remove their
+        layouts (LayoutInterface)
+      </description>
     </hook>
     <hook id="actionGetMailThemeFolder">
       <name>actionGetMailThemeFolder</name>
       <title>Define the folder of an email theme</title>
-      <description>This hook allows to change the folder of an email theme (useful if you theme is in a module for example)</description>
+      <description>This hook allows to change the folder of an email theme (useful if you theme is in a module for
+        example)
+      </description>
     </hook>
     <hook id="actionBuildMailLayoutVariables">
       <name>actionBuildMailLayoutVariables</name>
@@ -954,7 +980,73 @@
     <hook id="displayPersonalInformationTop">
       <name>displayPersonalInformationTop</name>
       <title>Content in the checkout funnel, on top of the personal information panel</title>
-      <description>Display actions or additional content in the personal details tab of the checkout funnel.</description>
+      <description>Display actions or additional content in the personal details tab of the checkout funnel.
+      </description>
     </hook>
-  </entities>
+    <hook id="actionEmployeeGridDefinitionModifier">
+      <name>actionEmployeeGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionContactGridDefinitionModifier">
+      <name>actionContactGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionCustomerGridDefinitionModifier">
+      <name>actionCustomerGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionLanguageGridDefinitionModifier">
+      <name>actionLanguageGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionCurrencyGridDefinitionModifier">
+      <name>actionCurrencyGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionSupplierGridDefinitionModifier">
+      <name>actionSupplierGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionProfileGridDefinitionModifier">
+      <name>actionProfileGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionCmsPageCategoryGridDefinitionModifier">
+      <name>actionCmsPageCategoryGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionCategoryGridDefinitionModifier">
+      <name>actionCategoryGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionTaxGridDefinitionModifier">
+      <name>actionTaxGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionManufacturerGridDefinitionModifier">
+      <name>actionManufacturerGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionManufacturerAddressGridDefinitionModifier">
+      <name>actionManufacturerAddressGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionCmsPageGridDefinitionModifier">
+      <name>actionCmsPageGridDefinitionModifier</name>
+      <title/>
+      <description/>
+    </hook>
+  <hook id="actionBackupGridQueryBuilderModifier"><name>actionBackupGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionCategoryGridQueryBuilderModifier"><name>actionCategoryGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionEmployeeGridQueryBuilderModifier"><name>actionEmployeeGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionContactGridQueryBuilderModifier"><name>actionContactGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionCustomerGridQueryBuilderModifier"><name>actionCustomerGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionLanguageGridQueryBuilderModifier"><name>actionLanguageGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionCurrencyGridQueryBuilderModifier"><name>actionCurrencyGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionSupplierGridQueryBuilderModifier"><name>actionSupplierGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionProfileGridQueryBuilderModifier"><name>actionProfileGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionCmsPageCategoryGridQueryBuilderModifier"><name>actionCmsPageCategoryGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionTaxGridQueryBuilderModifier"><name>actionTaxGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionManufacturerGridQueryBuilderModifier"><name>actionManufacturerGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionManufacturerAddressGridQueryBuilderModifier"><name>actionManufacturerAddressGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionCmsPageGridQueryBuilderModifier"><name>actionCmsPageGridQueryBuilderModifier</name><title/><description/></hook><hook id="actionLogsGridDataModifier"><name>actionLogsGridDataModifier</name><title/><description/></hook><hook id="actionEmailLogsGridDataModifier"><name>actionEmailLogsGridDataModifier</name><title/><description/></hook><hook id="actionSqlRequestGridDataModifier"><name>actionSqlRequestGridDataModifier</name><title/><description/></hook><hook id="actionBackupGridDataModifier"><name>actionBackupGridDataModifier</name><title/><description/></hook><hook id="actionWebserviceKeyGridDataModifier"><name>actionWebserviceKeyGridDataModifier</name><title/><description/></hook><hook id="actionMetaGridDataModifier"><name>actionMetaGridDataModifier</name><title/><description/></hook><hook id="actionCategoryGridDataModifier"><name>actionCategoryGridDataModifier</name><title/><description/></hook><hook id="actionEmployeeGridDataModifier"><name>actionEmployeeGridDataModifier</name><title/><description/></hook><hook id="actionContactGridDataModifier"><name>actionContactGridDataModifier</name><title/><description/></hook><hook id="actionCustomerGridDataModifier"><name>actionCustomerGridDataModifier</name><title/><description/></hook><hook id="actionLanguageGridDataModifier"><name>actionLanguageGridDataModifier</name><title/><description/></hook><hook id="actionCurrencyGridDataModifier"><name>actionCurrencyGridDataModifier</name><title/><description/></hook><hook id="actionSupplierGridDataModifier"><name>actionSupplierGridDataModifier</name><title/><description/></hook><hook id="actionProfileGridDataModifier"><name>actionProfileGridDataModifier</name><title/><description/></hook><hook id="actionCmsPageCategoryGridDataModifier"><name>actionCmsPageCategoryGridDataModifier</name><title/><description/></hook><hook id="actionTaxGridDataModifier"><name>actionTaxGridDataModifier</name><title/><description/></hook><hook id="actionManufacturerGridDataModifier"><name>actionManufacturerGridDataModifier</name><title/><description/></hook><hook id="actionManufacturerAddressGridDataModifier"><name>actionManufacturerAddressGridDataModifier</name><title/><description/></hook><hook id="actionCmsPageGridDataModifier"><name>actionCmsPageGridDataModifier</name><title/><description/></hook><hook id="actionCategoryGridFilterFormModifier"><name>actionCategoryGridFilterFormModifier</name><title/><description/></hook><hook id="actionEmployeeGridFilterFormModifier"><name>actionEmployeeGridFilterFormModifier</name><title/><description/></hook><hook id="actionContactGridFilterFormModifier"><name>actionContactGridFilterFormModifier</name><title/><description/></hook><hook id="actionCustomerGridFilterFormModifier"><name>actionCustomerGridFilterFormModifier</name><title/><description/></hook><hook id="actionLanguageGridFilterFormModifier"><name>actionLanguageGridFilterFormModifier</name><title/><description/></hook><hook id="actionCurrencyGridFilterFormModifier"><name>actionCurrencyGridFilterFormModifier</name><title/><description/></hook><hook id="actionSupplierGridFilterFormModifier"><name>actionSupplierGridFilterFormModifier</name><title/><description/></hook><hook id="actionProfileGridFilterFormModifier"><name>actionProfileGridFilterFormModifier</name><title/><description/></hook><hook id="actionCmsPageCategoryGridFilterFormModifier"><name>actionCmsPageCategoryGridFilterFormModifier</name><title/><description/></hook><hook id="actionTaxGridFilterFormModifier"><name>actionTaxGridFilterFormModifier</name><title/><description/></hook><hook id="actionManufacturerGridFilterFormModifier"><name>actionManufacturerGridFilterFormModifier</name><title/><description/></hook><hook id="actionManufacturerAddressGridFilterFormModifier"><name>actionManufacturerAddressGridFilterFormModifier</name><title/><description/></hook><hook id="actionCmsPageGridFilterFormModifier"><name>actionCmsPageGridFilterFormModifier</name><title/><description/></hook><hook id="actionCategoryGridPresenterModifier"><name>actionCategoryGridPresenterModifier</name><title/><description/></hook><hook id="actionEmployeeGridPresenterModifier"><name>actionEmployeeGridPresenterModifier</name><title/><description/></hook><hook id="actionContactGridPresenterModifier"><name>actionContactGridPresenterModifier</name><title/><description/></hook><hook id="actionCustomerGridPresenterModifier"><name>actionCustomerGridPresenterModifier</name><title/><description/></hook><hook id="actionLanguageGridPresenterModifier"><name>actionLanguageGridPresenterModifier</name><title/><description/></hook><hook id="actionCurrencyGridPresenterModifier"><name>actionCurrencyGridPresenterModifier</name><title/><description/></hook><hook id="actionSupplierGridPresenterModifier"><name>actionSupplierGridPresenterModifier</name><title/><description/></hook><hook id="actionProfileGridPresenterModifier"><name>actionProfileGridPresenterModifier</name><title/><description/></hook><hook id="actionCmsPageCategoryGridPresenterModifier"><name>actionCmsPageCategoryGridPresenterModifier</name><title/><description/></hook><hook id="actionTaxGridPresenterModifier"><name>actionTaxGridPresenterModifier</name><title/><description/></hook><hook id="actionManufacturerGridPresenterModifier"><name>actionManufacturerGridPresenterModifier</name><title/><description/></hook><hook id="actionManufacturerAddressGridPresenterModifier"><name>actionManufacturerAddressGridPresenterModifier</name><title/><description/></hook><hook id="actionCmsPageGridPresenterModifier"><name>actionCmsPageGridPresenterModifier</name><title/><description/></hook></entities>
 </entity_hook>
