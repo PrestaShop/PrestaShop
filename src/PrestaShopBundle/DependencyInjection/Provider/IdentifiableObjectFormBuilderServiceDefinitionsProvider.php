@@ -30,10 +30,12 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Providers service definitions of only identifiable object form builder.
+ * Providers service ids of only identifiable object form builder.
  */
 final class IdentifiableObjectFormBuilderServiceDefinitionsProvider implements ServiceDefinitionProviderInterface
 {
+    const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
+
     const SERVICE_NAME_START_WITH = 'prestashop.core.form.identifiable_object.builder';
     const ALTERNATIVE_SERVICE_STARTS_WITH = 'prestashop.core.form.builder';
 
@@ -54,9 +56,7 @@ final class IdentifiableObjectFormBuilderServiceDefinitionsProvider implements S
                 continue;
             }
 
-            $formBuilderService = $containerBuilder->get($serviceId);
-
-            if (!$formBuilderService instanceof FormBuilderInterface) {
+            if (!is_subclass_of($serviceDefinition->getClass(), FormBuilderInterface::class)) {
                 continue;
             }
 
