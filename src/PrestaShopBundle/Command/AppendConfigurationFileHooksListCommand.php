@@ -70,7 +70,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
 
         if (!empty($addedHooks)) {
             $io->title('Hooks added to configuration file');
-
+            $io->note(sprintf('Total hooks added: %s', count($addedHooks)));
             $io->listing($addedHooks);
 
             return;
