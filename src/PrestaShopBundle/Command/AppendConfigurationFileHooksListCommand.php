@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Command;
 use DOMDocument;
 use Exception;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Hook\Provider\HookByServiceIdsProviderInterface;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerDebugCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -91,35 +92,13 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
         $gridDefinitionIdsProvider = $container->get('prestashop.bundle.dependency_injection.provider.grid_definition_service_ids');
         $gridDefinitionServiceIds = $gridDefinitionIdsProvider->getServiceIds($containerBuilder);
 
-        $gridDefinitionHookNames = $this->getGridDefinitionHookNames($gridDefinitionServiceIds);
+        /** @var HookByServiceIdsProviderInterface $gridDefinitionHooksProvider */
+        $gridDefinitionHooksProvider =
+            $container->get('prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider');
+
+        $gridDefinitionHookNames = $gridDefinitionHooksProvider->getHookNames($container, $gridDefinitionServiceIds);
 
         return $gridDefinitionHookNames;
-    }
-
-    /**
-     * @param string[] $gridDefinitionServiceIds
-     *
-     * @return array
-     */
-    private function getGridDefinitionHookNames(array $gridDefinitionServiceIds)
-    {
-        $hookStartsWith = 'action';
-        $hookEndsWith = 'GridDefinitionModifier';
-
-        $hookNames = [];
-        foreach ($gridDefinitionServiceIds as $serviceId) {
-            /** @var GridDefinitionFactoryInterface $service */
-            $service = $this->getContainer()->get($serviceId);
-
-            $definition = $service->getDefinition();
-
-            $definitionId = $definition->getId();
-
-            $hookName = $hookStartsWith . Container::camelize($definitionId) . $hookEndsWith;
-            $hookNames[] = $hookName;
-        }
-
-        return $hookNames;
     }
 
     /**
