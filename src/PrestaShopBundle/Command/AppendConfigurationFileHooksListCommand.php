@@ -82,7 +82,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
     /**
      * Gets all hooks names which need to be appended.
      *
-     * @return array
+     * @return string[]
      */
     private function getHookNames()
     {
@@ -98,6 +98,11 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
         $identifiableObjectFormBuilderDefinitions =
             $identifiableObjectFormBuilderServiceDefinitionsProvider->getDefinitions($containerBuilder);
 
+        $optionFormServiceDefinitionsProvider =
+            $container->get('prestashop.bundle.dependency_injection.provider.options_form_service_definition');
+
+        $optionsFormDefinitions = $optionFormServiceDefinitionsProvider->getDefinitions($containerBuilder);
+
         $gridDefinitionHooksProvider =
             $container->get('prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider');
 
@@ -109,7 +114,12 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
         $identifiableObjectHookNames =
             $identifiableObjectHooksProvider->getHookNames($identifiableObjectFormBuilderDefinitions);
 
-        return array_merge($gridDefinitionHookNames, $identifiableObjectHookNames);
+        $optionFormHookNameProvider =
+            $container->get('prestashop.core.hook.provider.options_form_hook_by_service_definition_provider');
+
+        $optionHookNames = $optionFormHookNameProvider->getHookNames($optionsFormDefinitions);
+
+        return array_merge($gridDefinitionHookNames, $identifiableObjectHookNames, $optionHookNames);
     }
 
     /**

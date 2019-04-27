@@ -6,4 +6,7 @@ services:
     class: 'PrestaShopBundle\DependencyInjection\Provider\GridDefinitionServiceIdsProvider'
 
   prestashop.bundle.dependency_injection.provider.identifiable_object_form_builder_service_definition:
-    class: 'PrestaShopBundle\DependencyInjection\Provider\IdentifiableObjectFormBuilderServiceDefinitionsProvider'
+    class: 'PrestaShopBundle\DependencyInjection\Provider\IdentifiableObjectFormBuilderServiceDefinitionProvider'
+
+  prestashop.bundle.dependency_injection.provider.options_form_service_definition:
+    class: 'PrestaShopBundle\DependencyInjection\Provider\OptionsFormServiceDefinitionProvider'

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
+use Generator;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -102,11 +103,10 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
      * @param ContainerInterface $container
      * @param array $gridDefinitionServiceIds
      *
-     * @return array
+     * @return Generator
      */
     private function getGridDefinitionIds(ContainerInterface $container, array $gridDefinitionServiceIds)
     {
-        $definitionIds = [];
         foreach ($gridDefinitionServiceIds as $serviceId) {
             $service = $container->get($serviceId);
 
@@ -120,10 +120,8 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
 
             $camelizedDefinitionId = Container::camelize($definitionId);
 
-            $definitionIds[] = $camelizedDefinitionId;
+            yield $camelizedDefinitionId;
         }
-
-        return $definitionIds;
     }
 
     /**
