@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\Form\FormTypeInterface;
 
@@ -49,15 +50,15 @@ final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByS
     /**
      * @var FormRegistryInterface
      */
-    private $formRegistry;
+    private $formFactory;
 
 
     /**
-     * @param FormRegistryInterface $formRegistry
+     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(FormRegistryInterface $formRegistry)
+    public function __construct(FormFactoryInterface $formFactory)
     {
-        $this->formRegistry = $formRegistry;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -132,7 +133,7 @@ final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByS
                 continue;
             }
 
-            $formNames[] = $this->formRegistry->getType($formType)->getBlockPrefix();
+            $formNames[] = $this->formFactory->createBuilder($formType)->getName();
         }
 
         return $formNames;
