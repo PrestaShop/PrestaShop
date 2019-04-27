@@ -49,30 +49,43 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
     {
         $gridDefinitionIds = $this->getGridDefinitionIds($container, $gridDefinitionServiceIds);
 
-        $gridDefinitionHookNames = $this->collectHookNames(
-            $gridDefinitionIds,
-            self::GRID_DEFINITION_HOOK_ENDS_WITH
-        );
+        $gridDefinitionHookNames = [];
+        $gridQueryBuilderHookNames = [];
+        $gridDataHookNames = [];
+        $gridFilterFormHookNames = [];
+        $gridPresenterHookNames = [];
 
-        $gridQueryBuilderHookNames = $this->collectHookNames(
-            $gridDefinitionIds,
-            self::GRID_QUERY_BUILDER_HOOK_ENDS_WITH
-        );
+        foreach ($gridDefinitionIds as $gridDefinitionId) {
+            $gridDefinitionHookNames[] = $this->formatHookName(
+                self::HOOK_STARTS_WITH,
+                $gridDefinitionId,
+                self::GRID_DEFINITION_HOOK_ENDS_WITH
+            );
 
-        $gridDataHookNames = $this->collectHookNames(
-            $gridDefinitionIds,
-            self::GRID_DATA_HOOK_ENDS_WITH
-        );
+            $gridQueryBuilderHookNames[] = $this->formatHookName(
+                self::HOOK_STARTS_WITH,
+                $gridDefinitionId,
+                self::GRID_QUERY_BUILDER_HOOK_ENDS_WITH
+            );
 
-        $gridFilterFormHookNames = $this->collectHookNames(
-            $gridDefinitionIds,
-            self::GRID_FILTER_FORM_ENDS_WITH
-        );
+            $gridDataHookNames[] = $this->formatHookName(
+                self::HOOK_STARTS_WITH,
+                $gridDefinitionId,
+                self::GRID_DATA_HOOK_ENDS_WITH
+            );
 
-        $gridPresenterHookNames = $this->collectHookNames(
-            $gridDefinitionIds,
-            self::GRID_PRESENTER_ENDS_WITH
-        );
+            $gridFilterFormHookNames[] = $this->formatHookName(
+                self::HOOK_STARTS_WITH,
+                $gridDefinitionId,
+                self::GRID_FILTER_FORM_ENDS_WITH
+            );
+
+            $gridPresenterHookNames[] = $this->formatHookName(
+                self::HOOK_STARTS_WITH,
+                $gridDefinitionId,
+                self::GRID_PRESENTER_ENDS_WITH
+            );
+        }
 
         return array_merge(
             $gridDefinitionHookNames,
@@ -111,27 +124,6 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
         }
 
         return $definitionIds;
-    }
-
-    /**
-     * Collects hook names by using common pattern for all grids.
-     *
-     * @param array $gridDefinitionIds
-     * @param string $hookNameEndsWith
-     * @return array
-     */
-    private function collectHookNames($gridDefinitionIds, $hookNameEndsWith)
-    {
-        $hookNames = [];
-        foreach ($gridDefinitionIds as $gridDefinitionId) {
-            $hookNames[] = $this->formatHookName(
-                self::HOOK_STARTS_WITH,
-                $gridDefinitionId,
-                $hookNameEndsWith
-            );
-        }
-
-        return $hookNames;
     }
 
     /**

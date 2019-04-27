@@ -24,23 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\DependencyInjection\Provider;
+namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * todo: remove or keep
- * Defines contract for providing service definitions.
+ * todo: for options form is useful only right now.
+ *
+ * Defines contract for providing hooks by using definitions - e.g some hooks are passed as constructor argument
+ * and service Definition does have this information.
  */
-interface ServiceDefinitionProviderInterface
+interface HookByServiceDefinitionProviderInterface
 {
     /**
-     * Gets service definitions.
+     * @param Definition[] $serviceDefinitions
      *
-     * @param ContainerBuilder $containerBuilder
-     *
-     * @return Definition[]
+     * @return string[]
      */
-    public function getDefinitions(ContainerBuilder $containerBuilder);
+    public function getHookNames(array $serviceDefinitions);
 }

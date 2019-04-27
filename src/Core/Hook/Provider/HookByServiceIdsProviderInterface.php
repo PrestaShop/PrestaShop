@@ -29,7 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines contract for providing hooks by using services.
+ * Defines contract for providing hooks by using service ids - it calls the container by given id which exists in
+ * Definition.
  */
 interface HookByServiceIdsProviderInterface
 {

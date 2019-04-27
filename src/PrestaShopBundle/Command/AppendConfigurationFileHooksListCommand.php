@@ -98,13 +98,18 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
         $identifiableObjectFormBuilderDefinitions =
             $identifiableObjectFormBuilderServiceDefinitionsProvider->getDefinitions($containerBuilder);
 
-        /** @var HookByServiceIdsProviderInterface $gridDefinitionHooksProvider */
         $gridDefinitionHooksProvider =
             $container->get('prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider');
 
+        $identifiableObjectHooksProvider =
+            $container->get('prestashop.core.hook.provider.identifiable_object_hook_by_service_definition_provider');
+
         $gridDefinitionHookNames = $gridDefinitionHooksProvider->getHookNames($container, $gridDefinitionServiceIds);
 
-        return $gridDefinitionHookNames;
+        $identifiableObjectHookNames =
+            $identifiableObjectHooksProvider->getHookNames($identifiableObjectFormBuilderDefinitions);
+
+        return array_merge($gridDefinitionHookNames, $identifiableObjectHookNames);
     }
 
     /**
