@@ -131,6 +131,8 @@ final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByS
             if (!is_string($formType) || !is_subclass_of($formType, FormTypeInterface::class)) {
                 continue;
             }
+
+            $formNames[] = $this->formRegistry->getType($formType)->getBlockPrefix();
         }
 
         return $formNames;
