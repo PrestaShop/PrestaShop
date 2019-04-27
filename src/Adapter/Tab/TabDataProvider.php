@@ -78,6 +78,10 @@ class TabDataProvider
     {
         $viewableTabs = [];
 
+        if (!$this->contextEmployeeProfileId) {
+            return [];
+        }
+
         foreach (Tab::getTabs($languageId, 0) as $tab) {
             if ($this->canAccessTab($profileId, $tab['id_tab'])) {
                 $viewableTabs[$tab['id_tab']] = [

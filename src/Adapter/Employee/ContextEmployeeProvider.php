@@ -35,14 +35,14 @@ use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
 {
     /**
-     * @var Employee
+     * @var Employee|null
      */
     private $contextEmployee;
 
     /**
-     * @param Employee $contextEmployee
+     * @param Employee|null $contextEmployee
      */
-    public function __construct(Employee $contextEmployee)
+    public function __construct($contextEmployee)
     {
         $this->contextEmployee = $contextEmployee;
     }
@@ -52,6 +52,10 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function isSuperAdmin()
     {
+        if (null === $this->contextEmployee) {
+            return false;
+        }
+
         return $this->contextEmployee->isSuperAdmin();
     }
 
@@ -60,6 +64,10 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function getId()
     {
+        if (null === $this->contextEmployee) {
+            return 0;
+        }
+
         return (int) $this->contextEmployee->id;
     }
 
@@ -68,6 +76,10 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function getLanguageId()
     {
+        if (null === $this->contextEmployee) {
+            return 0;
+        }
+
         return (int) $this->contextEmployee->id_lang;
     }
 
