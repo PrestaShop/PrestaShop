@@ -26,18 +26,15 @@
 
 namespace PrestaShopBundle\DependencyInjection\Provider;
 
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Providers service ids of only identifiable object form builder.
+ * Returns service definitions form option forms.
  */
-final class IdentifiableObjectFormBuilderServiceDefinitionsProvider implements ServiceDefinitionProviderInterface
+final class OptionsFormServiceDefinitionProvider implements ServiceDefinitionProviderInterface
 {
-    const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
-
-    const SERVICE_NAME_START_WITH = 'prestashop.core.form.identifiable_object.builder';
-    const ALTERNATIVE_SERVICE_STARTS_WITH = 'prestashop.core.form.builder';
+    const OPTIONS_FORM_SERVICE_ENDS_WITH = 'form_handler';
 
     /**
      * {@inheritdoc}
@@ -52,31 +49,24 @@ final class IdentifiableObjectFormBuilderServiceDefinitionsProvider implements S
                 continue;
             }
 
-            if (!$this->isIdentifiableObjectFormBuilderServiceKey($serviceId)) {
+            if (!$this->stringEndsWith($serviceId, self::OPTIONS_FORM_SERVICE_ENDS_WITH)) {
                 continue;
             }
 
-            if (!is_subclass_of($serviceDefinition->getClass(), FormBuilderInterface::class)) {
+            if (!is_subclass_of($serviceDefinition->getClass(), FormHandlerInterface::class)) {
                 continue;
             }
 
-            $filteredDefinitions[] = $serviceDefinition;
+            $filteredDefinitions[$serviceId] = $serviceDefinition;
         }
 
         return $filteredDefinitions;
     }
 
-    /**
-     * Checks if service belongs to identifiable object form builder.
-     *
-     * @param string $serviceId
-     *
-     * @return bool
-     */
-    private function isIdentifiableObjectFormBuilderServiceKey($serviceId)
+    private function stringEndsWith($haystack, $needle)
     {
-        return strpos($serviceId, self::SERVICE_NAME_START_WITH) === 0 ||
-            strpos($serviceId, self::ALTERNATIVE_SERVICE_STARTS_WITH) === 0
-        ;
+        $diff = \strlen($haystack) - \strlen($needle);
+
+        return $diff >= 0 && strpos($haystack, $needle, $diff) !== false;
     }
 }

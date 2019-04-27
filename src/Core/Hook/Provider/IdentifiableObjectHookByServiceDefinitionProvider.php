@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
+use Generator;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRegistryInterface;
@@ -120,12 +121,10 @@ final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByS
      *
      * @param Definition[] $serviceDefinitions
      *
-     * @return string[]
+     * @return Generator
      */
     private function getFormNames(array $serviceDefinitions)
     {
-        $formNames = [];
-
         foreach ($serviceDefinitions as $serviceDefinition) {
             $formType = $serviceDefinition->getArgument(self::FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER);
 
@@ -133,10 +132,8 @@ final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByS
                 continue;
             }
 
-            $formNames[] = $this->formFactory->createBuilder($formType)->getName();
+            yield $this->formFactory->createBuilder($formType)->getName();
         }
-
-        return $formNames;
     }
 
     /**
@@ -150,6 +147,7 @@ final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByS
      */
     private function formatHookName($hookStartsWith, $hookId, $hookEndsWidth)
     {
+        //todo: camelise this if such functionality will be introduced to 1.7.6
         return $hookStartsWith . $hookId . $hookEndsWidth;
     }
 }

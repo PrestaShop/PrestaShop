@@ -30,7 +30,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * todo: remove or keep
  * Defines contract for providing service definitions.
  */
 interface ServiceDefinitionProviderInterface

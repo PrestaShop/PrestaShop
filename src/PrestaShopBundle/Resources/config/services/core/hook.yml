@@ -14,3 +14,6 @@ services:
       class: PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByServiceDefinitionProvider
       arguments:
         - '@form.factory'
+
+    prestashop.core.hook.provider.options_form_hook_by_service_definition_provider:
+      class: PrestaShop\PrestaShop\Core\Hook\Provider\OptionsFormHookByServiceDefinitionProvider
