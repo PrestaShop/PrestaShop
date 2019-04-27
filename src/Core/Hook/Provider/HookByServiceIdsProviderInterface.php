@@ -24,19 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\DependencyInjection\Provider;
+namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines contract for providing service ids.
+ * Defines contract for providing hooks by using services.
  */
-interface ServiceIdsProviderInterface
+interface HookByServiceIdsProviderInterface
 {
     /**
-     * @param ContainerBuilder $containerBuilder
+     * @param ContainerInterface $container
+     * @param string[] $gridDefinitionServiceIds
      *
      * @return string[]
      */
-    public function getServiceIds(ContainerBuilder $containerBuilder);
+    public function getHookNames(ContainerInterface $container, array $gridDefinitionServiceIds);
 }
