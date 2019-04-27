@@ -58,6 +58,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
     {
         require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
 
+        //todo: check why not list hooks are not being listed.
         $hookNames = $this->getHookNames();
 
         $io = new SymfonyStyle($input, $output);
