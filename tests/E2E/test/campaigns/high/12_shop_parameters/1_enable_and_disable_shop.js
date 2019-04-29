@@ -25,7 +25,7 @@ scenario('Configure shop in the Back Office', () => {
     test('should set the "Enable shop" parameter to "NO"', () => client.waitForExistAndClick(ShopParameters.enable_shop.replace("%ID", '0')));
     test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 1), 'We are currently disabled our shop and will be back really soon.'));
     test('should switch to the "French" language', () => client.waitForExistAndClick(ShopParameters.language_option.replace("%LANG", 'Fr').replace("%ID", "1")));
-    test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 2), 'Nous avons actuellement désactivés notre boutique et serons de retour très bientôt.'));
+    test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 2), 'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.'));
     test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.save_button));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Successful update."));
     test('should go to the front office', () => {
@@ -33,7 +33,7 @@ scenario('Configure shop in the Back Office', () => {
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
         .then(() => client.switchWindow(1));
     });
-    test('should check that the shop is disabled', () => client.checkTextValue(ShopParameters.maintenance_message, 'Nous avons actuellement désactivés notre boutique et serons de retour très bientôt.', 'contain'));
+    test('should check that the shop is disabled', () => client.checkTextValue(ShopParameters.maintenance_message, 'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.', 'contain'));
   }, 'common_client');
 
   scenario('Enable shop in the Back Office', client => {

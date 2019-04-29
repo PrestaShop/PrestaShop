@@ -56,7 +56,8 @@ scenario('Check the addons catalog page in the Back Office', () => {
     test('should search for the modules on the prestashop addons', () => {
       return promise
         .then(() => client.waitAndSetValue(ModulesCatalogPage.search_addons_input, 'minimal'))
-        .then(() => client.keys('Enter'));
+        .then(() => client.keys('Enter'))
+        .then(() => client.pause(1000));
     });
     test('should check that the page is well opened', () => {
       return promise

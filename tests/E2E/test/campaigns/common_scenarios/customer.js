@@ -39,7 +39,7 @@ module.exports = {
           .then(() => client.waitAndSelectByValue(Customer.years_select, customerData.birthday.year));
       });
       test('should activate "Partner offers" option ', () => client.waitForExistAndClick(Customer.Partner_offers));
-      test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Customer.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
     }, 'customer');
   },
@@ -79,7 +79,7 @@ module.exports = {
           .then(() => client.waitAndSelectByValue(Customer.month_select, editCustomerData.birthday.month))
           .then(() => client.waitAndSelectByValue(Customer.years_select, editCustomerData.birthday.year));
       });
-      test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Customer.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful update.'));
     }, 'customer');
   },

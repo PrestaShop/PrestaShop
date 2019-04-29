@@ -105,8 +105,7 @@ module.exports = {
                   if (productData.attribute[key].name === attributeData[key - 1].name) {
                     promise = client.scrollWaitForExistAndClick(AddProductPage.attribute_group_name.replace('%NAME', productData.attribute[key].name + date_time), 150, 3000);
                     Object.keys(attributeData[key - 1].values).forEach(function (index) {
-                      promise
-                        .then(() => client.scrollWaitForVisibleAndClick(AddProductPage.attribute_value_checkbox.replace('%ID', global.tab[productData.attribute[key].name + '_id']).replace('%S', index)));
+                      client.waitForExistAndClickJs(AddProductPage.attribute_value_checkbox.replace('%ID', global.tab[productData.attribute[key].name + '_id']).replace('%S', index),300);
                     });
                   }
                 });
