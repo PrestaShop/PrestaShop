@@ -814,7 +814,8 @@ class CommonClient {
       });
   }
   /**
-   * perform a javascript click
+   * perform a javascript click, function waitForExistAndClick sometimes clicks on the wrong element so we rely on JS
+   * click rather than a screen click
    * @param selector, xpath of the element
    * @param pause
    * @return true, if click works, false otherwise
@@ -830,7 +831,8 @@ class CommonClient {
 
 
   /**
-   *  set input javascript method
+   *  set input javascript method, function waitAndSetValue don't delete value before set the new value so we used this
+   *  to be sure that the input is empty before setting the new value
    * @param selector, the input
    * @param value, value to set
    * @param isXpath, selector is xpath or css selector
