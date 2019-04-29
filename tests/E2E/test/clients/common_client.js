@@ -814,17 +814,44 @@ class CommonClient {
       });
   }
   /**
-   * perform a javascript click
+   * perform a javascript click, function waitForExistAndClick sometimes clicks on the wrong element so we rely on JS
+   * click rather than a screen click
    * @param selector, xpath of the element
    * @param pause
    * @return true, if click works, false otherwise
    */
-  waitForExistAndClickJs(selector, pause = 0) {
+  waitForExistAndClickJs(selector, isXpath = true, pause = 0) {
     return this.client
       .pause(pause)
-      .execute(function (selector) {
-         return document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
-      }, selector);
+      .execute(function (selector,isXpath) {
+        if(isXpath) return document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+        else return document.querySelector(selector).click();
+      }, selector,isXpath);
+  }
+
+
+  /**
+   *  set input javascript method, function waitAndSetValue don't delete value before set the new value so we used this
+   *  to be sure that the input is empty before setting the new value
+   * @param selector, the input
+   * @param value, value to set
+   * @param isXpath, selector is xpath or css selector
+   * @param pause
+   * @return {*}
+   */
+  setInputValue(selector, value, isXpath = true, pause = 0) {
+    return this.client
+        .pause(pause)
+        .execute(function (selector, value, isXpath) {
+          if(isXpath) {
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = '';
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = value;
+          }
+          else {
+            document.querySelector(selector).value = '';
+            document.querySelector(selector).value = value;
+          }
+        }, selector, value, isXpath);
   }
 }
 

@@ -26,7 +26,7 @@ module.exports = {
       test('should select product "color Black"', () => client.waitForExistAndClick(productPage.first_product_color));
       test('should set the product "quantity"', () => {
         return promise
-          .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4"))
+          .then(() => client.setInputValue(productPage.first_product_quantity, "4"))
           .then(() => client.getTextInVar(CheckoutOrderPage.product_current_price, "first_basic_price"));
       });
       if (checkAvailableQuantity === true) {
@@ -41,7 +41,7 @@ module.exports = {
        * This scenario is based on the bug described in this ticket
        * https://github.com/PrestaShop/PrestaShop/issues/9841
        **/
-      test('should set the quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
+      test('should set the quantity to "4" using the keyboard', () => client.setInputValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
       test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
 
       if (authentication === "create_account" || authentication === "guest") {
@@ -267,6 +267,10 @@ module.exports = {
       test('should go to the orders list', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
       test('should change order state to "Payment accepted"', () => client.changeOrderState(OrderPage, 'Payment accepted'));
+      /**
+       * should refresh the page, to pass the error
+       */
+      test('should refresh the page', () => client.refresh());
       test('should click on "Partial refund" button', () => client.waitForExistAndClick(OrderPage.partial_refund));
       test('should set the "quantity refund" to "2"', () => client.waitAndSetValue(OrderPage.quantity_refund, refundedValue));
       test('should click on "Re-stock products" CheckBox', () => client.waitForExistAndClick(OrderPage.re_stock_product));
