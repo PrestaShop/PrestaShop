@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,9 +22,35 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="text-center grid-table-empty">
-  <p class="mb-0 mt-2"><i class="material-icons">warning</i></p>
-  <p class="mb-2">{{ 'No records found'|trans({}, 'Admin.Global') }}</p>
-</div>
+namespace PrestaShop\PrestaShop\Adapter\Profile\CommandHandler;
+
+use Employee;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
+use Profile;
+
+/**
+ * @internal
+ */
+abstract class AbstractProfileHandler
+{
+    /**
+     * Checks if given profile is not assigned to any employee.
+     *
+     * @param Profile $profile
+     *
+     * @throws FailedToDeleteProfileException
+     */
+    protected function assertProfileIsNotAssignedToEmployee(Profile $profile)
+    {
+        $profileEmployees = Employee::getEmployeesByProfile($profile->id);
+
+        if (!empty($profileEmployees)) {
+            throw new FailedToDeleteProfileException(
+                sprintf('Failed to delete profile with id "%d", because it is assigned to employee.', $profile->id),
+                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_EMPLOYEE
+            );
+        }
+    }
+}
