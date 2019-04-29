@@ -70,3 +70,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand'
+
+  prestashop.adapter.command_handler.update_product_price_in_cart_handler:
+    classS: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateProductPriceInCartHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand'
