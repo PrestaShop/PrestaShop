@@ -43,17 +43,9 @@ class ProductFeatureContextModifier implements BehatContext
     {
         $parameters = $scope->getEnvironment()->getSuite()->getSetting('parameters');
 
-        if (false === array_key_exists('profile', $parameters)) {
-            return;
+        if (!empty($parameters['profile']) && $parameters['profile'] === self::PROFILE_VIRTUAL_PRODUCTS) {
+            $productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+            $productFeatureContext->toggleCreateVirtualProductsFlagModifier(true);
         }
-
-        $profile = $parameters['profile'];
-
-        if ($profile !== self::PROFILE_VIRTUAL_PRODUCTS) {
-            return;
-        }
-
-        $productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
-        $productFeatureContext->activateCreateVirtualProductsModifier();
     }
 }

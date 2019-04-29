@@ -39,8 +39,14 @@ default:
 
 virtual_products:
     suites:
+        database:
+            filters:
+                tags: '@test-with-modifier-virtual-products'
         cart:
             parameters:
                 profile: 'virtual_products'
+            filters:
+                tags: '@test-with-modifier-virtual-products'
+        translation:
             filters:
                 tags: '@test-with-modifier-virtual-products'

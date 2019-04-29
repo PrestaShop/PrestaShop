@@ -73,9 +73,18 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         return $this->products[$productName];
     }
 
-    public function activateCreateVirtualProductsModifier()
+    /**
+     * @param bool $newValue
+     *
+     * @throws \Exception
+     */
+    public function toggleCreateVirtualProductsFlagModifier($newValue)
     {
-        $this->flagModifierCreateVirtualProducts = true;
+        if (!is_bool($newValue)) {
+            throw new \Exception('Expected boolean');
+        }
+
+        $this->flagModifierCreateVirtualProducts = $newValue;
     }
 
     /**
