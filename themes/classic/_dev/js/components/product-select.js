@@ -28,11 +28,8 @@ import 'velocity-animate';
 export default class ProductSelect {
   init() {
     const MAX_THUMBS = 5;
-    const FLAG_MARGIN = 10;
     let $arrows =   $('.js-modal-arrows');
     let $thumbnails = $('.js-modal-product-images');
-    const $onsale =  $('.on-sale');
-    const flagElems = $('.product-flags').find('.product-flag:not(.on-sale):not(.discount):not(.online-only)');
 
     $('body').on('click','.js-modal-thumb', (event) => {
       if($('.js-modal-thumb').hasClass('selected')){
@@ -48,19 +45,6 @@ export default class ProductSelect {
         $('#product-modal').modal('hide');
       }
     });
-
-    if ($('#product').length) {
-      let flagsTop = FLAG_MARGIN;
-      if ($onsale.length && $('#product').length) {
-        flagsTop = $onsale.outerHeight() + FLAG_MARGIN;
-      }
-
-      flagElems.each((index, flag) => {
-        $(flag).css('top', flagsTop);
-        $(flag).css('margin-top', 0);
-        flagsTop += $(flag).outerHeight() + FLAG_MARGIN;
-      });
-    }
 
     if ($('.js-modal-product-images li').length <= MAX_THUMBS) {
       $arrows.css('opacity', '.2');

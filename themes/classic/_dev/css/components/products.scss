@@ -527,45 +527,53 @@
 }
 .product-flags {
   width: 100%;
-}
-li.product-flag {
-  display: block;
   position: absolute;
-  background: $brand-primary;
-  font-weight: 700;
-  padding: 0.3125rem 0.4375rem;
-  text-transform: uppercase;
-  color: white;
-  margin-top: $small-space;
-  z-index: 2;
   top: 0;
-  @include box-shadow-light;
-  &.online-only {
-    top: 25.5rem;
-    right: 0;
-    z-index: 1;
-    font-size: $font-size-xs;
-    margin-top: 0;
-    &::before{
-      content:"\E30A";
-      font-family: 'Material Icons';
-      vertical-align: middle;
-      margin: 0.3125rem;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+
+  li.product-flag {
+    width: fit-content;
+    background: $brand-primary;
+    font-weight: 700;
+    padding: 0.3125rem 0.4375rem;
+    text-transform: uppercase;
+    color: white;
+    margin-top: $small-space;
+    font-size: $base-font-size;
+
+    @include box-shadow-light;
+    &.online-only {
+      position: absolute;
+      top: 13.1rem;
+      right: 0;
+      z-index: 1;
+      font-size: $font-size-xs;
+      margin-top: 0;
+      &::before{
+        content:"\E30A";
+        font-family: 'Material Icons';
+        vertical-align: middle;
+        margin: 0.3125rem;
+      }
+    }
+    &.discount-percentage,
+    &.discount-amount,
+    &.discount {
+      background-color: $brand-secondary;
+    }
+    &.on-sale {
+      order: -1;
+      background: $brand-secondary;
+      width: 100%;
+      text-align: center;
+      margin-top: 0 !important;
     }
   }
-  &.discount {
-    display: none;
-  }
-  &.on-sale {
-    background: $brand-secondary;
-    width: 100%;
-    text-align: center;
-    margin: 0;
-    left:0;
-    top:0;
-    margin-top: 0 !important;
-  }
 }
+
 
 .product-customization {
   margin: $extra-large-space 0;
