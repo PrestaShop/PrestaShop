@@ -189,7 +189,7 @@ module.exports = {
         test('should check the breadcrumb of the created category', () => client.checkBreadcrumbInFo(CategoryPageFO.breadcrumb_path, "Accessories", categoryData.name));
       } else {
         test('should check the existence of the created category', () => {
-          client.waitForExist(AccessPageFO.categories_list);
+          client.waitForVisible(AccessPageFO.categories_list);
           for (let i = 1; i < (parseInt(tab["number_category"]) + 1); i++) {
             promise = client.getCategoriesName(AccessPageFO.categories_list, i);
           }
