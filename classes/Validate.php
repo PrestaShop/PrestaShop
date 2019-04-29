@@ -158,7 +158,7 @@ class ValidateCore
     public static function isCustomerName($name)
     {
         $validityPattern = Tools::cleanNonUnicodeSupport(
-            '/^(?:[^0-9!<>,;?=+()\/\\@#"°*`{}_^$%:¤|\.。]|[\.。](?:\s|$))*$/u'
+            '/^(?:[^0-9!<>,;?=+()\/\\@#"°*`{}_^$%:¤\[\]|\.。]|[\.。](?:\s|$))*$/u'
         );
 
         return preg_match($validityPattern, $name);
