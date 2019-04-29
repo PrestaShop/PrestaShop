@@ -24,25 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Profile\CommandHandler;
+
+use Employee;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
+use Profile;
 
 /**
- * Class FailedToDeleteProfileException is thrown when Profile deletion fails.
+ * @internal
  */
-class FailedToDeleteProfileException extends ProfileException
+abstract class AbstractProfileHandler
 {
     /**
-     * Code is used when cannot delete profile because it is assigned to employee.
+     * Checks if given profile is not assigned to any employee.
+     *
+     * @param Profile $profile
+     *
+     * @throws FailedToDeleteProfileException
      */
-    const PROFILE_IS_ASSIGNED_TO_EMPLOYEE = 1;
+    protected function assertProfileIsNotAssignedToEmployee(Profile $profile)
+    {
+        $profileEmployees = Employee::getEmployeesByProfile($profile->id);
 
-    /**
-     * Code is used when unexpected error (e.g. lost db connection) occures while deleting profile.
-     */
-    const UNEXPECTED_ERROR = 2;
-
-    /**
-     * Code is used when logged in employee attempts to delete its own profile.
-     */
-    const PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE = 3;
+        if (!empty($profileEmployees)) {
+            throw new FailedToDeleteProfileException(
+                sprintf('Failed to delete profile with id "%d", because it is assigned to employee.', $profile->id),
+                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_EMPLOYEE
+            );
+        }
+    }
 }

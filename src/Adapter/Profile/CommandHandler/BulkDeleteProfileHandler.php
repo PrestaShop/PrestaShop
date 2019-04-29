@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminPr
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShopException;
 use Profile;
 
@@ -40,7 +41,7 @@ use Profile;
  *
  * @internal
  */
-final class BulkDeleteProfileHandler implements BulkDeleteProfileHandlerInterface
+final class BulkDeleteProfileHandler extends AbstractProfileHandler implements BulkDeleteProfileHandlerInterface
 {
     /**
      * @var int
@@ -48,11 +49,18 @@ final class BulkDeleteProfileHandler implements BulkDeleteProfileHandlerInterfac
     private $superAdminProfileId;
 
     /**
-     * @param int $superAdminProfileId
+     * @var ContextEmployeeProviderInterface
      */
-    public function __construct($superAdminProfileId)
+    private $contextEmployeeProvider;
+
+    /**
+     * @param int $superAdminProfileId
+     * @param ContextEmployeeProviderInterface $contextEmployeeProvider
+     */
+    public function __construct($superAdminProfileId, ContextEmployeeProviderInterface $contextEmployeeProvider)
     {
         $this->superAdminProfileId = $superAdminProfileId;
+        $this->contextEmployeeProvider = $contextEmployeeProvider;
     }
 
     /**
@@ -74,15 +82,25 @@ final class BulkDeleteProfileHandler implements BulkDeleteProfileHandlerInterfac
                     );
                 }
 
+                if ($this->contextEmployeeProvider->getProfileId() === $entity->id) {
+                    throw new FailedToDeleteProfileException(
+                        sprintf('Failed to delete Profile with id %s', var_export($entityIdValue, true)),
+                        FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE
+                    );
+                }
+
                 if ($entity->id == $this->superAdminProfileId) {
                     throw new CannotDeleteSuperAdminProfileException(
                         sprintf('Cannot delete Profile with id %s', var_export($entityIdValue, true))
                     );
                 }
 
+                $this->assertProfileIsNotAssignedToEmployee($entity);
+
                 if (false === $entity->delete()) {
                     throw new FailedToDeleteProfileException(
-                        sprintf('Failed to delete Profile with id %s', var_export($entityIdValue, true))
+                        sprintf('Failed to delete Profile with id %s', var_export($entityIdValue, true)),
+                        FailedToDeleteProfileException::UNEXPECTED_ERROR
                     );
                 }
             } catch (PrestaShopException $e) {

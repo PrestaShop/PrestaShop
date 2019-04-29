@@ -6,6 +6,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\DeleteProfileHandler'
         arguments:
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
+            - '@prestashop.adapter.data_provider.employee'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand' }
 
@@ -13,6 +14,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\BulkDeleteProfileHandler'
         arguments:
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
+            - '@prestashop.adapter.data_provider.employee'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand' }
 
