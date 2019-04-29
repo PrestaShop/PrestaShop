@@ -99,6 +99,14 @@ class ValidateCoreTest extends TestCase
     }
 
     /**
+     * @dataProvider isCustomerNameDataProvider
+     */
+    public function testIsCustomerName($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isCustomerName($input));
+    }
+
+    /**
      * @dataProvider isFloatDataProvider
      */
     public function testIsFloat($expected, $input)
@@ -157,7 +165,40 @@ class ValidateCoreTest extends TestCase
         );
     }
 
+
     public function isNameDataProvider()
+    {
+        return array(
+            array(1, 'Mathieu'),
+            array(1, 'Dupont'),
+            array(1, 'Jaçinthé'),
+            array(1, 'Jaçinthø'),
+            array(1, 'John D.'),
+            array(1, 'John D.John'),
+            array(1, 'John D. John'),
+            array(1, 'John D. John D.'),
+            array(1, 'Mario Bros.'),
+            array(1, 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â'),
+            array(0, 'https://www.website.com'),
+            array(1, 'www.website.com'),
+            array(1, 'www\.website\.com'),
+            array(1, 'www\\.website\\.com'),
+            array(1, 'www.website.com.'),
+            array(1, 'website。com'),
+            array(1, 'John D. www.some.site'),
+            array(1, 'www.website.com is cool'),
+            array(1, 'website。com。'),
+            array(1, 'website。com'),
+            array(0, 'website%2Ecom'),
+            array(1, 'website/./com'),
+            array(1, '.rn'),
+            array(1, 'websitecom/a'),
+            array(0, 'websitecom%20a'),
+            array(1, '`hello'),
+        );
+    }
+
+    public function isCustomerNameDataProvider()
     {
         return array(
             array(1, 'Mathieu'),
@@ -175,6 +216,7 @@ class ValidateCoreTest extends TestCase
             array(0, 'www\\.website\\.com'),
             array(0, 'www.website.com.'),
             array(0, 'website。com'),
+            array(0, 'John D.John'),
             array(0, 'John D. www.some.site'),
             array(0, 'www.website.com is cool'),
             array(0, 'website。com。'),
