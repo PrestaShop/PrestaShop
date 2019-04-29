@@ -27,33 +27,6 @@ import $ from 'jquery';
 export default class ProductMinitature {
   init() {
     $('.js-product-miniature').each((index, element) => {
-      const FLAG_MARGIN = 10;
-      //Top on sale banner
-      const onSaleElems =  $(element).find('.on-sale');
-      //Discount flag
-      const discountElems = $(element).find('.discount-product');
-      //Flags other than on-sale, discount and online-only (which have all their way to display)
-      const flagElems = $(element).find('.product-flag:not(.on-sale):not(.discount):not(.online-only)');
-
-      let flagsTop = FLAG_MARGIN;
-      let discountTop = FLAG_MARGIN;
-      if (onSaleElems.length) {
-        discountTop = onSaleElems.outerHeight() + FLAG_MARGIN;
-      }
-
-      if (discountElems.length) {
-        flagsTop = discountTop + discountElems.outerHeight() + FLAG_MARGIN;
-        //Discount flag is actually in product-description div so it needs a negative top value
-        discountElems.css('top', discountTop + -$(element).find('.thumbnail-container').outerHeight() + $(element).find('.product-description').outerHeight());
-      }
-
-      //Now display flags one above the other
-      flagElems.each((index, flag) => {
-        $(flag).css('top', flagsTop);
-        $(flag).css('margin-top', 0);
-        flagsTop += $(flag).outerHeight() + FLAG_MARGIN;
-      });
-
       //Limit number of shown colors
       if ($(element).find('.color').length > 5) {
         let count = 0;
