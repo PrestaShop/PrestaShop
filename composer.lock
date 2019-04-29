@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bcbb2226f496f6f4222c119c56828da",
+    "content-hash": "5d481b5fa9fb928dd98032c5f38f410c",
     "packages": [
         {
             "name": "analog/analog",
@@ -1544,16 +1544,16 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "v1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "c0f1c17602afc18b4cbd8e1c8125f264c9cf7d38"
+                "reference": "3da7c9d125591ca83944f477e65ed3d7b4617c48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/c0f1c17602afc18b4cbd8e1c8125f264c9cf7d38",
-                "reference": "c0f1c17602afc18b4cbd8e1c8125f264c9cf7d38",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/3da7c9d125591ca83944f477e65ed3d7b4617c48",
+                "reference": "3da7c9d125591ca83944f477e65ed3d7b4617c48",
                 "shasum": ""
             },
             "require": {
@@ -1622,7 +1622,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2018-11-21T00:33:13+00:00"
+            "time": "2019-04-23T08:28:24+00:00"
         },
         {
             "name": "doctrine/reflection",
@@ -3811,7 +3811,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": ">=5.3.2"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -4505,16 +4505,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.0.9",
+            "version": "v1.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "0500e9d3d6afe36a25769bd251a07c52d6be8298"
+                "reference": "1812505e5ad9ea8e445ec37ff24bcfac69bbe090"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/0500e9d3d6afe36a25769bd251a07c52d6be8298",
-                "reference": "0500e9d3d6afe36a25769bd251a07c52d6be8298",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/1812505e5ad9ea8e445ec37ff24bcfac69bbe090",
+                "reference": "1812505e5ad9ea8e445ec37ff24bcfac69bbe090",
                 "shasum": ""
             },
             "require": {
@@ -4533,7 +4533,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2018-09-19T15:46:24+00:00"
+            "time": "2019-04-15T09:36:45+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
@@ -5949,16 +5949,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v6.2.0",
+            "version": "v6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707"
+                "reference": "5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707",
-                "reference": "6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a",
+                "reference": "5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a",
                 "shasum": ""
             },
             "require": {
@@ -6007,7 +6007,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2019-03-10T07:52:41+00:00"
+            "time": "2019-04-21T09:21:45+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -6079,16 +6079,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.2.1",
+            "version": "v1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "305a6cd75a54992f47f46eb655245b6c9a06997a"
+                "reference": "d65041a4c9b1dbcd606f8be3a5bae2bee4534f6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/305a6cd75a54992f47f46eb655245b6c9a06997a",
-                "reference": "305a6cd75a54992f47f46eb655245b6c9a06997a",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/d65041a4c9b1dbcd606f8be3a5bae2bee4534f6a",
+                "reference": "d65041a4c9b1dbcd606f8be3a5bae2bee4534f6a",
                 "shasum": ""
             },
             "require": {
@@ -6124,7 +6124,7 @@
                 }
             ],
             "description": "Composer plugin for Symfony",
-            "time": "2019-04-03T17:16:03+00:00"
+            "time": "2019-04-16T10:04:15+00:00"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -6656,16 +6656,16 @@
         },
         {
             "name": "symfony/swiftmailer-bundle",
-            "version": "v3.2.5",
+            "version": "v3.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/swiftmailer-bundle.git",
-                "reference": "ac4f38c2ec7957f2dec8b6c2f24a060b10a254f2"
+                "reference": "7a83160b50a2479d37eb74ba71577380b9afe4f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/ac4f38c2ec7957f2dec8b6c2f24a060b10a254f2",
-                "reference": "ac4f38c2ec7957f2dec8b6c2f24a060b10a254f2",
+                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/7a83160b50a2479d37eb74ba71577380b9afe4f5",
+                "reference": "7a83160b50a2479d37eb74ba71577380b9afe4f5",
                 "shasum": ""
             },
             "require": {
@@ -6714,7 +6714,7 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2019-01-05T11:51:59+00:00"
+            "time": "2019-04-18T15:52:54+00:00"
         },
         {
             "name": "symfony/symfony",
@@ -6988,16 +6988,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.7.4",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ed9c49220e09bfaeb1ba4d48077c08a7b09908dd"
+                "reference": "82a1c055c8ed4c4705023bfd0405f3c74db6e3ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ed9c49220e09bfaeb1ba4d48077c08a7b09908dd",
-                "reference": "ed9c49220e09bfaeb1ba4d48077c08a7b09908dd",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/82a1c055c8ed4c4705023bfd0405f3c74db6e3ae",
+                "reference": "82a1c055c8ed4c4705023bfd0405f3c74db6e3ae",
                 "shasum": ""
             },
             "require": {
@@ -7013,7 +7013,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "2.9-dev"
                 }
             },
             "autoload": {
@@ -7051,7 +7051,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-03-23T14:28:58+00:00"
+            "time": "2019-04-28T06:57:38+00:00"
         }
     ],
     "packages-dev": [
@@ -8833,7 +8833,7 @@
         },
         {
             "name": "symfony/class-loader",
-            "version": "v3.4.24",
+            "version": "v3.4.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/class-loader.git",
@@ -8889,16 +8889,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.4.24",
+            "version": "v3.4.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "bf7ca5d4d7eb1758a1f7bed11111f630ac2d4f57"
+                "reference": "a43a2f6c465a2d99635fea0addbebddc3864ad97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/bf7ca5d4d7eb1758a1f7bed11111f630ac2d4f57",
-                "reference": "bf7ca5d4d7eb1758a1f7bed11111f630ac2d4f57",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/a43a2f6c465a2d99635fea0addbebddc3864ad97",
+                "reference": "a43a2f6c465a2d99635fea0addbebddc3864ad97",
                 "shasum": ""
             },
             "require": {
@@ -8950,7 +8950,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2019-03-22T08:11:54+00:00"
+            "time": "2019-04-16T09:03:16+00:00"
         },
         {
             "name": "symfony/polyfill-php70",

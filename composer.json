@@ -98,13 +98,13 @@
         "smarty/smarty": "^3.1.31",
         "soundasleep/html2text": "^0.5.0",
         "swiftmailer/swiftmailer": "~6.2",
-        "symfony/flex": "^1.1",
+        "symfony/flex": "^1.2",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/polyfill-php73": "^1.10",
         "symfony/swiftmailer-bundle": "^3.1",
-        "symfony/symfony": ">=4.2",
-        "symfony/twig-bridge": "^4.2",
+        "symfony/symfony": "^3.4 || ^4.0",
+        "symfony/twig-bridge": "^3.4 || ^4.0",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
         "twig/twig": "^2.6.2"
@@ -145,19 +145,12 @@
         "classmap": ["app/AppKernel.php", "app/AppCache.php"]
     },
     "scripts": {
-        "post-install-cmd": [
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-        ],
         "post-update-cmd": [
-            "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+            "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile"
         ],
         "create-test-db": [
             "@php ./tests-legacy/create-test-db.php",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
+            "@php bin/console ca:c"
         ],
         "test-all": [
             "composer phpunit-legacy",
@@ -209,21 +202,19 @@
             "security-checker security:check": "script"
         }
     },
+    "scripts-descriptions": {
+      "test-all": "Launch all PHPUnit test suites",
+      "create-test-db": "Create a Database for testing purposes",
+      "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information."
+    },
     "config": {
         "sort-packages": true
     },
     "extra": {
-        "symfony-app-dir": "app",
-        "symfony-bin-dir": "bin",
-        "symfony-var-dir": "var",
-        "symfony-web-dir": ".",
-        "symfony-tests-dir": "tests",
-        "symfony-assets-install": "relative",
-        "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
-        },
-        "scripts-description": {
-            "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information."
+        "config-dir": "app/config",
+        "public-dir": ".",
+        "symfony": {
+            "require": "~3.4"
         }
     },
     "authors": [

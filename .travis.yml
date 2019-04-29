@@ -33,7 +33,7 @@ env:
 matrix:
   include:
     - php: 7.2
-      env: PRESTASHOP_TEST_TYPE=unit
+      env: EXTRA_DEPS=phpHigh PRESTASHOP_TEST_TYPE=unit
     - php: 7.2
       env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
     - stage: deploy
@@ -74,7 +74,11 @@ before_install:
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
 before_script:
-  - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - if [ "$EXTRA_DEPS" = "phpHigh" ]; then
+    composer update --ignore-platform-reqs --no-suggest --ansi --no-interaction --no-progress --quiet;
+    else
+    composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+    fi
   - bash travis-scripts/install-prestashop;
 
 script:
