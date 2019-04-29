@@ -195,6 +195,7 @@ class ValidateCoreTest extends TestCase
             array(1, 'websitecom/a'),
             array(0, 'websitecom%20a'),
             array(1, '`hello'),
+            array(1, 'hello[my friend]'),
         );
     }
 
@@ -227,6 +228,7 @@ class ValidateCoreTest extends TestCase
             array(0, 'websitecom/a'),
             array(0, 'websitecom%20a'),
             array(0, '`hello'),
+            array(0, 'hello[my friend]'),
         );
     }
 
