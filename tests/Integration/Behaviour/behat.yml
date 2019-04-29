@@ -39,3 +39,10 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\TranslationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
+        order:
+            paths:
+                features: Features/Scenario/Order
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
