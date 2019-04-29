@@ -157,7 +157,23 @@ class ValidateCore
     }
 
     /**
-     * Check for name validity.
+     * Check whether given customer name is valid
+     *
+     * @param string $name Name to validate
+     *
+     * @return int 1 if given input is a name, 0 else
+     */
+    public static function isCustomerName($name)
+    {
+        $validityPattern = Tools::cleanNonUnicodeSupport(
+            '/^(?:[^0-9!<>,;?=+()\/\\@#"°*`{}_^$%:¤|\.。]|[\.。](?:\s|$))*$/u'
+        );
+
+        return preg_match($validityPattern, $name);
+    }
+
+    /**
+     * Check whether given name is valid
      *
      * @param string $name Name to validate
      *
@@ -165,7 +181,11 @@ class ValidateCore
      */
     public static function isName($name)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'), stripslashes($name));
+        $validityPattern = Tools::cleanNonUnicodeSupport(
+            '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'
+        );
+
+        return preg_match($validityPattern, $name);
     }
 
     /**
