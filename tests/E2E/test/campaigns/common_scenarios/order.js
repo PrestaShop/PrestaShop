@@ -424,6 +424,10 @@ module.exports = {
       test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
       test('should change order state to "' + status + '"', () => client.updateStatus(status));
       test('should click on "Update state" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+      /**
+       * should refresh the page, to pass the error
+       */
+      test('should refresh the page', () => client.refresh());
       test('should check that the status was updated', () => client.waitForVisible(OrderPage.status.replace('%STATUS', status)));
     }, 'order');
   },
