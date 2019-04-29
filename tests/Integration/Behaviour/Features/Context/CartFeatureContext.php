@@ -26,9 +26,16 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use Context;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
+use Product;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -38,6 +45,19 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      * @var CartOld
      */
     protected $cart;
+
+    /**
+     * @var CustomerFeatureContext
+     */
+    private $customerFeatureContext;
+
+    /**
+     * @BeforeScenario
+     */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
+    }
 
     /**
      * @Given /^I have an empty default cart$/
@@ -134,6 +154,60 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, 'v1', false, !empty($precisely));
+    }
+
+    /**
+     * @Given I create an empty cart for customer :customerName
+     */
+    public function iCreateAnEmptyCartForCustomer($customerName)
+    {
+        $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
+
+        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+
+        /** @var CartId $cartId */
+        $cartId = $commandBus->handle(
+            new CreateEmptyCustomerCartCommand(
+                (int) $customer->id,
+                (int) Context::getContext()->shop->id
+            )
+        );
+
+        Context::getContext()->cart = new Cart($cartId->getValue());
+    }
+
+    /**
+     * @Given I add :quantity products with reference :productReference to the cart
+     */
+    public function iAddProductToCart($quantity, $productReference)
+    {
+        $productId = (int) Product::getIdByReference($productReference);
+
+        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+
+        $commandBus->handle(
+            new UpdateProductQuantityInCartCommand(
+                (int) Context::getContext()->cart->id,
+                $productId,
+                (int) $quantity,
+                QuantityAction::INCREASE_PRODUCT_QUANTITY
+            )
+        );
+    }
+
+    /**
+     * @Given I set Free shipping to cart
+     */
+    public function iSetFreeShippingToCart()
+    {
+        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
+
+        $commandBus->handle(
+            new SetFreeShippingToCartCommand(
+                (int) Context::getContext()->cart->id,
+                true
+            )
+        );
     }
 
     protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
