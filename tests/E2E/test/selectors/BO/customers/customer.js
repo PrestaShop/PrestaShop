@@ -16,7 +16,7 @@ module.exports = {
     email_address_value: '//*[@id="form-customer"]//td[%ID]',
     reset_button: '//*[@id="table-customer"]//button[@name="submitResetcustomer"]',
     edit_button: '//*[@id="form-customer"]//a[@title="Edit"]',
-    dropdown_toggle: '//*[@id="form-customer"]//button[@data-toggle="dropdown"]',
+    dropdown_toggle: '//*[@id="customer_grid_table"]//td[contains(@class, "action-type")]//a[contains(@class, "dropdown-toggle")]',
     delete_button: '//*[@id="form-customer"]//a[@title="Delete"]',
     delete_first_option: '//*[@id="deleteMode_real"]',
     delete_second_option: '//*[@id="deleteMode_deleted"]',
@@ -32,6 +32,5 @@ module.exports = {
     valid_orders: '#main-div .card:nth-child(2) .card-body .badge-success',
     view_button: '//*[@id="customer_grid_table"]//td[contains(@class, "action-type")]//div[contains(@class, "dropdown-menu")]//a[contains(@class, "js-link-row-action")]',
     total_amount: '#main-div .card:nth-child(2) .card-body>.row>.col',
-
   }
 };

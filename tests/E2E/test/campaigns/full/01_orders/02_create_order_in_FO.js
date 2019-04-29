@@ -48,7 +48,7 @@ scenario('Check the created order in the Back Office', () => {
     test('should click on "View" button', () => {
       return promise
         .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 1000))
-        .then(() => client.waitForExistAndClick(Customer.view_button, 1000));
+        .then(() => client.waitForExistAndClickJs(Customer.view_button, 1000));
     });
     test('should get the "Valid orders" for a customer', () => client.getTextInVar(Customer.valid_orders, 'valid_orders'));
     test('should get the "Total amount" for a customer', () => {
