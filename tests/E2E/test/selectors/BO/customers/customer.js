@@ -29,8 +29,8 @@ module.exports = {
     Partner_offers: '//label[contains(@for,"customer_is_partner_offers_subscribed_1")]',
     first_name_value:'//*[@id="table-customer"]//tr[%ID]/td[4]',
     last_name_value:'//*[@id="table-customer"]//tr[%ID]/td[5]',
-    view_button: '//*[@id="form-customer"]//a[@title="View"]',
-    valid_orders: '//*[@id="container-customer"]//div[contains(@class,"panel")]//i/../span[contains(@class,"label-success")]',
+    view_button: '//table[@id="customer_grid_table"]//div[contains(@class, "dropdown-menu")]//a[contains(@class, "js-link-row-action")]',
+    valid_orders: '//div[contains(@class, "content-div")]/div[contains(@class, "row")][1]//div[contains(@class, "row")][1]//div[contains(@class, "col")][1]//div[contains(@class, "card")][2]//span[contains(@class, "badge-success")]',
     total_amount: '//*[@id="container-customer"]//div[contains(@class,"panel")]//i[contains(@class,"icon-ok-circle icon-big")]/..',
   }
 };
