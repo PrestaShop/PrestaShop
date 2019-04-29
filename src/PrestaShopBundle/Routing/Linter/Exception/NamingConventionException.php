@@ -24,31 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Resources\Controller;
-
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\Response;
+namespace PrestaShopBundle\Routing\Linter\Exception;
 
 /**
- * Class is used to test @AdminSecurity annotation linter
+ * Thrown when naming convention is not followed
  */
-class TestController
+class NamingConventionException extends LinterException
 {
-    /**
-     * @AdminSecurity()
-     */
-    public function indexAction()
-    {
-        return new Response();
-    }
-
-    public function createAction()
-    {
-        return new Response();
-    }
-
-    public function doSomethingComplexAction()
-    {
-        return new Response();
-    }
 }

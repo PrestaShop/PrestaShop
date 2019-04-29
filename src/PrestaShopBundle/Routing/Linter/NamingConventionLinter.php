@@ -26,35 +26,26 @@
 
 namespace PrestaShopBundle\Routing\Linter;
 
-use Doctrine\Common\Annotations\Reader;
-use PrestaShopBundle\Routing\Linter\Exception\LinterException;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use ReflectionMethod;
+use Doctrine\Common\Inflector\Inflector;
+use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Routing\Route;
 
 /**
- * Checks if SecurityAnnotation is configured for route's controller action
+ * Checks that route and contoller follows naming conventions
  */
-final class SecurityAnnotationLinter implements RouteLinterInterface
+final class NamingConventionLinter implements RouteLinterInterface
 {
-    /**
-     * @var Reader
-     */
-    private $annotationReader;
-
     /**
      * @var ControllerNameParser
      */
     private $controllerNameParser;
 
     /**
-     * @param Reader $annotationReader
      * @param ControllerNameParser $controllerNameParser
      */
-    public function __construct(Reader $annotationReader, ControllerNameParser $controllerNameParser)
+    public function __construct(ControllerNameParser $controllerNameParser)
     {
-        $this->annotationReader = $annotationReader;
         $this->controllerNameParser = $controllerNameParser;
     }
 
@@ -63,21 +54,19 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
      */
     public function lint($routeName, Route $route)
     {
-        $controllerAndMethod = $this->extractControllerAndMethodNamesFromRoute($route);
+        $controllerAndMethodName = $this->getControllerAndMethodName($route);
 
-        $reflection = new ReflectionMethod(
-            $controllerAndMethod['controller'],
-            $controllerAndMethod['method']
+        $pluralizedController = Inflector::tableize(
+            Inflector::pluralize($controllerAndMethodName['controller'])
         );
 
-        $annotation = $this->annotationReader->getMethodAnnotation($reflection, AdminSecurity::class);
+        $expectedRouteName = strtr('admin_{resources}_{action}', [
+            '{resources}' => $pluralizedController,
+            '{action}' => Inflector::tableize($controllerAndMethodName['method']),
+        ]);
 
-        if (null === $annotation) {
-            throw new LinterException(sprintf(
-                '"%s:%s" does not have AdminSecurity annotation configured',
-                 $controllerAndMethod['controller'],
-                 $controllerAndMethod['method']
-            ));
+        if ($routeName !== $expectedRouteName) {
+            throw new NamingConventionException(sprintf('Route "%s" does not follow naming convention.', $routeName));
         }
     }
 
@@ -86,16 +75,20 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
      *
      * @return array
      */
-    private function extractControllerAndMethodNamesFromRoute(Route $route)
+    private function getControllerAndMethodName(Route $route)
     {
         $controller = $route->getDefault('_controller');
 
         if (strpos($controller, '::') === false) {
-            // we need to support controllers defined as services & defined using short notation
             $controller = $this->controllerNameParser->parse($controller);
         }
 
         list($controller, $method) = explode('::', $controller, 2);
+
+        $controllerParts = explode('\\', $controller);
+        $controller = preg_replace('/Controller$/', '', end($controllerParts));
+
+        $method = preg_replace('/Action$/', '', $method);
 
         return [
             'controller' => $controller,
