@@ -41,10 +41,8 @@ module.exports = {
        * This scenario is based on the bug described in this ticket
        * https://github.com/PrestaShop/PrestaShop/issues/9841
        **/
-      test('should set the quantity to "4" using the keyboard', () => {
-        return promise
-          .then(() => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4', 500))
-      });
+      test('should set the quantity to "4" using the keyboard', () => client.setInputValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4', true, 500));
+
       test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
 
       if (authentication === "create_account" || authentication === "guest") {
