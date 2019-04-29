@@ -317,8 +317,6 @@ class LegacyContext
     }
 
     /**
-     * @internal
-     *
      * @return array Returns both enabled and disabled languages
      */
     public function getAvailableLanguages()
