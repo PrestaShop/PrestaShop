@@ -175,19 +175,22 @@ $(document).ready(() => {
   function labelCodeDisplayed() {
     $('.promo-code-button').not('.cancel-promo').hide();
     
-    $('.cancel-promo').on('click', () => {
-      $('.cancel-promo').hide();
+    $('.cancel-promo').on('click',  (e) => {
+      $(e.currentTarget).hide();
       $('.promo-code-button').not('.cancel-promo').show();
     });
-    $('.promo-code-button').not('.cancel-promo').on('click', () => {
-        $('.promo-code-button').not('.cancel-promo').hide();
+
+    $('.promo-code-button').not('.cancel-promo').on('click', (e) => {
+        $(e.currentTarget).hide();
         $('.cancel-promo').show();
     });
   }
 
   setInterval( function () {
-    if ($('.promo-name').length != nameLength){
-      nameLength = $('.promo-name').length;
+    let promoNameLength = $('.promo-name').length;
+
+    if (promoNameLength != nameLength) {
+      nameLength = promoNameLength;
       labelCodeDisplayed();
     }
   }, 100);
