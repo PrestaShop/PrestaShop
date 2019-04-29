@@ -5,7 +5,6 @@ Feature: Cart calculation with currencies
 
   # USD / USD
 
-  @test-with-modifier-virtual-products
   Scenario: Empty cart (default USD/ current USD)
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -17,6 +16,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 0.0 tax included
     Then my cart total using previous calculation method should be 0.0 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -29,6 +29,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 26.812 tax included
     Then my cart total using previous calculation method should be 26.812 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -41,6 +42,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 66.44 tax included
     Then my cart total using previous calculation method should be 66.44 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -70,6 +72,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 0.0 tax included
     Then my cart total using previous calculation method should be 0.0 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -82,6 +85,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 33.515 tax included
     Then my cart total using previous calculation method should be 33.515 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -94,6 +98,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 83.05 tax included
     Then my cart total using previous calculation method should be 83.05 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -123,6 +128,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 0.0 tax included
     Then my cart total using previous calculation method should be 0.0 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -135,6 +141,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 24.66704 tax included
     Then my cart total using previous calculation method should be 24.66704 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -147,6 +154,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 61.12 tax included
     Then my cart total using previous calculation method should be 61.12 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -176,6 +184,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 0.0 tax included
     Then my cart total using previous calculation method should be 0.0 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -188,6 +197,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 16.89156 tax included
     Then my cart total using previous calculation method should be 16.89156 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -200,6 +210,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 41.85 tax included
     Then my cart total using previous calculation method should be 41.85 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -229,6 +240,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 0.0 tax included
     Then my cart total using previous calculation method should be 0.0 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -241,6 +253,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 24.66704 tax included
     Then my cart total using previous calculation method should be 24.66704 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
@@ -253,6 +266,7 @@ Feature: Cart calculation with currencies
     Then my cart total should be 61.12 tax included
     Then my cart total using previous calculation method should be 61.12 tax included
 
+  @test-with-modifier-virtual-products
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
     Given there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
