@@ -98,8 +98,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'manufacturer_grid' => $this->presentGrid($manufacturerGrid),
-            'manufacturer_address_grid' => $this->presentGrid($manufacturerAddressGrid),
+            'manufacturerGrid' => $this->presentGrid($manufacturerGrid),
+            'manufacturerAddressGrid' => $this->presentGrid($manufacturerAddressGrid),
         ]);
     }
 
