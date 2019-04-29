@@ -41,7 +41,8 @@
             <div class="col">
               {{ 'Valid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
               <span class="badge badge-success rounded">{{ validOrdersCount }}</span>
-              {{ 'for a total amount of %s'|trans({}, 'Admin.Orderscustomers.Feature')|format(customerInformation.ordersInformation.totalSpent) }}
+              {% set totalAmount = '<span id="total-order-amount">'~customerInformation.ordersInformation.totalSpent~'</span>' %}
+              {{ 'for a total amount of %s'|trans({}, 'Admin.Orderscustomers.Feature')|format(totalAmount)|raw }}
             </div>
             <div class="col">
               {{ 'Invalid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
