@@ -939,7 +939,7 @@ abstract class ModuleCore implements ModuleInterface
      * @param bool $return define the return way : false for a display, true for a return
      * @param bool $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
      *
-     * @return bool|string
+     * @return false|string
      */
     public function displayFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)
     {
