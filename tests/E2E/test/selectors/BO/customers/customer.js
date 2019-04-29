@@ -24,7 +24,7 @@ module.exports = {
     select_customer: '//table[@id="customer_grid_table"]//td[contains(@class, "bulk_action-type")]/div/label',
     bulk_actions_button: '//button[contains(@class, "js-bulk-actions-btn")]',
     bulk_actions_delete_button: '//button[@id="customer_grid_bulk_action_delete_selection"]',
-    empty_list_icon: '//*[@id="customer_grid_table"]//tbody//td/div/p[2]',
+    empty_list_icon: '//*[@id="customer_grid_table"]//div[contains(@class, "grid-table-empty")]/p[2]',
     customer_link: '//*[@id="table-address"]//td[contains(text(),"%ID")]',
     Partner_offers: '//label[contains(@for,"customer_is_partner_offers_subscribed_1")]',
     first_name_value:'//*[@id="table-customer"]//tr[%ID]/td[4]',
