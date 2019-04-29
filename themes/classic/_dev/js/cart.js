@@ -177,17 +177,17 @@ $(document).ready(() => {
     
     $('.cancel-promo').on('click',  (e) => {
       $(e.currentTarget).hide();
-      $('.promo-code-button').not('.cancel-promo').show();
+      $('.promo-code-button:not(.cancel-promo)').show();
     });
 
-    $('.promo-code-button').not('.cancel-promo').on('click', (e) => {
+    $('.promo-code-button:not(.cancel-promo)').on('click', (e) => {
         $(e.currentTarget).hide();
         $('.cancel-promo').show();
     });
   }
 
   setInterval( function () {
-    let promoNameLength = $('.promo-name').length;
+    const promoNameLength = $('.promo-name').length;
 
     if (promoNameLength != nameLength) {
       nameLength = promoNameLength;
@@ -195,7 +195,7 @@ $(document).ready(() => {
     }
   }, 100);
 
-  $('.promo-code-button').each( () => {
+  $('.promo-code-button').each(() => {
     if (isPresent === 2) {
       labelCodeDisplayed();
     }
