@@ -101,7 +101,7 @@ var unicode_hack = (function() {
  */
 function validate_isCustomerName(s)
 {
-	var reg = /^(?:[^0-9!<>,;?=+()\/\\@#"°*`\{\}_^$%:¤|\.。]|[\.。](?:\s|$))*$/;
+	var reg = /^(?:[^0-9!<>,;?=+()\/\\@#"°*`\{\}_^$%:¤\[\]|\.。]|[\.。](?:\s|$))*$/;
 	return reg.test(s);
 }
 

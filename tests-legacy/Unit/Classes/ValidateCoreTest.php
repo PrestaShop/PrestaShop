@@ -195,6 +195,7 @@ class ValidateCoreTest extends TestCase
             array(1, 'websitecom/a'),
             array(0, 'websitecom%20a'),
             array(1, '`hello'),
+            array(1, 'hello[my friend]'),
         );
     }
 
@@ -227,6 +228,7 @@ class ValidateCoreTest extends TestCase
             array(0, 'websitecom/a'),
             array(0, 'websitecom%20a'),
             array(0, '`hello'),
+            array(0, 'hello[my friend]'),
         );
     }
 
@@ -255,7 +257,7 @@ class ValidateCoreTest extends TestCase
             array(false, '2020-03-19'),
             array(false, '1991-03-33'),
             array(false, '1991-15-19'),
-            array(true, date('Y-m-d', strtotime('now'))), 
+            array(true, date('Y-m-d', strtotime('now'))),
             array(true, date('Y-m-d', strtotime('-1 day'))),
             array(false, date('Y-m-d', strtotime('+1 day'))),
             array(true, date('Y-m-d', strtotime('-1 month'))),
