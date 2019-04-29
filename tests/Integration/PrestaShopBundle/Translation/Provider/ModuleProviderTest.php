@@ -60,7 +60,10 @@ class ModuleProviderTest extends TestCase
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
         // check only the specific module translations have been loaded
-        $this->assertSame(['ModulesWirepaymentAdmin', 'ModulesWirepaymentShop'], $catalogue->getDomains());
+        $domains = $catalogue->getDomains();
+        // for some reason domains may not be in the same order as the test
+        sort($domains);
+        $this->assertSame(['ModulesWirepaymentAdmin', 'ModulesWirepaymentShop'], $domains);
 
         // Check integrity of translations
         $this->assertCount(21, $catalogue->all('ModulesWirepaymentAdmin'));
