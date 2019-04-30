@@ -24,33 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
-use Cart;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DuplicateOrderCartHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateOrderCartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SendCartToCustomerCommand;
 
 /**
- * @internal
+ * Interface for service that handles sending cart to customer.
  */
-final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterface
+interface SendCartToCustomerHanlderInterface
 {
     /**
-     * {@inheritdoc}
+     * @param SendCartToCustomerCommand $command
      */
-    public function handle(DuplicateOrderCartCommand $command)
-    {
-        $cart = Cart::getCartByOrderId($command->getOrderId()->getValue());
-        $result = $cart->duplicate();
-
-        if (false === $result || !isset($result['cart'])) {
-            throw new DuplicateOrderCartException(
-                sprintf('Cannot duplicate cart from order "%s"', $command->getOrderId()->getValue())
-            );
-        }
-
-        return new CartId((int) $result['cart']->id);
-    }
+    public function handle(SendCartToCustomerCommand $command);
 }

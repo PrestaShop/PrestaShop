@@ -24,33 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
-use Cart;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DuplicateOrderCartHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateOrderCartException;
 
 /**
- * @internal
+ * Sends email to the customer to process the payment for cart.
  */
-final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterface
+class SendCartToCustomerCommand
 {
     /**
-     * {@inheritdoc}
+     * @var CartId
      */
-    public function handle(DuplicateOrderCartCommand $command)
+    private $cartId;
+
+    /**
+     * @param int $cartId
+     */
+    public function __construct($cartId)
     {
-        $cart = Cart::getCartByOrderId($command->getOrderId()->getValue());
-        $result = $cart->duplicate();
+        $this->cartId = new CartId($cartId);
+    }
 
-        if (false === $result || !isset($result['cart'])) {
-            throw new DuplicateOrderCartException(
-                sprintf('Cannot duplicate cart from order "%s"', $command->getOrderId()->getValue())
-            );
-        }
-
-        return new CartId((int) $result['cart']->id);
+    /**
+     * @return CartId
+     */
+    public function getCartId()
+    {
+        return $this->cartId;
     }
 }
