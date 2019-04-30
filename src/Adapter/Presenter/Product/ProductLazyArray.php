@@ -456,6 +456,11 @@ class ProductLazyArray extends AbstractLazyArray
                     'type' => 'discount',
                     'label' => $this->product['discount_amount_to_display'],
                 );
+            } else {
+                $flags['discount'] = array(
+                    'type' => 'discount',
+                    'label' => $this->translator->trans('Reduced price', array(), 'Shop.Theme.Catalog'),
+                );
             }
         }
 
