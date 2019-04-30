@@ -213,8 +213,8 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should click on order with an obligation to pay button', () => client.waitForExistAndClick(CheckoutOrderPage.confirmation_order_button));
     test('should check the order confirmation', () => client.checkTextValue(CheckoutOrderPage.confirmation_order_message, 'YOUR ORDER IS CONFIRMED', "contain"));
     test('should check "image" of the products', async () => {
-      await client.isExisting(CheckoutOrderPage.confirmation_product_picture.replace('%PRODUCT', (productData[0].name + date_time).toLowerCase()), 2000);
-      await client.isExisting(CheckoutOrderPage.confirmation_product_picture.replace('%PRODUCT', (productData[1].name + date_time).toLowerCase()));
+      await client.isExisting(CheckoutOrderPage.confirmation_product_picture.replace('%D', '1'), 2000);
+      await client.isExisting(CheckoutOrderPage.confirmation_product_picture.replace('%D', '2'));
     });
     test('should check "name" of the products', async () => {
       await client.checkTextValue(CheckoutOrderPage.confirmation_product_name.replace('%ID', 1), productData[0].name + date_time);
