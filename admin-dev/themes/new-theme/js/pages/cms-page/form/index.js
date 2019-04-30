@@ -30,10 +30,14 @@ import ChoiceTree from '../../../components/form/choice-tree';
 import TaggableField from '../../../components/taggable-field';
 import TranslatableInput from '../../../components/translatable-input';
 import textToLinkRewriteCopier from '../../../components/text-to-link-rewrite-copier';
+import TranslatableField from "../../../components/translatable-field";
+import TinyMCEEditor from "../../../components/tinymce-editor";
 
 $(() => {
   new ChoiceTree('#cms_page_page_category_id');
   new TranslatableInput();
+  new TranslatableField();
+  new TinyMCEEditor();
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
