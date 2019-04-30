@@ -2902,7 +2902,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $msg
      *
-     * @return false|void
+     * @return false|null
      */
     public function adminDisplayWarning($msg)
     {
@@ -2917,7 +2917,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $msg
      *
-     * @return false|void
+     * @return false|null
      */
     protected function adminDisplayInformation($msg)
     {
