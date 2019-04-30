@@ -27,7 +27,6 @@ module.exports = {
       test('should set the product "quantity"', () => {
         return promise
           .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4", 500))
-          .then(() => client.setInputValue(productPage.first_product_quantity, "4"))
           .then(() => client.getTextInVar(CheckoutOrderPage.product_current_price, "first_basic_price"));
       });
       if (checkAvailableQuantity === true) {
