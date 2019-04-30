@@ -1078,7 +1078,7 @@ class LanguageCore extends ObjectModel
                 $lang_pack = self::getLangDetails($iso);
                 if (!empty($lang_pack['locale'])) {
                     self::installSfLanguagePack($lang_pack['locale'], $errors);
-                    self::generateEmailsLanguagePack($lang_pack, $errors);
+                    self::generateEmailsLanguagePack($lang_pack, $errors, false);
                 }
             }
         }
@@ -1143,8 +1143,9 @@ class LanguageCore extends ObjectModel
     /**
      * @param array $langPack
      * @param array $errors
+     * @param bool $overwriteTemplates
      */
-    private static function generateEmailsLanguagePack($langPack, &$errors = array())
+    private static function generateEmailsLanguagePack($langPack, &$errors = array(), $overwriteTemplates = false)
     {
         $locale = $langPack['locale'];
         $sfContainer = SymfonyContainer::getInstance();
@@ -1163,7 +1164,7 @@ class LanguageCore extends ObjectModel
         $generateCommand = new GenerateThemeMailTemplatesCommand(
             $mailTheme,
             $locale,
-            false
+            $overwriteTemplates
         );
         /** @var CommandBusInterface $commandBus */
         $commandBus = $sfContainer->get('prestashop.core.command_bus');
@@ -1191,7 +1192,7 @@ class LanguageCore extends ObjectModel
             E_USER_DEPRECATED
         );
 
-        self::generateEmailsLanguagePack($lang_pack, $errors);
+        self::generateEmailsLanguagePack($lang_pack, $errors, true);
     }
 
     public static function installLanguagePack($iso, $params, &$errors = array())
@@ -1208,7 +1209,7 @@ class LanguageCore extends ObjectModel
 
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
-        self::generateEmailsLanguagePack($lang_pack, $errors);
+        self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return count($errors) ? $errors : true;
     }

@@ -26,7 +26,7 @@ module.exports = {
       test('should select product "color Black"', () => client.waitForExistAndClick(productPage.first_product_color));
       test('should set the product "quantity"', () => {
         return promise
-          .then(() => client.setInputValue(productPage.first_product_quantity, "4"))
+          .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4", 500))
           .then(() => client.getTextInVar(CheckoutOrderPage.product_current_price, "first_basic_price"));
       });
       if (checkAvailableQuantity === true) {
