@@ -26,10 +26,11 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\MessageCatalogue;
-use PrestaShopBundle\Translation\Locale\Converter;
 
 abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInterface, DatabaseCatalogueInterface
 {
@@ -153,6 +154,8 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
 
     /**
      * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
      */
     public function getDefaultCatalogue($empty = true)
     {
@@ -176,6 +179,8 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
 
     /**
      * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
      */
     public function getXliffCatalogue()
     {
@@ -232,6 +237,8 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
+     * Empties out the catalogue by removing translations but leaving keys
+     *
      * @param MessageCatalogueInterface $messageCatalogue
      *
      * @return MessageCatalogueInterface Empty the catalogue

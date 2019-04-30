@@ -26,9 +26,12 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Helper used to retrieve a Symfony Catalogue object.
@@ -42,7 +45,7 @@ trait TranslationFinderTrait
      *
      * @return MessageCatalogue
      *
-     * @throws \Exception
+     * @throws FileNotFoundException
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
@@ -53,12 +56,25 @@ trait TranslationFinderTrait
         if (null !== $pattern) {
             $finder->name($pattern);
         }
-        $translationFiles = $finder->files()->notName('index.php')->in($paths);
 
-        if (count($translationFiles) === 0) {
-            throw new \Exception('There is no translation file available.');
+        try {
+            $translationFiles = $finder->files()->notName('index.php')->in($paths);
+        } catch (\InvalidArgumentException $e) {
+            throw new FileNotFoundException(
+                sprintf(
+                    'Could not crawl for translation files: %s',
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
         }
 
+        if (count($translationFiles) === 0) {
+            throw new FileNotFoundException('There is no translation file available.');
+        }
+
+        /** @var SplFileInfo $file */
         foreach ($translationFiles as $file) {
             if ('xlf' === $file->getExtension()) {
                 if (strpos($file->getBasename('.xlf'), $locale) !== false) {
@@ -68,10 +84,35 @@ trait TranslationFinderTrait
                 }
 
                 $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
-                $messageCatalogue->addCatalogue($fileCatalogue);
+                $messageCatalogue->addCatalogue(
+                    $this->removeTrailingLocaleFromDomains($fileCatalogue)
+                );
             }
         }
 
         return $messageCatalogue;
+    }
+
+    /**
+     * @param MessageCatalogueInterface $catalogue
+     *
+     * @return MessageCatalogue
+     */
+    private function removeTrailingLocaleFromDomains(MessageCatalogueInterface $catalogue)
+    {
+        $messages = $catalogue->all();
+        $locale = $catalogue->getLocale();
+        $localeSuffix = '.' . $locale;
+        $suffixLength = strlen($localeSuffix);
+
+        foreach ($catalogue->getDomains() as $domain) {
+            if (substr($domain, -$suffixLength) === $localeSuffix) {
+                $cleanDomain = substr($domain, 0, -$suffixLength);
+                $messages[$cleanDomain] = $messages[$domain];
+                unset($messages[$domain]);
+            }
+        }
+
+        return new MessageCatalogue($locale, $messages);
     }
 }
