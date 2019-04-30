@@ -35,8 +35,8 @@ scenario('Check the employee creation', client => {
     return promise
       .then(() => client.waitForVisible(Employee.search_result))
       .then(() => client.getTextInVar(Employee.search_result,'employee_number'))
-      .then(() => tab['employee_number'] = /\(([^)]+)\)/.exec(tab['employee_number'])[1])
-      .then(() => expect(tab['employee_number']).to.be.equal('1'));
+      .then(() => global.tab['employee_number'] = /\(([^)]+)\)/.exec(global.tab['employee_number'])[1])
+      .then(() => expect(global.tab['employee_number']).to.be.equal('1'));
   });
   test('should check that the "First name" of employee is equal to "Demo"', () => client.checkTextValue(Employee.team_employee_name, 'Demo'));
   test('should check that the "Last name" of employee is equal to "Prestashop"', () => client.checkTextValue(Employee.team_employee_last_name, 'Prestashop'));
@@ -65,8 +65,8 @@ scenario('Delete an employee', client => {
     return promise
       .then(() => client.waitForVisible(Employee.search_result))
       .then(() => client.getTextInVar(Employee.search_result,'employee_number'))
-      .then(() => tab['employee_number'] = /\(([^)]+)\)/.exec(tab['employee_number'])[1])
-      .then(() => expect(tab['employee_number']).to.be.equal('1'));
+      .then(() => global.tab['employee_number'] = /\(([^)]+)\)/.exec(global.tab['employee_number'])[1])
+      .then(() => expect(global.tab['employee_number']).to.be.equal('1'));
   });
   test('should click dropdown-toggle button', () => client.waitForExistAndClick(Employee.dropdown_toggle));
   test('should click on "Delete" link', () => client.waitForExistAndClickJs(Employee.delete_link));
@@ -75,8 +75,8 @@ scenario('Delete an employee', client => {
     return promise
       .then(() => client.waitForVisible(Employee.search_result))
       .then(() => client.getTextInVar(Employee.search_result,'employee_number'))
-      .then(() => tab['employee_number'] = /\(([^)]+)\)/.exec(tab['employee_number'])[1])
-      .then(() => expect(tab['employee_number']).to.be.equal('0'));
+      .then(() => global.tab['employee_number'] = /\(([^)]+)\)/.exec(global.tab['employee_number'])[1])
+      .then(() => expect(global.tab['employee_number']).to.be.equal('0'));
   });
   test('should click on "Reset" button', () => client.waitForExistAndClick(Employee.reset_search_button));
 }, 'common_client', true);
