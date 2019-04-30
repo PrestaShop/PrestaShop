@@ -120,6 +120,9 @@ $product-description-height: 70px;
         min-width: 3.125rem;
         min-height: 1.875rem;
         font-weight: 600;
+        &.online-only {
+          top: 13.1rem;
+        }
       }
     }
   }
