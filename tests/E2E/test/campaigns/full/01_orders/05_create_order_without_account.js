@@ -76,7 +76,7 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should check that the message is equal to "There are 300 items in your cart."', () => client.checkTextValue(CheckoutOrderPage.modal_cart_product_count, 'There are 300 items in your cart.'));
     test('should check that the total product is equal to "4 284,00 €"', () => client.checkTextValue(CheckoutOrderPage.modal_total_products, '€4,284.00', 'contain'));
     test('should check that the total shipping is equal to "Free"', () => client.checkTextValue(CheckoutOrderPage.modal_total_shipping, 'Free', 'contain'));
-    test('should check that the total is equal to "4,284.00 € (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€4,284.00 (tax incl.)', 'contain'));
+    test('should check that the total is equal to "4,284.00 € (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€4,284.00', 'contain'));
     test('should click on "Continue shopping" button', () => client.waitForExistAndClick(CheckoutOrderPage.continue_shopping_button, 1000));
     test('should stay on the same product page', () => client.checkTextValue(productPage.product_name, (productData[0].name + date_time).toUpperCase(), 'equal', 1000));
   }, 'common_client');
@@ -134,7 +134,7 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should check that the message is equal to "There are 600 items in your cart."', () => client.checkTextValue(CheckoutOrderPage.modal_cart_product_count, 'There are 600 items in your cart.'));
     test('should check that the total product is equal to "10,584.00€"', () => client.checkTextValue(CheckoutOrderPage.modal_total_products, '€10,584.00', 'contain'));
     test('should check that the total shipping is equal to "Free"', () => client.checkTextValue(CheckoutOrderPage.modal_total_shipping, 'Free', 'contain'));
-    test('should check that the total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€10,584.00 (tax incl.)', 'contain'));
+    test('should check that the total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€10,584.00', 'contain'));
     test('should click on "PROCEED TO CHECKOUT" modal button', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
   }, 'product/product');
   scenario('Check all the information in the cart', client => {
