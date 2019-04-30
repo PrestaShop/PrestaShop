@@ -14,6 +14,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
 const commonOrder = require('../../common_scenarios/order');
 const commonProduct = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 scenario('Create order in the Front Office', () => {
@@ -35,6 +36,8 @@ scenario('Check the created order in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
 
+  welcomeScenarios.findAndCloseWelcomeModal();
+
   scenario('Get the customer information', client => {
     test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
     test('should search for the customer email in the "Customers list"', () => {
@@ -45,10 +48,15 @@ scenario('Check the created order in the Back Office', () => {
     test('should click on "View" button', () => {
       return promise
         .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 1000))
-        .then(() => client.waitForExistAndClick(Customer.view_button, 1000));
+        .then(() => client.waitForExistAndClickJs(Customer.view_button, 1000));
     });
     test('should get the "Valid orders" for a customer', () => client.getTextInVar(Customer.valid_orders, 'valid_orders'));
-    test('should get the "Total amount" for a customer', () => client.getTextInVar(Customer.total_amount, 'total_amount'));
+    test('should get the "Total amount" for a customer', () => {
+      return promise
+        .then(() => client.waitForVisible(Customer.total_amount))
+        .then(() => client.getTextInVar(Customer.total_amount, 'total_amount'))
+        .then(() => tab['total_amount'] = /(€\d+\.\d+)/.exec(tab['total_amount'])[1])
+    });
   }, 'order');
 
   commonOrder.checkOrderInBO('client', true);
