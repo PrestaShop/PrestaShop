@@ -53,7 +53,7 @@ class CartRuleCalculator
     /**
      * @var bool
      */
-    protected $useFreeShipping;
+    protected $useFreeShipping = true;
 
     public function applyCartRules()
     {
