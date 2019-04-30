@@ -90,6 +90,34 @@ class TinyMCEHelper {
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => { this.changeToMaterial(); });
 
     tinyMCE.init(config);
+    this.watchTabChanges(config);
+  }
+
+  /**
+   * When the editor is inside a tab it can cause a bug on tab switching.
+   * So we check if the editor is contained in a navigation and refresh the editor when its
+   * parent tab is shown.
+   *
+   * @param config
+   */
+  watchTabChanges(config) {
+    $(config.selector).each((index, textarea) => {
+      const translatedField = $(textarea).closest('.translation-field');
+      const tabContainer = $(textarea).closest('.translations.tabbable');
+
+      if (translatedField.length && tabContainer.length) {
+        const textareaLocale = translatedField.data('locale');
+        const textareaLinkSelector = '.nav-item a[data-locale="'+textareaLocale+'"]';
+
+        $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
+          const editor = tinyMCE.get(textarea.id);
+          if (editor) {
+            //Reset content to force refresh of editor
+            editor.setContent(editor.getContent());
+          }
+        });
+      }
+    });
   }
 
   loadAndInitTinyMCE(config) {
