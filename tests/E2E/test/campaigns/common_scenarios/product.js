@@ -1840,11 +1840,6 @@ module.exports = {
         test('should search with "First Tag"', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'First Tag'));
         test('should check that the product is well displayed', () => client.isExisting(SearchProductPage.product_result_name));
         test('should go back to the Back Office', () => client.closeWindow(0));
-        /**
-         * BlockTags Module doesn't exist on 1.7 version
-         */
-        commonModules.checkModuleExistence(client, ModulePage, 'blocktags');
-
         test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
         test('should search for the product', () => client.searchProductByName('PA' + global.date_time));
         test('should click on "Edit" button', () => client.waitForExistAndClick(ProductList.edit_button));
