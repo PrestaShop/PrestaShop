@@ -25,13 +25,24 @@
 
 const $ = window.$;
 
-class TinyMCEHelper {
+/**
+ * This class init TinyMCE instances in the back-office. It is wildly inspired by
+ * the scripts from js/admin And it actually loads TinyMCE from the js/tony_mce
+ * folder along with its modules. One improvement could be to install TinyMCE via
+ * npm and fully integrate in the back-office theme.
+ */
+class TinyMCEEditor {
   constructor(options) {
     options = options || {};
     this.tinyMCELoaded = false;
     this.setupTinyMCE(options);
   }
 
+  /**
+   * Initial setup which checks if the tinyMCE library is already loaded.
+   *
+   * @param config
+   */
   setupTinyMCE(config) {
     if (typeof tinyMCE === 'undefined') {
       this.loadAndInitTinyMCE(config);
@@ -40,6 +51,11 @@ class TinyMCEHelper {
     }
   }
 
+  /**
+   * Prepare the config and init all TinyMCE editors
+   *
+   * @param config
+   */
   initTinyMCE(config) {
     config = Object.assign({
       selector: ".rte",
@@ -68,18 +84,7 @@ class TinyMCEHelper {
       ],
       editor_selector :"autoload_rte",
       init_instance_callback: () => { this.changeToMaterial(); },
-      setup : (ed) => {
-        ed.on('loadContent', (event) => {
-          this.handleCounterTiny(tinymce.activeEditor.id);
-        });
-        ed.on('change', (event) => {
-          tinyMCE.triggerSave();
-          this.handleCounterTiny(event.target.id);
-        });
-        ed.on('blur', () => {
-          tinyMCE.triggerSave();
-        });
-      }
+      setup : (editor) => { this.setupEditor(editor); },
     }, config);
 
     if (typeof config.editor_selector != 'undefined') {
@@ -91,6 +96,24 @@ class TinyMCEHelper {
 
     tinyMCE.init(config);
     this.watchTabChanges(config);
+  }
+
+  /**
+   * Setup TinyMCE editor once it has been initialized
+   *
+   * @param editor
+   */
+  setupEditor(editor) {
+    editor.on('loadContent', (event) => {
+      this.handleCounterTiny(event.target.id);
+    });
+    editor.on('change', (event) => {
+      tinyMCE.triggerSave();
+      this.handleCounterTiny(event.target.id);
+    });
+    editor.on('blur', () => {
+      tinyMCE.triggerSave();
+    });
   }
 
   /**
@@ -120,6 +143,11 @@ class TinyMCEHelper {
     });
   }
 
+  /**
+   * Loads the TinyMCE javascript library and then init the editors
+   *
+   * @param config
+   */
   loadAndInitTinyMCE(config) {
     if (this.tinyMCELoaded) {
       return;
@@ -135,6 +163,9 @@ class TinyMCEHelper {
     $.getScript(final_path+'/js/tiny_mce/tinymce.min.js', () => {this.setupTinyMCE(config)});
   }
 
+  /**
+   * Replace initial TinyMCE icons with material icons
+   */
   changeToMaterial() {
     let materialIconAssoc = {
       'mce-i-code': '<i class="material-icons">code</i>',
@@ -163,6 +194,11 @@ class TinyMCEHelper {
     });
   }
 
+  /**
+   * Updates the characters counter
+   *
+   * @param id
+   */
   handleCounterTiny(id) {
     let textarea = $('#'+id);
     let counter = textarea.attr('counter');
@@ -178,4 +214,4 @@ class TinyMCEHelper {
   }
 }
 
-export default TinyMCEHelper;
+export default TinyMCEEditor;
