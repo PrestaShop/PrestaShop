@@ -591,7 +591,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param Module $module
      *
-     * @return bool
+     * @return bool|null Boolean if Module::$version != Module::$database_version, null instead
      */
     public static function needUpgrade($module)
     {
@@ -753,7 +753,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param array|string $name
      *
-     * @return true if succeed
+     * @return bool
      *
      * @since 1.4.1
      * @deprecated since 1.7
@@ -858,7 +858,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param array|string $name
      *
-     * @return true if succeed
+     * @return bool
      *
      * @since 1.7
      */
@@ -884,7 +884,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param array|string $name
      *
-     * @return true if succeed
+     * @return bool
      *
      * @since 1.4.1
      * @deprecated since 1.7
@@ -1115,7 +1115,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $module_name Module name
      *
-     * @return Module
+     * @return Module|false
      */
     public static function getInstanceByName($module_name)
     {
@@ -1164,7 +1164,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_module Module ID
      *
-     * @return Module instance
+     * @return Module|false
      */
     public static function getInstanceById($id_module)
     {
@@ -2443,7 +2443,7 @@ abstract class ModuleCore implements ModuleInterface
      * @param string|null $cache_id
      * @param string|null $compile_id
      *
-     * @return mixed
+     * @return string
      */
     public function fetch($templatePath, $cache_id = null, $compile_id = null)
     {
@@ -2505,7 +2505,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $template
      *
-     * @return string
+     * @return string|null
      */
     public function getTemplatePath($template)
     {
@@ -2901,6 +2901,8 @@ abstract class ModuleCore implements ModuleInterface
      * add a warning message to display at the top of the admin page.
      *
      * @param string $msg
+     *
+     * @return false|void
      */
     public function adminDisplayWarning($msg)
     {
@@ -2914,6 +2916,8 @@ abstract class ModuleCore implements ModuleInterface
      * add a info message to display at the top of the admin page.
      *
      * @param string $msg
+     *
+     * @return false|void
      */
     protected function adminDisplayInformation($msg)
     {
