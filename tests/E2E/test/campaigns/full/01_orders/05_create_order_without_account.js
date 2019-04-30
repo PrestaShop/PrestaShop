@@ -286,8 +286,16 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.updateStatus('Payment accepted');
     });
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+    /**
+     * should refresh the page, to pass the error
+     */
+    test('should refresh the page', () => client.refresh());
     test('should set order status to Delivered ', () => client.updateStatus('Delivered'));
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+    /**
+     * should refresh the page, to pass the error
+     */
+    test('should refresh the page', () => client.refresh());
   }, 'order');
   commonProductScenarios.checkProductQuantity(Menu, AddProductPage, productData[0].name + date_time, '50');
   commonProductScenarios.checkProductQuantity(Menu, AddProductPage, productData[1].name + date_time, '50');
