@@ -15,7 +15,6 @@ Feature: Cart rule (amount) calculation with one cart rule offering free shippin
     Then my cart total should be 19.812 tax included
     Then my cart total using previous calculation method should be 19.812 tax included
 
-  @current
   Scenario: One product in cart, one cartRule offering free shipping AND 5€ discount
     Given I have an empty default cart
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
@@ -25,5 +24,5 @@ Feature: Cart rule (amount) calculation with one cart rule offering free shippin
     Given cart rule "cartrule4" has a discount code "foo4"
     When I add 1 items of product "product1" in my cart
     When I use the discount "cartrule4"
-    Then my cart total using previous calculation method should be 14.812 tax included
     Then my cart total should be 14.812 tax included
+    Then my cart total using previous calculation method should be 14.812 tax included

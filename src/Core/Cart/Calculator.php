@@ -263,13 +263,14 @@ class Calculator
 
     /**
      * calculate only cart rules (rows and fees have to be calculated first).
+     * @param bool $withFreeShipping used to calculate free shipping discount (avoid loop on shipping calculation)
      */
-    public function calculateCartRules()
+    public function calculateCartRules($withFreeShipping = true)
     {
         $this->cartRuleCalculator->setCartRules($this->cartRules)
             ->setCartRows($this->cartRows)
             ->setCalculator($this)
-            ->applyCartRules();
+            ->applyCartRules($withFreeShipping);
     }
 
     /**
@@ -288,5 +289,13 @@ class Calculator
     public function getCartRulesData()
     {
         return $this->cartRuleCalculator->getCartRulesData();
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarrierId()
+    {
+        return $this->id_carrier;
     }
 }
