@@ -123,11 +123,11 @@
 					</div>
 					<div class="required form-group">
 						<label for="firstname">{l s='First name'} <sup>*</sup></label>
-						<input type="text" class="is_required validate form-control" data-validate="isName" id="firstname" name="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
+						<input type="text" class="is_required validate form-control" data-validate="isCustomerName" id="firstname" name="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
 					</div>
 					<div class="required form-group">
 						<label for="lastname">{l s='Last name'} <sup>*</sup></label>
-						<input type="text" class="is_required validate form-control" data-validate="isName" id="lastname" name="lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
+						<input type="text" class="is_required validate form-control" data-validate="isCustomerName" id="lastname" name="lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
 					</div>
 					<div class="form-group date-select">
 						<label>{l s='Date of Birth'}</label>
@@ -444,11 +444,11 @@
 			</div>
 			<div class="required form-group">
 				<label for="customer_firstname">{l s='First name'} <sup>*</sup></label>
-				<input onkeyup="$('#firstname').val(this.value);" type="text" class="is_required validate form-control" data-validate="isName" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.customer_firstname)}{$smarty.post.customer_firstname}{/if}" />
+				<input onkeyup="$('#firstname').val(this.value);" type="text" class="is_required validate form-control" data-validate="isCustomerName" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.customer_firstname)}{$smarty.post.customer_firstname}{/if}" />
 			</div>
 			<div class="required form-group">
 				<label for="customer_lastname">{l s='Last name'} <sup>*</sup></label>
-				<input onkeyup="$('#lastname').val(this.value);" type="text" class="is_required validate form-control" data-validate="isName" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
+				<input onkeyup="$('#lastname').val(this.value);" type="text" class="is_required validate form-control" data-validate="isCustomerName" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
 			</div>
 			<div class="required form-group">
 				<label for="email">{l s='Email'} <sup>*</sup></label>
