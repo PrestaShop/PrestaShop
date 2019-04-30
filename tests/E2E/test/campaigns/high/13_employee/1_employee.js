@@ -35,7 +35,7 @@ scenario('Check the employee creation', client => {
     return promise
       .then(() => client.waitForVisible(Employee.search_result))
       .then(() => client.getTextInVar(Employee.search_result,'employee_number'))
-      .then(() => tab['employee_number'] = tab['employee_number'].split('(')[1].split(')')[0])
+      .then(() => tab['employee_number'] = /\(([^)]+)\)/.exec(tab['employee_number'])[1])
       .then(() => expect(tab['employee_number']).to.be.equal('1'));
   });
   test('should check that the "First name" of employee is equal to "Demo"', () => client.checkTextValue(Employee.team_employee_name, 'Demo'));
