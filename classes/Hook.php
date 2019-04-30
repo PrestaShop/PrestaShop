@@ -587,7 +587,7 @@ class HookCore extends ObjectModel
 
             // Unregister module on hook by id
             $result &= Db::getInstance()->delete(
-                'hook_module', 
+                'hook_module',
                 '`id_module` = ' . (int) $module_instance->id . ' AND `id_hook` = ' . (int) $hook_id . $idShops
             );
 
