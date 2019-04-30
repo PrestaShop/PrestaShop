@@ -38,7 +38,7 @@ module.exports = {
     mode_delete_radio: '//*[@id="delete_categories_delete_mode_2"]/..',
     expand_all_button: '#expand-all-categories-tree',
     parent_category: '(//*[@id="categories-tree"]//span[contains(.,"%NAME")]//input)[1]',
-	  search_no_results: '//*[@id="category_grid"]//div[contains(@class, "grid-table-empty")]/p[2]',
+    search_no_results: '//*[@id="category_grid"]//div[contains(@class, "grid-table-empty")]/p[2]',
     category_name: '//*[@id="category_grid_table"]//tr[%ID]//td[3]',
     category_view_button: '//*[@id="category_grid_table"]//tr[%ID]//td[7]//a[@title="View"]',
     category_id_column:'//*[@id="category_grid_table"]//tr[%ID]//td[2]',
