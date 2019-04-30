@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "112f2aa0fb1d93c5791ff34b8f7c7e47",
+    "content-hash": "b3b2767f529a6e46dd23d92b88db238e",
     "packages": [
         {
             "name": "analog/analog",
@@ -2488,24 +2488,24 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v2.1.1",
+            "version": "v3.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "4dd659edadffdc2143e4753df655d866dbfeedf0"
+                "reference": "bb87e28e7d7b8d9a7fda231d37457c9210faf6ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4dd659edadffdc2143e4753df655d866dbfeedf0",
-                "reference": "4dd659edadffdc2143e4753df655d866dbfeedf0",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/bb87e28e7d7b8d9a7fda231d37457c9210faf6ce",
+                "reference": "bb87e28e7d7b8d9a7fda231d37457c9210faf6ce",
                 "shasum": ""
             },
             "require": {
                 "ext-tokenizer": "*",
-                "php": ">=5.4"
+                "php": ">=5.5"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "~4.0|~5.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -2513,7 +2513,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2535,7 +2535,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2016-09-16T12:04:44+00:00"
+            "time": "2018-02-28T20:30:58+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -4748,30 +4748,30 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v2.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "493ffd5352c53d184d009a1d7ca055ef678daf3d"
+                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/493ffd5352c53d184d009a1d7ca055ef678daf3d",
-                "reference": "493ffd5352c53d184d009a1d7ca055ef678daf3d",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/7ca162cee5a24359a33ada3eba13f94f23c1c926",
+                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^2.1",
-                "php": "^5.4 || ^7.1",
+                "nikic/php-parser": "^3",
+                "php": ">=5.6",
                 "smarty/smarty": "^3.1",
-                "symfony/twig-bridge": "^2.8 || ^3.0",
+                "symfony/twig-bridge": "^3.0",
                 "twig/twig": "^1.34 || ^2.0"
             },
             "require-dev": {
                 "doctrine/common": "~2.5.3",
-                "phpunit/phpunit": "~4.8",
-                "symfony/framework-bundle": "^2.8 || ^3.0",
-                "symfony/translation": "^2.8 || ^3.0"
+                "phpunit/phpunit": "^5",
+                "symfony/framework-bundle": "^3.0",
+                "symfony/translation": "^3.0"
             },
             "type": "bundle",
             "autoload": {
@@ -4803,7 +4803,7 @@
                 "prestashop",
                 "translation"
             ],
-            "time": "2017-12-05T14:58:25+00:00"
+            "time": "2019-04-19T12:27:03+00:00"
         },
         {
             "name": "prestashop/welcome",
@@ -6863,12 +6863,12 @@
             "version": "v1.6.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mikey179/vfsStream.git",
+                "url": "https://github.com/bovigo/vfsStream.git",
                 "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
+                "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
                 "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
                 "shasum": ""
             },
