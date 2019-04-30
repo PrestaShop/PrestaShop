@@ -26,6 +26,7 @@ const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Employee} = require('../../../selectors/BO/employee_page');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = [{
   name: 'ProductA',
@@ -54,6 +55,7 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   for (let m = 0; m < productData.length; m++) {
     commonProductScenarios.createProduct(AddProductPage, productData[m]);
   }
