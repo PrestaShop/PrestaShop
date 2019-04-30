@@ -78,7 +78,7 @@ services:
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand'
 
   prestashop.adapter.command_handler.send_cart_to_customer_handler:
-    classs: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\SendCartToCustomerHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\SendCartToCustomerHandler'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\SendCartToCustomerCommand'
