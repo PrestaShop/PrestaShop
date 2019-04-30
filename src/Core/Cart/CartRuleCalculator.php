@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Cart;
-use CartRule;
 
 class CartRuleCalculator
 {
@@ -76,6 +75,7 @@ class CartRuleCalculator
     /**
      * @param CartRuleData $cartRuleData
      * @param bool $withFreeShipping used to calculate free shipping discount (avoid loop on shipping calculation)
+     *
      * @throws \PrestaShopDatabaseException
      */
     protected function applyCartRule(CartRuleData $cartRuleData, $withFreeShipping = true)
