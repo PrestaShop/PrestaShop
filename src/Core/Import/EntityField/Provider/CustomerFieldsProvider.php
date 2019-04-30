@@ -54,7 +54,7 @@ final class CustomerFieldsProvider implements EntityFieldsProviderInterface
     public function getCollection()
     {
         $fields = [
-            new EntityField('id', $this->trans('ID', 'Admin.Global', 'Admin.Advparameters.Feature')),
+            new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active  (0/1)', 'Admin.Advparameters.Feature')),
             new EntityField('id_gender', $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)', 'Admin.Advparameters.Feature')),
             new EntityField('email', $this->trans('Email', 'Admin.Global'), '', true),

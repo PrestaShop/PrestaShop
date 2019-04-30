@@ -54,10 +54,10 @@ final class StoreContactFieldsProvider implements EntityFieldsProviderInterface
     public function getCollection()
     {
         $fields = [
-            new EntityField('id', $this->trans('ID', 'Admin.Global', 'Admin.Advparameters.Feature')),
+            new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
-            new EntityField('name', $this->trans('Name', 'Admin.Global', 'Admin.Advparameters.Feature')),
-            new EntityField('address1', $this->trans('Address', 'Admin.Global', 'Admin.Advparameters.Feature'), '', true),
+            new EntityField('name', $this->trans('Name', 'Admin.Global')),
+            new EntityField('address1', $this->trans('Address', 'Admin.Global'), '', true),
             new EntityField('address2', $this->trans('Address (2)', 'Admin.Advparameters.Feature')),
             new EntityField('postcode', $this->trans('Zip/postal code', 'Admin.Global')),
             new EntityField('state', $this->trans('State', 'Admin.Global')),

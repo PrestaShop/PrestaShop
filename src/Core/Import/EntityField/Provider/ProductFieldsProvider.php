@@ -54,9 +54,9 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
     public function getCollection()
     {
         $fields = [
-            new EntityField('id', $this->trans('ID', 'Admin.Global', 'Admin.Advparameters.Feature')),
+            new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
-            new EntityField('name', $this->trans('Name', 'Admin.Global', 'Admin.Advparameters.Feature')),
+            new EntityField('name', $this->trans('Name', 'Admin.Global')),
             new EntityField('category', $this->trans('Categories (x,y,z...)', 'Admin.Advparameters.Feature')),
             new EntityField('price_tex', $this->trans('Price tax excluded', 'Admin.Advparameters.Feature')),
             new EntityField('price_tin', $this->trans('Price tax included', 'Admin.Advparameters.Feature')),
@@ -115,7 +115,7 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('delete_existing_images', $this->trans('Delete existing images (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
             new EntityField('features', $this->trans('Feature (Name:Value:Position:Customized)', 'Admin.Advparameters.Feature')),
             new EntityField('online_only', $this->trans('Available online only (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('condition', $this->trans('Condition', 'Admin.Catalog.Feature', 'Admin.Advparameters.Feature')),
+            new EntityField('condition', $this->trans('Condition', 'Admin.Catalog.Feature')),
             new EntityField('customizable', $this->trans('Customizable (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
             new EntityField('uploadable_files', $this->trans('Uploadable files (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
             new EntityField('text_fields', $this->trans('Text fields (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
