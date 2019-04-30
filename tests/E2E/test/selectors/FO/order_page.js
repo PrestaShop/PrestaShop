@@ -74,7 +74,7 @@ module.exports = {
     shipping_value: '//*[@id="cart-subtotal-shipping"]/span[@class="value"]',
     product_total_price: '//*[@id="main"]//li[%NUMBER]//span[@class="product-price"]/strong',
     checkout_total_price: '(//*[@id="js-checkout-summary"]//div[contains(@class,"cart-summary-totals")]//span[2])[1]',
-    confirmation_product_picture:'//*[@id="order-items"]//img[contains(@src,"%PRODUCT")]',
+    confirmation_product_picture:'#order-items .order-confirmation-table .order-line:nth-child(%D) img',
     confirmation_product_name:'(//*[@id="order-items"]//div[2]/span)[%ID]',
     confirmation_product_unit_price:'(//*[@id="order-items"]//div[3]/div/div[1])[%ID]',
     confirmation_product_quantity:'(//*[@id="order-items"]//div[3]/div/div[2])[%ID]',
