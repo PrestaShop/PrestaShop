@@ -81,6 +81,7 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should check that the total is equal to "4,284.00 € (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€4,284.00', 'contain'));
     test('should click on "Continue shopping" button', () => client.waitForExistAndClick(CheckoutOrderPage.continue_shopping_button, 1000));
     test('should stay on the same product page', () => client.checkTextValue(productPage.product_name, (productData[0].name + date_time).toUpperCase(), 'equal', 1000));
+    test('should go to home Page', () => client.waitForExistAndClick(AccessPageFO.logo_home_page, 1000));
   }, 'common_client');
   scenario('Check the "' + productData[1].name + date_time + '" in the Front Office', client => {
     test('should go back to the "Back Office"', async () => client.switchWindow(0));
