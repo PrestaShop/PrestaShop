@@ -163,7 +163,7 @@ scenario('Create order in the Back Office', () => {
     });
   }, 'onboarding');
   commonCurrency.accessToCurrencies();
-  commonCurrency.createCurrency('close\nSuccessful creation.', firstCurrencyData, false, true, true);
+  commonCurrency.createCurrency('Successful creation.', firstCurrencyData, false, true, true);
   commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
   scenario('Enable currency', client => {
     test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1).replace('%ICON', "not-valid")));
@@ -176,8 +176,8 @@ scenario('Create order in the Back Office', () => {
         .then(() => client.goToFrame(1))
         .then(() => client.pause(2000));
     });
-    test('should check the "First name" and the "Last name" of the created customer', () => client.checkTextValue(CreateOrder.customer_details_header_bloc, secondCustomerData.first_name.toUpperCase() + ' ' + secondCustomerData.last_name.toUpperCase(), 'contain'));
-    test('should check the "Email" of the created customer', () => client.checkTextValue(CreateOrder.customer_details_email_link, secondCustomerData.email_address.toUpperCase(), 'contain'));
+    test('should check the "First name" and the "Last name" of the created customer', () => client.checkTextValue(CreateOrder.customer_details_header_bloc, secondCustomerData.first_name + ' ' + secondCustomerData.last_name, 'contain'));
+    test('should check the "Email" of the created customer', () => client.checkTextValue(CreateOrder.customer_details_email_link, secondCustomerData.email_address, 'contain'));
     test('should close details of the customer', () => {
       return promise
         .then(() => client.closeFrame())
@@ -255,7 +255,7 @@ scenario('Create order in the Back Office', () => {
         .then(() => client.pause(2000));
     });
     test('should verify that the price is changed', () => client.checkTextValue(CreateOrder.price_product_column, global.tab['price_product'], 'equal'));
-    test('should set the language "Frensh"', () => client.waitAndSelectByValue(CreateOrder.language_select, '2'));
+    test('should set the language "French"', () => client.waitAndSelectByValue(CreateOrder.language_select, '2'));
     test('should search for a voucher by name', () => {
       return promise
         .then(() => client.waitAndSetValue(CreateOrder.voucher_input, global.tab["firstCartRuleCode"]))
