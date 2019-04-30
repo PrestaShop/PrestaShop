@@ -51,12 +51,14 @@ class CartRuleCalculator
     protected $fees;
 
     /**
-     * @param bool $withFreeShipping used to calculate free shipping discount (avoid loop on shipping calculation)
+     * @var bool
      */
-    public function applyCartRules($withFreeShipping = true)
+    protected $useFreeShipping;
+
+    public function applyCartRules()
     {
         foreach ($this->cartRules as $cartRule) {
-            $this->applyCartRule($cartRule, $withFreeShipping);
+            $this->applyCartRule($cartRule);
         }
     }
 
@@ -74,11 +76,10 @@ class CartRuleCalculator
 
     /**
      * @param CartRuleData $cartRuleData
-     * @param bool $withFreeShipping used to calculate free shipping discount (avoid loop on shipping calculation)
      *
      * @throws \PrestaShopDatabaseException
      */
-    protected function applyCartRule(CartRuleData $cartRuleData, $withFreeShipping = true)
+    protected function applyCartRule(CartRuleData $cartRuleData)
     {
         $cartRule = $cartRuleData->getCartRule();
         $cart = $this->calculator->getCart();
@@ -88,7 +89,7 @@ class CartRuleCalculator
         }
 
         // Free shipping on selected carriers
-        if ($cartRule->free_shipping && $withFreeShipping) {
+        if ($cartRule->free_shipping && $this->useFreeShipping) {
             $initialShippingFees = new AmountImmutable(
                 $cart->getOrderTotal(true, Cart::ONLY_SHIPPING),
                 $cart->getOrderTotal(false, Cart::ONLY_SHIPPING)
@@ -252,6 +253,18 @@ class CartRuleCalculator
     public function setCalculator($calculator)
     {
         $this->calculator = $calculator;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $useFreeShipping used to calculate free shipping discount (avoid loop on shipping calculation)
+     *
+     * @return CartRuleCalculator
+     */
+    public function useFreeShipping($useFreeShipping)
+    {
+        $this->useFreeShipping = $useFreeShipping;
 
         return $this;
     }

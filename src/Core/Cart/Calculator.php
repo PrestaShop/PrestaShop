@@ -271,7 +271,8 @@ class Calculator
         $this->cartRuleCalculator->setCartRules($this->cartRules)
             ->setCartRows($this->cartRows)
             ->setCalculator($this)
-            ->applyCartRules($withFreeShipping);
+            ->useFreeShipping($withFreeShipping)
+            ->applyCartRules();
     }
 
     /**
