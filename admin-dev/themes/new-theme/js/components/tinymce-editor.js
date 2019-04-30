@@ -27,7 +27,7 @@ const $ = window.$;
 
 /**
  * This class init TinyMCE instances in the back-office. It is wildly inspired by
- * the scripts from js/admin And it actually loads TinyMCE from the js/tony_mce
+ * the scripts from js/admin And it actually loads TinyMCE from the js/tiny_mce
  * folder along with its modules. One improvement could be to install TinyMCE via
  * npm and fully integrate in the back-office theme.
  */
