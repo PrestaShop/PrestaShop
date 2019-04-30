@@ -26,10 +26,6 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 
 function setUpCheckout() {
-  if ($('.js-cancel-address').length !== 0) {
-    $('.checkout-step:not(.js-current-step) .step-title').addClass('not-allowed');
-  }
-
   $('.js-terms a').on('click', (event) => {
     event.preventDefault();
     var url = $(event.target).attr('href');
