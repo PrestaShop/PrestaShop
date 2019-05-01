@@ -46,4 +46,9 @@ class TestController
     {
         return new Response();
     }
+
+    public function doSomethingComplexAction()
+    {
+        return new Response();
+    }
 }

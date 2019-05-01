@@ -57,7 +57,6 @@ class SearchAndResetType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $showResetButton = false;
-        $disableSearchButton = true;
 
         if (null !== $form->getParent()) {
             $configuredTypeNames = array_keys($form->getParent()->all());
@@ -66,7 +65,6 @@ class SearchAndResetType extends AbstractType
             $configuredData = array_intersect($configuredTypeNames, $availableValueNames);
             if (!empty($configuredData)) {
                 $showResetButton = true;
-                $disableSearchButton = false;
             }
         }
 
@@ -95,7 +93,6 @@ class SearchAndResetType extends AbstractType
         }
 
         $view->vars['show_reset_button'] = $showResetButton;
-        $view->vars['disable_search_button'] = $disableSearchButton;
         $view->vars['redirect_url'] = $redirectUrl;
         $view->vars['reset_url'] = $resetUrl;
     }

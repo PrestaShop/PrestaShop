@@ -6,6 +6,12 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
+        customer:
+            paths:
+                features: Features/Scenario/Customer
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
         cart:
             paths:
                 features: Features/Scenario/Cart
@@ -27,9 +33,3 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
-        translation:
-            paths:
-                features: Features/Scenario/Translation
-            contexts:
-                - Tests\Integration\Behaviour\Features\Context\TranslationFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext

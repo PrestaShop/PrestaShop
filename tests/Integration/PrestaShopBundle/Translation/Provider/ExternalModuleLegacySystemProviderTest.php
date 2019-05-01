@@ -30,16 +30,31 @@ use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 
 /**
  * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="ExternalModuleLegacySystemProviderTest"
  */
 class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 {
+    const MODULE_NAME = 'translation_test';
+
     /**
      * @var ExternalModuleLegacySystemProvider
      */
     private $provider;
+
+    /**
+     * @var CatalogueVerifier
+     */
+    private $catalogueVerifier;
+
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->catalogueVerifier = new CatalogueVerifier($this);
+    }
 
     protected function setUp()
     {
@@ -49,8 +64,15 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $legacyFileLoader = $container->get('prestashop.translation.legacy_file_loader');
         $phpExtractor = $container->get('prestashop.translation.extractor.php');
         $moduleProvider = $container->get('prestashop.translation.module_provider');
-        $smartyExtractor = $container->get('prestashop.translation.extractor.smarty');
-        $extractor = new LegacyModuleExtractor($phpExtractor, $smartyExtractor, $this->getModuleDirectory());
+        $smartyExtractor = $container->get('prestashop.translation.extractor.smarty.legacy');
+        $twigExtractor = $container->get('prestashop.translation.extractor.twig');
+
+        $extractor = new LegacyModuleExtractor(
+            $phpExtractor,
+            $smartyExtractor,
+            $twigExtractor,
+            $this->getModuleDirectory()
+        );
 
         $this->provider = new ExternalModuleLegacySystemProvider(
             $databaseLoader,
@@ -61,44 +83,62 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         );
 
         $this->provider
-            ->setModuleName('some_module')
-            ->setDomain('ModulesSomeModule')
+            ->setModuleName(self::MODULE_NAME)
         ;
     }
 
-    protected function tearDown()
-    {
-        self::$kernel->shutdown();
-    }
-
-    public function testGetTranslationDomains()
-    {
-        $this->assertSame(['^ModulesSomeModule*'], $this->provider->getTranslationDomains());
-    }
-
-    public function testGetFilters()
-    {
-        $this->assertSame([], $this->provider->getFilters());
-    }
-
-    public function testGetIdentifier()
-    {
-        $this->assertSame('external_legacy_module', $this->provider->getIdentifier());
-    }
-
     /**
-     * In the module same_module, you can find:
-     * 1 translation in the controller
-     * 4 translations in Smarty files
-     * and 88 unique translations in the translations folder for the locale fr-FR
+     * @param string $locale
+     * @param array $expected
+     *
+     * @dataProvider provideTestCases
      */
-    public function testGetXliffCatalogueWithDefinedLocale()
-    {
-        $this->provider->setLocale('fr-FR');
+    public function testTranslationsCatalogueIsBuiltFromKeysFoundInSourceAndTranslationsInLegacyFiles(
+        $locale,
+        array $expected
+    ) {
+        $this->provider->setLocale($locale);
         $legacyCatalogue = $this->provider->getXliffCatalogue();
+
         $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 
-        $this->assertCount(5, $legacyCatalogue->all('ModulesSomeModule'));
+        $this->catalogueVerifier->assertCataloguesMatch($legacyCatalogue, $expected);
+    }
+
+    public function provideTestCases()
+    {
+        return [
+            'French' => [
+                'fr-FR',
+                [
+                    'ModulesTranslationtestAdmin' => [
+                        'Modern controller' => 'Contrôleur moderne',
+                    ],
+                    'ModulesTranslationtestTranslationtest' => [
+                        'Hello World' => 'Bonjour le monde',
+                    ],
+                    'ModulesTranslationtestSomefile.with-things' => [
+                        'Smarty template' => 'Le template Smarty',
+                    ],
+                ],
+            ],
+            'Spanish' => [
+                'es-ES',
+                [
+                    'ModulesTranslationtestTranslationtest' => [
+                        'Hello World' => 'Hola mundo',
+                    ],
+                ],
+            ],
+            'Italian' => [
+                'it-IT',
+                [
+                    'ModulesTranslationtestTranslationtest' => [
+                        'Hello World' => 'Ciao mondo',
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -106,6 +146,6 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
      */
     private function getModuleDirectory()
     {
-        return __DIR__ . '/../../../../resources';
+        return __DIR__ . '/../../../../Resources/modules';
     }
 }

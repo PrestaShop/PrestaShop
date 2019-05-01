@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Routing\Linter;
 
 use Doctrine\Common\Annotations\Reader;
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
@@ -60,7 +61,7 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     /**
      * {@inheritdoc}
      */
-    public function lint(Route $route)
+    public function lint($routeName, Route $route)
     {
         $controllerAndMethod = $this->extractControllerAndMethodNamesFromRoute($route);
 
