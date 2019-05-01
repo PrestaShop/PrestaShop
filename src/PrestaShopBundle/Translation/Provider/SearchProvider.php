@@ -26,11 +26,13 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
- * Able to search translations for a specific translation domains across
- * multiple sources
+ * Able to search translations for a specific translation domains across multiple sources
  */
 class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface, UseModuleInterface
 {
@@ -78,7 +80,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return ['^' . $this->domain];
+        return ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
     }
 
     /**
@@ -86,7 +88,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getFilters()
     {
-        return ['#^' . $this->domain . '#'];
+        return ['#^' . preg_quote($this->domain, '#') . '([A-Z]|\.|$)#'];
     }
 
     /**
@@ -109,8 +111,9 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     {
         try {
             $defaultCatalogue = parent::getDefaultCatalogue($empty);
-        } catch (\Exception $e) {
+        } catch (FileNotFoundException $e) {
             $defaultCatalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty);
+            $defaultCatalogue = $this->filterCatalogue($defaultCatalogue);
         }
 
         return $defaultCatalogue;
@@ -125,6 +128,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
             $xliffCatalogue = parent::getXliffCatalogue();
         } catch (\Exception $e) {
             $xliffCatalogue = $this->externalModuleLegacySystemProvider->getXliffCatalogue();
+            $xliffCatalogue = $this->filterCatalogue($xliffCatalogue);
         }
 
         return $xliffCatalogue;
@@ -161,5 +165,32 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function setModuleName($moduleName)
     {
         $this->externalModuleLegacySystemProvider->setModuleName($moduleName);
+    }
+
+    /**
+     * Filters the catalogue so that only domains matching the filters are kept
+     *
+     * @param MessageCatalogueInterface $defaultCatalogue
+     *
+     * @return MessageCatalogueInterface
+     */
+    private function filterCatalogue(MessageCatalogueInterface $defaultCatalogue)
+    {
+        // return only elements whose domain matches the filters
+        $filters = $this->getFilters();
+        $allowedDomains = [];
+
+        foreach ($defaultCatalogue->all() as $domain => $messages) {
+            foreach ($filters as $filter) {
+                if (preg_match($filter, $domain)) {
+                    $allowedDomains[$domain] = $messages;
+                    break;
+                }
+            }
+        }
+
+        $defaultCatalogue = new MessageCatalogue($this->getLocale(), $allowedDomains);
+
+        return $defaultCatalogue;
     }
 }

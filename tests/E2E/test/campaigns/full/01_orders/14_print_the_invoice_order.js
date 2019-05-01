@@ -81,8 +81,8 @@ scenario('Print the invoice of an order', () => {
     test('should select "Tax excluded" option for "Price display method"', () => client.waitAndSelectByValue(CustomerSettings.groups.price_display_method, "1"));
     test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
     test('should go to "International > Taxes" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.taxes_submenu));
-    test('should display tax in the shopping cart', () => client.waitForExistAndClick(Taxes.taxes.display_tax.replace('%D', 'on')));
-    test('should click on "Save" button', () => client.waitForExistAndClick(Taxes.taxes.save_button));
+    test('should display tax in the shopping cart', () => client.waitForExistAndClickJs(Taxes.taxes.display_tax.replace('%D', '1')));
+    test('should click on "Save" button', () => client.waitForExistAndClickJs(Taxes.taxes.save_button,false));
   }, 'order');
 
   for (let i = 0; i <= 2; i++) {
@@ -106,7 +106,7 @@ scenario('Print the invoice of an order', () => {
         test('should select product "size M"', () => client.waitAndSelectByValue(productPage.first_product_size, '2'));
         test('should set the product "quantity"', () => {
           return promise
-            .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4"))
+            .then(() => client.setInputValue(productPage.first_product_quantity, "4"))
             .then(() => client.getTextInVar(CheckoutOrderPage.product_current_price, "basic_price_" + i));
         });
         test('should click on "ADD TO CART" button', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
@@ -117,7 +117,7 @@ scenario('Print the invoice of an order', () => {
           test('should click on "PROCEED TO CHECKOUT" button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
         }
       }
-      test('should set the quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
+      test('should set the quantity to "4" using the keyboard', () => client.setInputValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
       test('should click on "PROCEED TO CHECKOUT" button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
       test('should click on confirm address button', () => client.waitForExistAndClick(CheckoutOrderPage.checkout_step2_continue_button));
       test('should choose shipping method my carrier', () => client.waitForExistAndClick(CheckoutOrderPage.shipping_method_option, 2000));
@@ -171,6 +171,10 @@ scenario('Print the invoice of an order', () => {
       test('should check that the status is "Awaiting bank wire payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting bank wire payment'));
       test('should set order status to "Payment accepted"', () => client.updateStatus('Payment accepted'));
       test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+      /**
+       * should refresh the page, to pass the error
+       */
+      test('should refresh the page', () => client.refresh());
       test('should check that the status is "Payment accepted"', () => client.checkTextValue(OrderPage.order_status, 'Payment accepted'));
     }, 'order');
 
@@ -250,7 +254,7 @@ scenario('Print the invoice of an order', () => {
     test('should select "Tax included" option for "Price display method"', () => client.waitAndSelectByValue(CustomerSettings.groups.price_display_method, "0"));
     test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
     test('should go to "International > Taxes" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.taxes_submenu));
-    test('should in display tax in the shopping cart', () => client.waitForExistAndClick(Taxes.taxes.display_tax.replace('%D', 'off')));
-    test('should click on "Save" button', () => client.waitForExistAndClick(Taxes.taxes.save_button));
+    test('should in display tax in the shopping cart', () => client.waitForExistAndClickJs(Taxes.taxes.display_tax.replace('%D', '0')));
+    test('should click on "Save" button', () => client.waitForExistAndClickJs(Taxes.taxes.save_button,false));
   }, 'order');
 }, 'order', true);

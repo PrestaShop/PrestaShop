@@ -36,6 +36,10 @@ scenario('Print the delivery slips of an order', () => {
     test('should check status to be equal to "Awaiting check payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting check payment'));
     test('should set order status to "Shipped"', () => client.updateStatus('Shipped'));
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+    /**
+     * should refresh the page, to pass the error
+     */
+    test('should refresh the page', () => client.refresh());
     test('should check that the status is "Shipped"', () => client.checkTextValue(OrderPage.order_status, 'Shipped'));
   }, 'order');
   commonOrder.getDeliveryInformation(0);

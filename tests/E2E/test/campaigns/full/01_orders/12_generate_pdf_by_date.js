@@ -43,6 +43,10 @@ scenario('Generate a PDF by date', () => {
       for (let i = 1; i <= 2; i++) {
         test('should go the order n°' + i, () => client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i)));
         test('should change order state to "payment accepted"', () => client.changeOrderState(OrderPage, 'Payment accepted'));
+        /**
+         * should refresh the page, to pass the error
+         */
+        test('should refresh the page', () => client.refresh());
         test('should get all order information', () => {
           return promise
             .then(() => client.getTextInVar(OrderPage.order_date, "invoiceDate"))
@@ -142,8 +146,8 @@ scenario('Generate a PDF by date', () => {
     }, 'order');
   }, 'order');
   scenario('Change the date', client => {
-    test('should set the "From" date', () => client.waitAndSetValue(Invoices.from_input, '2020-08-04'));
-    test('should set the "To" date', () => client.waitAndSetValue(Invoices.from_input, '2020-08-10'));
+    test('should set the "From" date', () => client.setInputValue(Invoices.from_input, '2020-08-04'));
+    test('should set the "To" date', () => client.setInputValue(Invoices.from_input, '2020-08-10'));
     test('should click on "Generate PDF file by date"', () => client.waitForExistAndClick(Invoices.generate_pdf_button));
     test('should check that no invoice has been found', () => client.checkTextValue(Invoices.no_invoice_alert, 'No invoice has been found for this period.', 'contain'));
   }, 'order');
