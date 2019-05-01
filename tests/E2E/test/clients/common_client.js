@@ -482,8 +482,8 @@ class CommonClient {
    */
   setEditorText(selector, content) {
     return this.client
-      .pause(1000)
-      .click(selector)
+      .pause(2000)
+      .waitForExistAndClick(selector)
       .execute(function (content) {
         return (tinyMCE.activeEditor.setContent(content));
       }, content);
