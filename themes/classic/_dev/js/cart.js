@@ -274,6 +274,19 @@ $(document).ready(() => {
       return false;
     }
   )
+
+  $body.on(
+    'click',
+    '[data-button-action="add-to-cart"]',
+    function () {
+    /**
+     * disable add-to-cart button after first click
+     * this prevents multiple clicks from inpatient users freezing the modal 
+     * and accidentally adding more products then desired
+     */
+      $(this).prop('disabled', true);
+    }
+  );
 });
 
 const CheckUpdateQuantityOperations = {
