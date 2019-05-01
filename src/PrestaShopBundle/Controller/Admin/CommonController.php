@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -329,6 +330,8 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $gridDefinitionFactoryServiceId
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */

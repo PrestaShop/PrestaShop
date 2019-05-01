@@ -367,8 +367,6 @@ class ThemeController extends AbstractAdminController
     /**
      * Show Front Office theme's pages layout customization.
      *
-     * @DemoRestricted(redirectRoute="admin_themes_index")
-     *
      * @param Request $request
      *
      * @return Response
