@@ -21,7 +21,7 @@ module.exports = {
     edit_button: '//*[@id="employee_grid_table"]//a[contains(@class, "edit")]',
     language_select: '//*[@id="id_lang"]',
     selected_language_option: '//*[@id="id_lang"]/option[@selected="selected"]',
-    employee_column_information: '//*[@id="table-employee"]//tr[1]/td[%COL]',
+    employee_column_information: '//*[@id="employee_grid_table"]//tr[1]/td[%COL]',
     success_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")] | //div[contains(@class,"alert-success")]//*[contains(@class,"alert-text")]//p',
   }
 };
