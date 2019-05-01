@@ -203,7 +203,7 @@ abstract class ApiController
     {
         return $this->container->get('security.authorization_checker')->isGranted(
             $accessLevel,
-            $controller.'_'
+            $controller . '_'
         );
     }
 }
