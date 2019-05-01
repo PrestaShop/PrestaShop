@@ -292,3 +292,4 @@ nb-configuration.xml
 ### Release creation ###
 tools/build/releases/*
 !tools/build/releases/.gitkeep
+themes/classic/_dev/package.json
