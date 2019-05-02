@@ -887,3 +887,11 @@ services:
           - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
+
+    form.type.login:
+        class: 'PrestaShopBundle\Form\Admin\Login\LoginType'
+        public: true
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
