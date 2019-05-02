@@ -34,7 +34,6 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -62,8 +61,7 @@ class ManufacturerType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         $isMultistoreEnabled
-    )
-    {
+    ) {
         parent::__construct($translator, $locales);
 
         $this->isMultistoreEnabled = $isMultistoreEnabled;
