@@ -46,7 +46,7 @@
 </head>
 <body>
 {% block content %}
-  <div class="d-flex flex-column align-items-center justify-content-center">
+  <div class="d-flex flex-column align-items-center justify-content-center flip-card">
     <div class="title-row">
       <div class="text-center">
         <img src="{{ imgDir }}prestashop@2x.png" alt="PrestaShop">
@@ -56,19 +56,24 @@
       </div>
     </div>
 
-    <div class="card login-card">
+    <div class="shop-image-container text-center mb-3">
+      <img
+        class="js-preston-img"
+        src="{{ imgDir }}preston-login@2x.png"
+        data-hover-src="{{ imgDir }}preston-login-wink@2x.png"
+        alt="{{ shopName }}"
+      >
+    </div>
+
+    <div class="card login-card flip-card-inner">
       <div class="card-block">
-        <div class="shop-image-container text-center mb-3">
-          <img
-            class="js-preston-img"
-            src="{{ imgDir }}preston-login@2x.png"
-            data-hover-src="{{ imgDir }}preston-login-wink@2x.png"
-            alt="{{ shopName }}"
-          >
-        </div>
-        <p class="text-center">{{ shopName }}</p>
-        <div class="card-text p-4 mx-auto">
-          {% include '@PrestaShop/Admin/Login/Blocks/login_form.html.twig' %}
+        <div class="card-text pb-3 mx-auto flip-card-back">
+          <div class="js-login-form-container">
+            {% include '@PrestaShop/Admin/Login/Blocks/login_form.html.twig' %}
+          </div>
+          <div class="js-forgot-form-container d-none">
+            {% include '@PrestaShop/Admin/Login/Blocks/forgot_password_form.html.twig' %}
+          </div>
         </div>
       </div>
     </div>
