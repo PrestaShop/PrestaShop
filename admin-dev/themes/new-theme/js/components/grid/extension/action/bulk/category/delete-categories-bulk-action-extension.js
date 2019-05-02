@@ -51,16 +51,11 @@ export default class DeleteCategoriesBulkActionExtension {
       $deleteCategoriesModal.modal('show');
 
       $deleteCategoriesModal.on('click', '.js-submit-delete-categories', () => {
-        const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox');
+        const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox:checked');
         const $categoriesToDeleteInputBlock = $('#delete_categories_categories_to_delete');
 
         $checkboxes.each((i, element) => {
           const $checkbox = $(element);
-
-          // don't submit categoreis (bulk checkboxes) that were not checked
-          if (!$checkbox.is(':checked')) {
-            return;
-          }
 
           const categoryInput = $categoriesToDeleteInputBlock
             .data('prototype')
