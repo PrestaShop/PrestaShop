@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use DateTime;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
 
 /**
@@ -46,6 +47,7 @@ class LoginController extends FrameworkBundleAdminController
             'languageIso' => $languageDataProvider->getLanguageIsoById(
                 $this->configuration->get('PS_LANG_DEFAULT')
             ),
+            'currentYear' => (new DateTime())->format('Y'),
         ]);
     }
 }
