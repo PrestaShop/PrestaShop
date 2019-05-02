@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use DateTime;
+use PrestaShopBundle\Form\Admin\Login\ForgotPasswordType;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
 
 /**
@@ -38,9 +39,11 @@ class LoginController extends FrameworkBundleAdminController
     {
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
         $loginForm = $this->createForm(LoginType::class);
+        $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
 
         return $this->render('@PrestaShop/Admin/Login/index.html.twig', [
             'loginForm' => $loginForm->createView(),
+            'forgotPasswordForm' => $forgotPasswordForm->createView(),
             'shopName' => $this->configuration->get('PS_SHOP_NAME'),
             'prestashopVersion' => $this->configuration->get('_PS_VERSION_'),
             'imgDir' => $this->configuration->get('_PS_IMG_'),

@@ -38,7 +38,22 @@ export default class LoginPage {
   }
 
   _initEvents() {
-    $(document).on('mouseover mouseout', loginPageMap.loginButton, this._prestonWink);
+    $(document).on('mouseover mouseout', loginPageMap.prestonWinkControl, this._prestonWink);
+
+    $(document).on('click', loginPageMap.forgotPasswordButton, (event) => {
+      event.preventDefault();
+
+      $(loginPageMap.flipCard).addClass('flipped');
+      $(loginPageMap.loginFormContainer).addClass('d-none');
+      $(loginPageMap.forgotFormContainer).removeClass('d-none');
+    });
+
+    $(document).on('click', loginPageMap.cancelButton, (event) => {
+      event.preventDefault();
+      $(loginPageMap.flipCard).removeClass('flipped');
+      $(loginPageMap.forgotFormContainer).addClass('d-none');
+      $(loginPageMap.loginFormContainer).removeClass('d-none');
+    });
   }
 
   /**

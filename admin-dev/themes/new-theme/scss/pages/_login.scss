@@ -1,22 +1,56 @@
-.login-card {
-  width: 500px;
-
-  .shop-image-container {
-    margin-top: -93px;
-
-    > img {
-      width: 69.5px;
-      height: 118.5px;
-    }
+.shop-image-container {
+  > img {
+    width: 69.5px;
+    height: 118.5px;
   }
+
+  z-index: 2;
+}
+
+.login-card {
+  z-index: 1;
+  padding-top: 37px;
+  margin-top: -50px;
+  width: 500px;
+  min-height: 250px;
 
   @include media-breakpoint-down(xs) {
     width: 90%;
   }
 }
 
+.flip-card {
+  perspective: 1000px;
+  position: relative;
+
+  .flip-card-inner {
+    .flip-card-back {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    &.flipped {
+      transform: rotateY(180deg);
+
+      .flip-card-back {
+        transform: rotateY(180deg);
+        position: absolute;
+        left: 0;
+        backface-visibility: hidden;
+        width: 100%;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+    }
+
+    position: relative;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+}
+
 .title-row {
-  margin-bottom: 120px;
+  margin-bottom: 30px;
   margin-top: 45px;
 
   img {

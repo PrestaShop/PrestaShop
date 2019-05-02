@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,26 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShopBundle\Form\Admin\Login;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\FormBuilderInterface;
+
 /**
- * This map defines all selectors that are available in the login page.
+ * Builds "Forgot password" form.
  */
-export default {
-  prestonImage: '.js-preston-img',
-
-  // These selectors will make preston image "wink" when hovered
-  prestonWinkControl: '.js-hover-preston-wink',
-
-  // Container that wraps login form
-  loginFormContainer: '.js-login-form-container',
-
-  // Container that wraps "forgot password" form
-  forgotFormContainer: '.js-forgot-form-container',
-
-  // Cancel button in "forgot password" form
-  cancelButton: '.js-cancel-button',
-
-  forgotPasswordButton: '.js-forgot-password',
-
-  // Card that flips when clicking on forgot password button
-  flipCard: '.flip-card-inner',
+class ForgotPasswordType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('email', EmailType::class, [
+            'attr' => [
+                'placeholder' => 'test@email.com',
+            ],
+        ]);
+    }
 }
