@@ -36,6 +36,8 @@ import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-act
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
 import ChoiceTree from '../../components/form/choice-tree';
+import TranslatableField from "../../components/translatable-field";
+import TinyMCEEditor from "../../components/tinymce-editor";
 
 const $ = window.$;
 
@@ -53,6 +55,8 @@ $(() => {
   });
 
   new TranslatableInput();
+  new TranslatableField();
+  new TinyMCEEditor();
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
