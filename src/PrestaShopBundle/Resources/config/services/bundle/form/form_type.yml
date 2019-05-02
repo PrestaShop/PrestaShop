@@ -866,3 +866,11 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.login:
+        class: 'PrestaShopBundle\Form\Admin\Login\LoginType'
+        public: true
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
