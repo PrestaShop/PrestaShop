@@ -292,12 +292,4 @@ class Calculator
     {
         return $this->cartRuleCalculator->getCartRulesData();
     }
-
-    /**
-     * @return int
-     */
-    public function getCarrierId()
-    {
-        return $this->id_carrier;
-    }
 }
