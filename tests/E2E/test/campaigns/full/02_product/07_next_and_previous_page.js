@@ -7,18 +7,13 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const commonProductScenarios = require('../../common_scenarios/product');
 const {TrafficAndSeo} = require('../../../selectors/BO/shopParameters/shop_parameters');
-const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
-let promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 scenario('Go to next & previous page', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
-    test('should check and click on "Stop the OnBoarding" button', () => {
-      return promise
-        .then(() => client.isVisible(OnBoarding.stop_button))
-        .then(() => client.stopOnBoarding(OnBoarding.stop_button));
-    });
-  }, 'onboarding');
+  }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
 
   scenario('Check product pagination in the Front Office', client => {
     commonProductScenarios.checkProductPaginationFO(client, productPage, 'enable', 1);
