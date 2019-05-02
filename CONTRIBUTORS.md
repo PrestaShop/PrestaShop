@@ -7,6 +7,7 @@ GitHub contributors:
 - Adrien
 - Adrien Astier
 - Agence CINS
+- Alban L
 - AlberT
 - Aleksander Palyan
 - Alessandro Corbelli
@@ -156,6 +157,7 @@ GitHub contributors:
 - Gaelle ITZKOVITZ
 - Gamesh
 - Geoffray
+- Geoffray Warnants
 - gfilippakis
 - ggedamed
 - Giant Leap Lab
@@ -167,6 +169,7 @@ GitHub contributors:
 - gRoussac
 - Gregoire Belorgey
 - gskema
+- Guillaume
 - Guillaume DELOINCE
 - Guillaume Germain
 - Guillaume Lafarge
@@ -203,6 +206,7 @@ GitHub contributors:
 - jeromenadaud
 - jessylenne
 - Jérôme Nadaud
+- jGissinger
 - Joan
 - Joan Juvanteny
 - joce
@@ -264,6 +268,7 @@ GitHub contributors:
 - Marcos
 - Marius
 - Mark Sullivan
+- Mathieu Ferment
 - matiasiglesias
 - matrix
 - Mats Rynge
@@ -333,8 +338,8 @@ GitHub contributors:
 - Petyuska
 - PhpMadman
 - Pierre
-- Pierre RAMBAUD
 - Pierre Joube
+- Pierre RAMBAUD
 - Pierre-Olivier Vares
 - Piotr Kaczor
 - Piotr Moćko

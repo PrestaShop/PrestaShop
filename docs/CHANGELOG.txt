@@ -25,6 +25,15 @@ Release Notes for PrestaShop 1.6
 --------------------------------
 
 ####################################
+#   v1.6.1.24 - (2019-05-02)
+####################################
+
+    Fixed bugs:
+
+    CO: Forbid URLs to be inserted into Name fields
+    CO: Fixed keywords disappear from search index
+
+####################################
 #   v1.6.1.23 - (2018-11-06)
 ####################################
 
