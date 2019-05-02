@@ -121,7 +121,7 @@ class CartRuleCalculator
             $cartRowCheapest = null;
             foreach ($this->cartRows as $cartRow) {
                 $product = $cartRow->getRowData();
-                    if ((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                if ((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                     || !$cartRule->reduction_exclude_special)) {
                     if ($cartRowCheapest === null
                         || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()
