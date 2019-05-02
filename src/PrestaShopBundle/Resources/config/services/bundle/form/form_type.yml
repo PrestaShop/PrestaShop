@@ -905,6 +905,14 @@ services:
             - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         tags:
+          - { name: form.type }
+
+    form.type.login:
+        class: 'PrestaShopBundle\Form\Admin\Login\LoginType'
+        public: true
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
             - { name: form.type }
 
     form.type.order.add_order_cart_rule:
