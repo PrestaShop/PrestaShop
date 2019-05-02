@@ -71,7 +71,7 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
     {
         $address = new Address($addressId->getValue());
 
-        if ($address->id_customer !== $cart->id_customer) {
+        if ((int) $address->id_customer !== $cart->id_customer) {
             throw new CartException(
                 sprintf(
                     'Address with id "%s" does not belong to cart customer, thus it cannot be used.',

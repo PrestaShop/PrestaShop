@@ -24,39 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Cart;
+namespace Tests\Integration\Behaviour\Features\Context;
 
-use Cart;
 use Context;
-use PrestaShop\PrestaShop\Adapter\Validate;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use Employee;
 
-/**
- * Provides reusable methods for cart handlers
- *
- * @internal
- */
-abstract class AbstractCartHandler
+class EmployeeFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @param CartId $cartId
-     *
-     * @return Cart
-     *
-     * @throws CartNotFoundException
+     * @Given I am logged in as :employeeEmail employee
      */
-    protected function getCartObject(CartId $cartId)
+    public function iAmLoggedInAs($employeeEmail)
     {
-        // Legacy behavior is working with context cart instead of retrieving cart from db
-        $cart = Context::getContext()->cart;
+        $employeeId = Employee::employeeExists($employeeEmail);
 
-        if (!Validate::isLoadedObject($cart) || $cartId->getValue() !== (int) $cart->id) {
-            throw new CartNotFoundException(
-                sprintf('Cart with id "%s" was not found', $cartId->getValue())
-            );
-        }
-
-        return $cart;
+        Context::getContext()->employee = new Employee($employeeId);
     }
 }

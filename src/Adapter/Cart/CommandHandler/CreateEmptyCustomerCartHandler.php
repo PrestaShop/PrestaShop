@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Cart;
 use Configuration;
+use Context;
+use Currency;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCustomerCartHandlerInterface;
@@ -63,6 +65,11 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
 
         $cart->setNoMultishipping();
         $cart->save();
+
+        Context::getContext()->cart = $cart;
+
+        $currency = new Currency((int) $cart->id_currency);
+        Context::getContext()->currency = $currency;
 
         return new CartId((int) $cart->id);
     }
