@@ -2067,7 +2067,7 @@ class CartCore extends ObjectModel
         $discountSubtotal = $this->excludeGiftsDiscountFromTotal()
             ->getOrderTotal($withTaxes, self::ONLY_DISCOUNTS);
         $this->includeGiftsDiscountInTotal();
-        
+
         return $discountSubtotal;
     }
 
