@@ -7,12 +7,16 @@ const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const commonProduct = require('../../common_scenarios/product');
 const promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 scenario('Check the sort of products in the Back Office', client => {
-  test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+  scenario('Login in the Back Office', client => {
+    test('should open the browser', () => client.open());
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Close symfony toolbar then change items per page number', client => {
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should close symfony toolbar', () => {
       return promise
         .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
