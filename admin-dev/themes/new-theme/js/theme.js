@@ -41,7 +41,7 @@ import 'OverlayScrollbars';
 // Plugins CSS
 import 'dropzone/dist/min/dropzone.min.css';
 import 'magnific-popup/dist/magnific-popup.css';
-import "overlayscrollbars/css/OverlayScrollbars.css";
+import "overlayscrollbars/css/OverlayScrollbars.min.css";
 
 // Theme SCSS
 import '../scss/theme.scss';
