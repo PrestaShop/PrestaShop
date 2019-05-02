@@ -25,7 +25,20 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
-#   v1.7.5.1 - (2010-02-18)
+#   v1.7.5.2 - (2019-05-02)
+####################################
+- Core:
+  - Bug fix:
+    - #13599: Forbid URLs to be added in customer names (by @PierreRambaud)
+    - #13580: Fixed dispatched hook on the Grid presenter (by @mickaelandrieu)
+    - #13567: Improve name validation (by @eternoendless)
+    - #13549: Forbid URLs to be inserted into Name fields (by @matks)
+- Tests:
+  - Refactoring:
+    - #13583: Fix selector in E2E tests for addons catalog page and another one in the autoupgrade test (by @nesrineabdmouleh)
+
+####################################
+#   v1.7.5.1 - (2019-02-18)
 ####################################
 - Back Office:
   - Bug fix:
