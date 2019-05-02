@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Login;
 
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -37,6 +38,8 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class LoginType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -48,7 +51,11 @@ class LoginType extends AbstractType
                     'placeholder' => 'test@email.com',
                 ]
             ])
-            ->add('password', PasswordType::class)
+            ->add('password', PasswordType::class, [
+                'attr' => [
+                    'placeholder' => $this->trans('Password', [], 'Admin.Global'),
+                ]
+            ])
             ->add('stay_logged_in', CheckboxType::class)
         ;
     }
