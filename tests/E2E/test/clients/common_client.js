@@ -864,6 +864,23 @@ class CommonClient {
           }
         }, selector, value, isXpath);
   }
+
+  /**
+   * get href from selector and go to URL
+   * @param selector
+   * @param pause
+   * @return {*}
+   */
+  goToUrl(selector, pause = 0){
+    return this.client
+        .pause(pause)
+        .waitForExist(selector)
+        .execute(function (selector) {
+          let href = document.querySelector(selector).href;
+          console.log(href);
+          window.location.href = href ;
+        }, selector);
+  }
 }
 
 module.exports = CommonClient;
