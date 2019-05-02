@@ -35,6 +35,25 @@ class TinyMCEEditor {
   constructor(options) {
     options = options || {};
     this.tinyMCELoaded = false;
+    if (typeof options.baseAdminUrl == 'undefined') {
+      if (typeof window.baseAdminDir != 'undefined') {
+        options.baseAdminUrl = window.baseAdminDir;
+      } else {
+        const pathParts = window.location.pathname.split('/');
+        pathParts.every(function(pathPart) {
+          if (pathPart !== '') {
+            options.baseAdminUrl = `/${pathPart}/`;
+
+            return false;
+          }
+
+          return true;
+        });
+      }
+    }
+    if (typeof options.langIsRtl == 'undefined') {
+      options.langIsRtl = typeof window.lang_is_rtl != 'undefined' ? window.lang_is_rtl === '1' : false;
+    }
     this.setupTinyMCE(options);
   }
 
@@ -63,13 +82,13 @@ class TinyMCEEditor {
       browser_spellcheck: true,
       toolbar1: "code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect",
       toolbar2: "",
-      external_filemanager_path: baseAdminDir + "filemanager/",
+      external_filemanager_path: config.baseAdminUrl + "filemanager/",
       filemanager_title: "File manager",
       external_plugins: {
-        "filemanager": baseAdminDir + "filemanager/plugin.min.js"
+        "filemanager": config.baseAdminUrl + "filemanager/plugin.min.js"
       },
       language: iso_user,
-      content_style : (lang_is_rtl === '1' ? "body {direction:rtl;}" : ""),
+      content_style : (config.langIsRtl ? "body {direction:rtl;}" : ""),
       skin: "prestashop",
       menubar: false,
       statusbar: false,
@@ -154,7 +173,7 @@ class TinyMCEEditor {
     }
 
     this.tinyMCELoaded = true;
-    var path_array = baseAdminDir.split('/');
+    var path_array = config.baseAdminUrl.split('/');
     path_array.splice((path_array.length - 2), 2);
     var final_path = path_array.join('/');
     window.tinyMCEPreInit = {};
