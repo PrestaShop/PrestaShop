@@ -344,7 +344,8 @@
   }
 }
 
-#left-column {
+#left-column,
+#right-column {
   .block_newsletter,
   #block-newsletter-label,
   .block-newsletter-form {
@@ -353,6 +354,8 @@
   .block_newsletter {
     margin-bottom: 1.563rem;
     background: $btn-primary-color;
+    float: none;
+    @include box-shadow;
   }
 
   .block-newsletter-inputs {
@@ -362,7 +365,7 @@
       order: -1;
       margin-bottom: .5rem;
       input {
-        border: 1px solid $gray-light-third;
+        border: 1px solid #eee;
       }
     }
   }
@@ -478,10 +481,7 @@
     }
   }
   #category {
-    #left-column { 
-      .block_newsletter {
-        @include box-shadow;
-      }
+    #left-column {
       #search_filters_wrapper {
         margin-left: -15px;
         margin-right: -15px;
