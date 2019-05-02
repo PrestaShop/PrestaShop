@@ -19,6 +19,8 @@ module.exports = {
     edit_carrier_button: '//*[@id="table-carrier"]//tr[@id="tr_2_1_0"]//td//a[contains(@class,"edit")]',
     install_chronopost_button: '//div[contains(@class,"modules_list_container_tab")]//td//a[contains(@href,"install=chronopost")]',
     over_to_you_modal: '#onboarding-welcome',
+    onboarding_navbar: '.onboarding-navbar.displayed',
+    onboarding_navbar_stop_button: 'a.onboarding-button-stop',
     welcomeSteps: {
       continue_button: '//*[@id="main-div"]//button[contains(@class,"onboarding-button-next")]',
       next_button: '//div[contains(@class, "onboarding-tooltip")]//button[contains(@class, "onboarding-button-next")]',
