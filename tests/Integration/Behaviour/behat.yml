@@ -40,3 +40,5 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext

@@ -53,9 +53,9 @@ class UpdateCartAddressesCommand
      */
     public function __construct($cartId, $newDeliveryAddressId, $newInvoiceAddressId)
     {
-        $this->cartId = $cartId;
-        $this->newDeliveryAddressId = $newDeliveryAddressId;
-        $this->newInvoiceAddressId = $newInvoiceAddressId;
+        $this->cartId = new CartId($cartId);
+        $this->newDeliveryAddressId = new AddressId($newDeliveryAddressId);
+        $this->newInvoiceAddressId = new AddressId($newInvoiceAddressId);
     }
 
     /**

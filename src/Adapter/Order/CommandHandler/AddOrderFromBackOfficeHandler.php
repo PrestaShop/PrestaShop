@@ -34,6 +34,7 @@ use Context;
 use Currency;
 use Customer;
 use Employee;
+use Exception;
 use Module;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
@@ -69,17 +70,21 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             $employee->lastname
         );
 
-        $paymentModule->validateOrder(
-            (int) $cart->id,
-            $command->getOrderStateId(),
-            $cart->getOrderTotal(),
-            $paymentModule->displayName,
-            $message,
-            [],
-            null,
-            false,
-            $cart->secure_key
-        );
+        try {
+            $paymentModule->validateOrder(
+                (int) $cart->id,
+                $command->getOrderStateId(),
+                $cart->getOrderTotal(),
+                $paymentModule->displayName,
+                $message,
+                [],
+                null,
+                false,
+                $cart->secure_key
+            );
+        } catch (Exception $e) {
+            throw new OrderException('Failed to add order.', 0, $e);
+        }
 
         if (!$paymentModule->currentOrder) {
             throw new OrderException('Failed to add order.');
