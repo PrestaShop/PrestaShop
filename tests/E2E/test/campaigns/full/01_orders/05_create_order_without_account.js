@@ -307,8 +307,8 @@ scenario('Create order by a guest from the Front Office', client => {
   scenario('Check the movement of the "' + productData[0].name + date_time + '"', client => {
     test('should go to "Employee" page', () => {
       return promise
-        .then(() => client.goToUrl(Menu.Configure.AdvancedParameters.team_submenu + ' a'))
-        .then(() => client.waitForVisible(Employee.employee_column_information.replace('%COL', 4)));
+        .then(() => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu))
+        .then(() => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
     });
     test('should get  the Employee "Name" and "Last Name"', async () => {
       await client.getTextInVar(Employee.employee_column_information.replace('%COL', 4), 'employee_last_name');
