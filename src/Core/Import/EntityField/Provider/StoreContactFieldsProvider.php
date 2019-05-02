@@ -68,7 +68,7 @@ final class StoreContactFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('phone', $this->trans('Phone', 'Admin.Global')),
             new EntityField('fax', $this->trans('Fax', 'Admin.Global')),
             new EntityField('email', $this->trans('Email address', 'Admin.Global')),
-            new EntityField('note', $this->trans('Note', 'Admin.Advparameters.Feature')),
+            new EntityField('note', $this->trans('Note', 'Admin.Global')),
             new EntityField('hours', $this->trans('Hours (x,y,z...)', 'Admin.Advparameters.Feature')),
             new EntityField('image', $this->trans('Image URL', 'Admin.Advparameters.Feature')),
             new EntityField(

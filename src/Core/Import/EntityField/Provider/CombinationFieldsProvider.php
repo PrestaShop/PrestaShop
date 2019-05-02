@@ -55,7 +55,7 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
     {
         $fields = [
             new EntityField('id_product', $this->trans('Product ID', 'Admin.Advparameters.Feature')),
-            new EntityField('product_reference', $this->trans('Product Reference', 'Admin.Advparameters.Feature')),
+            new EntityField('product_reference', $this->trans('Product reference', 'Admin.Advparameters.Feature')),
             new EntityField('group', $this->trans('Attribute (Name:Type:Position)', 'Admin.Advparameters.Feature'), '', true),
             new EntityField('attribute', $this->trans('Value (Value:Position)', 'Admin.Advparameters.Feature'), '', true),
             new EntityField('supplier_reference', $this->trans('Supplier reference', 'Admin.Advparameters.Feature')),
