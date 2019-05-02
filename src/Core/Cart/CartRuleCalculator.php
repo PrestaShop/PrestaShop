@@ -120,18 +120,22 @@ class CartRuleCalculator
             /** @var CartRow|null $cartRowCheapest */
             $cartRowCheapest = null;
             foreach ($this->cartRows as $cartRow) {
-                if ($cartRowCheapest === null
-                    || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()
-                                                                                           ->getTaxIncluded()
-                ) {
-                    $cartRowCheapest = $cartRow;
+                $product = $cartRow->getRowData();
+                    if ((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                    || !$cartRule->reduction_exclude_special)) {
+                    if ($cartRowCheapest === null
+                        || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()
+                            ->getTaxIncluded()
+                    ) {
+                        $cartRowCheapest = $cartRow;
+                    }
                 }
             }
             if ($cartRowCheapest !== null) {
                 // apply only on one product of the cheapest row
                 $discountTaxIncluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
                                        * $cartRule->reduction_percent / 100;
-                $discountTaxExcluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
+                $discountTaxExcluded = $cartRowCheapest->getInitialUnitPrice()->getTaxExcluded()
                                        * $cartRule->reduction_percent / 100;
                 $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
                 $cartRowCheapest->applyFlatDiscount($amount);
