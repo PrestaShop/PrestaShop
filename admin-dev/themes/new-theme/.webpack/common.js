@@ -90,6 +90,7 @@ module.exports = {
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
+    login_page: './js/pages/login/index',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
