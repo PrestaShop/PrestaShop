@@ -9,6 +9,10 @@
       height: 118.5px;
     }
   }
+
+  @include media-breakpoint-down(xs) {
+    width: 90%;
+  }
 }
 
 .title-row {
