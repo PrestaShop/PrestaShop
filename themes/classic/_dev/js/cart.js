@@ -195,11 +195,9 @@ $(document).ready(() => {
     }
   }, 100);
 
-  $('.promo-code-button').each(() => {
     if (isPresent === 2) {
       labelCodeDisplayed();
     }
-  });
 
   $body.on(
     'click',
