@@ -24,3 +24,13 @@
     height: 24px;
   }
 }
+
+.social-link {
+  &:hover {
+    text-decoration: none;
+  }
+
+  > img {
+    width: 24px;
+  }
+}
