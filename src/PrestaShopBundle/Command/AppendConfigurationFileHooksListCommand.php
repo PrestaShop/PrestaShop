@@ -57,7 +57,13 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+        $container = $this->getContainer();
+
+        require $container->get('kernel')->getRootDir() . '/../config/config.inc.php';
+
+        if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
+            return;
+        }
 
         $hookNames = $this->getHookNames();
 
