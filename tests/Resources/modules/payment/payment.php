@@ -36,5 +36,7 @@ class Payment extends PaymentModule
         parent::__construct();
 
         $this->displayName = 'Payment';
+
+        $this->active = true;
     }
 }
