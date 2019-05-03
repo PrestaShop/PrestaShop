@@ -279,11 +279,10 @@ $(document).ready(() => {
     'click',
     '[data-button-action="add-to-cart"]',
     function () {
-    /**
-     * disable add-to-cart button after first click
-     * this prevents multiple clicks from inpatient users freezing the modal 
-     * and accidentally adding more products then desired
-     */
+      /**
+       * disable add-to-cart button after first click
+       * this prevents multiple clicks from freezing the modal 
+       */
       $(this).prop('disabled', true);
     }
   );
