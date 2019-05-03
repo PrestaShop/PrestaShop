@@ -546,7 +546,9 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
+            if (isset($cartVoucher['free_shipping']) && $cartVoucher['free_shipping']) {
+                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cart->getTotalShippingCost(null, $this->includeTaxes()));
+            } elseif (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
                 $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
