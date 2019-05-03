@@ -52,7 +52,10 @@ export default class LoginPage {
       event.preventDefault();
       $(loginPageMap.flipCard).removeClass('flipped');
       $(loginPageMap.forgotFormContainer).addClass('d-none');
-      $(loginPageMap.loginFormContainer).removeClass('d-none');
+
+      setTimeout(() => {
+        $(loginPageMap.loginFormContainer).removeClass('d-none');
+      }, 200);
     });
   }
 
