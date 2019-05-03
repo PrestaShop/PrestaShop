@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import LocalizationException from './exception/localization';
-import NumberSymbol from './number-symbol';
+import NumberSpecification from './number-specification';
 
 /**
  * Currency display option: symbol notation.
@@ -31,7 +31,7 @@ import NumberSymbol from './number-symbol';
 const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
 
-class PriceSpecification {
+class PriceSpecification extends NumberSpecification {
   /**
    * Price specification constructor.
    *
@@ -60,22 +60,26 @@ class PriceSpecification {
     currencySymbol,
     currencyCode,
   ) {
+    super(
+      positivePattern,
+      negativePattern,
+      symbol,
+      maxFractionDigits,
+      minFractionDigits,
+      groupingUsed,
+      primaryGroupSize,
+      secondaryGroupSize,
+    );
     this.currencySymbol = currencySymbol;
     this.currencyCode = currencyCode;
 
-    this.positivePattern = positivePattern;
-    this.negativePattern = negativePattern;
-    this.symbol = symbol;
+    if (!this.currencySymbol || typeof this.currencySymbol !== 'string') {
+      throw new LocalizationException('Invalid currencySymbol');
+    }
 
-    this.maxFractionDigits = maxFractionDigits;
-    // eslint-disable-next-line
-    this.minFractionDigits = maxFractionDigits < minFractionDigits ? maxFractionDigits : minFractionDigits;
-
-    this.groupingUsed = groupingUsed;
-    this.primaryGroupSize = primaryGroupSize;
-    this.secondaryGroupSize = secondaryGroupSize;
-
-    this.validateData();
+    if (!this.currencyCode || typeof this.currencyCode !== 'string') {
+      throw new LocalizationException('Invalid currencyCode');
+    }
   }
 
   /**
@@ -105,130 +109,6 @@ class PriceSpecification {
    */
   getCurrencyCode() {
     return this.currencyCode;
-  }
-
-  /**
-   * Data (attributes) validation.
-   *
-   * @throws LocalizationException
-   */
-  validateData() {
-    if (!this.positivePattern || typeof this.positivePattern !== 'string') {
-      throw new LocalizationException('Invalid positivePattern');
-    }
-
-    if (!this.negativePattern || typeof this.negativePattern !== 'string') {
-      throw new LocalizationException('Invalid negativePattern');
-    }
-
-    if (!this.symbol || !(this.symbol instanceof NumberSymbol)) {
-      throw new LocalizationException('Invalid symbol');
-    }
-
-    if (typeof this.maxFractionDigits !== 'number') {
-      throw new LocalizationException('Invalid maxFractionDigits');
-    }
-
-    if (typeof this.minFractionDigits !== 'number') {
-      throw new LocalizationException('Invalid minFractionDigits');
-    }
-
-    if (typeof this.groupingUsed !== 'boolean') {
-      throw new LocalizationException('Invalid groupingUsed');
-    }
-
-    if (typeof this.primaryGroupSize !== 'number') {
-      throw new LocalizationException('Invalid primaryGroupSize');
-    }
-
-    if (typeof this.secondaryGroupSize !== 'number') {
-      throw new LocalizationException('Invalid secondaryGroupSize');
-    }
-
-    if (!this.currencySymbol || typeof this.currencySymbol !== 'string') {
-      throw new LocalizationException('Invalid currencySymbol');
-    }
-
-    if (!this.currencyCode || typeof this.currencyCode !== 'string') {
-      throw new LocalizationException('Invalid currencyCode');
-    }
-  }
-
-  /**
-   * Get symbol.
-   *
-   * @return NumberSymbol
-   */
-  getSymbol() {
-    return this.symbol;
-  }
-
-  /**
-   * Get the formatting rules for this number (when positive).
-   *
-   * This pattern uses the Unicode CLDR number pattern syntax
-   *
-   * @return string
-   */
-  getPositivePattern() {
-    return this.positivePattern;
-  }
-
-  /**
-   * Get the formatting rules for this number (when negative).
-   *
-   * This pattern uses the Unicode CLDR number pattern syntax
-   *
-   * @return string
-   */
-  getNegativePattern() {
-    return this.negativePattern;
-  }
-
-  /**
-   * Get the maximum number of digits after decimal separator (rounding if needed).
-   *
-   * @return int
-   */
-  getMaxFractionDigits() {
-    return this.maxFractionDigits;
-  }
-
-  /**
-   * Get the minimum number of digits after decimal separator (fill with "0" if needed).
-   *
-   * @return int
-   */
-  getMinFractionDigits() {
-    return this.minFractionDigits;
-  }
-
-  /**
-   * Get the "grouping" flag. This flag defines if digits
-   * grouping should be used when formatting this number.
-   *
-   * @return bool
-   */
-  isGroupingUsed() {
-    return this.groupingUsed;
-  }
-
-  /**
-   * Get the size of primary digits group in the number.
-   *
-   * @return int
-   */
-  getPrimaryGroupSize() {
-    return this.primaryGroupSize;
-  }
-
-  /**
-   * Get the size of secondary digits groups in the number.
-   *
-   * @return int
-   */
-  getSecondaryGroupSize() {
-    return this.secondaryGroupSize;
   }
 }
 

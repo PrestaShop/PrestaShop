@@ -55,6 +55,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: '[name].bundle.js',
+    libraryTarget: 'window',
+    library: '[name]',
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],

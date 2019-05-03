@@ -24,6 +24,7 @@
  */
 
 var currencyFormatter;
+var numberFormatter;
 
 var Tools = {
 
@@ -110,11 +111,7 @@ function formatedNumberToFloat(price, currencyFormat, currencySign)
  */
 function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
 {
-	var globalize = cldrForNumber();
-	return globalize.numberFormatter({
-			minimumFractionDigits: 2,
-			maximumFractionDigits: numberOfDecimal
-	})(value);
+	return getNumberFormatter(numberOfDecimal).format(value);
 }
 
 /**
@@ -126,15 +123,7 @@ function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
  * @param numberOfDecimal Size of fractionnal part in the number
  */
 function formatNumberCldr(value, callback, numberOfDecimal) {
-	if (typeof numberOfDecimal === 'undefined') numberOfDecimal = 2;
-
-	cldrForNumber(function(globalize) {
-		var result = globalize.numberFormatter({
-			minimumFractionDigits: 2,
-			maximumFractionDigits: numberOfDecimal
-		})(value);
-		callback(result);
-	});
+  callback(getNumberFormatter(numberOfDecimal).format(value));
 }
 
 /**
@@ -179,15 +168,36 @@ function formatCurrencyCldr(price, callback) {
 }
 
 /**
- * Simple function to generate global CurrencyFormatter
+ * Simple function to generate global NumberFormatter
+ * with a price specification
  * based one global currency_specifications
  */
 function getCurrencyFormatter() {
 	if (currencyFormatter === undefined) {
-		currencyFormatter = CurrencyFormatter.build(currency_specifications);
+		currencyFormatter = window.cldr.NumberFormatter.build(currency_specifications);
 	}
 
 	return currencyFormatter;
+}
+
+/**
+ * Simple function to generate global NumberFormatter
+ * based one global currency_specifications
+ * @param numberOfDecimal Size of fractionnal part in the number
+ */
+function getNumberFormatter(numberOfDecimal) {
+  if (numberFormatter === undefined) {
+    numberFormatter = window.cldr.NumberFormatter.build(number_specifications);
+  }
+
+  if (numberOfDecimal === undefined) {
+    numberOfDecimal = 2;
+  }
+
+  numberFormatter.numberSpecification.maxFractionDigits = numberOfDecimal;
+  numberFormatter.numberSpecification.minFractionDigits = numberOfDecimal;
+
+  return numberFormatter;
 }
 
 function ps_round_helper(value, mode)

@@ -175,4 +175,14 @@ class Locale implements LocaleInterface
 
         return $priceSpec;
     }
+
+    /**
+     * Get number specification
+     *
+     * @return NumberSpecification
+     */
+    public function getNumberSpecification()
+    {
+        return $this->numberSpecification;
+    }
 }

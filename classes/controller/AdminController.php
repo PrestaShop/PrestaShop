@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
 class AdminControllerCore extends Controller
 {
@@ -2727,7 +2728,8 @@ class AdminControllerCore extends Controller
         )));
         Media::addJsDef(
             array(
-                'currency_specifications' => $this->preparePriceSpecifications($this->context)
+                'currency_specifications' => $this->preparePriceSpecifications($this->context),
+                'number_specifications' => $this->prepareNumberSpecifications($this->context),
             )
         );
 
@@ -4795,8 +4797,6 @@ class AdminControllerCore extends Controller
         /** @var PriceSpecification **/
         $priceSpecification = $context->currentLocale->getPriceSpecification($currency->iso_code);
 
-        // The property `$precision` exists only from PS 1.7.6. On previous versions, all prices have 2 decimals
-        $precision = isset($currency->precision) ? $currency->precision : 2;
         return [
             'positivePattern' => $priceSpecification->getPositivePattern(),
             'negativePattern' => $priceSpecification->getNegativePattern(),
@@ -4820,6 +4820,41 @@ class AdminControllerCore extends Controller
             'secondaryGroupSize' => $priceSpecification->getSecondaryGroupSize(),
             'currencyCode' => $priceSpecification->getCurrencyCode(),
             'currencySymbol' => $priceSpecification->getCurrencySymbol(),
+        ];
+    }
+
+    /**
+     * Prepare number specifications to display cldr numbers in javascript context.
+     *
+     * @param Context $context
+     *
+     * @return array
+     */
+    private function prepareNumberSpecifications(Context $context)
+    {
+        /** @var NumberSpecification **/
+        $numberSpecification = $context->currentLocale->getNumberSpecification();
+        return [
+            'positivePattern' => $numberSpecification->getPositivePattern(),
+            'negativePattern' => $numberSpecification->getNegativePattern(),
+            'symbol' => [
+                '.',
+                ',',
+                ';',
+                '%',
+                '-',
+                '+',
+                'E',
+                '×',
+                '‰',
+                '∞',
+                'NaN',
+            ],
+            'maxFractionDigits' => $numberSpecification->getMaxFractionDigits(),
+            'minFractionDigits' => $numberSpecification->getMinFractionDigits(),
+            'groupingUsed' => $numberSpecification->isGroupingUsed(),
+            'primaryGroupSize' => $numberSpecification->getPrimaryGroupSize(),
+            'secondaryGroupSize' => $numberSpecification->getSecondaryGroupSize(),
         ];
     }
 }
