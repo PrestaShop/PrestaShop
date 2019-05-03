@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+var currencyFormatter;
+
 var Tools = {
 
   /**
@@ -173,8 +175,19 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
  * @param callback The function to call with the resulting formatted price as unique parameter
  */
 function formatCurrencyCldr(price, callback) {
-	var formatter = CurrencyFormatter.build(currency_specifications);
-	callback(formatter.format(price));
+	callback(getCurrencyFormatter().format(price));
+}
+
+/**
+ * Simple function to generate global CurrencyFormatter
+ * based one global currency_specifications
+ */
+function getCurrencyFormatter() {
+	if (currencyFormatter === undefined) {
+		currencyFormatter = CurrencyFormatter.build(currency_specifications);
+	}
+
+	return currencyFormatter;
 }
 
 function ps_round_helper(value, mode)
