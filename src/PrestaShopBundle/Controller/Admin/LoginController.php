@@ -29,12 +29,18 @@ namespace PrestaShopBundle\Controller\Admin;
 use DateTime;
 use PrestaShopBundle\Form\Admin\Login\ForgotPasswordType;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class LoginController responsible for employee login page.
  */
 class LoginController extends FrameworkBundleAdminController
 {
+    /**
+     * Render and handle login page.
+     *
+     * @return Response
+     */
     public function indexAction()
     {
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
