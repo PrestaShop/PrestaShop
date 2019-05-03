@@ -173,12 +173,8 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
  * @param callback The function to call with the resulting formatted price as unique parameter
  */
 function formatCurrencyCldr(price, callback) {
-	cldrForCurrencyFormatterWrapper(function(formatter) {
-		callback(formatter(price));
-	}, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2,
-  });
+	var formatter = CurrencyFormatter.build(currency_specifications);
+	callback(formatter.format(price));
 }
 
 function ps_round_helper(value, mode)
