@@ -37,6 +37,11 @@ export default class LoginPage {
     return {};
   }
 
+  /**
+   * Initialize page's events.
+   *
+   * @private
+   */
   _initEvents() {
     $(document).on('mouseover mouseout', loginPageMap.prestonWinkControl, this._prestonWink);
 
