@@ -263,16 +263,25 @@ class Calculator
 
     /**
      * calculate only cart rules (rows and fees have to be calculated first).
-     *
-     * @param bool $withFreeShipping used to calculate free shipping discount (avoid loop on shipping calculation)
      */
-    public function calculateCartRules($withFreeShipping = true)
+    public function calculateCartRules()
     {
         $this->cartRuleCalculator->setCartRules($this->cartRules)
             ->setCartRows($this->cartRows)
             ->setCalculator($this)
-            ->useFreeShipping($withFreeShipping)
             ->applyCartRules();
+    }
+
+    /**
+     * calculate only cart rules (rows and fees have to be calculated first), but don't process free-shipping discount
+     * (avoid loop on shipping calculation)
+     */
+    public function calculateCartRulesWithoutFreeShipping()
+    {
+        $this->cartRuleCalculator->setCartRules($this->cartRules)
+            ->setCartRows($this->cartRows)
+            ->setCalculator($this)
+            ->applyCartRulesWithoutFreeShipping();
     }
 
     /**
