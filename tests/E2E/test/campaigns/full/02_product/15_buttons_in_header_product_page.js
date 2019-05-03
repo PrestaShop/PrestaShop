@@ -11,6 +11,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const commonScenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = {
   name: 'PH',
@@ -33,7 +34,7 @@ scenario('Check that the buttons in header product page works successfully', () 
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonScenarios.createProduct(AddProductPage, productData);
 
   scenario('Check that "Type of product" select works successfully', client => {
@@ -74,6 +75,7 @@ scenario('Check that the buttons in header product page works successfully', () 
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the "Product name" is in french language', () => client.checkTextValue(productPage.product_name, ('produit' + date_time).toUpperCase()));
     test('should switch the front office language to English', () => client.changeLanguage());
+    commonScenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
     test('should check that the "Product name" is in English language', () => client.checkTextValue(productPage.product_name, productData.name + date_time));
     test('should go back to the Back Office', () => client.switchWindow(0));
     test('should select the "English" language from the list', () => client.waitAndSelectByValue(AddProductPage.product_language, 'en'));

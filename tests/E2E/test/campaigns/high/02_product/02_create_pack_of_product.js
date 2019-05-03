@@ -6,14 +6,17 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 let data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
-scenario('Create a pack of products in the Back Office', client => {
-  test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
-  test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
-
+scenario('Create a pack of products in the Back Office', () => {
+  scenario('Login in the Back Office', client => {
+    test('should open browser', () => client.open());
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  }, 'product/product');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Edit the Basic settings', client => {
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+    test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
     test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.pack.name + date_time));
     test('should set the "Summary" text', () => client.setEditorText(AddProductPage.summary_textarea, data.common.summary));
     test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));

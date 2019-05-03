@@ -239,7 +239,7 @@ class Product extends CommonClient {
 
   checkProductCategory(i) {
     return this.client
-      .scrollWaitForExistAndClick(AddProductPage.catalog_product_name.replace("%ID", global.positionTable[i - 1], 50000))
+      .scrollWaitForExistAndClick(AddProductPage.catalog_product_name.replace("%ID", global.positionTable[i - 1], 50, 50000))
       .waitForVisible(AddProductPage.product_name_input)
   }
 

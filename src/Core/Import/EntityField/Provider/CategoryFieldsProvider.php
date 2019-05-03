@@ -55,12 +55,12 @@ final class CategoryFieldsProvider implements EntityFieldsProviderInterface
     {
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
-            new EntityField('active', $this->trans('Active (0/1)')),
+            new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
             new EntityField('name', $this->trans('Name', 'Admin.Global')),
             new EntityField('parent', $this->trans('Parent category', 'Admin.Catalog.Feature')),
             new EntityField(
                 'is_root_category',
-                $this->trans('Root category (0/1)'),
+                $this->trans('Root category (0/1)', 'Admin.Advparameters.Feature'),
                 $this->trans('A category root is where a category tree can begin. This is used with multistore.', 'Admin.Advparameters.Help')
             ),
             new EntityField('description', $this->trans('Description', 'Admin.Global')),
@@ -68,10 +68,10 @@ final class CategoryFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
             new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
             new EntityField('link_rewrite', $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')),
-            new EntityField('image', $this->trans('Image URL')),
+            new EntityField('image', $this->trans('Image URL', 'Admin.Advparameters.Feature')),
             new EntityField(
                 'shop',
-                $this->trans('ID / Name of shop'),
+                $this->trans('ID / Name of shop', 'Admin.Advparameters.Feature'),
                 $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
             ),
         ];
