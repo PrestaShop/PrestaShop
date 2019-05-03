@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import NumberFormatter from '../../js/app/cldr/number-formatter';
-import PriceSpecification from '../../js/app/cldr/price-specification';
+import PriceSpecification from '../../js/app/cldr/specifications/price';
 import NumberSymbol from '../../js/app/cldr/number-symbol';
 
 describe('NumberFormatter', () => {
