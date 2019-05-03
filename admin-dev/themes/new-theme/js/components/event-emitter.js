@@ -23,14 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import EventEmitter from 'events';
+import EventEmitterClass from 'events';
 
 /**
- * We instanciate one EventEmitter (accessible from window) so that every components
+ * We instanciate one EventEmitter (restricted via a const) so that every components
  * register/dispatch on the same one and can communicate with each other.
  */
-if (!window.PrestaShopEventEmitter) {
-  window.PrestaShopEventEmitter = new EventEmitter();
-}
-
-export default window.PrestaShopEventEmitter;
+export const EventEmitter = new EventEmitterClass();
