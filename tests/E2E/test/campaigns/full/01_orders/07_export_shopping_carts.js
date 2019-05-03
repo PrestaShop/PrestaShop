@@ -15,7 +15,6 @@ scenario('Export shopping carts in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
   welcomeScenarios.findAndCloseWelcomeModal();
-
   scenario('Search for the shopping carts to export', client => {
     test('should go to "Shopping cart" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.shopping_carts_submenu));
     test('should set the "Customer" input', () => client.waitAndSetValue(ShoppingCart.search_input.replace('%searchParam', 'c!lastname'), 'DOE'));

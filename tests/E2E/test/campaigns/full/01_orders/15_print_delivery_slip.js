@@ -31,7 +31,6 @@ scenario('Print the delivery slips of an order', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
-
   welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, productData);
   commonOrder.createOrderBO(OrderPage, CreateOrder, productData);
