@@ -14,6 +14,7 @@ const commonProduct = require('../../common_scenarios/product');
 const {HomePage} = require('../../../selectors/FO/home_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 let dateFormat = require('dateformat');
 let dateSystem = dateFormat(new Date(), 'mm/dd/yyyy');
@@ -73,7 +74,7 @@ scenario('Print the invoice of an order', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Change the Customer Group tax parameter and the tax option', client => {
     test('should go to "Shop Parameters > Customer settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.customer_settings_submenu));
     test('should click on "Group" tab', () => client.waitForExistAndClick(CustomerSettings.groups.group_button));
@@ -248,6 +249,7 @@ scenario('Print the invoice of an order', () => {
   }, 'order');
 
   scenario('Change the Customer Group tax parameter', client => {
+
     test('should go to "Shop Parameters > Customer settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.customer_settings_submenu));
     test('should click on "Group" tab', () => client.waitForExistAndClick(CustomerSettings.groups.group_button));
     test('should click on customer "Edit" button', () => client.waitForExistAndClick(CustomerSettings.groups.customer_edit_button));
