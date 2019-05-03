@@ -9,6 +9,7 @@ const {CreateOrder} = require('../../../selectors/BO/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../../common_scenarios/product');
 const commonOrder = require('../../common_scenarios/order');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 global.orderInformation = [];
 let productData = {
@@ -30,6 +31,8 @@ scenario('Print the delivery slips of an order', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
+
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, productData);
   commonOrder.createOrderBO(OrderPage, CreateOrder, productData);
   scenario('Change the status', client => {
