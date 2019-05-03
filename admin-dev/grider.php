@@ -98,7 +98,7 @@ if (!$shop_id) {
     
 require_once($module_path);
 
-$grid = new $module();
+$grid = Module::getInstanceByName($module);
 $grid->setEmployee($id_employee);
 $grid->setLang($id_lang);
 if ($option) {
