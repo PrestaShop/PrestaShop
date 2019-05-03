@@ -58,7 +58,7 @@ scenario('Create virtual Product in the Back Office', () => {
   }, 'common_client');
   scenario('Test1: create "Currency"', () => {
     commonCurrencySenarios.accessToCurrencies();
-    commonCurrencySenarios.createCurrency('close\nSuccessful creation.', currencyData);
+    commonCurrencySenarios.createCurrency('Successful creation.', currencyData);
     commonCurrencySenarios.checkCurrencyByIsoCode(currencyData);
     scenario('Enable currency', client => {
       test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1).replace('%ICON', 'not-valid')));
@@ -331,7 +331,7 @@ scenario('Create virtual Product in the Back Office', () => {
     scenario('Delete the created currency', () => {
       commonCurrencySenarios.accessToCurrencies();
       commonCurrencySenarios.checkCurrencyByIsoCode(currencyData);
-      commonCurrencySenarios.deleteCurrency(true, 'close\nSuccessful deletion.');
+      commonCurrencySenarios.deleteCurrency(true, 'Successful deletion.');
       scenario('Click on Reset button', client => {
         test('should click on "Reset" button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
       }, 'common_client');
