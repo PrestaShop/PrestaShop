@@ -163,7 +163,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given I create an empty cart for customer with email :customerEmail
+     * @When I create an empty cart for customer with email :customerEmail
      */
     public function iCreateAnEmptyCartForCustomer($customerEmail)
     {
@@ -180,7 +180,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given I add :quantity products with reference :productReference to the cart
+     * @When I add :quantity products with reference :productReference to the cart
      */
     public function iAddProductToCart($quantity, $productReference)
     {
@@ -199,7 +199,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then I select :countryIsoCode address as delivery and invoice address
+     * @When I select :countryIsoCode address as delivery and invoice address
      */
     public function iSelectAddressAsDeliveryAndInvoiceAddress($countryIsoCode)
     {
@@ -231,7 +231,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given I set Free shipping to cart
+     * @When I set Free shipping to the cart
      */
     public function iSetFreeShippingToCart()
     {
@@ -246,15 +246,10 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then I place order with :paymentModuleName payment method and :orderStatus order status
+     * @When I place order with :paymentModuleName payment method and :orderStatus order status
      */
     public function iSelectPaymentMethod($paymentModuleName, $orderStatus)
     {
-        // deep inside order creation
-        // legacy code tries to access container via global $kernel
-        global $kernel;
-        $kernel = CommonFeatureContext::getKernel();
-
         $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
 
         $orderStates = OrderState::getOrderStates(Context::getContext()->language->id);
