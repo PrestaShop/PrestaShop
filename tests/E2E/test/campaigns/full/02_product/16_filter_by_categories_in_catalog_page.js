@@ -7,12 +7,14 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const commonProduct = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 scenario('Filters by categories in catalog page', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Check the filtering operation of the categories in the product page', client => {
     test('should go to "Catalog > Categories" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
     test('should get categories number', () => client.getCategoriesPageNumber('category_grid_table'));
