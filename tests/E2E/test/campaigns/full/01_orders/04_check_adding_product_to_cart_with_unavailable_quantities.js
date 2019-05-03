@@ -10,6 +10,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const common_scenarios = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = {
   name: 'PQ',
@@ -25,6 +26,7 @@ scenario('Check adding a product to the cart with unavailable quantities', () =>
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
+  welcomeScenarios.findAndCloseWelcomeModal();
 
   common_scenarios.createProduct(AddProductPage, productData);
 
