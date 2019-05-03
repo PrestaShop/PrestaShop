@@ -68,18 +68,50 @@
 
 @include media-breakpoint-down(md) {
   .carousel {
+    box-shadow: none;
+    width: 100vw;
+    margin-left: -50vw;
+    left: 50%;
+    padding-bottom: .5rem;
+    background-color: $gray-light;
     .carousel-item {
       .caption {
-        bottom: calc(50% - 2rem);
-        left: 10%;
-      }
-      .caption {
+        position: static;
+        margin: 1.275rem auto 1rem;
+        text-align: center;
         .display-1 {
           font-size: 2rem;
+          font-weight: normal;
+          color: $gray-darker;
+        }
+        .caption-description {
+          h3,
+          p {
+            color: $gray;
+          }
+          h3 {
+            font-size: 1rem;
+          }
         }
       }
-      .caption-description {
-        display: none;
+    }
+
+    .direction {
+      position: absolute;
+      top: calc(50%);
+      width: 100%;
+      .carousel-control {
+        .icon-prev {
+          left: 0;
+          margin-left: 0;
+        }
+        .icon-next {
+          right: 0;
+          margin-right: .78rem;
+        }
+        i {
+          background: rgba(122,122,122,.5);
+        }
       }
     }
   }
@@ -89,11 +121,8 @@
   .carousel {
     .carousel-item {
       .caption {
-        bottom: calc(50% - 1.5rem);
-      }
-      .caption {
         .display-1 {
-          font-size: 1.5rem;
+          font-size: 1.3rem;
         }
       }
     }
