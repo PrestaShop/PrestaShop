@@ -180,7 +180,6 @@ scenario('Create virtual Product in the Back Office', () => {
           test('should set the product "quantity"', () => client.waitAndSetValue(productPage.first_product_quantity, '4'));
           test('should click on "Add to cart" button ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button, 3000));
           test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
-          test('should set the quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
           test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
           scenario('Create new account', client => {
             test('should choose a "Social title"', () => client.waitForExistAndClick(accountPage.gender_radio_button));
