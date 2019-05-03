@@ -381,7 +381,7 @@ module.exports = {
     product_status_icon: '//*[@id="product_catalog_list"]//table//tr[%TR]/td[10]//i[contains(@class, "%STATUS")]',
     filter_by_category_button: '//*[@id="product_catalog_category_tree_filter"]/button',
     expand_filter_link: '//*[@id="product_catalog_category_tree_filter_expand"]',
-    unselect_filter_link: '//*[@id="product_catalog_category_tree_filter_reset"]',
+    unselect_filter_link: '//*[@id="product_catalog_category_tree_filter_reset"]/i',
     filter_list_category_label: '//*[@id="product_categories_categories"]/ul/li/ul/li[%ID]/div/label',
     sub_category_label: '//*[@id="product_categories_categories"]/ul[@class="category-tree"]//ul/li[%I]/ul/li[%J]//label[@class="category-label"]',
     category_radio:'(//*[@id="tree-categories"]//label[text()[contains(.,"%CATEGORY")]]/input[1])[1]',

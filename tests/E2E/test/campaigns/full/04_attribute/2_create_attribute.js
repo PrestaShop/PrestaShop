@@ -12,7 +12,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const commonAttribute = require('../../common_scenarios/attribute');
 const commonScenarios = require('../../common_scenarios/product');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
-
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 let productData = {
@@ -88,7 +88,7 @@ scenario('Create "Attributes" in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   /* Create three type of attribute */
   for (let i = 0; i < attributeData.length; i++) {
     commonAttribute.createAttribute(attributeData[i]);

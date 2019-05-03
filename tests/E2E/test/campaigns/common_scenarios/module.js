@@ -429,6 +429,6 @@ module.exports = {
     test('should click on "Modules Catalog" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog_submenu));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button, 2000));
-    test('should check that the ' + moduleTechName + ' module existence on the "Catalog" page', () => client.isExisting(ModulePage.installed_module_div.replace("%moduleTechName", moduleTechName)));
+    test('should check that the ' + moduleTechName + ' module exist on the "Catalog" page', () => client.isExisting(ModulePage.installed_module_div.replace("%moduleTechName", moduleTechName)));
   }
 };

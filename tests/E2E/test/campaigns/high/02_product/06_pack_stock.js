@@ -7,6 +7,7 @@ const {SearchProductPage} = require('../../../selectors/FO/search_product_page')
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../../common_scenarios/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = [{
   name: 'A',
@@ -32,6 +33,7 @@ scenario('Create standard product "A" and pack product "B" in the Back Office', 
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Change configuration of "Default pack stock management" and "Allow ordering of out-of-stock products"', client => {
     test('Should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
     test('Should click on "NO" button to disable ordering of out-of-stock products', () => client.scrollWaitForExistAndClick(ProductSettings.disableOrderOutOfStock_button));

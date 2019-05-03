@@ -7,6 +7,7 @@ const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const common_scenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = {
   name: 'CSC',
@@ -21,9 +22,12 @@ let productData = {
  * http://forge.prestashop.com/browse/BOOM-3268
  **/
 
-scenario('Check that the shopping cart dosen\'t allow checkout of zero quantity and inactive products', client => {
-  test('should open the browser', () => client.open());
-  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+scenario('Check that the shopping cart dosen\'t allow checkout of zero quantity and inactive products', () => {
+  scenario('Login in the Back Office', client => {
+    test('should open the browser', () => client.open());
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, productData);
 
   scenario('Test case n°1 : Check that the shopping cart dosen\'t allow checkout of inactive products', client => {

@@ -55,21 +55,21 @@ final class CustomerFieldsProvider implements EntityFieldsProviderInterface
     {
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
-            new EntityField('active', $this->trans('Active  (0/1)')),
-            new EntityField('id_gender', $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)')),
+            new EntityField('active', $this->trans('Active  (0/1)', 'Admin.Advparameters.Feature')),
+            new EntityField('id_gender', $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)', 'Admin.Advparameters.Feature')),
             new EntityField('email', $this->trans('Email', 'Admin.Global'), '', true),
             new EntityField('passwd', $this->trans('Password', 'Admin.Global'), '', true),
-            new EntityField('birthday', $this->trans('Birth date (yyyy-mm-dd)')),
+            new EntityField('birthday', $this->trans('Birth date (yyyy-mm-dd)', 'Admin.Advparameters.Feature')),
             new EntityField('lastname', $this->trans('Last name', 'Admin.Global'), '', true),
             new EntityField('firstname', $this->trans('First name', 'Admin.Global'), '', true),
-            new EntityField('newsletter', $this->trans('Newsletter (0/1)')),
-            new EntityField('optin', $this->trans('Partner offers (0/1)')),
-            new EntityField('date_add', $this->trans('Registration date (yyyy-mm-dd)')),
-            new EntityField('group', $this->trans('Groups (x,y,z...)')),
-            new EntityField('id_default_group', $this->trans('Default group ID')),
+            new EntityField('newsletter', $this->trans('Newsletter (0/1)', 'Admin.Advparameters.Feature')),
+            new EntityField('optin', $this->trans('Partner offers (0/1)', 'Admin.Advparameters.Feature')),
+            new EntityField('date_add', $this->trans('Registration date (yyyy-mm-dd)', 'Admin.Advparameters.Feature')),
+            new EntityField('group', $this->trans('Groups (x,y,z...)', 'Admin.Advparameters.Feature')),
+            new EntityField('id_default_group', $this->trans('Default group ID', 'Admin.Advparameters.Feature')),
             new EntityField(
                 'id_shop',
-                $this->trans('ID / Name of shop'),
+                $this->trans('ID / Name of shop', 'Admin.Advparameters.Feature'),
                 $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
             ),
         ];

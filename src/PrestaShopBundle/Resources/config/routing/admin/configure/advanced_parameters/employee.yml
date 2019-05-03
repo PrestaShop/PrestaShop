@@ -11,6 +11,7 @@ admin_employees_search:
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    _legacy_controller: AdminEmployees
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.employee
     redirectRoute: admin_employees_index
 
