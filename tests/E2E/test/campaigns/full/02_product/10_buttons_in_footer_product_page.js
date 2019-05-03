@@ -11,6 +11,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const common_scenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let firstProductData = {
   name: 'TEST PRODUCT',
@@ -26,7 +27,7 @@ scenario('Check product page buttons', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, firstProductData);
 
   scenario('Testing "Preview" button', client => {
@@ -122,6 +123,7 @@ scenario('Check product page buttons', () => {
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should click on "Preview" button', () => client.waitForExistAndClick(AddProductPage.preview_buttons));
     test('should switch to the Preview page in the Front Office', () => client.switchWindow(2));
+    common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
     test('should check the offline warning message', () => client.checkTextValue(productPage.offline_warning_message, "This product is not visible to your customers.", "contain"));
     test('should go back to the Back Office', () => client.switchWindow(0));
     test('should set the product "Online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
