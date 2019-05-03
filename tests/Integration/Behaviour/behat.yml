@@ -48,3 +48,5 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
