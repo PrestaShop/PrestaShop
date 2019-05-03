@@ -26,17 +26,12 @@
 
 namespace PrestaShopBundle\Command;
 
-use DOMDocument;
 use Exception;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Hook\Provider\HookByServiceIdsProviderInterface;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerDebugCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 
 /**

@@ -30,7 +30,6 @@ use Generator;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRegistryInterface;
-use Symfony\Component\Form\FormTypeInterface;
 
 /**
  * Gets hook names by identifiable object form types.
@@ -52,7 +51,6 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
      * @var FormRegistryInterface
      */
     private $formFactory;
-
 
     /**
      * @param FormFactoryInterface $formFactory
