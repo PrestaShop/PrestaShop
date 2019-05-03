@@ -250,6 +250,11 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function iSelectPaymentMethod($paymentModuleName, $orderStatus)
     {
+        // deep inside order creation
+        // legacy code tries to access container via global $kernel
+        global $kernel;
+        $kernel = CommonFeatureContext::getKernel();
+
         $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
 
         $orderStates = OrderState::getOrderStates(Context::getContext()->language->id);

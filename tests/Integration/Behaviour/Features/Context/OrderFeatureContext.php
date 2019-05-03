@@ -27,6 +27,8 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Configuration;
+use Context;
+use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
@@ -50,7 +52,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                 $paymentModule = new PaymentModuleFake();
                 break;
             default:
-                throw new \Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
+                throw new Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
         }
 
         // need to boot kernel for usage in $paymentModule->validateOrder()
@@ -163,7 +165,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $orderCartRulesData = $order->getCartRules();
         if (!isset($orderCartRulesData[$position - 1]['id_order_cart_rule'])) {
-            throw new \Exception(
+            throw new Exception(
                 sprintf('Undefined order cart rule on position #%s', $position)
             );
         }
@@ -188,11 +190,66 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         }
     }
 
+    /**
+     * @Then created order should have :quantity products in total
+     */
+    public function orderWithProductsShouldBeCreated($quantity)
+    {
+        $order = Order::getByCartId(Context::getContext()->cart->id);
+        $orderProducts = $order->getProducts();
+
+        $totalQuantity = 0;
+
+        foreach ($orderProducts as $orderProduct) {
+            $totalQuantity += $orderProduct['product_quantity'];
+        }
+
+        if ($totalQuantity !== (int) $quantity) {
+            throw new Exception(sprintf(
+                'Order should have "%d" products, but has "%d".',
+                $totalQuantity,
+                $quantity
+            ));
+        }
+    }
+
+    /**
+     * @Then created order should have free shipping
+     */
+    public function createdOrderShouldHaveFreeShipping()
+    {
+        $order = Order::getByCartId(Context::getContext()->cart->id);
+
+        foreach ($order->getCartRules() as $cartRule) {
+            if ($cartRule['free_shipping']) {
+                return;
+            }
+        }
+
+        throw new Exception('Order should have free shipping.');
+    }
+
+    /**
+     * @Then created order should have :paymentModuleName payment method
+     */
+    public function createdOrderShouldHavePaymentMethod($paymentModuleName)
+    {
+        $order = Order::getByCartId(Context::getContext()->cart->id);
+
+        if ($order->module !== $paymentModuleName) {
+            throw new Exception(sprintf(
+                'Order should have "%s" payment method, but has "%s" instead.',
+                $paymentModuleName,
+                $order->payment
+            ));
+        }
+    }
+
     protected function getCurrentCartOrder()
     {
         $cart = $this->getCurrentCart();
         if (null === $cart) {
-            throw new \Exception('Current cart was not initialized');
+            throw new Exception('Current cart was not initialized');
         }
         $order = Order::getByCartId($cart->id);
 
