@@ -9,11 +9,10 @@ services:
 
     prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider:
       class: PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider
+      arguments:
+        - '@service_container'
 
-    prestashop.core.hook.provider.identifiable_object_hook_by_service_definition_provider:
-      class: PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByServiceDefinitionProvider
+    prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider:
+      class: PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider
       arguments:
         - '@form.factory'
-
-    prestashop.core.hook.provider.options_form_hook_by_service_definition_provider:
-      class: PrestaShop\PrestaShop\Core\Hook\Provider\OptionsFormHookByServiceDefinitionProvider

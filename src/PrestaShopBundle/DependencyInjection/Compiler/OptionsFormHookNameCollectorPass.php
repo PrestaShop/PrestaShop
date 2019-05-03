@@ -24,15 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Hook\Provider;
+namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Generator;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
-final class OptionsFormHookByServiceDefinitionProvider implements HookByServiceDefinitionProviderInterface
+/**
+ * Used for collecting options form hook names and store them in the container.
+ */
+final class OptionsFormHookNameCollectorPass implements CompilerPassInterface
 {
-    const HOOK_NAME_POSITION_IN_CONSTRUCTOR = 4;
+    const OPTIONS_FORM_SERVICE_ENDS_WITH = 'form_handler';
 
+    const HOOK_NAME_POSITION_IN_CONSTRUCTOR = 4;
     const HOOK_NAME_STARTS_WITH = 'action';
     const HOOK_NAME_OF_FORM_BUILDER_ENDS_WITH = 'Form';
     const HOOK_NAME_OF_FORM_SAVE_ENDS_WIDTH = 'Save';
@@ -40,9 +47,26 @@ final class OptionsFormHookByServiceDefinitionProvider implements HookByServiceD
     /**
      * {@inheritdoc}
      */
-    public function getHookNames(array $serviceDefinitions)
+    public function process(ContainerBuilder $container)
     {
-        $optionNames = $this->getOptionNamesFromConstructorArgument($serviceDefinitions);
+        if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
+            return;
+        }
+
+        $serviceDefinitions = $container->getDefinitions();
+
+        $optionsFormServiceDefinitions = [];
+        foreach ($serviceDefinitions as $serviceId => $serviceDefinition) {
+            if ($serviceDefinition->isAbstract() || $serviceDefinition->isPrivate()) {
+                continue;
+            }
+
+            if ($this->isOptionsFormService($serviceId, $serviceDefinition->getClass())) {
+                $optionsFormServiceDefinitions[$serviceId] = $serviceDefinition;
+            }
+        }
+
+        $optionNames = $this->getOptionNamesFromConstructorArgument($optionsFormServiceDefinitions);
 
         $formBuilderHookNames = [];
         $formBuilderSaveHookNames = [];
@@ -61,7 +85,40 @@ final class OptionsFormHookByServiceDefinitionProvider implements HookByServiceD
             );
         }
 
-        return array_merge($formBuilderHookNames, $formBuilderSaveHookNames);
+        $container->setParameter(
+            'prestashop.hook.option_form_hook_names',
+            array_merge($formBuilderHookNames, $formBuilderSaveHookNames)
+        );
+    }
+
+    /**
+     * Checks if service belongs to options form.
+     *
+     * @param string $serviceId
+     * @param string $serviceClass
+     *
+     * @return bool
+     */
+    private function isOptionsFormService($serviceId, $serviceClass)
+    {
+        return $this->stringEndsWith($serviceId, self::OPTIONS_FORM_SERVICE_ENDS_WITH) &&
+            is_subclass_of($serviceClass, FormHandlerInterface::class)
+        ;
+    }
+
+    /**
+     * Checks if string ends with certain string.
+     *
+     * @param string $haystack
+     * @param string $needle
+     *
+     * @return bool
+     */
+    private function stringEndsWith($haystack, $needle)
+    {
+        $diff = strlen($haystack) - strlen($needle);
+
+        return $diff >= 0 && strpos($haystack, $needle, $diff) !== false;
     }
 
     /**

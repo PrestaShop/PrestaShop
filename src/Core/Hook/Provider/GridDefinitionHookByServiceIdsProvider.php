@@ -44,11 +44,24 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
     const GRID_PRESENTER_ENDS_WITH = 'GridPresenterModifier';
 
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function getHookNames(ContainerInterface $container, array $gridDefinitionServiceIds)
+    public function getHookNames(array $gridDefinitionServiceIds)
     {
-        $gridDefinitionIds = $this->getGridDefinitionIds($container, $gridDefinitionServiceIds);
+        $gridDefinitionIds = $this->getGridDefinitionIds($gridDefinitionServiceIds);
 
         $gridDefinitionHookNames = [];
         $gridQueryBuilderHookNames = [];
@@ -100,15 +113,14 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
     /**
      * Gets grid definition ids which are used in a grid hook formation.
      *
-     * @param ContainerInterface $container
      * @param array $gridDefinitionServiceIds
      *
      * @return Generator
      */
-    private function getGridDefinitionIds(ContainerInterface $container, array $gridDefinitionServiceIds)
+    private function getGridDefinitionIds(array $gridDefinitionServiceIds)
     {
         foreach ($gridDefinitionServiceIds as $serviceId) {
-            $service = $container->get($serviceId);
+            $service = $this->container->get($serviceId);
 
             if (!$service instanceof GridDefinitionFactoryInterface) {
                 continue;

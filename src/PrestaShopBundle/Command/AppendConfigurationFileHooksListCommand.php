@@ -31,6 +31,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Hook\Provider\HookByServiceIdsProviderInterface;
 use SimpleXMLElement;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerDebugCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,7 +42,7 @@ use Symfony\Component\Finder\Finder;
 /**
  * This command is used for appending the hook names in the configuration file.
  */
-class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
+class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -58,7 +59,6 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
     {
         require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
 
-        //todo: check why not list hooks are not being listed.
         $hookNames = $this->getHookNames();
 
         $io = new SymfonyStyle($input, $output);
@@ -88,39 +88,28 @@ class AppendConfigurationFileHooksListCommand extends ContainerDebugCommand
     private function getHookNames()
     {
         $container = $this->getContainer();
-        $containerBuilder = $this->getContainerBuilder();
 
-        $gridDefinitionIdsProvider = $container->get('prestashop.bundle.dependency_injection.provider.grid_definition_service_ids');
-        $gridDefinitionServiceIds = $gridDefinitionIdsProvider->getServiceIds($containerBuilder);
+        $gridServiceIds = $container->getParameter('prestashop.core.grid.definition.service_ids');
+        $optionsFormHookNames = $container->getParameter('prestashop.hook.option_form_hook_names');
+        $identifiableObjectFormTypes = $container->getParameter('prestashop.core.form.identifiable_object.form_types');
 
-        $identifiableObjectFormBuilderServiceDefinitionsProvider =
-            $container->get('prestashop.bundle.dependency_injection.provider.identifiable_object_form_builder_service_definition');
+        $gridDefinitionHooksProvider = $container->get(
+            'prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider'
+        );
 
-        $identifiableObjectFormBuilderDefinitions =
-            $identifiableObjectFormBuilderServiceDefinitionsProvider->getDefinitions($containerBuilder);
+        $identifiableObjectFormTypeProvider = $container->get(
+            'prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider'
+        );
 
-        $optionFormServiceDefinitionsProvider =
-            $container->get('prestashop.bundle.dependency_injection.provider.options_form_service_definition');
+        $gridDefinitionHookNames = $gridDefinitionHooksProvider->getHookNames($gridServiceIds);
 
-        $optionsFormDefinitions = $optionFormServiceDefinitionsProvider->getDefinitions($containerBuilder);
+        $identifiableObjectHookNames = $identifiableObjectFormTypeProvider->getHookNames($identifiableObjectFormTypes);
 
-        $gridDefinitionHooksProvider =
-            $container->get('prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider');
-
-        $identifiableObjectHooksProvider =
-            $container->get('prestashop.core.hook.provider.identifiable_object_hook_by_service_definition_provider');
-
-        $gridDefinitionHookNames = $gridDefinitionHooksProvider->getHookNames($container, $gridDefinitionServiceIds);
-
-        $identifiableObjectHookNames =
-            $identifiableObjectHooksProvider->getHookNames($identifiableObjectFormBuilderDefinitions);
-
-        $optionFormHookNameProvider =
-            $container->get('prestashop.core.hook.provider.options_form_hook_by_service_definition_provider');
-
-        $optionHookNames = $optionFormHookNameProvider->getHookNames($optionsFormDefinitions);
-
-        return array_merge($gridDefinitionHookNames, $identifiableObjectHookNames, $optionHookNames);
+        return array_merge(
+            $identifiableObjectHookNames,
+            $optionsFormHookNames,
+            $gridDefinitionHookNames
+        );
     }
 
     /**

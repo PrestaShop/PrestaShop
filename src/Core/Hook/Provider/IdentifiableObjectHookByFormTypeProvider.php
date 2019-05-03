@@ -33,9 +33,9 @@ use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\Form\FormTypeInterface;
 
 /**
- * Gets hook names by using identifiable object form builder service definition.
+ * Gets hook names by identifiable object form types.
  */
-final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByServiceDefinitionProviderInterface
+final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypeProviderInterface
 {
     const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
 
@@ -65,9 +65,9 @@ final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByS
     /**
      * {@inheritdoc}
      */
-    public function getHookNames(array $serviceDefinitions)
+    public function getHookNames(array $formTypes)
     {
-        $formNames = $this->getFormNames($serviceDefinitions);
+        $formNames = $this->getFormNames($formTypes);
 
         $formBuilderHookNames = [];
         $formHandlerBeforeUpdateHookNames = [];
@@ -119,19 +119,13 @@ final class IdentifiableObjectHookByServiceDefinitionProvider implements HookByS
     /**
      * Gets form names which are used when generating hooks.
      *
-     * @param Definition[] $serviceDefinitions
+     * @param Definition[] $formTypes
      *
      * @return Generator
      */
-    private function getFormNames(array $serviceDefinitions)
+    private function getFormNames(array $formTypes)
     {
-        foreach ($serviceDefinitions as $serviceDefinition) {
-            $formType = $serviceDefinition->getArgument(self::FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER);
-
-            if (!is_string($formType) || !is_subclass_of($formType, FormTypeInterface::class)) {
-                continue;
-            }
-
+        foreach ($formTypes as $formType) {
             yield $this->formFactory->createBuilder($formType)->getName();
         }
     }

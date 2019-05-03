@@ -24,22 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\DependencyInjection\Provider;
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
+namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
 /**
- * Defines contract for providing service definitions.
+ * Defines contract for providing hooks from form types.
  */
-interface ServiceDefinitionProviderInterface
+interface HookByFormTypeProviderInterface
 {
     /**
-     * Gets service definitions.
+     * @param string[] $formTypes
      *
-     * @param ContainerBuilder $containerBuilder
-     *
-     * @return Definition[]
+     * @return string[]
      */
-    public function getDefinitions(ContainerBuilder $containerBuilder);
+    public function getHookNames(array $formTypes);
 }
