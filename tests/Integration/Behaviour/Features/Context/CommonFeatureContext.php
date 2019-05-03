@@ -49,6 +49,11 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         self::$kernel = new AppKernel('test', true);
         self::$kernel->boot();
+
+        // Some services uses static PrestaShop/Adapter/SymfonyContainer::getInstance()
+        // and it depends on global $kernel
+        global $kernel;
+        $kernel = self::$kernel;
     }
 
     /**
@@ -91,10 +96,5 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function getContainer()
     {
         return static::$kernel->getContainer();
-    }
-
-    public static function getKernel()
-    {
-        return static::$kernel;
     }
 }
