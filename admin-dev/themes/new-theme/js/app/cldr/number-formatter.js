@@ -27,8 +27,8 @@
  * They are meant to be replaced by the correct localized symbols in the number formatting process.
  */
 import NumberSymbol from './number-symbol';
-import PriceSpecification from './price-specification';
-import NumberSpecification from './number-specification';
+import PriceSpecification from './specifications/price';
+import NumberSpecification from './specifications/number';
 
 const CURRENCY_SYMBOL_PLACEHOLDER = '¤';
 const DECIMAL_SEPARATOR_PLACEHOLDER = '.';

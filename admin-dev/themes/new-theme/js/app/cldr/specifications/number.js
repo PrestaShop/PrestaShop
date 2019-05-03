@@ -22,8 +22,8 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import LocalizationException from './exception/localization';
-import NumberSymbol from './number-symbol';
+import LocalizationException from '../exception/localization';
+import NumberSymbol from '../number-symbol';
 
 class NumberSpecification {
   /**

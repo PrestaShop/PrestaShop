@@ -23,7 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import NumberFormatter from './number-formatter';
+import NumberSymbol from './number-symbol';
+import PriceSpecification from './specifications/price';
+import NumberSpecification from './specifications/number';
 
 export {
+  PriceSpecification,
+  NumberSpecification,
   NumberFormatter,
+  NumberSymbol,
 };
