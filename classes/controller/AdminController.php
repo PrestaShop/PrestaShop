@@ -4792,9 +4792,9 @@ class AdminControllerCore extends Controller
      */
     private function preparePriceSpecifications(Context $context)
     {
-        /** @var Currency **/
+        /* @var Currency */
         $currency = $context->currency;
-        /** @var PriceSpecification **/
+        /* @var PriceSpecification */
         $priceSpecification = $context->currentLocale->getPriceSpecification($currency->iso_code);
 
         return [
@@ -4832,8 +4832,9 @@ class AdminControllerCore extends Controller
      */
     private function prepareNumberSpecifications(Context $context)
     {
-        /** @var NumberSpecification **/
+        /* @var NumberSpecification */
         $numberSpecification = $context->currentLocale->getNumberSpecification();
+
         return [
             'positivePattern' => $numberSpecification->getPositivePattern(),
             'negativePattern' => $numberSpecification->getNegativePattern(),
