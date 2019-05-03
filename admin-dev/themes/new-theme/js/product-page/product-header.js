@@ -41,8 +41,6 @@ export default function() {
     $navWidth += $(item).width();
   });
 
-  $navTabs.width($navWidth);
-
   $widthWithTabs = $navWidth + ($defaultArrowWidth * 2);
 
   $navTabs.find('[data-toggle="tab"]').on('click', (e) => {
