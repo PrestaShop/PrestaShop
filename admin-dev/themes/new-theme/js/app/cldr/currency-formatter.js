@@ -277,4 +277,6 @@ class CurrencyFormatter {
   }
 }
 
+window.CurrencyFormatter = CurrencyFormatter;
+
 export default CurrencyFormatter;

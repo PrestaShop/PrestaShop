@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 class AdminControllerCore extends Controller
 {
@@ -2702,7 +2703,7 @@ class AdminControllerCore extends Controller
 
         $this->addJS(array(
             _PS_JS_DIR_ . 'admin.js?v=' . _PS_VERSION_, // TODO: SEE IF REMOVABLE
-            _PS_JS_DIR_ . 'cldr.js',
+            __PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/cldr.bundle.js',
             _PS_JS_DIR_ . 'tools.js?v=' . _PS_VERSION_,
             __PS_BASE_URI__ . $this->admin_webpath . '/public/bundle.js',
         ));
@@ -2724,6 +2725,11 @@ class AdminControllerCore extends Controller
             'name' => Context::getContext()->currency->name,
             'format' => Context::getContext()->currency->format,
         )));
+        Media::addJsDef(
+            array(
+                'currency_specifications' => $this->preparePriceSpecifications($this->context)
+            )
+        );
 
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
@@ -4773,5 +4779,47 @@ class AdminControllerCore extends Controller
         }
 
         return '';
+    }
+
+    /**
+     * Prepare price specifications to display cldr prices in javascript context.
+     *
+     * @param Context $context
+     *
+     * @return array
+     */
+    private function preparePriceSpecifications(Context $context)
+    {
+        /** @var Currency **/
+        $currency = $context->currency;
+        /** @var PriceSpecification **/
+        $priceSpecification = $context->currentLocale->getPriceSpecification($currency->iso_code);
+
+        // The property `$precision` exists only from PS 1.7.6. On previous versions, all prices have 2 decimals
+        $precision = isset($currency->precision) ? $currency->precision : 2;
+        return [
+            'positivePattern' => $priceSpecification->getPositivePattern(),
+            'negativePattern' => $priceSpecification->getNegativePattern(),
+            'symbol' => [
+                '.',
+                ',',
+                ';',
+                '%',
+                '-',
+                '+',
+                'E',
+                '×',
+                '‰',
+                '∞',
+                'NaN',
+            ],
+            'maxFractionDigits' => $priceSpecification->getMaxFractionDigits(),
+            'minFractionDigits' => $priceSpecification->getMinFractionDigits(),
+            'groupingUsed' => $priceSpecification->isGroupingUsed(),
+            'primaryGroupSize' => $priceSpecification->getPrimaryGroupSize(),
+            'secondaryGroupSize' => $priceSpecification->getSecondaryGroupSize(),
+            'currencyCode' => $priceSpecification->getCurrencyCode(),
+            'currencySymbol' => $priceSpecification->getCurrencySymbol(),
+        ];
     }
 }
