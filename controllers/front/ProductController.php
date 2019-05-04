@@ -958,12 +958,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
-            $productAttributes = array_filter(
-                $this->product->getAttributeCombinations(),
-                function ($elem) {
-                    return $elem['quantity'] > 0;
-                }
-            );
+            $productAttributes = $this->product->getAttributeCombinations();
             $productAttribute = array_filter(
                 $productAttributes,
                 function ($elem) use ($requestedIdProductAttribute) {
