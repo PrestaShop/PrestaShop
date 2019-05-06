@@ -181,40 +181,27 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb->andWhere('cs.id_shop = :context_shop_id');
         }
 
-        $allowedFilters = ['id_category', 'name', 'description', 'active'];
+        $allowedFiltersAliasMap = [
+            'id_category' => 'c.id_category',
+            'active' => 'c.active',
+            'name' => 'cl.name',
+            'description' => 'cl.description',
+        ];
 
         foreach ($filters as $filterName => $filterValue) {
-            if (!in_array($filterName, $allowedFilters, true)) {
+            if (!array_key_exists($filterName, $allowedFiltersAliasMap)) {
                 continue;
             }
 
-            if ('id_category' === $filterName) {
-                $qb->andWhere("c.id_category = :$filterName");
+            if ('active' === $filterName || 'id_category' === $filterName) {
+                $qb->andWhere($allowedFiltersAliasMap[$filterName] . " = :$filterName");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
-            if ('name' === $filterName) {
-                $qb->andWhere("cl.name LIKE :$filterName");
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
-
-                continue;
-            }
-
-            if ('description' === $filterName) {
-                $qb->andWhere("cl.description LIKE :$filterName");
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
-
-                continue;
-            }
-
-            if ('active' === $filterName) {
-                $qb->andWhere("c.active = :$filterName");
-                $qb->setParameter($filterName, $filterValue);
-
-                continue;
-            }
+            $qb->andWhere($allowedFiltersAliasMap[$filterName] . " LIKE :$filterName");
+            $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
 
         return $qb;
