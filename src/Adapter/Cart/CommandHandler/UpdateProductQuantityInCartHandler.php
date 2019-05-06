@@ -49,7 +49,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
      */
     public function handle(UpdateProductQuantityInCartCommand $command)
     {
-        $cart = $this->getCartObject($command->getCartId());
+        $cart = $this->getContextCartObject($command->getCartId());
 
         $this->assertOrderDoesNotExistForCart($cart);
 

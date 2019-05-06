@@ -46,7 +46,7 @@ abstract class AbstractCartHandler
      *
      * @throws CartNotFoundException
      */
-    protected function getCartObject(CartId $cartId)
+    protected function getContextCartObject(CartId $cartId)
     {
         // Legacy behavior is working with context cart instead of retrieving cart from db
         $cart = Context::getContext()->cart;

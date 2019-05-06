@@ -50,7 +50,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
 
         $this->assertLanguageIsActive($language);
 
-        $cart = $this->getCartObject($command->getCartId());
+        $cart = $this->getContextCartObject($command->getCartId());
         $cart->id_lang = (int) $language->id;
 
         if (false === $cart->save()) {

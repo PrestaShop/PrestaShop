@@ -51,7 +51,7 @@ final class GetCartSummaryHandler extends AbstractCartHandler implements GetCart
      */
     public function handle(GetCartSummary $query)
     {
-        $cart = $this->getCartObject($query->getCartId());
+        $cart = $this->getContextCartObject($query->getCartId());
 
         return new CartSummary(
             $this->getCartSummary($cart),
