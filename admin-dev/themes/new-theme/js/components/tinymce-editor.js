@@ -173,13 +173,13 @@ class TinyMCEEditor {
     }
 
     this.tinyMCELoaded = true;
-    var path_array = config.baseAdminUrl.split('/');
-    path_array.splice((path_array.length - 2), 2);
-    var final_path = path_array.join('/');
+    const pathArray = config.baseAdminUrl.split('/');
+    pathArray.splice((pathArray.length - 2), 2);
+    const finalPath = pathArray.join('/');
     window.tinyMCEPreInit = {};
-    window.tinyMCEPreInit.base = final_path+'/js/tiny_mce';
+    window.tinyMCEPreInit.base = finalPath+'/js/tiny_mce';
     window.tinyMCEPreInit.suffix = '.min';
-    $.getScript(final_path+'/js/tiny_mce/tinymce.min.js', () => {this.setupTinyMCE(config)});
+    $.getScript(`${finalPath}/js/tiny_mce/tinymce.min.js`, () => {this.setupTinyMCE(config)});
   }
 
   /**
@@ -209,7 +209,7 @@ class TinyMCEEditor {
     };
 
     $.each(materialIconAssoc, function (index, value) {
-      $('.' + index).replaceWith(value);
+      $(`.${index}`).replaceWith(value);
     });
   }
 
@@ -219,13 +219,13 @@ class TinyMCEEditor {
    * @param id
    */
   handleCounterTiny(id) {
-    let textarea = $('#'+id);
-    let counter = textarea.attr('counter');
-    let counter_type = textarea.attr('counter_type');
-    let max = tinyMCE.activeEditor.getBody().textContent.length;
+    const textarea = $(`#${id}`);
+    const counter = textarea.attr('counter');
+    const counterType = textarea.attr('counter_type');
+    const max = tinyMCE.activeEditor.getBody().textContent.length;
 
     textarea.parent().find('span.currentLength').text(max);
-    if ('recommended' !== counter_type && max > counter) {
+    if ('recommended' !== counterType && max > counter) {
       textarea.parent().find('span.maxLength').addClass('text-danger');
     } else {
       textarea.parent().find('span.maxLength').removeClass('text-danger');
