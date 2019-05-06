@@ -231,7 +231,7 @@ class AddProductToOrderCommand
     /**
      * @return bool|null
      */
-    public function getIsFreeShipping()
+    public function isFreeShipping()
     {
         return $this->isFreeShipping;
     }
