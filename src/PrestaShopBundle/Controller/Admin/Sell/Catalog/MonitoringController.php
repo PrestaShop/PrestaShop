@@ -140,24 +140,22 @@ class MonitoringController extends FrameworkBundleAdminController
         $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.empty_category';
         $gridId = EmptyCategoryGridDefinitionFactory::GRID_ID;
 
-        if ($request->request->has(ProductWithCombinationGridDefinitionFactory::GRID_ID)) {
-            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_with_combination';
-            $gridId = ProductWithCombinationGridDefinitionFactory::GRID_ID;
-        } elseif ($request->request->has(ProductWithoutCombinationGridDefinitionFactory::GRID_ID)) {
-            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_combination';
-            $gridId = ProductWithoutCombinationGridDefinitionFactory::GRID_ID;
-        } elseif ($request->request->has(DisabledProductGridDefinitionFactory::GRID_ID)) {
-            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.disabled_product';
-            $gridId = DisabledProductGridDefinitionFactory::GRID_ID;
-        } elseif ($request->request->has(ProductWithoutImageGridDefinitionFactory::GRID_ID)) {
-            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_image';
-            $gridId = ProductWithoutImageGridDefinitionFactory::GRID_ID;
-        } elseif ($request->request->has(ProductWithoutDescriptionGridDefinitionFactory::GRID_ID)) {
-            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_description';
-            $gridId = ProductWithoutDescriptionGridDefinitionFactory::GRID_ID;
-        } elseif ($request->request->has(ProductWithoutPriceGridDefinitionFactory::GRID_ID)) {
-            $gridDefinition = 'prestashop.core.grid.definition.factory.monitoring.product_without_price';
-            $gridId = ProductWithoutPriceGridDefinitionFactory::GRID_ID;
+        $definitionMap = [
+            ProductWithCombinationGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_with_combination',
+            ProductWithoutCombinationGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_combination',
+            DisabledProductGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.disabled_product',
+            ProductWithoutImageGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_image',
+            ProductWithoutDescriptionGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_description',
+            ProductWithoutPriceGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_price',
+        ];
+
+        foreach ($definitionMap as $id => $definition) {
+            if ($request->request->has($id)) {
+                $gridId = $id;
+                $gridDefinition = $definition;
+
+                break;
+            }
         }
 
         return [
