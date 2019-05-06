@@ -46,7 +46,7 @@ class CreateEmptyCustomerCartCommand
 
     /**
      * @param int $customerId Customer for which cart is being created
-     * @param int $shopId     Shop in which cart is created
+     * @param int $shopId Shop in which cart is created
      */
     public function __construct($customerId, $shopId)
     {

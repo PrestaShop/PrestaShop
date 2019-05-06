@@ -81,7 +81,7 @@ final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterf
         );
 
         if (!$emailWasSent) {
-           throw new CartException('Failed to send email to customer.');
+            throw new CartException('Failed to send email to customer.');
         }
     }
 
@@ -141,7 +141,7 @@ final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterf
             [
                 'step' => 3,
                 'recover_cart' => $cart->id,
-                'token_cart' => md5(_COOKIE_KEY_ . 'recover_cart_' . (int) $cart->id)
+                'token_cart' => md5(_COOKIE_KEY_ . 'recover_cart_' . (int) $cart->id),
             ]
         );
     }
