@@ -26,26 +26,213 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+
 /**
- * Adds product to existing order.
+ * Adds product to an existing order.
  */
 class AddProductToOrderCommand
 {
     /**
+     * @var OrderId
+     */
+    private $orderId;
+
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var int
+     */
+    private $combinationId;
+
+    /**
+     * @var float
+     */
+    private $productPriceTaxIncluded;
+
+    /**
+     * @var float
+     */
+    private $productPriceTaxExcluded;
+
+    /**
+     * @var int
+     */
+    private $productQuantity;
+
+    /**
+     * @var int|null Invoice id or null if new invoice should be created.
+     */
+    private $orderInvoiceId;
+
+    /**
+     * @var bool|null Bool if product is being added using new invoice.
+     */
+    private $isFreeShipping;
+
+    /**
+     * Add product to an order with new invoice.
+     *
      * @param int $orderId
      * @param int $productId
+     * @param int $combinationId
      * @param float $productPriceTaxIncluded
      * @param float $productPriceTaxExcluded
      * @param int $productQuantity
-     * @param int|null $orderInvoiceId
+     * @param bool $isFreeShipping
+     *
+     * @return self
      */
-    public function __construct(
+    public static function withNewInvoice(
         $orderId,
         $productId,
+        $combinationId,
         $productPriceTaxIncluded,
         $productPriceTaxExcluded,
         $productQuantity,
-        $orderInvoiceId = null
+        $isFreeShipping
     ) {
+        $command = new self(
+            $orderId,
+            $productId,
+            $combinationId,
+            $productPriceTaxIncluded,
+            $productPriceTaxExcluded,
+            $productQuantity
+        );
+
+        $command->isFreeShipping = $isFreeShipping;
+
+        return $command;
+    }
+
+    /**
+     * Add product to an order using existing invoice.
+     *
+     * @param int $orderId
+     * @param int $orderInvoiceId
+     * @param int $productId
+     * @param int $combinationId
+     * @param float $productPriceTaxIncluded
+     * @param float $productPriceTaxExcluded
+     * @param int $productQuantity
+     *
+     * @return self
+     */
+    public static function toExistingInvoice(
+        $orderId,
+        $orderInvoiceId,
+        $productId,
+        $combinationId,
+        $productPriceTaxIncluded,
+        $productPriceTaxExcluded,
+        $productQuantity
+    ) {
+        $command = new self(
+            $orderId,
+            $productId,
+            $combinationId,
+            $productPriceTaxIncluded,
+            $productPriceTaxExcluded,
+            $productQuantity
+        );
+
+        $command->orderInvoiceId = $orderInvoiceId;
+
+        return $command;
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $productId
+     * @param int $combinationId
+     * @param float $productPriceTaxIncluded
+     * @param float $productPriceTaxExcluded
+     * @param int $productQuantity
+     */
+    private function __construct(
+        $orderId,
+        $productId,
+        $combinationId,
+        $productPriceTaxIncluded,
+        $productPriceTaxExcluded,
+        $productQuantity
+    ) {
+        // @todo: add integrity checks
+
+        $this->orderId = new OrderId($orderId);
+        $this->productId = new ProductId($productId);
+        $this->combinationId = $combinationId;
+        $this->productPriceTaxIncluded = $productPriceTaxIncluded;
+        $this->productPriceTaxExcluded = $productPriceTaxExcluded;
+        $this->productQuantity = $productQuantity;
+    }
+
+    /**
+     * @return OrderId
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId()
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId()
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProductPriceTaxIncluded()
+    {
+        return $this->productPriceTaxIncluded;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProductPriceTaxExcluded()
+    {
+        return $this->productPriceTaxExcluded;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductQuantity()
+    {
+        return $this->productQuantity;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOrderInvoiceId()
+    {
+        return $this->orderInvoiceId;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsFreeShipping()
+    {
+        return $this->isFreeShipping;
     }
 }
