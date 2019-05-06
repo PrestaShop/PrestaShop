@@ -2063,10 +2063,10 @@ class CartCore extends ObjectModel
     /**
      * @return float
      */
-    public function getDiscountSubtotalWithoutGifts()
+    public function getDiscountSubtotalWithoutGifts($withTaxes = true)
     {
         $discountSubtotal = $this->excludeGiftsDiscountFromTotal()
-            ->getOrderTotal(true, self::ONLY_DISCOUNTS);
+            ->getOrderTotal($withTaxes, self::ONLY_DISCOUNTS);
         $this->includeGiftsDiscountInTotal();
 
         return $discountSubtotal;
