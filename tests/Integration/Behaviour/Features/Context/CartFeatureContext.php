@@ -28,20 +28,8 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
-use Configuration;
 use Context;
-use Country;
-use Customer;
-use Exception;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
-use OrderState;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
-use Product;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -160,116 +148,6 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, 'v1', false, !empty($precisely));
-    }
-
-    /**
-     * @When I create an empty cart for customer with email :customerEmail
-     */
-    public function iCreateAnEmptyCartForCustomer($customerEmail)
-    {
-        $customer = Customer::getCustomersByEmail($customerEmail);
-
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
-
-        $commandBus->handle(
-            new CreateEmptyCustomerCartCommand(
-                (int) $customer[0]['id_customer'],
-                (int) Context::getContext()->shop->id
-            )
-        );
-    }
-
-    /**
-     * @When I add :quantity products with reference :productReference to the cart
-     */
-    public function iAddProductToCart($quantity, $productReference)
-    {
-        $productId = (int) Product::getIdByReference($productReference);
-
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
-
-        $commandBus->handle(
-            new UpdateProductQuantityInCartCommand(
-                (int) Context::getContext()->cart->id,
-                $productId,
-                (int) $quantity,
-                QuantityAction::INCREASE_PRODUCT_QUANTITY
-            )
-        );
-    }
-
-    /**
-     * @When I select :countryIsoCode address as delivery and invoice address
-     */
-    public function iSelectAddressAsDeliveryAndInvoiceAddress($countryIsoCode)
-    {
-        $customer = new Customer(Context::getContext()->cart->id_customer);
-        $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
-
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
-
-        foreach ($customerAddresses as $address) {
-            $country = new Country($address['id_country']);
-
-            if ($country->iso_code === $countryIsoCode) {
-                $commandBus->handle(
-                    new UpdateCartAddressesCommand(
-                        (int) Context::getContext()->cart->id,
-                        (int) $address['id_address'],
-                        (int) $address['id_address']
-                    )
-                );
-
-                return;
-            }
-        }
-
-        throw new Exception(sprintf(
-            'Cart customer does not have address in "%s" country',
-            $countryIsoCode
-        ));
-    }
-
-    /**
-     * @When I set Free shipping to the cart
-     */
-    public function iSetFreeShippingToCart()
-    {
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
-
-        $commandBus->handle(
-            new SetFreeShippingToCartCommand(
-                (int) Context::getContext()->cart->id,
-                true
-            )
-        );
-    }
-
-    /**
-     * @When I place order with :paymentModuleName payment method and :orderStatus order status
-     */
-    public function iSelectPaymentMethod($paymentModuleName, $orderStatus)
-    {
-        $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
-
-        $orderStates = OrderState::getOrderStates(Context::getContext()->language->id);
-        $orderStatusId = null;
-
-        foreach ($orderStates as $state) {
-            if ($state['name'] === $orderStatus) {
-                $orderStatusId = (int) $state['id_order_state'];
-            }
-        }
-
-        $commandBus->handle(
-            new AddOrderFromBackOfficeCommand(
-                (int) Context::getContext()->cart->id,
-                (int) Context::getContext()->employee->id,
-                '',
-                $paymentModuleName,
-                $orderStatusId
-            )
-        );
     }
 
     protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
