@@ -43,7 +43,7 @@ final class UpdateProductPriceInCartHandler extends AbstractCartHandler implemen
      */
     public function handle(UpdateProductPriceInCartCommand $command)
     {
-        $cart = $this->getCartObject($command->getCartId());
+        $cart = $this->getContextCartObject($command->getCartId());
 
         $this->deleteSpecificPriceIfExists($command);
 

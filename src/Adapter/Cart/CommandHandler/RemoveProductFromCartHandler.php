@@ -43,7 +43,7 @@ final class RemoveProductFromCartHandler extends AbstractCartHandler implements 
      */
     public function handle(RemoveProductFromCartCommand $command)
     {
-        $cart = $this->getCartObject($command->getCartId());
+        $cart = $this->getContextCartObject($command->getCartId());
 
         $removed = $cart->deleteProduct(
             $command->getProductId()->getValue(),
