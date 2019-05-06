@@ -41,7 +41,7 @@ class CartId
     /**
      * @param int $cartId
      *
-     * @throws CartConstraintException if cart id is not valid.
+     * @throws CartConstraintException if cart id is not valid
      */
     public function __construct($cartId)
     {
