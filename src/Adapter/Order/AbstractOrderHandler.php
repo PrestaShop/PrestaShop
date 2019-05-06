@@ -24,50 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use Order;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
- * Product identity.
+ * Reusable methods for Order subdomain command/query handlers.
  */
-class ProductId
+abstract class AbstractOrderHandler
 {
     /**
-     * @var int
+     * @param OrderId $orderId
+     *
+     * @return Order
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct($productId)
+    protected function getOrderObject(OrderId $orderId)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        $order = new Order($orderId->getValue());
 
-        $this->productId = $productId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
+        if ($order->id !== $orderId->getValue()) {
+            throw new OrderNotFoundException(
+                sprintf('Order with id "%d" was not found.', $orderId->getValue())
             );
         }
+
+        return $order;
     }
 }
