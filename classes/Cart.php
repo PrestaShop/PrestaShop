@@ -1976,7 +1976,8 @@ class CartCore extends ObjectModel
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
                 $calculator->calculateRows();
-                $calculator->calculateCartRules();
+                // dont process free shipping to avoid calculation loop (and maximum nested functions !)
+                $calculator->calculateCartRulesWithoutFreeShipping();
                 $amount = $calculator->getTotal(true);
                 break;
             case Cart::ONLY_PRODUCTS:
