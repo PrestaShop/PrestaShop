@@ -13,3 +13,11 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand'
+
+  prestashop.adapter.order.command_handler.add_product_to_order_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddProductToOrderHandler
+    arguments:
+      - '@translator'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddProductToOrderCommand
