@@ -201,10 +201,10 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $totalQuantity = 0;
 
         foreach ($orderProducts as $orderProduct) {
-            $totalQuantity += (int) $orderProduct['product_quantity'];
+            $totalQuantity += (int)$orderProduct['product_quantity'];
         }
 
-        if ($totalQuantity !== (int) $quantity) {
+        if ($totalQuantity !== (int)$quantity) {
             throw new Exception(sprintf(
                 'Order should have "%d" products, but has "%d".',
                 $totalQuantity,
