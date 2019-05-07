@@ -80,7 +80,7 @@ class LegacyLinkLinterCommand extends ContainerAwareCommand
         $unconfiguredRoutes = [];
 
         foreach ($routes as $routeName => $route) {
-            if (true === $legacyLinkLinter->lint($route)) {
+            if (true === $legacyLinkLinter->lint('_legacy_link', $route)) {
                 continue;
             }
             $unconfiguredRoutes[] = $routeName;
