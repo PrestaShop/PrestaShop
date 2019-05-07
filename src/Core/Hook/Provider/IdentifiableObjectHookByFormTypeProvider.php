@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
 use Generator;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRegistryInterface;
@@ -139,7 +140,6 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
      */
     private function formatHookName($hookStartsWith, $hookId, $hookEndsWidth)
     {
-        //todo: camelise this if such functionality will be introduced to 1.7.6
-        return $hookStartsWith . $hookId . $hookEndsWidth;
+        return $hookStartsWith . Container::camelize($hookId) . $hookEndsWidth;
     }
 }
