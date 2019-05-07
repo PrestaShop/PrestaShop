@@ -75,7 +75,7 @@ class AddProductToOrderCommand
     private $isFreeShipping;
 
     /**
-     * Add product to an order with new invoice.
+     * Add product to an order with new invoice. It applies to orders that were already paid and waiting for payment.
      *
      * @param int $orderId
      * @param int $productId
@@ -111,7 +111,7 @@ class AddProductToOrderCommand
     }
 
     /**
-     * Add product to an order using existing invoice.
+     * Add product to an order using existing invoice. It applies only for orders that were not yet paid.
      *
      * @param int $orderId
      * @param int $orderInvoiceId

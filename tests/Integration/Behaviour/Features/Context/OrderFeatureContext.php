@@ -31,6 +31,7 @@ use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
+use Product;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -200,15 +201,27 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $totalQuantity = 0;
 
         foreach ($orderProducts as $orderProduct) {
-            $totalQuantity += (int) $orderProduct['product_quantity'];
+            $totalQuantity += (int)$orderProduct['product_quantity'];
         }
 
-        if ($totalQuantity !== (int) $quantity) {
+        if ($totalQuantity !== (int)$quantity) {
             throw new Exception(sprintf(
                 'Order should have "%d" products, but has "%d".',
                 $totalQuantity,
                 $quantity
             ));
+        }
+    }
+
+    /**
+     * @Given there is order with reference :orderReference
+     */
+    public function thereIsOrderWithReference($orderReference)
+    {
+        $orders = Order::getByReference($orderReference);
+
+        if (0 === $orders->count()) {
+            throw new \Exception(sprintf('Order with reference "%s" does not exist.', $orderReference));
         }
     }
 
@@ -242,6 +255,64 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                 $order->payment
             ));
         }
+    }
+
+    /**
+     * @Given order with reference :orderReference does not contain product with reference :productReference
+     */
+    public function orderDoesNotContainProductWithReference($orderReference, $productReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $productId = Product::getIdByReference($productReference);
+
+        if ($order->orderContainProduct($productId)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Order with reference "%s" contains product with reference "%s".',
+                    $orderReference,
+                    $productReference
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then order :orderReference should contain :quantity products with reference :productReference
+     */
+    public function orderContainsProductWithReference($orderReference, $quantity, $productReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $productId = (int) Product::getIdByReference($productReference);
+
+        if (!$order->orderContainProduct($productId)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Order with reference "%s" does not contain product with reference "%s".',
+                    $orderReference,
+                    $productReference
+                )
+            );
+        }
+
+        $orderDetails = $order->getOrderDetailList();
+
+        foreach ($orderDetails as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === $productId &&
+                (int) $orderDetail['product_quantity'] === (int) $quantity
+            ) {
+                return;
+            }
+        }
+
+        throw new \RuntimeException(
+            sprintf('Order was expected to have "%d" products "%s" in it.', $quantity, $productReference)
+        );
     }
 
     protected function getCurrentCartOrder()
