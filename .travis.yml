@@ -18,8 +18,8 @@ sudo: required
 dist: trusty
 
 php:
-  - 5.6
   - 7.2
+  - 7.3
 
 env:
   global:
