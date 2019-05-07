@@ -132,7 +132,7 @@ class LinkCore
         $ean13 = null,
         $idLang = null,
         $idShop = null,
-        $ipa = 0,
+        $ipa = null,
         $force_routes = false,
         $relativeProtocol = false,
         $addAnchor = false,
@@ -161,6 +161,10 @@ class LinkCore
             $params['id'] = $product->id;
         }
 
+        //Attribute equal to 0 or empty is useless, so we force it to null so that it won't be inserted in query parameters
+        if (empty($ipa)) {
+            $ipa = null;
+        }
         $params['id_product_attribute'] = $ipa;
         if (!$alias) {
             $product = $this->getProductObject($product, $idLang, $idShop);
