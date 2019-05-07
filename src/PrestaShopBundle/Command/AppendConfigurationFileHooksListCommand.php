@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
+use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use SimpleXMLElement;
