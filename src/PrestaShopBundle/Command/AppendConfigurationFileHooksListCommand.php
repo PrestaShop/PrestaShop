@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Command;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -54,7 +55,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
 
-        require $container->get('kernel')->getRootDir() . '/../config/config.inc.php';
+        $this->initContext();
 
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;
@@ -79,6 +80,23 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
         }
 
         $io->note('No new hooks have been added to configuration file');
+    }
+
+
+    /**
+     * Initialize PrestaShop Context
+     */
+    private function initContext()
+    {
+        require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+        /** @var LegacyContext $legacyContext */
+        $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
+        //We need to have an employee or the listing hooks don't work
+        //see LegacyHookSubscriber
+        if (!$legacyContext->getContext()->employee) {
+            //Even a non existing employee is fine
+            $legacyContext->getContext()->employee = new Employee(42);
+        }
     }
 
     /**
