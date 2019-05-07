@@ -14,7 +14,7 @@ module.exports = {
     banktransfer_bankaddress_input: '#BANK_WIRE_ADDRESS',
     banktransfer_save_button: '#module_form_submit_btn',
     success_alert: '//div[contains(@class,"module_confirmation")]',
-    install_paypal_button : '//*[@id="main-div"]//a[contains(@href,"module_name=paypal&anchor=Paypal")]',
+    install_paypal_button : '//*[@id="main-div"]//a[contains(@href,"module_name=paypal")]',
     paypal_conf_page : '//*[@id="paypal_conf"]',
     edit_carrier_button: '//*[@id="table-carrier"]//tr[@id="tr_2_1_0"]//td//a[contains(@class,"edit")]',
     install_chronopost_button: '//div[contains(@class,"modules_list_container_tab")]//td//a[contains(@href,"install=chronopost")]',
