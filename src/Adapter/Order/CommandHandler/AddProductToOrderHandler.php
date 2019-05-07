@@ -107,8 +107,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $totalMethod = $command->getOrderInvoiceId() ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
 
         // Create Order detail information
-        $order_detail = new OrderDetail();
-        $order_detail->createList(
+        $orderDetail = new OrderDetail();
+        $orderDetail->createList(
             $order,
             $cart,
             $order->getCurrentOrderState(),
@@ -120,9 +120,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $order->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $order->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 
-        $order->total_paid += Tools::ps_round((float) ($cart->getOrderTotal(true, $totalMethod)), 2);
-        $order->total_paid_tax_excl += Tools::ps_round((float) ($cart->getOrderTotal(false, $totalMethod)), 2);
-        $order->total_paid_tax_incl += Tools::ps_round((float) ($cart->getOrderTotal(true, $totalMethod)), 2);
+        $order->total_paid += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
+        $order->total_paid_tax_excl += Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
+        $order->total_paid_tax_incl += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
 
         if (null !== $invoice && Validate::isLoadedObject($invoice)) {
             $order->total_shipping = $invoice->total_shipping_tax_incl;
@@ -141,16 +141,16 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         StockAvailable::synchronize($product->id);
 
         // Update weight SUM
-        $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-        if (Validate::isLoadedObject($order_carrier)) {
-            $order_carrier->weight = (float) $order->getTotalWeight();
-            if ($order_carrier->update()) {
-                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+        $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
+        if (Validate::isLoadedObject($orderCarrier)) {
+            $orderCarrier->weight = (float) $order->getTotalWeight();
+            if ($orderCarrier->update()) {
+                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
             }
         }
 
         // Update Tax lines
-        $order_detail->updateTaxAmount($order);
+        $orderDetail->updateTaxAmount($order);
 
         // Delete specific price if exists
         if (null !== $specificPrice) {
@@ -161,23 +161,26 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         Hook::exec('actionOrderEdited', ['order' => $order]);
 
-        $new_cart_rules = Context::getContext()->cart->getCartRules();
-        sort($old_cart_rules);
-        sort($new_cart_rules);
-        $result = array_diff($new_cart_rules, $old_cart_rules);
+        $oldCartRules = Context::getContext()->cart->getCartRules();
+        $newCartRules = Context::getContext()->cart->getCartRules();
 
-        foreach ($result as $cart_rule) {
+        sort($oldCartRules);
+        sort($newCartRules);
+
+        $result = array_diff($newCartRules, $oldCartRules);
+
+        foreach ($result as $cartRule) {
             // Create OrderCartRule
-            $rule = new CartRule($cart_rule['id_cart_rule']);
+            $rule = new CartRule($cartRule['id_cart_rule']);
             $values = array(
                 'tax_incl' => $rule->getContextualValue(true),
                 'tax_excl' => $rule->getContextualValue(false),
             );
             $orderCartRule = new OrderCartRule();
             $orderCartRule->id_order = $order->id;
-            $orderCartRule->id_cart_rule = $cart_rule['id_cart_rule'];
+            $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
             $orderCartRule->id_order_invoice = $invoice->id;
-            $orderCartRule->name = $cart_rule['name'];
+            $orderCartRule->name = $cartRule['name'];
             $orderCartRule->value = $values['tax_incl'];
             $orderCartRule->value_tax_excl = $values['tax_excl'];
             $orderCartRule->add();

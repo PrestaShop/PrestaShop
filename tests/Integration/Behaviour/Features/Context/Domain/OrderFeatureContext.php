@@ -32,6 +32,8 @@ use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddProductToOrderCommand;
+use Product;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -49,15 +51,15 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($orderStates as $state) {
             if ($state['name'] === $orderStatus) {
-                $orderStatusId = (int) $state['id_order_state'];
+                $orderStatusId = (int)$state['id_order_state'];
             }
         }
 
         /** @var OrderId $orderId */
         $orderId = $this->getCommandBus()->handle(
             new AddOrderFromBackOfficeCommand(
-                (int) SharedStorage::getStorage()->get($cartReference)->id,
-                (int) Context::getContext()->employee->id,
+                (int)SharedStorage::getStorage()->get($cartReference)->id,
+                (int)Context::getContext()->employee->id,
                 '',
                 $paymentModuleName,
                 $orderStatusId
@@ -65,5 +67,33 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         );
 
         SharedStorage::getStorage()->set($orderReference, new Order($orderId->getValue()));
+    }
+
+    /**
+     * @When I add :quantity products with reference :productReference, price :price and free shipping to order :orderReference with new invoice
+     */
+    public function addProductToOrderWithFreeShippingAndNewInvoice(
+        $quantity,
+        $productReference,
+        $price,
+        $orderReference
+    ) {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $productId = Product::getIdByReference($productReference);
+
+        $this->getCommandBus()->handle(
+            AddProductToOrderCommand::withNewInvoice(
+                (int) $order->id,
+                (int) $productId,
+                0,
+                (float) $price,
+                (float) $price,
+                (int) $quantity,
+                true
+            )
+        );
     }
 }
