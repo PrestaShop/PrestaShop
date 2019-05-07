@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -192,12 +193,13 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $filters = (new FilterCollection())
             ->add(
-                (new Filter('id_category', TextType::class))
-                ->setAssociatedColumn('id_category')
+                (new Filter('reduction_type', ChoiceType::class))
+                ->setAssociatedColumn('reduction_type')
                 ->setTypeOptions([
                     'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    'choices' => [
+                        $this->translator->trans('Amount') => 'amount',
+                        $this->translator->trans('Percent') => 'percent',
                     ],
                 ])
             )
