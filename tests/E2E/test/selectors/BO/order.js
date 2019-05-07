@@ -116,7 +116,7 @@ module.exports = {
     new_customer_button: '//*[@id="search-customer-form-group"]//a',
     detail_customer_button: '//*[@id="customers"]//a',
     customer_details_header_bloc: '(//div[contains(@class, "card")])[1]//h3[contains(@class, "card-header")]',
-    customer_details_email_link:  '(//div[contains(@class, "card")])[1]//h3[contains(@class, "card-header")]/a',
+    customer_details_email_link:  '(//div[contains(@class, "card")])[1]//h3[contains(@class, "card-header")]/a[1]',
     close_detail_link: '//a[@title="Close"]',
     detail_cart_button: '//*[@id="nonOrderedCarts"]//a[contains(@title,"View")]',
     use_cart_button: '//*[@id="nonOrderedCarts"]//a[contains(@title,"Use")]',
