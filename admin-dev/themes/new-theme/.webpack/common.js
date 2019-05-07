@@ -80,6 +80,7 @@ module.exports = {
     error: './js/pages/error',
     monitoring: './js/pages/monitoring',
     order: './js/pages/order',
+    catalog_price_rule: './js/pages/catalog-price-rule',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
