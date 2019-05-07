@@ -57,7 +57,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (Validate::isLoadedObject($this->product)) {
             if (!$this->product->hasCombinations() ||
                 !$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
-                //Invalid combination we redirect to the canonical url (with attribute id)
+                //Invalid combination we redirect to the canonical url (without attribute id)
                 unset($_GET['id_product_attribute']);
             } else {
                 //Only redirect to canonical (parent product without combination) when the requested combination is not valid

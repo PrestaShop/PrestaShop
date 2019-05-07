@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
+use Cart;
+
 class CartRuleCalculator
 {
     /**
@@ -48,10 +50,23 @@ class CartRuleCalculator
      */
     protected $fees;
 
+    /**
+     * process cartrules calculation
+     */
     public function applyCartRules()
     {
         foreach ($this->cartRules as $cartRule) {
             $this->applyCartRule($cartRule);
+        }
+    }
+
+    /**
+     * process cartrules calculation, excluding free-shipping processing
+     */
+    public function applyCartRulesWithoutFreeShipping()
+    {
+        foreach ($this->cartRules as $cartRule) {
+            $this->applyCartRule($cartRule, false);
         }
     }
 
@@ -67,7 +82,13 @@ class CartRuleCalculator
         return $this;
     }
 
-    protected function applyCartRule(CartRuleData $cartRuleData)
+    /**
+     * @param CartRuleData $cartRuleData
+     * @param bool $withFreeShipping used to calculate free shipping discount (avoid loop on shipping calculation)
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    protected function applyCartRule(CartRuleData $cartRuleData, $withFreeShipping = true)
     {
         $cartRule = $cartRuleData->getCartRule();
         $cart = $this->calculator->getCart();
@@ -77,8 +98,11 @@ class CartRuleCalculator
         }
 
         // Free shipping on selected carriers
-        if ($cartRule->free_shipping) {
-            $initialShippingFees = $this->calculator->getFees()->getInitialShippingFees();
+        if ($cartRule->free_shipping && $withFreeShipping) {
+            $initialShippingFees = new AmountImmutable(
+                $cart->getOrderTotal(true, Cart::ONLY_SHIPPING),
+                $cart->getOrderTotal(false, Cart::ONLY_SHIPPING)
+            );
             $this->calculator->getFees()->subDiscountValueShipping($initialShippingFees);
             $cartRuleData->addDiscountApplied($initialShippingFees);
         }

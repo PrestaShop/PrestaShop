@@ -326,7 +326,7 @@ class CartPresenter implements PresenterInterface
         $productsTotalExcludingTax = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
-        $total_discount = $cart->getDiscountSubtotalWithoutGifts();
+        $total_discount = $cart->getDiscountSubtotalWithoutGifts($this->includeTaxes());
         $totalCartAmount = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
 
         $subtotals['products'] = array(
