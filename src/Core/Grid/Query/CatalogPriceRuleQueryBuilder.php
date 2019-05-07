@@ -87,7 +87,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             pr.from,
             pr.to,
             pr_shop.name shop,
-            pr_currency.iso_code currency,
+            pr_currency.name currency,
             pr_country.name country,
             pr_group.name group_name'
         );
@@ -131,9 +131,9 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             )
             ->leftJoin(
                 'pr',
-                $this->dbPrefix . 'currency',
+                $this->dbPrefix . 'currency_lang',
                 'pr_currency',
-                'pr_currency.`id_currency` = pr.`id_currency`'
+                'pr_currency.`id_currency` = pr.`id_currency` AND pr_currency.`id_lang` = :contextLangId'
             )
             ->leftJoin(
                 'pr',
@@ -156,9 +156,14 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * @param QueryBuilder $qb
+     * @param array $filters
+     */
     private function applyFilters(QueryBuilder $qb, array $filters)
     {
         $allowedFiltersAliasMap = [
+            'id_specific_price_rule' => 'pr.id_specific_price_rule',
             'name' => 'pr.name',
             'from_quantity' => 'pr.from_quantity',
             'reduction' => 'pr.reduction',
@@ -166,15 +171,38 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             'from' => 'pr.from',
             'to' => 'pr.to',
             'shop' => 'pr_shop.name',
-            'currency' => 'pr_currency.iso_code',
+            'currency' => 'pr_currency.name',
             'country' => 'pr_country.name',
             'group_name' => 'pr_group.name',
         ];
+
+        $exactMatchFilters = ['id_specific_price_rule', 'from_quantity', 'reduction', 'reduction_type'];
 
         foreach ($filters as $filterName => $value) {
             if (!array_key_exists($filterName, $allowedFiltersAliasMap)) {
                 return;
             }
+
+            if (in_array($filterName, $exactMatchFilters, true)) {
+                $qb->andWhere($allowedFiltersAliasMap[$filterName . ' = :value']);
+                $qb->setParameter('value', $value);
+
+                continue;
+            }
+
+            if ('from' === $filterName || 'to' === $filterName) {
+                $qb->andWhere(
+                    $allowedFiltersAliasMap[$filterName] . ' >= :date_from AND ' .
+                    $allowedFiltersAliasMap[$filterName] . ' <= :date_to'
+                );
+                $qb->setParameter('date_from', sprintf('%s 0:0:0', $value['from']));
+                $qb->setParameter('date_to', sprintf('%s 23:59:59', $value['to']));
+
+                continue;
+            }
+
+            $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' LIKE :value');
+            $qb->setParameter('value', "%$value%");
         }
     }
 }
