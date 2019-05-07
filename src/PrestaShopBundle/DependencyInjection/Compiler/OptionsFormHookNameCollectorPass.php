@@ -37,12 +37,12 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 final class OptionsFormHookNameCollectorPass implements CompilerPassInterface
 {
-    const OPTIONS_FORM_SERVICE_ENDS_WITH = 'form_handler';
+    const OPTIONS_FORM_SERVICE_SUFFIX = 'form_handler';
 
     const HOOK_NAME_POSITION_IN_CONSTRUCTOR = 4;
-    const HOOK_NAME_STARTS_WITH = 'action';
-    const HOOK_NAME_OF_FORM_BUILDER_ENDS_WITH = 'Form';
-    const HOOK_NAME_OF_FORM_SAVE_ENDS_WIDTH = 'Save';
+    const HOOK_NAME_PREFIX = 'action';
+    const HOOK_NAME_OF_FORM_BUILDER_SUFFIX = 'Form';
+    const HOOK_NAME_OF_FORM_SAVE_SUFFIX = 'Save';
 
     /**
      * {@inheritdoc}
@@ -73,15 +73,15 @@ final class OptionsFormHookNameCollectorPass implements CompilerPassInterface
 
         foreach ($optionNames as $optionName) {
             $formBuilderHookNames[] = $this->formatHookName(
-                self::HOOK_NAME_STARTS_WITH,
+                self::HOOK_NAME_PREFIX,
                 $optionName,
-                self::HOOK_NAME_OF_FORM_BUILDER_ENDS_WITH
+                self::HOOK_NAME_OF_FORM_BUILDER_SUFFIX
             );
 
             $formBuilderSaveHookNames[] = $this->formatHookName(
-                self::HOOK_NAME_STARTS_WITH,
+                self::HOOK_NAME_PREFIX,
                 $optionName,
-                self::HOOK_NAME_OF_FORM_SAVE_ENDS_WIDTH
+                self::HOOK_NAME_OF_FORM_SAVE_SUFFIX
             );
         }
 
@@ -101,7 +101,7 @@ final class OptionsFormHookNameCollectorPass implements CompilerPassInterface
      */
     private function isOptionsFormService($serviceId, $serviceClass)
     {
-        return $this->stringEndsWith($serviceId, self::OPTIONS_FORM_SERVICE_ENDS_WITH) &&
+        return $this->stringEndsWith($serviceId, self::OPTIONS_FORM_SERVICE_SUFFIX) &&
             is_subclass_of($serviceClass, FormHandlerInterface::class)
         ;
     }

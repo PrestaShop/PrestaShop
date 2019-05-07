@@ -38,14 +38,14 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
 {
     const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
 
-    const FORM_BUILDER_HOOK_STARTS_WITH = 'action';
-    const FORM_BUILDER_HOOK_ENDS_WITH = 'FormBuilderModifier';
+    const FORM_BUILDER_HOOK_PREFIX = 'action';
+    const FORM_BUILDER_HOOK_SUFFIX = 'FormBuilderModifier';
 
-    const FORM_HANDLER_UPDATE_BEFORE_STARTS_WITH = 'actionBeforeUpdate';
-    const FORM_HANDLER_UPDATE_AFTER_STARTS_WITH = 'actionAfterUpdate';
-    const FORM_HANDLER_CREATE_BEFORE_STARTS_WITH = 'actionBeforeCreate';
-    const FORM_HANDLER_CREATE_AFTER_STARTS_WITH = 'actionAfterCreate';
-    const FORM_HANDLER_ENDS_WITH = 'FormHandler';
+    const FORM_HANDLER_UPDATE_BEFORE_PREFIX = 'actionBeforeUpdate';
+    const FORM_HANDLER_UPDATE_AFTER_PREFIX = 'actionAfterUpdate';
+    const FORM_HANDLER_CREATE_BEFORE_PREFIX = 'actionBeforeCreate';
+    const FORM_HANDLER_CREATE_AFTER_PREFIX = 'actionAfterCreate';
+    const FORM_HANDLER_SUFFIX = 'FormHandler';
 
     /**
      * @var FormRegistryInterface
@@ -75,33 +75,33 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
 
         foreach ($formNames as $formName) {
             $formBuilderHookNames[] = $this->formatHookName(
-                self::FORM_BUILDER_HOOK_STARTS_WITH,
+                self::FORM_BUILDER_HOOK_PREFIX,
                 $formName,
-                self::FORM_BUILDER_HOOK_ENDS_WITH
+                self::FORM_BUILDER_HOOK_SUFFIX
             );
 
             $formHandlerBeforeUpdateHookNames[] = $this->formatHookName(
-                self::FORM_HANDLER_UPDATE_BEFORE_STARTS_WITH,
+                self::FORM_HANDLER_UPDATE_BEFORE_PREFIX,
                 $formName,
-                self::FORM_HANDLER_ENDS_WITH
+                self::FORM_HANDLER_SUFFIX
             );
 
             $formHandlerAfterUpdateHookNames[] = $this->formatHookName(
-                self::FORM_HANDLER_UPDATE_AFTER_STARTS_WITH,
+                self::FORM_HANDLER_UPDATE_AFTER_PREFIX,
                 $formName,
-                self::FORM_HANDLER_ENDS_WITH
+                self::FORM_HANDLER_SUFFIX
             );
 
             $formHandlerBeforeCreateHookNames[] = $this->formatHookName(
-                self::FORM_HANDLER_CREATE_BEFORE_STARTS_WITH,
+                self::FORM_HANDLER_CREATE_BEFORE_PREFIX,
                 $formName,
-                self::FORM_HANDLER_ENDS_WITH
+                self::FORM_HANDLER_SUFFIX
             );
 
             $formHandlerAfterCreateHookNames[] = $this->formatHookName(
-                self::FORM_HANDLER_CREATE_AFTER_STARTS_WITH,
+                self::FORM_HANDLER_CREATE_AFTER_PREFIX,
                 $formName,
-                self::FORM_HANDLER_ENDS_WITH
+                self::FORM_HANDLER_SUFFIX
             );
         }
 

@@ -36,12 +36,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsProviderInterface
 {
-    const HOOK_STARTS_WITH = 'action';
-    const GRID_DEFINITION_HOOK_ENDS_WITH = 'GridDefinitionModifier';
-    const GRID_QUERY_BUILDER_HOOK_ENDS_WITH = 'GridQueryBuilderModifier';
-    const GRID_DATA_HOOK_ENDS_WITH = 'GridDataModifier';
-    const GRID_FILTER_FORM_ENDS_WITH = 'GridFilterFormModifier';
-    const GRID_PRESENTER_ENDS_WITH = 'GridPresenterModifier';
+    const HOOK_PREFIX = 'action';
+    const GRID_DEFINITION_HOOK_SUFFIX = 'GridDefinitionModifier';
+    const GRID_QUERY_BUILDER_HOOK_SUFFIX = 'GridQueryBuilderModifier';
+    const GRID_DATA_HOOK_SUFFIX = 'GridDataModifier';
+    const GRID_FILTER_FORM_SUFFIX = 'GridFilterFormModifier';
+    const GRID_PRESENTER_SUFFIX = 'GridPresenterModifier';
 
     /**
      * @var ContainerInterface
@@ -71,33 +71,33 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
 
         foreach ($gridDefinitionIds as $gridDefinitionId) {
             $gridDefinitionHookNames[] = $this->formatHookName(
-                self::HOOK_STARTS_WITH,
+                self::HOOK_PREFIX,
                 $gridDefinitionId,
-                self::GRID_DEFINITION_HOOK_ENDS_WITH
+                self::GRID_DEFINITION_HOOK_SUFFIX
             );
 
             $gridQueryBuilderHookNames[] = $this->formatHookName(
-                self::HOOK_STARTS_WITH,
+                self::HOOK_PREFIX,
                 $gridDefinitionId,
-                self::GRID_QUERY_BUILDER_HOOK_ENDS_WITH
+                self::GRID_QUERY_BUILDER_HOOK_SUFFIX
             );
 
             $gridDataHookNames[] = $this->formatHookName(
-                self::HOOK_STARTS_WITH,
+                self::HOOK_PREFIX,
                 $gridDefinitionId,
-                self::GRID_DATA_HOOK_ENDS_WITH
+                self::GRID_DATA_HOOK_SUFFIX
             );
 
             $gridFilterFormHookNames[] = $this->formatHookName(
-                self::HOOK_STARTS_WITH,
+                self::HOOK_PREFIX,
                 $gridDefinitionId,
-                self::GRID_FILTER_FORM_ENDS_WITH
+                self::GRID_FILTER_FORM_SUFFIX
             );
 
             $gridPresenterHookNames[] = $this->formatHookName(
-                self::HOOK_STARTS_WITH,
+                self::HOOK_PREFIX,
                 $gridDefinitionId,
-                self::GRID_PRESENTER_ENDS_WITH
+                self::GRID_PRESENTER_SUFFIX
             );
         }
 
