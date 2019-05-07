@@ -33,7 +33,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * Used for collecting options form hook names and store them in the container.
+ * Used for collecting options form hook names and store them in the container. Options form hook name is stored in the
+ * constructor argument. E.g in yml file:
+ *
+ * prestashop.admin.my_form.form_handler:
+ *   class: 'MyForm'
+ *   arguments:
+ *    - '@someService'
+ *    - 'MyFormHookName'
+ *
+ * In the sample, hook name is located in 1 position of argument array.
+ *
  */
 final class OptionsFormHookNameCollectorPass implements CompilerPassInterface
 {
