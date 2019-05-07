@@ -64,7 +64,6 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
         CommandBusInterface $queryBus
     ) {
         parent::__construct($hookDispatcher);
-
         $this->queryBus = $queryBus;
     }
 
