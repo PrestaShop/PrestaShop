@@ -6,6 +6,7 @@ const {SearchProductPage} = require('../../../selectors/FO/search_product_page')
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonDiscountScenarios = require('../../common_scenarios/discount');
 const commonScenarios = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 let cartRuleData = [
@@ -45,6 +46,7 @@ scenario('Create a new "Cart Rule" in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'discount');
+  welcomeScenarios.findAndCloseWelcomeModal();
   for (let i = 0; i < cartRuleData.length; i++) {
     commonDiscountScenarios.createCartRule(cartRuleData[i], 'codePromo' + (i + 1));
     commonDiscountScenarios.checkCartRule(cartRuleData[i], 'codePromo' + (i + 1));
