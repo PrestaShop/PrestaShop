@@ -27,19 +27,21 @@
 namespace PrestaShopBundle\Command;
 
 use Employee;
-use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * This command is used for appending the hook names in the configuration file.
+ * Appends sql upgrade file with the sql which can be used to create new hooks.
  */
-class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
+class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -47,8 +49,15 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('prestashop:update:configuration-file-hooks-listing')
-            ->setDescription('Appends configuration file hooks list')
+            ->setName('prestashop:update:sql-upgrade-file-hooks-listing')
+            ->setDescription(
+                'Adds sql to sql upgrade file which contains hook insert opeartion'
+            )
+            ->addArgument(
+                'ps-version',
+                InputArgument::REQUIRED,
+                'The prestashop version for which sql upgrade file will be searched'
+            )
         ;
     }
 
@@ -68,23 +77,32 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
 
         $hookNames = $this->getHookNames();
 
-        try {
-            $addedHooks = $this->appendHooksInConfigurationFile($hookNames);
-        } catch (Exception $e) {
-            $io->error($e->getMessage());
-        }
-
-        if (!empty($addedHooks)) {
-            $io->title('Hooks added to configuration file');
-            $io->note(sprintf('Total hooks added: %s', count($addedHooks)));
-            $io->listing($addedHooks);
+        if (empty($hookNames)) {
+            $io->note('No hooks found.');
 
             return;
         }
 
-        $io->note('No new hooks have been added to configuration file');
-    }
+        try {
+            $sqlUpgradeFile = $this->getSqlUpgradeFileByPrestaShopVersion($input->getArgument('ps-version'));
+        } catch (FileNotFoundException $exception) {
+            $io->error($exception->getMessage());
 
+            return;
+        }
+
+        $sqlInsertStatement = $this->getSqlInsertStatement($hookNames);
+
+        $this->appendSqlToFile($sqlUpgradeFile->getFileInfo()->getPathName(), $sqlInsertStatement);
+
+        $io->success(
+            sprintf(
+                'All %s hooks have been listed to file %s',
+                count($hookNames),
+                $sqlUpgradeFile->getFileInfo()->getPathName()
+            )
+        );
+    }
 
     /**
      * Initialize PrestaShop Context
@@ -92,6 +110,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
     private function initContext()
     {
         require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+
         /** @var LegacyContext $legacyContext */
         $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the listing hooks don't work
@@ -135,95 +154,77 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
     }
 
     /**
-     * Appends given hooks in the configuration file.
+     * Gets sql upgrade file by PrestaShop version.
      *
-     * @param array $newHookNames
+     * @param string $version
      *
-     * @return array
-     *
-     * @throws Exception
+     * @return SplFileInfo
      */
-    private function appendHooksInConfigurationFile(array $newHookNames)
+    private function getSqlUpgradeFileByPrestaShopVersion($version)
     {
-        $hookConfigurationFileLocation = $this->getContainer()->get('kernel')->getRootDir() . '/../install-dev/data/xml/';
-        $hookFileName = 'hook.xml';
-        $fullFilePath = $hookConfigurationFileLocation . $hookFileName;
+        $sqlUpgradeFilesLocation = $this->getContainer()->get('kernel')->getRootDir() . '/../install-dev/upgrade/sql/';
+        $sqlUpgradeFile = $version . '.sql';
 
         $filesFinder = new Finder();
         $filesFinder
             ->files()
-            ->in($hookConfigurationFileLocation)
-            ->name($hookFileName)
+            ->in($sqlUpgradeFilesLocation)
+            ->name($sqlUpgradeFile)
         ;
 
-        $hookFileContent = null;
+        $filesCount = $filesFinder->count();
 
-        foreach ($filesFinder as $fileInfo) {
-            $hookFileContent = $fileInfo->getContents();
-
-            break;
-        }
-
-        if (!$hookFileContent) {
-            throw new Exception(
-                sprintf('File %s has not been found', $fullFilePath)
-            );
-        }
-
-        $xmlFileContent = new SimpleXMLElement($hookFileContent);
-
-        if (!isset($xmlFileContent->entities, $xmlFileContent->entities->hook)) {
-            return [];
-        }
-
-        $existingHookNames = $this->filterExistingHookNames($xmlFileContent->entities->hook);
-
-        $addedHooks = [];
-        foreach ($newHookNames as $hookName) {
-            if (in_array($hookName, $existingHookNames)) {
-                continue;
-            }
-
-            $hook = $xmlFileContent->entities->addChild('hook');
-
-            $hook->addAttribute('id', $hookName);
-            $hook->addChild('name', $hookName);
-            $hook->addChild('title', '');
-            $hook->addChild('description', '');
-
-            $addedHooks[] = $hookName;
-        }
-
-        if (!$xmlFileContent->saveXML($fullFilePath)) {
-            throw new Exception(
+        if (1 !== $filesCount) {
+            throw new FileNotFoundException(
                 sprintf(
-                    'Failed to save new xml content to file %s',
-                    $fullFilePath
+                    'Expected to find 1 file but %s files found with name %s',
+                    $filesFinder->count(),
+                    $sqlUpgradeFile
                 )
             );
         }
 
-        return $addedHooks;
+        foreach ($filesFinder as $sqlInfo) {
+            return $sqlInfo;
+        }
+
+        return null;
     }
 
     /**
-     * Gets existing hook names which are already defined in the file.
+     * Gets sql insert statement.
      *
-     * @param SimpleXMLElement $hooksFromXmlFile
+     * @param array $hookNames
      *
-     * @return array
+     * @return string
      */
-    private function filterExistingHookNames(SimpleXMLElement $hooksFromXmlFile)
+    private function getSqlInsertStatement(array $hookNames)
     {
-        $hookNames = [];
-        foreach ($hooksFromXmlFile as $hook) {
-            if (!isset($hook->name)) {
-                continue;
-            }
-
-            $hookNames[] = $hook->name->__toString();
+        $valuesToInsert = [];
+        foreach ($hookNames as $hookName) {
+            $valuesToInsert[] = sprintf('(NULL,"%s","","","1")', $hookName);
         }
 
-        return $hookNames;
+        if (empty($valuesToInsert)) {
+            return '';
+        }
+
+        return sprintf(
+            'INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES %s;',
+            implode(',', $valuesToInsert)
+        );
+    }
+
+    /**
+     * Appends new content to the given file.
+     *
+     * @param string $pathToFile
+     * @param string $content
+     */
+    private function appendSqlToFile($pathToFile, $content)
+    {
+        $fileSystem = new FileSystem();
+
+        $fileSystem->appendToFile($pathToFile, $content);
     }
 }
