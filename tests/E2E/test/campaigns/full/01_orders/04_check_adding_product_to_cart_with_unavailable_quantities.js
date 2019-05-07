@@ -19,6 +19,9 @@ let productData = {
   image_name: 'image_test.jpg',
   reference: 'test_1',
 };
+/*
+* Check issue #13634, blocking last step
+ */
 
 scenario('Check adding a product to the cart with unavailable quantities', () => {
 
@@ -26,6 +29,8 @@ scenario('Check adding a product to the cart with unavailable quantities', () =>
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
+  welcomeScenarios.findAndCloseWelcomeModal();
+
   welcomeScenarios.findAndCloseWelcomeModal();
 
   common_scenarios.createProduct(AddProductPage, productData);
