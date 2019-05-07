@@ -28,7 +28,7 @@ module.exports = {
     sql_manager: './js/pages/sql-manager',
     catalog_product: './js/pages/catalog/product',
     backup: './js/pages/backup',
-    categories: './js/pages/categories',
+    categories: './js/pages/category',
     module_card: './js/app/pages/module-card',
     translation_settings: './js/pages/translation-settings',
     webservice: './js/pages/webservice',

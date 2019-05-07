@@ -23,7 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Vue from 'vue';
-import serp from './serp';
+import serp from './serp.vue';
+
 const $ = window.$;
 
 /**
@@ -33,60 +34,41 @@ const $ = window.$;
  * Set the proper class to link a input to a part of the panel.
  */
 class SerpApp {
-  constructor() {
+  constructor($selector, url) {
     // If the selector cannot be found, we do not load the Vue app
-    if (0 === $('#serp-app').length) {
+    if ($($selector).length === 0) {
       return;
     }
 
-    this.defaultTitle = $('.serp-default-title:input');
-    this.watchedTitle = $('.serp-watched-title:input');
-    this.defaultDescription = $('.serp-default-description');
-    this.watchedDescription = $('.serp-watched-description');
-    this.defaultUrl = $('.serp-default-url:input');
+    this.data = {
+      url,
+      title: '',
+      description: '',
+    };
 
     this.vm = new Vue({
-      el: '#serp-app',
-      template: '<serp ref="serp" />',
+      el: $selector,
+      template: '<serp ref="serp" :url="url" :title="title" :description="description" />',
       components: { serp },
+      data: this.data,
     });
-
-    this.attachEvents(this.vm.$refs.serp);
-  }
-    
-  attachEvents(app) {
-    // Specific rules for updating the search result preview
-    const updateSerpTitle = () => {
-      const title1 = this.watchedTitle.length ? this.watchedTitle.val() : '';
-      const title2 = this.defaultTitle.length ? this.defaultTitle.val() : '';
-      app.setTitle(title1 || title2);
-    };
-    const updateSerpUrl = () => {
-      if (this.defaultUrl.length) {
-        app.setUrl(this.defaultUrl.val());
-      }
-    };
-    const updateSerpDescription = () => {
-      const desc1 = this.watchedDescription.length ? this.watchedDescription.val().innerText || this.watchedDescription.val() : '';
-      const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() || this.defaultDescription.val() : '';
-      app.setDescription(desc1 || desc2);
-    };
-    this.watchedTitle.on('keyup change', updateSerpTitle);
-    this.defaultTitle.on('keyup change', updateSerpTitle);
-
-    this.watchedDescription.on('keyup change', updateSerpDescription);
-    this.defaultDescription.on('keyup change', updateSerpDescription);
-
-    updateSerpTitle();
-    updateSerpUrl();
-    updateSerpDescription();
   }
 
-  /**
-   * @returns {boolean}
-   */
-  isActive() {
-    return (undefined !== this.vm);
+  setTitle(title) {
+    this.data.title = title;
+  }
+
+  setDescription(description) {
+    this.data.description = description;
+  }
+
+  setUrl(url) {
+    this.data.url = this.data.url.replace(
+      this.originalUrl,
+      url,
+    );
+
+    this.originalUrl = url;
   }
 }
 
