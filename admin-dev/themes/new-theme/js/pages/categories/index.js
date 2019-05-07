@@ -45,6 +45,8 @@ import TaggableField from "../../components/taggable-field";
 import ShowcaseCard from "../../components/showcase-card/showcase-card";
 import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
 import TextWithRecommendedLengthCounter from '../../components/form/text-with-recommended-length-counter';
+import TranslatableField from "../../components/translatable-field";
+import TinyMCEEditor from "../../components/tinymce-editor";
 
 const $ = window.$;
 
@@ -67,6 +69,8 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
+  new TranslatableField();
+  new TinyMCEEditor();
   new TranslatableInput();
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
