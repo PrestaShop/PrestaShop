@@ -34,11 +34,13 @@ const $ = window.$;
  * Set the proper class to link a input to a part of the panel.
  */
 class SerpApp {
-  constructor(selectors, url) {
+  constructor(selectors, url, multiLang) {
     // If the selector cannot be found, we do not load the Vue app
     if ($(selectors.container).length === 0) {
       return;
     }
+
+    this.multiLanguageSupport = multiLang === undefined ? multiLang : false;
 
     this.data = {
       url,
@@ -53,13 +55,24 @@ class SerpApp {
       data: this.data,
     });
 
-    this.defaultTitle = $(selectors.defaultTitle);
-    this.watchedTitle = $(selectors.watchedTitle);
-    this.defaultDescription = $(selectors.defaultDescription);
-    this.watchedDescription = $(selectors.watchedDescription);
-    this.watchedMetaUrl = $(selectors.watchedMetaUrl);
-
+    this.initializeSelectors(selectors);
     this.attachEvents();
+  }
+  initializeSelectors(selectors) {
+    if (!this.multiLanguageSupport) {
+      this.defaultTitle = $(selectors.defaultTitle);
+      this.watchedTitle = $(selectors.watchedTitle);
+      this.defaultDescription = $(selectors.defaultDescription);
+      this.watchedDescription = $(selectors.watchedDescription);
+      this.watchedMetaUrl = $(selectors.watchedMetaUrl);
+      return;
+    }
+
+    this.defaultTitle = $(`${selectors.defaultTitle}`);
+    this.watchedTitle = $(`${selectors.watchedTitle}`);
+    this.defaultDescription = $(`${selectors.defaultDescription}`);
+    this.watchedDescription = $(`${selectors.watchedDescription}`);
+    this.watchedMetaUrl = $(`${selectors.watchedMetaUrl}:visible`);
   }
 
   attachEvents() {

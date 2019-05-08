@@ -47,6 +47,7 @@ import ShowcaseCardCloseExtension from '../../components/showcase-card/extension
 import TextWithRecommendedLengthCounter from '../../components/form/text-with-recommended-length-counter';
 import TranslatableField from '../../components/translatable-field';
 import TinyMCEEditor from '../../components/tinymce-editor';
+import FormSeoPreview from './seo-preview';
 
 const $ = window.$;
 
@@ -83,6 +84,14 @@ $(() => {
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="root_category[name]"]',
     destinationElementSelector: 'input[name^="root_category[link_rewrite]"]',
+  });
+
+  FormSeoPreview({
+    title: 'input[name^="category[name]',
+    metaTitle: 'input[name^="category[meta_title]',
+    description: 'textarea[name^="category[description]',
+    metaDescription: 'textarea[name^="category[meta_description]',
+    metaUrl: 'input[name^="category[link_rewrite]',
   });
 
   new FormSubmitButton();

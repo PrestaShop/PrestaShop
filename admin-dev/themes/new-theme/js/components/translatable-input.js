@@ -36,9 +36,9 @@ class TranslatableInput {
   constructor(options) {
     options = options || {};
 
-    this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
-    this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
-    this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
+    this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
+    this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
+    this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
 
     $('body').on('click', this.localeItemSelector, this.toggleLanguage.bind(this));
     EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
