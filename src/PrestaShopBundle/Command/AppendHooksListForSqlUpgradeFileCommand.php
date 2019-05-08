@@ -76,6 +76,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         }
 
         $hookNames = $this->getHookNames();
+        $hookNames = $this->getWithoutRegisteredHooks($hookNames);
 
         if (empty($hookNames)) {
             $io->note('No hooks found.');
@@ -226,5 +227,21 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         $fileSystem = new FileSystem();
 
         $fileSystem->appendToFile($pathToFile, $content);
+    }
+
+    /**
+     * Filters out already registered hooks.
+     *
+     * @param array $hookNames
+     *
+     * @return array
+     */
+    private function getWithoutRegisteredHooks(array $hookNames)
+    {
+        $hooksProvider = $this->getContainer()->get('prestashop.adapter.legacy.hook');
+        $registeredHooks = $hooksProvider->getHooks();
+        $registeredHookNames = array_column($registeredHooks, 'name');
+
+        return array_diff($hookNames, $registeredHookNames);
     }
 }
