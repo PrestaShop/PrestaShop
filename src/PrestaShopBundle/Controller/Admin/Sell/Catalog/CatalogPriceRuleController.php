@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use phpDocumentor\Reflection\Types\Array_;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
@@ -128,20 +128,19 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        //@todo:
-//        $catalogPriceRuleIds = $this->getBulkCatalogPriceRulesFromRequest($request);
-//
-//        try {
-//            $this->getCommandBus()->handle(new BulkDeleteCatalogPriceRuleCommand($catalogPriceRuleIds));
-//            $this->addFlash(
-//                'success',
-//                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
-//            );
-//        } catch (CatalogPriceRuleException $e) {
-//            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-//        }
-//
-//        return $this->redirectToRoute('admin_catalog_price_rules_index');
+        $catalogPriceRuleIds = $this->getBulkCatalogPriceRulesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCatalogPriceRuleCommand($catalogPriceRuleIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (CatalogPriceRuleException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_catalog_price_rules_index');
     }
 
     /**
@@ -149,7 +148,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    public function getErrorMessages()
+    private function getErrorMessages()
     {
         return [
             DeleteCatalogPriceRuleException::class => [
@@ -163,5 +162,27 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * Provides catalog price rule ids from request of bulk action
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkCatalogPriceRulesFromRequest(Request $request)
+    {
+        $catalogPriceRuleIds = $request->request->get('catalog_price_rule_bulk');
+
+        if (!is_array($catalogPriceRuleIds)) {
+            return [];
+        }
+
+        foreach ($catalogPriceRuleIds as &$catalogPriceRuleId) {
+            $catalogPriceRuleId = (int) $catalogPriceRuleId;
+        }
+
+        return $catalogPriceRuleIds;
     }
 }
