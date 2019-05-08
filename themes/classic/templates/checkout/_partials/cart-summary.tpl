@@ -54,7 +54,7 @@
 
     {block name='cart_summary_subtotals'}
       {foreach from=$cart.subtotals item="subtotal"}
-        {if $subtotal && $subtotal.type !== 'tax'}
+        {if $subtotal.value && $subtotal.type !== 'tax'}
           <div class="cart-summary-line cart-summary-subtotals" id="cart-subtotal-{$subtotal.type}">
             <span class="label">{$subtotal.label}</span>
             <span class="value">{$subtotal.value}</span>
