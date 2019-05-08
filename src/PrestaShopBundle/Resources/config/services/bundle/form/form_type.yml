@@ -905,6 +905,19 @@ services:
             - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         tags:
+          - { name: form.type }
+
+    form.type.sell.catalog_price_rule:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule\CatalogPriceRuleType'
+        public: true
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+            - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+        tags:
             - { name: form.type }
 
     form.type.sell.customer.private_note:
