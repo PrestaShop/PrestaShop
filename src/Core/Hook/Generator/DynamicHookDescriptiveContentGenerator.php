@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook\Generator;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
+use Symfony\Component\DependencyInjection\Container;
 
 final class DynamicHookDescriptiveContentGenerator implements DynamicHookDescriptiveContentGeneratorInterface
 {
@@ -50,6 +51,7 @@ final class DynamicHookDescriptiveContentGenerator implements DynamicHookDescrip
      */
     public function getDescription($hookName)
     {
+        //todo: move string operations to different services in Util folder.
         foreach ($this->hookDescriptions as $hookPlaceholder => $hookDescription) {
             $prefix = isset($hookDescription['prefix']) ? $hookDescription['prefix'] : '';
             $suffix = isset($hookDescription['suffix']) ? $hookDescription['suffix'] : '';
