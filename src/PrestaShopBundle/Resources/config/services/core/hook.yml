@@ -18,7 +18,7 @@ services:
         - '@form.factory'
 
     prestashop.core.hook.generator.dynamic_hook_descriptive_content_generator:
-      class: 'PrestaShop\PrestaShop\Core\Hook\Generator\DynamicHookDescriptiveContentGenerator'
+      class: 'PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator'
       arguments:
         - '':
             'prefix': ''

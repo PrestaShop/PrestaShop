@@ -36,7 +36,7 @@ use Symfony\Component\DependencyInjection\Container;
 /**
  * Generates description for hook names.
  */
-final class HookDescriptionGenerator implements DynamicHookDescriptiveContentGeneratorInterface
+final class HookDescriptionGenerator implements HookDescriptionGeneratorInterface
 {
     /**
      * @var array
@@ -80,10 +80,12 @@ final class HookDescriptionGenerator implements DynamicHookDescriptiveContentGen
             if ($this->stringValidator->startsWithAndEndsWith($hookName, $prefix, $suffix) &&
                 !$this->stringValidator->doesContainsWhiteSpaces($hookName)
             ) {
+                $hookId = $this->extractHookId($hookName, $prefix, $suffix);
+
                 return new HookDescription(
                     $hookName,
-                    $hookDescription['title'],
-                    $hookDescription['description']
+                    $this->getTextWithHookId($hookDescription['title'], $hookId),
+                    $this->getTextWithHookId($hookDescription['description'], $hookId)
                 );
             }
         }
@@ -93,5 +95,71 @@ final class HookDescriptionGenerator implements DynamicHookDescriptiveContentGen
             '',
             ''
         );
+    }
+
+    /**
+     * Removes from hook name id prefix and suffix.
+     *
+     * @param string $hookName
+     * @param string $prefix
+     * @param string $suffix
+     *
+     * @return string
+     */
+    private function extractHookId($hookName, $prefix, $suffix)
+    {
+        return str_replace([$prefix, $suffix], '', $hookName);
+    }
+
+    /**
+     * Gets text with replaced hook id.
+     *
+     * @param string $description
+     * @param string $hookId
+     *
+     * @return string
+     */
+    private function getTextWithHookId($description, $hookId)
+    {
+        if (!$this->doesHookDescriptionContainsPlaceholder($description)) {
+
+            return $description;
+        }
+
+        $hookIdSplitByCamelCase = $this->stringModifier->splitByCamelCase($hookId);
+
+        $isPlaceholderAsFirstValueInString = $this->doesPlaceholderIsTheFirstElementOfTheDescription($description);
+
+        if ($isPlaceholderAsFirstValueInString) {
+            $hookIdSplitByCamelCase = ucfirst($hookIdSplitByCamelCase);
+        } else {
+            $hookIdSplitByCamelCase = strtolower($hookIdSplitByCamelCase);
+        }
+
+        return sprintf($description, $hookIdSplitByCamelCase);
+    }
+
+    /**
+     * Checks if hook description contains placeholder value.
+     *
+     * @param string $description
+     *
+     * @return bool
+     */
+    private function doesHookDescriptionContainsPlaceholder($description)
+    {
+        return false !== strpos($description, '%s');
+    }
+
+    /**
+     * Checks if placeholder is the first element of the string.
+     *
+     * @param string $description
+     *
+     * @return bool
+     */
+    private function doesPlaceholderIsTheFirstElementOfTheDescription($description)
+    {
+        return 0 === strncmp($description, '%s', 2);
     }
 }

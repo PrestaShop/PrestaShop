@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Hook\Generator;
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
 
 /**
- * Used for defining contract for DynamicHookDescriptiveContentGenerator.
+ * Defines contract for generating description for hook names.
  */
-interface DynamicHookDescriptiveContentGeneratorInterface
+interface HookDescriptionGeneratorInterface
 {
     /**
      * @param string $hookName
