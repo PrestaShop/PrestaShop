@@ -315,6 +315,34 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         );
     }
 
+    /**
+     * @Given order :orderReference does not have any invoices
+     */
+    public function orderDoesNotHaveAnyInvoices($orderReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        if ($order->hasInvoice()) {
+            throw new \RuntimeException('Order should not have any invoices');
+        }
+    }
+
+    /**
+     * @Then order :orderReference should have invoice
+     */
+    public function orderShouldHaveInvoice($orderReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        if (false === $order->hasInvoice()) {
+            throw new \RuntimeException(sprintf('Order "%s" should have invoice', $orderReference));
+        }
+    }
+
     protected function getCurrentCartOrder()
     {
         $cart = $this->getCurrentCart();
