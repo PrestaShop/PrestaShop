@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateOrderInvoiceCommand;
 use Product;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
@@ -57,6 +58,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 (int) $quantity,
                 true
             )
+        );
+    }
+
+    /**
+     * @When I generate invoice for :invoiceReference order
+     */
+    public function generateOrderInvoice($orderReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $this->getCommandBus()->handle(
+            new GenerateOrderInvoiceCommand((int) $order->id)
         );
     }
 }
