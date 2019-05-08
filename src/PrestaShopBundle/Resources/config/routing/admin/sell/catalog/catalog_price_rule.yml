@@ -1,3 +1,11 @@
+##todo:index action
+admin_catalog_price_rules_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:create'
+    _legacy_controller: AdminSpecificPriceRule
+
 admin_catalog_price_rules_create:
   path: /new
   methods: [GET, POST]

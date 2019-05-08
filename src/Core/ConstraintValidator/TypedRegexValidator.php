@@ -87,6 +87,8 @@ class TypedRegexValidator extends ConstraintValidator
             'message' => '/[<>{}]/i',
             'language_iso_code' => IsoCode::PATTERN,
             'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            'negative_price' => '/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/',
+            'price' => '/^[0-9]{1,10}(\.[0-9]{1,9})?$/',
         ];
 
         if (isset($typePatterns[$type])) {
