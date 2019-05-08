@@ -57,3 +57,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderPaymentCommand
+
+  prestashop.adapter.order.command_handler.generate_order_invoice_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\GenerateOrderInvoiceHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateOrderInvoiceCommand
