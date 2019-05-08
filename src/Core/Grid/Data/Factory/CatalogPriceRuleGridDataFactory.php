@@ -81,13 +81,16 @@ final class CatalogPriceRuleGridDataFactory implements GridDataFactoryInterface
      */
     private function applyModification(array $priceRules)
     {
-        foreach ($priceRules as $i => $priceRule) {
-            if ($priceRules[$i]['reduction_type'] === 'amount') {
-                $priceRules[$i]['reduction_type'] = $this->translator->trans('Amount', [], 'Admin.Global');
-                continue;
+        foreach ($priceRules as &$priceRule) {
+            foreach ($priceRule as &$value) {
+                if ($value === null) {
+                    $value = '--';
+                }
             }
 
-            $priceRules[$i]['reduction_type'] = $this->translator->trans('Percentage', [], 'Admin.Global');
+            $priceRule['reduction_type'] === 'amount' ?
+                $priceRule['reduction_type'] = $this->translator->trans('Amount', [], 'Admin.Global') :
+                $priceRule['reduction_type'] = $this->translator->trans('Percentage', [], 'Admin.Global');
         }
 
         return $priceRules;

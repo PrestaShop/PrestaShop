@@ -184,7 +184,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, $exactMatchFilters, true)) {
-                $qb->andWhere($allowedFiltersAliasMap[$filterName . ' = :value']);
+                $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' = :value');
                 $qb->setParameter('value', $value);
 
                 continue;
