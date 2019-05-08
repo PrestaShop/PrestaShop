@@ -24,19 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Hook\Generator;
-
-use PrestaShop\PrestaShop\Core\Hook\HookDescription;
+namespace PrestaShop\PrestaShop\Core\Util\String;
 
 /**
- * Used for defining contract for DynamicHookDescriptiveContentGenerator.
+ * Defines reusable methods for checking strings under certain conditions.
  */
-interface DynamicHookDescriptiveContentGeneratorInterface
+interface StringValidatorInterface
 {
     /**
-     * @param string $hookName
+     * @param string $string
+     * @param string $prefix
      *
-     * @return HookDescription
+     * @return bool
      */
-    public function generate($hookName);
+    public function startsWith($string, $prefix);
+
+    /**
+     * @param string $string
+     * @param string $suffix
+     *
+     * @return bool
+     */
+    public function endsWith($string, $suffix);
+
+    /**
+     * @param string $string
+     * @param string $prefix
+     * @param string $suffix
+     *
+     * @return bool
+     */
+    public function startsWithAndEndsWith($string, $prefix, $suffix);
+
+    /**
+     * @param string $string
+     *
+     * @return bool
+     */
+    public function doesContainsWhiteSpaces($string);
 }

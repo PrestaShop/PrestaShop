@@ -27,43 +27,57 @@
 namespace PrestaShop\PrestaShop\Core\Hook\Generator;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
+use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
+use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use PrestaShop\PrestaShop\Core\Util\String\StringValidator;
+use PrestaShop\PrestaShop\Core\Util\String\StringValidatorInterface;
 use Symfony\Component\DependencyInjection\Container;
 
-final class DynamicHookDescriptiveContentGenerator implements DynamicHookDescriptiveContentGeneratorInterface
+/**
+ * Generates description for hook names.
+ */
+final class HookDescriptionGenerator implements DynamicHookDescriptiveContentGeneratorInterface
 {
-    const STRING_STARTS_WITH_AND_ENDS_WITH_REGEX_PATTERN = '/%s(.+?)%s/ims';
-
     /**
      * @var array
      */
     private $hookDescriptions;
 
     /**
-     * @var StringValidator
+     * @var StringValidatorInterface
      */
     private $stringValidator;
 
     /**
-     * @param array $hookDescriptions
-     * @param StringValidator $stringValidator
+     * @var StringModifierInterface
      */
-    public function __construct(array $hookDescriptions, StringValidator $stringValidator)
-    {
+    private $stringModifier;
+
+    /**
+     * @param array $hookDescriptions
+     * @param StringValidatorInterface $stringValidator
+     * @param StringModifierInterface $stringModifier
+     */
+    public function __construct(
+        array $hookDescriptions,
+        StringValidatorInterface $stringValidator,
+        StringModifierInterface $stringModifier
+    ) {
         $this->hookDescriptions = $hookDescriptions;
         $this->stringValidator = $stringValidator;
+        $this->stringModifier = $stringModifier;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDescription($hookName)
+    public function generate($hookName)
     {
         foreach ($this->hookDescriptions as $hookPlaceholder => $hookDescription) {
             $prefix = isset($hookDescription['prefix']) ? $hookDescription['prefix'] : '';
             $suffix = isset($hookDescription['suffix']) ? $hookDescription['suffix'] : '';
 
-            if ($this->stringValidator->doesStartsWithAndEndsWith($hookName, $prefix, $suffix) &&
+            if ($this->stringValidator->startsWithAndEndsWith($hookName, $prefix, $suffix) &&
                 !$this->stringValidator->doesContainsWhiteSpaces($hookName)
             ) {
                 return new HookDescription(

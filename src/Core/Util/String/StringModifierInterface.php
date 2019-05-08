@@ -24,19 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Hook\Generator;
-
-use PrestaShop\PrestaShop\Core\Hook\HookDescription;
+namespace PrestaShop\PrestaShop\Core\Util\String;
 
 /**
- * Used for defining contract for DynamicHookDescriptiveContentGenerator.
+ * Defines reusable methods for strings modifications.
  */
-interface DynamicHookDescriptiveContentGeneratorInterface
+interface StringModifierInterface
 {
     /**
-     * @param string $hookName
+     * @param $string
      *
-     * @return HookDescription
+     * @return string
      */
-    public function generate($hookName);
+    public function splitByCamelCase($string);
 }

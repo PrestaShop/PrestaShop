@@ -54,7 +54,7 @@ class StringValidatorTest extends TestCase
         $stringValidator = new StringValidator();
 
         foreach ($data as $item) {
-            $result = $stringValidator->doesStartsWith($item['string'], $item['starts_with']);
+            $result = $stringValidator->startsWith($item['string'], $item['starts_with']);
 
             $this->assertEquals($item['expects'], $result);
         }
@@ -83,7 +83,7 @@ class StringValidatorTest extends TestCase
         $stringValidator = new StringValidator();
 
         foreach ($data as $item) {
-            $result = $stringValidator->doesEndsWith($item['string'], $item['ends_with']);
+            $result = $stringValidator->endsWith($item['string'], $item['ends_with']);
 
             $this->assertEquals($item['expects'], $result);
         }
@@ -115,7 +115,7 @@ class StringValidatorTest extends TestCase
         $stringValidator = new StringValidator();
 
         foreach ($data as $item) {
-            $result = $stringValidator->doesStartsWithAndEndsWith(
+            $result = $stringValidator->startsWithAndEndsWith(
                 $item['string'],
                 $item['prefix'],
                 $item['suffix']

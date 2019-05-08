@@ -26,3 +26,4 @@ services:
             'title': 'test'
             'description': 'test'
         - '@prestashop.core.util.string.string_validator'
+        - '@prestashop.core.util.string.string_modifier'

@@ -49,7 +49,11 @@ class StringModifierTest extends TestCase
             [
                 'string' => 'NewMODULEDevelopment',
                 'expects' => 'New MODULE Development',
-            ]
+            ],
+            [
+                'string' => 'snake_case_word',
+                'expects' => 'snake_case_word',
+            ],
         ];
 
         $stringModifier = new StringModifier();

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Hook;
 /**
  * Class holds descriptive information about the hook.
  */
-class HookDescription
+final class HookDescription
 {
     /**
      * @var string

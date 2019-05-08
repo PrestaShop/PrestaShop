@@ -27,10 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Util\String;
 
 /**
- * This class defines reusable methods for modify string.
+ * This class defines reusable methods for strings modifications.
  */
-class StringModifier
+final class StringModifier implements StringModifierInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function splitByCamelCase($string)
     {
         $regex = '/(?)(?<=[a-z])(?=[A-Z]) | (?<=[A-Z])(?=[A-Z][a-z])/x'

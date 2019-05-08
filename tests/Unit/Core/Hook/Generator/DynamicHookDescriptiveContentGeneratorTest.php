@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\Hook\Generator;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Hook\Generator\DynamicHookDescriptiveContentGenerator;
+use PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator;
 
 class DynamicHookDescriptiveContentGeneratorTest extends TestCase
 {
@@ -42,9 +42,9 @@ class DynamicHookDescriptiveContentGeneratorTest extends TestCase
             ],
         ];
 
-        $descriptiveContentGenerator = new DynamicHookDescriptiveContentGenerator($hookDescriptionList);
+        $descriptiveContentGenerator = new HookDescriptionGenerator($hookDescriptionList);
 
-        $description = $descriptiveContentGenerator->getDescription('actionCurrencyGridQueryBuilderModifier');
+        $description = $descriptiveContentGenerator->generate('actionCurrencyGridQueryBuilderModifier');
 
 
     }
