@@ -43,7 +43,7 @@ class GenerateOrderInvoiceCommand
      */
     public function __construct($orderId)
     {
-        $this->orderId = $orderId;
+        $this->orderId = new OrderId($orderId);
     }
 
     /**
