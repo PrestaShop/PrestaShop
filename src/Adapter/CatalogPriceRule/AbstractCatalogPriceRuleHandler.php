@@ -43,7 +43,6 @@ abstract class AbstractCatalogPriceRuleHandler
      * @param CatalogPriceRuleId $catalogPriceRuleId
      *
      * @return SpecificPriceRule
-     *
      */
     protected function getSpecificPriceRule(CatalogPriceRuleId $catalogPriceRuleId)
     {
