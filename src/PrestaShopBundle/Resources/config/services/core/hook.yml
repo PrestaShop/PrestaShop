@@ -45,5 +45,15 @@ services:
             'suffix': 'GridPresenterModifier'
             'title': 'Modify %s grid template data'
             'description': 'This hook allows to modify data which is about to be used in template for %s grid'
+          'option_form':
+            'prefix': 'action'
+            'suffix': 'Form'
+            'title': 'Modify %s options form content'
+            'description': 'This hook allows to modify %s options form FormBuilder'
+          'option_save':
+            'prefix': 'action'
+            'suffix': 'Save'
+            'title': 'Modify %s options form saved data'
+            'description': 'This hook allows to modify data of %s options form after it was saved'
         - '@prestashop.core.util.string.string_validator'
         - '@prestashop.core.util.string.string_modifier'
