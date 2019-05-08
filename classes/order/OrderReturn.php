@@ -104,7 +104,7 @@ class OrderReturnCore extends ObjectModel
             foreach (array_keys($order_detail_list) as $key) {
                 if (!isset($product_qty_list[$key])) {
                     return false;
-                }                 
+                }
                 if ($qty = (int) $product_qty_list[$key]) {
                     if ($products[$key]['product_quantity'] - $qty < 0) {
                         return false;
