@@ -474,8 +474,8 @@ class CartPresenter implements PresenterInterface
         );
     }
     
-    private function getShippingDisplayValue($cart, $shippingCost) 
-    {        
+    private function getShippingDisplayValue($cart, $shippingCost)
+    {
         $hasFreeCarrier = 0;
         $default_country = null;
 
@@ -485,13 +485,13 @@ class CartPresenter implements PresenterInterface
 
         $delivery_option_list = $cart->getDeliveryOptionList($default_country);
 
-        if (isset($delivery_option_list) && count($delivery_option_list) > 0) {                
+        if (isset($delivery_option_list) && count($delivery_option_list) > 0) {
             foreach ($delivery_option_list as $option) {
-                foreach ($option as $currentCarrier) {                    
-                    if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {                                                   
+                foreach ($option as $currentCarrier) {
+                    if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
                         $hasFreeCarrier = 1;
-                        break 2;                                                                        
-                    }                                                                  
+                        break 2;
+                    }
                 }
             }
         }
@@ -500,9 +500,7 @@ class CartPresenter implements PresenterInterface
 
         if ($shippingCost != 0) {
             $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
-        } elseif ($hasFreeCarrier == 0) {
-            $shippingDisplayValue = $this->translator->trans('Not Calculated', array(), 'Shop.Theme.Checkout');
-        } else {
+        } elseif ($hasFreeCarrier == 1) {
             $shippingDisplayValue = $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
         }
 
