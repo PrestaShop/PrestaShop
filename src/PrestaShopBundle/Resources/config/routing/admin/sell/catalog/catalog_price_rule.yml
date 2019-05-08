@@ -1,0 +1,16 @@
+admin_catalog_price_rules_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:create'
+    _legacy_controller: AdminSpecificPriceRule
+
+##todo: implement edit action
+#admin_catalog_price_rules_edit:
+#  path: /{catalogPriceRuleId}/edit
+#  methods: [GET, POST]
+#  defaults:
+#    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+#    _legacy_controller: AdminSpecificPriceRule
+#  requirements:
+#    catalogPriceRuleId: \d+

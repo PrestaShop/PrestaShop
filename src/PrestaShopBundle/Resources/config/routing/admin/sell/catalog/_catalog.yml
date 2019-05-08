@@ -17,3 +17,7 @@ _manufacturers:
 _monitoring:
   resource: "monitoring.yml"
   prefix: /monitoring
+
+_catalog_price_rules:
+    resource: "catalog_price_rule.yml"
+    prefix: /price-rules
