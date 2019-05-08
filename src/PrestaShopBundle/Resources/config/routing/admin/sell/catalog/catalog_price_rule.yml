@@ -22,28 +22,28 @@ admin_catalog_price_rules_create:
 
 ##todo: implement edit action
 admin_catalog_price_rules_edit:
-  path: /{priceRuleId}/edit
+  path: /{catalogPriceRuleId}/edit
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
     _legacy_controller: AdminSpecificPriceRule
   requirements:
-    priceRuleId: \d+
+    catalogPriceRuleId: \d+
 
 ##todo: implement delete action
 admin_catalog_price_rules_delete:
-  path: /{priceRuleId}/delete
+  path: /{catalogPriceRuleId}/delete
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:delete'
     _legacy_controller: AdminSpecificPriceRule
   requirements:
-    priceRuleId: \d+
+    catalogPriceRuleId: \d+
 
 ##todo: implement bulk delete action
 admin_catalog_price_rules_bulk_delete:
   path: /bulk-delete
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:bulkDelete'
     _legacy_controller: AdminSpecificPriceRule
