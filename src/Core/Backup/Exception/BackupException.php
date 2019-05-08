@@ -31,6 +31,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 /**
  * Class BackupException is thrown whenever backup fails.
  */
-class BackupException extends CoreException implements ExceptionInterface
+class BackupException extends CoreException
 {
 }
