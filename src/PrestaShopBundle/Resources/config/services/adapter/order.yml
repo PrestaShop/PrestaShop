@@ -51,3 +51,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand
+
+  prestashop.adapter.order.command_handler.add_order_payment_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddOrderPaymentHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderPaymentCommand
