@@ -27,3 +27,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand
+
+  prestashop.adapter.order.command_handler.update_product_in_order_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateProductInOrderHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateProductInOrderCommand
