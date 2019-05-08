@@ -26,7 +26,127 @@
 
 namespace Tests\Unit\Core\Util\String;
 
-class StringValidatorTest
-{
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Util\String\StringValidator;
 
+class StringValidatorTest extends TestCase
+{
+    public function testItDetectsThatStringStartsWith()
+    {
+        $data = [
+            [
+                'string' => 'startString',
+                'starts_with' => 'start',
+                'expects' => true,
+            ],
+            [
+                'string' => 'start another start string',
+                'starts_with' => 'start',
+                'expects' => true,
+            ],
+            [
+                'string' => ' start',
+                'starts_with' => 'start',
+                'expects' => false,
+            ],
+        ];
+
+        $stringValidator = new StringValidator();
+
+        foreach ($data as $item) {
+            $result = $stringValidator->doesStartsWith($item['string'], $item['starts_with']);
+
+            $this->assertEquals($item['expects'], $result);
+        }
+    }
+
+    public function testItDetectsThatStringEndsWith()
+    {
+        $data = [
+            [
+                'string' => 'startString',
+                'ends_with' => 'String',
+                'expects' => true,
+            ],
+            [
+                'string' => 'start . another . string.',
+                'ends_with' => '.',
+                'expects' => true,
+            ],
+            [
+                'string' => ' start.',
+                'ends_with' => 'start',
+                'expects' => false,
+            ],
+        ];
+
+        $stringValidator = new StringValidator();
+
+        foreach ($data as $item) {
+            $result = $stringValidator->doesEndsWith($item['string'], $item['ends_with']);
+
+            $this->assertEquals($item['expects'], $result);
+        }
+    }
+
+    public function testStringStartsWithAndEndsWith()
+    {
+        $data = [
+            [
+                'string' => 'actionSomethingModifier',
+                'prefix' => 'action',
+                'suffix' => 'Modifier',
+                'expects' => true,
+            ],
+            [
+                'string' => 'start . another . string.',
+                'prefix' => 'start',
+                'suffix' => '. string.',
+                'expects' => true,
+            ],
+            [
+                'string' => ' start.',
+                'prefix' => ' ',
+                'suffix' => 't',
+                'expects' => false,
+            ],
+        ];
+
+        $stringValidator = new StringValidator();
+
+        foreach ($data as $item) {
+            $result = $stringValidator->doesStartsWithAndEndsWith(
+                $item['string'],
+                $item['prefix'],
+                $item['suffix']
+            );
+
+            $this->assertEquals($item['expects'], $result);
+        }
+    }
+
+    public function testStringContainsWhiteSpaces()
+    {
+        $data = [
+            [
+                'string' => 'action Something Modifier',
+                'expects' => true,
+            ],
+            [
+                'string' => 'tab    ',
+                'expects' => true,
+            ],
+            [
+                'string' => 'noWhiteSpace',
+                'expects' => false,
+            ],
+        ];
+
+        $stringValidator = new StringValidator();
+
+        foreach ($data as $item) {
+            $result = $stringValidator->doesContainsWhiteSpaces($item['string']);
+            $this->assertEquals($item['expects'], $result);
+        }
+    }
 }

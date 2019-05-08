@@ -26,7 +26,34 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\String;
 
+/**
+ * This class defines reusable methods for checking strings under certain conditions.
+ */
 class StringValidator
 {
+    public function doesStartsWith($string, $startsWith)
+    {
+        return (strpos($string, $startsWith) === 0);
+    }
 
+    public function doesEndsWith($string, $endsWith)
+    {
+        $length = strlen($endsWith);
+
+        if (0 === $length) {
+            return true;
+        }
+
+        return (substr($string, -$length) === $endsWith);
+    }
+
+    public function doesStartsWithAndEndsWith($string, $prefix, $suffix)
+    {
+        return $this->doesStartsWith($string, $prefix) && $this->doesEndsWith($string, $suffix);
+    }
+
+    public function doesContainsWhiteSpaces($string)
+    {
+        return preg_match('/\s/', $string);
+    }
 }
