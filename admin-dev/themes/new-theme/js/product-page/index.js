@@ -42,39 +42,17 @@ $(() => {
   bulkCombination().init();
   nestedCategory().init();
 
-  const serpApp = new Serp(
-    '#serp-app',
+  new Serp(
+    {
+      container: '#serp-app',
+      defaultTitle: '.serp-default-title:input',
+      watchedTitle: '.serp-watched-title:input',
+      defaultDescription: '.serp-default-description',
+      watchedDescription: '.serp-watched-description',
+      watchedMetaUrl: '.serp-watched-url:input',
+    },
     $('#product_form_preview_btn').data('redirect')
   );
-
-  const defaultTitle = $('.serp-default-title:input');
-  const watchedTitle = $('.serp-watched-title:input');
-  const defaultDescription = $('.serp-default-description');
-  const watchedDescription = $('.serp-watched-description');
-  const watchedMetaUrl = $('.serp-watched-url:input');
-
-  const checkTitle = () => {
-    const title1 = watchedTitle.length ? watchedTitle.val() : '';
-    const title2 = defaultTitle.length ? defaultTitle.val() : '';
-
-    serpApp.setTitle(title1 === '' ? title2 : title1);
-  };
-  const checkDesc = () => {
-    const desc1 = watchedDescription.length ? watchedDescription.val().innerText || watchedDescription.val() : '';
-    const desc2 = defaultDescription.length ? $(defaultDescription.val()).text() || defaultDescription.val() : '';
-    serpApp.setDescription(desc1 === '' ? desc2 : desc1);
-  };
-  const checkUrl = () => {
-    serpApp.setUrl(watchedMetaUrl.val());
-  };
-
-  $(watchedTitle, defaultTitle).on('keyup change', checkTitle);
-  $(watchedDescription, defaultDescription).on('keyup change', checkDesc);
-  watchedMetaUrl.on('keyup change', checkUrl);
-
-  checkTitle();
-  checkDesc();
-  checkUrl();
 
   // This is the only script for the module page so there is no specific file for it.
   $('.modules-list-select').on('change', (e) => {

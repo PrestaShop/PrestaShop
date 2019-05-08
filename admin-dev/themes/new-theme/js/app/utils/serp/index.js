@@ -34,9 +34,9 @@ const $ = window.$;
  * Set the proper class to link a input to a part of the panel.
  */
 class SerpApp {
-  constructor($selector, url) {
+  constructor(selectors, url) {
     // If the selector cannot be found, we do not load the Vue app
-    if ($($selector).length === 0) {
+    if ($(selectors.container).length === 0) {
       return;
     }
 
@@ -47,11 +47,46 @@ class SerpApp {
     };
 
     this.vm = new Vue({
-      el: $selector,
+      el: selectors.container,
       template: '<serp ref="serp" :url="url" :title="title" :description="description" />',
       components: { serp },
       data: this.data,
     });
+
+    this.defaultTitle = $(selectors.defaultTitle);
+    this.watchedTitle = $(selectors.watchedTitle);
+    this.defaultDescription = $(selectors.defaultDescription);
+    this.watchedDescription = $(selectors.watchedDescription);
+    this.watchedMetaUrl = $(selectors.watchedMetaUrl);
+
+    this.attachEvents();
+  }
+
+  attachEvents() {
+    const checkTitle = () => {
+      const title1 = this.watchedTitle.length ? this.watchedTitle.val() : '';
+      const title2 = this.defaultTitle.length ? this.defaultTitle.val() : '';
+
+      this.setTitle(title1 === '' ? title2 : title1);
+    };
+
+    const checkDesc = () => {
+      const desc1 = this.watchedDescription.length ? this.watchedDescription.val().innerText || this.watchedDescription.val() : '';
+      const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() || this.defaultDescription.val() : '';
+      this.setDescription(desc1 === '' ? desc2 : desc1);
+    };
+
+    const checkUrl = () => {
+      this.setUrl(this.watchedMetaUrl.val());
+    };
+
+    $(this.watchedTitle, this.defaultTitle).on('keyup change', checkTitle);
+    $(this.watchedDescription, this.defaultDescription).on('keyup change', checkDesc);
+    this.watchedMetaUrl.on('keyup change', checkUrl);
+
+    checkTitle();
+    checkDesc();
+    checkUrl();
   }
 
   setTitle(title) {
