@@ -16,3 +16,13 @@ services:
       class: PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider
       arguments:
         - '@form.factory'
+
+    prestashop.core.hook.generator.dynamic_hook_descriptive_content_generator:
+      class: 'PrestaShop\PrestaShop\Core\Hook\Generator\DynamicHookDescriptiveContentGenerator'
+      arguments:
+        - '':
+            'prefix': ''
+            'suffix': ''
+            'title': 'test'
+            'description': 'test'
+        - '@prestashop.core.util.string.string_validator'

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook\Generator;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
+use PrestaShop\PrestaShop\Core\Util\String\StringValidator;
 use Symfony\Component\DependencyInjection\Container;
 
 final class DynamicHookDescriptiveContentGenerator implements DynamicHookDescriptiveContentGeneratorInterface
@@ -39,11 +40,18 @@ final class DynamicHookDescriptiveContentGenerator implements DynamicHookDescrip
     private $hookDescriptions;
 
     /**
-     * @param array $hookDescriptions
+     * @var StringValidator
      */
-    public function __construct(array $hookDescriptions)
+    private $stringValidator;
+
+    /**
+     * @param array $hookDescriptions
+     * @param StringValidator $stringValidator
+     */
+    public function __construct(array $hookDescriptions, StringValidator $stringValidator)
     {
         $this->hookDescriptions = $hookDescriptions;
+        $this->stringValidator = $stringValidator;
     }
 
     /**
@@ -51,12 +59,13 @@ final class DynamicHookDescriptiveContentGenerator implements DynamicHookDescrip
      */
     public function getDescription($hookName)
     {
-        //todo: move string operations to different services in Util folder.
         foreach ($this->hookDescriptions as $hookPlaceholder => $hookDescription) {
             $prefix = isset($hookDescription['prefix']) ? $hookDescription['prefix'] : '';
             $suffix = isset($hookDescription['suffix']) ? $hookDescription['suffix'] : '';
 
-            if ($this->doesHookSuffixAndPrefixMatches($hookName, $prefix, $suffix)) {
+            if ($this->stringValidator->doesStartsWithAndEndsWith($hookName, $prefix, $suffix) &&
+                !$this->stringValidator->doesContainsWhiteSpaces($hookName)
+            ) {
                 return new HookDescription(
                     $hookName,
                     $hookDescription['title'],
@@ -70,24 +79,5 @@ final class DynamicHookDescriptiveContentGenerator implements DynamicHookDescrip
             '',
             ''
         );
-    }
-
-    /**
-     * Checks if hook starts with certain prefix and ends with certain suffix.
-     *
-     * @param string $hookName
-     * @param string $prefix
-     * @param string $suffix
-     *
-     * @return false|int
-     */
-    private function doesHookSuffixAndPrefixMatches($hookName, $prefix, $suffix)
-    {
-        $pattern = sprintf(
-            self::STRING_STARTS_WITH_AND_ENDS_WITH_REGEX_PATTERN,
-            preg_quote($prefix, '/'), preg_quote($suffix, '/')
-        );
-
-        return preg_match($pattern, $hookName);
     }
 }
