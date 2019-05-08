@@ -144,6 +144,23 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     }
 
     /**
+     * Show & process catalog price rule creation.
+     *
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/CatalogPriceRule/create.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
+    }
+
+    /**
      * Provides translated error messages for exceptions
      *
      * @return array
