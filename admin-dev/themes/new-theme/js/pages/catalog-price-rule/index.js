@@ -44,7 +44,6 @@ $(() => {
   priceRuleGrid.addExtension(new ReloadListActionExtension());
   priceRuleGrid.addExtension(new SortingExtension());
   priceRuleGrid.addExtension(new FiltersResetExtension());
-  priceRuleGrid.addExtension(new ColumnTogglingExtension());
   priceRuleGrid.addExtension(new SubmitRowActionExtension());
   priceRuleGrid.addExtension(new SubmitBulkExtension());
   priceRuleGrid.addExtension(new BulkActionCheckboxExtension());
