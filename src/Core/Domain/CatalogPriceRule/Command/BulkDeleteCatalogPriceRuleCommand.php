@@ -24,53 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
 
 /**
- * Provides catalog price rule id
+ * Deletes catalog price rules in bulk acton
  */
-class CatalogPriceRuleId
+class BulkDeleteCatalogPriceRuleCommand
 {
     /**
-     * @var int
+     * @var CatalogPriceRuleId[]
      */
-    private $catalogPriceRuleId;
+    private $catalogPriceRuleIds;
 
     /**
-     * @param int $catalogPriceRuleId
+     * @param int[] $catalogPriceRuleIds
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    public function __construct($catalogPriceRuleId)
+    public function __construct($catalogPriceRuleIds)
     {
-        $this->assertIsIntegerGreaterThanZero($catalogPriceRuleId);
-        $this->catalogPriceRuleId = $catalogPriceRuleId;
+        $this->setCatalogPriceRuleIds($catalogPriceRuleIds);
     }
 
     /**
-     * @return int
+     * @return CatalogPriceRuleId[]
      */
-    public function getValue()
+    public function getCatalogPriceRuleIds()
     {
-        return $this->catalogPriceRuleId;
+        return $this->catalogPriceRuleIds;
     }
 
     /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param $value
+     * @param int[] $catalogPriceRuleIds
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function setCatalogPriceRuleIds(array $catalogPriceRuleIds)
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new CatalogPriceRuleConstraintException(
-                sprintf('Invalid catalog price rule id "%s".', var_export($value, true)),
-                CatalogPriceRuleConstraintException::INVALID_ID
-            );
+        foreach ($catalogPriceRuleIds as $catalogPriceRuleId) {
+            $this->catalogPriceRuleIds[] = new CatalogPriceRuleId($catalogPriceRuleId);
         }
     }
 }
