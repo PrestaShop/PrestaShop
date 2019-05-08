@@ -105,3 +105,7 @@ services:
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
 
+  prestashop.core.form.identifiable_object.data_provider.catalog_price_rule_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CatalogPriceRuleFormDataProvider'
+    arguments:
+      - '@prestashop.core.command_bus'
