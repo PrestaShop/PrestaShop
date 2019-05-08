@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Command;
 use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Hook\HookDescription;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -67,9 +68,10 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
         }
 
         $hookNames = $this->getHookNames();
+        $hookDescriptions = $this->getHookDescriptions($hookNames);
 
         try {
-            $addedHooks = $this->appendHooksInConfigurationFile($hookNames);
+            $addedHooks = $this->appendHooksInConfigurationFile($hookDescriptions);
         } catch (Exception $e) {
             $io->error($e->getMessage());
         }
@@ -137,13 +139,13 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
     /**
      * Appends given hooks in the configuration file.
      *
-     * @param array $newHookNames
+     * @param HookDescription[] $hookDescriptions
      *
      * @return array
      *
      * @throws Exception
      */
-    private function appendHooksInConfigurationFile(array $newHookNames)
+    private function appendHooksInConfigurationFile(array $hookDescriptions)
     {
         $hookConfigurationFileLocation = $this->getContainer()->get('kernel')->getRootDir() . '/../install-dev/data/xml/';
         $hookFileName = 'hook.xml';
@@ -179,19 +181,19 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
         $existingHookNames = $this->filterExistingHookNames($xmlFileContent->entities->hook);
 
         $addedHooks = [];
-        foreach ($newHookNames as $hookName) {
-            if (in_array($hookName, $existingHookNames)) {
+        foreach ($hookDescriptions as $hookDescription) {
+            if (in_array($hookDescription->getName(), $existingHookNames)) {
                 continue;
             }
 
             $hook = $xmlFileContent->entities->addChild('hook');
 
-            $hook->addAttribute('id', $hookName);
-            $hook->addChild('name', $hookName);
-            $hook->addChild('title', '');
-            $hook->addChild('description', '');
+            $hook->addAttribute('id', $hookDescription->getName());
+            $hook->addChild('name', $hookDescription->getName());
+            $hook->addChild('title', $hookDescription->getTitle());
+            $hook->addChild('description', $hookDescription->getDescription());
 
-            $addedHooks[] = $hookName;
+            $addedHooks[] = $hookDescription;
         }
 
         if (!$xmlFileContent->saveXML($fullFilePath)) {
@@ -225,5 +227,26 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
         }
 
         return $hookNames;
+    }
+
+    /**
+     * Gets hook descriptions
+     *
+     * @param array $hookNames
+     *
+     * @return HookDescription[]
+     */
+    private function getHookDescriptions(array $hookNames)
+    {
+        $descriptionGenerator = $this->getContainer()->get('prestashop.core.hook.generator.hook_description_generator');
+
+        $descriptions = [];
+        foreach ($hookNames as $hookName) {
+            $hookDescription = $descriptionGenerator->generate($hookName);
+
+            $descriptions[] = $hookDescription;
+        }
+
+        return $descriptions;
     }
 }

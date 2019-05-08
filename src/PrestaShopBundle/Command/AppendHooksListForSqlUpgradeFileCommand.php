@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Command;
 
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Hook\HookDescription;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -84,6 +85,8 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
             return;
         }
 
+        $hookDescriptions = $this->getHookDescriptions($hookNames);
+
         try {
             $sqlUpgradeFile = $this->getSqlUpgradeFileByPrestaShopVersion($input->getArgument('ps-version'));
         } catch (FileNotFoundException $exception) {
@@ -92,7 +95,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
             return;
         }
 
-        $sqlInsertStatement = $this->getSqlInsertStatement($hookNames);
+        $sqlInsertStatement = $this->getSqlInsertStatement($hookDescriptions);
 
         $this->appendSqlToFile($sqlUpgradeFile->getFileInfo()->getPathName(), $sqlInsertStatement);
 
@@ -195,15 +198,20 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
     /**
      * Gets sql insert statement.
      *
-     * @param array $hookNames
+     * @param HookDescription[] $hookDescriptions
      *
      * @return string
      */
-    private function getSqlInsertStatement(array $hookNames)
+    private function getSqlInsertStatement(array $hookDescriptions)
     {
         $valuesToInsert = [];
-        foreach ($hookNames as $hookName) {
-            $valuesToInsert[] = sprintf('(NULL,"%s","","","1")', $hookName);
+        foreach ($hookDescriptions as $hookDescription) {
+            $valuesToInsert[] = sprintf(
+                '(NULL,"%s","%s","%s","1")',
+                pSQL($hookDescription->getName()),
+                pSQL($hookDescription->getTitle()),
+                pSQL($hookDescription->getDescription())
+            );
         }
 
         if (empty($valuesToInsert)) {
@@ -243,5 +251,26 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         $registeredHookNames = array_column($registeredHooks, 'name');
 
         return array_diff($hookNames, $registeredHookNames);
+    }
+
+    /**
+     * Gets hook descriptions
+     *
+     * @param array $hookNames
+     *
+     * @return HookDescription[]
+     */
+    private function getHookDescriptions(array $hookNames)
+    {
+        $descriptionGenerator = $this->getContainer()->get('prestashop.core.hook.generator.hook_description_generator');
+
+        $descriptions = [];
+        foreach ($hookNames as $hookName) {
+            $hookDescription = $descriptionGenerator->generate($hookName);
+
+            $descriptions[] = $hookDescription;
+        }
+
+        return $descriptions;
     }
 }

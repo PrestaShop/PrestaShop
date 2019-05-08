@@ -17,13 +17,33 @@ services:
       arguments:
         - '@form.factory'
 
-    prestashop.core.hook.generator.dynamic_hook_descriptive_content_generator:
+    prestashop.core.hook.generator.hook_description_generator:
       class: 'PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator'
       arguments:
-        - '':
-            'prefix': ''
-            'suffix': ''
-            'title': 'test'
-            'description': 'test'
+        - 'grid_definition_modifier':
+            'prefix': 'action'
+            'suffix': 'GridDefinitionModifier'
+            'title': 'Modify %s grid definition'
+            'description': 'This hook allows to alter %s grid columns, actions and filters'
+          'grid_query_builder_modifier':
+            'prefix': 'action'
+            'suffix': 'GridQueryBuilderModifier'
+            'title': 'Modify %s grid query builder'
+            'description': 'This hook allows to alter Doctrine query builder for %s grid'
+          'grid_data_modifier':
+            'prefix': 'action'
+            'suffix': 'GridDataModifier'
+            'title': 'Modify %s grid data'
+            'description': 'This hook allows to modify %s grid data'
+          'grid_filter_form_modifier':
+            'prefix': 'action'
+            'suffix': 'GridFilterFormModifier'
+            'title': 'Modify %s grid filters'
+            'description': 'This hook allows to modify filters for %s grid'
+          'grid_presenter_modifier':
+            'prefix': 'action'
+            'suffix': 'GridPresenterModifier'
+            'title': 'Modify %s grid template data'
+            'description': 'This hook allows to modify data which is about to be used in template for %s grid'
         - '@prestashop.core.util.string.string_validator'
         - '@prestashop.core.util.string.string_modifier'
