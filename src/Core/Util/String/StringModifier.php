@@ -36,8 +36,7 @@ final class StringModifier implements StringModifierInterface
      */
     public function splitByCamelCase($string)
     {
-        $regex = '/(?)(?<=[a-z])(?=[A-Z]) | (?<=[A-Z])(?=[A-Z][a-z])/x'
-        ;
+        $regex = '/(?)(?<=[a-z])(?=[A-Z]) | (?<=[A-Z])(?=[A-Z][a-z])/x';
 
         $splitString = preg_split($regex, $string);
 

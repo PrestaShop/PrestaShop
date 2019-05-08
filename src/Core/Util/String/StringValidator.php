@@ -36,7 +36,7 @@ final class StringValidator implements StringValidatorInterface
      */
     public function startsWith($string, $prefix)
     {
-        return (strpos($string, $prefix) === 0);
+        return strpos($string, $prefix) === 0;
     }
 
     /**
@@ -50,7 +50,7 @@ final class StringValidator implements StringValidatorInterface
             return false;
         }
 
-        return (substr($string, -$length) === $suffix);
+        return substr($string, -$length) === $suffix;
     }
 
     /**

@@ -86,7 +86,6 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
         $io->note('No new hooks have been added to configuration file');
     }
 
-
     /**
      * Initialize PrestaShop Context
      */

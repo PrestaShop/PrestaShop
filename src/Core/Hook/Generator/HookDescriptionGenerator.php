@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use PrestaShop\PrestaShop\Core\Util\String\StringValidator;
 use PrestaShop\PrestaShop\Core\Util\String\StringValidatorInterface;
-use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Generates description for hook names.
@@ -122,7 +121,6 @@ final class HookDescriptionGenerator implements HookDescriptionGeneratorInterfac
     private function getTextWithHookId($description, $hookId)
     {
         if (!$this->doesHookDescriptionContainsPlaceholder($description)) {
-
             return $description;
         }
 

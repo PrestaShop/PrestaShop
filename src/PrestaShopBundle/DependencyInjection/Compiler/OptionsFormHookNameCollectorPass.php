@@ -43,7 +43,6 @@ use Symfony\Component\DependencyInjection\Definition;
  *    - 'MyFormHookName'
  *
  * In the sample, hook name is located in 1 position of argument array.
- *
  */
 final class OptionsFormHookNameCollectorPass implements CompilerPassInterface
 {
