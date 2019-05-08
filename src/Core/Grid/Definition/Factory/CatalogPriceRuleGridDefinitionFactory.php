@@ -171,7 +171,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_catalog_price_rules_edit',
-                                'route_param_name' => 'priceRuleId',
+                                'route_param_name' => 'catalogPriceRuleId',
                                 'route_param_field' => 'id_specific_price_rule',
                             ])
                         )
@@ -179,9 +179,9 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'method' => 'DELETE',
+                                'method' => 'POST',
                                 'route' => 'admin_catalog_price_rules_delete',
-                                'route_param_name' => 'priceRuleId',
+                                'route_param_name' => 'catalogPriceRuleId',
                                 'route_param_field' => 'id_specific_price_rule',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
@@ -345,10 +345,9 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ->add((new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_manufacturers_bulk_delete', //@todo
+                    'submit_route' => 'admin_catalog_price_rules_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
-            )
-            ;
+            );
     }
 }

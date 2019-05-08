@@ -26,10 +26,15 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use phpDocumentor\Reflection\Types\Array_;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,5 +89,79 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             CatalogPriceRuleGridDefinitionFactory::GRID_ID,
             'admin_catalog_price_rules_index'
         );
+    }
+
+    /**
+     * Deletes catalog price rule
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
+     * @DemoRestricted(redirectRoute="admin_catalog_price_rules_index")
+     *
+     * @param $catalogPriceRuleId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($catalogPriceRuleId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCatalogPriceRuleCommand((int) $catalogPriceRuleId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (CatalogPriceRuleException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_catalog_price_rules_index');
+    }
+
+    /**
+     * Deletes catalogPriceRules on bulk action
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
+     * @DemoRestricted(redirectRoute="admin_catalog_price_rules_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        //@todo:
+//        $catalogPriceRuleIds = $this->getBulkCatalogPriceRulesFromRequest($request);
+//
+//        try {
+//            $this->getCommandBus()->handle(new BulkDeleteCatalogPriceRuleCommand($catalogPriceRuleIds));
+//            $this->addFlash(
+//                'success',
+//                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+//            );
+//        } catch (CatalogPriceRuleException $e) {
+//            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+//        }
+//
+//        return $this->redirectToRoute('admin_catalog_price_rules_index');
+    }
+
+    /**
+     * Provides translated error messages for exceptions
+     *
+     * @return array
+     */
+    public function getErrorMessages()
+    {
+        return [
+            DeleteCatalogPriceRuleException::class => [
+                DeleteCatalogPriceRuleException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteCatalogPriceRuleException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
     }
 }
