@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CatalogPriceRuleController extends FrameworkBundleAdminController
 {
     /**
-     * Show & process manufacturer creation.
+     * Show & process catalogPriceRule creation.
      *
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
      *
@@ -47,9 +50,41 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
+        try {
+            $catalogPriceRuleForm = $this->getFormBuilder()->getForm();
+            $catalogPriceRuleForm->handleRequest($request);
+
+//            $result = $this->getFormHandler()->handle($catalogPriceRuleForm);
+
+//            if (null !== $result->getIdentifiableObjectId()) {
+//                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+//
+//                return $this->redirectToRoute('admin_catalog_price_rules_index');
+//            }
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+        
         return $this->render('@PrestaShop/Admin/Sell/Catalog/CatalogPriceRule/create.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'catalogPriceRuleForm' => $catalogPriceRuleForm->createView(),
         ]);
+    }
+
+//    /**
+//     * @return FormHandlerInterface
+//     */
+//    private function getFormHandler()
+//    {
+//        return $this->get('prestashop.core.form.identifiable_object.handler.catalog_price_rule_form_handler');
+//    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder');
     }
 }

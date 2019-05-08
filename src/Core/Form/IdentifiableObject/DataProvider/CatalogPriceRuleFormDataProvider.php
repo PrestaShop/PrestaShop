@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,28 +22,46 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-{{ form_start(catalogPriceRuleForm) }}
-<div class="card">
-  <h3 class="card-header">
-    <i class="material-icons">attach_money</i>
-    {{ 'Catalog price rules'|trans({}, 'Admin.Catalog.Feature') }}
-  </h3>
-  <div class="card-block row">
-    <div class="card-text">
-      {{ form_rest(catalogPriceRuleForm) }}
-    </div>
-  </div>
-  <div class="card-footer">
-    <a href="{{ path('admin_catalog_price_rules_index') }}" class="btn btn-outline-secondary">
-      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-    </a>
-    <button class="btn btn-primary float-right">
-      {{ 'Save'|trans({}, 'Admin.Actions') }}
-    </button>
-  </div>
-</div>
-{{ form_end(catalogPriceRuleForm) }}
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
+
+/**
+ * Provides data for catalog price rule add/edit forms
+ */
+final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * @var CommandBusInterface
+     */
+    private $bus;
+
+    /**
+     * @param CommandBusInterface $bus
+     */
+    public function __construct(
+        CommandBusInterface $bus
+    ) {
+        $this->bus = $bus;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData($manufacturerId)
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultData()
+    {
+        return [];
+    }
+}
