@@ -27,8 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
 /**
- * Defines contract for providing hooks by using service ids - it calls the container by given id which exists in
- * Definition.
+ * Defines contract for providing hooks by using service ids.
  */
 interface HookByServiceIdsProviderInterface
 {

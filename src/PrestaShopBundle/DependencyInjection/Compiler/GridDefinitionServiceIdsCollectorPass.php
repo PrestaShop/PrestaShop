@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 final class GridDefinitionServiceIdsCollectorPass implements CompilerPassInterface
 {
-    const GRID_DEFINITION_SERVICE_STARTS_WITH = 'prestashop.core.grid.definition';
+    const GRID_DEFINITION_SERVICE_PREFIX = 'prestashop.core.grid.definition';
 
     /**
      * {@inheritdoc}
@@ -75,7 +75,7 @@ final class GridDefinitionServiceIdsCollectorPass implements CompilerPassInterfa
      */
     private function isGridDefinitionService($serviceId, $serviceClass)
     {
-        $doesServiceStartsWithGridDefinition = strpos($serviceId, self::GRID_DEFINITION_SERVICE_STARTS_WITH) === 0;
+        $doesServiceStartsWithGridDefinition = strpos($serviceId, self::GRID_DEFINITION_SERVICE_PREFIX) === 0;
 
         return $doesServiceStartsWithGridDefinition && is_subclass_of($serviceClass, GridDefinitionFactoryInterface::class);
     }

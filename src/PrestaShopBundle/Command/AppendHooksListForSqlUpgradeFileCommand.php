@@ -118,7 +118,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         //see LegacyHookSubscriber
         if (!$legacyContext->getContext()->employee) {
             //Even a non existing employee is fine
-            $legacyContext->getContext()->employee = new Employee(42);
+            $legacyContext->getContext()->employee = new Employee();
         }
     }
 
