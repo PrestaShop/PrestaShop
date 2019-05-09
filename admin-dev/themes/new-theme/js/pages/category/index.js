@@ -47,7 +47,7 @@ import ShowcaseCardCloseExtension from '../../components/showcase-card/extension
 import TextWithRecommendedLengthCounter from '../../components/form/text-with-recommended-length-counter';
 import TranslatableField from '../../components/translatable-field';
 import TinyMCEEditor from '../../components/tinymce-editor';
-import FormSeoPreview from './seo-preview';
+import Serp from '../../app/utils/serp/index';
 
 const $ = window.$;
 
@@ -86,15 +86,19 @@ $(() => {
     destinationElementSelector: 'input[name^="root_category[link_rewrite]"]',
   });
 
-  FormSeoPreview({
-    title: 'input[name^="category[name]',
-    metaTitle: 'input[name^="category[meta_title]',
-    description: 'textarea[name^="category[description]',
-    metaDescription: 'textarea[name^="category[meta_description]',
-    metaUrl: 'input[name^="category[link_rewrite]',
-    multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-    multiLanguageItem: translatorInput.localeItemSelector,
-  });
+  new Serp(
+    {
+      container: '#serp-app',
+      defaultTitle: 'input[name^="category[name]',
+      watchedTitle: 'input[name^="category[meta_title]',
+      defaultDescription: 'textarea[name^="category[description]',
+      watchedDescription: 'textarea[name^="category[meta_description]',
+      watchedMetaUrl: 'input[name^="category[link_rewrite]',
+      multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
+      multiLanguageItem: translatorInput.localeItemSelector,
+    },
+    $('#serp-app').data('category-url'),
+  );
 
   new FormSubmitButton();
 

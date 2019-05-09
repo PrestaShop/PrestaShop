@@ -133,8 +133,12 @@ class SerpApp {
     let defaultDescription = this.defaultDescription;
 
     if (this.useMultiLang) {
-      watchedDescription = watchedDescription.closest(this.multiLangInputSelector).find('textarea');
-      defaultDescription = defaultDescription.closest(this.multiLangInputSelector).find('textarea');
+      watchedDescription = watchedDescription
+        .closest(this.multiLangInputSelector)
+        .find(this.watchedDescription.is('input') ? 'input' : 'textarea');
+      defaultDescription = defaultDescription
+        .closest(this.multiLangInputSelector)
+        .find(this.defaultDescription.is('input') ? 'input' : 'textarea');
     }
 
     const desc1 = watchedDescription.length ? watchedDescription.val().innerText || watchedDescription.val() : '';
