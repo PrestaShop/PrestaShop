@@ -122,6 +122,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     {
         return $this->customers[$customerName];
     }
+
     /**
      * @AfterScenario
      */
