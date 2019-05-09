@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -54,14 +54,14 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             $catalogPriceRuleForm = $this->getFormBuilder()->getForm();
             $catalogPriceRuleForm->handleRequest($request);
 
-//            $result = $this->getFormHandler()->handle($catalogPriceRuleForm);
+            $result = $this->getFormHandler()->handle($catalogPriceRuleForm);
 
-//            if (null !== $result->getIdentifiableObjectId()) {
-//                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-//
-//                return $this->redirectToRoute('admin_catalog_price_rules_index');
-//            }
-        } catch (DomainException $e) {
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_catalog_price_rules_index');
+            }
+        } catch (CatalogPriceRuleException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -72,13 +72,23 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         ]);
     }
 
-//    /**
-//     * @return FormHandlerInterface
-//     */
-//    private function getFormHandler()
-//    {
-//        return $this->get('prestashop.core.form.identifiable_object.handler.catalog_price_rule_form_handler');
-//    }
+    /**
+     * Provides translated error messages for exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [];
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.catalog_price_rule_form_handler');
+    }
 
     /**
      * @return FormBuilderInterface
