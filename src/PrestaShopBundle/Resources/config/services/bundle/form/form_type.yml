@@ -852,7 +852,7 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name_with_emails").getChoices()'
         tags:
             - { name: form.type }
 
