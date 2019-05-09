@@ -34,13 +34,20 @@ const $ = window.$;
  * Set the proper class to link a input to a part of the panel.
  */
 class SerpApp {
-  constructor(selectors, url, multiLang) {
+  constructor(selectors, url) {
     // If the selector cannot be found, we do not load the Vue app
     if ($(selectors.container).length === 0) {
       return;
     }
 
-    this.multiLanguageSupport = multiLang === undefined ? multiLang : false;
+    this.originalUrl = url;
+    this.useMultiLang = selectors.multiLanguageInput !== undefined &&
+                        selectors.multiLanguageItem !== undefined;
+
+    if (this.useMultiLang) {
+      this.multiLangInputSelector = selectors.multiLanguageInput;
+      this.attachMultiLangEvents(selectors.multiLanguageItem);
+    }
 
     this.data = {
       url,
@@ -56,50 +63,39 @@ class SerpApp {
     });
 
     this.initializeSelectors(selectors);
-    this.attachEvents();
+    this.attachInputEvents();
   }
+
+  attachMultiLangEvents(itemSelector) {
+    $('body').on(
+      'click',
+      itemSelector,
+      () => {
+        this.checkTitle();
+        this.checkDesc();
+        this.checkUrl();
+      },
+    );
+  }
+
   initializeSelectors(selectors) {
-    if (!this.multiLanguageSupport) {
-      this.defaultTitle = $(selectors.defaultTitle);
-      this.watchedTitle = $(selectors.watchedTitle);
-      this.defaultDescription = $(selectors.defaultDescription);
-      this.watchedDescription = $(selectors.watchedDescription);
-      this.watchedMetaUrl = $(selectors.watchedMetaUrl);
-      return;
-    }
-
-    this.defaultTitle = $(`${selectors.defaultTitle}`);
-    this.watchedTitle = $(`${selectors.watchedTitle}`);
-    this.defaultDescription = $(`${selectors.defaultDescription}`);
-    this.watchedDescription = $(`${selectors.watchedDescription}`);
-    this.watchedMetaUrl = $(`${selectors.watchedMetaUrl}:visible`);
+    this.defaultTitle = $(selectors.defaultTitle);
+    this.watchedTitle = $(selectors.watchedTitle);
+    this.defaultDescription = $(selectors.defaultDescription);
+    this.watchedDescription = $(selectors.watchedDescription);
+    this.watchedMetaUrl = $(selectors.watchedMetaUrl);
   }
 
-  attachEvents() {
-    const checkTitle = () => {
-      const title1 = this.watchedTitle.length ? this.watchedTitle.val() : '';
-      const title2 = this.defaultTitle.length ? this.defaultTitle.val() : '';
+  attachInputEvents() {
+    $(this.defaultTitle).on('keyup change', () => this.checkTitle());
+    $(this.watchedTitle).on('keyup change', () => this.checkTitle());
+    $(this.defaultDescription).on('keyup change', () => this.checkDesc());
+    $(this.watchedDescription).on('keyup change', () => this.checkDesc());
+    this.watchedMetaUrl.on('keyup change', () => this.checkUrl());
 
-      this.setTitle(title1 === '' ? title2 : title1);
-    };
-
-    const checkDesc = () => {
-      const desc1 = this.watchedDescription.length ? this.watchedDescription.val().innerText || this.watchedDescription.val() : '';
-      const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() || this.defaultDescription.val() : '';
-      this.setDescription(desc1 === '' ? desc2 : desc1);
-    };
-
-    const checkUrl = () => {
-      this.setUrl(this.watchedMetaUrl.val());
-    };
-
-    $(this.watchedTitle, this.defaultTitle).on('keyup change', checkTitle);
-    $(this.watchedDescription, this.defaultDescription).on('keyup change', checkDesc);
-    this.watchedMetaUrl.on('keyup change', checkUrl);
-
-    checkTitle();
-    checkDesc();
-    checkUrl();
+    this.checkTitle();
+    this.checkDesc();
+    this.checkUrl();
   }
 
   setTitle(title) {
@@ -110,13 +106,50 @@ class SerpApp {
     this.data.description = description;
   }
 
-  setUrl(url) {
-    this.data.url = this.data.url.replace(
-      this.originalUrl,
-      url,
+  setUrl(rewrite) {
+    this.data.url = this.originalUrl.replace(
+      '{friendy-url}',
+      rewrite,
     );
+  }
 
-    this.originalUrl = url;
+  checkTitle() {
+    let defaultTitle = this.defaultTitle;
+    let watchedTitle = this.watchedTitle;
+
+    if (this.useMultiLang) {
+      watchedTitle = watchedTitle.closest(this.multiLangInputSelector).find('input');
+      defaultTitle = defaultTitle.closest(this.multiLangInputSelector).find('input');
+    }
+
+    const title1 = watchedTitle.length ? watchedTitle.val() : '';
+    const title2 = defaultTitle.length ? defaultTitle.val() : '';
+
+    this.setTitle(title1 === '' ? title2 : title1);
+  }
+
+  checkDesc() {
+    let watchedDescription = this.watchedDescription;
+    let defaultDescription = this.defaultDescription;
+
+    if (this.useMultiLang) {
+      watchedDescription = watchedDescription.closest(this.multiLangInputSelector).find('textarea');
+      defaultDescription = defaultDescription.closest(this.multiLangInputSelector).find('textarea');
+    }
+
+    const desc1 = watchedDescription.length ? watchedDescription.val().innerText || watchedDescription.val() : '';
+    const desc2 = defaultDescription.length ? $(defaultDescription.val()).text() || defaultDescription.val() : '';
+
+    this.setDescription(desc1 === '' ? desc2 : desc1);
+  }
+
+  checkUrl() {
+    let watchedMetaUrl = this.watchedMetaUrl;
+    if (this.useMultiLang) {
+      watchedMetaUrl = watchedMetaUrl.closest(this.multiLangInputSelector).find('input');
+    }
+
+    this.setUrl(watchedMetaUrl.val());
   }
 }
 

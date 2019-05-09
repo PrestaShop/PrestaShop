@@ -72,7 +72,7 @@ $(() => {
 
   new TranslatableField();
   new TinyMCEEditor();
-  new TranslatableInput();
+  const translatorInput = new TranslatableInput();
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
@@ -92,6 +92,8 @@ $(() => {
     description: 'textarea[name^="category[description]',
     metaDescription: 'textarea[name^="category[meta_description]',
     metaUrl: 'input[name^="category[link_rewrite]',
+    multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
+    multiLanguageItem: translatorInput.localeItemSelector,
   });
 
   new FormSubmitButton();

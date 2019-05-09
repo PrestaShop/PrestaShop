@@ -12,9 +12,10 @@ const FormSeoPreview = (selectors) => {
       defaultDescription: selectors.description,
       watchedDescription: selectors.metaDescription,
       watchedMetaUrl: selectors.metaUrl,
+      multiLanguageInput: selectors.multiLanguageInput,
+      multiLanguageItem: selectors.multiLanguageItem,
     },
-    'http://google.com/art.html',
-    true
+    $('#serp-app').data('category-url'),
   );
 };
 
