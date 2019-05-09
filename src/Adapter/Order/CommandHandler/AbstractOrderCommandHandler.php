@@ -54,8 +54,8 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
     protected function reinjectQuantity(OrderDetail $orderDetail, $productQuantity, $delete = false)
     {
         // Reinject product
-        $reinjetableQuantity = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_reinjected;
-        $quantityToReinject = $productQuantity > $reinjetableQuantity ? $reinjetableQuantity : $productQuantity;
+        $reinjectableQuantity = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_reinjected;
+        $quantityToReinject = $productQuantity > $reinjectableQuantity ? $reinjectableQuantity : $productQuantity;
 
         $product = new Product(
             $orderDetail->product_id,
