@@ -42,3 +42,7 @@ services:
 
   prestashop.adapter.form.choice_provider.order_countries:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderCountriesChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.shop_name_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopNameByIdChoiceProvider'
+
