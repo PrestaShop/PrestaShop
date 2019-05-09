@@ -90,6 +90,7 @@
               </div>
             {/block}
           </div>
+          
         </div>
         {hook h="displayWrapperBottom"}
       </section>
