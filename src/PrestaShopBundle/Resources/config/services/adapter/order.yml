@@ -70,8 +70,8 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand
 
-  prestashop.adapter.order.command_handler.remove_cart_rule_from_order_handler:
-    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\RemoveCartRuleFromOrderHandler
+  prestashop.adapter.order.command_handler.delete_cart_rule_from_order_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteCartRuleFromOrderHandler
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\RemoveCartRuleFromOrderCommand

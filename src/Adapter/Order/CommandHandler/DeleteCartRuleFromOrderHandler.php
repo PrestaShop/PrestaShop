@@ -29,21 +29,21 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\RemoveCartRuleFromOrderCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\RemoveCartRuleFromOrderHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DeleteCartRuleFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use Validate;
 
 /**
  * @internal
  */
-final class RemoveCartRuleFromOrderHandler extends AbstractOrderHandler implements
-    RemoveCartRuleFromOrderHandlerInterface
+final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implements
+    DeleteCartRuleFromOrderHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(RemoveCartRuleFromOrderCommand $command)
+    public function handle(DeleteCartRuleFromOrderCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
         $orderCartRule = new OrderCartRule($command->getOrderCartRule());
