@@ -33,7 +33,57 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      {{ form_rest(catalogPriceRuleForm) }}
+      {{ ps.form_group_row(catalogPriceRuleForm.name, {}, {
+        'label': 'Name'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {% if catalogPriceRuleForm.id_shop is defined %}
+        {{ ps.form_group_row(catalogPriceRuleForm.id_shop, {}, {
+          'label': 'Shop'|trans({}, 'Admin.Global')
+        }) }}
+      {% endif %}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.id_currency, {}, {
+        'label': 'Currency'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.id_country, {}, {
+        'label': 'Country'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.id_group, {}, {
+        'label': 'Group'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.from_quantity, {}, {
+        'label': 'From quantity'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.price, {}, {
+        'label': 'Price (tax excl.)'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.leave_initial_price, {}, {'label': ''}) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.from, {}, {
+        'label': 'From'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.to, {}, {
+        'label': 'To'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.reduction_type, {}, {
+        'label': 'Reduction Type'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.include_tax, {}, {
+        'label': 'Reduction with or without taxes'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.reduction, {}, {
+        'label': 'Reduction'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
     </div>
   </div>
   <div class="card-footer">

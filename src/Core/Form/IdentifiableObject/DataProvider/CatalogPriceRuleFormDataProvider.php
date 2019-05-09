@@ -60,6 +60,10 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
      */
     public function getDefaultData()
     {
-        return [];
+        return [
+            'from_quantity' => 1,
+            'leave_initial_price' => true,
+            'reduction' => '0.000000',
+        ];
     }
 }
