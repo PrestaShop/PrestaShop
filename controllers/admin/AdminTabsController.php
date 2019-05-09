@@ -49,8 +49,8 @@ class AdminTabsControllerCore extends AdminController
         $this->imageType = 'gif';
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected'),
+                'confirm' => $this->trans('Delete selected items?'),
                 'icon' => 'icon-trash',
             ),
         );
@@ -64,10 +64,10 @@ class AdminTabsControllerCore extends AdminController
                 'title' => $this->trans('Name', array(), 'Admin.Global'),
             ),
             'class_name' => array(
-                'title' => $this->l('Class'),
+                'title' => $this->trans('Class'),
             ),
             'module' => array(
-                'title' => $this->l('Module'),
+                'title' => $this->trans('Module'),
             ),
             'active' => array(
                 'title' => $this->trans('Enabled', array(), 'Admin.Global'),
@@ -77,7 +77,7 @@ class AdminTabsControllerCore extends AdminController
                 'orderby' => false,
             ),
             'position' => array(
-                'title' => $this->l('Position'),
+                'title' => $this->trans('Position'),
                 'filter_key' => 'a!position',
                 'position' => 'position',
                 'align' => 'center',
@@ -88,18 +88,18 @@ class AdminTabsControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        $this->page_header_toolbar_title = $this->l('Menus');
+        $this->page_header_toolbar_title = $this->trans('Menus');
 
         if ($this->display == 'details') {
             $this->page_header_toolbar_btn['back_to_list'] = array(
                 'href' => Context::getContext()->link->getAdminLink('AdminTabs'),
-                'desc' => $this->l('Back to list', null, null, false),
+                'desc' => $this->trans('Back to list'),
                 'icon' => 'process-icon-back',
             );
         } elseif (empty($this->display)) {
             $this->page_header_toolbar_btn['new_menu'] = array(
                 'href' => self::$currentIndex . '&addtab&token=' . $this->token,
-                'desc' => $this->l('Add new menu', null, null, false),
+                'desc' => $this->trans('Add new menu'),
                 'icon' => 'process-icon-new',
             );
         }
@@ -127,13 +127,13 @@ class AdminTabsControllerCore extends AdminController
         // added category "Home" in var $tabs
         $tab_zero = array(
             'id_tab' => 0,
-            'name' => $this->l('Home'),
+            'name' => $this->trans('Home'),
         );
         array_unshift($tabs, $tab_zero);
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Menus'),
+                'title' => $this->trans('Menus'),
                 'icon' => 'icon-list-ul',
             ),
             'input' => array(
@@ -148,22 +148,22 @@ class AdminTabsControllerCore extends AdminController
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
-                    'hint' => $this->l('Invalid characters:') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:') . ' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Class'),
+                    'label' => $this->trans('Class'),
                     'name' => 'class_name',
                     'required' => true,
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Module'),
+                    'label' => $this->trans('Module'),
                     'name' => 'module',
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Status'),
+                    'label' => $this->trans('Status'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
@@ -179,7 +179,7 @@ class AdminTabsControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global'),
                         ),
                     ),
-                    'hint' => $this->l('Show or hide menu.'),
+                    'hint' => $this->trans('Show or hide menu.'),
                 ),
             ),
             'submit' => array(
@@ -195,7 +195,7 @@ class AdminTabsControllerCore extends AdminController
         if ($display_parent) {
             $this->fields_form['input'][] = array(
                 'type' => 'select',
-                'label' => $this->l('Parent'),
+                'label' => $this->trans('Parent'),
                 'name' => 'id_parent',
                 'options' => array(
                     'query' => $tabs,
@@ -300,11 +300,11 @@ class AdminTabsControllerCore extends AdminController
         } elseif (isset($_GET['details' . $this->table]) && is_array($this->bulk_actions)) {
             $submit_bulk_actions = array_merge(array(
                 'enableSelection' => array(
-                    'text' => $this->l('Enable selection'),
+                    'text' => $this->trans('Enable selection'),
                     'icon' => 'icon-power-off text-success',
                 ),
                 'disableSelection' => array(
-                    'text' => $this->l('Disable selection'),
+                    'text' => $this->trans('Disable selection'),
                     'icon' => 'icon-power-off text-danger',
                 ),
             ), $this->bulk_actions);
