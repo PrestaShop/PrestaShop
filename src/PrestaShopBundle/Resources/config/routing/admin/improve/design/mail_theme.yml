@@ -23,7 +23,7 @@ admin_mail_theme_save_configuration:
     _legacy_link: AdminMailTheme:saveConfiguration
 
 admin_mail_theme_preview:
-  path: /preview/{themeName}
+  path: /preview/{theme}
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:previewTheme
@@ -62,5 +62,22 @@ admin_mail_theme_raw_module_layout:
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:rawLayout
+    _legacy_link: AdminMailTheme:rawModuleLayout
+    _legacy_controller: AdminMailTheme
+
+admin_mail_theme_send_test_mail:
+  path: /sendTestMail/{locale}/{theme}/{layout}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:sendTestMail
+    _legacy_link: AdminMailTheme:rawModuleLayout
+    _legacy_controller: AdminMailTheme
+    module: ''
+
+admin_mail_theme_send_test_module_mail:
+  path: /sendTestMail/{locale}/{theme}/{module}/{layout}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:sendTestMail
     _legacy_link: AdminMailTheme:rawModuleLayout
     _legacy_controller: AdminMailTheme

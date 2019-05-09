@@ -58,4 +58,11 @@ interface ContextEmployeeProviderInterface
      * @return int
      */
     public function getProfileId();
+
+    /**
+     *  Get context employee's data as an array
+     *
+     * @return array
+     */
+    public function getData();
 }
