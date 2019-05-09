@@ -26,13 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -112,7 +111,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (CatalogPriceRuleException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -139,7 +138,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (CatalogPriceRuleException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -161,14 +160,14 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             $catalogPriceRuleForm = $this->getFormBuilder()->getForm();
             $catalogPriceRuleForm->handleRequest($request);
 
-//            $result = $this->getFormHandler()->handle($catalogPriceRuleForm);
+            $result = $this->getFormHandler()->handle($catalogPriceRuleForm);
 
-//            if (null !== $result->getIdentifiableObjectId()) {
-//                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-//
-//                return $this->redirectToRoute('admin_catalog_price_rules_index');
-//            }
-        } catch (DomainException $e) {
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_catalog_price_rules_index');
+            }
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -221,13 +220,14 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
 
         return $catalogPriceRuleIds;
     }
-//    /**
-//     * @return FormHandlerInterface
-//     */
-//    private function getFormHandler()
-//    {
-//        return $this->get('prestashop.core.form.identifiable_object.handler.catalog_price_rule_form_handler');
-//    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.catalog_price_rule_form_handler');
+    }
 
     /**
      * @return FormBuilderInterface
