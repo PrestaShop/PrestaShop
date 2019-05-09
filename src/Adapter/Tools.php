@@ -244,4 +244,14 @@ class Tools
     {
         return LegacyTools::getAdminImageUrl($fileName, $escapeHtmlEntities);
     }
+
+    /**
+     * Get IP address of the user.
+     *
+     * @return string
+     */
+    public function getIpAddress()
+    {
+        return LegacyTools::getRemoteAddr();
+    }
 }
