@@ -6,8 +6,8 @@ _admin_security_routing:
     resource: "admin/_security.yml"
     prefix: /security
 
-_admin_login_routing:
-    resource: "admin/_login.yml"
+_admin_authorization_routing:
+    resource: "admin/_authorization.yml"
 
 _admin_sell_routing:
     resource: "admin/sell/_sell.yml"

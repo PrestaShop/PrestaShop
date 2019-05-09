@@ -74,10 +74,10 @@ class EmployeeProvider implements UserProviderInterface
             return $cachedEmployee->get();
         }
 
-        if (
-            null !== $this->legacyContext->employee
-            && $this->legacyContext->employee->email === $username
-        ) {
+        $isContextEmployee = null !== $this->legacyContext->employee &&
+            $this->legacyContext->employee->email === $username;
+
+        if ($isContextEmployee || $this->legacyContext->employee->getByEmail($username)) {
             $employee = new Employee($this->legacyContext->employee);
             $employee->setRoles(
                 array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))

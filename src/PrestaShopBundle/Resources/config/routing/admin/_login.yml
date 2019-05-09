@@ -1,6 +1,0 @@
-admin_login_index:
-    path: /
-    methods: [GET,POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin\Login:index
-        _legacy_controller: AdminLogin

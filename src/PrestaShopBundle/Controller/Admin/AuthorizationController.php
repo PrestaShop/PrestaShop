@@ -34,14 +34,14 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class LoginController responsible for employee login page.
  */
-class LoginController extends FrameworkBundleAdminController
+class AuthorizationController extends FrameworkBundleAdminController
 {
     /**
      * Render and handle login page.
      *
      * @return Response
      */
-    public function indexAction()
+    public function loginAction()
     {
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
         $loginForm = $this->createForm(LoginType::class);

@@ -24,41 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Login;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 /**
- * Builds login form.
+ * Authenticates employee into back office.
  */
-class LoginType extends AbstractType
+class AuthenticateEmployeeCommand
 {
-    use TranslatorAwareTrait;
+    /**
+     * @var EmployeeId
+     */
+    private $employeeId;
 
     /**
-     * {@inheritdoc}
+     * @param int $employeeId
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function __construct($employeeId)
     {
-        $builder
-            ->add('email', EmailType::class, [
-                'attr' => [
-                    'placeholder' => 'test@email.com',
-                ]
-            ])
-            ->add('password', PasswordType::class, [
-                'attr' => [
-                    'placeholder' => $this->trans('Password', [], 'Admin.Global'),
-                ]
-            ])
-            ->add('stay_logged_in', CheckboxType::class, [
-                'required' => false,
-            ])
-        ;
+        $this->employeeId = new EmployeeId($employeeId);
+    }
+
+    /**
+     * @return EmployeeId
+     */
+    public function getEmployeeId()
+    {
+        return $this->employeeId;
+    }
+
+    /**
+     * @param EmployeeId $employeeId
+     */
+    public function setEmployeeId(EmployeeId $employeeId)
+    {
+        $this->employeeId = $employeeId;
     }
 }
