@@ -24,41 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Login;
+namespace PrestaShop\PrestaShop\Adapter\Employee;
 
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Employee;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Employee\EmployeeDefaultPageProviderInterface;
 
 /**
- * Builds login form.
+ * Provides default page data for an employee.
  */
-class LoginType extends AbstractType
+final class EmployeeDefaultPageProvider implements EmployeeDefaultPageProviderInterface
 {
-    use TranslatorAwareTrait;
+    /**
+     * @var LegacyContext
+     */
+    private $context;
+
+    /**
+     * @param LegacyContext $context
+     */
+    public function __construct(LegacyContext $context)
+    {
+        $this->context = $context;
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getDefaultPageUrl($employeeId)
     {
-        $builder
-            ->add('email', EmailType::class, [
-                'attr' => [
-                    'placeholder' => 'test@email.com',
-                ]
-            ])
-            ->add('password', PasswordType::class, [
-                'attr' => [
-                    'placeholder' => $this->trans('Password', [], 'Admin.Global'),
-                ]
-            ])
-            ->add('stay_logged_in', CheckboxType::class, [
-                'required' => false,
-            ])
-        ;
+        $employee = new Employee($employeeId);
+
+        return $this->context->getAdminLink($employee->getDefaultTabClassName());
     }
 }
