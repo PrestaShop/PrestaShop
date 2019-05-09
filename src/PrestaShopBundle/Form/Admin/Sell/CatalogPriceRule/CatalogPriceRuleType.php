@@ -67,7 +67,7 @@ class CatalogPriceRuleType extends AbstractType
     /**
      * @var array
      */
-    private $contextShopIds;//@todo: shopByIdChoiceProvider
+    private $contextShopIds; //@todo: shopByIdChoiceProvider
 
     /**
      * @param TranslatorInterface $translator
@@ -142,7 +142,7 @@ class CatalogPriceRuleType extends AbstractType
                 'choices' => [
                     $this->translator->trans('Tax included', [], 'Admin.Global') => 1,
                     $this->translator->trans('Tax excluded', [], 'Admin.Global') => 0,
-                ]
+                ],
             ])
             ->add('reduction_type', ChoiceType::class, [
                 'required' => false,
@@ -162,7 +162,7 @@ class CatalogPriceRuleType extends AbstractType
 
         if (!$this->isSingleShopContext) {
             $builder->add('id_shop', ChoiceType::class, [
-                'choices' => $this->contextShopIds //@todo
+                'choices' => $this->contextShopIds, //@todo
             ]);
         }
     }

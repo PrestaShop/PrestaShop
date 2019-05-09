@@ -916,7 +916,7 @@ services:
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
             - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
-            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
         tags:
             - { name: form.type }
 
