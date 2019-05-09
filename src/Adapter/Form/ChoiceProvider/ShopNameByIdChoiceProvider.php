@@ -24,42 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Shop;
 
 /**
- * Provides data for catalog price rule add/edit forms
+ * Provides shop names by name => id value pairs
  */
-final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterface
+final class ShopNameByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var CommandBusInterface
-     */
-    private $bus;
-
-    /**
-     * @param CommandBusInterface $bus
-     */
-    public function __construct(
-        CommandBusInterface $bus
-    ) {
-        $this->bus = $bus;
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function getData($manufacturerId)
+    public function getChoices()
     {
-        return [];
-    }
+        $shopsById = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData()
-    {
-        return [];
+        foreach (Shop::getShops() as $shop) {
+            $shopsById[$shop['name']] = $shop['id_shop'];
+        }
+
+        return $shopsById;
     }
 }
