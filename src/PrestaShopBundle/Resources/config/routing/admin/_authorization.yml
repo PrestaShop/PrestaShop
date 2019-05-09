@@ -1,0 +1,11 @@
+_admin_login:
+    path: /
+    methods: [GET,POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Authorization:login
+        _legacy_controller: AdminLogin
+
+_admin_logout:
+    path: /logout
+    defaults:
+        _legacy_link: AdminLogin:logout

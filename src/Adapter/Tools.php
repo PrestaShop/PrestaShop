@@ -246,6 +246,7 @@ class Tools
     }
 
     /**
+<<<<<<< HEAD
      * Delete unicode class from regular expression patterns.
      *
      * @param string $pattern
@@ -277,5 +278,15 @@ class Tools
     public function truncateString($text, $length = 120, $options = array())
     {
         return LegacyTools::truncateString($text, $length, $options);
+    }
+
+    /**
+     * Get IP address of the user.
+     *
+     * @return string
+     */
+    public function getIpAddress()
+    {
+        return LegacyTools::getRemoteAddr();
     }
 }

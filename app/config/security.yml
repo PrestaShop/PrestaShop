@@ -4,8 +4,6 @@ security:
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory:
-            memory: ~
         admin:
             id: prestashop.security.admin.provider
 
@@ -18,3 +16,12 @@ security:
         main:
             anonymous: ~
             logout_on_user_change: true
+            guard:
+                authenticators:
+                    - prestashop.security.admin.login_form_authenticator
+            logout:
+                path: /logout
+
+    access_control:
+        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: ROLE_EMPLOYEE }
