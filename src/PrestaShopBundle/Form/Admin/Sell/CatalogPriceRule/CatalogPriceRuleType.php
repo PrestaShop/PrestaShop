@@ -32,7 +32,6 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -135,8 +134,8 @@ class CatalogPriceRuleType extends AbstractType
                 'placeholder' => false,
                 'choices' => $this->getModifiedGroupChoices(),
             ])
-            ->add('from_quantity', NumberType::class)
-            ->add('price', NumberType::class, [
+            ->add('from_quantity', TextType::class)
+            ->add('price', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new TypedRegex([
