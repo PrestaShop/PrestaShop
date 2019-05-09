@@ -112,3 +112,10 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderMessageFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.catalog_price_rule_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CatalogPriceRuleFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
