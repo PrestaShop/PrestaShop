@@ -9,6 +9,7 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const commonCurrency = require('../../../common_scenarios/currency');
 const {Localization} = require('../../../../selectors/BO/international/localization');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 let wrongCurrencyData = {
     name: 'CHF',
     exchangeRate: '0,86'
@@ -39,7 +40,7 @@ scenario('Create, edit, delete and live exchange rate currency', () => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Test1: create, check and sort "Currency"', () => {
     commonCurrency.accessToCurrencies();
     /**
