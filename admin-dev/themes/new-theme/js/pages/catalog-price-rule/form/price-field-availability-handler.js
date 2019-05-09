@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,22 +21,32 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
+const $ = window.$;
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+/**
+ * Enables/disables 'price' field depending from 'leave_initial_price' field checkbox value
+ */
+export default class PriceFieldAvailabilityHandler {
+  constructor(checkboxSelector, targetSelector) {
+    this.$checkboxSelector = checkboxSelector;
+    this.$targetSelector = targetSelector;
+    this._handle();
+    $(checkboxSelector).on('change', () => this._handle());
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/CatalogPriceRule/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+    return {};
+  }
 
-{% block javascripts %}
-  {{ parent() }}
+  /**
+   * When checkbox value is 1, target field is disabled, else enabled
+   *
+   * @private
+   */
+  _handle() {
+    const checkboxVal = $(`${this.$checkboxSelector}:checked`).val();
+    const isFieldEnabled = parseInt(checkboxVal, 10);
 
-  <script src="{{ asset('themes/new-theme/public/catalog_price_rule_form.bundle.js') }}"></script>
-{% endblock %}
+    $(this.$targetSelector).prop('disabled', isFieldEnabled);
+  }
+}
