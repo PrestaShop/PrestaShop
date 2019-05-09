@@ -37,12 +37,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Defines catalog price rule form for create/edit actions
+ */
 class CatalogPriceRuleType extends AbstractType
 {
     /**
      * @var TranslatorInterface
      */
     private $translator;
+
+    /**
+     * @var bool
+     */
+    private $isSingleShopContext;
 
     /**
      * @var array
@@ -60,37 +68,48 @@ class CatalogPriceRuleType extends AbstractType
     private $groupByIdChoices;
 
     /**
-     * @var bool
+     * @var array
      */
-    private $isSingleShopContext;
+    private $shopByIdChoices;
 
     /**
      * @var array
      */
-    private $shopByIdChoices; //@todo: shopByIdChoiceProvider
+    private $taxInclusionChoices;
+
+    /**
+     * @var array
+     */
+    private $priceReductionTypeChoices;
 
     /**
      * @param TranslatorInterface $translator
+     * @param $isSingleShopContext
      * @param array $currencyByIdChoices
      * @param array $countryByIdChoices
      * @param array $groupByIdChoices
-     * @param $isSingleShopContext
-     * @param array $contextShopIds
+     * @param array $shopByIdChoices
+     * @param array $taxInclusionChoices
+     * @param array $priceReductionTypeChoices
      */
     public function __construct(
         TranslatorInterface $translator,
+        $isSingleShopContext,
         array $currencyByIdChoices,
         array $countryByIdChoices,
         array $groupByIdChoices,
-        $isSingleShopContext,
-        array $shopByIdChoices
+        array $shopByIdChoices,
+        array $taxInclusionChoices,
+        array $priceReductionTypeChoices
     ) {
         $this->translator = $translator;
+        $this->isSingleShopContext = $isSingleShopContext;
         $this->currencyByIdChoices = $currencyByIdChoices;
         $this->countryByIdChoices = $countryByIdChoices;
         $this->groupByIdChoices = $groupByIdChoices;
-        $this->isSingleShopContext = $isSingleShopContext;
         $this->shopByIdChoices = $shopByIdChoices;
+        $this->taxInclusionChoices = $taxInclusionChoices;
+        $this->priceReductionTypeChoices = $priceReductionTypeChoices;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -98,13 +117,7 @@ class CatalogPriceRuleType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'constraints' => [
-                    new CleanHtml([
-                        'message' => $this->translator->trans(
-                            '%s is invalid.',
-                            [],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
+                    new CleanHtml(),
                 ],
             ])
             ->add('id_currency', ChoiceType::class, [
@@ -143,18 +156,12 @@ class CatalogPriceRuleType extends AbstractType
             ->add('include_tax', ChoiceType::class, [
                 'placeholder' => false,
                 'required' => false,
-                'choices' => [
-                    $this->translator->trans('Tax included', [], 'Admin.Global') => 1,
-                    $this->translator->trans('Tax excluded', [], 'Admin.Global') => 0,
-                ],
+                'choices' => $this->taxInclusionChoices,
             ])
             ->add('reduction_type', ChoiceType::class, [
                 'placeholder' => false,
                 'required' => false,
-                'choices' => [
-                    $this->translator->trans('Amount', [], 'Admin.Global') => 'amount',
-                    $this->translator->trans('Percentage', [], 'Admin.Global') => 'percentage',
-                ],
+                'choices' => $this->priceReductionTypeChoices,
             ])
             ->add('reduction', TextType::class, [
                 'constraints' => [
