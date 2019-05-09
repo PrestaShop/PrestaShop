@@ -67,7 +67,7 @@ class CatalogPriceRuleType extends AbstractType
     /**
      * @var array
      */
-    private $contextShopIds; //@todo: shopByIdChoiceProvider
+    private $shopByIdChoices; //@todo: shopByIdChoiceProvider
 
     /**
      * @param TranslatorInterface $translator
@@ -83,14 +83,14 @@ class CatalogPriceRuleType extends AbstractType
         array $countryByIdChoices,
         array $groupByIdChoices,
         $isSingleShopContext,
-        array $contextShopIds
+        array $shopByIdChoices
     ) {
         $this->translator = $translator;
         $this->currencyByIdChoices = $currencyByIdChoices;
         $this->countryByIdChoices = $countryByIdChoices;
         $this->groupByIdChoices = $groupByIdChoices;
         $this->isSingleShopContext = $isSingleShopContext;
-        $this->contextShopIds = $contextShopIds;
+        $this->shopByIdChoices = $shopByIdChoices;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -109,15 +109,18 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('id_currency', ChoiceType::class, [
                 'required' => false,
-                'choices' => $this->currencyByIdChoices,
+                'placeholder' => false,
+                'choices' => $this->getModifiedCurrencyChoices(),
             ])
             ->add('id_country', ChoiceType::class, [
                 'required' => false,
-                'choices' => $this->countryByIdChoices,
+                'placeholder' => false,
+                'choices' => $this->getModifiedCountryChoices(),
             ])
             ->add('id_group', ChoiceType::class, [
                 'required' => false,
-                'choices' => $this->groupByIdChoices,
+                'placeholder' => false,
+                'choices' => $this->getModifiedGroupChoices(),
             ])
             ->add('from_quantity', NumberType::class)
             ->add('price', NumberType::class, [
@@ -138,6 +141,7 @@ class CatalogPriceRuleType extends AbstractType
                 'required' => false,
             ])
             ->add('include_tax', ChoiceType::class, [
+                'placeholder' => false,
                 'required' => false,
                 'choices' => [
                     $this->translator->trans('Tax included', [], 'Admin.Global') => 1,
@@ -145,13 +149,14 @@ class CatalogPriceRuleType extends AbstractType
                 ],
             ])
             ->add('reduction_type', ChoiceType::class, [
+                'placeholder' => false,
                 'required' => false,
                 'choices' => [
-                    $this->translator->trans('Percentage', [], 'Admin.Global') => 'percentage',
                     $this->translator->trans('Amount', [], 'Admin.Global') => 'amount',
+                    $this->translator->trans('Percentage', [], 'Admin.Global') => 'percentage',
                 ],
             ])
-            ->add('reduction', NumberType::class, [
+            ->add('reduction', TextType::class, [
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'price',
@@ -162,8 +167,49 @@ class CatalogPriceRuleType extends AbstractType
 
         if (!$this->isSingleShopContext) {
             $builder->add('id_shop', ChoiceType::class, [
-                'choices' => $this->contextShopIds, //@todo
+                'required' => false,
+                'placeholder' => false,
+                'choices' => $this->shopByIdChoices,
             ]);
         }
+    }
+
+    /**
+     * Prepends 'All currencies' option with id of 0 to currency choices
+     *
+     * @return array
+     */
+    private function getModifiedCurrencyChoices()
+    {
+        return array_merge(
+            [$this->translator->trans('All currencies', [], 'Admin.Global') => 0],
+            $this->currencyByIdChoices
+        );
+    }
+
+    /**
+     * Prepends 'All countries' option with id of 0 to country choices
+     *
+     * @return array
+     */
+    private function getModifiedCountryChoices()
+    {
+        return array_merge(
+            [$this->translator->trans('All countries', [], 'Admin.Global') => 0],
+            $this->countryByIdChoices
+        );
+    }
+
+    /**
+     * Prepends 'All groups' option with id of 0 to group choices
+     *
+     * @return array
+     */
+    private function getModifiedGroupChoices()
+    {
+        return array_merge(
+            [$this->translator->trans('All groups', [], 'Admin.Global') => 0],
+            $this->groupByIdChoices
+        );
     }
 }
