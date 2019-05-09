@@ -24,17 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\RemoveCartRuleFromOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
- * Interface for service that handles removing cart rule from given order.
+ * Removes cart rule from given order.
  */
-interface RemoveCartRuleFromOrderHandlerInterface
+class DeleteCartRuleFromOrderCommand
 {
     /**
-     * @param RemoveCartRuleFromOrderCommand $command
+     * @var OrderId
      */
-    public function handle(RemoveCartRuleFromOrderCommand $command);
+    private $orderId;
+
+    /**
+     * @var int
+     */
+    private $orderCartRule;
+
+    /**
+     * @param int $orderId
+     * @param int $orderCartRule
+     */
+    public function __construct($orderId, $orderCartRule)
+    {
+        $this->orderId = new OrderId($orderId);
+        $this->orderCartRule = $orderCartRule;
+    }
+
+    /**
+     * @return OrderId
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderCartRule()
+    {
+        return $this->orderCartRule;
+    }
 }
