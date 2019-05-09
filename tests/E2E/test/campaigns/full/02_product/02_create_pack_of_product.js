@@ -4,7 +4,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-let data = require('./../../../datas/product-data');
+let data = require('../../../datas/product-data');
 let promise = Promise.resolve();
 const welcomeScenarios = require('../../common_scenarios/welcome');
 
