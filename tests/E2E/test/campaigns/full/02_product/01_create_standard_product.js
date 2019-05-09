@@ -5,7 +5,7 @@ const {SearchProductPage} = require('../../../selectors/FO/search_product_page')
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const welcomeScenarios = require('../../common_scenarios/welcome');
-let data = require('./../../../datas/product-data');
+let data = require('../../../datas/product-data');
 let promise = Promise.resolve();
 
 scenario('Create Standard Product in the Back Office', () => {
