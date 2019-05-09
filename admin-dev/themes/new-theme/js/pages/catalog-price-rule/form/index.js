@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,22 +21,13 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
+import PriceFieldAvailabilityHandler
+  from './price-field-availability-handler';
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+const $ = window.$;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/CatalogPriceRule/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/catalog_price_rule_form.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  new PriceFieldAvailabilityHandler('#catalog_price_rule_leave_initial_price', '#catalog_price_rule_price');
+});

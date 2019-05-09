@@ -38,6 +38,7 @@ module.exports = {
     backup: './js/pages/backup',
     catalog: './js/app/pages/catalog',
     catalog_product: './js/pages/catalog/product',
+    catalog_price_rule_form: './js/pages/catalog-price-rule/form',
     category: './js/pages/category',
     cldr: './js/app/cldr',
     cms_page: './js/pages/cms-page',
