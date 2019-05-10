@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -81,7 +82,9 @@ class UpdateProductQuantityInCartCommand
         $combinationId = null,
         $customizationId = null
     ) {
-        // @todo: add integirty checks for $quantity, $combinationId, $customizationId
+        $this->assertCombinationIdIsPositiveIntOrNull($combinationId);
+        $this->assertCustomizationIdIsPositiveIntOrNull($customizationId);
+        $this->assertQuantityIsPositiveInt($quantity);
 
         $this->cartId = new CartId($cartId);
         $this->productId = new ProductId($productId);
@@ -137,5 +140,48 @@ class UpdateProductQuantityInCartCommand
     public function getCustomizationId()
     {
         return $this->customizationId;
+    }
+
+    /**
+     * @param int|null $combinationId
+     *
+     * @throws CartConstraintException
+     */
+    private function assertCombinationIdIsPositiveIntOrNull($combinationId)
+    {
+        if (null !== $combinationId && (!is_int($combinationId) || 0 >= $combinationId)) {
+            throw new CartConstraintException(sprintf(
+                'Combination id must be of type "int" and positive number, but %s given.',
+                var_export($combinationId, true)
+            ));
+        }
+    }
+
+    /**
+     * @param int|null $customizationId
+     *
+     * @throws CartConstraintException
+     */
+    private function assertCustomizationIdIsPositiveIntOrNull($customizationId)
+    {
+        if (null !== $customizationId && (!is_int($customizationId) || 0 >= $customizationId)) {
+            throw new CartConstraintException(sprintf(
+                'Customization id must be of type "int" and positive number, but %s given.',
+                var_export($customizationId, true)
+            ));
+        }
+    }
+
+    /**
+     * @param int $quantity
+     */
+    private function assertQuantityIsPositiveInt($quantity)
+    {
+        if (!is_int($quantity) || 0 > $quantity) {
+            throw new CartConstraintException(sprintf(
+                'Quantity must be of type "int" and positive number, but %s given.',
+                var_export($quantity, true)
+            ));
+        }
     }
 }
