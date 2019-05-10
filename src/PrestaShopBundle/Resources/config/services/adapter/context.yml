@@ -3,7 +3,6 @@ services:
     public: true
 
   #SECURITY
-  #@todo: is this service used?
   prestashop.adapter.security.admin:
     class: "%AdapterSecurityAdminClass%"
     arguments:
