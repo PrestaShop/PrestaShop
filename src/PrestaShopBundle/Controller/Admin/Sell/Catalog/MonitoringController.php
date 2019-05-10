@@ -28,16 +28,16 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithCombinationGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutCombinationGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithoutCombinationGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\DisabledProductFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\EmptyCategoryFilters;
-use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithCombinationFilters;
-use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutCombinationFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\NoQtyProductWithCombinationFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\NoQtyProductWithoutCombinationFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutDescriptionFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutImageFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutPriceFilters;
@@ -61,8 +61,8 @@ class MonitoringController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param EmptyCategoryFilters $emptyCategoryFilters
-     * @param ProductWithCombinationFilters $productWithCombinationFilters
-     * @param ProductWithoutCombinationFilters $productWithoutCombinationFilters
+     * @param NoQtyProductWithCombinationFilters $noQtyProductWithCombinationFilters
+     * @param NoQtyProductWithoutCombinationFilters $noQtyProductWithoutCombinationFilters
      * @param DisabledProductFilters $disabledProductFilters
      * @param ProductWithoutImageFilters $productWithoutImageFilters
      * @param ProductWithoutDescriptionFilters $productWithoutDescriptionFilters
@@ -73,8 +73,8 @@ class MonitoringController extends FrameworkBundleAdminController
     public function indexAction(
         Request $request,
         EmptyCategoryFilters $emptyCategoryFilters,
-        ProductWithCombinationFilters $productWithCombinationFilters,
-        ProductWithoutCombinationFilters $productWithoutCombinationFilters,
+        NoQtyProductWithCombinationFilters $noQtyProductWithCombinationFilters,
+        NoQtyProductWithoutCombinationFilters $noQtyProductWithoutCombinationFilters,
         DisabledProductFilters $disabledProductFilters,
         ProductWithoutImageFilters $productWithoutImageFilters,
         ProductWithoutDescriptionFilters $productWithoutDescriptionFilters,
@@ -83,8 +83,8 @@ class MonitoringController extends FrameworkBundleAdminController
         $deleteCategoryForm = $this->createForm(DeleteCategoriesType::class);
 
         $emptyCategoryGrid = $this->getEmptyCategoryGrid($emptyCategoryFilters);
-        $productWithCombinationGrid = $this->getProductWithCombinationGrid($productWithCombinationFilters);
-        $productWithoutCombinationGrid = $this->getProductWithoutCombinationGrid($productWithoutCombinationFilters);
+        $noQtyProductWithCombinationGrid = $this->getNoQtyProductWithCombinationGrid($noQtyProductWithCombinationFilters);
+        $noQtyProductWithoutCombinationGrid = $this->getNoQtyProductWithoutCombinationGrid($noQtyProductWithoutCombinationFilters);
         $disabledProductGrid = $this->getDisabledProductGrid($disabledProductFilters);
         $productWithoutImageGrid = $this->getProductWithoutImageGrid($productWithoutImageFilters);
         $productWithoutDescriptionGrid = $this->getProductWithoutDescriptionGrid($productWithoutDescriptionFilters);
@@ -95,8 +95,8 @@ class MonitoringController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'emptyCategoryGrid' => $this->presentGrid($emptyCategoryGrid),
             'deleteCategoryForm' => $deleteCategoryForm->createView(),
-            'productWithCombinationGrid' => $this->presentGrid($productWithCombinationGrid),
-            'productWithoutCombinationGrid' => $this->presentGrid($productWithoutCombinationGrid),
+            'noQtyProductWithCombinationGrid' => $this->presentGrid($noQtyProductWithCombinationGrid),
+            'noQtyProductWithoutCombinationGrid' => $this->presentGrid($noQtyProductWithoutCombinationGrid),
             'disabledProductGrid' => $this->presentGrid($disabledProductGrid),
             'productWithoutImageGrid' => $this->presentGrid($productWithoutImageGrid),
             'productWithoutDescriptionGrid' => $this->presentGrid($productWithoutDescriptionGrid),
@@ -141,8 +141,8 @@ class MonitoringController extends FrameworkBundleAdminController
         $gridId = EmptyCategoryGridDefinitionFactory::GRID_ID;
 
         $definitionMap = [
-            ProductWithCombinationGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_with_combination',
-            ProductWithoutCombinationGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_combination',
+            NoQtyProductWithCombinationGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.no_qty_product_with_combination',
+            NoQtyProductWithoutCombinationGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.no_qty_product_without_combination',
             DisabledProductGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.disabled_product',
             ProductWithoutImageGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_image',
             ProductWithoutDescriptionGridDefinitionFactory::GRID_ID => 'prestashop.core.grid.definition.factory.monitoring.product_without_description',
@@ -177,25 +177,25 @@ class MonitoringController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param ProductWithCombinationFilters $filters
+     * @param NoQtyProductWithCombinationFilters $filters
      *
      * @return GridInterface
      */
-    private function getProductWithCombinationGrid(ProductWithCombinationFilters $filters)
+    private function getNoQtyProductWithCombinationGrid(NoQtyProductWithCombinationFilters $filters)
     {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.product_with_combination');
+        $gridFactory = $this->get('prestashop.core.grid.grid_factory.no_qty_product_with_combination');
 
         return $gridFactory->getGrid($filters);
     }
 
     /**
-     * @param ProductWithoutCombinationFilters $filters
+     * @param NoQtyProductWithoutCombinationFilters $filters
      *
      * @return GridInterface
      */
-    private function getProductWithoutCombinationGrid(ProductWithoutCombinationFilters $filters)
+    private function getNoQtyProductWithoutCombinationGrid(NoQtyProductWithoutCombinationFilters $filters)
     {
-        $gridFactory = $this->get('prestashop.core.grid.grid_factory.product_without_combination');
+        $gridFactory = $this->get('prestashop.core.grid.grid_factory.no_qty_product_without_combination');
 
         return $gridFactory->getGrid($filters);
     }

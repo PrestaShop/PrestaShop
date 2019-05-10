@@ -40,18 +40,18 @@
     </div>
   {% endblock %}
 
-  {% block product_with_combinations_listing %}
+  {% block no_qty_product_with_combinations_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithCombinationGrid} %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': noQtyProductWithCombinationGrid} %}
       </div>
     </div>
   {% endblock %}
 
-  {% block product_without_combinations_listing %}
+  {% block no_qty_product_without_combinations_listing %}
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithoutCombinationGrid} %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': noQtyProductWithoutCombinationGrid} %}
       </div>
     </div>
   {% endblock %}

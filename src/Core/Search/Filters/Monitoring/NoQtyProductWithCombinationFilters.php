@@ -26,16 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters\Monitoring;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutCombinationGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
  * Defines default filters for product with combination grid.
  */
-final class ProductWithoutCombinationFilters extends Filters
+final class NoQtyProductWithCombinationFilters extends Filters
 {
     /** @var string */
-    protected $filterId = ProductWithoutCombinationGridDefinitionFactory::GRID_ID;
+    protected $filterId = NoQtyProductWithCombinationGridDefinitionFactory::GRID_ID;
 
     /**
      * {@inheritdoc}

@@ -43,11 +43,11 @@ use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Builds Grid definition for product with combination grid
+ * Builds Grid definition for product with combination and without quantities grid
  */
-final class ProductWithCombinationGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class NoQtyProductWithCombinationGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'product_with_combination';
+    const GRID_ID = 'no_qty_product_with_combination';
 
     /**
      * {@inheritdoc}

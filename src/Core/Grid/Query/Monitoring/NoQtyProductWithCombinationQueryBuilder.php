@@ -30,9 +30,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Builds query for product without combination and without quantities list data
+ * Builds query for product with combination but without quantities list data
  */
-final class ProductWithoutCombinationQueryBuilder extends AbstractProductQueryBuilder
+final class NoQtyProductWithCombinationQueryBuilder extends AbstractProductQueryBuilder
 {
     /**
      * {@inheritdoc}
@@ -60,7 +60,7 @@ final class ProductWithoutCombinationQueryBuilder extends AbstractProductQueryBu
     }
 
     /**
-     * Get generic query builder.
+     * Gets generic query builder
      *
      * @param SearchCriteriaInterface $searchCriteria
      *
@@ -84,7 +84,7 @@ final class ProductWithoutCombinationQueryBuilder extends AbstractProductQueryBu
             ->andWhere('IFNULL(stock.quantity, 0) <= 0')
         ;
 
-        $qb->andWhere('NOT EXISTS(' . $subQuery->getSQL() . ')');
+        $qb->andWhere('EXISTS(' . $subQuery->getSQL() . ')');
 
         return $qb;
     }
