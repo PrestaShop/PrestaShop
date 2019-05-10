@@ -47,6 +47,7 @@ import ShowcaseCardCloseExtension from '../../components/showcase-card/extension
 import TextWithRecommendedLengthCounter from '../../components/form/text-with-recommended-length-counter';
 import TranslatableField from '../../components/translatable-field';
 import TinyMCEEditor from '../../components/tinymce-editor';
+import Serp from '../../app/utils/serp/index';
 
 const $ = window.$;
 
@@ -71,19 +72,33 @@ $(() => {
 
   new TranslatableField();
   new TinyMCEEditor();
-  new TranslatableInput();
+  const translatorInput = new TranslatableInput();
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',
-    destinationElementSelector: 'input[name^="category[link_rewrite]"]',
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="category[link_rewrite]"]`,
   });
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="root_category[name]"]',
-    destinationElementSelector: 'input[name^="root_category[link_rewrite]"]',
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="root_category[link_rewrite]"]`,
   });
+
+  new Serp(
+    {
+      container: '#serp-app',
+      defaultTitle: 'input[name^="category[name]',
+      watchedTitle: 'input[name^="category[meta_title]',
+      defaultDescription: 'textarea[name^="category[description]',
+      watchedDescription: 'textarea[name^="category[meta_description]',
+      watchedMetaUrl: 'input[name^="category[link_rewrite]',
+      multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
+      multiLanguageItem: translatorInput.localeItemSelector,
+    },
+    $('#serp-app').data('category-url'),
+  );
 
   new FormSubmitButton();
 

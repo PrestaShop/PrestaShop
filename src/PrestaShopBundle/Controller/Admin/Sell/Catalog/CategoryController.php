@@ -143,11 +143,16 @@ class CategoryController extends FrameworkBundleAdminController
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig', [
-            'allowMenuThumbnailsUpload' => true,
-            'categoryForm' => $categoryForm->createView(),
-            'defaultGroups' => $defaultGroups,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => true,
+                'categoryForm' => $categoryForm->createView(),
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
+                ->getUrl(0, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -164,10 +169,8 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function createRootAction(Request $request)
     {
-        $rootCategoryFormBuilder =
-            $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
-        $rootCategoryFormHandler =
-            $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
+        $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
+        $rootCategoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
 
         $rootCategoryForm = $rootCategoryFormBuilder->getForm();
         $rootCategoryForm->handleRequest($request);
@@ -188,11 +191,16 @@ class CategoryController extends FrameworkBundleAdminController
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig', [
-            'allowMenuThumbnailsUpload' => true,
-            'rootCategoryForm' => $rootCategoryForm->createView(),
-            'defaultGroups' => $defaultGroups,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => true,
+                'rootCategoryForm' => $rootCategoryForm->createView(),
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
+                ->getUrl(0, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -249,14 +257,19 @@ class CategoryController extends FrameworkBundleAdminController
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
-            'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
-            'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
-            'contextLangId' => $this->getContextLangId(),
-            'editCategoryForm' => $categoryForm->createView(),
-            'editableCategory' => $editableCategory,
-            'defaultGroups' => $defaultGroups,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
+                'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
+                'contextLangId' => $this->getContextLangId(),
+                'editCategoryForm' => $categoryForm->createView(),
+                'editableCategory' => $editableCategory,
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
+                ->getUrl($categoryId, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -287,10 +300,8 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_categories_index');
         }
 
-        $rootCategoryFormBuilder =
-            $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
-        $rootCategoryFormHandler =
-            $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
+        $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
+        $rootCategoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
 
         try {
             $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
@@ -311,14 +322,19 @@ class CategoryController extends FrameworkBundleAdminController
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig', [
-            'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
-            'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
-            'contextLangId' => $this->getContextLangId(),
-            'editRootCategoryForm' => $rootCategoryForm->createView(),
-            'editableCategory' => $editableCategory,
-            'defaultGroups' => $defaultGroups,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
+                'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
+                'contextLangId' => $this->getContextLangId(),
+                'editRootCategoryForm' => $rootCategoryForm->createView(),
+                'editableCategory' => $editableCategory,
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
+                ->getUrl($categoryId, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -642,8 +658,7 @@ class CategoryController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('category_' . date('Y-m-d_His') . '.csv')
-        ;
+            ->setFileName('category_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
