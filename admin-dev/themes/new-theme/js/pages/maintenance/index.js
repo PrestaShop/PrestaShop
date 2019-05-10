@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -24,11 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
+import TinyMCEEditor from '../../components/tinymce-editor';
 
-/**
- * Class UndefinedEmployeeAccountStatusException.
- */
-class UndefinedEmployeeStatusException extends EmployeeException
-{
-}
+const $ = window.$;
+
+$(() => {
+  new TinyMCEEditor();
+});

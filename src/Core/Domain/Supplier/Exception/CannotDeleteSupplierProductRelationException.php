@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
 
 /**
- * Class CannotDeleteSupplierProductRelationException
+ * Is thrown when supplier product relation cannot be deleted
  */
 class CannotDeleteSupplierProductRelationException extends SupplierException
 {

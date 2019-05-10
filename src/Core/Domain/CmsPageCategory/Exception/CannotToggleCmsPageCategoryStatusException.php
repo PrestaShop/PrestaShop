@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
 /**
- * Class CannotToggleCmsPageCategoryStatusException
+ * Is thrown when cms page category cannot be enabled or disabled in toggling action
  */
 class CannotToggleCmsPageCategoryStatusException extends CmsPageCategoryException
 {

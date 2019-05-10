@@ -34,7 +34,7 @@ module.exports = {
     save_quantitie_button: '//*[@id="apply-on-combinations"]',
     add_feature_to_product_button: '//*[@id="add_feature_button"]',
     feature_select: '//*[@id="features-content"]/div/div[%NUMBER]/div[1]/fieldset/span/span[1]/span',
-    select_feature_created: '/html/body//span/span[1]/input',
+    select_feature_created: '//*[@id="form_step1_features_%ID_feature"]',
     feature_select_button: '//*[@id="select2-form_step1_features_%ID_feature-container"]',
     feature_select_button1: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
     customized_value_input: '//*[@id="form_step1_features_%ID_custom_value_1"]',

@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -24,11 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Backup\Exception;
+import EventEmitterClass from 'events';
 
 /**
- * Interface ExceptionInterface is implemented by backup exceptions.
+ * We instanciate one EventEmitter (restricted via a const) so that every components
+ * register/dispatch on the same one and can communicate with each other.
  */
-interface ExceptionInterface
-{
-}
+export const EventEmitter = new EventEmitterClass();

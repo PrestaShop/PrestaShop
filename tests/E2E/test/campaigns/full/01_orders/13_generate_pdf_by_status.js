@@ -12,6 +12,7 @@ const {Invoices} = require('../../../selectors/BO/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonOrder = require('../../common_scenarios/order');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 
@@ -30,8 +31,11 @@ scenario('Generate a PDF by status', () => {
       }, 'order');
       commonOrder.createOrderFO();
     }, 'order');
-    scenario('Change the Customer Group tax parameter', client => {
+    scenario('Open the browser and login successfully in the Back Office ', client => {
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+    }, 'common_client');
+    welcomeScenarios.findAndCloseWelcomeModal();
+    scenario('Change the Customer Group tax parameter', client => {
       test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.customer_settings_submenu));
       test('should click on "Group" tab', () => client.waitForExistAndClick(CustomerSettings.groups.group_button));
       test('should click on customer "Edit" button', () => client.waitForExistAndClick(CustomerSettings.groups.customer_edit_button));

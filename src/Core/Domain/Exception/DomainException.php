@@ -26,8 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-class DomainException extends Exception
+/**
+ * Base class for all domain exceptions
+ */
+class DomainException extends CoreException
 {
 }

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
 
 /**
- * Class CannotAddMetaException
+ * Is thrown when new meta cannot be added
  */
 class CannotAddMetaException extends MetaException
 {

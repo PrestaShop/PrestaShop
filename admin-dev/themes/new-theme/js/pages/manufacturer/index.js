@@ -38,6 +38,8 @@ import ExportToSqlManagerExtension from '../../components/grid/extension/export-
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import ChoiceTree from '../../components/form/choice-tree';
+import TranslatableField from '../../components/translatable-field';
+import TinyMCEEditor from '../../components/tinymce-editor';
 
 const $ = window.$;
 
@@ -56,6 +58,8 @@ $(() => {
   });
 
   new TranslatableInput();
+  new TranslatableField();
+  new TinyMCEEditor();
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {

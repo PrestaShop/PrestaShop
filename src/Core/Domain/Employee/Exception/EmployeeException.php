@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class EmployeeException.
+ * Base exception for employee sub-domain
  */
 class EmployeeException extends DomainException
 {
