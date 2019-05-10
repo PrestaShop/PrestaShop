@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Updates cart's prodcut price.
+ * Updates cart product price
  */
 class UpdateProductPriceInCartCommand
 {
