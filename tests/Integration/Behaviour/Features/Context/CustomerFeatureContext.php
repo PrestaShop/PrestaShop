@@ -28,9 +28,11 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Configuration;
 use Context;
+use Country;
 use Customer;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use RuntimeException;
 
 class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -76,14 +78,24 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given customer has address in :isoCode country
+     * @Given customer :customerEmail has address in :isoCode country
      */
-    public function customerHasAddress($isoCode)
+    public function customerHasAddressInCountry($customerEmail, $isoCode)
     {
-        $customerAddresses = $this->lastCustomer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
+        $data = Customer::getCustomersByEmail($customerEmail);
+
+        if (empty($data)) {
+            throw new RuntimeException(sprintf(
+                'Customer with email "%s" does not exist.',
+                $customerEmail
+            ));
+        }
+
+        $customer = new Customer($data[0]['id_customer']);
+        $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
 
         foreach ($customerAddresses as $address) {
-            $country = new \Country($address['id_country']);
+            $country = new Country($address['id_country']);
 
             if ($country->iso_code === $isoCode) {
                 return;
