@@ -193,7 +193,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then created order should have :quantity products in total
      */
-    public function createdOrderShouldHaveProductsInTotal($quantity)
+    public function assertOrderProductsQuantity($quantity)
     {
         $order = Order::getByCartId(Context::getContext()->cart->id);
         $orderProducts = $order->getProducts();
