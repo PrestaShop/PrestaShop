@@ -473,35 +473,42 @@ class CartPresenter implements PresenterInterface
                 '',
         );
     }
-    
+
+    /**
+     * Accepts a cart object with the shipping cost amount and formats the shipping cost display value accordingly. 
+     * If the shipping cost is 0, then we must check if this is because of a free carrier and thus display 'Free' or
+     * simply because the system was unable to determine shipping cost at this point and thus send an empty string to hide the shipping line.
+     * 
+     * @param Cart $cart
+     * @param float $shippingCost
+     *
+     * @return string
+     */
     private function getShippingDisplayValue($cart, $shippingCost)
     {
-        $hasFreeCarrier = 0;
-        $default_country = null;
-
-        if (isset(Context::getContext()->cookie->id_country)) {
-            $default_country = new Country(Context::getContext()->cookie->id_country);
-        }
-
-        $delivery_option_list = $cart->getDeliveryOptionList($default_country);
-
-        if (isset($delivery_option_list) && count($delivery_option_list) > 0) {
-            foreach ($delivery_option_list as $option) {
-                foreach ($option as $currentCarrier) {
-                    if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
-                        $hasFreeCarrier = 1;
-                        break 2;
-                    }
-                }
-            }
-        }
-
         $shippingDisplayValue = '';
 
         if ($shippingCost != 0) {
             $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
-        } elseif ($hasFreeCarrier == 1) {
-            $shippingDisplayValue = $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
+        } else {            
+            $defaultCountry = null;
+
+            if (isset(Context::getContext()->cookie->id_country)) {
+                $defaultCountry = new Country(Context::getContext()->cookie->id_country);
+            }
+
+            $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
+
+            if (isset($deliveryOptionList) && count($deliveryOptionList) > 0) {
+                foreach ($deliveryOptionList as $option) {
+                    foreach ($option as $currentCarrier) {
+                        if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
+                            $shippingDisplayValue = $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
+                            break 2;
+                        }
+                    }
+                }
+            }
         }
 
         return $shippingDisplayValue;
