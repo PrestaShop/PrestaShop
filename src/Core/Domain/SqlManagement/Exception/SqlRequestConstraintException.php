@@ -26,10 +26,28 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
+/**
+ * Is thrown when SqlRequest constraints are violated
+ */
 class SqlRequestConstraintException extends SqlRequestException
 {
+    /**
+     * When provided name is not valid
+     */
     const INVALID_NAME = 10;
+
+    /**
+     * When provided sql query is not valid
+     */
     const INVALID_SQL_QUERY = 20;
+
+    /**
+     * When provided sql query format is invalid
+     */
     const MALFORMED_SQL_QUERY = 30;
+
+    /**
+     * When empty data is provided for bulk action
+     */
     const MISSING_BULK_DATA = 40;
 }
