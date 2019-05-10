@@ -23,18 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-class Payment extends PaymentModule
+
+class Dummy_Payment extends PaymentModule
 {
     public function __construct()
     {
-        $this->name = 'payment';
+        $this->name = 'dummy_payment';
         $this->version = '1.0.0';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
 
         parent::__construct();
 
-        $this->displayName = 'Payment';
+        $this->displayName = 'Dummy payment';
 
         $this->active = true;
     }
