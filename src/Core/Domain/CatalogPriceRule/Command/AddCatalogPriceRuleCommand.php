@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command;
 
-use DateTime;
-
 /**
  * Adds new catalog price rule with provided data
  */
