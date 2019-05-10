@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
 /**
- * Updates cart's delivery option with new one.
+ * Updates cart delivery option with new one.
  */
 class UpdateCartDeliveryOptionCommand
 {
