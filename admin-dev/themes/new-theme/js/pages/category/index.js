@@ -78,12 +78,12 @@ $(() => {
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',
-    destinationElementSelector: 'input[name^="category[link_rewrite]"]',
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="category[link_rewrite]"]`,
   });
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="root_category[name]"]',
-    destinationElementSelector: 'input[name^="root_category[link_rewrite]"]',
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="root_category[link_rewrite]"]`,
   });
 
   new Serp(

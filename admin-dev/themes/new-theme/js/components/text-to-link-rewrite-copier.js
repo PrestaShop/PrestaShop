@@ -26,19 +26,6 @@
 const $ = window.$;
 
 /**
- * Gets language id by target element.
- *
- * @param {jQuery} $targetElement
- *
- * @returns {Number|null}
- */
-const getLanguageIdByElement = ($targetElement) => {
-  const langId = $targetElement.attr('data-lang-id');
-
-  return typeof langId === 'undefined' ? null : parseInt(langId, 10);
-};
-
-/**
  * Component which allows to copy regular text to url friendly text
  *
  * Usage example in template:
@@ -69,11 +56,7 @@ const getLanguageIdByElement = ($targetElement) => {
  */
 const textToLinkRewriteCopier = ({sourceElementSelector, destinationElementSelector, options = {eventName: 'input'}}) => {
   $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
-    const $nameInput = $(event.currentTarget);
-    const langId = getLanguageIdByElement($nameInput);
-    const elementToModifySelector = langId !== null ? `${destinationElementSelector}[data-lang-id="${langId}"]` : destinationElementSelector;
-
-    $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8'));
+    $(destinationElementSelector).val(str2url($(event.currentTarget).val(), 'UTF-8'));
   });
 };
 
