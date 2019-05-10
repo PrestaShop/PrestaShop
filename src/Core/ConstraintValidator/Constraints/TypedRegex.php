@@ -47,8 +47,8 @@ class TypedRegex extends Constraint
     const TYPE_MESSAGE = 'message';
     const TYPE_LANGUAGE_ISO_CODE = 'language_iso_code';
     const TYPE_LANGUAGE_CODE = 'language_code';
-    const NEGATIVE_PRICE = 'native_price';
-    const PRICE = 'price';
+    const TYPE_NEGATIVE_PRICE = 'native_price';
+    const TYPE_PRICE = 'price';
 
     /**
      * @var string

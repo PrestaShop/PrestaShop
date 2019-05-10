@@ -46,14 +46,18 @@ final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInte
         try {
             $specificPriceRule = $this->createSpecificPriceRuleFromCommand($command);
 
+            if (false === $specificPriceRule->validateFields(false)) {
+                throw new CatalogPriceRuleException('Specific price rule contains invalid field values');
+            }
+
             if (false === $specificPriceRule->add()) {
                 throw new CatalogPriceRuleException(
-                    sprintf('Failed to create catalog price rule')
+                    sprintf('Failed to create specific price rule')
                 );
             }
         } catch (PrestaShopException $e) {
             throw new CatalogPriceRuleException(
-                'An unexpected error occurred while creating catalog price rule',
+                'An unexpected error occurred while creating specific price rule',
                 0,
                 $e
             );
