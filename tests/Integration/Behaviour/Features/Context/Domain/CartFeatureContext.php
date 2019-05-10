@@ -26,47 +26,71 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Cart;
 use Configuration;
 use Context;
 use Country;
 use Customer;
 use Exception;
-use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use Product;
+use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I create an empty cart for customer with email :customerEmail
+     * @var array Registry to keep track of created/edited carts using references
      */
-    public function createEmptyCartForCustomer($customerEmail)
-    {
-        $customer = Customer::getCustomersByEmail($customerEmail);
+    private $cartRegistry = [];
 
-        $this->getCommandBus()->handle(
-            new CreateEmptyCustomerCartCommand(
-                (int) $customer[0]['id_customer'],
-                (int) Context::getContext()->shop->id
-            )
-        );
+    /**
+     * @var CustomerFeatureContext
+     */
+    private $customerFeatureContext;
+
+    /**
+     * @BeforeScenario
+     */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
     }
 
     /**
-     * @When I add :quantity products with reference :productReference to the cart
+     * @When I create an empty cart :cartReference for customer :customerReference
      */
-    public function addProductToCarts($quantity, $productReference)
+    public function createEmptyCartForCustomer($cartReference, $customerReference)
+    {
+        $customer = $this->customerFeatureContext->getCustomerWithName($customerReference);
+
+        /** @var CartId $cartId */
+        $cartId = $this->getCommandBus()->handle(
+            new CreateEmptyCustomerCartCommand(
+                (int) $customer->id,
+                (int) Context::getContext()->shop->id
+            )
+        );
+
+        $this->cartRegistry[$cartReference] = new Cart($cartId->getValue());
+    }
+
+    /**
+     * @When I add :quantity products with reference :productReference to the cart :reference
+     */
+    public function addProductToCarts($quantity, $productReference, $reference)
     {
         $productId = (int) Product::getIdByReference($productReference);
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
-                (int) Context::getContext()->cart->id,
+                (int) $this->getCartFromRegistry($reference)->id,
                 $productId,
                 (int) $quantity,
                 QuantityAction::INCREASE_PRODUCT_QUANTITY
@@ -75,11 +99,11 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I select :countryIsoCode address as delivery and invoice address
+     * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
      */
-    public function selectAddressAsDeliveryAndInvoiceAddress($countryIsoCode)
+    public function selectAddressAsDeliveryAndInvoiceAddress($countryIsoCode, $customerReference, $cartReference)
     {
-        $customer = new Customer(Context::getContext()->cart->id_customer);
+        $customer = $this->customerFeatureContext->getCustomerWithName($customerReference);
 
         $getAddressByCountryIsoCode = static function ($isoCode) use ($customer) {
             $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -99,7 +123,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(
             new UpdateCartAddressesCommand(
-                (int) Context::getContext()->cart->id,
+                (int) $this->getCartFromRegistry($cartReference)->id,
                 $addressId,
                 $addressId
             )
@@ -107,40 +131,31 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I set Free shipping to the cart
+     * @When I set Free shipping to the cart :reference
      */
-    public function setFreeShippingToCart()
+    public function setFreeShippingToCart($reference)
     {
         $this->getCommandBus()->handle(
             new SetFreeShippingToCartCommand(
-                (int) Context::getContext()->cart->id,
+                (int) $this->getCartFromRegistry($reference)->id,
                 true
             )
         );
     }
 
     /**
-     * @When I place order with :paymentModuleName payment method and :orderStatus order status
+     * Allows accessing created/edited carts in different contexts
+     *
+     * @param string $reference
+     *
+     * @return Cart
      */
-    public function placeOrderWithPaymentMethodAndOrderStatus($paymentModuleName, $orderStatus)
+    public function getCartFromRegistry($reference)
     {
-        $orderStates = OrderState::getOrderStates(Context::getContext()->language->id);
-        $orderStatusId = null;
-
-        foreach ($orderStates as $state) {
-            if ($state['name'] === $orderStatus) {
-                $orderStatusId = (int) $state['id_order_state'];
-            }
+        if (!isset($this->cartRegistry[$reference])) {
+            throw new RuntimeException(sprintf('Cart "%s" does not exist in registry', $reference));
         }
 
-        $this->getCommandBus()->handle(
-            new AddOrderFromBackOfficeCommand(
-                (int) Context::getContext()->cart->id,
-                (int) Context::getContext()->employee->id,
-                '',
-                $paymentModuleName,
-                $orderStatusId
-            )
-        );
+        return $this->cartRegistry[$reference];
     }
 }

@@ -39,6 +39,7 @@ use Module;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
  * @internal
@@ -93,6 +94,8 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         if (!$paymentModule->currentOrder) {
             throw new OrderException('Failed to add order.');
         }
+
+        return new OrderId((int) $paymentModule->currentOrder);
     }
 
     /**
