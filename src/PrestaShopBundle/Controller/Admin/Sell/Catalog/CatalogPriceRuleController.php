@@ -118,7 +118,6 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             'catalogPriceRuleForm' => $catalogPriceRuleForm->createView(),
             'catalogPriceRuleName' => $editableCatalogPriceRule->getName(),
         ]);
-
     }
 
     /**
@@ -136,7 +135,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             CatalogPriceRuleNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
-            )
+            ),
         ];
     }
 
