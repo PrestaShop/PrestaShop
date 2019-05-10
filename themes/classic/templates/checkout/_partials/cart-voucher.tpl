@@ -79,18 +79,20 @@
         </p>
 
         {if $cart.discounts|count > 0}
-          <p class="block-promo promo-highlighted">
-            {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
-          </p>
-        {/if}
-
-        <ul class="js-discount card-block promo-discounts">
-            {foreach from=$cart.discounts item=discount}
-              <li class="cart-summary-line">
-                <span class="label"><span class="code">{$discount.code}</span> - {$discount.name}</span>
-              </li>
-            {/foreach}
+          <div class="block-promo-container">
+            <p class="block-promo promo-highlighted">
+              {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
+            </p>
+            
+            <ul class="js-discount card-block promo-discounts">
+              {foreach from=$cart.discounts item=discount}
+                <li class="cart-summary-line">
+                  <span class="label"><span class="code">{$discount.code}</span> - {$discount.name}</span>
+                </li>
+              {/foreach}
             </ul>
+          </div>
+        {/if}
       </div>
     </div>
   {/block}
