@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
  * Adds new order from given cart.
@@ -68,7 +69,8 @@ class AddOrderFromBackOfficeCommand
      */
     public function __construct($cartId, $employeeId, $orderMessage, $paymentModuleName, $orderStateId)
     {
-        // @todo: add integrity checks
+        $this->assertIsModuleName($paymentModuleName);
+        $this->assertOrderStateIsPositiveInt($orderStateId);
 
         $this->cartId = new CartId($cartId);
         $this->employeeId = new EmployeeId($employeeId);
@@ -115,5 +117,27 @@ class AddOrderFromBackOfficeCommand
     public function getEmployeeId()
     {
         return $this->employeeId;
+    }
+
+    /**
+     * @param string $moduleName
+     *
+     * @throws OrderException
+     */
+    private function assertIsModuleName($moduleName)
+    {
+        if (!is_string($moduleName) || !preg_match('/^[a-zA-Z0-9_-]+$/', $moduleName)) {
+            throw new OrderException('Payment module name is invalid');
+        }
+    }
+
+    /**
+     * @param int $orderStateId
+     */
+    private function assertOrderStateIsPositiveInt($orderStateId)
+    {
+        if (!is_int($orderStateId) || 0 >= $orderStateId) {
+            throw new OrderException('Invalid order state id');
+        }
     }
 }
