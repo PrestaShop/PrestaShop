@@ -39,14 +39,6 @@ class AdapterSecurityAdminMock
     {
     }
 
-    /**
-     * Check if employee is logged in
-     * If not loggedin in, redirect to admin home page
-     *
-     * @param GetResponseEvent $event
-     *
-     * @return bool or redirect
-     */
     public function onKernelRequest(GetResponseEvent $event)
     {
     }

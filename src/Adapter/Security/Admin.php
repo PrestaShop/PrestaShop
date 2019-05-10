@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -45,11 +45,6 @@ class Admin
     private $context;
 
     /**
-     * @var \Context
-     */
-    private $legacyContext;
-
-    /**
      * @var TokenStorage
      */
     private $securityTokenStorage;
@@ -59,52 +54,46 @@ class Admin
      */
     private $userProvider;
 
-    public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage, UserProviderInterface $userProvider)
-    {
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
+    /**
+     * @param LegacyContext $context
+     * @param TokenStorage $securityTokenStorage
+     * @param UserProviderInterface $userProvider
+     * @param UrlGeneratorInterface $urlGenerator
+     */
+    public function __construct(
+        LegacyContext $context,
+        TokenStorage $securityTokenStorage,
+        UserProviderInterface $userProvider,
+        UrlGeneratorInterface $urlGenerator
+    ) {
         $this->context = $context;
-        $this->legacyContext = $context->getContext();
         $this->securityTokenStorage = $securityTokenStorage;
         $this->userProvider = $userProvider;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
-     * Check if employee is logged in
-     * If not logged in, redirect to admin home page.
+     * If employee is logged in - set security token to the token storage.
      *
      * @param GetResponseEvent $event
-     *
-     * @return bool or redirect
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+        $contextEmployee = $this->context->getContext()->employee;
+
         //if employee loggdin in legacy context, authenticate him into sf2 security context
-        if (isset($this->legacyContext->employee) && $this->legacyContext->employee->isLoggedBack()) {
-            $user = $this->userProvider->loadUserByUsername($this->legacyContext->employee->email);
+        if (isset($contextEmployee) && $contextEmployee->isLoggedBack()) {
+            $user = $this->userProvider->loadUserByUsername($contextEmployee->email);
             $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
             $this->securityTokenStorage->setToken($token);
-
-            return true;
+        } elseif ($event->isMasterRequest()) {
+            // If employee is not logged in - redirect to login page.
+            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('_admin_login')));
         }
-
-        // in case of exception handler sub request, avoid infinite redirection
-        if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
-            && isset($event->getRequest()->attributes['exception'])
-        ) {
-            return true;
-        }
-
-        //employee not logged in
-        $event->stopPropagation();
-
-        //if http request - add 403 error
-        $request = Request::createFromGlobals();
-        if ($request->isXmlHttpRequest()) {
-            header('HTTP/1.1 403 Forbidden');
-            exit();
-        }
-
-        //redirect to admin home page
-        header('Location: ' . $this->context->getAdminLink('', false));
-        exit();
     }
 }

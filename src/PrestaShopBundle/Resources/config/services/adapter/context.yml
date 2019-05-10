@@ -1,14 +1,15 @@
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    #SECURITY
-    #@todo: is this service used?
-    prestashop.adapter.security.admin:
-        class: "%AdapterSecurityAdminClass%"
-        arguments:
-            - "@prestashop.adapter.legacy.context"
-            - "@security.token_storage"
-            - "@prestashop.security.admin.provider"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+  #SECURITY
+  #@todo: is this service used?
+  prestashop.adapter.security.admin:
+    class: "%AdapterSecurityAdminClass%"
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+      - "@security.token_storage"
+      - "@prestashop.security.admin.provider"
+      - "@prestashop.core.admin.url_generator"
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
