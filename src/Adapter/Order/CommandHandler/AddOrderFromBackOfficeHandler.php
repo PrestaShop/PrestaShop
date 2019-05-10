@@ -54,6 +54,10 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             Module::getInstanceByName($command->getPaymentModuleName()) :
             new BoOrderCore();
 
+        if (false === $paymentModule) {
+            throw new OrderException(sprintf('Payment method "%s" does not exist.', $paymentModule));
+        }
+
         $cart = new Cart($command->getCartId()->getValue());
 
         Context::getContext()->currency = new Currency((int) $cart->id_currency);
