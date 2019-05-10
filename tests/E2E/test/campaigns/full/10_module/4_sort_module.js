@@ -8,12 +8,14 @@ const {ModulePage} = require('../../../selectors/BO/module_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const moduleCommonScenarios = require('../../common_scenarios/module');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 scenario('Check sort module by "Name"', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'module');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Check then install "ps_mbo" module', client => {
     moduleCommonScenarios.installUninstallMboModule(client, ModulePage, AddProductPage, "ps_mbo", 'install');
   }, 'onboarding');

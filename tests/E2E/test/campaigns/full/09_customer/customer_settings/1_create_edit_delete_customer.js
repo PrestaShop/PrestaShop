@@ -14,6 +14,7 @@ const {Addresses} = require('../../../../selectors/BO/customers/addresses');
 const {BO} = require('../../../../selectors/BO/customers/index');
 const common_scenarios = require('../../../common_scenarios/customer');
 const common_scenarios_address = require('../../../common_scenarios/address');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 let customerData = {
@@ -45,7 +46,7 @@ scenario('Create, Edit, delete "Customer"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'customer');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createCustomer(customerData);
   common_scenarios.checkCustomerBO(customerData);
 

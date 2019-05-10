@@ -110,9 +110,9 @@ module.exports = {
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
           .then(() => client.search(Customer.customer_filter_by_email_input, date_time + customerEmail));
       });
-      test('should select the searched client', () => client.waitForExistAndClick(Customer.select_customer));
-      test('should click on the "Bulk actions" button', () => client.waitForExistAndClick(Customer.bulk_actions_button));
-      test('should click on the "Delete selected" button', () => client.waitForExistAndClick(Customer.bulk_actions_delete_button));
+      test('should select the searched client', () => client.waitForExistAndClickJs(Customer.select_customer));
+      test('should click on the "Bulk actions" button', () => client.waitForVisibleAndClick(Customer.bulk_actions_button));
+      test('should click on the "Delete selected" button', () => client.waitForVisibleAndClick(Customer.bulk_actions_delete_button));
       test('should choose the option that allows customers to register again with the same email address', () => client.waitForVisibleAndClick(Customer.delete_first_option));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, 'The selection has been successfully deleted.'));

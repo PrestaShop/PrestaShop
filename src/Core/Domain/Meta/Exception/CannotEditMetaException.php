@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
 
 /**
- * Class CannotEditMetaException
+ * Is thrown when meta cannot be edited
  */
 class CannotEditMetaException extends MetaException
 {

@@ -3,7 +3,7 @@ module.exports = {
     submenu: '//*[@id="subtab-AdminCategories"]/a',
     new_category_button: '//a[@id="page-header-desc-configuration-add"]',
     name_input: '//*[@id="category_name_1"]',
-    description_textarea: '//textarea[@id="category_description_1"]',
+    description_textarea: '#category_description_1_ifr',
     picture: '//*[@id="category_cover_image"]',
     thumb_picture: '//*[@id="category_thumbnail_image"]',
     thumb_menu_picture: '//*[@id="category_menu_thumbnail_images"]',

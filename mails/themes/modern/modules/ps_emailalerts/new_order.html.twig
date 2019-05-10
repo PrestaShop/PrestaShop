@@ -318,149 +318,58 @@
                         <div class="mj-column-per-100 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tr>
-                              <td align="left" style="font-size:0px;padding:10px 25px;padding-right:50px;padding-left:50px;word-break:break-word;">
+                              <td align="left" class="products-table mail-alert" style="font-size:0px;padding:10px 25px;padding-right:50px;padding-left:50px;word-break:break-word;">
                                 <table cellpadding="0" cellspacing="0" width="100%" border="0" style="cellspacing:0;color:#000000;font-family:Open sans, arial, sans-serif;font-size:14px;line-height:22px;table-layout:auto;width:100%;">
+                                  <colgroup>
+                                    <col span="1" style="width: 15%;">
+                                    <col span="1" style="width: 40%;">
+                                    <col span="1" style="width: 15%;">
+                                    <col span="1" style="width: 15%;">
+                                    <col span="1" style="width: 15%;">
+                                  </colgroup>
                                   <tr>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Reference'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Product'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Unit price'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD">{{ 'Reference'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD">{{ 'Product'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD">{{ 'Unit price'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
                                   </tr>
-                                  <tr>
-                                    <td colspan="5" style="border: 1px solid #DFDFDF;padding:10px 0 10px 10px"> {items} </td>
+                                  <mj-raw> {items} </mj-raw>
+                                  <tr class="order_summary">
+                                    <td bgcolor="#FDFDFD" colspan="3" align="right">
+                                      {{ 'Products'|trans({}, 'Emails.Body', locale)|raw }}
+                                    </td>
+                                    <td bgcolor="#FDFDFD" colspan="3"> {total_products} </td>
                                   </tr>
-                                  <tr class="conf_body">
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" class="table-header">
-                                            {{ 'Products'|trans({}, 'Emails.Body', locale)|raw }}
-                                          </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
+                                  <tr class="order_summary">
+                                    <td bgcolor="#FDFDFD" colspan="3" align="right">
+                                      {{ 'Discounts'|trans({}, 'Emails.Body', locale)|raw }}
                                     </td>
-                                    <td bgcolor="#FDFDFD" align="right" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" style="padding:0;font-size:14px;font-family:Open sans,Arial,sans-serif"> {total_products} </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
-                                    </td>
+                                    <td bgcolor="#FDFDFD" colspan="3"> {total_discounts} </td>
                                   </tr>
-                                  <tr class="conf_body">
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" class="table-header">
-                                            {{ 'Discounts'|trans({}, 'Emails.Body', locale)|raw }}
-                                          </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
+                                  <tr class="order_summary">
+                                    <td bgcolor="#FDFDFD" colspan="3" align="right">
+                                      {{ 'Gift-wrapping'|trans({}, 'Emails.Body', locale)|raw }}
                                     </td>
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" style="padding:0;font-size:14px;font-family:Open sans,Arial,sans-serif"> {total_discounts} </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
-                                    </td>
+                                    <td bgcolor="#FDFDFD" colspan="3"> {total_wrapping} </td>
                                   </tr>
-                                  <tr class="conf_body">
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" class="table-header">
-                                            {{ 'Gift-wrapping'|trans({}, 'Emails.Body', locale)|raw }}
-                                          </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
+                                  <tr class="order_summary">
+                                    <td bgcolor="#FDFDFD" colspan="3" align="right">
+                                      {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
                                     </td>
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" style="padding:0;font-size:14px;font-family:Open sans,Arial,sans-serif"> {total_wrapping} </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
-                                    </td>
+                                    <td bgcolor="#FDFDFD" colspan="3"> {total_shipping} </td>
                                   </tr>
-                                  <tr class="conf_body">
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" class="table-header">
-                                            {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
-                                          </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
+                                  <tr class="order_summary">
+                                    <td bgcolor="#FDFDFD" colspan="3" align="right">
+                                      {{ 'Including total tax'|trans({}, 'Emails.Body', locale)|raw }}
                                     </td>
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" style="padding:0;font-size:14px;font-family:Open sans,Arial,sans-serif"> {total_shipping} </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
-                                    </td>
+                                    <td bgcolor="#FDFDFD" colspan="3"> {total_tax_paid} </td>
                                   </tr>
-                                  <tr class="conf_body">
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" class="table-header">
-                                            {{ 'Including total tax'|trans({}, 'Emails.Body', locale)|raw }}
-                                          </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
+                                  <tr class="order_summary">
+                                    <td bgcolor="#FDFDFD" colspan="3" align="right">
+                                      {{ 'Total paid'|trans({}, 'Emails.Body', locale)|raw }}
                                     </td>
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" style="padding:0;font-size:14px;font-family:Open sans,Arial,sans-serif"> {total_tax_paid} </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                  <tr class="conf_body">
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" class="table-header">
-                                            {{ 'Total paid'|trans({}, 'Emails.Body', locale)|raw }}
-                                          </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
-                                    </td>
-                                    <td bgcolor="#FDFDFD" colspan="3" style="border: 1px solid #DFDFDF;background-color: #FDFDFD;padding:10px 0">
-                                      <table class="table" style="width:100%;border-collapse:collapse">
-                                        <tr>
-                                          <td width="10" style="padding:0"> </td>
-                                          <td align="right" style="padding:0;font-size:16px;font-weight:bold;font-family:Open sans,Arial,sans-serif"> {total_paid} </td>
-                                          <td width="10" style="padding:0"> </td>
-                                        </tr>
-                                      </table>
-                                    </td>
+                                    <td bgcolor="#FDFDFD" colspan="3"> {total_paid} </td>
                                   </tr>
                                 </table>
                               </td>
@@ -970,16 +879,29 @@
       font-size: 14px;
     }
 
-    .table-header {
+    .products-table,
+    .products-table th,
+    .products-table td {
       font-family: Open sans, Arial, sans-serif;
-      font-weight: 600;
-      font-size: 14px;
+      font-size: 12px;
       background-color: #FDFDFD;
       color: #353943;
     }
 
-    th.table-header {
+    .products-table th {
+      font-weight: 600;
+      padding: 10px 5px;
+      border: 1px solid #DFDFDF;
+    }
+
+    .products-table .order_summary td {
+      font-weight: 600;
+      font-size: 14px;
       padding: 10px;
+      border: 1px solid #DFDFDF;
+    }
+
+    .products-table.mail-alert td {
       border: 1px solid #DFDFDF;
     }
 

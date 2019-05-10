@@ -10,11 +10,13 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {MerchandiseReturns} = require('../../../selectors/BO/Merchandise_returns');
 const common = require('../../../common.webdriverio');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let Date = common.getCustomDate(0);
 scenario('Create three credits slips and generate them', () => {
   scenario('Open the browser login successfully in the Back Office ', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+    welcomeScenarios.findAndCloseWelcomeModal();
     commonOrder.enableMerchandise(MerchandiseReturns);
   }, 'common_client');
   scenario('Create order and generate a credit slip', () => {

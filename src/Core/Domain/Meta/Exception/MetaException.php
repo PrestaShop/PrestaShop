@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class MetaException
+ * Base exception for meta sub-domain
  */
 class MetaException extends DomainException
 {

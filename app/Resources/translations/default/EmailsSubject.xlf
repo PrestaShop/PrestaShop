@@ -5,7 +5,7 @@
       <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
-        <note>Line: 1112</note>
+        <note>Line: 1132</note>
       </trans-unit>
     </body>
   </file>
@@ -14,12 +14,12 @@
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>Line: 644</note>
+        <note>Line: 1142</note>
       </trans-unit>
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>Line: 850</note>
+        <note>Line: 655</note>
       </trans-unit>
     </body>
   </file>
@@ -37,7 +37,7 @@
       <trans-unit id="9a843f20677a52ca79af903123147af0">
         <source>Welcome!</source>
         <target>Welcome!</target>
-        <note>Line: 215</note>
+        <note>Line: 219</note>
       </trans-unit>
     </body>
   </file>
@@ -64,12 +64,12 @@
       <trans-unit id="4f55e8d67e33d354a5273eb87c903980">
         <source>Fwd: Customer message</source>
         <target>Fwd: Customer message</target>
-        <note>Line: 402</note>
+        <note>Line: 408</note>
       </trans-unit>
       <trans-unit id="26fabd8660373b86b9288dd72fd40e13">
         <source>An answer to your message is available #ct%thread_id% #tc%thread_token%</source>
         <target>An answer to your message is available #ct%thread_id% #tc%thread_token%</target>
-        <note>Line: 465</note>
+        <note>Line: 478</note>
       </trans-unit>
     </body>
   </file>
@@ -78,7 +78,7 @@
       <trans-unit id="a218495ad30949e8ea1f64a261e37463">
         <source>Import complete</source>
         <target>Import complete</target>
-        <note>Line: 4667</note>
+        <note>Line: 4887</note>
       </trans-unit>
     </body>
   </file>
@@ -87,22 +87,22 @@
       <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
         <source>New message regarding your order</source>
         <target>New message regarding your order</target>
-        <note>Line: 650</note>
+        <note>Line: 658</note>
       </trans-unit>
       <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
         <source>New credit slip regarding your order</source>
         <target>New credit slip regarding your order</target>
-        <note>Line: 1039</note>
+        <note>Line: 1055</note>
       </trans-unit>
       <trans-unit id="b360ddde7a5a70304c005e45e141cf9d">
         <source>New voucher for your order #%s</source>
         <target>New voucher for your order #%s</target>
-        <note>Line: 1120</note>
+        <note>Line: 1136</note>
       </trans-unit>
       <trans-unit id="cad374f43e79ca774b2e8e00dcd8b842">
         <source>Process the payment of your order</source>
         <target>Process the payment of your order</target>
-        <note>Line: 2017</note>
+        <note>Line: 2055</note>
       </trans-unit>
     </body>
   </file>
@@ -111,7 +111,7 @@
       <trans-unit id="f2328a3f139e31d53016f94ea9477124">
         <source>Your order return status has changed</source>
         <target>Your order return status has changed</target>
-        <note>Line: 257</note>
+        <note>Line: 261</note>
       </trans-unit>
     </body>
   </file>
@@ -134,7 +134,7 @@
       <trans-unit id="c5f4622e4a63b41e7c0ddc100583ee6b">
         <source>Your new password</source>
         <target>Your new password</target>
-        <note>Line: 168</note>
+        <note>Line: 187</note>
       </trans-unit>
     </body>
   </file>

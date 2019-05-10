@@ -58,7 +58,7 @@ scenario('Create virtual Product in the Back Office', () => {
   }, 'common_client');
   scenario('Test1: create "Currency"', () => {
     commonCurrencySenarios.accessToCurrencies();
-    commonCurrencySenarios.createCurrency('close\nSuccessful creation.', currencyData);
+    commonCurrencySenarios.createCurrency('Successful creation.', currencyData);
     commonCurrencySenarios.checkCurrencyByIsoCode(currencyData);
     scenario('Enable currency', client => {
       test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1).replace('%ICON', 'not-valid')));
@@ -180,7 +180,6 @@ scenario('Create virtual Product in the Back Office', () => {
           test('should set the product "quantity"', () => client.waitAndSetValue(productPage.first_product_quantity, '4'));
           test('should click on "Add to cart" button ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button, 3000));
           test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
-          test('should set the quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
           test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
           scenario('Create new account', client => {
             test('should choose a "Social title"', () => client.waitForExistAndClick(accountPage.gender_radio_button));
@@ -331,7 +330,7 @@ scenario('Create virtual Product in the Back Office', () => {
     scenario('Delete the created currency', () => {
       commonCurrencySenarios.accessToCurrencies();
       commonCurrencySenarios.checkCurrencyByIsoCode(currencyData);
-      commonCurrencySenarios.deleteCurrency(true, 'close\nSuccessful deletion.');
+      commonCurrencySenarios.deleteCurrency(true, 'Successful deletion.');
       scenario('Click on Reset button', client => {
         test('should click on "Reset" button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
       }, 'common_client');

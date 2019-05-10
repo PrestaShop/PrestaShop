@@ -26,8 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
+/**
+ * Is thrown when SqlRequest cannot be deleted
+ */
 class CannotDeleteSqlRequestException extends SqlRequestException
 {
+    /**
+     * When deleting single SqlRequest
+     */
     const CANNOT_SINGLE_DELETE = 10;
+
+    /**
+     * When deleting SqlRequest in bulk action
+     */
     const CANNOT_BULK_DELETE = 20;
 }
