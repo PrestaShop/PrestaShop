@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 
 /**
- * Interface for service that updates (inreases or decreases) product quantity in cart
+ * Interface for service that updates (increases or decreases) product quantity in cart
  */
 interface UpdateProductQuantityInCartHandlerInterface
 {
