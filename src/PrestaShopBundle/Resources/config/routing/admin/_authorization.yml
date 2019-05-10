@@ -1,6 +1,9 @@
 _admin_login:
     path: /
     methods: [GET,POST]
+    # This condition is needed to prevent triggering the login route when
+    # visiting legacy URLs, because all legacy URls start with /index.php
+    condition: 'not (request.getBaseUrl() matches "/\\/index\.php/" and request.query.has("controller"))'
     defaults:
         _controller: PrestaShopBundle:Admin\Authorization:login
         _legacy_controller: AdminLogin
