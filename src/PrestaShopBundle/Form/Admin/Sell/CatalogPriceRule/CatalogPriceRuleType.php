@@ -32,9 +32,12 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\LessThan;
 
 /**
  * Defines catalog price rule form for create/edit actions
@@ -135,13 +138,9 @@ class CatalogPriceRuleType extends AbstractType
                 'choices' => $this->getModifiedGroupChoices(),
             ])
             ->add('from_quantity', TextType::class)
-            ->add('price', TextType::class, [
+            ->add('price', NumberType::class, [
+                'scale' => 6,
                 'required' => false,
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => 'negative_price',
-                    ]),
-                ],
             ])
             ->add('leave_initial_price', CheckboxType::class, [
                 'required' => false,
@@ -162,10 +161,16 @@ class CatalogPriceRuleType extends AbstractType
                 'required' => false,
                 'choices' => $this->priceReductionTypeChoices,
             ])
-            ->add('reduction', TextType::class, [
+            ->add('reduction', NumberType::class, [
+                'scale' => 6,
                 'constraints' => [
-                    new TypedRegex([
-                        'type' => 'price',
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => $this->translator->trans(
+                            '%s is invalid.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
             ])

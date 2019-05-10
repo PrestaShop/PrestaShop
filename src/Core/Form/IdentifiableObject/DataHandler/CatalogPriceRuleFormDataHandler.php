@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\AddCatalogPriceRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
 
 /**
@@ -38,7 +40,7 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
     /**
      * @var CommandBusInterface
      */
-    private $bus;
+    private $commandBus;
 
     /**
      * @var bool
@@ -51,16 +53,16 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
     private $contextShopId;
 
     /**
-     * @param CommandBusInterface $bus
+     * @param CommandBusInterface $commandBus
      * @param $isSingleShopContext
      * @param $contextShopId
      */
     public function __construct(
-        CommandBusInterface $bus,
+        CommandBusInterface $commandBus,
         $isSingleShopContext,
         $contextShopId
     ) {
-        $this->bus = $bus;
+        $this->commandBus = $commandBus;
         $this->contextShopId = $contextShopId;
         $this->isSingleShopContext = $isSingleShopContext;
     }
@@ -79,7 +81,7 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
         }
 
         /** @var CatalogPriceRuleId $catalogPriceRuleId */
-        $catalogPriceRuleId = $this->bus->handle(new AddCatalogPriceRuleCommand(
+        $catalogPriceRuleId = $this->commandBus->handle(new AddCatalogPriceRuleCommand(
             $data['name'],
             (int) $data['id_currency'],
             (int) $data['id_country'],
@@ -88,8 +90,8 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
             (float) $data['reduction'],
             (int) $data['id_shop'],
             (float) $data['price'],
-            $data['from'] ?: '0000-00-00 00:00:00',
-            $data['to'] ?: '0000-00-00 00:00:00',
+            $data['from'] ?: date('Y-m-d H:i:s'),
+            $data['to'] ?: date('Y-m-d H:i:s'),
             $data['reduction_type'],
             (bool) $data['include_tax']
         ));
@@ -99,9 +101,36 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws CatalogPriceRuleException
      */
     public function update($catalogPriceRuleId, array $data)
     {
-        //@todo
+        $editCatalogPriceRuleCommand = new EditCatalogPriceRuleCommand((int) $catalogPriceRuleId);
+        $this->fillCommandWithData($editCatalogPriceRuleCommand, $data);
+
+        $this->commandBus->handle($editCatalogPriceRuleCommand);
+    }
+
+    /**
+     * @param EditCatalogPriceRuleCommand $command
+     * @param array $data
+     *
+     * @throws CatalogPriceRuleException
+     */
+    private function fillCommandWithData(EditCatalogPriceRuleCommand $command, array $data)
+    {
+        $command->setName($data['name']);
+        $command->setShopId((int) $data['id_shop']);
+        $command->setCurrencyId((int) $data['id_currency']);
+        $command->setCountryId((int) $data['id_country']);
+        $command->setGroupId((int) $data['id_group']);
+        $command->setFromQuantity((int) $data['from_quantity']);
+        $command->setPrice((float) $data['price']);
+        $command->setFrom($data['from']);
+        $command->setTo($data['to']);
+        $command->setReductionType($data['reduction_type']);
+        $command->setIncludeTax((bool) $data['include_tax']);
+        $command->setReduction((float) $data['reduction']);
     }
 }
