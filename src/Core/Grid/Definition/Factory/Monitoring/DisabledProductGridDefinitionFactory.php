@@ -26,36 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
-use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-
 /**
  * Builds Grid definition for disabled product grid
  */
-final class DisabledProductGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class DisabledProductGridDefinitionFactory extends AbstractProductGridDefinitionFactory
 {
     const GRID_ID = 'disabled_product';
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getId()
-    {
-        return self::GRID_ID;
-    }
 
     /**
      * {@inheritdoc}
@@ -63,146 +39,5 @@ final class DisabledProductGridDefinitionFactory extends AbstractGridDefinitionF
     protected function getName()
     {
         return $this->trans('List of disabled products', [], 'Admin.Catalog.Feature');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getColumns()
-    {
-        return (new ColumnCollection())
-            ->add(
-                (new IdentifierColumn('id_product'))
-                    ->setName($this->trans('ID', [], 'Admin.Global'))
-                    ->setOptions([
-                        'identifier_field' => 'id_product',
-                    ])
-            )
-            ->add(
-                (new DataColumn('reference'))
-                    ->setName($this->trans('Reference', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'reference',
-                    ])
-            )
-            ->add(
-                (new DataColumn('name'))
-                    ->setName($this->trans('Name', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'name',
-                    ])
-            )
-            ->add(
-                (new ToggleColumn('active'))
-                    ->setName($this->trans('Status', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'active',
-                        'primary_field' => 'id_product',
-                        'route' => 'admin_monitoring_index', //@todo: implement toggle status action
-                        'route_param_name' => 'id_product',
-                    ])
-            )
-            ->add(
-                (new ActionColumn('actions'))
-                    ->setName($this->trans('Actions', [], 'Admin.Global'))
-                    ->setOptions([
-                        'actions' => $this->getRowActions(),
-                    ])
-            );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getFilters()
-    {
-        return (new FilterCollection())
-            ->add(
-                (new Filter('id_product', TextType::class))
-                    ->setAssociatedColumn('id_product')
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                        ],
-                    ])
-            )
-            ->add(
-                (new Filter('reference', TextType::class))
-                    ->setAssociatedColumn('reference')
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
-                        ],
-                    ])
-            )
-            ->add(
-                (new Filter('name', TextType::class))
-                    ->setAssociatedColumn('name')
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                        ],
-                    ])
-            )
-            ->add(
-                (new Filter('active', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('active')
-            )
-            ->add(
-                (new Filter('actions', SearchAndResetType::class))
-                    ->setAssociatedColumn('actions')
-                    ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search_by_filter_id',
-                        'reset_route_params' => [
-                            'filterId' => self::GRID_ID,
-                        ],
-                        'redirect_route' => 'admin_monitoring_index',
-                    ])
-                    ->setAssociatedColumn('actions')
-            );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getGridActions()
-    {
-        return (new GridActionCollection())
-            ->add(
-                (new SimpleGridAction('common_refresh_list'))
-                    ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-                    ->setIcon('refresh')
-            );
-    }
-
-    /**
-     * @return RowActionCollection
-     */
-    private function getRowActions()
-    {
-        return (new RowActionCollection())
-            ->add(
-                (new LinkRowAction('edit'))
-                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                    ->setIcon('edit')
-                    ->setOptions([
-                        'route' => 'admin_monitoring_index', //@todo: implement edit action
-                        'route_param_name' => 'productId',
-                        'route_param_field' => 'id_product',
-                    ])
-            )
-            ->add(
-                (new LinkRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'route' => 'admin_monitoring_index', //@todo: implement delete action
-                        'route_param_name' => 'productId',
-                        'route_param_field' => 'id_product',
-                    ])
-            );
     }
 }
