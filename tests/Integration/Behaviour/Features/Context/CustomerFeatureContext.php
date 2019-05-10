@@ -63,9 +63,9 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given there is customer with email :customerEmail
+     * @Given there is customer :reference with email :customerEmail
      */
-    public function customerExists($customerEmail)
+    public function customerExists($reference, $customerEmail)
     {
         $data = Customer::getCustomersByEmail($customerEmail);
         $customer = new Customer($data[0]['id_customer']);
@@ -74,24 +74,15 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             throw new Exception(sprintf('Customer with email "%s" does not exist.', $customerEmail));
         }
 
-        $this->lastCustomer = $customer;
+        $this->customers[$reference] = $customer;
     }
 
     /**
-     * @Given customer :customerEmail has address in :isoCode country
+     * @Given customer :reference has address in :isoCode country
      */
-    public function customerHasAddressInCountry($customerEmail, $isoCode)
+    public function customerHasAddressInCountry($reference, $isoCode)
     {
-        $data = Customer::getCustomersByEmail($customerEmail);
-
-        if (empty($data)) {
-            throw new RuntimeException(sprintf(
-                'Customer with email "%s" does not exist.',
-                $customerEmail
-            ));
-        }
-
-        $customer = new Customer($data[0]['id_customer']);
+        $customer = $this->getCustomerWithName($reference);
         $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
 
         foreach ($customerAddresses as $address) {

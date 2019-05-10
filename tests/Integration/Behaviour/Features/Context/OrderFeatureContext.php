@@ -26,12 +26,14 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Configuration;
 use Context;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
+use Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext as DomainOrderFeatureContext;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -41,6 +43,19 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      * @var Order[]
      */
     protected $orders = [];
+
+    /**
+     * @var DomainOrderFeatureContext
+     */
+    private $domainOrderFeatureContext;
+
+    /**
+     * @BeforeScenario
+     */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->domainOrderFeatureContext = $scope->getEnvironment()->getContext(DomainOrderFeatureContext::class);
+    }
 
     /**
      * @When /^I validate my cart using payment module (fake)$/
@@ -191,17 +206,17 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then created order should have :quantity products in total
+     * @Then order :reference should have :quantity products in total
      */
-    public function assertOrderProductsQuantity($quantity)
+    public function assertOrderProductsQuantity($reference, $quantity)
     {
-        $order = Order::getByCartId(Context::getContext()->cart->id);
-        $orderProducts = $order->getProducts();
+        $order = $this->domainOrderFeatureContext->getOrderFromRegistry($reference);
+        $orderProducts = $order->getProductsDetail();
 
         $totalQuantity = 0;
 
         foreach ($orderProducts as $orderProduct) {
-            $totalQuantity += $orderProduct['product_quantity'];
+            $totalQuantity += (int) $orderProduct['product_quantity'];
         }
 
         if ($totalQuantity !== (int) $quantity) {
@@ -214,11 +229,11 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then created order should have free shipping
+     * @Then order :reference should have free shipping
      */
-    public function createdOrderShouldHaveFreeShipping()
+    public function createdOrderShouldHaveFreeShipping($reference)
     {
-        $order = Order::getByCartId(Context::getContext()->cart->id);
+        $order = $this->domainOrderFeatureContext->getOrderFromRegistry($reference);
 
         foreach ($order->getCartRules() as $cartRule) {
             if ($cartRule['free_shipping']) {
@@ -230,11 +245,11 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then created order should have :paymentModuleName payment method
+     * @Then order :reference should have :paymentModuleName payment method
      */
-    public function createdOrderShouldHavePaymentMethod($paymentModuleName)
+    public function createdOrderShouldHavePaymentMethod($reference, $paymentModuleName)
     {
-        $order = Order::getByCartId(Context::getContext()->cart->id);
+        $order = $this->domainOrderFeatureContext->getOrderFromRegistry($reference);
 
         if ($order->module !== $paymentModuleName) {
             throw new Exception(sprintf(
