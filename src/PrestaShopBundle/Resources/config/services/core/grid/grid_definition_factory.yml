@@ -154,13 +154,13 @@ services:
         - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
       public: true
 
-    prestashop.core.grid.definition.factory.monitoring.product_with_combination:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithCombinationGridDefinitionFactory'
+    prestashop.core.grid.definition.factory.monitoring.no_qty_product_with_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
 
-    prestashop.core.grid.definition.factory.monitoring.product_without_combination:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutCombinationGridDefinitionFactory'
+    prestashop.core.grid.definition.factory.monitoring.no_qty_product_without_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithoutCombinationGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
 

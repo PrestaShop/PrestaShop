@@ -58,8 +58,8 @@ $(() => {
   emptyCategoriesGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   [
-    'product_with_combination',
-    'product_without_combination',
+    'no_qty_product_with_combination',
+    'no_qty_product_without_combination',
     'disabled_product',
     'product_without_image',
     'product_without_description',

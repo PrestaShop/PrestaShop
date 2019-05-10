@@ -178,13 +178,13 @@ services:
         - '@prestashop.adapter.feature.multistore'
       public: true
 
-    prestashop.core.grid.query_builder.monitoring.product_with_combination:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithCombinationQueryBuilder'
+    prestashop.core.grid.query_builder.monitoring.no_qty_product_with_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\NoQtyProductWithCombinationQueryBuilder'
       parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
       public: true
 
-    prestashop.core.grid.query_builder.monitoring.product_without_combination:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutCombinationQueryBuilder'
+    prestashop.core.grid.query_builder.monitoring.no_qty_product_without_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\NoQtyProductWithoutCombinationQueryBuilder'
       parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
       public: true
 
