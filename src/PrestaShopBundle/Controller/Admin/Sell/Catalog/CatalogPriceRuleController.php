@@ -225,7 +225,6 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             'catalogPriceRuleForm' => $catalogPriceRuleForm->createView(),
             'catalogPriceRuleName' => $editableCatalogPriceRule->getName(),
         ]);
-
     }
 
     /**
