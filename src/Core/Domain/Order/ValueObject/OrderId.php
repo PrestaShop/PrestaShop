@@ -38,6 +38,11 @@ class OrderId
      */
     private $orderId;
 
+    /**
+     * @param int $orderId
+     *
+     * @throws OrderException
+     */
     public function __construct($orderId)
     {
         $this->assertIntegerIsGreaterThanZero($orderId);
