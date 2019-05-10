@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b3b2767f529a6e46dd23d92b88db238e",
+    "content-hash": "acd79e89c6d0be700a10d642e4afe4f1",
     "packages": [
         {
             "name": "analog/analog",
@@ -3628,16 +3628,16 @@
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
-            "version": "v1.0.0",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_faviconnotificationbo.git",
-                "reference": "03e639f4248d551693827dd50576dbb961ecfdb7"
+                "reference": "7f594cacf3b5ddbbd138ae46dbdf04d6ec34a7a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_faviconnotificationbo/zipball/03e639f4248d551693827dd50576dbb961ecfdb7",
-                "reference": "03e639f4248d551693827dd50576dbb961ecfdb7",
+                "url": "https://api.github.com/repos/PrestaShop/ps_faviconnotificationbo/zipball/7f594cacf3b5ddbbd138ae46dbdf04d6ec34a7a4",
+                "reference": "7f594cacf3b5ddbbd138ae46dbdf04d6ec34a7a4",
                 "shasum": ""
             },
             "require": {
@@ -3656,7 +3656,7 @@
             ],
             "description": "PrestaShop - Favicon notification BO",
             "homepage": "https://github.com/PrestaShop/ps_faviconnotificationbo",
-            "time": "2018-10-03T12:42:08+00:00"
+            "time": "2019-04-26T10:29:18+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
@@ -3756,22 +3756,31 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v2.1.6",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "bec64f6fb80543983f5c3fee315312de5e0c4c0d"
+                "reference": "3e21e7b3ff481fdf07e078b881b1099e57d0c187"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/bec64f6fb80543983f5c3fee315312de5e0c4c0d",
-                "reference": "bec64f6fb80543983f5c3fee315312de5e0c4c0d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/3e21e7b3ff481fdf07e078b881b1099e57d0c187",
+                "reference": "3e21e7b3ff481fdf07e078b881b1099e57d0c187",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.6.0"
             },
             "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\LinkList\\": "src/"
+                },
+                "classmap": [
+                    "ps_linklist.php"
+                ],
+                "exclude-from-classmap": []
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
@@ -3784,7 +3793,7 @@
             ],
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
-            "time": "2019-01-30T15:42:35+00:00"
+            "time": "2019-05-09T16:31:33+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -3948,16 +3957,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.0.9",
+            "version": "v1.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "0500e9d3d6afe36a25769bd251a07c52d6be8298"
+                "reference": "1812505e5ad9ea8e445ec37ff24bcfac69bbe090"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/0500e9d3d6afe36a25769bd251a07c52d6be8298",
-                "reference": "0500e9d3d6afe36a25769bd251a07c52d6be8298",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/1812505e5ad9ea8e445ec37ff24bcfac69bbe090",
+                "reference": "1812505e5ad9ea8e445ec37ff24bcfac69bbe090",
                 "shasum": ""
             },
             "require": {
@@ -3976,7 +3985,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2018-09-19T15:46:24+00:00"
+            "time": "2019-04-15T09:36:45+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
@@ -4807,16 +4816,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v5.1.0",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "04955250748214a001492a9326996a95c725f092"
+                "reference": "a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/04955250748214a001492a9326996a95c725f092",
-                "reference": "04955250748214a001492a9326996a95c725f092",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50",
+                "reference": "a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50",
                 "shasum": ""
             },
             "require": {
@@ -4841,7 +4850,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2018-09-26T13:52:02+00:00"
+            "time": "2019-05-02T15:48:46+00:00"
         },
         {
             "name": "psr/cache",
