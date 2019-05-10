@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+
 /**
  * Product identity
  */
@@ -41,7 +43,7 @@ class ProductId
      */
     public function __construct($productId)
     {
-        // @todo: add integrity check
+        $this->assertIntegerIsGreaterThanZero($productId);
 
         $this->productId = $productId;
     }
@@ -52,5 +54,20 @@ class ProductId
     public function getValue()
     {
         return $this->productId;
+    }
+
+    /**
+     * @param int $productId
+     */
+    private function assertIntegerIsGreaterThanZero($productId)
+    {
+        if (!is_int($productId) || 0 > $productId) {
+            throw new OrderException(
+                sprintf(
+                    'Order id %s is invalid. Order id must be number that is greater than zero.',
+                    var_export($productId, true)
+                )
+            );
+        }
     }
 }
