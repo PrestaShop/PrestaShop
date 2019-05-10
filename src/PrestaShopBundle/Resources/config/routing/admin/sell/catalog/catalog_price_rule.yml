@@ -22,12 +22,11 @@ admin_catalog_price_rules_create:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:create'
     _legacy_controller: AdminSpecificPriceRule
 
-##todo: implement edit action #13716
 admin_catalog_price_rules_edit:
   path: /{catalogPriceRuleId}/edit
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:edit'
     _legacy_controller: AdminSpecificPriceRule
   requirements:
     catalogPriceRuleId: \d+

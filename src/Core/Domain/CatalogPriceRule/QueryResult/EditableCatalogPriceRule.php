@@ -24,15 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult;
 
-use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
 
 /**
- * Adds new catalog price rule with provided data
+ * Provides data for editing CatalogPriceRule
  */
-class AddCatalogPriceRuleCommand
+class EditableCatalogPriceRule
 {
+    /**
+     * @var CatalogPriceRuleId
+     */
+    private $catalogPriceRuleId;
+
     /**
      * @var string
      */
@@ -93,45 +98,56 @@ class AddCatalogPriceRuleCommand
     private $reduction;
 
     /**
+     * @param int $catalogPriceRuleId
      * @param string $name
+     * @param int $shopId
      * @param int $currencyId
      * @param int $countryId
      * @param int $groupId
      * @param int $fromQuantity
+     * @param float $price
+     * @param string $from
+     * @param string $to
+     * @param string $reductionType
+     * @param bool $includeTax
      * @param float $reduction
-     * @param int|null $shopId
-     * @param float|null $price
-     * @param string|null $from
-     * @param string|null $to
-     * @param string|null $reductionType
-     * @param bool|null $includeTax
      */
     public function __construct(
+        $catalogPriceRuleId,
         $name,
+        $shopId,
         $currencyId,
         $countryId,
         $groupId,
         $fromQuantity,
-        $reduction,
-        $shopId = null,
-        $price = null,
-        $from = null,
-        $to = null,
-        $reductionType = null,
-        $includeTax = null
+        $price,
+        $from,
+        $to,
+        $reductionType,
+        $includeTax,
+        $reduction
     ) {
+        $this->catalogPriceRuleId = $catalogPriceRuleId;
         $this->name = $name;
+        $this->shopId = $shopId;
         $this->currencyId = $currencyId;
         $this->countryId = $countryId;
         $this->groupId = $groupId;
         $this->fromQuantity = $fromQuantity;
-        $this->reduction = $reduction;
-        $this->shopId = $shopId;
         $this->price = $price;
         $this->from = $from;
         $this->to = $to;
         $this->reductionType = $reductionType;
         $this->includeTax = $includeTax;
+        $this->reduction = $reduction;
+    }
+
+    /**
+     * @return CatalogPriceRuleId
+     */
+    public function getCatalogPriceRuleId()
+    {
+        return $this->catalogPriceRuleId;
     }
 
     /**

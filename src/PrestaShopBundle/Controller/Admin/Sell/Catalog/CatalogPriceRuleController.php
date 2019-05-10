@@ -32,6 +32,11 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPric
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\UpdateCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -179,6 +184,51 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     }
 
     /**
+     * Show & process catalog price rule editing.
+     *
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
+     *
+     * @param int $catalogPriceRuleId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $catalogPriceRuleId)
+    {
+        $catalogPriceRuleId = (int) $catalogPriceRuleId;
+
+        try {
+            $catalogPriceRuleForm = $this->getFormBuilder()->getFormFor($catalogPriceRuleId);
+            $catalogPriceRuleForm->handleRequest($request);
+
+            $result = $this->getFormHandler()->handleFor($catalogPriceRuleId, $catalogPriceRuleForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_catalog_price_rules_index');
+            }
+        } catch (CatalogPriceRuleException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof CatalogPriceRuleNotFoundException) {
+                return $this->redirectToRoute('admin_catalog_price_rules_index');
+            }
+        }
+
+        /** @var EditableCatalogPriceRule $editableCatalogPriceRule */
+        $editableCatalogPriceRule = $this->getQueryBus()->handle(new GetCatalogPriceRuleForEditing($catalogPriceRuleId));
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/CatalogPriceRule/edit.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'catalogPriceRuleForm' => $catalogPriceRuleForm->createView(),
+            'catalogPriceRuleName' => $editableCatalogPriceRule->getName(),
+        ]);
+
+    }
+
+    /**
      * Provides translated error messages for exceptions
      *
      * @return array
@@ -196,6 +246,14 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            UpdateCatalogPriceRuleException::class => $this->trans(
+                'An error occurred while updating an object.',
+                'Admin.Notifications.Error'
+            ),
+            CatalogPriceRuleNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 

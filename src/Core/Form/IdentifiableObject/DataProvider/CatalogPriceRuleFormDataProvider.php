@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\editableCatalogPriceRule;
 
 /**
  * Provides data for catalog price rule add/edit forms
@@ -50,9 +52,33 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
     /**
      * {@inheritdoc}
      */
-    public function getData($manufacturerId)
+    public function getData($catalogPriceRuleId)
     {
-        return [];
+        /** @var editableCatalogPriceRule $editableCatalogPriceRule */
+        $editableCatalogPriceRule = $this->bus->handle(new GetCatalogPriceRuleForEditing((int) $catalogPriceRuleId));
+
+        $price = $editableCatalogPriceRule->getPrice();
+        if (-1.0 === $price) {
+            $price = null;
+        }
+
+        $data = [
+            'name' => $editableCatalogPriceRule->getName(),
+            'id_shop' => $editableCatalogPriceRule->getShopId(),
+            'id_currency' => $editableCatalogPriceRule->getCurrencyId(),
+            'id_country' => $editableCatalogPriceRule->getCountryId(),
+            'id_group' => $editableCatalogPriceRule->getGroupId(),
+            'from_quantity' => $editableCatalogPriceRule->getFromQuantity(),
+            'price' => $price,
+            'leave_initial_price' => $price ? false : true,
+            'from' => $editableCatalogPriceRule->getFrom(),
+            'to' => $editableCatalogPriceRule->getTo(),
+            'reduction_type' => $editableCatalogPriceRule->getReductionType(),
+            'include_tax' => $editableCatalogPriceRule->isTaxIncluded(),
+            'reduction' => $editableCatalogPriceRule->getReduction(),
+        ];
+
+        return $data;
     }
 
     /**
@@ -63,7 +89,7 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
         return [
             'from_quantity' => 1,
             'leave_initial_price' => true,
-            'reduction' => '0.000000',
+            'reduction' => 0,
         ];
     }
 }

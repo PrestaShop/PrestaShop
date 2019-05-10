@@ -101,8 +101,8 @@ class TypedRegexValidator extends ConstraintValidator
             TypedRegex::TYPE_MESSAGE => '/[<>{}]/i',
             TypedRegex::TYPE_LANGUAGE_ISO_CODE => IsoCode::PATTERN,
             TypedRegex::TYPE_LANGUAGE_CODE => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
-            TypedRegex::NEGATIVE_PRICE => '/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/',
-            TypedRegex::PRICE => '/^[0-9]{1,10}(\.[0-9]{1,9})?$/',
+            TypedRegex::TYPE_NEGATIVE_PRICE => '/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/',
+            TypedRegex::TYPE_PRICE => '/^[0-9]{1,10}(\.[0-9]{1,9})?$/',
         ];
 
         if (isset($typePatterns[$type])) {
