@@ -5,9 +5,11 @@ Feature: Add Order from Back Office
   As a BO user
   I must be able to place an order for FO customers
 
+  Background:
+    Given email sending is disabled
+
   Scenario: Add order from Back Office with free shipping
     Given I am logged in as "test@prestashop.com" employee
-    And email sending is disabled
     And there is customer with email "pub@prestashop.com"
     And customer has address in "US" country
     And the module "payment" is installed
