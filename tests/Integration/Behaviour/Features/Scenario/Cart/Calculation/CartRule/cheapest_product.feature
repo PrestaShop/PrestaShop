@@ -15,7 +15,7 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to cheape
     Then my cart total should be 0.0 tax included
     Then my cart total using previous calculation method should be 0.0 tax included
 
-  Scenario: one product in cart, quantity 1, one specific 50% cartRule on cheapest product
+  Scenario: one product in cart, quantity 1, one 50% cartRule on cheapest product
     Given I have an empty default cart
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
