@@ -171,11 +171,11 @@ $(document).ready(() => {
   //Hide 'have a code promo' text if displayed when 'close' is
   let isPresent = $('.promo-code-button').length,
       nameLength = 0;
+  
+  $('.cancel-promo').hide();
 
   function labelCodeDisplayed() {
-    $('.promo-code-button').not('.cancel-promo').hide();
-    
-    $('.cancel-promo').on('click',  (e) => {
+    $('.cancel-promo').on('click', (e) => {
       $(e.currentTarget).hide();
       $('.promo-code-button:not(.cancel-promo)').show();
     });
@@ -186,18 +186,30 @@ $(document).ready(() => {
     });
   }
 
+  function isBlockPromoPresent() {
+    if ($('.block-promo-container').length != 0 && isPresent === 2) {
+      $('.cancel-promo').show();
+      $('.promo-code-button').not('.cancel-promo').hide();
+    }
+  }
+
   setInterval( function () {
     const promoNameLength = $('.promo-name').length;
 
     if (promoNameLength != nameLength) {
       nameLength = promoNameLength;
       labelCodeDisplayed();
+      $('.cancel-promo').hide();
+
+      isBlockPromoPresent()
     }
   }, 100);
 
-    if (isPresent === 2) {
-      labelCodeDisplayed();
-    }
+  if (isPresent === 2) {
+    labelCodeDisplayed();
+  }
+
+  isBlockPromoPresent()
 
   $body.on(
     'click',
