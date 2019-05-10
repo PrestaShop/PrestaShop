@@ -34,7 +34,7 @@ class EmployeeFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given I am logged in as :employeeEmail employee
      */
-    public function iAmLoggedInAs($employeeEmail)
+    public function logsInBackOffice($employeeEmail)
     {
         $employeeId = Employee::employeeExists($employeeEmail);
 
