@@ -33,5 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
  */
 interface RemoveProductFromCartHandlerInterface
 {
+    /**
+     * @param RemoveProductFromCartCommand $command
+     */
     public function handle(RemoveProductFromCartCommand $command);
 }
