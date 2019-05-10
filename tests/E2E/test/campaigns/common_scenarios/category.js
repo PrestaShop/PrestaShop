@@ -32,7 +32,7 @@ module.exports = {
       test('should go to "Category" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
       test('should click on "Add new category" button', () => client.waitForExistAndClick(CategorySubMenu.new_category_button));
       test('should set the "Name" input', () => client.waitAndSetValue(CategorySubMenu.name_input, categoryData.name + date_time));
-      test('should set the "Description" textarea', () => client.waitAndSetValue(CategorySubMenu.description_textarea, categoryData.description + date_time));
+      test('should set the "Description" textarea', () => client.setiFrameContent(CategorySubMenu.description_textarea, categoryData.description + date_time,false));
       test('should upload the picture', () => client.uploadPicture(categoryData.picture, CategorySubMenu.picture, 'image'));
       test('should upload the thumb picture', () => client.uploadPicture(categoryData.thumb_picture, CategorySubMenu.thumb_picture, 'image'));
       test('should set the "Meta title" input', () => client.waitAndSetValue(CategorySubMenu.title, categoryData.meta_title));
@@ -73,7 +73,7 @@ module.exports = {
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
       test('should click on "Edit" action', () => client.waitForExistAndClickJs(CategorySubMenu.update_button));
       test('should set the "Name" input', () => client.waitAndSetValue(CategorySubMenu.name_input, editedCategoryData.name + date_time));
-      test('should set the "Description" textarea', () => client.waitAndSetValue(CategorySubMenu.description_textarea, editedCategoryData.description + date_time));
+      test('should set the "Description" textarea', () => client.setiFrameContent(CategorySubMenu.description_textarea, editedCategoryData.description + date_time,false));
       test('should set the "Meta title" input', () => client.waitAndSetValue(CategorySubMenu.title, editedCategoryData.meta_title));
       test('should set the "Meta description" input', () => client.waitAndSetValue(CategorySubMenu.meta_description, editedCategoryData.meta_description));
       for (let j in categoryData.meta_keywords) {
