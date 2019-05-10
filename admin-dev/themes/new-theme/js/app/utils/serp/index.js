@@ -126,6 +126,8 @@ class SerpApp {
     const title2 = defaultTitle.length ? defaultTitle.val() : '';
 
     this.setTitle(title1 === '' ? title2 : title1);
+    // Always check for url if title change
+    this.checkUrl();
   }
 
   checkDesc() {

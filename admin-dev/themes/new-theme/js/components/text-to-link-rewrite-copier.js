@@ -35,7 +35,7 @@ const $ = window.$;
 const getLanguageIdByElement = ($targetElement) => {
   const langId = $targetElement.attr('data-lang-id');
 
-  return typeof langId === 'undefined' ? null : parseInt(langId);
+  return typeof langId === 'undefined' ? null : parseInt(langId, 10);
 };
 
 /**
@@ -67,17 +67,14 @@ const getLanguageIdByElement = ($targetElement) => {
  * });
  *
  */
-const textToLinkRewriteCopier = ({ sourceElementSelector, destinationElementSelector, options = { eventName: 'input', } }) => {
+const textToLinkRewriteCopier = ({sourceElementSelector, destinationElementSelector, options = {eventName: 'input'}}) => {
+  $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
+    const $nameInput = $(event.currentTarget);
+    const langId = getLanguageIdByElement($nameInput);
+    const elementToModifySelector = langId !== null ? `${destinationElementSelector}[data-lang-id="${langId}"]` : destinationElementSelector;
 
-    $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
-      const $nameInput = $(event.currentTarget);
-      const langId = getLanguageIdByElement($nameInput);
-      let elementToModifySelector = null !== langId ? `${destinationElementSelector}[data-lang-id="${langId}"]` : destinationElementSelector;
-
-      $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8'));
-    })
+    $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8'));
+  });
 };
 
 export default textToLinkRewriteCopier;
-
-
