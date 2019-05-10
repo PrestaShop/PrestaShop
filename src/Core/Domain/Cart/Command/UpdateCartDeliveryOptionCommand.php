@@ -49,8 +49,6 @@ class UpdateCartDeliveryOptionCommand
      */
     public function __construct($cartId, $newDeliveryOption)
     {
-        // @todo: add integrity checks
-
         $this->cartId = new CartId($cartId);
         $this->newDeliveryOption = $newDeliveryOption;
     }
