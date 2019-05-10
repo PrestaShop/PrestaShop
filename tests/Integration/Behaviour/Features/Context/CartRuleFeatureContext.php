@@ -163,6 +163,27 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" is restricted to cheapest product$/
+     */
+    public function cartRuleIsRestrictedToCheapestProduct($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->product_restriction = 1;
+        $this->cartRules[$cartRuleName]->reduction_product = -1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" does not apply to already discounted products$/
+     */
+    public function cartRuleDoesNotApplyToDiscountedProduct($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->reduction_exclude_special = 1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
      * @Given /^cart rule "(.+)" offers a gift product "(.+)"$/
      */
     public function cartRuleNamedHasAGiftProductNamed($cartRuleName, $productName)
