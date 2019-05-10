@@ -64,7 +64,7 @@ class ProductId
         if (!is_int($productId) || 0 > $productId) {
             throw new OrderException(
                 sprintf(
-                    'Order id %s is invalid. Order id must be number that is greater than zero.',
+                    'Product id %s is invalid. Product id must be number that is greater than zero.',
                     var_export($productId, true)
                 )
             );
