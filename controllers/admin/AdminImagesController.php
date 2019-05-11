@@ -433,9 +433,10 @@ class AdminImagesControllerCore extends AdminController
 
         foreach ($toDel as $d) {
             foreach ($type as $imageType) {
-                if (preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '\.jpg$/', $d)
+                if ((preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '\.jpg$/', $d)
                     || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
-                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '\.jpg$/', $d)) {
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '\.jpg$/', $d))
+                    && !preg_match('/^(.)*_thumb.jpg$/', $d)) {
                     if (file_exists($dir . $d)) {
                         unlink($dir . $d);
                     }
