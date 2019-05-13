@@ -1,4 +1,4 @@
-##todo:index action
+##todo:index action #13584
 admin_catalog_price_rules_index:
   path: /
   methods: [GET]
