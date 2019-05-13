@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -35,8 +36,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class UploadLogosCommand
 {
-    const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
-
     /**
      * @var UploadedFile|null
      */
@@ -132,7 +131,7 @@ class UploadLogosCommand
      */
     public function setUploadedFavicon(UploadedFile $uploadedFavicon)
     {
-        if ('ico' !== $uploadedFavicon->getClientOriginalExtension()) {
+        if (ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION !== $uploadedFavicon->getClientOriginalExtension()) {
             throw new NotSupportedFaviconExtensionException(sprintf(
                 'Not supported "%s" favicon extension. Supported extension is "ico".',
                 $uploadedFavicon->getClientOriginalExtension()
@@ -150,11 +149,11 @@ class UploadLogosCommand
     private function assertIsValidLogoImageExtension(UploadedFile $uploadedFile)
     {
         $extension = $uploadedFile->getClientOriginalExtension();
-        if (!in_array($extension, self::AVAILABLE_LOGO_IMAGE_EXTENSIONS, true)) {
+        if (!in_array($extension, ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS, true)) {
             throw new NotSupportedLogoImageExtensionException(
                 sprintf(
                     'Not supported "%s" image logo extension. Supported extensions are ""',
-                    implode(',', self::AVAILABLE_LOGO_IMAGE_EXTENSIONS)
+                    implode(',', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)
                 )
             );
         }

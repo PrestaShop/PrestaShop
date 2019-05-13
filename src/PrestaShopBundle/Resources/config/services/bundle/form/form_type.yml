@@ -845,6 +845,8 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
             - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
             - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
