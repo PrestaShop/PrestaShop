@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command;
 
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 /**
  * Adds payment for given order.
  */
-class AddOrderPaymentCommand
+class AddPaymentCommand
 {
     /**
      * @var OrderId
