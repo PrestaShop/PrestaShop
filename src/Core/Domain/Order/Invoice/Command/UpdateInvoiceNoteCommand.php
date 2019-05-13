@@ -24,25 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CartRule;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command;
 
 /**
- * Type of Cart rule that can be added to an order
+ * Adds note for given invoice.
  */
-final class CartRuleType
+class UpdateInvoiceNoteCommand
 {
     /**
-     * Type is used with order cart rule that is percent discount
+     * @var int
      */
-    const PERCENT = 1;
+    private $orderInvoiceId;
 
     /**
-     * Type is used with order cart rule that is amount discount
+     * @var string
      */
-    const AMOUNT = 2;
+    private $note;
 
     /**
-     * Type is used with order cart rule that is free shipping
+     * @param int $orderInvoiceId
+     * @param string $note
      */
-    const FREE_SHIPPING = 3;
+    public function __construct($orderInvoiceId, $note)
+    {
+        $this->orderInvoiceId = $orderInvoiceId;
+        $this->note = $note;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderInvoiceId()
+    {
+        return $this->orderInvoiceId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
 }

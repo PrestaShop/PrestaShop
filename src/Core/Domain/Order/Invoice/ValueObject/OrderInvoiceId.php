@@ -24,25 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CartRule;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceException;
 
 /**
- * Type of Cart rule that can be added to an order
+ * Order invoice identity
  */
-final class CartRuleType
+class OrderInvoiceId
 {
     /**
-     * Type is used with order cart rule that is percent discount
+     * @var int
      */
-    const PERCENT = 1;
+    private $orderInvoiceId;
 
     /**
-     * Type is used with order cart rule that is amount discount
+     * @param int $orderInvoiceId
      */
-    const AMOUNT = 2;
+    public function __construct($orderInvoiceId)
+    {
+        if (!is_int($orderInvoiceId) || 0 >= $orderInvoiceId) {
+            throw new InvoiceException('Invalid order invoice id supplied.');
+        }
+
+        $this->orderInvoiceId = $orderInvoiceId;
+    }
 
     /**
-     * Type is used with order cart rule that is free shipping
+     * @return int
      */
-    const FREE_SHIPPING = 3;
+    public function getValue()
+    {
+        return $this->orderInvoiceId;
+    }
 }
