@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -34,6 +35,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class UploadLogosCommand
 {
+    const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'png', 'jpg'];
+
     /**
      * @var UploadedFile|null
      */
@@ -64,9 +67,13 @@ class UploadLogosCommand
 
     /**
      * @param UploadedFile $uploadedHeaderLogo
+     *
+     * @throws NotSupportedLogoImageExtensionException
      */
     public function setUploadedHeaderLogo(UploadedFile $uploadedHeaderLogo)
     {
+        $this->assertIsValidLogoImageExtension($uploadedHeaderLogo);
+
         $this->uploadedHeaderLogo = $uploadedHeaderLogo;
     }
 
@@ -80,9 +87,13 @@ class UploadLogosCommand
 
     /**
      * @param UploadedFile $uploadedInvoiceLogo
+     *
+     * @throws NotSupportedLogoImageExtensionException
      */
     public function setUploadedInvoiceLogo(UploadedFile $uploadedInvoiceLogo)
     {
+        $this->assertIsValidLogoImageExtension($uploadedInvoiceLogo);
+
         $this->uploadedInvoiceLogo = $uploadedInvoiceLogo;
     }
 
@@ -96,9 +107,13 @@ class UploadLogosCommand
 
     /**
      * @param UploadedFile $uploadedMailLogo
+     *
+     * @throws NotSupportedLogoImageExtensionException
      */
     public function setUploadedMailLogo(UploadedFile $uploadedMailLogo)
     {
+        $this->assertIsValidLogoImageExtension($uploadedMailLogo);
+
         $this->uploadedMailLogo = $uploadedMailLogo;
     }
 
@@ -125,5 +140,23 @@ class UploadLogosCommand
         }
 
         $this->uploadedFavicon = $uploadedFavicon;
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @throws NotSupportedLogoImageExtensionException
+     */
+    private function assertIsValidLogoImageExtension(UploadedFile $uploadedFile)
+    {
+        $extension = $uploadedFile->getClientOriginalExtension();
+        if (!in_array($extension, self::AVAILABLE_LOGO_IMAGE_EXTENSIONS, true)) {
+            throw new NotSupportedLogoImageExtensionException(
+                sprintf(
+                    'Not supported "%s" image logo extension. Supported extensions are ""',
+                    implode(',', self::AVAILABLE_LOGO_IMAGE_EXTENSIONS)
+                )
+            );
+        }
     }
 }
