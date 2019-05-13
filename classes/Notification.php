@@ -139,7 +139,7 @@ class NotificationCore
                 'date_add' => isset($value['date_add']) ? Tools::displayDate($value['date_add']) : 0,
                 'customer_view_url' => Context::getContext()->link->getAdminLink('AdminCustomers', true, [
                     'customerId' => $value['id_customer'],
-                    'viewcustomer' => 1,
+                    'viewcustomer' => true,
                 ])
             );
         }
