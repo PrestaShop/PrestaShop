@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 
 /**
  * Interface for service that handles generating invoice for order.

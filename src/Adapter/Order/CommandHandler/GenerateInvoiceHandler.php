@@ -28,9 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Configuration;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateInvoiceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\GenerateOrderInvoiceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler\GenerateOrderInvoiceHandlerInterface;
 
 /**
  * @internal
