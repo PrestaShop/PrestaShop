@@ -99,6 +99,11 @@ services:
     arguments:
       - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
 
+  prestashop.core.form.choice_provider.theme_by_name_with_emails:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameWithEmailsChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
+
   prestashop.core.form.choice_provider.module_by_name:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider'
     arguments:
