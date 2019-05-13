@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class UploadLogosCommand
 {
-    const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'png', 'jpg'];
+    const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
 
     /**
      * @var UploadedFile|null

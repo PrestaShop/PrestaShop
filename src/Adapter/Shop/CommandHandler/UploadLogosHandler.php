@@ -117,8 +117,9 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadHeaderLogo(UploadedFile $uploadedFile)
     {
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO', $uploadedFile);
-        $this->assertIsValidImage($file);
+        $legacyFileName = 'PS_LOGO';
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, $uploadedFile);
+        $this->assertIsValidImage($file[$legacyFileName]);
 
         $this->logoUploader->updateHeader();
     }
@@ -130,8 +131,9 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadMailLogo(UploadedFile $uploadedFile)
     {
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO_MAIL', $uploadedFile);
-        $this->assertIsValidImage($file);
+        $legacyFileName = 'PS_LOGO_MAIL';
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, $uploadedFile);
+        $this->assertIsValidImage($file[$legacyFileName]);
 
         $this->logoUploader->updateMail();
     }
@@ -143,8 +145,9 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadInvoiceLogo(UploadedFile $uploadedHeaderLogo)
     {
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO_INVOICE', $uploadedHeaderLogo);
-        $this->assertIsValidImage($file);
+        $legacyFileName = 'PS_LOGO_INVOICE';
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, $uploadedHeaderLogo);
+        $this->assertIsValidImage($file[$legacyFileName]);
 
         $this->logoUploader->updateInvoice();
     }
@@ -156,8 +159,9 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadFavicon(UploadedFile $uploadedHeaderLogo)
     {
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_FAVICON', $uploadedHeaderLogo);
-        $this->assertIsValidIcon($file);
+        $legacyFileName = 'PS_FAVICON';
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, $uploadedHeaderLogo);
+        $this->assertIsValidIcon($file[$legacyFileName]);
 
         $this->logoUploader->updateFavicon();
     }

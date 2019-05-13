@@ -30,6 +30,8 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
@@ -142,7 +144,13 @@ class ThemeController extends AbstractAdminController
                     $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
                 );
             } catch (ShopException $e) {
-                $this->addFlash('error', $this->handleUploadLogosException($e));
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException(
+                        $e,
+                        $this->getLogoUploadErrorMessages($e)
+                    )
+                );
             }
         }
 
@@ -449,28 +457,6 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
-     * Handles exception that was thrown when uploading shop logos.
-     *
-     * @param ShopException $e
-     *
-     * @return string error message for exception
-     */
-    private function handleUploadLogosException(ShopException $e)
-    {
-        $type = get_class($e);
-
-        $errorMessages = [
-            NotSupportedFaviconExtensionException::class => $this->trans('Image format not recognized, allowed formats are: .ico', 'Admin.Notifications.Error'),
-        ];
-
-        if (isset($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
-    }
-
-    /**
      * @param ThemeException $e
      *
      * @return string
@@ -566,5 +552,25 @@ class ThemeController extends AbstractAdminController
         }
 
         return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * Gets exception or exception and its code error mapping.
+     *
+     * @param ShopException $exception
+     *
+     * @return array
+     */
+    private function getLogoUploadErrorMessages(ShopException $exception)
+    {
+        return [
+            NotSupportedLogoImageExtensionException::class =>
+                $this->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', 'Admin.Notifications.Error'),
+            NotSupportedFaviconExtensionException::class => $this->trans('Image format not recognized, allowed formats are: .ico', 'Admin.Notifications.Error'),
+            ShopConstraintException::class => [
+                ShopConstraintException::INVALID_IMAGE => $exception->getMessage(),
+                ShopConstraintException::INVALID_ICON => $exception->getMessage(),
+            ]
+        ];
     }
 }
