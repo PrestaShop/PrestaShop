@@ -82,8 +82,14 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand
 
-  prestashop.adapter.order.command_handler:
+  prestashop.adapter.order.command_handler.update_invoice_note_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateInvoiceNoteHandler
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand
+
+  prestashop.adapter.order.command_handler.issue_partial_refund_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\IssuePartialRefundHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
