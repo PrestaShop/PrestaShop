@@ -305,10 +305,10 @@ scenario('Create order by a guest from the Front Office', client => {
   stockCommonScenarios.checkStockProduct(client, productData[0].name + date_time, Menu, Stock, '50', '0', '50');
   stockCommonScenarios.checkStockProduct(client, productData[1].name + date_time, Menu, Stock, '50', '0', '50');
   scenario('Check the movement of the "' + productData[0].name + date_time + '"', client => {
-    test('should go to "Employee" page', () => {
-      return promise
-        .then(() => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu))
-        .then(() => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
+    test('should go to "Employee" page', async () => {
+      await client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu);
+      await client.waitForVisible(Menu.Configure.AdvancedParameters.advanced_parameters_menu);
+      await client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu);
     });
     test('should get  the Employee "Name" and "Last Name"', async () => {
       await client.getTextInVar(Employee.employee_column_information.replace('%COL', 4), 'employee_last_name');
