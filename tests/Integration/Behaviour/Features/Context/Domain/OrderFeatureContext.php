@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeComman
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddProductToOrderCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use Product;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
