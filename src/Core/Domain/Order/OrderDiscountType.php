@@ -24,25 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CartRule;
+namespace PrestaShop\PrestaShop\Core\Domain\Order;
 
 /**
- * Type of Cart rule that can be added to an order
+ * Discount types that can be added to an order
  */
-final class CartRuleType
+final class OrderDiscountType
 {
     /**
-     * Type is used with order cart rule that is percent discount
+     * Discount type with percent (%) amount
      */
-    const PERCENT = 1;
+    const DISCOUNT_PERCENT = 1;
 
     /**
-     * Type is used with order cart rule that is amount discount
+     * Discount type with money (EUR, USD & etc) amount
      */
-    const AMOUNT = 2;
+    const DISCOUNT_AMOUNT = 2;
 
     /**
-     * Type is used with order cart rule that is free shipping
+     * Discount type with free shipping
      */
     const FREE_SHIPPING = 3;
 }
