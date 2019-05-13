@@ -26,12 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 
+use ImageManager;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler\UploadLogosHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
+use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Tools;
 
 /**
  * Class UploadLogosHandler
@@ -70,25 +75,36 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws ShopConstraintException
+     * @throws ShopException
      */
     public function handle(UploadLogosCommand $command)
     {
         $this->configuration->set('PS_IMG_UPDATE_TIME', time());
 
-        if (null !== $command->getUploadedHeaderLogo()) {
-            $this->uploadHeaderLogo($command->getUploadedHeaderLogo());
-        }
+        try {
+            if (null !== $command->getUploadedHeaderLogo()) {
+                $this->uploadHeaderLogo($command->getUploadedHeaderLogo());
+            }
 
-        if (null !== $command->getUploadedMailLogo()) {
-            $this->uploadMailLogo($command->getUploadedMailLogo());
-        }
+            if (null !== $command->getUploadedMailLogo()) {
+                $this->uploadMailLogo($command->getUploadedMailLogo());
+            }
 
-        if (null !== $command->getUploadedInvoiceLogo()) {
-            $this->uploadInvoiceLogo($command->getUploadedInvoiceLogo());
-        }
+            if (null !== $command->getUploadedInvoiceLogo()) {
+                $this->uploadInvoiceLogo($command->getUploadedInvoiceLogo());
+            }
 
-        if (null !== $command->getUploadedFavicon()) {
-            $this->uploadFavicon($command->getUploadedFavicon());
+            if (null !== $command->getUploadedFavicon()) {
+                $this->uploadFavicon($command->getUploadedFavicon());
+            }
+        } catch (PrestaShopException $exception) {
+            throw new ShopException(
+                'An unexpected error occurred when uploading image',
+                0,
+                $exception
+            );
         }
 
         $this->hookDispatcher->dispatchWithParameters('actionAdminThemesControllerUpdate_optionsAfter');
@@ -96,39 +112,52 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
 
     /**
      * @param UploadedFile $uploadedFile
+     *
+     * @throws ShopConstraintException
      */
     private function uploadHeaderLogo(UploadedFile $uploadedFile)
     {
-        $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO', $uploadedFile);
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO', $uploadedFile);
+        $this->assertIsValidImage($file);
+
         $this->logoUploader->updateHeader();
     }
 
     /**
      * @param UploadedFile $uploadedFile
+     *
+     * @throws ShopConstraintException
      */
     private function uploadMailLogo(UploadedFile $uploadedFile)
     {
-        $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO_MAIL', $uploadedFile);
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO_MAIL', $uploadedFile);
+        $this->assertIsValidImage($file);
 
         $this->logoUploader->updateMail();
     }
 
     /**
      * @param UploadedFile $uploadedHeaderLogo
+     *
+     * @throws ShopConstraintException
      */
     private function uploadInvoiceLogo(UploadedFile $uploadedHeaderLogo)
     {
-        $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO_INVOICE', $uploadedHeaderLogo);
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO_INVOICE', $uploadedHeaderLogo);
+        $this->assertIsValidImage($file);
 
         $this->logoUploader->updateInvoice();
     }
 
     /**
      * @param UploadedFile $uploadedHeaderLogo
+     *
+     * @throws ShopConstraintException
      */
     private function uploadFavicon(UploadedFile $uploadedHeaderLogo)
     {
-        $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_FAVICON', $uploadedHeaderLogo);
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_FAVICON', $uploadedHeaderLogo);
+        $this->assertIsValidIcon($file);
 
         $this->logoUploader->updateFavicon();
     }
@@ -136,6 +165,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     /**
      * @param string $legacyFileName
      * @param UploadedFile $uploadedFile
+     *
+     * @return array
      */
     private function setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, UploadedFile $uploadedFile)
     {
@@ -146,5 +177,44 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
             'error' => $uploadedFile->getError(),
             'size' => $uploadedFile->getSize(),
         ];
+
+        return $_FILES;
+    }
+
+    /**
+     * This is used for validating the image and throwing the translatable exception message.
+     *
+     * @param array $file
+     *
+     * @throws ShopConstraintException
+     */
+    private function assertIsValidImage(array $file)
+    {
+        $maxUploadSize = Tools::getMaxUploadSize();
+        $translatableError = ImageManager::validateUpload($file, $maxUploadSize);
+
+        if ($translatableError) {
+            throw new ShopConstraintException(
+                $translatableError,
+                ShopConstraintException::INVALID_IMAGE
+            );
+        }
+    }
+
+    /**
+     * @param array $file
+     *
+     * @throws ShopConstraintException
+     */
+    private function assertIsValidIcon(array $file)
+    {
+        $translatableError  = ImageManager::validateIconUpload($file);
+
+        if ($translatableError) {
+            throw new ShopConstraintException(
+                $translatableError,
+                ShopConstraintException::INVALID_ICON
+            );
+        }
     }
 }
