@@ -37,7 +37,7 @@ export default class FiltersSubmitButtonEnablerExtension {
     const $filtersRow = grid.getContainer().find('.column-filters');
     $filtersRow.find('.grid-search-button').prop('disabled', true);
 
-    $filtersRow.find('input, select').on('input', () => {
+    $filtersRow.find('input, select, datepicker').on('input dp.change', () => {
       $filtersRow.find('.grid-search-button').prop('disabled', false);
       $filtersRow.find('.js-grid-reset-button').prop('hidden', false);
     });
