@@ -31,7 +31,7 @@ use Configuration;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Core\Domain\Order\CartRule\CartRuleType;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -62,7 +62,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $discountValue = (float) str_replace(',', '.', $command->getDiscountValue());
         switch ($command->getCartRuleType()) {
             // Percent type
-            case CartRuleType::PERCENT:
+            case OrderDiscountType::DISCOUNT_PERCENT:
                 if ($discountValue < 100) {
                     if (isset($orderInvoice)) {
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round(
@@ -116,7 +116,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
                 break;
             // Amount type
-            case CartRuleType::AMOUNT:
+            case OrderDiscountType::DISCOUNT_AMOUNT:
                 if (isset($orderInvoice)) {
                     if ($discountValue > $orderInvoice->total_paid_tax_incl) {
                         throw new OrderException('The discount value is greater than the order invoice total.');
@@ -169,7 +169,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
                 break;
             // Free shipping type
-            case CartRuleType::FREE_SHIPPING:
+            case OrderDiscountType::FREE_SHIPPING:
                 if (isset($orderInvoice)) {
                     if ($orderInvoice->total_shipping_tax_incl > 0) {
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = $orderInvoice->total_shipping_tax_incl;
@@ -218,11 +218,11 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             $cartRuleObj->quantity = 0;
             $cartRuleObj->quantity_per_user = 1;
 
-            if ($command->getCartRuleType() === CartRuleType::PERCENT) {
+            if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
                 $cartRuleObj->reduction_percent = $discountValue;
-            } elseif ($command->getCartRuleType() === CartRuleType::AMOUNT) {
+            } elseif ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_AMOUNT) {
                 $cartRuleObj->reduction_amount = $cartRule['value_tax_excl'];
-            } elseif ($command->getCartRuleType() === CartRuleType::FREE_SHIPPING) {
+            } elseif ($command->getCartRuleType() === OrderDiscountType::FREE_SHIPPING) {
                 $cartRuleObj->free_shipping = 1;
             }
 
