@@ -24,25 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CartRule;
+namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
+
+use OrderInvoice;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler\UpdateInvoiceNoteHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceException;
+use Validate;
 
 /**
- * Type of Cart rule that can be added to an order
+ * @internal
  */
-final class CartRuleType
+final class UpdateInvoiceNoteHandler implements UpdateInvoiceNoteHandlerInterface
 {
     /**
-     * Type is used with order cart rule that is percent discount
+     * {@inheritdoc}
      */
-    const PERCENT = 1;
+    public function handle(UpdateInvoiceNoteCommand $command)
+    {
+        $note = $command->getNote();
+        $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
 
-    /**
-     * Type is used with order cart rule that is amount discount
-     */
-    const AMOUNT = 2;
+        if (Validate::isLoadedObject($orderInvoice) && Validate::isCleanHtml($note)) {
+            throw new InvoiceException('Failed to upload the invoice and edit its note.');
+        }
 
-    /**
-     * Type is used with order cart rule that is free shipping
-     */
-    const FREE_SHIPPING = 3;
+        $orderInvoice->note = $note;
+
+        if (!$orderInvoice->save()) {
+            throw new InvoiceException('The invoice note was not saved.');
+        }
+    }
 }
