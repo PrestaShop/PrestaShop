@@ -29,20 +29,20 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Currency;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderPaymentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderPaymentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Payment\CommandHandler\AddPaymentHandlerInterface;
 use Validate;
 
 /**
  * @internal
  */
-final class AddOrderPaymentHandler extends AbstractOrderHandler implements AddOrderPaymentHandlerInterface
+final class AddPaymentHandler extends AbstractOrderHandler implements AddPaymentHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(AddOrderPaymentCommand $command)
+    public function handle(AddPaymentCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
 

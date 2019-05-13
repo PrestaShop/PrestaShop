@@ -24,17 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Payment\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderPaymentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
- * Interface for service that handles adding payment for order.
+ * Is base exception for Payment subdomain
  */
-interface AddOrderPaymentHandlerInterface
+class PaymentException extends OrderException
 {
-    /**
-     * @param AddOrderPaymentCommand $command
-     */
-    public function handle(AddOrderPaymentCommand $command);
 }
