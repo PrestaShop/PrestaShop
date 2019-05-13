@@ -157,6 +157,7 @@ class CustomerController extends AbstractAdminController
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,
             'displayInIframe' => $request->query->has('submitFormAjax'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
@@ -201,6 +202,7 @@ class CustomerController extends AbstractAdminController
             'customerInformation' => $customerInformation,
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
