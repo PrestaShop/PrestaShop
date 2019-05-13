@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeComman
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddProductToOrderCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateOrderInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateInvoiceCommand;
 use Product;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
@@ -108,7 +108,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $order = $orders->getFirst();
 
         $this->getCommandBus()->handle(
-            new GenerateOrderInvoiceCommand((int) $order->id)
+            new GenerateInvoiceCommand((int) $order->id)
         );
     }
 }

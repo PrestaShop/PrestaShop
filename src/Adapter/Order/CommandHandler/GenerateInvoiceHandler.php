@@ -24,33 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
+namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use Configuration;
+use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\GenerateOrderInvoiceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
- * Generates invoice for given order.
+ * @internal
  */
-class GenerateOrderInvoiceCommand
+final class GenerateInvoiceHandler extends AbstractOrderHandler implements GenerateOrderInvoiceHandlerInterface
 {
     /**
-     * @var OrderId
+     * {@inheritdoc}
      */
-    private $orderId;
-
-    /**
-     * @param int $orderId
-     */
-    public function __construct($orderId)
+    public function handle(GenerateInvoiceCommand $command)
     {
-        $this->orderId = new OrderId($orderId);
-    }
+        $order = $this->getOrderObject($command->getOrderId());
 
-    /**
-     * @return OrderId
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
+        if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop)) {
+            throw new OrderException('Invoice management has been disabled.');
+        }
+
+        if ($order->hasInvoice()) {
+            throw new OrderException('This order already has an invoice.');
+        }
+
+        $order->setInvoice(true);
     }
 }

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateOrderInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateInvoiceCommand;
 
 /**
  * Interface for service that handles generating invoice for order.
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\GenerateOrderInvoiceCommand;
 interface GenerateOrderInvoiceHandlerInterface
 {
     /**
-     * @param GenerateOrderInvoiceCommand $command
+     * @param GenerateInvoiceCommand $command
      */
-    public function handle(GenerateOrderInvoiceCommand $command);
+    public function handle(GenerateInvoiceCommand $command);
 }
