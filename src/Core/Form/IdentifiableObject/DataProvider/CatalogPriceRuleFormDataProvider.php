@@ -58,8 +58,11 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
         $editableCatalogPriceRule = $this->bus->handle(new GetCatalogPriceRuleForEditing((int) $catalogPriceRuleId));
 
         $price = $editableCatalogPriceRule->getPrice();
+        $leaveInitialPrice = false;
+
         if (-1.0 === $price) {
             $price = null;
+            $leaveInitialPrice = true;
         }
 
         $data = [
@@ -70,7 +73,7 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
             'id_group' => $editableCatalogPriceRule->getGroupId(),
             'from_quantity' => $editableCatalogPriceRule->getFromQuantity(),
             'price' => $price,
-            'leave_initial_price' => $price ? false : true,
+            'leave_initial_price' => $leaveInitialPrice,
             'from' => $editableCatalogPriceRule->getFrom(),
             'to' => $editableCatalogPriceRule->getTo(),
             'reduction_type' => $editableCatalogPriceRule->getReductionType(),
