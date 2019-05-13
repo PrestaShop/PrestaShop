@@ -24,25 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CartRule;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
- * Type of Cart rule that can be added to an order
+ * Base exception for Invoice subdomain
  */
-final class CartRuleType
+class InvoiceException extends OrderException
 {
-    /**
-     * Type is used with order cart rule that is percent discount
-     */
-    const PERCENT = 1;
-
-    /**
-     * Type is used with order cart rule that is amount discount
-     */
-    const AMOUNT = 2;
-
-    /**
-     * Type is used with order cart rule that is free shipping
-     */
-    const FREE_SHIPPING = 3;
 }

@@ -24,25 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CartRule;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
 
 /**
- * Type of Cart rule that can be added to an order
+ * Interface for service that handles updating invoice note
  */
-final class CartRuleType
+interface UpdateInvoiceNoteHandlerInterface
 {
     /**
-     * Type is used with order cart rule that is percent discount
+     * @param UpdateInvoiceNoteCommand $command
      */
-    const PERCENT = 1;
-
-    /**
-     * Type is used with order cart rule that is amount discount
-     */
-    const AMOUNT = 2;
-
-    /**
-     * Type is used with order cart rule that is free shipping
-     */
-    const FREE_SHIPPING = 3;
+    public function handle(UpdateInvoiceNoteCommand $command);
 }
