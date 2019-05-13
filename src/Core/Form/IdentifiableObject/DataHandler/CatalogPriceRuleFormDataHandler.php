@@ -90,8 +90,8 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
             (float) $data['reduction'],
             (int) $data['id_shop'],
             (float) $data['price'],
-            $data['from'] ?: date('Y-m-d H:i:s'),
-            $data['to'] ?: date('Y-m-d H:i:s'),
+            $data['from'],
+            $data['to'],
             $data['reduction_type'],
             (bool) $data['include_tax']
         ));
