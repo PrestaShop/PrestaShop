@@ -60,7 +60,7 @@ final class ThemeByNameWithEmailsChoiceProvider implements FormChoiceProviderInt
         foreach ($this->themeCollection as $theme) {
             $coreMailsFolder = $theme->getDirectory() . '/mails';
             $modulesMailFolder = $theme->getDirectory() . '/modules';
-            if (is_dir($coreMailsFolder) && is_dir($modulesMailFolder)) {
+            if (is_dir($coreMailsFolder) || is_dir($modulesMailFolder)) {
                 $themeChoices[$theme->getName()] = $theme->getName();
             }
         }
