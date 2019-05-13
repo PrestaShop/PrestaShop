@@ -144,14 +144,6 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I set the delivery address in my cart to address id (\d+)$/
-     */
-    public function setIdAddress($addressId)
-    {
-        $this->getCurrentCart()->id_address_delivery = $addressId;
-    }
-
-    /**
      * @Given /^product "(.+)" belongs to tax group "(.+)"$/
      */
     public function setProductTaxRuleGroup($productName, $taxName)
