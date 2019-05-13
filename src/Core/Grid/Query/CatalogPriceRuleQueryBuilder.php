@@ -191,12 +191,14 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('from' === $filterName || 'to' === $filterName) {
-                $qb->andWhere(
-                    $allowedFiltersAliasMap[$filterName] . ' >= :date_from AND ' .
-                    $allowedFiltersAliasMap[$filterName] . ' <= :date_to'
-                );
-                $qb->setParameter('date_from', sprintf('%s 0:0:0', $value['from']));
-                $qb->setParameter('date_to', sprintf('%s 23:59:59', $value['to']));
+                if (isset($value['from'])) {
+                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' >= :date_from');
+                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $value['from']));
+                }
+                if (isset($value['to'])) {
+                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' <= :date_to');
+                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $value['to']));
+                }
 
                 continue;
             }
