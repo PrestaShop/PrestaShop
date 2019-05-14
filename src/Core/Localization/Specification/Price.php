@@ -171,4 +171,20 @@ class Price extends NumberSpecification
             throw new LocalizationException('Invalid currencyDisplay');
         }
     }
+
+    /**
+     * To array function
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array_merge(
+            [
+                'currencyCode' => $this->getCurrencyCode(),
+                'currencySymbol' => $this->getCurrencySymbol(),
+            ],
+            parent::toArray()
+        );
+    }
 }

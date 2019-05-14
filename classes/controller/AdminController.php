@@ -30,6 +30,21 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 
 class AdminControllerCore extends Controller
 {
+    /** @var array */
+    const DEFAULT_SPECIFICATION_SYMBOL = [
+        '.',
+        ',',
+        ';',
+        '%',
+        '-',
+        '+',
+        'E',
+        '×',
+        '‰',
+        '∞',
+        'NaN',
+    ];
+
     /** @var string */
     public $path;
 
@@ -4796,31 +4811,10 @@ class AdminControllerCore extends Controller
         $currency = $context->currency;
         /* @var PriceSpecification */
         $priceSpecification = $context->currentLocale->getPriceSpecification($currency->iso_code);
-
-        return [
-            'positivePattern' => $priceSpecification->getPositivePattern(),
-            'negativePattern' => $priceSpecification->getNegativePattern(),
-            'symbol' => [
-                '.',
-                ',',
-                ';',
-                '%',
-                '-',
-                '+',
-                'E',
-                '×',
-                '‰',
-                '∞',
-                'NaN',
-            ],
-            'maxFractionDigits' => $priceSpecification->getMaxFractionDigits(),
-            'minFractionDigits' => $priceSpecification->getMinFractionDigits(),
-            'groupingUsed' => $priceSpecification->isGroupingUsed(),
-            'primaryGroupSize' => $priceSpecification->getPrimaryGroupSize(),
-            'secondaryGroupSize' => $priceSpecification->getSecondaryGroupSize(),
-            'currencyCode' => $priceSpecification->getCurrencyCode(),
-            'currencySymbol' => $priceSpecification->getCurrencySymbol(),
-        ];
+        return array_merge(
+            ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
+            $priceSpecification->toArray()
+        );
     }
 
     /**
@@ -4834,28 +4828,9 @@ class AdminControllerCore extends Controller
     {
         /* @var NumberSpecification */
         $numberSpecification = $context->currentLocale->getNumberSpecification();
-
-        return [
-            'positivePattern' => $numberSpecification->getPositivePattern(),
-            'negativePattern' => $numberSpecification->getNegativePattern(),
-            'symbol' => [
-                '.',
-                ',',
-                ';',
-                '%',
-                '-',
-                '+',
-                'E',
-                '×',
-                '‰',
-                '∞',
-                'NaN',
-            ],
-            'maxFractionDigits' => $numberSpecification->getMaxFractionDigits(),
-            'minFractionDigits' => $numberSpecification->getMinFractionDigits(),
-            'groupingUsed' => $numberSpecification->isGroupingUsed(),
-            'primaryGroupSize' => $numberSpecification->getPrimaryGroupSize(),
-            'secondaryGroupSize' => $numberSpecification->getSecondaryGroupSize(),
-        ];
+        return array_merge(
+            ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
+            $numberSpecification->toArray()
+        );
     }
 }
