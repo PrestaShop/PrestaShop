@@ -144,7 +144,7 @@ class NotificationCore
                         'customerId' => $value['id_customer'],
                         'viewcustomer' => true,
                     ]
-                )
+                ),
             );
         }
 
