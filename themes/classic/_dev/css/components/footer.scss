@@ -23,6 +23,47 @@
     }
   }
   margin-bottom: 0.625rem;
+  &.__minsize {
+    float: none;
+    background: $btn-primary-color;
+    width: 100%;
+    #block-newsletter-label,
+    .block-newsletter-form {
+      width: 100%;
+    }
+    .block-newsletter-inputs {
+      display: flex;
+      flex-direction: column;
+      .input-wrapper {
+        order: -1;
+        margin-bottom: .5rem;
+        input {
+          border: 1px solid #eee;
+        }
+      }
+    }
+
+    &.__minheight {
+      background: inherit;
+      float: left;
+      width: 75%;
+      margin-top: .2rem;
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+
+      #block-newsletter-label,
+      .block-newsletter-conditions {
+        display: none;
+      }
+      .block-newsletter-form {
+        width: 100%;
+          .block-newsletter-inputs {
+          flex-direction: row;
+        }
+      }
+    }
+  }
 }
 .block-contact {
   color: $gray;

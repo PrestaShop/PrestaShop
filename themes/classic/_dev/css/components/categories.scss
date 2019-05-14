@@ -346,28 +346,9 @@
 
 #left-column,
 #right-column {
-  .block_newsletter,
-  #block-newsletter-label,
-  .block-newsletter-form {
-    width: 100%;
-  }
   .block_newsletter {
     margin-bottom: 1.563rem;
-    background: $btn-primary-color;
-    float: none;
     @include box-shadow;
-  }
-
-  .block-newsletter-inputs {
-    display: flex;
-    flex-direction: column;
-    .input-wrapper {
-      order: -1;
-      margin-bottom: .5rem;
-      input {
-        border: 1px solid #eee;
-      }
-    }
   }
 }
 

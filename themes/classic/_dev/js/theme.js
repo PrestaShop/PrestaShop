@@ -39,6 +39,7 @@ import Form from './components/form';
 import ProductMinitature from './components/product-miniature';
 import ProductSelect from './components/product-select';
 import TopMenu from './components/top-menu';
+import NewsletterAppearance from './components/newsletter-appearance';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
@@ -61,9 +62,11 @@ $(document).ready(() => {
   let topMenu = new TopMenu(topMenuEl);
   let productMinitature = new ProductMinitature();
   let productSelect  = new ProductSelect();
+  let newsletterAppearance = new NewsletterAppearance();
   dropDown.init();
   form.init();
   topMenu.init();
   productMinitature.init();
   productSelect.init();
+  newsletterAppearance.init();
 });
