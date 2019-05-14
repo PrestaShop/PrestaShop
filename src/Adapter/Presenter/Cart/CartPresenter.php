@@ -504,7 +504,8 @@ class CartPresenter implements PresenterInterface
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
-                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
+                $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($value);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-' . $cartVoucher['reduction_formatted'];
