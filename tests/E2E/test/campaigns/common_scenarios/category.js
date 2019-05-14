@@ -116,7 +116,7 @@ module.exports = {
         return promise
           .then(() => client.waitForExistAndClickJs(CategorySubMenu.update_button))
           .then(() => client.getURL(2000))
-          .then((res) => global.param['id_category'] = res.value.match(/\d+/g)[0]);
+          .then((res) => global.param['id_category'] = /categories\/(\d+)\//g.exec(res.value)[1]);
       });
       test('should check the category name', () => client.checkAttributeValue(CategorySubMenu.name_input, 'value', categoryData.name + date_time));
       test('should check that the image is well displayed', () => client.checkImage(CategorySubMenu.image_link));

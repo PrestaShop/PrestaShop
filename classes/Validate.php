@@ -177,7 +177,7 @@ class ValidateCore
      *
      * @param string $name Name to validate
      *
-     * @return bool Validity is ok or not
+     * @return int 1 if given input is a name, 0 else
      */
     public static function isName($name)
     {
