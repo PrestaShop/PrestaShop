@@ -114,6 +114,8 @@ class CatalogPriceRuleType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $dateTimeFormat = 'YYYY-MM-DD HH:mm:ss';
+
         $builder
             ->add('name', TextType::class, [
                 'constraints' => [
@@ -145,9 +147,11 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('from', DatePickerType::class, [
                 'required' => false,
+                'date_format' => $dateTimeFormat,
             ])
             ->add('to', DatePickerType::class, [
                 'required' => false,
+                'date_format' => $dateTimeFormat,
             ])
             ->add('include_tax', ChoiceType::class, [
                 'placeholder' => false,
