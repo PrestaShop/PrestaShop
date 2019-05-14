@@ -60,7 +60,7 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
         $price = $editableCatalogPriceRule->getPrice();
         $leaveInitialPrice = false;
 
-        if ((float) -1 === $price) {
+        if (0 > $price) {
             $price = null;
             $leaveInitialPrice = true;
         }
