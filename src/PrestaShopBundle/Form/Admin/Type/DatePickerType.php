@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -43,6 +45,11 @@ class DatePickerType extends AbstractType
         return TextType::class;
     }
 
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['date_format'] = $options['date_format'];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -50,6 +57,7 @@ class DatePickerType extends AbstractType
     {
         $resolver->setDefaults([
             'widget' => 'single_text',
+            'date_format' => 'YYYY-MM-DD',
         ]);
     }
 

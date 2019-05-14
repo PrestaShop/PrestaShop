@@ -30,18 +30,28 @@ const $ = global.$;
  * Enable all datepickers.
  */
 const init = function initDatePickers() {
-  $('.datepicker input[type="text"]').datetimepicker({
-    locale: global.full_language_code,
-    format: 'YYYY-MM-DD',
+  const datePickers = $('.datepicker input[type="text"]');
+
+  datePickers.each((key, picker) => {
+    $(picker).datetimepicker({
+      locale: global.full_language_code,
+      format: $(picker).data('format') ? $(picker).data('format') : 'YYYY-MM-DD',
+      sideBySide: true,
+      icons: {
+        up: 'up',
+        down: 'down',
+        date: 'date',
+        time: 'time',
+      },
+    });
   })
   .on('dp.show', replaceDatePicker)
   .on('dp.hide', function() {
     $(window).off('resize', replaceDatePicker);
-  })
-  ;
+  });
 
   function replaceDatePicker() {
-    const datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
+    const datepicker = $('body').find('.bootstrap-datetimepicker-widget');
     if (datepicker.length <= 0) {
       return;
     }
@@ -64,7 +74,7 @@ const init = function initDatePickers() {
       left: position.left,
       right: 'auto'
     });
-    
+
     $(window).on('resize', replaceDatePicker);
   }
 };

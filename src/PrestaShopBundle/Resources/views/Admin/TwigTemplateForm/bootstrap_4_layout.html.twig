@@ -332,17 +332,17 @@
 {%- endblock translate_textarea_widget %}
 
 {% block date_picker_widget %}
-    {% spaceless %}
-        {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
-        <div class="input-group datepicker">
-            <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <i class="material-icons">date_range</i>
-                </div>
-            </div>
+  {% spaceless %}
+      {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+      <div class="input-group datepicker">
+        <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <i class="material-icons">date_range</i>
+          </div>
         </div>
-    {% endspaceless %}
+      </div>
+  {% endspaceless %}
 {% endblock date_picker_widget %}
 
 {% block date_range_widget %}
