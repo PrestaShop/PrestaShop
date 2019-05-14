@@ -4811,6 +4811,9 @@ class AdminControllerCore extends Controller
         $currency = $context->currency;
         /* @var PriceSpecification */
         $priceSpecification = $context->currentLocale->getPriceSpecification($currency->iso_code);
+        if (empty($priceSpecification)) {
+            return [];
+        }
 
         return array_merge(
             ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
@@ -4829,6 +4832,9 @@ class AdminControllerCore extends Controller
     {
         /* @var NumberSpecification */
         $numberSpecification = $context->currentLocale->getNumberSpecification();
+        if (empty($numberSpecification)) {
+            return [];
+        }
 
         return array_merge(
             ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
