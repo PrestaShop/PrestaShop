@@ -139,8 +139,18 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('from_quantity', TextType::class)
             ->add('price', NumberType::class, [
-                'scale' => 6,
                 'required' => false,
+                'scale' => 6,
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => $this->translator->trans(
+                            '%s is invalid.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
             ])
             ->add('leave_initial_price', CheckboxType::class, [
                 'required' => false,
