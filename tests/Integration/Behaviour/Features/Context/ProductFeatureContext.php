@@ -240,16 +240,6 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkFixtureExists($this->products, 'Product', $productName);
     }
 
-    /**
-     * @When /^product "(.+)" has following tax rule group id: (\d+)$/
-     */
-    public function setProductTaxRuleGroupId($productName, $taxRuleGroupId)
-    {
-        $this->checkProductWithNameExists($productName);
-        $this->products[$productName]->id_tax_rules_group = $taxRuleGroupId;
-        $this->products[$productName]->save();
-    }
-
     /* SPECIFIC PRICE */
 
     /**
