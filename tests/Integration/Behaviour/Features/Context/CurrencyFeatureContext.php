@@ -26,13 +26,25 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Context;
 use Currency;
 use Configuration;
+use RuntimeException;
 
 class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
+
+    /**
+     * @var ShopFeatureContext
+     */
+    private $shopFeatureContext;
+
+    /**
+     * @var Domain\CurrencyFeatureContext
+     */
+    private $domainCurrencyFeatureContext;
 
     /**
      * @var Currency[]
@@ -47,6 +59,13 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function storePreviousCurrencyId()
     {
         $this->previousDefaultCurrencyId = Configuration::get('PS_CURRENCY_DEFAULT');
+    }
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->shopFeatureContext = $scope->getEnvironment()->getContext(ShopFeatureContext::class);
+        $this->domainCurrencyFeatureContext = $scope->getEnvironment()->getContext(Domain\CurrencyFeatureContext::class);
     }
 
     /**
@@ -120,5 +139,80 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function checkCurrencyWithNameExists($currencyName)
     {
         $this->checkFixtureExists($this->currencies, 'Currency', $currencyName);
+    }
+
+    /**
+     * @Then currency :reference should be :isoCode
+     */
+    public function assertCurrencyIsoCode($reference, $isoCode)
+    {
+        $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($reference);
+
+        if ($currency->iso_code !== $isoCode) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" iso code, but "%s" was expected.',
+                $reference,
+                $currency->iso_code,
+                $isoCode
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference should have status :status
+     */
+    public function assertCurrencyStatus($reference, $status)
+    {
+        $statuses = ['enabled', 'disabled'];
+
+        if (!in_array($status, $statuses)) {
+            throw new RuntimeException(sprintf('Available statuses are: %s', implode(',', $statuses)));
+        }
+
+        $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($reference);
+        $expectedStatus = $status === 'enabled';
+
+        if ($currency->active != $expectedStatus) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has status "%s", but "%s" was expected.',
+                $reference,
+                $currency->active,
+                $expectedStatus
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference exchange rate should be :exchangeRate
+     */
+    public function assertCurrencyExchangeRate($reference, $exchangeRate)
+    {
+        $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($reference);
+
+        if ($currency->conversion_rate != $exchangeRate) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" exchange rate, but "%s" was expected.',
+                $reference,
+                $currency->conversion_rate,
+                $exchangeRate
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :currencyReference should be available in shop :shopReference
+     */
+    public function assertCurrencyIsAvailableInShop($currencyReference, $shopReference)
+    {
+        $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($currencyReference);
+        $shop = $this->shopFeatureContext->getShopFromRegistry($shopReference);
+
+        if (!in_array($shop->id, $currency->getAssociatedShops())) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" is not associated with "%s" shop',
+                $currencyReference,
+                $shopReference
+            ));
+        }
     }
 }
