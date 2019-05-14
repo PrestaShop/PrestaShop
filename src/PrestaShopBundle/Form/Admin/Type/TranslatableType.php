@@ -138,7 +138,7 @@ class TranslatableType extends AbstractType
             'type' => TextType::class,
             'options' => [],
             'error_bubbling' => false,
-            'only_enabled_locales' => true,
+            'only_enabled_locales' => false,
             'locales' => function (Options $options) {
                 return $options['only_enabled_locales'] ?
                     $this->enabledLocales :
