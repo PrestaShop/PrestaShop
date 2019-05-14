@@ -4811,6 +4811,7 @@ class AdminControllerCore extends Controller
         $currency = $context->currency;
         /* @var PriceSpecification */
         $priceSpecification = $context->currentLocale->getPriceSpecification($currency->iso_code);
+
         return array_merge(
             ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
             $priceSpecification->toArray()
@@ -4828,6 +4829,7 @@ class AdminControllerCore extends Controller
     {
         /* @var NumberSpecification */
         $numberSpecification = $context->currentLocale->getNumberSpecification();
+
         return array_merge(
             ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
             $numberSpecification->toArray()
