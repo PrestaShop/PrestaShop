@@ -102,11 +102,11 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
         if (null !== $command->getPrice()) {
             $specificPriceRule->price = $command->getPrice();
         }
-        if (null !== $command->getFrom()) {
-            $specificPriceRule->from = $command->getFrom();
+        if (null !== $command->getDateTimeFrom()) {
+            $specificPriceRule->from = $command->getDateTimeFrom();
         }
-        if (null !== $command->getTo()) {
-            $specificPriceRule->to = $command->getTo();
+        if (null !== $command->getDateTimeTo()) {
+            $specificPriceRule->to = $command->getDateTimeTo();
         }
         if (null !== $command->getReductionType()) {
             $specificPriceRule->reduction_type = $command->getReductionType();

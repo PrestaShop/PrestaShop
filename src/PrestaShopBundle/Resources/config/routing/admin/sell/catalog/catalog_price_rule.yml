@@ -21,6 +21,7 @@ admin_catalog_price_rules_create:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:create'
     _legacy_controller: AdminSpecificPriceRule
+    _legacy_link: AdminSpecificPriceRule:addspecific_price_rule
 
 admin_catalog_price_rules_edit:
   path: /{catalogPriceRuleId}/edit
@@ -28,6 +29,9 @@ admin_catalog_price_rules_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:edit'
     _legacy_controller: AdminSpecificPriceRule
+    _legacy_link: AdminSpecificPriceRule:updatespecific_price_rule
+    _legacy_parameters:
+      id_specific_price_rule: catalogPriceRuleId
   requirements:
     catalogPriceRuleId: \d+
 
