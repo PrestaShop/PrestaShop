@@ -27,7 +27,19 @@ import 'url-polyfill';
 const $ = global.$;
 
 /**
- * Enable all datepickers.
+ * Initializes all datetimepickers.
+ *
+ * 'data-format' attribute is optional to define custom date-time format.
+ * If provided format contains time, the time picker appears aside date picker calendar.
+ * Default datepicker icons are overridden in css by appending context to corresponding class.
+ *
+ * Example usage in template:
+ *
+ * <div class="input-group datepicker">      // .datepicker class is used to select datetimepicker object
+ *   <input type="text" class="form-control"
+ *     data-format="YYYY-MM-DD HH:mm:ss"     // provide data-format attr in case you need custom format
+ *   />
+ * </div>
  */
 const init = function initDatePickers() {
   const datePickers = $('.datepicker input[type="text"]');
