@@ -194,4 +194,3 @@ services:
       arguments:
         - '@prestashop.core.grid.data.factory.catalog_price_rule'
         - '@translator'
-
