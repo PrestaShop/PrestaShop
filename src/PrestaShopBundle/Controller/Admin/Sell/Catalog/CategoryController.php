@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageC
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryStatus;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
@@ -446,7 +447,9 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $command = new ToggleCategoryStatusCommand((int) $categoryId);
+            $isEnabled = $this->getQueryBus()->handle(new GetCategoryStatus((int) $categoryId));
+
+            $command = new ToggleCategoryStatusCommand((int) $categoryId, !$isEnabled);
 
             $this->getCommandBus()->handle($command);
 

@@ -108,3 +108,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand
+
+  prestashop.adapter.category.command_handler.get_category_status_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryStatusHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryStatus
