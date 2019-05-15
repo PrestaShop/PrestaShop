@@ -169,12 +169,10 @@ $(document).ready(() => {
   };
 
   //Hide 'have a code promo' text if displayed when 'close' is
-  let isPresent = $('.promo-code-button').length,
+  let promoButtonsNb = $('.promo-code-button').length,
       nameLength = 0;
-  
-  $('.cancel-promo').hide();
 
-  function labelCodeDisplayed() {
+  function initPromoCodeButtons() {
     $('.cancel-promo').on('click', (e) => {
       $(e.currentTarget).hide();
       $('.promo-code-button:not(.cancel-promo)').show();
@@ -182,14 +180,14 @@ $(document).ready(() => {
 
     $('.promo-code-button:not(.cancel-promo)').on('click', (e) => {
         $(e.currentTarget).hide();
-        $('.cancel-promo').show();
+        $('.cancel-promo').css('display','block');
     });
   }
 
-  function isBlockPromoPresent() {
-    if ($('.block-promo-container').length != 0 && isPresent === 2) {
-      $('.cancel-promo').show();
-      $('.promo-code-button').not('.cancel-promo').hide();
+  function forceCancelButtonOnPromo() {
+    if ($('.block-promo-container').length != 0 && promoButtonsNb === 2) {
+      $('.cancel-promo').css('display','block');
+      $('.promo-code-button:not(.cancel-promo)').hide();
     }
   }
 
@@ -198,18 +196,18 @@ $(document).ready(() => {
 
     if (promoNameLength != nameLength) {
       nameLength = promoNameLength;
-      labelCodeDisplayed();
+      initPromoCodeButtons();
       $('.cancel-promo').hide();
 
-      isBlockPromoPresent()
+      forceCancelButtonOnPromo();
     }
   }, 100);
 
-  if (isPresent === 2) {
-    labelCodeDisplayed();
+  if (promoButtonsNb === 2) {
+    initPromoCodeButtons();
   }
 
-  isBlockPromoPresent()
+  forceCancelButtonOnPromo();
 
   $body.on(
     'click',
