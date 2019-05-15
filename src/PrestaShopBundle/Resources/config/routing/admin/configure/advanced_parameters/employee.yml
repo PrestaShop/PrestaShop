@@ -42,14 +42,21 @@ admin_employees_bulk_update_status:
   requirements:
     newStatus: enabled|disabled
 
-#todo: refactor above and split in two separate routes
 admin_employees_bulk_enable_status:
   path: /bulk-enable-status/
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusUpdate'
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusEnable'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:submitBulkenableSelectionemployee
+
+admin_employees_bulk_disable_status:
+  path: /bulk-disable-status/
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusDisable'
+    _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitBulkdisableSelectionemployee
 
 admin_employees_delete:
   path: /{employeeId}/delete
