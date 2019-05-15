@@ -54,17 +54,10 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
 {
     const GRID_ID = 'catalog_price_rule';
 
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
     public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        CommandBusInterface $queryBus
+        HookDispatcherInterface $hookDispatcher
     ) {
         parent::__construct($hookDispatcher);
-        $this->queryBus = $queryBus;
     }
 
     /**
