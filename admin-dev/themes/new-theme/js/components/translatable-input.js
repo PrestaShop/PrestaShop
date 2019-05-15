@@ -36,9 +36,9 @@ class TranslatableInput {
   constructor(options) {
     options = options || {};
 
-    this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
-    this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
-    this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
+    this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
+    this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
+    this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
 
     $('body').on('click', this.localeItemSelector, this.toggleLanguage.bind(this));
     EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
@@ -68,7 +68,7 @@ class TranslatableInput {
 
     localeButton.text(selectedLocale);
     form.find(this.localeInputSelector).addClass('d-none');
-    form.find(this.localeInputSelector+'.js-locale-' + selectedLocale).removeClass('d-none');
+    form.find(`${this.localeInputSelector}.js-locale-${selectedLocale}`).removeClass('d-none');
 
     if (changeLanguageUrl) {
       this._saveSelectedLanguage(changeLanguageUrl, selectedLocale);

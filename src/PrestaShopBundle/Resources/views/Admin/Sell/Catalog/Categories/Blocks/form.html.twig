@@ -123,6 +123,15 @@
 
       {{ renderhook('displayBackOfficeCategory') }}
 
+      {% block category_tool_serp %}
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            <div id="serp-app" data-category-url="{{ categoryUrl }}"></div>
+          </div>
+        </div>
+      {% endblock %}
+
       <div class="form-group row">
         {{ ps.label_with_help(('Meta title'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
         <div class="col-sm">

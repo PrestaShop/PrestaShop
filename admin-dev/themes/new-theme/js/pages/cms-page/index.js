@@ -60,9 +60,11 @@ $(() => {
   cmsCategory.addExtension(new PositionExtension());
   cmsCategory.addExtension(new FiltersSubmitButtonEnablerExtension());
 
+  const translatorInput = new TranslatableInput();
+
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="cms_page_category[name]"]',
-    destinationElementSelector: 'input[name^="cms_page_category[friendly_url]"]',
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="cms_page_category[friendly_url]"]`,
   });
 
   new ChoiceTree('#cms_page_category_parent_category');
@@ -70,7 +72,6 @@ $(() => {
   const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
   shopChoiceTree.enableAutoCheckChildren();
 
-  new TranslatableInput();
 
   new TaggableField({
     tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
