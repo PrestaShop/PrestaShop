@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 
+/**
+ * @doc ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --filter=ColumnCollectionTest
+ */
 class ColumnCollectionTest extends TestCase
 {
     public function testItAddsColumnsToCollection()
@@ -184,6 +187,33 @@ class ColumnCollectionTest extends TestCase
 
         $this->assertInternalType('array', $columnsArray);
         $this->assertCount(3, $columnsArray);
+    }
+
+    public function testColumnsCanBeSwapped()
+    {
+        $columns = (new ColumnCollection())
+            ->add($test1 = $this->createColumnMock('test_1'))
+            ->add($this->createColumnMock('test_2'))
+            ->add($test3 = $this->createColumnMock('test_3'));
+
+        $columns->swap('test_1', 'test_3');
+
+        $this->assertSame($columns->current(), $test3);
+        $columns->next();
+        $columns->next();
+        $this->assertSame($columns->current(), $test1);
+    }
+
+    public function testColumnsSwapWithInvalidIdWillThrowsAnException()
+    {
+        $this->expectException(ColumnNotFoundException::class);
+
+        $columns = (new ColumnCollection())
+            ->add($this->createColumnMock('test_1'))
+            ->add($this->createColumnMock('test_2'))
+            ->add($this->createColumnMock('test_3'));
+
+        $columns->swap('test_1', 'undefined_id');
     }
 
     /**

@@ -108,13 +108,38 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     }
 
     /**
+     * Swap two existing columns.
+     *
+     * @param string $keyFrom the Column ID original position in the Collection
+     * @param string $keyTo the Column ID destination position in the Collection
+     *
+     * @return self
+     */
+    public function swap($keyFrom, $keyTo)
+    {
+        if (!array_key_exists($keyFrom, $this->items) || !array_key_exists($keyTo, $this->items)) {
+            throw new ColumnNotFoundException(sprintf(
+                'Cannot swap two existing columns from collection. Columns with ids "%s" or "%s" were not found.',
+                $keyFrom,
+                $keyTo
+            ));
+        }
+
+        $fromColumn = $this->items[$keyFrom];
+        $this->items[$keyFrom] = $this->items[$keyTo];
+        $this->items[$keyTo] = $fromColumn;
+
+        return $this;
+    }
+
+    /**
      * Insert new column into collection at given position.
      *
      * @param string $id Existing column id
      * @param ColumnInterface $newColumn Column to insert
      * @param string $position Position: "before" or "after"
      *
-     * @throws ColumnNotFoundException When column with gieven $id does not exist
+     * @throws ColumnNotFoundException When column with given $id does not exist
      */
     private function insertByPosition($id, ColumnInterface $newColumn, $position)
     {
