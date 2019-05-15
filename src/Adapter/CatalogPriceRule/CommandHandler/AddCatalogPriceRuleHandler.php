@@ -55,6 +55,7 @@ final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInte
                     sprintf('Failed to create specific price rule')
                 );
             }
+            $specificPriceRule->apply();
         } catch (PrestaShopException $e) {
             throw new CatalogPriceRuleException(
                 'An unexpected error occurred while creating specific price rule',
