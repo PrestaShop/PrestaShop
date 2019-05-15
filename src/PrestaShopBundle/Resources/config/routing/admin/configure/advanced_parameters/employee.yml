@@ -12,6 +12,7 @@ admin_employees_search:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitFilteremployee
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.employee
     redirectRoute: admin_employees_index
 
@@ -21,6 +22,7 @@ admin_employees_save_options:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:saveOptions'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitOptionsemployee
 
 admin_employees_toggle_status:
   path: /{employeeId}/toggle-status
@@ -28,6 +30,7 @@ admin_employees_toggle_status:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleStatus'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:statusemployee
 
 admin_employees_bulk_update_status:
   path: /bulk-update-status/{newStatus}
@@ -35,8 +38,18 @@ admin_employees_bulk_update_status:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusUpdate'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitBulkenableSelectionemployee
   requirements:
     newStatus: enabled|disabled
+
+#todo: refactor above and split in two separate routes
+admin_employees_bulk_enable_status:
+  path: /bulk-enable-status/
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusUpdate'
+    _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitBulkenableSelectionemployee
 
 admin_employees_delete:
   path: /{employeeId}/delete
