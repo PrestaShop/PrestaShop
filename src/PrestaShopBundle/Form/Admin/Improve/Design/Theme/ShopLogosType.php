@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestrictionField;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionCheckboxType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
