@@ -45,7 +45,7 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
     /**
      * @var bool
      */
-    private $isSingleShopContext;
+    private $isMultishopEnabled;
 
     /**
      * @var int
@@ -54,17 +54,17 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
 
     /**
      * @param CommandBusInterface $commandBus
-     * @param $isSingleShopContext
+     * @param $isMultishopEnabled
      * @param $contextShopId
      */
     public function __construct(
         CommandBusInterface $commandBus,
-        $isSingleShopContext,
+        $isMultishopEnabled,
         $contextShopId
     ) {
         $this->commandBus = $commandBus;
         $this->contextShopId = $contextShopId;
-        $this->isSingleShopContext = $isSingleShopContext;
+        $this->isMultishopEnabled = $isMultishopEnabled;
     }
 
     /**
@@ -72,7 +72,7 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        if ($this->isSingleShopContext && !isset($data['id_shop'])) {
+        if (!$this->isMultishopEnabled) {
             $data['id_shop'] = $this->contextShopId;
         }
 
