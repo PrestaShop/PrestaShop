@@ -158,6 +158,7 @@ class CurrencyCore extends ObjectModel
      * @var string
      */
     public $prefix = null;
+
     /**
      * contains the sign to display after price, according to its format.
      *
@@ -263,11 +264,7 @@ class CurrencyCore extends ObjectModel
     {
         $idCurrencyExists = Currency::getIdByIsoCode($isoCode, (int) $idShop);
 
-        if ($idCurrencyExists) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) $idCurrencyExists;
     }
 
     /**
