@@ -675,12 +675,14 @@ class FrontControllerCore extends Controller
 
         $html = '';
 
+        $theme = $this->context->shop->theme->getName();
+
         if (is_array($content)) {
             foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
+                $html .= $this->context->smarty->fetch($tpl, null, $theme . $this->getLayout());
             }
         } else {
-            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+            $html = $this->context->smarty->fetch($content, null, $theme . $this->getLayout());
         }
 
         Hook::exec('actionOutputHTMLBefore', array('html' => &$html));
