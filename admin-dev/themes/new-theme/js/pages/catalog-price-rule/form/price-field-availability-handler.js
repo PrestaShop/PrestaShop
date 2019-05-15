@@ -44,9 +44,8 @@ export default class PriceFieldAvailabilityHandler {
    * @private
    */
   _handle() {
-    const checkboxVal = $(`${this.$checkboxSelector}:checked`).val();
-    const isFieldEnabled = parseInt(checkboxVal, 10);
+    const checkboxVal = $(`${this.$checkboxSelector}`).is(':checked');
 
-    $(this.$targetSelector).prop('disabled', isFieldEnabled);
+    $(this.$targetSelector).prop('disabled', checkboxVal);
   }
 }
