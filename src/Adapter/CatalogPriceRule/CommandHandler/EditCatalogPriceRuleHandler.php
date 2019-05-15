@@ -55,6 +55,7 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
                     sprintf('Failed to update specific price rule with id %s', $specificPriceRule->id)
                 );
             }
+            $specificPriceRule->apply();
         } catch (PrestaShopException $e) {
             throw new CatalogPriceRuleException(
                 sprintf(

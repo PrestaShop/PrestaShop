@@ -912,7 +912,7 @@ services:
         public: true
         arguments:
             - '@translator'
-            - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
             - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
