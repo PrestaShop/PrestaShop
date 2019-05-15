@@ -585,7 +585,7 @@ class ThemeController extends AbstractAdminController
             ShopConstraintException::class => [
                 ShopConstraintException::INVALID_IMAGE => $exception->getMessage(),
                 ShopConstraintException::INVALID_ICON => $exception->getMessage(),
-            ]
+            ],
         ];
     }
 }

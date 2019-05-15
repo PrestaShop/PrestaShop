@@ -38,7 +38,6 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Validator\Constraints\Image;
 
 /**
  * Class ThemeLogosType is used to configure theme's logos.
@@ -46,7 +45,7 @@ use Symfony\Component\Validator\Constraints\Image;
 class ShopLogosType extends AbstractType
 {
     use TranslatorAwareTrait;
-    
+
     /**
      * @var bool
      */

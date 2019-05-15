@@ -32,12 +32,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shop\DTO;
 class ShopLogoSettings
 {
     /**
-     * @var array - a list of available image mime types.
+     * @var array - a list of available image mime types
      */
     const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
 
     /**
-     * @var string - a type used for icon images for shop logo.
+     * @var string - a type used for icon images for shop logo
      */
     const AVAILABLE_ICON_IMAGE_EXTENSION = 'ico';
 

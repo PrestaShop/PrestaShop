@@ -212,7 +212,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function assertIsValidIcon(array $file)
     {
-        $translatedErrorMessage  = ImageManager::validateIconUpload($file);
+        $translatedErrorMessage = ImageManager::validateIconUpload($file);
 
         if ($translatedErrorMessage) {
             throw new ShopConstraintException(
