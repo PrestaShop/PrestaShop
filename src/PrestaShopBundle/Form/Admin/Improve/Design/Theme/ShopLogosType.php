@@ -44,8 +44,6 @@ use Symfony\Component\Form\FormEvents;
  */
 class ShopLogosType extends AbstractType
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var bool
      */
