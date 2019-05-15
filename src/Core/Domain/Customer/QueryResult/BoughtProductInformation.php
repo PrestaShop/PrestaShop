@@ -24,80 +24,80 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
- * Class CustomerCartInformation.
+ * Class BoughtProductInformation holds information about product that customer has bought.
  */
-class CartInformation
+class BoughtProductInformation
 {
     /**
-     * @var string
+     * @var int
      */
-    private $cartId;
+    private $orderId;
 
     /**
      * @var string
      */
-    private $cartCreationDate;
+    private $boughtDate;
 
     /**
      * @var string
      */
-    private $cartTotal;
+    private $productName;
 
     /**
-     * @var string
+     * @var int
      */
-    private $carrierName;
+    private $boughtQuantity;
 
     /**
-     * @param string $cartId
-     * @param string $cartCreationDate
-     * @param string $cartTotal
-     * @param string $carrierName
+     * @param int $orderId
+     * @param string $boughtDate
+     * @param string $productName
+     * @param int $boughtQuantity
      */
     public function __construct(
-        $cartId,
-        $cartCreationDate,
-        $cartTotal,
-        $carrierName
+        $orderId,
+        $boughtDate,
+        $productName,
+        $boughtQuantity
     ) {
-        $this->cartId = $cartId;
-        $this->cartCreationDate = $cartCreationDate;
-        $this->cartTotal = $cartTotal;
-        $this->carrierName = $carrierName;
+        $this->orderId = $orderId;
+        $this->boughtDate = $boughtDate;
+        $this->productName = $productName;
+        $this->boughtQuantity = $boughtQuantity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
     }
 
     /**
      * @return string
      */
-    public function getCartId()
+    public function getBoughtDate()
     {
-        return $this->cartId;
+        return $this->boughtDate;
     }
 
     /**
      * @return string
      */
-    public function getCartCreationDate()
+    public function getProductName()
     {
-        return $this->cartCreationDate;
+        return $this->productName;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getCartTotal()
+    public function getBoughtQuantity()
     {
-        return $this->cartTotal;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCarrierName()
-    {
-        return $this->carrierName;
+        return $this->boughtQuantity;
     }
 }

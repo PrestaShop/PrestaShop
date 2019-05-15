@@ -24,76 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
- * Class SentEmailInformation holds information about email sent to customer.
+ * Class GroupInformation holds customer group information.
  */
-class SentEmailInformation
+class GroupInformation
 {
     /**
-     * @var string
+     * @var int
      */
-    private $date;
+    private $groupId;
 
     /**
      * @var string
      */
-    private $language;
+    private $name;
 
     /**
-     * @var string
+     * @param int $groupId
+     * @param string $name
      */
-    private $subject;
-
-    /**
-     * @var string
-     */
-    private $template;
-
-    /**
-     * @param string $date
-     * @param string $language
-     * @param string $subject
-     * @param string $template
-     */
-    public function __construct($date, $language, $subject, $template)
+    public function __construct($groupId, $name)
     {
-        $this->date = $date;
-        $this->language = $language;
-        $this->subject = $subject;
-        $this->template = $template;
+        $this->groupId = $groupId;
+        $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
     }
 
     /**
      * @return string
      */
-    public function getDate()
+    public function getName()
     {
-        return $this->date;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
+        return $this->name;
     }
 }
