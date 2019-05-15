@@ -69,12 +69,12 @@ class AddCatalogPriceRuleCommand
     /**
      * @var string
      */
-    private $from;
+    private $dateTimeFrom;
 
     /**
      * @var string
      */
-    private $to;
+    private $dateTimeTo;
 
     /**
      * @var string
@@ -97,10 +97,10 @@ class AddCatalogPriceRuleCommand
      * @param int $groupId
      * @param int $fromQuantity
      * @param float $reduction
-     * @param int|null $shopId
+     * @param int $shopId
      * @param float|null $price
-     * @param string|null $from
-     * @param string|null $to
+     * @param string|null $dateTimeFrom
+     * @param string|null $dateTimeTo
      * @param string|null $reductionType
      * @param bool|null $includeTax
      */
@@ -111,10 +111,10 @@ class AddCatalogPriceRuleCommand
         $groupId,
         $fromQuantity,
         $reduction,
-        $shopId = null,
+        $shopId,
         $price = null,
-        $from = null,
-        $to = null,
+        $dateTimeFrom = null,
+        $dateTimeTo = null,
         $reductionType = null,
         $includeTax = null
     ) {
@@ -126,8 +126,8 @@ class AddCatalogPriceRuleCommand
         $this->reduction = $reduction;
         $this->shopId = $shopId;
         $this->price = $price;
-        $this->from = $from;
-        $this->to = $to;
+        $this->dateTimeFrom = $dateTimeFrom;
+        $this->dateTimeTo = $dateTimeTo;
         $this->reductionType = $reductionType;
         $this->includeTax = $includeTax;
     }
@@ -191,17 +191,17 @@ class AddCatalogPriceRuleCommand
     /**
      * @return string
      */
-    public function getFrom()
+    public function getDateTimeFrom()
     {
-        return $this->from;
+        return $this->dateTimeFrom;
     }
 
     /**
      * @return string
      */
-    public function getTo()
+    public function getDateTimeTo()
     {
-        return $this->to;
+        return $this->dateTimeTo;
     }
 
     /**
