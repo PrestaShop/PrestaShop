@@ -62,28 +62,29 @@ class AddCatalogPriceRuleCommand
     private $fromQuantity;
 
     /**
+     * @var bool
+     */
+    private $includeTax;
+
+    /**
      * @var float
      */
     private $price;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $dateTimeFrom;
+    private $dateFrom;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $dateTimeTo;
+    private $dateTo;
 
     /**
      * @var string
      */
     private $reductionType;
-    /**
-     * @var bool
-     */
-    private $includeTax;
 
     /**
      * @var float
@@ -98,11 +99,11 @@ class AddCatalogPriceRuleCommand
      * @param int $fromQuantity
      * @param float $reduction
      * @param int $shopId
-     * @param float|null $price
+     * @param bool $includeTax
+     * @param string $reductionType
+     * @param float $price
      * @param string|null $dateTimeFrom
      * @param string|null $dateTimeTo
-     * @param string|null $reductionType
-     * @param bool|null $includeTax
      */
     public function __construct(
         $name,
@@ -112,11 +113,11 @@ class AddCatalogPriceRuleCommand
         $fromQuantity,
         $reduction,
         $shopId,
-        $price = null,
+        $includeTax,
+        $reductionType,
+        $price,
         $dateTimeFrom = null,
-        $dateTimeTo = null,
-        $reductionType = null,
-        $includeTax = null
+        $dateTimeTo = null
     ) {
         $this->name = $name;
         $this->currencyId = $currencyId;
@@ -126,8 +127,8 @@ class AddCatalogPriceRuleCommand
         $this->reduction = $reduction;
         $this->shopId = $shopId;
         $this->price = $price;
-        $this->dateTimeFrom = $dateTimeFrom;
-        $this->dateTimeTo = $dateTimeTo;
+        $this->dateFrom = $dateTimeFrom;
+        $this->dateTo = $dateTimeTo;
         $this->reductionType = $reductionType;
         $this->includeTax = $includeTax;
     }
@@ -189,19 +190,19 @@ class AddCatalogPriceRuleCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDateTimeFrom()
+    public function getDateFrom()
     {
-        return $this->dateTimeFrom;
+        return $this->dateFrom;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDateTimeTo()
+    public function getDateTo()
     {
-        return $this->dateTimeTo;
+        return $this->dateTo;
     }
 
     /**
