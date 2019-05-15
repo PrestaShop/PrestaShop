@@ -15,12 +15,12 @@ _manufacturers:
     prefix: /brands
 
 _monitoring:
-  resource: "monitoring.yml"
-  prefix: /monitoring
+    resource: "monitoring.yml"
+    prefix: /monitoring
 
 _catalog_price_rules:
-  resource: "catalog_price_rule.yml"
-  prefix: /catalog-price-rules
+    resource: "catalog_price_rule.yml"
+    prefix: /catalog-price-rules
 
 _features:
     resource: "features.yml"

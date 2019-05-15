@@ -77,12 +77,12 @@ class EditCatalogPriceRuleCommand
     /**
      * @var string|null
      */
-    private $from;
+    private $dateTimeFrom;
 
     /**
      * @var string|null
      */
-    private $to;
+    private $dateTimeTo;
 
     /**
      * @var string|null
@@ -232,33 +232,33 @@ class EditCatalogPriceRuleCommand
     /**
      * @return string|null
      */
-    public function getFrom()
+    public function getDateTimeFrom()
     {
-        return $this->from;
+        return $this->dateTimeFrom;
     }
 
     /**
-     * @param string|null $from
+     * @param string|null $dateTimeFrom
      */
-    public function setFrom($from)
+    public function setDateTimeFrom($dateTimeFrom)
     {
-        $this->from = $from;
+        $this->dateTimeFrom = $dateTimeFrom;
     }
 
     /**
      * @return string|null
      */
-    public function getTo()
+    public function getDateTimeTo()
     {
-        return $this->to;
+        return $this->dateTimeTo;
     }
 
     /**
-     * @param string|null $to
+     * @param string|null $dateTimeTo
      */
-    public function setTo($to)
+    public function setDateTimeTo($dateTimeTo)
     {
-        $this->to = $to;
+        $this->dateTimeTo = $dateTimeTo;
     }
 
     /**

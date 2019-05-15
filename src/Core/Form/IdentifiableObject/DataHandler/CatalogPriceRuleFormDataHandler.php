@@ -54,8 +54,8 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
 
     /**
      * @param CommandBusInterface $commandBus
-     * @param $isMultishopEnabled
-     * @param $contextShopId
+     * @param bool $isMultishopEnabled
+     * @param int $contextShopId
      */
     public function __construct(
         CommandBusInterface $commandBus,
@@ -127,8 +127,8 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
         $command->setGroupId((int) $data['id_group']);
         $command->setFromQuantity((int) $data['from_quantity']);
         $command->setPrice((float) $data['price']);
-        $command->setFrom($data['from']);
-        $command->setTo($data['to']);
+        $command->setDateTimeFrom($data['from']);
+        $command->setDateTimeTo($data['to']);
         $command->setReductionType($data['reduction_type']);
         $command->setIncludeTax((bool) $data['include_tax']);
         $command->setReduction((float) $data['reduction']);
