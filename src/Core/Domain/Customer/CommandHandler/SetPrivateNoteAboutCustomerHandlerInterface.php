@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 
 /**
- * Defines interface for service that handles command which saves private note for customer
+ * Defines interface for service that handles command which sets private note about customer
  */
-interface SavePrivateNoteForCustomerHandlerInterface
+interface SetPrivateNoteAboutCustomerHandlerInterface
 {
     /**
-     * @param SavePrivateNoteForCustomerCommand $command
+     * @param SetPrivateNoteAboutCustomerCommand $command
      */
-    public function handle(SavePrivateNoteForCustomerCommand $command);
+    public function handle(SetPrivateNoteAboutCustomerCommand $command);
 }

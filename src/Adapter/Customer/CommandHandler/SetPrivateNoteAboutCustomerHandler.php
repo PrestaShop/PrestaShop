@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\SavePrivateNoteForCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\SetPrivateNoteAboutCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 
 /**
@@ -36,12 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
  *
  * @internal
  */
-final class SavePrivateNoteForCustomerHandler implements SavePrivateNoteForCustomerHandlerInterface
+final class SetPrivateNoteAboutCustomerHandler implements SetPrivateNoteAboutCustomerHandlerInterface
 {
     /**
-     * @param SavePrivateNoteForCustomerCommand $command
+     * @param SetPrivateNoteAboutCustomerCommand $command
      */
-    public function handle(SavePrivateNoteForCustomerCommand $command)
+    public function handle(SetPrivateNoteAboutCustomerCommand $command)
     {
         $customerId = $command->getCustomerId();
         $customer = new Customer($customerId->getValue());
