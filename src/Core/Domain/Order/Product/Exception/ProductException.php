@@ -24,17 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
- * Interface for service that handles adding product to an exiting order.
+ * Base exception for Order/Product subdomain
  */
-interface AddProductToOrderHandlerInterface
+class ProductException extends OrderException
 {
-    /**
-     * @param AddProductToOrderCommand $command
-     */
-    public function handle(AddProductToOrderCommand $command);
 }

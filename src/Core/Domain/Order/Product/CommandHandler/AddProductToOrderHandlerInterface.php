@@ -24,49 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 
 /**
- * Deletes product from given order.
+ * Interface for service that handles adding product to an exiting order.
  */
-class DeleteProductFromOrderCommand
+interface AddProductToOrderHandlerInterface
 {
     /**
-     * @var OrderId
+     * @param AddProductToOrderCommand $command
      */
-    private $orderId;
-
-    /**
-     * @var int
-     */
-    private $orderDetailId;
-
-    /**
-     * @param int $orderId
-     */
-    public function __construct($orderId, $orderDetailId)
-    {
-        // @todo: add integrity checks
-
-        $this->orderId = new OrderId($orderId);
-        $this->orderDetailId = $orderDetailId;
-    }
-
-    /**
-     * @return OrderId
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOrderDetailId()
-    {
-        return $this->orderDetailId;
-    }
+    public function handle(AddProductToOrderCommand $command);
 }

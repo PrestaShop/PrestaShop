@@ -30,9 +30,9 @@ use Context;
 use Order;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use Product;
 

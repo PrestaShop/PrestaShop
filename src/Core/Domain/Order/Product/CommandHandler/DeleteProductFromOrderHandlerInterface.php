@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateProductInOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 
 /**
- * Interface for service that updates product in given order.
+ * Interface for service that handles deleting product from order.
  */
-interface UpdateProductInOrderHandlerInterface
+interface DeleteProductFromOrderHandlerInterface
 {
     /**
-     * @param UpdateProductInOrderCommand $command
+     * @param DeleteProductFromOrderCommand $command
      */
-    public function handle(UpdateProductInOrderCommand $command);
+    public function handle(DeleteProductFromOrderCommand $command);
 }

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 

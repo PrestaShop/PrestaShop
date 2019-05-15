@@ -20,7 +20,7 @@ services:
       - '@translator'
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddProductToOrderCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand
 
   prestashop.adapter.order.command_handler.update_order_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateOrderStatusHandler
@@ -32,7 +32,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateProductInOrderHandler
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateProductInOrderCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand
 
   prestashop.adapter.order.command_handler.change_order_delivery_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderDeliveryAddressHandler
@@ -93,3 +93,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
+
+  prestashop.adapter.order.command_handler.delete_product_from_order_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
