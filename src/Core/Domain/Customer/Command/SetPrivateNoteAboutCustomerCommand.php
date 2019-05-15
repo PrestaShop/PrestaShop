@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Saves private note for customer that can only be seen in Back Office
+ * Sets private note about customer that can only be seen in Back Office
  */
-class SavePrivateNoteForCustomerCommand
+class SetPrivateNoteAboutCustomerCommand
 {
     /**
      * @var CustomerId
