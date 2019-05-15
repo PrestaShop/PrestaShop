@@ -30,6 +30,7 @@ use Context;
 use Currency;
 use Employee;
 use Language;
+use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Psr\Log\NullLogger;
@@ -131,6 +132,13 @@ class LightWebTestCase extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['getDefaultCurrencyIsoCode', 'getDefaultCurrency'])
             ->getMock();
+
+        $linkMock = $this
+            ->getMockBuilder(Link::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $contextMock->link = $linkMock;
 
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
             ->will($this->returnValue('en'));
