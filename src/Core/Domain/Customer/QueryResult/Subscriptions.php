@@ -24,46 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
-/**
- * Class GroupInformation holds customer group information.
- */
-class GroupInformation
+class Subscriptions
 {
     /**
-     * @var int
+     * @var bool
      */
-    private $groupId;
+    private $isNewsletterSubscribed;
 
     /**
-     * @var string
+     * @var bool
      */
-    private $name;
+    private $isPartnerOffersSubscribed;
 
     /**
-     * @param int $groupId
-     * @param string $name
+     * @param bool $isNewsletterSubscribed
+     * @param bool $isPartnerOffersSubscribed
      */
-    public function __construct($groupId, $name)
+    public function __construct($isNewsletterSubscribed, $isPartnerOffersSubscribed)
     {
-        $this->groupId = $groupId;
-        $this->name = $name;
+        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
+        $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
     }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getGroupId()
+    public function isNewsletterSubscribed()
     {
-        return $this->groupId;
+        return $this->isNewsletterSubscribed;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getName()
+    public function isPartnerOffersSubscribed()
     {
-        return $this->name;
+        return $this->isPartnerOffersSubscribed;
     }
 }

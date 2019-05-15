@@ -24,61 +24,96 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
- * Class ViewedProductInformation holds information about product that customer has viewed.
+ * Class DiscountInformation.
  */
-class ViewedProductInformation
+class DiscountInformation
 {
     /**
      * @var int
      */
-    private $productId;
+    private $discountId;
 
     /**
      * @var string
      */
-    private $productName;
+    private $code;
 
     /**
      * @var string
      */
-    private $productUrl;
+    private $name;
 
     /**
-     * @param int $productId
-     * @param string $productName
-     * @param string $productUrl
+     * @var bool
      */
-    public function __construct($productId, $productName, $productUrl)
-    {
-        $this->productId = $productId;
-        $this->productName = $productName;
-        $this->productUrl = $productUrl;
+    private $isActive;
+
+    /**
+     * @var int
+     */
+    private $availableQuantity;
+
+    /**
+     * @param int $discountId
+     * @param string $code
+     * @param string $name
+     * @param bool $isActive
+     * @param int $availableQuantity
+     */
+    public function __construct(
+        $discountId,
+        $code,
+        $name,
+        $isActive,
+        $availableQuantity
+    ) {
+        $this->discountId = $discountId;
+        $this->code = $code;
+        $this->name = $name;
+        $this->isActive = $isActive;
+        $this->availableQuantity = $availableQuantity;
     }
 
     /**
      * @return int
      */
-    public function getProductId()
+    public function getDiscountId()
     {
-        return $this->productId;
+        return $this->discountId;
     }
 
     /**
      * @return string
      */
-    public function getProductName()
+    public function getCode()
     {
-        return $this->productName;
+        return $this->code;
     }
 
     /**
      * @return string
      */
-    public function getProductUrl()
+    public function getName()
     {
-        return $this->productUrl;
+        return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAvailableQuantity()
+    {
+        return $this->availableQuantity;
     }
 }

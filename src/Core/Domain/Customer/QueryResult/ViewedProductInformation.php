@@ -24,46 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
- * Class CustomerProductsInformation holds information about products that customers has bought and viewed.
+ * Class ViewedProductInformation holds information about product that customer has viewed.
  */
-class ProductsInformation
+class ViewedProductInformation
 {
     /**
-     * @var BoughtProductInformation[]
+     * @var int
      */
-    private $boughtProductsInformation;
+    private $productId;
 
     /**
-     * @var ViewedProductInformation[]
+     * @var string
      */
-    private $viewedProductsInformation;
+    private $productName;
 
     /**
-     * @param BoughtProductInformation[] $boughtProductsInformation
-     * @param ViewedProductInformation[] $viewedProductsInformation
+     * @var string
      */
-    public function __construct(array $boughtProductsInformation, array $viewedProductsInformation)
+    private $productUrl;
+
+    /**
+     * @param int $productId
+     * @param string $productName
+     * @param string $productUrl
+     */
+    public function __construct($productId, $productName, $productUrl)
     {
-        $this->boughtProductsInformation = $boughtProductsInformation;
-        $this->viewedProductsInformation = $viewedProductsInformation;
+        $this->productId = $productId;
+        $this->productName = $productName;
+        $this->productUrl = $productUrl;
     }
 
     /**
-     * @return BoughtProductInformation[]
+     * @return int
      */
-    public function getBoughtProductsInformation()
+    public function getProductId()
     {
-        return $this->boughtProductsInformation;
+        return $this->productId;
     }
 
     /**
-     * @return ViewedProductInformation[]
+     * @return string
      */
-    public function getViewedProductsInformation()
+    public function getProductName()
     {
-        return $this->viewedProductsInformation;
+        return $this->productName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductUrl()
+    {
+        return $this->productUrl;
     }
 }

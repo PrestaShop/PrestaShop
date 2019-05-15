@@ -24,43 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
-class Subscriptions
+/**
+ * Class ReferrerInformation holds information about customer referrer.
+ */
+class ReferrerInformation
 {
     /**
-     * @var bool
+     * @var string
      */
-    private $isNewsletterSubscribed;
+    private $date;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $isPartnerOffersSubscribed;
+    private $name;
 
     /**
-     * @param bool $isNewsletterSubscribed
-     * @param bool $isPartnerOffersSubscribed
+     * @var string
      */
-    public function __construct($isNewsletterSubscribed, $isPartnerOffersSubscribed)
+    private $shop;
+
+    /**
+     * @param string $date
+     * @param string $name
+     * @param string $shop
+     */
+    public function __construct($date, $name, $shop)
     {
-        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
-        $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
+        $this->date = $date;
+        $this->name = $name;
+        $this->shop = $shop;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isNewsletterSubscribed()
+    public function getDate()
     {
-        return $this->isNewsletterSubscribed;
+        return $this->date;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isPartnerOffersSubscribed()
+    public function getName()
     {
-        return $this->isPartnerOffersSubscribed;
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShop()
+    {
+        return $this->shop;
     }
 }
