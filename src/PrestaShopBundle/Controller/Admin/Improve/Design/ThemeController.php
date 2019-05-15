@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopConstraintException;
@@ -563,10 +564,24 @@ class ThemeController extends AbstractAdminController
      */
     private function getLogoUploadErrorMessages(ShopException $exception)
     {
+        $availableLogoFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS);
+        $availableIconFormat = ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION;
+
+        $logoImageFormatError = $this->trans(
+            'Image format not recognized, allowed format(s) is(are): .%s',
+            'Admin.Notifications.Error',
+            [$availableLogoFormatsImploded]
+        );
+
+        $iconFormatError = $this->trans(
+            'Image format not recognized, allowed format(s) is(are): .%s',
+            'Admin.Notifications.Error',
+            [$availableIconFormat]
+        );
+
         return [
-            NotSupportedLogoImageExtensionException::class =>
-                $this->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', 'Admin.Notifications.Error'),
-            NotSupportedFaviconExtensionException::class => $this->trans('Image format not recognized, allowed formats are: .ico', 'Admin.Notifications.Error'),
+            NotSupportedLogoImageExtensionException::class => $logoImageFormatError,
+            NotSupportedFaviconExtensionException::class => $iconFormatError,
             ShopConstraintException::class => [
                 ShopConstraintException::INVALID_IMAGE => $exception->getMessage(),
                 ShopConstraintException::INVALID_ICON => $exception->getMessage(),
