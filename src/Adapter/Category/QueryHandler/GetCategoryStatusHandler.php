@@ -24,48 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
+namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use Category;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryStatus;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryStatusHandlerInterface;
 
 /**
- * Class ToggleCategoryStatusCommand toggles given category status.
+ * @internal
  */
-class ToggleCategoryStatusCommand
+final class GetCategoryStatusHandler implements GetCategoryStatusHandlerInterface
 {
     /**
-     * @var CategoryId
+     * {@inheritdoc}
      */
-    private $categoryId;
-
-    /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @param int $categoryId
-     * @param bool $isEnabled
-     */
-    public function __construct($categoryId, $isEnabled)
+    public function handle(GetCategoryStatus $query)
     {
-        $this->categoryId = new CategoryId($categoryId);
-        $this->isEnabled = $isEnabled;
-    }
+        $category = new Category($query->getCategoryId()->getValue());
 
-    /**
-     * @return CategoryId
-     */
-    public function getCategoryId()
-    {
-        return $this->categoryId;
-    }
+        if ($category->id !== $query->getCategoryId()->getValue()) {
+            throw new CategoryNotFoundException(
+                $query->getCategoryId(),
+                sprintf('Category with id "%s" was not found.', $query->getCategoryId()->getValue())
+            );
+        }
 
-    /**
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return $this->isEnabled;
+        return (bool) $category->active;
     }
 }

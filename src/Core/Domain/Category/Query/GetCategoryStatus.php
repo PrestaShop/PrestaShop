@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class ToggleCategoryStatusCommand toggles given category status.
+ * Get current status (enabled/disabled) for given category.
  */
-class ToggleCategoryStatusCommand
+class GetCategoryStatus
 {
     /**
      * @var CategoryId
@@ -39,18 +39,11 @@ class ToggleCategoryStatusCommand
     private $categoryId;
 
     /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
      * @param int $categoryId
-     * @param bool $isEnabled
      */
-    public function __construct($categoryId, $isEnabled)
+    public function __construct($categoryId)
     {
         $this->categoryId = new CategoryId($categoryId);
-        $this->isEnabled = $isEnabled;
     }
 
     /**
@@ -59,13 +52,5 @@ class ToggleCategoryStatusCommand
     public function getCategoryId()
     {
         return $this->categoryId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return $this->isEnabled;
     }
 }
