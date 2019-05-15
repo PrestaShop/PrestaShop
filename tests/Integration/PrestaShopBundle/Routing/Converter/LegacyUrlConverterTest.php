@@ -204,6 +204,14 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_profiles_edit' => ['/configure/advanced/profiles/1000/edit', 'AdminProfiles', 'updateprofile', ['id_profile' => 1000]],
             'admin_profiles_bulk_delete' => ['/configure/advanced/profiles/delete/bulk', 'AdminProfiles', 'submitBulkdeleteprofile'],
             'admin_profiles_delete' => ['/configure/advanced/profiles/12/delete', 'AdminProfiles', 'deleteprofile', ['id_profile' => 12]],
+
+            'admin_currencies_index' => ['/improve/international/currencies/', 'AdminCurrencies'],
+            'admin_currencies_search' => ['/improve/international/currencies/', 'AdminCurrencies', 'submitFiltercurrency'],
+            'admin_currencies_create' => ['/improve/international/currencies/new', 'AdminCurrencies', 'addcurrency'],
+            'admin_currencies_edit' => ['/improve/international/currencies/1000/edit', 'AdminCurrencies', 'updatecurrency', ['id_currency' => 1000]],
+            'admin_currencies_delete' => ['/improve/international/currencies/1000/delete', 'AdminCurrencies', 'deletecurrency', ['id_currency' => 1000]],
+            'admin_currencies_toggle_status' => ['/improve/international/currencies/1000/toggle-status', 'AdminCurrencies', 'statuscurrency'],
+            'admin_currencies_refresh_exchange_rates' => ['/improve/international/currencies/refresh-exchange-rates', 'AdminCurrencies', 'SubmitExchangesRates'],
         ];
     }
 
