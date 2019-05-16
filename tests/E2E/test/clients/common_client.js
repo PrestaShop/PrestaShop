@@ -121,9 +121,11 @@ class CommonClient {
       .waitForExistAndClick(option.replace('%LANG', language).replace('%ID', id))
   }
 
-  open() {
+  async open() {
     if (headless !== 'undefined' && headless) {
-      return this.client.init().windowHandleSize({width: 1280, height: 899});
+      let headless_client = await this.client.init().windowHandleSize({width: 1280, height: 899});
+      await this.enableDownload();
+      return headless_client;
     } else {
       return this.client.init().windowHandleSize({width: 1280, height: 1024});
     }
