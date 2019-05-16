@@ -109,6 +109,9 @@ scenario('Test2: Delivery slips options', () => {
       test('should get the invoice name', () => client.getDocumentName(OrderPage.delivery_slip_document));
       test('should generate the "deliveries" pdf file', () => {
         return promise
+          .then(() => {
+            if(global.headless)  client.removeAttribute(OrderPage.delivery_slip_document,'target');
+          })
           .then(() => client.waitForExistAndClick(OrderPage.delivery_slip_document))
           .then(() => client.pause(5000));
       });

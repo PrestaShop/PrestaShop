@@ -46,7 +46,11 @@ scenario('Print the delivery slips of an order', () => {
   }, 'order');
   commonOrder.getDeliveryInformation(0);
   scenario('Verify all the information on the deliveries slips', client => {
-    test('should click on "View delivery slip" button', () => client.waitForExistAndClick(OrderPage.view_delivery_slip));
+    test('should click on "View delivery slip" button', async () => {
+      await client.waitForVisible(OrderPage.view_delivery_slip);
+      if(global.headless)  await client.removeAttribute(OrderPage.view_delivery_slip,'target');
+      await client.waitForExistAndClick(OrderPage.view_delivery_slip);
+    });
     test('should click on "DOCUMENTS" subtab', () => client.waitForVisibleAndClick(OrderPage.document_submenu));
     test('should get the delivery slip information', () => {
       return promise
