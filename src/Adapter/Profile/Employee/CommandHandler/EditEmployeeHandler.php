@@ -38,6 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationE
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use Shop;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Handles command which edits employee using legacy object model
@@ -67,21 +70,37 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $legacyContext;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var UserProviderInterface
+     */
+    private $userProvider;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
      * @param LegacyContext $legacyContext
+     * @param TokenStorageInterface $tokenStorage
+     * @param UserProviderInterface $userProvider
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
         ContextEmployeeProviderInterface $contextEmployeeProvider,
-        LegacyContext $legacyContext
+        LegacyContext $legacyContext,
+        TokenStorageInterface $tokenStorage,
+        UserProviderInterface $userProvider
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
         $this->contextEmployeeProvider = $contextEmployeeProvider;
         $this->legacyContext = $legacyContext;
+        $this->tokenStorage = $tokenStorage;
+        $this->userProvider = $userProvider;
     }
 
     /**
@@ -102,10 +121,26 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
 
         $this->assertEmailIsNotAlreadyUsed($employee, $command->getEmail()->getValue());
 
+        $oldEmail = $employee->email;
+
         $this->updateEmployeeWithCommandData($employee, $command);
 
-        if (null !== $command->getPlainPassword() && $employee->id == $this->contextEmployeeProvider->getId()) {
-            $this->updatePasswordInCookie($employee);
+        // If the edited employee is the one that's logged in at the moment - update data in cookies and session.
+        if ($employee->id == $this->contextEmployeeProvider->getId()) {
+            $isEmailModified = $command->getEmail()->getValue() !== $oldEmail;
+            $isPasswordModified = null !== $command->getPlainPassword();
+
+            if ($isEmailModified) {
+                $this->updateEmailInCookie($employee);
+            }
+
+            if ($isPasswordModified) {
+                $this->updatePasswordInCookie($employee);
+            }
+
+            if ($isEmailModified || $isPasswordModified) {
+                $this->updateSecurityToken($employee);
+            }
         }
     }
 
@@ -193,5 +228,29 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $this->legacyContext->getContext()->cookie->passwd = $employee->passwd;
         $this->legacyContext->getContext()->employee->passwd = $employee->passwd;
         $this->legacyContext->getContext()->cookie->write();
+    }
+
+    /**
+     * Update employee email in cookie.
+     *
+     * @param Employee $employee
+     */
+    private function updateEmailInCookie(Employee $employee)
+    {
+        $this->legacyContext->getContext()->cookie->email = $employee->email;
+        $this->legacyContext->getContext()->employee->email = $employee->email;
+        $this->legacyContext->getContext()->cookie->write();
+    }
+
+    /**
+     * Update security token since the authenticated user was updated.
+     *
+     * @param Employee $employee
+     */
+    private function updateSecurityToken(Employee $employee)
+    {
+        $user = $this->userProvider->loadUserByUsername($employee->email);
+        $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
+        $this->tokenStorage->setToken($token);
     }
 }
