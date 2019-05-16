@@ -26,6 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command;
 
+use DateTime;
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
+
 /**
  * Adds new catalog price rule with provided data
  */
@@ -72,14 +76,14 @@ class AddCatalogPriceRuleCommand
     private $price;
 
     /**
-     * @var string|null
+     * @var DateTime|null
      */
-    private $dateFrom;
+    private $dateTimeFrom;
 
     /**
-     * @var string|null
+     * @var DateTime|null
      */
-    private $dateTo;
+    private $dateTimeTo;
 
     /**
      * @var string
@@ -102,8 +106,6 @@ class AddCatalogPriceRuleCommand
      * @param bool $includeTax
      * @param string $reductionType
      * @param float $price
-     * @param string|null $dateTimeFrom
-     * @param string|null $dateTimeTo
      */
     public function __construct(
         $name,
@@ -115,9 +117,7 @@ class AddCatalogPriceRuleCommand
         $shopId,
         $includeTax,
         $reductionType,
-        $price,
-        $dateTimeFrom = null,
-        $dateTimeTo = null
+        $price
     ) {
         $this->name = $name;
         $this->currencyId = $currencyId;
@@ -127,8 +127,6 @@ class AddCatalogPriceRuleCommand
         $this->reduction = $reduction;
         $this->shopId = $shopId;
         $this->price = $price;
-        $this->dateFrom = $dateTimeFrom;
-        $this->dateTo = $dateTimeTo;
         $this->reductionType = $reductionType;
         $this->includeTax = $includeTax;
     }
@@ -190,19 +188,19 @@ class AddCatalogPriceRuleCommand
     }
 
     /**
-     * @return string|null
+     * @return DateTime|null
      */
-    public function getDateFrom()
+    public function getDateTimeFrom()
     {
-        return $this->dateFrom;
+        return $this->dateTimeFrom;
     }
 
     /**
-     * @return string|null
+     * @return DateTime|null
      */
-    public function getDateTo()
+    public function getDateTimeTo()
     {
-        return $this->dateTo;
+        return $this->dateTimeTo;
     }
 
     /**
@@ -227,5 +225,45 @@ class AddCatalogPriceRuleCommand
     public function getReduction()
     {
         return $this->reduction;
+    }
+
+    /**
+     * @param string $dateTimeFrom
+     *
+     * @throws CatalogPriceRuleConstraintException
+     */
+    public function setDateTimeFrom($dateTimeFrom)
+    {
+        $this->dateTimeFrom = $this->createDateTime($dateTimeFrom);
+    }
+
+    /**
+     * @param string $dateTimeTo
+     *
+     * @throws CatalogPriceRuleConstraintException
+     */
+    public function setDateTimeTo($dateTimeTo)
+    {
+        $this->dateTimeTo = $this->createDateTime($dateTimeTo);
+    }
+
+    /**
+     * @param string $dateTime
+     *
+     * @return DateTime
+     *
+     * @throws CatalogPriceRuleConstraintException
+     */
+    private function createDateTime($dateTime)
+    {
+        try {
+            return new DateTime($dateTime);
+        } catch (Exception $e) {
+            throw new CatalogPriceRuleConstraintException(
+                'Invalid date time format',
+                CatalogPriceRuleConstraintException::INVALID_DATETIME,
+                $e
+            );
+        }
     }
 }

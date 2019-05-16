@@ -80,8 +80,7 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
             $data['price'] = -1;
         }
 
-        /** @var CatalogPriceRuleId $catalogPriceRuleId */
-        $catalogPriceRuleId = $this->commandBus->handle(new AddCatalogPriceRuleCommand(
+        $command = new AddCatalogPriceRuleCommand(
             $data['name'],
             (int) $data['id_currency'],
             (int) $data['id_country'],
@@ -91,10 +90,19 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
             (int) $data['id_shop'],
             (bool) $data['include_tax'],
             $data['reduction_type'],
-            (float) $data['price'],
-            $data['from'],
-            $data['to']
-        ));
+            (float) $data['price']
+        );
+
+        if ($data['from']) {
+            $command->setDateTimeFrom($data['from']);
+        }
+
+        if ($data['to']) {
+            $command->setDateTimeTo($data['to']);
+        }
+
+        /** @var CatalogPriceRuleId $catalogPriceRuleId */
+        $catalogPriceRuleId = $this->commandBus->handle($command);
 
         return $catalogPriceRuleId->getValue();
     }
@@ -127,10 +135,16 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
         $command->setGroupId((int) $data['id_group']);
         $command->setFromQuantity((int) $data['from_quantity']);
         $command->setPrice((float) $data['price']);
-        $command->setDateFrom($data['from']);
-        $command->setDateTo($data['to']);
         $command->setReductionType($data['reduction_type']);
         $command->setIncludeTax((bool) $data['include_tax']);
         $command->setReduction((float) $data['reduction']);
+
+        if ($data['from']) {
+            $command->setDateTimeFrom($data['from']);
+        }
+
+        if ($data['to']) {
+            $command->setDateTimeTo($data['to']);
+        }
     }
 }
