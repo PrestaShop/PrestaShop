@@ -189,22 +189,37 @@ class ColumnCollectionTest extends TestCase
         $this->assertCount(3, $columnsArray);
     }
 
-    public function testColumnsCanBeSwapped()
+    public function testAColumnCanBeMoved()
     {
         $columns = (new ColumnCollection())
-            ->add($test1 = $this->createColumnMock('test_1'))
+            ->add($this->createColumnMock('test_1'))
             ->add($this->createColumnMock('test_2'))
-            ->add($test3 = $this->createColumnMock('test_3'));
+            ->add($this->createColumnMock('test_3'))
+            ->add($this->createColumnMock('test_4'))
+            ->add($this->createColumnMock('test_5'))
+            ->add($this->createColumnMock('test_6'))
+            ->add($this->createColumnMock('test_7'))
+        ;
 
-        $columns->swap('test_1', 'test_3');
+        $columns->move('test_1', 2)
+            ->move('test_5', 1)
+            ->move('test_2', 5)
+        ;
 
-        $this->assertSame($columns->current(), $test3);
+        $this->isColumnWithId($columns, 'test_5');
+        $columns->next();
+        $this->isColumnWithId($columns, 'test_1');
         $columns->next();
         $columns->next();
-        $this->assertSame($columns->current(), $test1);
+        $columns->next();
+        $this->isColumnWithId($columns, 'test_2');
+        $columns->next();
+        $this->isColumnWithId($columns, 'test_6');
+
+        $this->assertCount(7, $columns);
     }
 
-    public function testColumnsSwapWithInvalidIdWillThrowsAnException()
+    public function testColumnMoveWithInvalidIdWillThrowsAnException()
     {
         $this->expectException(ColumnNotFoundException::class);
 
@@ -213,7 +228,7 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock('test_2'))
             ->add($this->createColumnMock('test_3'));
 
-        $columns->swap('test_1', 'undefined_id');
+        $columns->move('undefined_id', 10);
     }
 
     /**
@@ -244,5 +259,16 @@ class ColumnCollectionTest extends TestCase
         }
 
         return $positions;
+    }
+
+    /**
+     * Helper assertion.
+     *
+     * @param ColumnCollection $columnCollection
+     * @param string $columnId
+     */
+    private function isColumnWithId(ColumnCollection $columnCollection, $columnId)
+    {
+        $this->assertSame($columnCollection->current()->getId(), $columnId);
     }
 }
