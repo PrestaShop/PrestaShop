@@ -55,7 +55,6 @@ matrix:
         local-dir: "/tmp/ps-release"
         on:
           all_branches: true
-          condition: "$(date --date \"$(git show -s --format=%cI $TRAVIS_COMMIT)\" +%s)\" -gt \"$(date --date '1 day ago' +%s)\""
   exclude:
     - php: 7.2 # Replaced with additional tests
       env: PRESTASHOP_TEST_TYPE=e2e
