@@ -128,7 +128,7 @@ module.exports = {
       if (existingFile) {
         test('should click on "Preview" button', () => client.waitForExistAndClick(AddProductPage.preview_buttons, 1000));
         test('should go to the Front Office', () => client.switchWindow(id));
-        common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productData.name + global.date_time);
+        common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
         test('should click on "Attachments" tab', () => client.scrollWaitForExistAndClick(productPage.attachments_tab, 50));
         test('should check the existence of the file', () => {
           for (let i = 0; i < productData.options.filename.length; i++) {
