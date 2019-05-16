@@ -336,7 +336,7 @@ module.exports = {
       test('should click on "Download credit slip" button', async () => {
         await client.waitForVisible(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
         if(global.headless) {
-          await client.enableDownload();
+          await client.enableDownloadForHeadlessMode();
           await client.removeAttribute(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')),'target');
         }
         await client.waitForExistAndClick(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));

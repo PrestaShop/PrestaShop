@@ -126,7 +126,7 @@ class CommonClient {
   async open() {
     if (headless !== 'undefined' && headless) {
       let headless_client = await this.client.init().windowHandleSize({width: 1280, height: 899});
-      await this.enableDownload();
+      await this.enableDownloadForHeadlessMode();
       return headless_client;
     } else {
       return this.client.init().windowHandleSize({width: 1280, height: 1024});
@@ -136,7 +136,7 @@ class CommonClient {
   /**
    * Enable download in headless mode
    */
-  async enableDownload(){
+  async enableDownloadForHeadlessMode(){
     let sessionId = await this.client.requestHandler.sessionID;
     let params = {
       'cmd': 'Page.setDownloadBehavior',
