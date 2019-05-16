@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
 /**
  * @property Product|Category $object
  */
@@ -185,7 +187,7 @@ class AdminTrackingControllerCore extends AdminController
             'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
             'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
-            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs', 'filter_key' => 'a!active'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs', 'filter_key' => 'a!active', 'ajax' => 1),
         );
         $this->clearFilters();
 
@@ -382,6 +384,29 @@ class AdminTrackingControllerCore extends AdminController
         $this->_helper_list->currentIndex = $this->_list_index;
         $this->_helper_list->identifier = $this->identifier;
         $this->_helper_list->table = $this->table;
+
+        // Since Categories controller is migrated to Symfony
+        // it makes use of new endpoint instead of relaying on legacy controller
+        if ($this->list_id === 'empty_categories') {
+            $url = SymfonyContainer::getInstance()->get('router')->generate('admin_categories_toggle_status', [
+                'categoryId' => $id,
+            ]);
+            $this->context->smarty->assign('migrated_url_enable', $url);
+
+            $html = $this->_helper_list->displayEnableLink(
+                $this->_list_token,
+                $id,
+                $value,
+                $active,
+                $id_category,
+                $id_product,
+                true
+            );
+
+            $this->context->smarty->clearAssign('migrated_url_enable');
+
+            return $html;
+        }
 
         return $this->_helper_list->displayEnableLink($this->_list_token, $id, $value, $active, $id_category, $id_product);
     }
