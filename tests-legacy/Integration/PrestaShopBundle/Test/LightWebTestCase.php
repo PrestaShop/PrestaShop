@@ -199,6 +199,7 @@ class LightWebTestCase extends TestCase
                         'iso_code' => 'en',
                         'language_code' => 'en-us',
                         'locale' => 'en-US',
+                        'active' => true,
                     ],
                     [
                         'id_lang' => '2',
@@ -206,6 +207,7 @@ class LightWebTestCase extends TestCase
                         'iso_code' => 'fr',
                         'language_code' => 'fr',
                         'locale' => 'fr-FR',
+                        'active' => false,
                     ],
                 ]
             );
