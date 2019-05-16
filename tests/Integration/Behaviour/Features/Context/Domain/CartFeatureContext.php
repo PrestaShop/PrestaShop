@@ -26,12 +26,10 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use Configuration;
 use Context;
 use Country;
-use Customer;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
@@ -41,34 +39,16 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use Product;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var array Registry to keep track of created/edited carts using references
-     */
-    private $cartRegistry = [];
-
-    /**
-     * @var CustomerFeatureContext
-     */
-    private $customerFeatureContext;
-
-    /**
-     * @BeforeScenario
-     */
-    public function before(BeforeScenarioScope $scope)
-    {
-        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
-    }
-
     /**
      * @When I create an empty cart :cartReference for customer :customerReference
      */
     public function createEmptyCartForCustomer($cartReference, $customerReference)
     {
-        $customer = $this->customerFeatureContext->getCustomerWithName($customerReference);
+        $customer = SharedStorage::getStorage()->get($customerReference);
 
         /** @var CartId $cartId */
         $cartId = $this->getCommandBus()->handle(
@@ -78,7 +58,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             )
         );
 
-        $this->cartRegistry[$cartReference] = new Cart($cartId->getValue());
+        SharedStorage::getStorage()->set($cartReference, new Cart($cartId->getValue()));
     }
 
     /**
@@ -90,7 +70,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
-                (int) $this->getCartFromRegistry($reference)->id,
+                (int) SharedStorage::getStorage()->get($reference)->id,
                 $productId,
                 (int) $quantity,
                 QuantityAction::INCREASE_PRODUCT_QUANTITY
@@ -103,7 +83,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function selectAddressAsDeliveryAndInvoiceAddress($countryIsoCode, $customerReference, $cartReference)
     {
-        $customer = $this->customerFeatureContext->getCustomerWithName($customerReference);
+        $customer = SharedStorage::getStorage()->get($customerReference);
 
         $getAddressByCountryIsoCode = static function ($isoCode) use ($customer) {
             $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -123,7 +103,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(
             new UpdateCartAddressesCommand(
-                (int) $this->getCartFromRegistry($cartReference)->id,
+                (int) SharedStorage::getStorage()->get($cartReference)->id,
                 $addressId,
                 $addressId
             )
@@ -137,25 +117,9 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $this->getCommandBus()->handle(
             new SetFreeShippingToCartCommand(
-                (int) $this->getCartFromRegistry($reference)->id,
+                (int) SharedStorage::getStorage()->get($reference)->id,
                 true
             )
         );
-    }
-
-    /**
-     * Allows accessing created/edited carts in different contexts
-     *
-     * @param string $reference
-     *
-     * @return Cart
-     */
-    public function getCartFromRegistry($reference)
-    {
-        if (!isset($this->cartRegistry[$reference])) {
-            throw new RuntimeException(sprintf('Cart "%s" does not exist in registry', $reference));
-        }
-
-        return $this->cartRegistry[$reference];
     }
 }

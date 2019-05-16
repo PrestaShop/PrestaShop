@@ -41,19 +41,6 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     protected $cart;
 
     /**
-     * @var CustomerFeatureContext
-     */
-    private $customerFeatureContext;
-
-    /**
-     * @BeforeScenario
-     */
-    public function before(BeforeScenarioScope $scope)
-    {
-        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
-    }
-
-    /**
      * @Given /^I have an empty default cart$/
      */
     public function iHaveAnEmptyDefaultCart()
