@@ -914,11 +914,9 @@ class CommonClient {
    * @param selector, xpath or css selector of the element
    * @param attributeName, attribute to remove
    * @param isXpath, true if selector is xpath, false if css selector
-   * @param pause
    */
-  removeAttribute(selector, attributeName, isXpath = true, pause = 0) {
+  removeAttribute(selector, attributeName, isXpath = true) {
     return this.client
-      .pause(pause)
       .execute(function (selector, attributeName, isXpath) {
         if(isXpath) document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.removeAttribute(attributeName);
         else document.querySelector(selector).removeAttribute(attributeName);
