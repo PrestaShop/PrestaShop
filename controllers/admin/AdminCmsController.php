@@ -148,7 +148,7 @@ class AdminCmsControllerCore extends AdminController
         $this->fields_form = array(
             'tinymce' => true,
             'legend' => array(
-                'title' => $this->trans('Page'),
+                'title' => $this->trans('Page', [], 'Admin.Global'),
                 'icon' => 'icon-folder-close',
             ),
             'input' => array(

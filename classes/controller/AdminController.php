@@ -1597,7 +1597,7 @@ class AdminControllerCore extends Controller
                                 && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])
                             )
                                 ? $obj->{$this->identifier_name}[$this->context->employee->id_lang]
-                                : $obj->{$this->identifier_name}
+                                : $obj->{$this->identifier_name},
                         ]
                     );
                     $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
