@@ -2452,7 +2452,7 @@ class AdminControllerCore extends Controller
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->trans('Bad SQL query', 'Helper') . '<br />' . htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->trans('Bad SQL query') . '<br />' . htmlspecialchars($this->_list_error));
 
             return false;
         }
