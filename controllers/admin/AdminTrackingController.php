@@ -326,7 +326,7 @@ class AdminTrackingControllerCore extends AdminController
             'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
             'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
-            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs', 'ajax' => true),
         );
         $this->clearFilters();
         $this->_join = Shop::addSqlAssociation('product', 'a');

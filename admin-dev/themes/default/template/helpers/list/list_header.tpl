@@ -34,7 +34,7 @@
           // otherwise if response comes from legacy controller
           // then data has "success" and "text" properties.
 
-					if (data.success == 1 || data.status == true) {
+					if (data.success == 1 || data.status === true) {
 						showSuccessMessage(data.text || data.message);
 						if (link.hasClass('action-disabled')){
 							link.removeClass('action-disabled').addClass('action-enabled');
