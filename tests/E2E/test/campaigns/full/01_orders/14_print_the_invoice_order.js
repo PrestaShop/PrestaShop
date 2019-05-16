@@ -182,6 +182,7 @@ scenario('Print the invoice of an order', () => {
     scenario('Print invoice then check information', client => {
       test('should click on "View Invoice" button', async () => {
         await client.waitForVisible(OrderPage.view_invoice_button);
+        // for headless, we need to remove attribute 'target' to avoid download in a new Tab
         if(global.headless)  await client.removeAttribute(OrderPage.view_invoice_button,'target');
         await client.waitForExistAndClick(OrderPage.view_invoice_button)
       });

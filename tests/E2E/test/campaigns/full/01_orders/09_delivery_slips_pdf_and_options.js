@@ -110,6 +110,7 @@ scenario('Test2: Delivery slips options', () => {
       test('should generate the "deliveries" pdf file', () => {
         return promise
           .then(() => {
+            // for headless, we need to remove attribute 'target' to avoid download in a new Tab
             if(global.headless)  client.removeAttribute(OrderPage.delivery_slip_document,'target');
           })
           .then(() => client.waitForExistAndClick(OrderPage.delivery_slip_document))

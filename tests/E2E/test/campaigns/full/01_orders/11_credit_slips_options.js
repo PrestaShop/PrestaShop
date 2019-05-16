@@ -31,6 +31,7 @@ scenario('Generate and check a Credit slips options ', () => {
       await client.getCreditSlipDocumentName(OrderPage.credit_slip_document_name);
     });
     test('should download the credit slip', async () => {
+      // for headless, we need to remove attribute 'target' to avoid download in a new Tab
       if(global.headless)  await client.removeAttribute(OrderPage.credit_slip_document_name,'target');
       await client.waitForExistAndClick(OrderPage.credit_slip_document_name);
     });

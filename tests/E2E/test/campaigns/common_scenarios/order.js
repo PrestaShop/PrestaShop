@@ -337,6 +337,7 @@ module.exports = {
         await client.waitForVisible(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
         if(global.headless) {
           await client.enableDownloadForHeadlessMode();
+          // for headless, we need to remove attribute 'target' to avoid download in a new Tab
           await client.removeAttribute(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')),'target');
         }
         await client.waitForExistAndClick(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
