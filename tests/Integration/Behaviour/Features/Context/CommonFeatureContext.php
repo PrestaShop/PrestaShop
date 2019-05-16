@@ -49,6 +49,12 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         self::$kernel = new AppKernel('test', true);
         self::$kernel->boot();
+
+        global $kernel;
+        $kernel = self::$kernel;
+
+        $employeeId = \Employee::employeeExists('test@prestashop.com');
+        \Context::getContext()->employee = new \Employee($employeeId);
     }
 
     /**
