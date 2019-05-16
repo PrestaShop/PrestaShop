@@ -4,6 +4,7 @@ let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
 const exec = require('child_process').exec;
+let got = require('got');
 
 global.tab = [];
 global.isOpen = false;
@@ -126,6 +127,22 @@ class CommonClient {
     } else {
       return this.client.init().windowHandleSize({width: 1280, height: 1024});
     }
+  }
+
+  /**
+   * Enable download in headless mode
+   */
+  async enableDownload(){
+    let sessionId = await this.client.requestHandler.sessionID;
+    let params = {
+      'cmd': 'Page.setDownloadBehavior',
+      'params': {
+        'behavior': 'allow', 'downloadPath': global.downloadsFolderPath
+      }
+    };
+    let selenium_hostURL = 'http://' + global.selenium_host + ':' + global.selenium_port
+      + '/wd/hub/session/' + sessionId + '/chromium/send_command' ;
+    await got.post(selenium_hostURL, {body: JSON.stringify(params)});
   }
 
   close() {
