@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception;
 use DomainException;
 
 /**
- * Base exception for CatalogPriceRule sub-domain
+ * Base exception for CatalogPriceRule subdomain
  */
 class CatalogPriceRuleException extends DomainException
 {
