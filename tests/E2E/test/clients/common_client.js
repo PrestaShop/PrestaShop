@@ -904,6 +904,22 @@ class CommonClient {
           }
         }, selector, value, isXpath);
   }
+
+  /**
+   * remove attribute from selector
+   * @param selector, xpath or css selector of the element
+   * @param attributeName, attribute to remove
+   * @param isXpath, true if selector is xpath, false if css selector
+   * @param pause
+   */
+  removeAttribute(selector, attributeName, isXpath = true, pause = 0) {
+    return this.client
+      .pause(pause)
+      .execute(function (selector, attributeName, isXpath) {
+        if(isXpath) document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.removeAttribute(attributeName);
+        else document.querySelector(selector).removeAttribute(attributeName);
+      }, selector, attributeName, isXpath);
+  }
 }
 
 module.exports = CommonClient;
