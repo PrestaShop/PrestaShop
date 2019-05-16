@@ -55,6 +55,7 @@ final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInte
                     sprintf('Failed to create specific price rule')
                 );
             }
+            $specificPriceRule->deleteConditions();
             $specificPriceRule->apply();
         } catch (PrestaShopException $e) {
             throw new CatalogPriceRuleException(
@@ -84,11 +85,17 @@ final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInte
         $specificPriceRule->id_group = $command->getGroupId();
         $specificPriceRule->from_quantity = $command->getFromQuantity();
         $specificPriceRule->price = $command->getPrice();
-        $specificPriceRule->from = $command->getDateFrom();
-        $specificPriceRule->to = $command->getDateTo();
         $specificPriceRule->reduction_type = $command->getReductionType();
         $specificPriceRule->reduction_tax = $command->isTaxIncluded();
         $specificPriceRule->reduction = $command->getReduction();
+
+        if ($command->getDateTimeFrom()) {
+            $specificPriceRule->from = $command->getDateTimeFrom()->format('Y-m-d H:i:s');
+        }
+
+        if ($command->getDateTimeTo()) {
+            $specificPriceRule->to = $command->getDateTimeTo()->format('Y-m-d H:i:s');
+        }
 
         return $specificPriceRule;
     }

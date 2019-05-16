@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\SpecificPriceRule;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\EditCatalogPriceRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\UpdateCatalogPriceRuleException;
 use PrestaShopException;
+use SpecificPriceRule;
 
 /**
  * Handles command which edits catalog price rule handler using legacy object model
@@ -55,6 +55,7 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
                     sprintf('Failed to update specific price rule with id %s', $specificPriceRule->id)
                 );
             }
+            $specificPriceRule->deleteConditions();
             $specificPriceRule->apply();
         } catch (PrestaShopException $e) {
             throw new CatalogPriceRuleException(
@@ -102,11 +103,11 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
         if (null !== $command->getPrice()) {
             $specificPriceRule->price = $command->getPrice();
         }
-        if (null !== $command->getDateFrom()) {
-            $specificPriceRule->from = $command->getDateFrom();
+        if (null !== $command->getDateTimeFrom()) {
+            $specificPriceRule->from = $command->getDateTimeFrom()->format('Y-m-d H:i:s');
         }
-        if (null !== $command->getDateTo()) {
-            $specificPriceRule->to = $command->getDateTo();
+        if (null !== $command->getDateTimeTo()) {
+            $specificPriceRule->to = $command->getDateTimeTo()->format('Y-m-d H:i:s');
         }
         if (null !== $command->getReductionType()) {
             $specificPriceRule->reduction_type = $command->getReductionType();
