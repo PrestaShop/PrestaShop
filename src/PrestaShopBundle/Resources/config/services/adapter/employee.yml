@@ -52,6 +52,7 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@security.token_storage'
       - '@prestashop.security.admin.provider'
+      - '@prestashop.static_cache.adapter'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand }
 
