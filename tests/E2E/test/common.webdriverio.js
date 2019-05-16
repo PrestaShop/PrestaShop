@@ -179,12 +179,18 @@ module.exports = {
     if (typeof global.selenium_host !== 'undefined') {
       options.host = global.selenium_host;
     }
-    else global.selenium_host = 'localhost';
+    else {
+      // We need to set it to localhost for "got" library
+      global.selenium_host = 'localhost';
+    }
 
     if (typeof global.selenium_port !== 'undefined') {
       options.port = global.selenium_port;
     }
-    else global.selenium_port = options.port;
+    else {
+      // We need to set it to localhost for "got" library
+      global.selenium_port = options.port;
+    }
     fs.readFile(debugFile, 'utf8', (err, content) => {
       global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(");")).split(', ')[1]) === 'true' ? true : false;
     });
