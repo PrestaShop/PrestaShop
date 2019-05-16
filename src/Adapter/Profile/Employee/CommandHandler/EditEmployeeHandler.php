@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Shop;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -80,12 +81,18 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $userProvider;
 
     /**
+     * @var CacheItemPoolInterface
+     */
+    private $cache;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
      * @param LegacyContext $legacyContext
      * @param TokenStorageInterface $tokenStorage
      * @param UserProviderInterface $userProvider
+     * @param CacheItemPoolInterface $cache
      */
     public function __construct(
         Hashing $hashing,
@@ -93,7 +100,8 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         ContextEmployeeProviderInterface $contextEmployeeProvider,
         LegacyContext $legacyContext,
         TokenStorageInterface $tokenStorage,
-        UserProviderInterface $userProvider
+        UserProviderInterface $userProvider,
+        CacheItemPoolInterface $cache
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
@@ -101,6 +109,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $this->legacyContext = $legacyContext;
         $this->tokenStorage = $tokenStorage;
         $this->userProvider = $userProvider;
+        $this->cache = $cache;
     }
 
     /**
@@ -249,6 +258,12 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      */
     private function updateSecurityToken(Employee $employee)
     {
+        $cacheKey = sha1($employee->email);
+
+        if ($this->cache->hasItem("app.employees_${cacheKey}")) {
+            $this->cache->deleteItem("app.employees_${cacheKey}");
+        }
+
         $user = $this->userProvider->loadUserByUsername($employee->email);
         $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
         $this->tokenStorage->setToken($token);
