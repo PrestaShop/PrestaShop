@@ -4,7 +4,9 @@ let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
 const exec = require('child_process').exec;
-let got = require('got');
+let chai = require('chai');
+let chai_http = require('chai-http');
+chai.use(chai_http);
 
 global.tab = [];
 global.isOpen = false;
@@ -142,9 +144,11 @@ class CommonClient {
         'behavior': 'allow', 'downloadPath': global.downloadsFolderPath
       }
     };
-    let selenium_hostURL = 'http://' + global.selenium_host + ':' + global.selenium_port
-      + '/wd/hub/session/' + sessionId + '/chromium/send_command' ;
-    await got.post(selenium_hostURL, {body: JSON.stringify(params)});
+    let selenium_hostURL= 'http://' + global.selenium_host + ':' + global.selenium_port;
+    let selenium_requestURL = '/wd/hub/session/' + sessionId + '/chromium/send_command' ;
+    await chai.request(selenium_hostURL)
+              .post(selenium_requestURL)
+              .send({body: JSON.stringify(params)});
   }
 
   close() {
