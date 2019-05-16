@@ -45,19 +45,6 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     protected $orders = [];
 
     /**
-     * @var DomainOrderFeatureContext
-     */
-    private $domainOrderFeatureContext;
-
-    /**
-     * @BeforeScenario
-     */
-    public function before(BeforeScenarioScope $scope)
-    {
-        $this->domainOrderFeatureContext = $scope->getEnvironment()->getContext(DomainOrderFeatureContext::class);
-    }
-
-    /**
      * @When /^I validate my cart using payment module (fake)$/
      */
     public function validateCartWithPaymentModule($paymentModuleName)
@@ -210,7 +197,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertOrderProductsQuantity($reference, $quantity)
     {
-        $order = $this->domainOrderFeatureContext->getOrderFromRegistry($reference);
+        $order = SharedStorage::getStorage()->get($reference);
         $orderProducts = $order->getProductsDetail();
 
         $totalQuantity = 0;
@@ -233,7 +220,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createdOrderShouldHaveFreeShipping($reference)
     {
-        $order = $this->domainOrderFeatureContext->getOrderFromRegistry($reference);
+        $order = SharedStorage::getStorage()->get($reference);
 
         foreach ($order->getCartRules() as $cartRule) {
             if ($cartRule['free_shipping']) {
@@ -249,7 +236,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createdOrderShouldHavePaymentMethod($reference, $paymentModuleName)
     {
-        $order = $this->domainOrderFeatureContext->getOrderFromRegistry($reference);
+        $order = SharedStorage::getStorage()->get($reference);
 
         if ($order->module !== $paymentModuleName) {
             throw new Exception(sprintf(

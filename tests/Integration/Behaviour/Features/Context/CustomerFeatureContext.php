@@ -44,11 +44,6 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customers = [];
 
     /**
-     * @var Customer|null
-     */
-    protected $lastCustomer = null;
-
-    /**
      * @Given /^there is a customer named "(.+)" whose email is "(.+)"$/
      */
     public function createCustomer($customerName, $customerEmail)
@@ -74,7 +69,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             throw new Exception(sprintf('Customer with email "%s" does not exist.', $customerEmail));
         }
 
-        $this->customers[$reference] = $customer;
+        SharedStorage::getStorage()->set($reference, $customer);
     }
 
     /**
@@ -82,7 +77,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function customerHasAddressInCountry($reference, $isoCode)
     {
-        $customer = $this->getCustomerWithName($reference);
+        $customer = SharedStorage::getStorage()->get($reference);
         $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
 
         foreach ($customerAddresses as $address) {
