@@ -105,7 +105,7 @@
         "symfony/polyfill-apcu": "^1.0",
         "symfony/polyfill-php73": "^1.10",
         "symfony/swiftmailer-bundle": "^2.6.4",
-        "symfony/symfony": ">=3.4.8",
+        "symfony/symfony": ">=3.4.26",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
         "twig/twig": "^1.38||^2.6.2"
