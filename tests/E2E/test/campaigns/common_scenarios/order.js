@@ -334,7 +334,13 @@ module.exports = {
       test('should get the credit slip name', () => client.getCreditSlipDocumentName(OrderPage.credit_slip_document_name));
       test('should go to "Credit slip" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.credit_slips_submenu));
       test('should click on "Download credit slip" button', async () => {
-        await client.waitForVisibleAndClick(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')), 2000);
+        await client.waitForVisible(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
+        if(global.headless) {
+          await client.enableDownloadForHeadlessMode();
+          // for headless, we need to remove attribute 'target' to avoid download in a new Tab
+          await client.removeAttribute(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')),'target');
+        }
+        await client.waitForExistAndClick(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
         await client.pause(8000);
       });
     }, 'order', close);

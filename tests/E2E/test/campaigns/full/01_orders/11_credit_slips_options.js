@@ -30,7 +30,11 @@ scenario('Generate and check a Credit slips options ', () => {
       await client.pause(3000);
       await client.getCreditSlipDocumentName(OrderPage.credit_slip_document_name);
     });
-    test('should download the credit slip', () => client.waitForExistAndClick(OrderPage.credit_slip_document_name));
+    test('should download the credit slip', async () => {
+      // for headless, we need to remove attribute 'target' to avoid download in a new Tab
+      if(global.headless)  await client.removeAttribute(OrderPage.credit_slip_document_name,'target');
+      await client.waitForExistAndClick(OrderPage.credit_slip_document_name);
+    });
     test('should check the existence of "prefix value" ', async () => {
       await client.pause(1000);
       await client.checkFile(global.downloadsFolderPath, global.creditSlip + '.pdf');
