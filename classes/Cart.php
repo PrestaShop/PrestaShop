@@ -3339,17 +3339,14 @@ class CartCore extends ObjectModel
             $default_country = Context::getContext()->country;
         }
 
-        if (null !== $product_list) {
+        if (null === $product_list) {
+            $products = $this->getProducts(false, false, null, true);
+        } else {
             foreach ($product_list as $key => $value) {
                 if ($value['is_virtual'] == 1) {
                     unset($product_list[$key]);
                 }
             }
-        }
-
-        if (null === $product_list) {
-            $products = $this->getProducts(false, false, null, true);
-        } else {
             $products = $product_list;
         }
 
