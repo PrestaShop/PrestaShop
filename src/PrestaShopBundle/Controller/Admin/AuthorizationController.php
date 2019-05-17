@@ -30,9 +30,12 @@ use DateTime;
 use PrestaShopBundle\Form\Admin\Login\ForgotPasswordType;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
- * Class LoginController responsible for employee login page.
+ * Class AuthorizationController responsible for employee login page.
  */
 class AuthorizationController extends FrameworkBundleAdminController
 {
@@ -43,9 +46,18 @@ class AuthorizationController extends FrameworkBundleAdminController
      */
     public function loginAction()
     {
+        $authenticationUtils = $this->get('security.authentication_utils');
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
         $loginForm = $this->createForm(LoginType::class);
         $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
+        $authenticationError = $authenticationUtils->getLastAuthenticationError();
+
+        if (null !== $authenticationError) {
+            $errorMessage = $this->getErrorMessageForException(
+                $authenticationError,
+                $this->getErrorMessages($authenticationError)
+            );
+        }
 
         return $this->render('@PrestaShop/Admin/Login/index.html.twig', [
             'loginForm' => $loginForm->createView(),
@@ -57,6 +69,27 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $this->configuration->get('PS_LANG_DEFAULT')
             ),
             'currentYear' => (new DateTime())->format('Y'),
+            'errorMessage' => isset($errorMessage) ? $errorMessage : null,
         ]);
+    }
+
+    /**
+     * Get all authorization error messages.
+     *
+     * @param AuthenticationException $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(AuthenticationException $e)
+    {
+        $employeeDoesNotExistMessage = $this->trans(
+            'The employee does not exist, or the password provided is incorrect.',
+            'Admin.Login.Notification'
+        );
+
+        return [
+            BadCredentialsException::class => $employeeDoesNotExistMessage,
+            UsernameNotFoundException::class => $employeeDoesNotExistMessage,
+        ];
     }
 }
