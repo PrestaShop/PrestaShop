@@ -54,7 +54,8 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         $kernel = self::$kernel;
 
         $employeeId = \Employee::employeeExists('test@prestashop.com');
-        \Context::getContext()->employee = new \Employee($employeeId);
+        $employee = new \Employee();
+        \Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
     }
 
     /**
