@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use PrestaShopBundle\Entity\AdminFilter;
 
 /**
@@ -74,19 +76,14 @@ class AdminFilterRepository extends EntityRepository
      * @param $controller
      * @param $action
      *
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMInvalidArgumentException
+     * @throws OptimisticLockException
      *
      * @return bool Returns false if entity was not found
      */
     public function removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
     {
-        $adminFilter = $this->findOneBy([
-            'employee' => $employeeId ?: 0,
-            'shop' => $shopId ?: 0,
-            'controller' => $controller,
-            'action' => $action,
-        ]);
+        $adminFilter = $this->findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
 
         if (null === $adminFilter) {
             return false;
@@ -99,21 +96,28 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * @param string $filterId
+     * Removes filters from ps_admin_filter `filters` column using provided AdminFilter entity.
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @param AdminFilter $adminFilter
+     * @param array $filtersToKeep - Names of filters which values should not be removed
+     *
+     * @throws OptimisticLockException
      */
-    public function removeByFilterId($filterId)
-    {
-        $adminFilter = $this->findOneBy([
-            'filterId' => $filterId,
-        ]);
+    public function resetFilters(
+        AdminFilter $adminFilter,
+        array $filtersToKeep = ['limit', 'sortOrder', 'orderBy']
+    ) {
+        $currentFilters = json_decode($adminFilter->getFilter());
+        $newFilters = [];
 
-        if (null === $adminFilter) {
-            return;
+        foreach ($currentFilters as $filterName => $value) {
+            if (in_array($filterName, $filtersToKeep, true)) {
+                $newFilters[$filterName] = $value;
+            }
         }
+        $adminFilter->setFilter(json_encode($newFilters));
 
-        $this->getEntityManager()->remove($adminFilter);
+        $this->getEntityManager()->persist($adminFilter);
         $this->getEntityManager()->flush();
     }
 
@@ -125,7 +129,7 @@ class AdminFilterRepository extends EntityRepository
      * @param array $filters
      * @param string $filterId
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      */
     public function createOrUpdateByEmployeeAndFilterId(
         $employeeId,
@@ -133,12 +137,7 @@ class AdminFilterRepository extends EntityRepository
         array $filters,
         $filterId
     ) {
-        $adminFilter = $this->findOneBy([
-            'employee' => $employeeId,
-            'shop' => $shopId,
-            'filterId' => $filterId,
-        ]);
-
+        $adminFilter = $this->findByEmployeeAndFilterId($employeeId, $shopId, $filterId);
         $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
 
         $adminFilter
@@ -163,7 +162,7 @@ class AdminFilterRepository extends EntityRepository
      * @param string $controller
      * @param string $action
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      */
     public function createOrUpdateByEmployeeAndRouteParams(
         $employeeId,
