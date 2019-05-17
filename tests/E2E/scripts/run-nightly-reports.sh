@@ -27,7 +27,7 @@ echo "Check for reports..."
 if [ -n "$(ls ${REPORT_PATH})" ]; then
   mkdir -p "${DIR_PATH}/reports"
   ./scripts/combine-reports.py "${REPORT_PATH}" "${DIR_PATH}/reports/${REPORT_NAME}.json"
-  nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${DIR_PATH}/reports/${REPORT_NAME}.json" -o "${DIR_PATH}/reports"
+  nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${DIR_PATH}/reports/${REPORT_NAME}.json" -o "${DIR_PATH}/reports" -f "${REPORT_NAME}.html"
 
   # Send file, remove directory, and shutdown if everything is ok
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly && \
