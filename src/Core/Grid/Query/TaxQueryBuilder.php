@@ -142,7 +142,7 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere($allowedFiltersMap[$filterName] . '` LIKE :' . $filterName)
+            $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                 ->setParameter($filterName, '%' . $value . '%');
         }
     }
