@@ -206,15 +206,15 @@ class ColumnCollectionTest extends TestCase
             ->move('test_2', 4)
         ;
 
-        $this->isColumnWithId($columns, 'test_5');
+        $this->assertValidColumnWithId($columns, 'test_5');
         $columns->next();
-        $this->isColumnWithId($columns, 'test_1');
+        $this->assertValidColumnWithId($columns, 'test_1');
         $columns->next();
         $columns->next();
         $columns->next();
-        $this->isColumnWithId($columns, 'test_2');
+        $this->assertValidColumnWithId($columns, 'test_2');
         $columns->next();
-        $this->isColumnWithId($columns, 'test_6');
+        $this->assertValidColumnWithId($columns, 'test_6');
 
         $this->assertCount(7, $columns);
     }
@@ -267,7 +267,7 @@ class ColumnCollectionTest extends TestCase
      * @param ColumnCollection $columnCollection
      * @param string $columnId
      */
-    private function isColumnWithId(ColumnCollection $columnCollection, $columnId)
+    private function assertValidColumnWithId(ColumnCollection $columnCollection, $columnId)
     {
         $this->assertSame($columnCollection->current()->getId(), $columnId);
     }
