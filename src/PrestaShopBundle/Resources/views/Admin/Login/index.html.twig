@@ -54,6 +54,14 @@
       <div class="text-center text-secondary">
         {{ prestashopVersion }}
       </div>
+
+      {% if errorMessage %}
+        <div class="alert alert-danger mt-1" role="alert">
+          <div class="alert-text">
+            {{ errorMessage }}
+          </div>
+        </div>
+      {% endif %}
     </div>
 
     <div class="shop-image-container text-center mb-3">
