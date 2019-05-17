@@ -129,7 +129,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
 
         $columns = array_slice($this->items, 0, $position, true) +
             [$column->getId() => $column] +
-            array_slice($this->items, $position, $this->count(), true);
+            array_slice($this->items, $position, null, true);
 
         $this->items = $columns;
 
@@ -162,7 +162,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
 
         $columns = array_slice($this->items, 0, $existingColumnKeyPosition, true) +
             [$newColumn->getId() => $newColumn] +
-            array_slice($this->items, $existingColumnKeyPosition, $this->count(), true);
+            array_slice($this->items, $existingColumnKeyPosition, null, true);
 
         $this->items = $columns;
     }
