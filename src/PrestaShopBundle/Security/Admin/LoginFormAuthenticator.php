@@ -36,16 +36,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Responsible for authenticating the admin user using the login form.
  */
-final class LoginFormAuthenticator extends AbstractGuardAuthenticator
+final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     /**
      * @var Hashing
@@ -115,15 +114,9 @@ final class LoginFormAuthenticator extends AbstractGuardAuthenticator
     public function supports(Request $request)
     {
         // only authenticate on login route
-        return '_admin_login' === $request->attributes->get('_route') && $request->isMethod('POST');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function start(Request $request, AuthenticationException $authException = null)
-    {
-        return new RedirectResponse($this->router->generate('_admin_login'));
+        return $this->getLoginRoute() === $request->attributes->get('_route')
+            && $request->isMethod('POST')
+        ;
     }
 
     /**
@@ -162,14 +155,6 @@ final class LoginFormAuthenticator extends AbstractGuardAuthenticator
     /**
      * {@inheritdoc}
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
-    {
-        return new RedirectResponse($this->router->generate('_admin_login'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         $userId = $token->getUser()->getId();
@@ -194,8 +179,18 @@ final class LoginFormAuthenticator extends AbstractGuardAuthenticator
     /**
      * {@inheritdoc}
      */
-    public function supportsRememberMe()
+    protected function getLoginUrl()
     {
-        return true;
+        return $this->router->generate($this->getLoginRoute());
+    }
+
+    /**
+     * Get the route to login page.
+     *
+     * @return string
+     */
+    private function getLoginRoute()
+    {
+        return '_admin_login';
     }
 }
