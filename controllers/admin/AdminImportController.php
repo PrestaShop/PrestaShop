@@ -692,8 +692,8 @@ class AdminImportControllerCore extends AdminController
         $this->addJqueryPlugin(array('fancybox'));
 
         $entity_selected = 0;
-        if (isset($this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))])) {
-            $entity_selected = $this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))];
+        if (isset($this->entities[$this->trans(Tools::ucfirst(Tools::getValue('import_type')))])) {
+            $entity_selected = $this->entities[$this->trans(Tools::ucfirst(Tools::getValue('import_type')))];
             $this->context->cookie->entity_selected = (int) $entity_selected;
         } elseif (isset($this->context->cookie->entity_selected)) {
             $entity_selected = (int) $this->context->cookie->entity_selected;
