@@ -295,7 +295,7 @@ class CommonController extends FrameworkBundleAdminController
         }
 
         if (isset($adminFilter)) {
-            $adminFiltersRepository->resetFilters($adminFilter);
+            $adminFiltersRepository->unsetFilters($adminFilter);
         }
 
         return new JsonResponse();

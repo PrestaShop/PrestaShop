@@ -99,23 +99,18 @@ class AdminFilterRepository extends EntityRepository
      * Removes filters from ps_admin_filter `filters` column using provided AdminFilter entity.
      *
      * @param AdminFilter $adminFilter
-     * @param array $filtersToKeep - Names of filters which values should not be removed
      *
      * @throws OptimisticLockException
      */
-    public function resetFilters(
-        AdminFilter $adminFilter,
-        array $filtersToKeep = ['limit', 'sortOrder', 'orderBy']
-    ) {
-        $currentFilters = json_decode($adminFilter->getFilter());
-        $newFilters = [];
+    public function unsetFilters(AdminFilter $adminFilter)
+    {
+        $currentFilters = json_decode($adminFilter->getFilter(), true);
 
-        foreach ($currentFilters as $filterName => $value) {
-            if (in_array($filterName, $filtersToKeep, true)) {
-                $newFilters[$filterName] = $value;
-            }
-        }
-        $adminFilter->setFilter(json_encode($newFilters));
+        // reset offset to show first page of list after filters resetting
+        $currentFilters['offset'] = 0;
+        // unset list columns filters
+        unset($currentFilters['filters']);
+        $adminFilter->setFilter(json_encode($currentFilters));
 
         $this->getEntityManager()->persist($adminFilter);
         $this->getEntityManager()->flush();
