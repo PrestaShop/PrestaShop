@@ -783,8 +783,9 @@ services:
 
     form.type.sell.manufacturer:
         class: 'PrestaShopBundle\Form\Admin\Sell\Manufacturer\ManufacturerType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
-            - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         tags:
             - { name: form.type }
@@ -819,8 +820,9 @@ services:
 
     form.type.cms_page:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
-            - '@translator'
             - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         tags:
@@ -852,7 +854,7 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name_with_emails").getChoices()'
         tags:
             - { name: form.type }
 

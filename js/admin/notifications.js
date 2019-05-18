@@ -116,7 +116,7 @@ function getPush()
 				// Add customers notifications to the list
 				html = "";
 				$.each(json.customer.results, function(property, value) {
-					html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminCustomers&token=" + token_admin_customers + "&viewcustomer&id_customer=" + parseInt(value.id_customer) + "'>";
+					html += "<a class='notif' href='" + value.customer_view_url + "'>";
 					html += "#" + value.id_customer + " - <strong>" + value.customer_name + "</strong>"
           if (value.company !== "") {
             html += " (" + value.company + ")";

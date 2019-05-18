@@ -7,12 +7,15 @@ const {CreditSlip} = require('../../../selectors/BO/order');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+
 require('./10_check_credit_slip');
 scenario('Generate and check a Credit slips options ', () => {
   scenario('Open the browser and login successfully in the Back Office ', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Change the credit slip prefix ', client => {
     test('should go to "Credit slip" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.credit_slips_submenu));
     test('should change the credit slip prefix value', () => client.waitAndSetValue(CreditSlip.credit_slip_prefix_input, 'PrefixTest'));
@@ -29,7 +32,8 @@ scenario('Generate and check a Credit slips options ', () => {
     });
     test('should download the credit slip', () => client.waitForExistAndClick(OrderPage.credit_slip_document_name));
     test('should check the existence of "prefix value" ', async () => {
-      await client.checkFile(global.downloadsFolderPath, global.creditSlip + '.pdf', 3000);
+      await client.pause(1000);
+      await client.checkFile(global.downloadsFolderPath, global.creditSlip + '.pdf');
       if (global.existingFile) {
         await client.pause(6000);
         await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'PrefixTest');

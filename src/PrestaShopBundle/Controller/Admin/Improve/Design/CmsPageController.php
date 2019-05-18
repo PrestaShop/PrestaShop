@@ -125,16 +125,19 @@ class CmsPageController extends FrameworkBundleAdminController
 
         $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/index.html.twig', [
-            'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
-            'cmsGrid' => $gridPresenter->present($cmsGrid),
-            'cmsPageView' => $viewData,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'helperDocLink' => $helperBlockLinkProvider->getLink('cms_pages'),
-            'cmsPageShowcaseCardName' => ShowcaseCard::CMS_PAGES_CARD,
-            'showcaseCardIsClosed' => $showcaseCardIsClosed,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Improve/Design/Cms/index.html.twig',
+            [
+                'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
+                'cmsGrid' => $gridPresenter->present($cmsGrid),
+                'cmsPageView' => $viewData,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'helperDocLink' => $helperBlockLinkProvider->getLink('cms_pages'),
+                'cmsPageShowcaseCardName' => ShowcaseCard::CMS_PAGES_CARD,
+                'showcaseCardIsClosed' => $showcaseCardIsClosed,
+            ]
+        );
     }
 
     /**
@@ -217,12 +220,17 @@ class CmsPageController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->render('PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig', [
-            'cmsPageForm' => $form->createView(),
-            'cmsCategoryParentId' => $categoryParentId,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-        ]);
+        return $this->render(
+            'PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig',
+            [
+                'cmsPageForm' => $form->createView(),
+                'cmsCategoryParentId' => $categoryParentId,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'cmsUrl' => $this->get('prestashop.adapter.shop.url.cms_provider')
+                ->getUrl(0, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -281,13 +289,18 @@ class CmsPageController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit.html.twig', [
-            'cmsPageForm' => $form->createView(),
-            'cmsCategoryParentId' => $request->get('id_cms_category'),
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'previewUrl' => $previewUrl,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Improve/Design/Cms/edit.html.twig',
+            [
+                'cmsPageForm' => $form->createView(),
+                'cmsCategoryParentId' => $request->get('id_cms_category'),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'previewUrl' => $previewUrl,
+                'cmsUrl' => $this->get('prestashop.adapter.shop.url.cms_provider')
+                ->getUrl($cmsPageId, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -329,9 +342,12 @@ class CmsPageController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/create_category.html.twig', [
-            'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Improve/Design/Cms/create_category.html.twig',
+            [
+                'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
+            ]
+        );
     }
 
     /**
@@ -378,10 +394,13 @@ class CmsPageController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/edit_category.html.twig', [
-            'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
-            'cmsCategoryParentId' => $cmsCategoryParentId,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Improve/Design/Cms/edit_category.html.twig',
+            [
+                'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
+                'cmsCategoryParentId' => $cmsCategoryParentId,
+            ]
+        );
     }
 
     /**
@@ -693,7 +712,12 @@ class CmsPageController extends FrameworkBundleAdminController
     {
         $cmsCategoriesToDisable = $request->request->get('cms_page_category_bulk');
         try {
-            $cmsCategoriesToDisable = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToDisable);
+            $cmsCategoriesToDisable = array_map(
+                function ($item) {
+                    return (int) $item;
+                },
+                $cmsCategoriesToDisable
+            );
             $this->getCommandBus()->handle(
                 new BulkDisableCmsPageCategoryCommand($cmsCategoriesToDisable)
             );
@@ -815,7 +839,12 @@ class CmsPageController extends FrameworkBundleAdminController
         $cmsPagesToDisable = $request->request->get('cms_page_bulk');
 
         try {
-            $cmsPagesToDisable = array_map(function ($item) { return (int) $item; }, $cmsPagesToDisable);
+            $cmsPagesToDisable = array_map(
+                function ($item) {
+                    return (int) $item;
+                },
+                $cmsPagesToDisable
+            );
 
             $this->getCommandBus()->handle(
                 new BulkEnableCmsPageCommand($cmsPagesToDisable)
@@ -860,7 +889,12 @@ class CmsPageController extends FrameworkBundleAdminController
         $redirectResponse = $this->redirectToParentIndexPageByBulkIds($cmsPagesToDisable);
 
         try {
-            $cmsPagesToDisable = array_map(function ($item) { return (int) $item; }, $cmsPagesToDisable);
+            $cmsPagesToDisable = array_map(
+                function ($item) {
+                    return (int) $item;
+                },
+                $cmsPagesToDisable
+            );
 
             $this->getCommandBus()->handle(
                 new BulkDeleteCmsPageCommand($cmsPagesToDisable)

@@ -24,11 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
+namespace PrestaShopBundle\Routing\Linter;
+
+use Symfony\Component\Routing\Route;
 
 /**
- * Class UndefinedEmployeeAccountStatusException.
+ * Responsible for checking route _legacy_link configuration
  */
-class UndefinedEmployeeStatusException extends EmployeeException
+final class LegacyLinkLinter implements RouteLinterInterface
 {
+    /**
+     * Checks if _legacy_link is configured to route.
+     * Returns true if configured, false if not.
+     *
+     * {@inheritdoc}
+     */
+    public function lint($routeName, Route $route)
+    {
+        if ($route->hasDefault($routeName)) {
+            return true;
+        }
+
+        return false;
+    }
 }

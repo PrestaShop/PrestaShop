@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
 /**
- * Class CannotAddCmsPageCategoryException
+ * Is thrown on failure when adding new cms page
  */
 class CannotAddCmsPageCategoryException extends CmsPageCategoryException
 {

@@ -4,7 +4,7 @@ const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
-
+const welcomeScenarios = require('../../common_scenarios/welcome');
 const common_scenarios = require('../../common_scenarios/product');
 
 let productData = {
@@ -20,7 +20,7 @@ scenario('Delete product', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, productData);
 
   scenario('Delete product "DP' + date_time + '"', client => {

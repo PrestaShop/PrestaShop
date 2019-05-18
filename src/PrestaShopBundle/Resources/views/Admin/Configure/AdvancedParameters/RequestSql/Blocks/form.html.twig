@@ -25,6 +25,8 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+
 {% block sql_request_form %}
   {{ form_start(requestSqlForm) }}
     <div class="card">

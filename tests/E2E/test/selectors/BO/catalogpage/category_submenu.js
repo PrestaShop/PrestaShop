@@ -3,7 +3,7 @@ module.exports = {
     submenu: '//*[@id="subtab-AdminCategories"]/a',
     new_category_button: '//a[@id="page-header-desc-configuration-add"]',
     name_input: '//*[@id="category_name_1"]',
-    description_textarea: '//textarea[@id="category_description_1"]',
+    description_textarea: '#category_description_1_ifr',
     picture: '//*[@id="category_cover_image"]',
     thumb_picture: '//*[@id="category_thumbnail_image"]',
     thumb_menu_picture: '//*[@id="category_menu_thumbnail_images"]',
@@ -39,9 +39,8 @@ module.exports = {
     expand_all_button: '#expand-all-categories-tree',
     parent_category: '(//*[@id="categories-tree"]//span[contains(.,"%NAME")]//input)[1]',
     search_no_results: '//*[@id="category_grid"]//div[contains(@class, "grid-table-empty")]/p[2]',
-    category_name: '//*[@id="table-category"]//tr[%ID]//td[3]',
-    category_view_button: '//*[@id="table-category"]//tr[%ID]//td[7]//a[@title="View"]',
-    category_id_column:'//*[@id="table-category"]//tr[%ID]//td[2]',
-
+    category_name: '//*[@id="category_grid_table"]//tr[%ID]//td[3]',
+    category_view_button: '//*[@id="category_grid_table"]//tr[%ID]//td[7]//a[@title="View"]',
+    category_id_column:'//*[@id="category_grid_table"]//tr[%ID]//td[2]',
   }
 };

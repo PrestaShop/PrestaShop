@@ -291,7 +291,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     public function deleteBulkAction(Request $request)
     {
         try {
-            $requestSqlIds = $request->request->get('request_sql_bulk');
+            $requestSqlIds = $request->request->get('sql_request_bulk');
             $bulkDeleteSqlRequestCommand = new BulkDeleteSqlRequestCommand($requestSqlIds);
 
             $this->getCommandBus()->handle($bulkDeleteSqlRequestCommand);

@@ -1976,7 +1976,8 @@ class CartCore extends ObjectModel
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
                 $calculator->calculateRows();
-                $calculator->calculateCartRules();
+                // dont process free shipping to avoid calculation loop (and maximum nested functions !)
+                $calculator->calculateCartRulesWithoutFreeShipping();
                 $amount = $calculator->getTotal(true);
                 break;
             case Cart::ONLY_PRODUCTS:
@@ -2062,10 +2063,10 @@ class CartCore extends ObjectModel
     /**
      * @return float
      */
-    public function getDiscountSubtotalWithoutGifts()
+    public function getDiscountSubtotalWithoutGifts($withTaxes = true)
     {
         $discountSubtotal = $this->excludeGiftsDiscountFromTotal()
-            ->getOrderTotal(true, self::ONLY_DISCOUNTS);
+            ->getOrderTotal($withTaxes, self::ONLY_DISCOUNTS);
         $this->includeGiftsDiscountInTotal();
 
         return $discountSubtotal;
@@ -3338,17 +3339,14 @@ class CartCore extends ObjectModel
             $default_country = Context::getContext()->country;
         }
 
-        if (null !== $product_list) {
+        if (null === $product_list) {
+            $products = $this->getProducts(false, false, null, true);
+        } else {
             foreach ($product_list as $key => $value) {
                 if ($value['is_virtual'] == 1) {
                     unset($product_list[$key]);
                 }
             }
-        }
-
-        if (null === $product_list) {
-            $products = $this->getProducts(false, false, null, true);
-        } else {
             $products = $product_list;
         }
 

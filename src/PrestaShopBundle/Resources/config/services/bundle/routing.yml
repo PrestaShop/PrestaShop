@@ -46,6 +46,9 @@ services:
         arguments:
             - '@controller_name_converter'
 
+    prestashop.bundle.routing.linter.legacy_link_linter:
+      class: 'PrestaShopBundle\Routing\Linter\LegacyLinkLinter'
+
     prestashop.bundle.routing.linter.admin_route_provider:
         class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'
         arguments:

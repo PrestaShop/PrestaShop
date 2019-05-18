@@ -111,6 +111,8 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer create form & handle processing of it.
      *
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return Response
@@ -155,11 +157,14 @@ class CustomerController extends AbstractAdminController
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,
             'displayInIframe' => $request->query->has('submitFormAjax'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
     /**
      * Show customer edit form & handle processing of it.
+     *
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
      *
      * @param int $customerId
      * @param Request $request
@@ -197,6 +202,7 @@ class CustomerController extends AbstractAdminController
             'customerInformation' => $customerInformation,
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
@@ -627,6 +633,8 @@ class CustomerController extends AbstractAdminController
 
     /**
      * Export filtered customers
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param CustomerFilters $filters
      *

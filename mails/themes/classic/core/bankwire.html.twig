@@ -19,9 +19,13 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Awaiting wire payment'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Awaiting wire payment'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
               {{ 'Your order with the reference <span><strong>{order_name}</strong></span> has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.'|trans({}, 'Emails.Body', locale)|raw }}
             </span>
@@ -46,11 +50,11 @@
               {{ 'You have selected to pay by wire transfer.'|trans({}, 'Emails.Body', locale)|raw }}
             </p>
             <span>
-              {{ 'Here are the bank details for your transfer:'|trans({}, 'Emails.Body', locale)|raw }}<br />
-              <span><strong>{{ 'Amount:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {total_paid}<br />
-              <span><strong>{{ 'Account owner:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {bankwire_owner}<br />
-              <span><strong>{{ 'Account details:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {bankwire_details}<br />
-              <span><strong>{{ 'Bank address:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {bankwire_address}<br />
+              {{ 'Here are the bank details for your transfer:'|trans({}, 'Emails.Body', locale)|raw }}<br/>
+              <span><strong>{{ 'Amount:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {total_paid}<br/>
+              <span><strong>{{ 'Account owner:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {bankwire_owner}<br/>
+              <span><strong>{{ 'Account details:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {bankwire_details}<br/>
+              <span><strong>{{ 'Bank address:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {bankwire_address}<br/>
                             {{ 'Please specify your order reference in the bankwire description.'|trans({}, 'Emails.Body', locale)|raw }}
             </span>
           </font>

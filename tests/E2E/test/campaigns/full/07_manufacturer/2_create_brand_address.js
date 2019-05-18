@@ -6,6 +6,7 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Brands} = require('../../../selectors/BO/catalogpage/Manufacturers/brands');
 const commonManufacturers = require('../../common_scenarios/manufacturers');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let brandData = {
   name: 'PrestaShopBrand',
   shortDescription: 'short description',
@@ -37,6 +38,7 @@ scenario('Create "Brand address"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
 
   commonManufacturers.createBrand(brandData);
   commonManufacturers.createBrandAddress(brandAddressData);

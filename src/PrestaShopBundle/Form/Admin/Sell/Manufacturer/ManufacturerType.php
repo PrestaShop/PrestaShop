@@ -28,10 +28,12 @@ namespace PrestaShopBundle\Form\Admin\Sell\Manufacturer;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -43,13 +45,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Defines form for manufacturer create/edit actions (Sell > Catalog > Brands & Suppliers)
  */
-class ManufacturerType extends AbstractType
+class ManufacturerType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     /**
      * @var bool
      */
@@ -57,13 +54,16 @@ class ManufacturerType extends AbstractType
 
     /**
      * @param TranslatorInterface $translator
+     * @param array $locales
      * @param bool $isMultistoreEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
+        array $locales,
         $isMultistoreEnabled
     ) {
-        $this->translator = $translator;
+        parent::__construct($translator, $locales);
+
         $this->isMultistoreEnabled = $isMultistoreEnabled;
     }
 
@@ -76,16 +76,16 @@ class ManufacturerType extends AbstractType
             ->add('name', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        'message' => $this->trans(
+                            'This field cannot be empty', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new Length([
                         'max' => 64,
-                        'maxMessage' => $this->translator->trans(
+                        'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 64],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => 64]
                         ),
                     ]),
                     new TypedRegex([
@@ -93,30 +93,32 @@ class ManufacturerType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('short_description', TranslatableType::class, [
-                'type' => TextareaType::class,
+            ->add('short_description', TranslateType::class, [
+                'type' => FormattedTextareaType::class,
+                'locales' => $this->locales,
+                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
                         new CleanHtml([
-                            'message' => $this->translator->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
-                                [],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
                     ],
                 ],
             ])
-            ->add('description', TranslatableType::class, [
-                'type' => TextareaType::class,
+            ->add('description', TranslateType::class, [
+                'type' => FormattedTextareaType::class,
+                'locales' => $this->locales,
+                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
                         new CleanHtml([
-                            'message' => $this->translator->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
-                                [],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -136,10 +138,10 @@ class ManufacturerType extends AbstractType
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
                             ),
                         ]),
                     ],
@@ -155,10 +157,10 @@ class ManufacturerType extends AbstractType
                         ]),
                         new Length([
                             'max' => 512,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 512],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 512]
                             ),
                         ]),
                     ],
@@ -170,7 +172,7 @@ class ManufacturerType extends AbstractType
                 'options' => [
                     'attr' => [
                         'class' => 'js-taggable-field',
-                        'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
                     ],
                     'constraints' => [
                         new TypedRegex([
@@ -181,16 +183,15 @@ class ManufacturerType extends AbstractType
             ])
             ->add('is_enabled', SwitchType::class, [
                 'required' => false,
-            ])
-        ;
+            ]);
 
         if ($this->isMultistoreEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
                 'required' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        'message' => $this->trans(
+                            'This field cannot be empty', 'Admin.Notifications.Error'
                         ),
                     ]),
                 ],

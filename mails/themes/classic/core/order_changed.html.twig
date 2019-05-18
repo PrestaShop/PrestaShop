@@ -18,9 +18,13 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Order changed'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Order changed'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
               {{ 'Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been changed by the merchant.'|trans({}, 'Emails.Body', locale)|raw }}
             </span>

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
 
 /**
- * Class CannotUpdateSupplierStatusException
+ * Is thrown when supplier status cannot be updated
  */
 class CannotUpdateSupplierStatusException extends SupplierException
 {

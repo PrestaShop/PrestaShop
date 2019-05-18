@@ -10,6 +10,8 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {DeliverySlip} = require('../../../selectors/BO/order');
 const {OrderPage} = require('../../../selectors/BO/order');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+
 let promise = Promise.resolve();
 global.orderInformation = [];
 
@@ -26,6 +28,7 @@ scenario('Test1: Delivery slips PDF', () => {
       }, 'common_client');
       scenario('Login in the Back Office ', client => {
         test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+        welcomeScenarios.findAndCloseWelcomeModal();
         commonOrder.updateStatus("Shipped");
         commonOrder.getDeliveryInformation(i - 1);
       }, 'common_client');

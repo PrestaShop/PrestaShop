@@ -99,7 +99,7 @@ class MailTemplateTwigRendererTest extends TestCase
             MailTemplateInterface::HTML_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
-        $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::HTML_TYPE];
         $expectedLanguage = $this->createLanguageMock();
         $mailLayout = $this->createMailLayoutMock($templatePaths);
 
@@ -121,7 +121,7 @@ class MailTemplateTwigRendererTest extends TestCase
             MailTemplateInterface::TXT_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
-        $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::HTML_TYPE];
         $expectedLanguage = $this->createLanguageMock();
         $mailLayout = $this->createMailLayoutMock($templatePaths);
 
@@ -142,7 +142,7 @@ class MailTemplateTwigRendererTest extends TestCase
             MailTemplateInterface::TXT_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
-        $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::TXT_TYPE];
         $expectedLanguage = $this->createLanguageMock();
         $mailLayout = $this->createMailLayoutMock($templatePaths);
 
@@ -164,7 +164,7 @@ class MailTemplateTwigRendererTest extends TestCase
             MailTemplateInterface::TXT_TYPE => '',
         ];
         $expectedTemplate = 'mail_template';
-        $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::TXT_TYPE];
         $expectedLanguage = $this->createLanguageMock();
         $mailLayout = $this->createMailLayoutMock($templatePaths);
 
@@ -186,7 +186,7 @@ class MailTemplateTwigRendererTest extends TestCase
         ];
         $generatedTemplate = 'mail_template';
         $transformedTemplate = 'mail_template_transformed_fr';
-        $expectedVariables = ['locale' => 'fr', 'url' => 'http://test.com'];
+        $expectedVariables = ['locale' => 'fr', 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::HTML_TYPE];
         $expectedLanguage = $this->createLanguageMock();
         $mailLayout = $this->createMailLayoutMock($templatePaths);
 

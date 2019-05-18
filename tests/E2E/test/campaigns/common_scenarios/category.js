@@ -32,7 +32,7 @@ module.exports = {
       test('should go to "Category" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
       test('should click on "Add new category" button', () => client.waitForExistAndClick(CategorySubMenu.new_category_button));
       test('should set the "Name" input', () => client.waitAndSetValue(CategorySubMenu.name_input, categoryData.name + date_time));
-      test('should set the "Description" textarea', () => client.waitAndSetValue(CategorySubMenu.description_textarea, categoryData.description + date_time));
+      test('should set the "Description" textarea', () => client.setiFrameContent(CategorySubMenu.description_textarea, categoryData.description + date_time,false));
       test('should upload the picture', () => client.uploadPicture(categoryData.picture, CategorySubMenu.picture, 'image'));
       test('should upload the thumb picture', () => client.uploadPicture(categoryData.thumb_picture, CategorySubMenu.thumb_picture, 'image'));
       test('should set the "Meta title" input', () => client.waitAndSetValue(CategorySubMenu.title, categoryData.meta_title));
@@ -73,7 +73,7 @@ module.exports = {
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
       test('should click on "Edit" action', () => client.waitForExistAndClickJs(CategorySubMenu.update_button));
       test('should set the "Name" input', () => client.waitAndSetValue(CategorySubMenu.name_input, editedCategoryData.name + date_time));
-      test('should set the "Description" textarea', () => client.waitAndSetValue(CategorySubMenu.description_textarea, editedCategoryData.description + date_time));
+      test('should set the "Description" textarea', () => client.setiFrameContent(CategorySubMenu.description_textarea, editedCategoryData.description + date_time,false));
       test('should set the "Meta title" input', () => client.waitAndSetValue(CategorySubMenu.title, editedCategoryData.meta_title));
       test('should set the "Meta description" input', () => client.waitAndSetValue(CategorySubMenu.meta_description, editedCategoryData.meta_description));
       for (let j in categoryData.meta_keywords) {
@@ -116,7 +116,7 @@ module.exports = {
         return promise
           .then(() => client.waitForExistAndClickJs(CategorySubMenu.update_button))
           .then(() => client.getURL(2000))
-          .then((res) => global.param['id_category'] = res.value.match(/\d+/g)[0]);
+          .then((res) => global.param['id_category'] = /categories\/(\d+)\//g.exec(res.value)[1]);
       });
       test('should check the category name', () => client.checkAttributeValue(CategorySubMenu.name_input, 'value', categoryData.name + date_time));
       test('should check that the image is well displayed', () => client.checkImage(CategorySubMenu.image_link));

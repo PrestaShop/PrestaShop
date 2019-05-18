@@ -482,8 +482,8 @@ class CommonClient {
    */
   setEditorText(selector, content) {
     return this.client
-      .pause(1000)
-      .click(selector)
+      .pause(2000)
+      .waitForExistAndClick(selector)
       .execute(function (content) {
         return (tinyMCE.activeEditor.setContent(content));
       }, content);
@@ -861,6 +861,27 @@ class CommonClient {
           else {
             document.querySelector(selector).value = '';
             document.querySelector(selector).value = value;
+          }
+        }, selector, value, isXpath);
+  }
+
+  /**
+   *  set iFrame Content, Added to set value for textarea timymce
+   * @param selector, the iFrame
+   * @param value, value to set
+   * @param isXpath, selector is xpath or css selector
+   * @param pause
+   * @return {*}
+   */
+  setiFrameContent(selector, value, isXpath = true, pause = 0) {
+    return this.client
+        .pause(pause)
+        .execute(function (selector, value, isXpath) {
+          if(isXpath) {
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
+          }
+          else {
+            document.querySelector(selector).contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
           }
         }, selector, value, isXpath);
   }

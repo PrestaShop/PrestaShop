@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
 
 /**
- * Class CannotToggleSupplierStatusException
+ * Is thrown when supplier status cannot be enabled or disabled in toggling action
  */
 class CannotToggleSupplierStatusException extends SupplierException
 {

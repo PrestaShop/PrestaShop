@@ -56,9 +56,9 @@ final class AddressFieldsProvider implements EntityFieldsProviderInterface
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('alias', $this->trans('Alias', 'Admin.Shopparameters.Feature'), '', true),
-            new EntityField('active', $this->trans('Active  (0/1)')),
-            new EntityField('customer_email', $this->trans('Customer email'), '', true),
-            new EntityField('id_customer', $this->trans('Customer ID')),
+            new EntityField('active', $this->trans('Active  (0/1)', 'Admin.Advparameters.Feature')),
+            new EntityField('customer_email', $this->trans('Customer email', 'Admin.Advparameters.Feature'), '', true),
+            new EntityField('id_customer', $this->trans('Customer ID', 'Admin.Advparameters.Feature')),
             new EntityField('manufacturer', $this->trans('Brand', 'Admin.Global')),
             new EntityField('supplier', $this->trans('Supplier', 'Admin.Global')),
             new EntityField('company', $this->trans('Company', 'Admin.Global')),

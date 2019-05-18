@@ -45,7 +45,7 @@ scenario('Welcome Module', () => {
        * https://github.com/PrestaShop/PrestaShop/issues/12560
        */
       test('should check that the current step has started', () => client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '1'), 'class', 'id -done', 'equal', 2000));
-      test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button, 2000));
+      test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button, 50, 2000));
       test('should close the symfony toolbar', () => client.waitForSymfonyToolbar(AddProductPage, 2000));
       test('should check that the step number is equal to "1" ', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/2', 'contain', 4000));
       test('should check the first onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'A good way to start is to add your own logo here!'));

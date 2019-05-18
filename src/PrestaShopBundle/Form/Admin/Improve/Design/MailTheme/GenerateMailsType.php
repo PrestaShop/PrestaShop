@@ -83,6 +83,7 @@ class GenerateMailsType extends TranslatorAwareType
                 'required' => false,
                 'empty_data' => '',
                 'data' => '',
+                'disabled' => count($this->themes) <= 0,
             ])
             ->add('overwrite', SwitchType::class, ['data' => false])
         ;

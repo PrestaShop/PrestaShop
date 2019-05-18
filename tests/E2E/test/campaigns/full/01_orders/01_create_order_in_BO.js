@@ -245,13 +245,13 @@ scenario('Create order in the Back Office', () => {
     });
     test('should choose "British Pound Sterling" from currency list', () => {
       return promise
-        .then(() => client.waitAndSelectByValue(CreateOrder.currency_select, '2'))
+        .then(() => client.selectByVisibleText(CreateOrder.currency_select, 'British Pound'))
         .then(() => client.pause(2000));
     });
     test('should verify that the price is changed', () => client.checkTextValue(CreateOrder.price_product_column, global.tab['price_product'], 'notequal'));
     test('should choose "Euro" from currency list', () => {
       return promise
-        .then(() => client.waitAndSelectByValue(CreateOrder.currency_select, '1'))
+        .then(() => client.selectByVisibleText(CreateOrder.currency_select, 'Euro'))
         .then(() => client.pause(2000));
     });
     test('should verify that the price is changed', () => client.checkTextValue(CreateOrder.price_product_column, global.tab['price_product'], 'equal'));
@@ -402,7 +402,7 @@ scenario('Create order in the Back Office', () => {
   }, 'common_client');
   commonCurrency.accessToCurrencies();
   commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
-  commonCurrency.deleteCurrency(true, 'close\nSuccessful deletion.');
+  commonCurrency.deleteCurrency(true, 'Successful deletion.');
   scenario('Click on "Reset" button', client => {
     test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
   }, 'common_client');

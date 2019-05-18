@@ -85,6 +85,8 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality.
      *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
