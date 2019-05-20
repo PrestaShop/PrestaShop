@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 
 use ImageManager;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\MaximumFileSizeBreachedException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler\UploadLogosHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
@@ -87,8 +88,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     /**
      * {@inheritdoc}
      *
-     * @throws ShopConstraintException
      * @throws ShopException
+     * @throws MaximumFileSizeBreachedException
      */
     public function handle(UploadLogosCommand $command)
     {
@@ -187,7 +188,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     /**
      * @param UploadedFile $uploadedFile
      *
-     * @throws ShopConstraintException
+     * @throws MaximumFileSizeBreachedException
      */
     private function assertIsMaxFileSizeNotBreached(UploadedFile $uploadedFile)
     {
@@ -201,14 +202,15 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
         );
 
         if (0 !== count($errors)) {
-            throw new ShopConstraintException(
+            throw new MaximumFileSizeBreachedException(
+                $uploadedFile->getSize(),
+                $maxSizeInBytes,
                 sprintf(
                     'An error occurred when uploading file %s : max size of %s bytes breached. Current file size is %s bytes',
                     $uploadedFile->getFilename(),
                     $maxSizeInBytes,
                     $uploadedFile->getSize()
-                ),
-                ShopConstraintException::FILE_SIZE_LIMIT_BREACHED
+                )
             );
         }
     }

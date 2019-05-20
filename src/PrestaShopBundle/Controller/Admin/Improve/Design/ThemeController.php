@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\MaximumFileSizeBreachedException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
@@ -144,7 +146,7 @@ class ThemeController extends AbstractAdminController
                     'success',
                     $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
                 );
-            } catch (ShopException $e) {
+            } catch (DomainException $e) {
                 $this->addFlash(
                     'error',
                     $this->getErrorMessageForException(
@@ -558,11 +560,11 @@ class ThemeController extends AbstractAdminController
     /**
      * Gets exception or exception and its code error mapping.
      *
-     * @param ShopException $exception
+     * @param DomainException $exception
      *
      * @return array
      */
-    private function getLogoUploadErrorMessages(ShopException $exception)
+    private function getLogoUploadErrorMessages(DomainException $exception)
     {
         $availableLogoFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS);
         $availableIconFormat = ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION;
@@ -582,10 +584,15 @@ class ThemeController extends AbstractAdminController
         return [
             NotSupportedLogoImageExtensionException::class => $logoImageFormatError,
             NotSupportedFaviconExtensionException::class => $iconFormatError,
-            ShopConstraintException::class => [
-                ShopConstraintException::INVALID_IMAGE => $exception->getMessage(),
-                ShopConstraintException::INVALID_ICON => $exception->getMessage(),
-            ],
+            MaximumFileSizeBreachedException::class =>
+                $this->trans(
+                    'Image is too large (%1$d kB). Maximum allowed: %2$d kB',
+                    'Admin.Notifications.Error',
+                    [
+                        $exception->getActualSizeInBytes() / 1000,
+                        $exception->getExpectedSizeInBytes() / 1000
+                    ]
+                )
         ];
     }
 }
