@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Form\Admin\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
