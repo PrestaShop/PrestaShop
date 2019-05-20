@@ -45,10 +45,8 @@ class HelpTextExtension extends AbstractTypeExtension
     {
         $resolver
             ->setDefaults([
-                'label_help_text' => null,
                 'help' => null,
             ])
-            ->setAllowedTypes('label_help_text', ['null', 'string'])
             ->setAllowedTypes('help', ['null', 'string'])
         ;
     }
@@ -58,10 +56,6 @@ class HelpTextExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if (isset($options['label_help_text'])) {
-            $view->vars['label_help_text'] = $options['label_help_text'];
-        }
-
         if (isset($options['help'])) {
             $view->vars['help'] = $options['help'];
         }
