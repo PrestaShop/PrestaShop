@@ -113,8 +113,10 @@
 
   {{ form_widget(form, vars) }}
 
-  {% if extraVars.help is defined %}
-    <small class="form-text">{{ extraVars.help }}</small>
+  {% if extraVars.help is defined or form.vars.help is defined %}
+{#    todo: which one should take the priority or both of them should be concated?#}
+
+    <small class="form-text">{{ extraVars.help|default('') ~ form.vars.help|default('') }}</small>
   {% endif %}
 
   {{ self.form_error_with_popover(form) }}
