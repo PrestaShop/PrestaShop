@@ -26,21 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 
-use ImageManager;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler\UploadLogosHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Tools;
 
 /**
  * Class UploadLogosHandler

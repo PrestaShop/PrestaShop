@@ -34,8 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
@@ -590,11 +588,10 @@ class ThemeController extends AbstractAdminController
                     'File too large (limit of %s bytes).',
                     'Admin.Notifications.Error',
                     [
-                        UploadedFile::getMaxFilesize()
+                        UploadedFile::getMaxFilesize(),
                     ]
-                )
-            ]
-
+                ),
+            ],
         ];
     }
 }
