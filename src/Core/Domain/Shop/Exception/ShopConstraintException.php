@@ -29,12 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 class ShopConstraintException extends ShopException
 {
     /**
-     * @var int - either size, format or native error has been raised
+     * @var int
      */
-    const INVALID_IMAGE = 1;
-
-    /**
-     * @var int - either size, format or native error has been raised
-     */
-    const INVALID_ICON = 2;
+    const FILE_SIZE_LIMIT_BREACHED = 1;
 }

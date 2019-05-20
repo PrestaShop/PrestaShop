@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Tools;
 
 /**
@@ -60,18 +62,26 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     private $hookDispatcher;
 
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
      * @param ConfigurationInterface $configuration
      * @param LogoUploader $logoUploader
      * @param HookDispatcherInterface $hookDispatcher
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         ConfigurationInterface $configuration,
         LogoUploader $logoUploader,
-        HookDispatcherInterface $hookDispatcher
+        HookDispatcherInterface $hookDispatcher,
+        ValidatorInterface $validator
     ) {
         $this->configuration = $configuration;
         $this->logoUploader = $logoUploader;
         $this->hookDispatcher = $hookDispatcher;
+        $this->validator = $validator;
     }
 
     /**
@@ -86,18 +96,22 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
 
         try {
             if (null !== $command->getUploadedHeaderLogo()) {
+                $this->assertIsMaxFileSizeNotBreached($command->getUploadedHeaderLogo());
                 $this->uploadHeaderLogo($command->getUploadedHeaderLogo());
             }
 
             if (null !== $command->getUploadedMailLogo()) {
+                $this->assertIsMaxFileSizeNotBreached($command->getUploadedMailLogo());
                 $this->uploadMailLogo($command->getUploadedMailLogo());
             }
 
             if (null !== $command->getUploadedInvoiceLogo()) {
+                $this->assertIsMaxFileSizeNotBreached($command->getUploadedInvoiceLogo());
                 $this->uploadInvoiceLogo($command->getUploadedInvoiceLogo());
             }
 
             if (null !== $command->getUploadedFavicon()) {
+                $this->assertIsMaxFileSizeNotBreached($command->getUploadedFavicon());
                 $this->uploadFavicon($command->getUploadedFavicon());
             }
         } catch (PrestaShopException $exception) {
@@ -113,52 +127,40 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
 
     /**
      * @param UploadedFile $uploadedFile
-     *
-     * @throws ShopConstraintException
      */
     private function uploadHeaderLogo(UploadedFile $uploadedFile)
     {
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::HEADER_LOGO_FILE_NAME, $uploadedFile);
-        $this->assertIsValidImage($file[ShopLogoSettings::HEADER_LOGO_FILE_NAME]);
+        $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::HEADER_LOGO_FILE_NAME, $uploadedFile);
 
         $this->logoUploader->updateHeader();
     }
 
     /**
      * @param UploadedFile $uploadedFile
-     *
-     * @throws ShopConstraintException
      */
     private function uploadMailLogo(UploadedFile $uploadedFile)
     {
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::MAIL_LOGO_FILE_NAME, $uploadedFile);
-        $this->assertIsValidImage($file[ShopLogoSettings::MAIL_LOGO_FILE_NAME]);
+        $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::MAIL_LOGO_FILE_NAME, $uploadedFile);
 
         $this->logoUploader->updateMail();
     }
 
     /**
      * @param UploadedFile $uploadedHeaderLogo
-     *
-     * @throws ShopConstraintException
      */
     private function uploadInvoiceLogo(UploadedFile $uploadedHeaderLogo)
     {
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::INVOICE_LOGO_FILE_NAME, $uploadedHeaderLogo);
-        $this->assertIsValidImage($file[ShopLogoSettings::INVOICE_LOGO_FILE_NAME]);
+        $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::INVOICE_LOGO_FILE_NAME, $uploadedHeaderLogo);
 
         $this->logoUploader->updateInvoice();
     }
 
     /**
      * @param UploadedFile $uploadedHeaderLogo
-     *
-     * @throws ShopConstraintException
      */
     private function uploadFavicon(UploadedFile $uploadedHeaderLogo)
     {
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::FAVICON_FILE_NAME, $uploadedHeaderLogo);
-        $this->assertIsValidIcon($file[ShopLogoSettings::FAVICON_FILE_NAME]);
+        $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::FAVICON_FILE_NAME, $uploadedHeaderLogo);
 
         $this->logoUploader->updateFavicon();
     }
@@ -183,38 +185,30 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     }
 
     /**
-     * This is used for validating the image and throwing the translatable exception message.
-     *
-     * @param array $file
+     * @param UploadedFile $uploadedFile
      *
      * @throws ShopConstraintException
      */
-    private function assertIsValidImage(array $file)
+    private function assertIsMaxFileSizeNotBreached(UploadedFile $uploadedFile)
     {
-        $maxUploadSize = Tools::getMaxUploadSize();
-        $translatedErrorMessage = ImageManager::validateUpload($file, $maxUploadSize);
+        $maxSizeInBytes = Tools::getMaxUploadSize();
 
-        if ($translatedErrorMessage) {
+        $errors = $this->validator->validate(
+            $uploadedFile,
+            new File([
+                'maxSize' => $maxSizeInBytes,
+            ])
+        );
+
+        if (0 !== count($errors)) {
             throw new ShopConstraintException(
-                $translatedErrorMessage,
-                ShopConstraintException::INVALID_IMAGE
-            );
-        }
-    }
-
-    /**
-     * @param array $file
-     *
-     * @throws ShopConstraintException
-     */
-    private function assertIsValidIcon(array $file)
-    {
-        $translatedErrorMessage = ImageManager::validateIconUpload($file);
-
-        if ($translatedErrorMessage) {
-            throw new ShopConstraintException(
-                $translatedErrorMessage,
-                ShopConstraintException::INVALID_ICON
+                sprintf(
+                    'An error occurred when uploading file %s : max size of %s bytes breached. Current file size is %s bytes',
+                    $uploadedFile->getFilename(),
+                    $maxSizeInBytes,
+                    $uploadedFile->getSize()
+                ),
+                ShopConstraintException::FILE_SIZE_LIMIT_BREACHED
             );
         }
     }

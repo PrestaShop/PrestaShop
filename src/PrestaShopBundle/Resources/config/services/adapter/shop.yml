@@ -8,6 +8,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.shop.logo_uploader'
       - '@prestashop.core.hook.dispatcher'
+      - '@validator'
     tags:
       - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand' }
 
