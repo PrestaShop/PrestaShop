@@ -31,6 +31,14 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shop\DTO;
  */
 class ShopLogoSettings
 {
+    const HEADER_LOGO_FILE_NAME = 'PS_LOGO';
+
+    const MAIL_LOGO_FILE_NAME = 'PS_LOGO_MAIL';
+
+    const INVOICE_LOGO_FILE_NAME = 'PS_LOGO_INVOICE';
+
+    const FAVICON_FILE_NAME = 'PS_FAVICON';
+
     /**
      * @var array - a list of available image mime types
      */

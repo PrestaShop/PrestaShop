@@ -30,6 +30,7 @@ use ImageManager;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler\UploadLogosHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -117,9 +118,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadHeaderLogo(UploadedFile $uploadedFile)
     {
-        $legacyFileName = 'PS_LOGO';
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, $uploadedFile);
-        $this->assertIsValidImage($file[$legacyFileName]);
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::HEADER_LOGO_FILE_NAME, $uploadedFile);
+        $this->assertIsValidImage($file[ShopLogoSettings::HEADER_LOGO_FILE_NAME]);
 
         $this->logoUploader->updateHeader();
     }
@@ -131,9 +131,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadMailLogo(UploadedFile $uploadedFile)
     {
-        $legacyFileName = 'PS_LOGO_MAIL';
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, $uploadedFile);
-        $this->assertIsValidImage($file[$legacyFileName]);
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::MAIL_LOGO_FILE_NAME, $uploadedFile);
+        $this->assertIsValidImage($file[ShopLogoSettings::MAIL_LOGO_FILE_NAME]);
 
         $this->logoUploader->updateMail();
     }
@@ -145,9 +144,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadInvoiceLogo(UploadedFile $uploadedHeaderLogo)
     {
-        $legacyFileName = 'PS_LOGO_INVOICE';
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, $uploadedHeaderLogo);
-        $this->assertIsValidImage($file[$legacyFileName]);
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::INVOICE_LOGO_FILE_NAME, $uploadedHeaderLogo);
+        $this->assertIsValidImage($file[ShopLogoSettings::INVOICE_LOGO_FILE_NAME]);
 
         $this->logoUploader->updateInvoice();
     }
@@ -159,9 +157,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadFavicon(UploadedFile $uploadedHeaderLogo)
     {
-        $legacyFileName = 'PS_FAVICON';
-        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, $uploadedHeaderLogo);
-        $this->assertIsValidIcon($file[$legacyFileName]);
+        $file = $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::FAVICON_FILE_NAME, $uploadedHeaderLogo);
+        $this->assertIsValidIcon($file[ShopLogoSettings::FAVICON_FILE_NAME]);
 
         $this->logoUploader->updateFavicon();
     }
