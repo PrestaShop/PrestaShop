@@ -315,4 +315,12 @@ class LegacyContext
     {
         return $this->mailThemesUri;
     }
+
+    /**
+     * @return array Returns both enabled and disabled languages
+     */
+    public function getAvailableLanguages()
+    {
+        return $this->getLanguages(false);
+    }
 }

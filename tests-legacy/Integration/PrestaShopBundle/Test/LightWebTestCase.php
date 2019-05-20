@@ -30,6 +30,7 @@ use Context;
 use Currency;
 use Employee;
 use Language;
+use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Psr\Log\NullLogger;
@@ -132,6 +133,13 @@ class LightWebTestCase extends TestCase
             ->setMethods(['getDefaultCurrencyIsoCode', 'getDefaultCurrency'])
             ->getMock();
 
+        $linkMock = $this
+            ->getMockBuilder(Link::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $contextMock->link = $linkMock;
+
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
             ->will($this->returnValue('en'));
         $currencyDataProviderMock->method('getDefaultCurrency')
@@ -146,6 +154,7 @@ class LightWebTestCase extends TestCase
                 'getLanguages',
                 'getLanguage',
                 'getAdminLink',
+                'getAvailableLanguages',
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()
@@ -179,6 +188,28 @@ class LightWebTestCase extends TestCase
         $legacyContextMock->method('getLanguage')
             ->will(
                 $this->returnValue($languageMock)
+            );
+
+        $legacyContextMock->method('getAvailableLanguages')
+            ->willReturn(
+                [
+                    [
+                        'id_lang' => '1',
+                        'name' => 'English (English)',
+                        'iso_code' => 'en',
+                        'language_code' => 'en-us',
+                        'locale' => 'en-US',
+                        'active' => true,
+                    ],
+                    [
+                        'id_lang' => '2',
+                        'name' => 'Français (French)',
+                        'iso_code' => 'fr',
+                        'language_code' => 'fr',
+                        'locale' => 'fr-FR',
+                        'active' => false,
+                    ],
+                ]
             );
 
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
