@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
@@ -68,10 +69,12 @@ class UploadLogosCommand
      * @param UploadedFile $uploadedHeaderLogo
      *
      * @throws NotSupportedLogoImageExtensionException
+     * @throws FileUploadException
      */
     public function setUploadedHeaderLogo(UploadedFile $uploadedHeaderLogo)
     {
         $this->assertIsValidLogoImageExtension($uploadedHeaderLogo);
+        $this->assertNativeFileValidationDoesNotFail($uploadedHeaderLogo);
 
         $this->uploadedHeaderLogo = $uploadedHeaderLogo;
     }
@@ -88,10 +91,12 @@ class UploadLogosCommand
      * @param UploadedFile $uploadedInvoiceLogo
      *
      * @throws NotSupportedLogoImageExtensionException
+     * @throws FileUploadException
      */
     public function setUploadedInvoiceLogo(UploadedFile $uploadedInvoiceLogo)
     {
         $this->assertIsValidLogoImageExtension($uploadedInvoiceLogo);
+        $this->assertNativeFileValidationDoesNotFail($uploadedInvoiceLogo);
 
         $this->uploadedInvoiceLogo = $uploadedInvoiceLogo;
     }
@@ -108,10 +113,12 @@ class UploadLogosCommand
      * @param UploadedFile $uploadedMailLogo
      *
      * @throws NotSupportedLogoImageExtensionException
+     * @throws FileUploadException
      */
     public function setUploadedMailLogo(UploadedFile $uploadedMailLogo)
     {
         $this->assertIsValidLogoImageExtension($uploadedMailLogo);
+        $this->assertNativeFileValidationDoesNotFail($uploadedMailLogo);
 
         $this->uploadedMailLogo = $uploadedMailLogo;
     }
@@ -128,6 +135,7 @@ class UploadLogosCommand
      * @param UploadedFile $uploadedFavicon
      *
      * @throws NotSupportedFaviconExtensionException
+     * @throws FileUploadException
      */
     public function setUploadedFavicon(UploadedFile $uploadedFavicon)
     {
@@ -137,6 +145,8 @@ class UploadLogosCommand
                 $uploadedFavicon->getClientOriginalExtension()
             ));
         }
+
+        $this->assertNativeFileValidationDoesNotFail($uploadedFavicon);
 
         $this->uploadedFavicon = $uploadedFavicon;
     }
@@ -155,6 +165,25 @@ class UploadLogosCommand
                     'Not supported "%s" image logo extension. Supported extensions are ""',
                     implode(',', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)
                 )
+            );
+        }
+    }
+
+    /**
+     * Checks if native file validation does not fail.
+     *
+     * @param UploadedFile $uploadedFile
+     *
+     * @throws FileUploadException
+     */
+    private function assertNativeFileValidationDoesNotFail(UploadedFile $uploadedFile)
+    {
+        $errorCode = $uploadedFile->getError();
+
+        if ($errorCode !== UPLOAD_ERR_OK) {
+            throw new FileUploadException(
+                $uploadedFile->getErrorMessage(),
+                $errorCode
             );
         }
     }

@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 
 use ImageManager;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Exception\MaximumFileSizeBreachedException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler\UploadLogosHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
@@ -63,33 +63,25 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     private $hookDispatcher;
 
     /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
      * @param ConfigurationInterface $configuration
      * @param LogoUploader $logoUploader
      * @param HookDispatcherInterface $hookDispatcher
-     * @param ValidatorInterface $validator
      */
     public function __construct(
         ConfigurationInterface $configuration,
         LogoUploader $logoUploader,
-        HookDispatcherInterface $hookDispatcher,
-        ValidatorInterface $validator
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->configuration = $configuration;
         $this->logoUploader = $logoUploader;
         $this->hookDispatcher = $hookDispatcher;
-        $this->validator = $validator;
     }
 
     /**
      * {@inheritdoc}
      *
      * @throws ShopException
-     * @throws MaximumFileSizeBreachedException
+     * @throws FileUploadException
      */
     public function handle(UploadLogosCommand $command)
     {
@@ -97,22 +89,18 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
 
         try {
             if (null !== $command->getUploadedHeaderLogo()) {
-                $this->assertIsMaxFileSizeNotBreached($command->getUploadedHeaderLogo());
                 $this->uploadHeaderLogo($command->getUploadedHeaderLogo());
             }
 
             if (null !== $command->getUploadedMailLogo()) {
-                $this->assertIsMaxFileSizeNotBreached($command->getUploadedMailLogo());
                 $this->uploadMailLogo($command->getUploadedMailLogo());
             }
 
             if (null !== $command->getUploadedInvoiceLogo()) {
-                $this->assertIsMaxFileSizeNotBreached($command->getUploadedInvoiceLogo());
                 $this->uploadInvoiceLogo($command->getUploadedInvoiceLogo());
             }
 
             if (null !== $command->getUploadedFavicon()) {
-                $this->assertIsMaxFileSizeNotBreached($command->getUploadedFavicon());
                 $this->uploadFavicon($command->getUploadedFavicon());
             }
         } catch (PrestaShopException $exception) {
@@ -183,35 +171,5 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
         ];
 
         return $_FILES;
-    }
-
-    /**
-     * @param UploadedFile $uploadedFile
-     *
-     * @throws MaximumFileSizeBreachedException
-     */
-    private function assertIsMaxFileSizeNotBreached(UploadedFile $uploadedFile)
-    {
-        $maxSizeInBytes = Tools::getMaxUploadSize();
-
-        $errors = $this->validator->validate(
-            $uploadedFile,
-            new File([
-                'maxSize' => $maxSizeInBytes,
-            ])
-        );
-
-        if (0 !== count($errors)) {
-            throw new MaximumFileSizeBreachedException(
-                $uploadedFile->getSize(),
-                $maxSizeInBytes,
-                sprintf(
-                    'An error occurred when uploading file %s : max size of %s bytes breached. Current file size is %s bytes',
-                    $uploadedFile->getFilename(),
-                    $maxSizeInBytes,
-                    $uploadedFile->getSize()
-                )
-            );
-        }
     }
 }

@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Domain\Exception\MaximumFileSizeBreachedException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
@@ -59,6 +59,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -584,15 +585,16 @@ class ThemeController extends AbstractAdminController
         return [
             NotSupportedLogoImageExtensionException::class => $logoImageFormatError,
             NotSupportedFaviconExtensionException::class => $iconFormatError,
-            MaximumFileSizeBreachedException::class =>
-                $this->trans(
-                    'Image is too large (%1$d kB). Maximum allowed: %2$d kB',
+            FileUploadException::class => [
+                UPLOAD_ERR_INI_SIZE => $this->trans(
+                    'File too large (limit of %s bytes).',
                     'Admin.Notifications.Error',
                     [
-                        $exception->getActualSizeInBytes() / 1000,
-                        $exception->getExpectedSizeInBytes() / 1000
+                        UploadedFile::getMaxFilesize()
                     ]
                 )
+            ]
+
         ];
     }
 }
