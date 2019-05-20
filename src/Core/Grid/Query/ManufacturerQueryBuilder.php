@@ -134,18 +134,14 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
             if (!in_array($filterName, $allowedFilters, true)) {
                 continue;
             }
-            if ('active' === $filterName) {
-                $qb->andWhere('m.`active` = :active');
-                $qb->setParameter('active', $value);
-                continue;
-            }
+
             if ('name' === $filterName) {
                 $qb->andWhere('m.`name` LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
                 continue;
             }
-            $qb->andWhere('m.`' . $filterName . '` LIKE :' . $filterName)
-                ->setParameter($filterName, '%' . $value . '%');
+            $qb->andWhere('m.`' . $filterName . '` = :' . $filterName)
+                ->setParameter($filterName, $value);
         }
 
         $qb->andWhere('ms.`id_shop` IN (:contextShopIds)');
