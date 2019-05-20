@@ -49,4 +49,11 @@ interface ThemeCollectionInterface extends \IteratorAggregate, \Countable
      * @param ThemeInterface $theme
      */
     public function remove($theme);
+
+    /**
+     * @param string $themeName
+     *
+     * @return ThemeInterface|null
+     */
+    public function getByName($themeName);
 }
