@@ -29,6 +29,8 @@ admin_currencies_edit:
         _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:edit'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:updatecurrency
+        _legacy_parameters:
+          id_currency: currencyId
     requirements:
         currencyId: \d+
 
@@ -39,6 +41,8 @@ admin_currencies_delete:
         _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:delete'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:deletecurrency
+        _legacy_parameters:
+          id_currency: currencyId
     requirements:
         currencyId: \d+
 
@@ -49,6 +53,8 @@ admin_currencies_toggle_status:
         _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:toggleStatus'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:statuscurrency
+        _legacy_parameters:
+          id_currency: currencyId
     requirements:
         currencyId: \d+
 

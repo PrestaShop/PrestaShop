@@ -210,7 +210,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_currencies_create' => ['/improve/international/currencies/new', 'AdminCurrencies', 'addcurrency'],
             'admin_currencies_edit' => ['/improve/international/currencies/1000/edit', 'AdminCurrencies', 'updatecurrency', ['id_currency' => 1000]],
             'admin_currencies_delete' => ['/improve/international/currencies/1000/delete', 'AdminCurrencies', 'deletecurrency', ['id_currency' => 1000]],
-            'admin_currencies_toggle_status' => ['/improve/international/currencies/1000/toggle-status', 'AdminCurrencies', 'statuscurrency'],
+            'admin_currencies_toggle_status' => ['/improve/international/currencies/1000/toggle-status', 'AdminCurrencies', 'statuscurrency', ['id_currency' => 1000]],
             'admin_currencies_refresh_exchange_rates' => ['/improve/international/currencies/refresh-exchange-rates', 'AdminCurrencies', 'SubmitExchangesRates'],
         ];
     }
