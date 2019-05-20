@@ -216,13 +216,13 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_employees_index' => ['/configure/advanced/employees/', 'AdminEmployees'],
             'admin_employees_search' => ['/configure/advanced/employees/', 'AdminEmployees', 'submitFilteremployee'],
             'admin_employees_save_options' => ['/configure/advanced/employees/save-options', 'AdminEmployees', 'submitOptionsemployee'],
-            'admin_employees_toggle_status' => ['/configure/advanced/employees/1000/toggle-status', 'AdminEmployees', 'statusemployee', ['id_employee' => 1000,]],
+            'admin_employees_toggle_status' => ['/configure/advanced/employees/1000/toggle-status', 'AdminEmployees', 'statusemployee', ['id_employee' => 1000]],
             'admin_employees_bulk_enable_status' => ['/configure/advanced/employees/bulk-enable-status', 'AdminEmployees', 'submitBulkenableSelectionemployee'],
             'admin_employees_bulk_disable_status' => ['/configure/advanced/employees/bulk-disable-status', 'AdminEmployees', 'submitBulkdisableSelectionemployee'],
-            'admin_employees_delete' => ['/configure/advanced/employees/1000/delete', 'AdminEmployees', 'deleteemployee', ['id_employee' => 1000,]],
+            'admin_employees_delete' => ['/configure/advanced/employees/1000/delete', 'AdminEmployees', 'deleteemployee', ['id_employee' => 1000]],
             'admin_employees_bulk_delete' => ['/configure/advanced/employees/bulk-delete', 'AdminEmployees', 'submitBulkdeleteemployee'],
             'admin_employees_create' => ['/configure/advanced/employees/new', 'AdminEmployees', 'addemployee'],
-            'admin_employees_edit' => ['/configure/advanced/employees/1000/edit', 'AdminEmployees', 'updateemployee', ['id_employee' => 1000,]],
+            'admin_employees_edit' => ['/configure/advanced/employees/1000/edit', 'AdminEmployees', 'updateemployee', ['id_employee' => 1000]],
         ];
     }
 
