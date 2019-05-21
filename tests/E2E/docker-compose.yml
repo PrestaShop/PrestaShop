@@ -14,6 +14,7 @@ services:
     volumes:
       - .docker:/tmp/docker
       - ../../:/var/www/html/
+      - /dev/shm:/home/seluser/Downloads
     networks:
       - default
 
