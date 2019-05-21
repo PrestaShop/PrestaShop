@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
  *
  * @internal
  */
-final class AddCustomerHandler implements AddCustomerHandlerInterface
+final class AddCustomerHandler extends AbstractCustomerHandler implements AddCustomerHandlerInterface
 {
     /**
      * @var Hashing
@@ -78,19 +78,7 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
         // to check if required fields are set
         $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
 
-        $errors = $customer->validateFieldsRequiredDatabase();
-
-        if (!empty($errors)) {
-            $missingFields = array_keys($errors);
-
-            throw new MissingCustomerRequiredFieldsException(
-                $missingFields,
-                sprintf(
-                    'One or more required fields for customer are missing. Missing fields are: %s',
-                    implode(',', $missingFields)
-                )
-            );
-        }
+        $this->assertRequiredFieldsAreNotMissing($customer);
 
         if (false === $customer->validateFields(false)) {
             throw new CustomerException('Customer contains invalid field values');

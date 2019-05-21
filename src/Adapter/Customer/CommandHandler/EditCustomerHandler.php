@@ -83,19 +83,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         // to check if required fields are set
         $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
 
-        $errors = $customer->validateFieldsRequiredDatabase();
-
-        if (!empty($errors)) {
-            $missingFields = array_keys($errors);
-
-            throw new MissingCustomerRequiredFieldsException(
-                $missingFields,
-                sprintf(
-                    'One or more required fields for customer are missing. Missing fields are: %s',
-                    implode(',', $missingFields)
-                )
-            );
-        }
+        $this->assertRequiredFieldsAreNotMissing($customer);
 
         if (false === $customer->validateFields(false)) {
             throw new CustomerException('Customer contains invalid field values');
