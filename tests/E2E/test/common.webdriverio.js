@@ -167,6 +167,7 @@ module.exports = {
     if (client) {
       return client;
     }
+    // Mode Headless
     if (typeof global.headless !== 'undefined' && global.headless) {
       options["desiredCapabilities"] = {
         browserName: 'chrome',
