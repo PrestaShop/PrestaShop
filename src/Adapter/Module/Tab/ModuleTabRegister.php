@@ -36,6 +36,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use TabCore as Tab;
 
 /**
@@ -172,9 +173,15 @@ class ModuleTabRegister
     protected function checkIsValid($moduleName, ParameterBag $data)
     {
         $className = $data->get('class_name', null);
+
         if (null === $className) {
             throw new Exception('Missing class name of tab');
         }
+
+        if(is_subclass_of($className, FrameworkBundleAdminController::class)) {
+            return true;
+        }
+
         // Check controller exists
         if (!in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
@@ -275,15 +282,18 @@ class ModuleTabRegister
     {
         $this->checkIsValid($module->get('name'), $tabDetails);
 
-        /**
-         * Legacy Tab, to be replaced with Doctrine entity when right management
-         * won't be directly linked to the tab creation
-         *
-         * @ToDo
-         */
+        // Legacy Tab, to be replaced with Doctrine entity when right management
+        // won't be directly linked to the tab creation
+        // @ToDo
+
+        $className = $tabDetails->get('class_name');
+
+        if (is_subclass_of($className, FrameworkBundleAdminController::class)) {
+            $className = $tabDetails->get('legacy_class_name');
+        }
         $tab = new Tab();
         $tab->active = $tabDetails->getBoolean('visible', true);
-        $tab->class_name = $tabDetails->get('class_name');
+        $tab->class_name = $className;
         $tab->module = $module->get('name');
         $tab->name = $this->getTabNames($tabDetails->get('name', $tab->class_name));
         $tab->icon = $tabDetails->get('icon');
