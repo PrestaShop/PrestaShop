@@ -10,6 +10,11 @@ let options = {
   waitForTimeout: 30000,
   desiredCapabilities: {
     browserName: 'chrome',
+    chromeOptions: {
+      prefs: {
+        "download.default_directory": '',
+      }
+    }
   },
   port: 4444,
   deprecationWarnings: false
@@ -162,14 +167,20 @@ module.exports = {
     if (client) {
       return client;
     }
-
     if (typeof global.headless !== 'undefined' && global.headless) {
       options["desiredCapabilities"] = {
         browserName: 'chrome',
         chromeOptions: {
-          args: ['--headless', '--disable-gpu', '--window-size=1270,899']
+          args: ['--headless', '--disable-gpu', '--window-size=1270,899'],
+          prefs: {
+            "download.default_directory": global.downloadsFolderPath,
+          }
         }
       };
+    }
+    else{
+      // Mode Headfull
+      options["desiredCapabilities"]["chromeOptions"]["prefs"]["download.default_directory"] = global.downloadsFolderPath;
     }
 
     if (typeof global.selenium_protocol !== 'undefined') {
