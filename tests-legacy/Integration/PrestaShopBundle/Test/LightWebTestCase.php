@@ -225,6 +225,9 @@ class LightWebTestCase extends TestCase
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
         self::$kernel->getContainer()->set('logger', new NullLogger());
+        
+        global $kernel;
+        $kernel = self::$kernel;
     }
 
     protected function enableDemoMode()
