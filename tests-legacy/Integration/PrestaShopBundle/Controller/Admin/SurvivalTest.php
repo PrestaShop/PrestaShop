@@ -171,7 +171,6 @@ class SurvivalTest extends WebTestCase
             'admin_categories_create_root' => ['Add new root category', 'admin_categories_create_root'],
             'admin_themes_index' => ['Theme & logo', 'admin_themes_index'],
             'admin_themes_import' => ['Add new theme', 'admin_themes_import'],
-            'admin_themes_export_current' => ['Export current theme', 'admin_themes_export_current'],
             'admin_mail_theme_index' => ['Email Theme', 'admin_mail_theme_index'],
             'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
         ];
