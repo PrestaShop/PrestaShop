@@ -2451,7 +2451,7 @@ abstract class ModuleCore implements ModuleInterface
         if ($cache_id !== null) {
             Tools::enableCache();
         }
-        if ($compile_id == null) {
+        if ($compile_id === null) {
             $compile_id = Context::getContext()->shop->theme->getName();
         }
 
