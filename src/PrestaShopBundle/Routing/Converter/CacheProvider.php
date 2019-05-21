@@ -36,7 +36,7 @@ class CacheProvider extends AbstractLegacyRouteProvider
     /**
      * @var AdapterInterface
      */
-    private $cache;
+    protected $cache;
 
     /**
      * @var LegacyRouteProviderInterface
@@ -61,6 +61,8 @@ class CacheProvider extends AbstractLegacyRouteProvider
         $this->legacyRouteProvider = $legacyRouteProvider;
         $this->cache = $cache;
         $this->cacheKeyGenerator = $cacheKeyGenerator;
+
+        parent::__construct($cache);
     }
 
     /**

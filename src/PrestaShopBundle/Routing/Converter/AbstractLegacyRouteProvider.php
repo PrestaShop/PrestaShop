@@ -27,12 +27,23 @@
 namespace PrestaShopBundle\Routing\Converter;
 
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 /**
  * Class AbstractLegacyRouteProvider.
  */
 abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterface
 {
+    /**
+     * @var AdapterInterface
+     */
+    protected $cache;
+
+    public function __construct(AdapterInterface $cache)
+    {
+        $this->cache = $cache;
+    }
+
     /**
      * @var array|null
      */
@@ -107,19 +118,13 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
      */
     private function getRouteName(array $controllerActions, $action)
     {
-        $routeName = null;
         foreach ($controllerActions as $controllerAction => $actionRoute) {
-            if (strtolower($controllerAction) == strtolower($action)) {
-                $routeName = $actionRoute;
-                break;
+            if (strtolower($controllerAction) === strtolower($action)) {
+                return is_array($actionRoute) ? $actionRoute[0] : $actionRoute;
             }
         }
 
-        if (is_array($routeName)) {
-            return $routeName[0];
-        }
-
-        return $routeName;
+        return null;
     }
 
     /**
@@ -127,13 +132,23 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
      */
     private function initControllerActions()
     {
-        if (null === $this->controllersActions) {
-            $this->controllersActions = [];
+        $cacheItem = $this->cache->getItem('controller_actions');
+
+        if (!$cacheItem->isHit()) {
+            $controllersActions = [[]];
             /** @var LegacyRoute $legacyRoute */
             foreach ($this->getLegacyRoutes() as $legacyRoute) {
-                $this->controllersActions = array_merge_recursive($this->controllersActions, $legacyRoute->getControllersActions());
+                $controllersActions[] = $legacyRoute->getControllersActions();
             }
+
+            $controllersActions = array_merge_recursive(...$this->controllersActions);
+            $cacheItem->set($controllersActions);
+            $this->cache->save($cacheItem);
         }
+
+        $this->controllersActions = $cacheItem->get();
+
+        return $cacheItem->get();
     }
 
     /**
@@ -143,14 +158,12 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
      */
     private function getControllerActions($controller)
     {
-        $controllerActions = null;
         foreach ($this->controllersActions as $listController => $actions) {
-            if (strtolower($listController) == strtolower($controller)) {
-                $controllerActions = $actions;
-                break;
+            if (strtolower($listController) === strtolower($controller)) {
+                return $actions;
             }
         }
 
-        return $controllerActions;
+        return null;
     }
 }

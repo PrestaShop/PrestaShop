@@ -72,6 +72,8 @@ services:
     # Legacy Hooks registrator
     prestashop.adapter.legacy.hook.subscriber:
         class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
+        arguments:
+          - '@prestashop.cache'
 
     prestashop.adapter.legacy.block.helper.subscriber:
             class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber

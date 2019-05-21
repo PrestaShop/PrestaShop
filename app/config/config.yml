@@ -20,6 +20,11 @@ framework:
     assets:
         version: !php/const \AppKernel::VERSION
 
+    cache:
+        pools:
+            prestashop.cache:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 0
     #esi:             ~
     secret:          "%secret%"
     translator:      { fallbacks: ["default"] }
