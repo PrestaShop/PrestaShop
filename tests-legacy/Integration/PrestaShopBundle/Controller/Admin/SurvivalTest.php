@@ -176,8 +176,6 @@ class SurvivalTest extends WebTestCase
             'admin_themes_import' => ['Add new theme', 'admin_themes_import'],
             'admin_themes_export_current' => ['Export current theme', 'admin_themes_export_current'],
             'admin_mail_theme_index' => ['Email Theme', 'admin_mail_theme_index'],
-            'admin_link_block_list' => ['Link Widget', 'admin_link_block_list'],
-            'admin_link_block_create' => ['New link block', 'admin_link_block_create'],
             'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
         ];
     }
