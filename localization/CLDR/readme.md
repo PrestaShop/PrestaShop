@@ -2,7 +2,7 @@
 ## Download latest CLDR files
 Download link can be found on [CLDR Releases/Downloads](http://cldr.unicode.org/index/downloads) page.
 
-Latest stable release is [CLDR 32.0.1](http://unicode.org/Public/cldr/32.0.1/) (released on 2017-12-08).
+Latest stable release is [CLDR 35.1](http://unicode.org/Public/cldr/35.1/) (released on 2019-04-17).
 
 All needed files can be found in core.zip
 

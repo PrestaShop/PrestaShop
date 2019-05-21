@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision: 14782 $"/>
 		<language type="vai"/>
 		<script type="Latn"/>
 	</identity>
@@ -617,6 +617,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Malagasi Ariyari</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>Mɔretani Yugiya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Mɔretani Yugiya</displayName>
 			</currency>
 			<currency type="MUR">
@@ -653,6 +656,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Somaliya Siyeŋ</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Sawo Tombe ɓɛ a Gbawo Dobura (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Sawo Tombe ɓɛ a Gbawo Dobura</displayName>
 			</currency>
 			<currency type="SZL">
