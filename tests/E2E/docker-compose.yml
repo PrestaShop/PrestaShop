@@ -14,7 +14,7 @@ services:
     volumes:
       - .docker:/tmp/docker
       - ../../:/var/www/html/
-      - /dev/shm:/home/seluser/Downloads
+      - selenium-downloads:/home/seluser/Downloads
     networks:
       - default
 
@@ -45,7 +45,7 @@ services:
     depends_on:
       - "prestashop"
     volumes:
-      - /dev/shm:/home/seluser/Downloads
+      - selenium-downloads:/home/seluser/Downloads
     networks:
       default:
         aliases:
@@ -57,3 +57,6 @@ services:
       MYSQL_ROOT_PASSWORD: admin
     networks:
       - default
+
+volumes:
+  selenium-downloads:
