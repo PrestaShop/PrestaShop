@@ -792,7 +792,7 @@ class CustomerController extends AbstractAdminController
                     implode(
                         ',',
                         $e instanceof MissingCustomerRequiredFieldsException ? $e->getMissingRequiredFields() : []
-                    )
+                    ),
                 ]
             ),
         ];
