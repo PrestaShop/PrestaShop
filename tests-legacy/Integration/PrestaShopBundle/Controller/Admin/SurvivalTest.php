@@ -116,7 +116,7 @@ class SurvivalTest extends WebTestCase
     public function getDataProvider()
     {
         return [
-            'administration_page' => ['Administration', 'admin_administration'],
+            'admin_administration' => ['Administration', 'admin_administration'],
             'admin_performance' => ['Performance', 'admin_performance'],
             'admin_import' => ['Import', 'admin_import'],
             'admin_preferences' => ['Preferences', 'admin_preferences'],
@@ -159,6 +159,26 @@ class SurvivalTest extends WebTestCase
             'admin_profiles_create' => ['Add new profile', 'admin_profiles_create'],
             'admin_taxes_index' => ['Taxes', 'admin_taxes_index'],
             'admin_taxes_create' => ['Add new tax', 'admin_taxes_create'],
+            'admin_manufacturers_index' => ['Brands', 'admin_manufacturers_index'],
+            'admin_manufacturers_create' => ['Add new brand', 'admin_manufacturers_create'],
+            'admin_sql_requests_index' => ['SQL Manager', 'admin_sql_requests_index'],
+            'admin_sql_requests_create' => ['Add new SQL query', 'admin_sql_requests_create'],
+            'admin_customers_index' => ['Customers', 'admin_customers_index'],
+            'admin_customers_create' => ['Add new customer', 'admin_customers_create'],
+            'admin_order_invoices' => ['Invoices', 'admin_order_invoices'],
+            'admin_product_catalog' => ['Products', 'admin_product_catalog'],
+            'admin_categories_index' => ['Categories', 'admin_categories_index'],
+            'admin_categories_create' => ['Add new category', 'admin_categories_create'],
+            'admin_categories_create_root' => ['Add new root category', 'admin_categories_create_root'],
+            'admin_stock_overview' => ['Stock management', 'admin_stock_overview'],
+            'admin_stock_movements_overview' => ['Stock management movements', 'admin_stock_movements_overview'],
+            'admin_themes_index' => ['Theme & logo', 'admin_themes_index'],
+            'admin_themes_import' => ['Add new theme', 'admin_themes_import'],
+            'admin_themes_export_current' => ['Export current theme', 'admin_themes_export_current'],
+            'admin_mail_theme_index' => ['Email Theme', 'admin_mail_theme_index'],
+            'admin_link_block_list' => ['Link Widget', 'admin_link_block_list'],
+            'admin_link_block_create' => ['New link block', 'admin_link_block_create'],
+            'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
         ];
     }
 
