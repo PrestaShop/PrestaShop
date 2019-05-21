@@ -44,7 +44,7 @@ services:
     depends_on:
       - "prestashop"
     volumes:
-      - /dev/shm:/dev/shm
+      - /dev/shm:/home/seluser/Downloads
     networks:
       default:
         aliases:
