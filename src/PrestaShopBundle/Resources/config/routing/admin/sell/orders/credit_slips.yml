@@ -1,0 +1,7 @@
+admin_credit_slips_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:index'
+    _legacy_controller: AdminSlip
+#    _legacy_link: AdminSlip
