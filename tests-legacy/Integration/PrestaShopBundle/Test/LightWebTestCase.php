@@ -33,6 +33,7 @@ use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use Psr\Log\NullLogger;
 
 use Shop;
@@ -40,7 +41,6 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
-use Theme;
 
 /**
  * Responsible of e2e and integration tests using Symfony.
@@ -100,15 +100,10 @@ class LightWebTestCase extends TestCase
 
         $contextMock->shop = $shopMock;
 
-        $themeMock = $this->getMockBuilder(Theme::class)
-            ->setMethods(array('getName'))
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $themeMock->method('getName')
-            ->willReturn('classic');
-
-        $contextMock->shop->theme = $themeMock;
+        $contextMock->shop->theme = new Theme([
+            'name' => 'classic',
+            'directory' => _PS_ROOT_DIR_.'/themes/',
+        ]);
 
         $countryMock = $this->getMockBuilder(Country::class)
             ->getMock();
@@ -116,11 +111,9 @@ class LightWebTestCase extends TestCase
 
         $contextMock->country = $countryMock;
 
-        $languageMock = $this->getMockBuilder(Language::class)
-            ->disableAutoload()
-            ->disableOriginalConstructor()
-            ->getMock();
-        $contextMock->language = $languageMock;
+        $languageFixture = new Language(1);
+
+        $contextMock->language = $languageFixture;
 
         $currencyMock = $this->getMockBuilder(Currency::class)
             ->disableOriginalConstructor()
@@ -197,7 +190,7 @@ class LightWebTestCase extends TestCase
 
         $legacyContextMock->method('getLanguage')
             ->will(
-                $this->returnValue($languageMock)
+                $this->returnValue($languageFixture)
             );
 
         $legacyContextMock->method('getAvailableLanguages')
@@ -225,7 +218,7 @@ class LightWebTestCase extends TestCase
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
         self::$kernel->getContainer()->set('logger', new NullLogger());
-        
+
         global $kernel;
         $kernel = self::$kernel;
     }
