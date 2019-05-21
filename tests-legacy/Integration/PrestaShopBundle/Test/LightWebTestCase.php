@@ -138,6 +138,12 @@ class LightWebTestCase extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $smartyMock = $this
+            ->getMockBuilder(\Smarty::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
         $contextMock->link = $linkMock;
 
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
@@ -155,10 +161,14 @@ class LightWebTestCase extends TestCase
                 'getLanguage',
                 'getAdminLink',
                 'getAvailableLanguages',
+                'getSmarty',
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()
             ->getMock();
+
+        $legacyContextMock->method('getSmarty')
+            ->willReturn($smartyMock);
 
         $legacyContextMock->method('getContext')
             ->willReturn($contextMock);
