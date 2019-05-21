@@ -65,7 +65,9 @@
           </div>
         </div>
 
-        {{ form_rest(webserviceConfigurationForm) }}
+        {% block webservice_configuration_form_rest %}
+          {{ form_rest(webserviceConfigurationForm) }}
+        {% endblock %}
       </div>
     </div>
     <div class="card-footer">

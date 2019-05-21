@@ -59,7 +59,9 @@
           }) }}
         {% endif %}
 
-        {{ form_rest(currencyForm) }}
+        {% block currency_form_rest %}
+          {{ form_rest(currencyForm) }}
+        {% endblock %}
       </div>
     </div>
 

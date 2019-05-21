@@ -101,7 +101,9 @@
           </div>
         </div>
 
-        {{ form_rest(stockForm) }}
+        {% block product_stock_preferences_form_rest %}
+          {{ form_rest(stockForm) }}
+        {% endblock %}
       </div>
     </div>
     <div class="card-footer">

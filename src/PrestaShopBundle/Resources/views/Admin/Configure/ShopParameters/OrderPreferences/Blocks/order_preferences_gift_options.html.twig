@@ -67,7 +67,9 @@
                     </div>
                 </div>
 
-                {{ form_rest(giftOptionsForm) }}
+                {% block order_gift_options_preferences_form_rest %}
+                  {{ form_rest(giftOptionsForm) }}
+                {% endblock %}
             </div>
         </div>
         <div class="card-footer">

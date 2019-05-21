@@ -120,8 +120,10 @@
               </div>
             </div>
           </div>
-          
-          {{ form_rest(importThemeForm) }}
+
+          {% block import_theme_form_rest %}
+            {{ form_rest(importThemeForm) }}
+          {% endblock %}
         </div>
 
       {{ form_end(importThemeForm) }}
