@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use Context;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;

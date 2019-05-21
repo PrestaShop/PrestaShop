@@ -26,14 +26,11 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Configuration;
-use Context;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
-use Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext as DomainOrderFeatureContext;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {

@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCo
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use Product;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext

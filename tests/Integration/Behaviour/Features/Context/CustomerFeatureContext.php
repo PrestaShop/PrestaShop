@@ -32,7 +32,6 @@ use Country;
 use Customer;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Validate;
-use RuntimeException;
 
 class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
 {
