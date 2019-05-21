@@ -86,7 +86,7 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
             throw new MissingCustomerRequiredFieldsException(
                 $missingFields,
                 sprintf(
-                    'One or more required fields for customer is missing. Missing fields are: %s',
+                    'One or more required fields for customer are missing. Missing fields are: %s',
                     implode(',', $missingFields)
                 )
             );
