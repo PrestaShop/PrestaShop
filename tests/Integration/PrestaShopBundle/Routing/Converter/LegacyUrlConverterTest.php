@@ -204,6 +204,25 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_profiles_edit' => ['/configure/advanced/profiles/1000/edit', 'AdminProfiles', 'updateprofile', ['id_profile' => 1000]],
             'admin_profiles_bulk_delete' => ['/configure/advanced/profiles/delete/bulk', 'AdminProfiles', 'submitBulkdeleteprofile'],
             'admin_profiles_delete' => ['/configure/advanced/profiles/12/delete', 'AdminProfiles', 'deleteprofile', ['id_profile' => 12]],
+
+            'admin_currencies_index' => ['/improve/international/currencies/', 'AdminCurrencies'],
+            'admin_currencies_search' => ['/improve/international/currencies/', 'AdminCurrencies', 'submitFiltercurrency'],
+            'admin_currencies_create' => ['/improve/international/currencies/new', 'AdminCurrencies', 'addcurrency'],
+            'admin_currencies_edit' => ['/improve/international/currencies/1000/edit', 'AdminCurrencies', 'updatecurrency', ['id_currency' => 1000]],
+            'admin_currencies_delete' => ['/improve/international/currencies/1000/delete', 'AdminCurrencies', 'deletecurrency', ['id_currency' => 1000]],
+            'admin_currencies_toggle_status' => ['/improve/international/currencies/1000/toggle-status', 'AdminCurrencies', 'statuscurrency', ['id_currency' => 1000]],
+            'admin_currencies_refresh_exchange_rates' => ['/improve/international/currencies/refresh-exchange-rates', 'AdminCurrencies', 'SubmitExchangesRates'],
+
+            'admin_employees_index' => ['/configure/advanced/employees/', 'AdminEmployees'],
+            'admin_employees_search' => ['/configure/advanced/employees/', 'AdminEmployees', 'submitFilteremployee'],
+            'admin_employees_save_options' => ['/configure/advanced/employees/save-options', 'AdminEmployees', 'submitOptionsemployee'],
+            'admin_employees_toggle_status' => ['/configure/advanced/employees/1000/toggle-status', 'AdminEmployees', 'statusemployee', ['id_employee' => 1000]],
+            'admin_employees_bulk_enable_status' => ['/configure/advanced/employees/bulk-enable-status', 'AdminEmployees', 'submitBulkenableSelectionemployee'],
+            'admin_employees_bulk_disable_status' => ['/configure/advanced/employees/bulk-disable-status', 'AdminEmployees', 'submitBulkdisableSelectionemployee'],
+            'admin_employees_delete' => ['/configure/advanced/employees/1000/delete', 'AdminEmployees', 'deleteemployee', ['id_employee' => 1000]],
+            'admin_employees_bulk_delete' => ['/configure/advanced/employees/bulk-delete', 'AdminEmployees', 'submitBulkdeleteemployee'],
+            'admin_employees_create' => ['/configure/advanced/employees/new', 'AdminEmployees', 'addemployee'],
+            'admin_employees_edit' => ['/configure/advanced/employees/1000/edit', 'AdminEmployees', 'updateemployee', ['id_employee' => 1000]],
         ];
     }
 

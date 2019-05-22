@@ -18,7 +18,7 @@
 
     .nav-pills {
       .nav-item {
-        padding-right: 0.875rem;
+        padding-right: 1.25rem;
       }
 
       border-top: 0;
@@ -26,10 +26,12 @@
 
       .nav-link {
         &.active {
+          color: #363a41;
           background-color: inherit;
         }
 
-        height: 1.375rem;
+        color: #afbbbe;
+        height: 1.65rem;
         padding-top: 0;
         padding-left: 0;
         padding-right: 0;
@@ -73,7 +75,7 @@
 
       .favicon-logo {
         width: 2.41875rem;
-        height: 2.19375rem;
+        height: 2.41875rem;;
         box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
         border: 1px solid transparent;
       }
@@ -83,4 +85,5 @@
   .logo-card:not(:last-child) {
     border-right: 0.0625rem solid #dedede;
   }
+
 }
