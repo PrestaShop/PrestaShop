@@ -34,6 +34,7 @@ use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Psr\Log\NullLogger;
 
 use Shop;
@@ -131,18 +132,26 @@ class LightWebTestCase extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $smartyMock = $this
-            ->getMockBuilder(\Smarty::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
         $contextMock->link = $linkMock;
 
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
             ->will($this->returnValue('en'));
         $currencyDataProviderMock->method('getDefaultCurrency')
             ->will($this->returnValue($currencyMock));
+
+        $kpiRowPresenterMock = $this->getMockBuilder(KpiRowPresenterInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['present'])
+            ->getMock();
+
+        $kpiRowPresenterMock->method('present')
+            ->will($this->returnValue(['allowRefresh' => false, 'kpis' => ['a', 'b', 'c']]));
+
+        $smartyMock = $this
+            ->getMockBuilder(\Smarty::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
             ->setMethods([
@@ -217,6 +226,7 @@ class LightWebTestCase extends TestCase
 
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
+        self::$kernel->getContainer()->set('prestashop.core.kpi_row.presenter', $kpiRowPresenterMock);
         self::$kernel->getContainer()->set('logger', new NullLogger());
     }
 
