@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -68,7 +69,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
             ->add((new DataColumn('id_credit_slip'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_credit_slip',
+                    'field' => 'id_order_slip',
                 ])
             )
             ->add((new DataColumn('id_order'))
@@ -78,19 +79,24 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                 ])
             )
             ->add((new DateTimeColumn('date_issued'))
-                ->setName($this->trans('Admin.Orderscustomers.Feature', [], 'Admin.Orderscustomers.Feature'))
+                ->setName($this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
-                    'field' => 'date_issued',
+                    'field' => 'date_add',
+                    'format' => 'Y-m-d',
                 ])
             )
-            ->add((new LinkColumn('pdf'))
-                ->setName($this->trans('PDF', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'pdf',
-                    'sortable' => false,
-                ])
+            ->add(
+                (new LinkColumn('pdf'))
+                    ->setName($this->trans('PDF', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'link_value',
+                        'sortable' => false,
+                        'route' => 'admin_credit_slips_pdf',
+                        'route_param_name' => 'creditSlipId',
+                        'route_param_field' => 'id_order_slip',
+                    ])
             )
-        ;
+            ->add((new ActionColumn('actions')));
     }
 
     /**

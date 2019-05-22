@@ -71,8 +71,7 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('slip.`id_order_slip`, slip.id_order, slip_date_add')
-            ->addSelect('c.`id_cms_category`')
+            ->select('slip.id_order_slip, slip.id_order, slip.date_add')
             ->groupBy('slip.id_order_slip')
         ;
 
@@ -112,7 +111,7 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
                 'slip',
                 $this->dbPrefix . 'orders',
                 'orders',
-                'slip.id_order = order.id_order'
+                'slip.id_order = orders.id_order'
             )
         ;
         $qb->andWhere('orders.id_shop IN (:contextShopIds)');
@@ -125,7 +124,7 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
     private function applyFilters(QueryBuilder $qb, array $filters)
     {
         $availableFiltersMap = [
-            'id_order_slip' => 'slip.id_order_slip',
+            'id_credit_slip' => 'slip.id_order_slip',
             'id_order' => 'slip.id_order',
             'date_issued' => 'slip.date_add',
         ];
@@ -135,7 +134,7 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('id_order_slip' === $filterName || 'id_order' === $filterName) {
+            if ('id_credit_slip' === $filterName || 'id_order' === $filterName) {
                 $qb->andWhere($availableFiltersMap[$filterName] . "= :$filterName");
                 $qb->setParameter($filterName, $value);
 

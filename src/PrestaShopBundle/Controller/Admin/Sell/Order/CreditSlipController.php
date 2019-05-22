@@ -26,7 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -35,10 +39,37 @@ use Symfony\Component\HttpFoundation\Response;
 class CreditSlipController extends FrameworkBundleAdminController
 {
     /**
+     * Show manufacturers listing page.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param CreditSlipFilters $creditSlipFilters
+     *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(
+        Request $request,
+        CreditSlipFilters $creditSlipFilters
+    ) {
+        $creditSlipGridFactory = $this->get('prestashop.core.grid.factory.credit_slip');
+        $creditSlipGrid = $creditSlipGridFactory->getGrid($creditSlipFilters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/CreditSlip/index.html.twig', [
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'creditSlipGrid' => $this->presentGrid($creditSlipGrid),
+        ]);
+    }
+
+    /**
+     * @param int $creditSlipId
+     *
+     * @return RedirectResponse
+     */
+    public function generatePdfAction($creditSlipId)
     {
-        return $this->render('@PrestaShop/Admin/Sell/Order/CreditSlip/index.html.twig');
+        //@todo: implement action
+        return $this->redirectToRoute('admin_credit_slips_index');
     }
 }
