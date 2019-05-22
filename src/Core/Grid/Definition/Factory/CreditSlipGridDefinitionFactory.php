@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -43,6 +44,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'credit_slip';
+
+    /**
+     * @var string
+     */
+    private $dateFormat;
+
+    public function __construct(HookDispatcherInterface $hookDispatcher, $dateFormat)
+    {
+        parent::__construct($hookDispatcher);
+        $this->dateFormat = $dateFormat;
+    }
 
     /**
      * {@inheritdoc}
@@ -82,7 +94,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                 ->setName($this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'date_add',
-                    'format' => 'Y-m-d',
+                    'format' => $this->dateFormat,
                 ])
             )
             ->add(
