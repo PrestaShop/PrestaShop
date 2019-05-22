@@ -50,13 +50,17 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
 
     /**
      * @param string $mailThemesFolder
+     * @param FolderThemeScanner $scanner
      * @param HookDispatcherInterface $hookDispatcher
      */
-    public function __construct($mailThemesFolder, HookDispatcherInterface $hookDispatcher)
-    {
+    public function __construct(
+        $mailThemesFolder,
+        FolderThemeScanner $scanner,
+        HookDispatcherInterface $hookDispatcher
+    ) {
         $this->mailThemesFolder = $mailThemesFolder;
+        $this->scanner = $scanner;
         $this->hookDispatcher = $hookDispatcher;
-        $this->scanner = new FolderThemeScanner();
     }
 
     /**
