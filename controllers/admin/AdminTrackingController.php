@@ -93,8 +93,6 @@ class AdminTrackingControllerCore extends AdminController
 
         $this->addRowAction('edit');
         $this->addRowAction('view');
-        $this->addRowAction('delete');
-        $this->addRowActionSkipList('delete', array((int) Configuration::get('PS_ROOT_CATEGORY')));
         $this->addRowActionSkipList('edit', array((int) Configuration::get('PS_ROOT_CATEGORY')));
 
         $this->fields_list = (array(
