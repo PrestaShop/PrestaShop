@@ -344,3 +344,11 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'address'
+
+    prestashop.core.grid.data.factory.credit_slip:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.credit_slip'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'cms_page'
