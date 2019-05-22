@@ -154,3 +154,10 @@ services:
         - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
         - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       public: true
+
+    prestashop.core.grid.query_builder.credit_slip:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\CreditSlipQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+      public: true
