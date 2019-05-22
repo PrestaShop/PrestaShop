@@ -57,6 +57,7 @@ class DatePickerType extends AbstractType
     {
         $resolver->setDefaults([
             'widget' => 'single_text',
+            // date_format must be provided in javascript supported type
             'date_format' => 'YYYY-MM-DD',
         ]);
     }
