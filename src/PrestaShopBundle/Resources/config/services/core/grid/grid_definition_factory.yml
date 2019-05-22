@@ -146,3 +146,8 @@ services:
           - '@prestashop.adapter.shop.context'
           - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
+
+    prestashop.core.grid.definition.factory.credit_slip:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
