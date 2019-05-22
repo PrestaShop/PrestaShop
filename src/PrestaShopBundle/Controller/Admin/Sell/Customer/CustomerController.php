@@ -263,7 +263,7 @@ class CustomerController extends AbstractAdminController
      * @param int $customerId
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function savePrivateNoteAction($customerId, Request $request)
     {
@@ -278,6 +278,13 @@ class CustomerController extends AbstractAdminController
                     (int) $customerId,
                     $data['note']
                 ));
+
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json([
+                        'success' => true,
+                        'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+                    ]);
+                }
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             } catch (CustomerException $e) {
