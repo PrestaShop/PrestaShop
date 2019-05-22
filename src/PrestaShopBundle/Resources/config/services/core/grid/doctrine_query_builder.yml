@@ -205,4 +205,5 @@ services:
       arguments:
         - '@doctrine.dbal.default_connection'
         - '%database_prefix%'
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
         - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

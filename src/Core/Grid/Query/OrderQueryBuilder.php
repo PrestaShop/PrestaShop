@@ -52,15 +52,26 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     private $contextLangId;
 
     /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $criteriaApplicator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
      * @param int $contextLangId
      */
-    public function __construct(Connection $connection, $dbPrefix, $contextLangId)
-    {
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
+        $contextLangId
+    ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->contextLangId = $contextLangId;
+        $this->criteriaApplicator = $criteriaApplicator;
     }
 
     /**
@@ -68,9 +79,24 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        $newCustomerSubSelect = $this->connection
+            ->createQueryBuilder()
+            ->select('so.id_order ')
+            ->from($this->dbPrefix . 'orders', 'so')
+            ->where('so.id_customer = o.id_customer')
+            ->andWhere('so.id_order < o.id_order')
+            ->setMaxResults(1)
+        ;
+
         $qb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
-            ->select('o.id_order, o.reference')
+            ->select('o.id_order, o.reference, o.total_paid_tax_incl, os.paid')
+            ->addSelect('Concat(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
+            ->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new')
+        ;
+
+        $this->criteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
         ;
 
         return $qb;

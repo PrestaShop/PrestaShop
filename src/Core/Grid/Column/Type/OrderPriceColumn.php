@@ -24,30 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Stores filters for Order grid
+ * Displays order price
  */
-final class OrderFilters extends Filters
+final class OrderPriceColumn extends AbstractColumn
 {
-    /** @var string */
-    protected $filterId = OrderGridDefinitionFactory::GRID_ID;
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'order_price';
+    }
 
     /**
      * {@inheritdoc}
      */
-    public static function getDefaults()
+    protected function configureOptions(OptionsResolver $resolver)
     {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'id_order',
-            'sortOrder' => 'DESC',
-            'filters' => [],
-        ];
+        $resolver
+            ->setRequired([
+                'field',
+                'is_paid_field',
+            ])
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('is_paid_field', 'string')
+        ;
     }
 }
