@@ -771,7 +771,7 @@ class ProductLazyArray extends AbstractLazyArray
 
         if ($show_availability) {
             if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
-                $this->product['availability_date'] = $product['available_date'];
+                $this->product['availability_date'] = Tools::displayDate($product['available_date']);
 
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $this->applyLastItemsInStockDisplayRule();
@@ -783,7 +783,7 @@ class ProductLazyArray extends AbstractLazyArray
             } elseif ($product['allow_oosp']) {
                 $this->product['availability_message'] = $product['available_later'] ? $product['available_later']
                     : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
-                $this->product['availability_date'] = $product['available_date'];
+                $this->product['availability_date'] = Tools::displayDate($product['available_date']);
                 $this->product['availability'] = 'available';
             } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
@@ -799,12 +799,12 @@ class ProductLazyArray extends AbstractLazyArray
                     array(),
                     'Shop.Theme.Catalog'
                 );
-                $this->product['availability_date'] = $product['available_date'];
+                $this->product['availability_date'] = Tools::displayDate($product['available_date']);
                 $this->product['availability'] = 'unavailable';
             } else {
                 $this->product['availability_message'] =
                     Configuration::get('PS_LABEL_OOS_PRODUCTS_BOD', $language->id);
-                $this->product['availability_date'] = $product['available_date'];
+                $this->product['availability_date'] = Tools::displayDate($product['available_date']);
                 $this->product['availability'] = 'unavailable';
             }
         } else {
