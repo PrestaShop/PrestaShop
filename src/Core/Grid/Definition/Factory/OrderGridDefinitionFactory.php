@@ -27,7 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 
 /**
  * Creates definition for Orders grid
@@ -65,9 +67,30 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add((new DataColumn('reference'))
-                ->setName( $this->trans('Reference', [], 'Admin.Global'))
+                ->setName($this->trans('Reference', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'reference',
+                ])
+            )
+            ->add((new BooleanColumn('new'))
+                ->setName($this->trans('New client', [], 'Admin.Orderscustomers.Feature'))
+                ->setOptions([
+                    'field' => 'new',
+                    'true_name' => $this->trans('Yes', [], 'Admin.Global'),
+                    'false_name' => $this->trans('No', [], 'Admin.Global'),
+                ])
+            )
+            ->add((new DataColumn('customer'))
+                ->setName($this->trans('Customer', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'customer',
+                ])
+            )
+            ->add((new OrderPriceColumn('total_paid_tax_incl'))
+                ->setName($this->trans('Total', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'total_paid_tax_incl',
+                    'is_paid_field' => 'paid',
                 ])
             )
         ;
