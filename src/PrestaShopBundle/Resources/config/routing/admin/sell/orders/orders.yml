@@ -1,0 +1,6 @@
+admin_orders_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
+    _legacy_controller: AdminOrders
