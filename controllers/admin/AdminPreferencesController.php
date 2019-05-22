@@ -235,20 +235,4 @@ class AdminPreferencesControllerCore extends AdminController
             );
         }
     }
-
-    /**
-     * Enable / disable multishop menu if multishop feature is activated.
-     *
-     * @param string $value
-     */
-    public function updateOptionPsMultishopFeatureActive($value)
-    {
-        Configuration::updateValue('PS_MULTISHOP_FEATURE_ACTIVE', $value);
-
-        $tab = Tab::getInstanceFromClassName('AdminShopGroup');
-        if (Validate::isLoadedObject($tab)) {
-            $tab->active = (bool) Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
-            $tab->update();
-        }
-    }
 }

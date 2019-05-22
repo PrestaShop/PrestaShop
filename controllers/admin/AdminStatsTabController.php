@@ -278,30 +278,6 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         }
     }
 
-    public function ajaxProcessSetDashboardDateRange()
-    {
-        $this->processDateRange();
-
-        if ($this->isXmlHttpRequest()) {
-            if (is_array($this->errors) && count($this->errors)) {
-                die(json_encode(
-                    array(
-                        'has_errors' => true,
-                        'errors' => array($this->errors),
-                        'date_from' => $this->context->employee->stats_date_from,
-                        'date_to' => $this->context->employee->stats_date_to, )
-                ));
-            } else {
-                die(json_encode(
-                    array(
-                        'has_errors' => false,
-                        'date_from' => $this->context->employee->stats_date_from,
-                        'date_to' => $this->context->employee->stats_date_to, )
-                    ));
-            }
-        }
-    }
-
     protected function getDate()
     {
         $year = isset($this->context->cookie->stats_year) ? $this->context->cookie->stats_year : date('Y');
