@@ -199,3 +199,10 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutPriceQueryBuilder'
       parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
       public: true
+
+    prestashop.core.grid.query_builder.order:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\OrderQueryBuilder'
+      arguments:
+        - '@doctrine.dbal.default_connection'
+        - '%database_prefix%'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

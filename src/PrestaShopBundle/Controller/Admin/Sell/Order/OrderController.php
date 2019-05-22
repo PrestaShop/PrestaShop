@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,14 +43,18 @@ class OrderController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
+     * @param OrderFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, OrderFilters $filters)
     {
+        $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
+
         return $this->render(
             '@PrestaShop/Admin/Sell/Order/Order/index.html.twig',
             [
+                'orderGrid' => $this->presentGrid($orderGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
             ]

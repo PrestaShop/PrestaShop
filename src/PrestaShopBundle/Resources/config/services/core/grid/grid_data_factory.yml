@@ -236,3 +236,11 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'no_qty_product_with_combination'
+
+    prestashop.core.grid.data.factory.order:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.order'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - '!php/const PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory::GRID_ID'
