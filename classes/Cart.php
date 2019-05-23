@@ -2795,7 +2795,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this, true);
+        $cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this, false);
 
         $result = false;
         if ($this->id) {
@@ -2816,37 +2816,37 @@ class CartCore extends ObjectModel
         $free_carriers_rules = array();
 
         $context = Context::getContext();
+        $defaultCarrierId = 0;
+        if ($this->id_carrier == 0) {
+            $allCarriers = array();
+            foreach ($delivery_option_list as $option) {
+                foreach ($option as $currentCarrier) {
+                    $allCarriers[] = $currentCarrier;
+                }
+            }
+            $defaultCarrierId = (int)$this->getDefaultCarrierId($allCarriers);
+        }
         foreach ($cart_rules as $cart_rule) {
             $total_price = $cart_rule['minimum_amount_tax'] ? $total_products_wt : $total_products;
             $total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
             $total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
-            if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction']
-                && $cart_rule['minimum_amount'] <= $total_price) {
+
+            if ($cart_rule['carrier_restriction'] && $cart_rule['minimum_amount'] <= $total_price) {
                 $cr = new CartRule((int) $cart_rule['id_cart_rule']);
-                if (Validate::isLoadedObject($cr) &&
-                    $cr->checkValidity($context, in_array((int) $cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false)) {
+                if (Validate::isLoadedObject($cr) && $cr->checkValidity($context, in_array((int) $cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false)) {
                     $carriers = $cr->getAssociatedRestrictions('carrier', true, false);
-                    $defaultCarrierId = 0;
-
-                    if ($this->id_carrier == 0) {
-
-                        $allCarriers = array();
-                        
-                        foreach ($delivery_option_list as $option) {
-                            foreach ($option as $currentCarrier) {
-                                $allCarriers[] = $currentCarrier;
-                            }
-                        }
-
-                        $defaultCarrierId = (int)$this->getDefaultCarrierId($allCarriers);
-                    }
-
                     if (is_array($carriers) && count($carriers) && isset($carriers['selected'])) {
                         foreach ($carriers['selected'] as $carrier) {
                             if (isset($carrier['id_carrier']) && $carrier['id_carrier']) {
-                                $free_carriers_rules[] = (int)$carrier['id_carrier'];
-                                if ($defaultCarrierId > 0 && $defaultCarrierId == $carrier['id_carrier'] && !in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)) {
-                                    $context->cart->addCartRule((int)$cart_rule['id_cart_rule']);
+                                if ($cart_rule['free_shipping']) {
+                                    $free_carriers_rules[] = (int)$carrier['id_carrier'];
+                                    if ($defaultCarrierId > 0 && $defaultCarrierId == $carrier['id_carrier'] && !in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)) {
+                                        $context->cart->addCartRule((int)$cart_rule['id_cart_rule']);
+                                    }
+                                } else {
+                                    if ($defaultCarrierId > 0 && $defaultCarrierId == $carrier['id_carrier'] && !in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)) {
+                                        $context->cart->addCartRule((int)$cart_rule['id_cart_rule']);
+                                    }
                                 }
                             }
                         }
