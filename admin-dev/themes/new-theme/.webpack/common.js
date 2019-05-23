@@ -27,6 +27,7 @@ module.exports = {
     geolocation: './js/pages/geolocation',
     imports: './js/pages/import',
     improve_design_positions: './js/pages/improve/design_positions',
+    improve_design_positions_module_hook_form: './js/pages/improve/design_positions/module-hook-form.js',
     invoices: './js/pages/invoices',
     language: './js/pages/language',
     localization: './js/pages/localization',

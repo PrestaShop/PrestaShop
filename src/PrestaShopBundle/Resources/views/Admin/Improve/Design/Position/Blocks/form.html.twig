@@ -32,6 +32,10 @@
   </div>
   <div class="card-block row">
     <div class="card-text">
+      {{ ps.form_group_row(moduleHookForm.module_hooks.id_module, {'attr': {
+        'data-hooks-url': path('admin_module_hooks') }}, {
+        'label': 'Module'|trans({}, 'Admin.Global'),
+      }) }}
       {{ form_rest(moduleHookForm) }}
     </div>
   </div>

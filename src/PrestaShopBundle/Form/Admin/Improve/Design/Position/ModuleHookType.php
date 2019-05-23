@@ -61,9 +61,14 @@ class ModuleHookType extends AbstractType
     {
         $builder
             ->add('id_module', ChoiceType::class, [
+                'label' => false,
+                'placeholder' => $this->translator->trans('Please select a module', [], 'Admin.Design.Help'),
                 'choices' => $this->moduleNameByIdChoices,
             ])
             ->add('id_hook', ChoiceType::class, [
+                'label' => false,
+                'placeholder' => $this->translator->trans(
+                    'Select a module above before choosing from available hooks', [], 'Admin.Design.Help'),
                 'choices' => [],
             ])
             ->add('except_files', ChoiceType::class, [

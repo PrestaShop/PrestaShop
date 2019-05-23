@@ -40,11 +40,11 @@ final class ModuleNameByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $choices = [];
+
         foreach (Module::getModulesInstalled() as $module) {
-            if ($choice = Module::getInstanceById($module['id_module'])) {
-                $choices[$choice->displayName] = $choice;
+            if ($instance = Module::getInstanceById($module['id_module'])) {
+                $choices[$instance->displayName] = $instance->id;
             }
-            $choices[$module['name']] = $module['id_module'];
         }
         ksort($choices);
 

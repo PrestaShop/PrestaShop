@@ -356,5 +356,5 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.admin.module_hook.form_data_provider'
         -
-          'options': 'PrestaShopBundle\Form\Admin\Improve\Design\Position\ModuleHookType'
+          'module_hooks': 'PrestaShopBundle\Form\Admin\Improve\Design\Position\ModuleHookType'
         - 'ModuleHook'

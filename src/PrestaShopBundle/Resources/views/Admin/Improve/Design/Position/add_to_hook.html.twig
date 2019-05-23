@@ -32,3 +32,8 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/improve_design_positions_module_hook_form.bundle.js') }}"></script>
+{% endblock %}
