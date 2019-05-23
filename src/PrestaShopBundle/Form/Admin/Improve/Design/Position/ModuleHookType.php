@@ -26,42 +26,25 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Position;
 
-use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Defines Improve > Design > Positions > Transplant | Edit module-hook form
  */
-class ModuleHookType extends TranslatorAwareType
+class ModuleHookType extends AbstractType
 {
     /**
-     * @var array
+     * @var TranslatorInterface
      */
-    private $allCmsCategories;
+    private $translator;
 
-    /**
-     * @var bool
-     */
-    private $isMultiShopEnabled;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $allCmsCategories
-     * @param $isMultiShopEnabled
-     */
     public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        array $allCmsCategories,
-        $isMultiShopEnabled)
-    {
-        parent::__construct($translator, $locales);
-
-        $this->allCmsCategories = $allCmsCategories;
-        $this->isMultiShopEnabled = $isMultiShopEnabled;
+        TranslatorInterface $translator
+    ) {
+        $this->translator = $translator;
     }
 
     /**
@@ -70,10 +53,15 @@ class ModuleHookType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('page_category_id', MaterialChoiceTreeType::class, [
-                'required' => false,
-                'choices_tree' => $this->allCmsCategories,
-                'choice_value' => 'id_cms_category',
-            ]);
+            ->add('id_module', ChoiceType::class, [
+                'choices' => [],
+            ])
+            ->add('id_hook', ChoiceType::class, [
+                'choices' => [],
+            ])
+            ->add('except_files', ChoiceType::class, [
+                'choices' => [],
+            ])
+        ;
     }
 }
