@@ -105,14 +105,6 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
           .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
           .then(() => client.switchWindow(1));
       });
-      test('should sign in Front Office', () => {
-        return promise
-          .then(() => client.waitForExistAndClick(AccessPageFO.sign_in_button))
-          .then(() => client.waitAndSetValue(AccessPageFO.login_input, 'pub@prestashop.com'))
-          .then(() => client.waitAndSetValue(AccessPageFO.password_inputFO, '123456789'))
-          .then(() => client.waitForExistAndClick(AccessPageFO.login_button))
-          .then(() => client.waitForExistAndClick(AccessPageFO.logo_home_page));
-      });
       test('should change the Front Office language to "English"', () => client.changeLanguage());
       test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product));
       test('should check in the FO if the block is displayed', () => client.waitForVisible(productPage.widget_after_product_thumbs.replace('%NAME', 'displayAfterProductThumbs' + " " + date_time)));
