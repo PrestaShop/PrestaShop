@@ -13,6 +13,7 @@ const commonLinkWidget = require('../../../common_scenarios/linkwidget');
 const {CheckoutOrderPage} = require('../../../../selectors/FO/order_page');
 const {Menu} = require('../../../../selectors/BO/menu');
 let promise = Promise.resolve();
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 /**
  * This script should be moved to the campaign full when this issue will be fixed
@@ -25,6 +26,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
 
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Create a link Widget with "displayFooter" hook and check it in the Front Office', client => {
 
     commonLinkWidget.createWidget('first', 'displayFooter');
