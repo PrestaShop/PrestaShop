@@ -26,8 +26,12 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Configuration;
 use Context;
+use Country;
 use Customer;
+use Exception;
+use PrestaShop\PrestaShop\Adapter\Validate;
 
 class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -50,6 +54,43 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer->email = $customerEmail;
         $customer->add();
         $this->customers[$customerName] = $customer;
+    }
+
+    /**
+     * @Given there is customer :reference with email :customerEmail
+     */
+    public function customerExists($reference, $customerEmail)
+    {
+        $data = Customer::getCustomersByEmail($customerEmail);
+        $customer = new Customer($data[0]['id_customer']);
+
+        if (!Validate::isLoadedObject($customer)) {
+            throw new Exception(sprintf('Customer with email "%s" does not exist.', $customerEmail));
+        }
+
+        SharedStorage::getStorage()->set($reference, $customer);
+    }
+
+    /**
+     * @Given customer :reference has address in :isoCode country
+     */
+    public function customerHasAddressInCountry($reference, $isoCode)
+    {
+        $customer = SharedStorage::getStorage()->get($reference);
+        $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
+
+        foreach ($customerAddresses as $address) {
+            $country = new Country($address['id_country']);
+
+            if ($country->iso_code === $isoCode) {
+                return;
+            }
+        }
+
+        throw new Exception(sprintf(
+            'Customer does not have address in "%s" country',
+            $isoCode
+        ));
     }
 
     /**
