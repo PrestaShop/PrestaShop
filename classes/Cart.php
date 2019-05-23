@@ -2821,16 +2821,33 @@ class CartCore extends ObjectModel
             $total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
             $total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
             if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction']
-                && in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)
                 && $cart_rule['minimum_amount'] <= $total_price) {
                 $cr = new CartRule((int) $cart_rule['id_cart_rule']);
                 if (Validate::isLoadedObject($cr) &&
                     $cr->checkValidity($context, in_array((int) $cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false)) {
                     $carriers = $cr->getAssociatedRestrictions('carrier', true, false);
+                    $defaultCarrierId = 0;
+
+                    if ($this->id_carrier == 0) {
+
+                        $allCarriers = array();
+                        
+                        foreach ($delivery_option_list as $option) {
+                            foreach ($option as $currentCarrier) {
+                                $allCarriers[] = $currentCarrier;
+                            }
+                        }
+
+                        $defaultCarrierId = (int)$this->getDefaultCarrierId($allCarriers);
+                    }
+
                     if (is_array($carriers) && count($carriers) && isset($carriers['selected'])) {
                         foreach ($carriers['selected'] as $carrier) {
                             if (isset($carrier['id_carrier']) && $carrier['id_carrier']) {
-                                $free_carriers_rules[] = (int) $carrier['id_carrier'];
+                                $free_carriers_rules[] = (int)$carrier['id_carrier'];
+                                if ($defaultCarrierId > 0 && $defaultCarrierId == $carrier['id_carrier'] && !in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)) {
+                                    $context->cart->addCartRule((int)$cart_rule['id_cart_rule']);
+                                }
                             }
                         }
                     }
@@ -2880,6 +2897,55 @@ class CartCore extends ObjectModel
         static::$cacheDeliveryOptionList[$this->id] = $delivery_option_list;
 
         return static::$cacheDeliveryOptionList[$this->id];
+    }
+    
+    /**
+     * Accepts a list of carriers THAT MUST INDICATE which carrier is "Best Price" and "Best Grade"
+     * and returns the default carrier.
+     * 
+     * @param $carriers
+     * 
+     * @return int The Id of the default carrier. If it can't be determined will return 0
+     */
+    private function getDefaultCarrierId($carriers)
+    {
+        $defaultCarrierType = (int)Configuration::get('PS_CARRIER_DEFAULT');
+        $defaultCarrierId = 0;
+
+        if (isset($carriers) && count($carriers) > 0) {
+            switch ($defaultCarrierType) {
+                //In this case the default carrier is of type "Best Grade"
+                case -2:
+                foreach ($carriers as $carrier) {
+                    if (isset($carrier['is_best_grade']) && $carrier['is_best_grade'] > 0) {
+                        reset($carrier['carrier_list']);
+                        $firstArrayKey = key($carrier['carrier_list']);
+                        $defaultCarrierId = $firstArrayKey;
+                        break;
+                    }
+                }
+                break;
+
+                //In this case the default carrier is of type "Best Price"
+                case -1:
+                foreach ($carriers as $carrier) {
+                    if (isset($carrier['is_best_price']) && $carrier['is_best_price'] > 0) { 
+                        reset($carrier['carrier_list']);
+                        $firstArrayKey = key($carrier['carrier_list']);
+                        $defaultCarrierId = $firstArrayKey;
+                        break;
+                    }
+                }
+                break;
+                
+                //In this case we have a specific carrier selected as default, so we just get its Id
+                case $defaultCarrierType > 0:
+                $defaultCarrierId = $defaultCarrierType;
+                break;               
+            }                   
+        }        
+
+        return $defaultCarrierId;
     }
 
     /**
