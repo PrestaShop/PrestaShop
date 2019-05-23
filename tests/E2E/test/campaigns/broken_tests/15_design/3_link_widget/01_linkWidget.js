@@ -422,22 +422,37 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
   commonLinkWidget.createWidget('EditHook', 'displayFooter');
 
   scenario('Edit the created linkwidget hook from "displayFooter" to "displayleftcolumn"', client => {
-    test('should go to "Design - Link Widget" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.link_widget_submenu));
-    test('should click on Display Footer "EditHook" linkwidget edit button', () => client.waitForExistAndClick(LinkWidget.edit_display_footer_created_hook));
-    test('should choose the hook "displayLeftColumn"', () => client.waitAndSelectByVisibleText(LinkWidget.hook_select, "displayLeftColumn"));
-    test('should select All the "content pages"', () => client.waitForExistAndClick(LinkWidget.select_all_content_page));
-    test('should deactivate all product pages"', () => {
-      return promise
-        .then(() => client.waitForExistAndClick(LinkWidget.select_all_product_page))
-        .then(() => client.waitForExistAndClick(LinkWidget.select_all_product_page));
+    test('should go to "Design - Link Widget" page', async () => await client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.link_widget_submenu));
+    test('should click on Display Footer "EditHook" linkwidget edit button', async () => await client.waitForExistAndClickJs(LinkWidget.edit_display_footer_created_hook));
+    test('should choose the hook "displayLeftColumn"', async () => await client.waitAndSelectByVisibleText(LinkWidget.hook_select, "displayLeftColumn"));
+    test('should unselect All the "content pages"', async () => {
+      let i = 1;
+      do{
+        await client.isVisible(LinkWidget.select_all_content_page.replace('%POS',i));
+        if(global.isVisible)
+          client.scrollWaitForExistAndClick(LinkWidget.select_all_content_page.replace('%POS',i));
+        i++;
+      }while(global.isVisible);
     });
-    test('should deactivate all "static content"', () => {
-      return promise
-        .then(() => client.waitForExistAndClick(LinkWidget.select_all_static_content))
-        .then(() => client.waitForExistAndClick(LinkWidget.select_all_static_content));
+    test('should deactivate all product pages"', async () => {
+      let i = 1;
+      do{
+        await client.isVisible(LinkWidget.select_all_product_page.replace('%POS',i));
+        if(global.isVisible)
+          client.scrollWaitForExistAndClick(LinkWidget.select_all_product_page.replace('%POS',i));
+        i++;
+      }while(global.isVisible);
     });
-    test('should click on "save" button', () => client.waitForExistAndClick(LinkWidget.save_button));
-    test('should verify the redirection to the link widget page', () => client.checkTextValue(LinkWidget.link_widget_configuration_bloc, 'LINK BLOCK CONFIGURATION', 'contain'));
+    test('should deactivate all "static content"', async () => {
+      let i = 1;
+      do{
+        await client.isVisible(LinkWidget.select_all_static_content.replace('%POS',i));
+        if(global.isVisible)
+          client.scrollWaitForExistAndClick(LinkWidget.select_all_static_content.replace('%POS',i));
+        i++;
+      }while(global.isVisible);
+    });
+    test('should click on "save" button', () => client.scrollWaitForExistAndClick(LinkWidget.save_button));
     test('should refresh the page', () => client.refresh());
     test('should verify if the added block is displayed', () => client.checkTextValue(LinkWidget.last_widget_name_block.replace('%HOOK', "displayLeftColumn"), "EditHook" + " " + +date_time));
 
@@ -455,11 +470,12 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
     }, 'common_client');
   }, 'common_client');
 
-  scenario('Delete the created linkwidget hook from "displayFooter" to "displayleftcolumn"', client => {
-    test('should click on delete button of the created hook', () => {
-      return promise
-        .then(() => client.waitForExistAndClick(LinkWidget.delete_display_footer_created_hook))
-        .then(() => client.waitForExistAndClick(LinkWidget.delete_button));
+
+  scenario('Delete the created linkwidget hook in "displayFooter" and moved to "displayleftcolumn"', client => {
+    test('should click on delete button of the created hook', async () => {
+      await client.scrollWaitForVisibleAndClick(LinkWidget.delete_display_footer_created_hook);
+      await client.waitForExistAndClickJs(LinkWidget.delete_button);
+      await client.alertAccept();
     });
     test('should verify if the added block is displayed', () => client.isNotExisting(LinkWidget.last_widget_name_block.replace('%HOOK', "displayleftcolumn"), "EditHook" + " " + date_time));
     scenario('Check that the hook is well deleted in the front office in the Front Office', client => {
