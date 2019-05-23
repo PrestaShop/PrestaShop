@@ -35,4 +35,11 @@ class RequiredField
      * Partner offers field name
      */
     const PARTNER_OFFERS = 'optin';
+
+    /**
+     * All allowed required fields for customer
+     */
+    const ALLOWED_REQUIRED_FIELDS = [
+        self::PARTNER_OFFERS,
+    ];
 }
