@@ -192,7 +192,7 @@ module.exports = {
       options.host = global.selenium_host;
     }
     else {
-      // We need to set it to localhost for 'got' library
+      // We need to set it to localhost for 'chai-http' library
       global.selenium_host = 'localhost';
     }
 
@@ -200,7 +200,7 @@ module.exports = {
       options.port = global.selenium_port;
     }
     else {
-      // We need to set it to localhost for 'got' library
+      // We need to set it to localhost for 'chai-http' library
       global.selenium_port = options.port;
     }
     fs.readFile(debugFile, 'utf8', (err, content) => {
