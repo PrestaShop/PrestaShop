@@ -2840,13 +2840,9 @@ class CartCore extends ObjectModel
                             if (isset($carrier['id_carrier']) && $carrier['id_carrier']) {
                                 if ($cart_rule['free_shipping']) {
                                     $free_carriers_rules[] = (int)$carrier['id_carrier'];
-                                    if ($defaultCarrierId > 0 && $defaultCarrierId == $carrier['id_carrier'] && !in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)) {
-                                        $context->cart->addCartRule((int)$cart_rule['id_cart_rule']);
-                                    }
-                                } else {
-                                    if ($defaultCarrierId > 0 && $defaultCarrierId == $carrier['id_carrier'] && !in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)) {
-                                        $context->cart->addCartRule((int)$cart_rule['id_cart_rule']);
-                                    }
+                                }
+                                if ($defaultCarrierId > 0 && $defaultCarrierId == $carrier['id_carrier'] && !in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)) {
+                                    $context->cart->addCartRule((int)$cart_rule['id_cart_rule']);
                                 }
                             }
                         }
