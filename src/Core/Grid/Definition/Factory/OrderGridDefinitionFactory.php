@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Category\DeleteCategoryRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Creates definition for Orders grid
@@ -44,6 +45,22 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'order';
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @param HookDispatcherInterface $dispatcher
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct(HookDispatcherInterface $dispatcher, ConfigurationInterface $configuration)
+    {
+        parent::__construct($dispatcher);
+
+        $this->configuration = $configuration;
+    }
 
     /**
      * {@inheritdoc}
@@ -66,7 +83,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columns = (new ColumnCollection())
             ->add((new DataColumn('id_order'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
@@ -130,6 +147,17 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
         ;
+
+        if ($this->configuration->get('PS_B2B_ENABLE')) {
+            $columns->addAfter('customer', (new DataColumn('company'))
+                ->setName($this->trans('Company', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'company',
+                ])
+            );
+        }
+
+        return $columns;
     }
 
     /**
