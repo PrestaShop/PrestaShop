@@ -178,8 +178,7 @@ module.exports = {
           }
         }
       };
-    }
-    else{
+    } else {
       // Mode Headfull
       options['desiredCapabilities']['chromeOptions']['prefs']['download.default_directory'] = global.downloadsFolderPath;
     }
@@ -190,21 +189,20 @@ module.exports = {
 
     if (typeof global.selenium_host !== 'undefined') {
       options.host = global.selenium_host;
-    }
-    else {
+    } else {
       // We need to set it to localhost for 'chai-http' library
       global.selenium_host = 'localhost';
     }
 
     if (typeof global.selenium_port !== 'undefined') {
       options.port = global.selenium_port;
-    }
-    else {
+    } else {
       // We need to set it to localhost for 'chai-http' library
       global.selenium_port = options.port;
     }
+
     fs.readFile(debugFile, 'utf8', (err, content) => {
-      global.ps_mode_dev = (content.substring(content.indexOf('define('_PS_MODE_DEV_', '), content.indexOf(');')).split(', ')[1]) === 'true' ? true : false;
+      global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(');')).split(', ')[1]) === 'true' ? true : false;
     });
     client = webdriverio.remote(options);
     initCommands(client);
