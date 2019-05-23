@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,32 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/Design/Position/Blocks/form.html.twig', {}) }}
-    </div>
-  </div>
-{% endblock %}
+use Module;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+
+/**
+ * Provides array of modules where key is module name and value is module id
+ */
+final class ModuleNameByIdChoiceProvider implements FormChoiceProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        $choices = [];
+        foreach (Module::getModulesInstalled() as $module) {
+            if ($choice = Module::getInstanceById($module['id_module'])) {
+                $choices[$choice->displayName] = $choice;
+            }
+            $choices[$module['name']] = $module['id_module'];
+        }
+        ksort($choices);
+
+        return $choices;
+    }
+}

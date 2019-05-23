@@ -26,49 +26,23 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Position;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-/**
- * Defines Improve > Design > Positions > Transplant | Edit module-hook form
- */
-class ModuleHookType extends AbstractType
+class ModuleHookFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var TranslatorInterface
+     * {@inheritdoc}
      */
-    private $translator;
-
-    /**
-     * @var array
-     */
-    private $moduleNameByIdChoices;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        array $moduleNameByIdChoices
-    ) {
-        $this->translator = $translator;
-        $this->moduleNameByIdChoices = $moduleNameByIdChoices;
+    public function getData()
+    {
+        // TODO: Implement getData() method.
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function setData(array $data)
     {
-        $builder
-            ->add('id_module', ChoiceType::class, [
-                'choices' => $this->moduleNameByIdChoices,
-            ])
-            ->add('id_hook', ChoiceType::class, [
-                'choices' => [],
-            ])
-            ->add('except_files', ChoiceType::class, [
-                'choices' => [],
-            ])
-        ;
+        // TODO: Implement setData() method.
     }
 }

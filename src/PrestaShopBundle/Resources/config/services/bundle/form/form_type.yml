@@ -865,3 +865,11 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.improve.design.position.module_hook:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\Position\ModuleHookType'
+      arguments:
+        - '@translator'
+        - '@=service("prestashop.adapter.form.choice_provider.module_name_by_id").getChoices()'
+      tags:
+        - { name: form.type }

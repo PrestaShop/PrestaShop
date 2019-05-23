@@ -27,10 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +46,6 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Display hooks positions.
      *
-     * @Template("@PrestaShop/Admin/Improve/Design/Position/index.html.twig")
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
@@ -240,7 +237,11 @@ class PositionsController extends FrameworkBundleAdminController
      */
     public function addToHookAction(Request $request)
     {
-        return $this->render('PrestaShopBundle:Admin/Improve/Design/Position:add_to_hook.html.twig');
+        $moduleHookForm = $this->get('prestashop.admin.module_hook.form_handler')->getForm();
+
+        return $this->render('PrestaShopBundle:Admin/Improve/Design/Position:add_to_hook.html.twig', [
+            'moduleHookForm' => $moduleHookForm->createView(),
+        ]);
     }
 
     /**

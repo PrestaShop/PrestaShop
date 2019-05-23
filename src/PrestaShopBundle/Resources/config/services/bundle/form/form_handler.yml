@@ -348,3 +348,13 @@ services:
             -
               'configuration': 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType'
             - 'MailTheme'
+
+    prestashop.admin.module_hook.form_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+      arguments:
+        - '@=service("form.factory").createBuilder()'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.admin.module_hook.form_data_provider'
+        -
+          'options': 'PrestaShopBundle\Form\Admin\Improve\Design\Position\ModuleHookType'
+        - 'ModuleHook'

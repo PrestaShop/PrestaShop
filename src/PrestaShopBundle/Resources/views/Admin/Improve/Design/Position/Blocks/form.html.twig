@@ -32,13 +32,13 @@
   </div>
   <div class="card-block row">
     <div class="card-text">
-
+      {{ form_rest(moduleHookForm) }}
     </div>
   </div>
 
   <div class="card-footer">
     <div class="d-inline-flex">
-      <a href="{{ path('admin_modules_positions_index') }}" class="btn btn-outline-secondary">
+      <a href="{{ path('admin_modules_positions') }}" class="btn btn-outline-secondary">
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
     </div>
