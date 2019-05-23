@@ -104,6 +104,12 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'false_name' => $this->trans('No', [], 'Admin.Global'),
                 ])
             )
+            ->add((new DataColumn('country_name'))
+                ->setName($this->trans('Delivery', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'country_name',
+                ])
+            )
             ->add((new DataColumn('customer'))
                 ->setName($this->trans('Customer', [], 'Admin.Global'))
                 ->setOptions([
