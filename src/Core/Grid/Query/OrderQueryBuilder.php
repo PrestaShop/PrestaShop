@@ -81,7 +81,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     {
         $newCustomerSubSelect = $this->connection
             ->createQueryBuilder()
-            ->select('so.id_order ')
+            ->select('so.id_order')
             ->from($this->dbPrefix . 'orders', 'so')
             ->where('so.id_customer = o.id_customer')
             ->andWhere('so.id_order < o.id_order')
@@ -91,6 +91,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         $qb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
             ->select('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname, os.color')
+            ->addSelect('o.date_add')
             ->addSelect('Concat(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
             ->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new')
         ;

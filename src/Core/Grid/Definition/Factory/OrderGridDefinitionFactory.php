@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
@@ -99,6 +101,22 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'osname',
                     'color_field' => 'color',
+                ])
+            )
+            ->add((new DateTimeColumn('date_add'))
+                ->setName($this->trans('Date', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'date_add',
+                ])
+            )
+            ->add((new LinkColumn('pdf'))
+                ->setName($this->trans('PDF', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => null,
+                    'route' => 'admin_orders_index',
+                    'route_param_name' => 'id_order',
+                    'route_param_field' => 'id_order',
+                    'icon' => 'picture_as_pdf',
                 ])
             )
         ;
