@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 
 /**
  * Creates definition for Orders grid
@@ -91,6 +92,13 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'total_paid_tax_incl',
                     'is_paid_field' => 'paid',
+                ])
+            )
+            ->add((new ColorColumn('osname'))
+                ->setName($this->trans('Status', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'osname',
+                    'color_field' => 'color',
                 ])
             )
         ;
