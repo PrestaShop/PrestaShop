@@ -157,13 +157,16 @@
                             {% set linkParams = {
                               'id_module': moduleInstance.id,
                               'id_hook': hook['id_hook'],
-                              'editGraft': 1
                             } %}
-                            {% if selectedModule %}
-                              {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
-                            {% endif %}
+                            {# recheck if this 'selectedModule` needed here, it might only controll the selection display #}
+{#                            {% if selectedModule %}#}
+{#                              {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}#}
+{#                            {% endif %}#}
 
-                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}">
+                            <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_modules_positions_edit', {
+                              'moduleId' : moduleInstance.id,
+                              'hookId': hook['id_hook'],
+                            }) }}">
                               <i class="material-icons">edit</i>
                               {{ 'Edit' | trans({}, 'Admin.Actions') }}
                             </a>

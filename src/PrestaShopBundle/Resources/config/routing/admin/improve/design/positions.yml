@@ -8,8 +8,25 @@ admin_modules_positions:
 
 admin_modules_positions_unhook:
     path: /unhook
-    methods: [POST,GET]
+    methods: [POST, GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:unhook'
         _legacy_controller: AdminModulesPositions
         _legacy_link: AdminModulesPositions:unhook
+
+admin_modules_positions_add_to_hook:
+  path: /transplant
+  methods: [POST, GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:addToHook'
+    _legacy_controller: AdminModulesPositions
+    _legacy_link: AdminModulesPositions:addToHook
+
+
+admin_modules_positions_edit:
+  path: /{moduleId}/{hookId}/edit
+  methods: [POST, GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:edit'
+    _legacy_controller: AdminModulesPositions
+    _legacy_link: AdminModulesPositions:editGraft
