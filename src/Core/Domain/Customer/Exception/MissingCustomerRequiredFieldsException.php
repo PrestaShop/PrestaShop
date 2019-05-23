@@ -24,22 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
 /**
- * Stores required field values for customer.
+ * Is thrown when adding/editing customer with missing required fields
  */
-class RequiredField
+class MissingCustomerRequiredFieldsException extends CustomerException
 {
     /**
-     * Partner offers field name
+     * @var string[]
      */
-    const PARTNER_OFFERS = 'optin';
+    private $missingRequiredFields;
 
     /**
-     * All allowed required fields for customer
+     * @param string[] $missingRequiredFields
+     * @param string $message
+     * @param int $code
+     * @param \Exception|null $previous
      */
-    const ALLOWED_REQUIRED_FIELDS = [
-        self::PARTNER_OFFERS,
-    ];
+    public function __construct(array $missingRequiredFields, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->missingRequiredFields = $missingRequiredFields;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getMissingRequiredFields()
+    {
+        return $this->missingRequiredFields;
+    }
 }
