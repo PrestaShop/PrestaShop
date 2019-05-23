@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,34 +22,38 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
 
-{extends file="helpers/form/form.tpl"}
-{block name="input"}
-	{if $input.name == "link_rewrite"}
-		<script type="text/javascript">
-		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
-			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
-		{else}
-			var PS_ALLOW_ACCENTED_CHARS_URL = 0;
-		{/if}
-		</script>
-		{$smarty.block.parent}
-	{else}
-		{$smarty.block.parent}
-	{/if}
-{/block}
-{block name="input"}
-	{if $input.type == 'select_category'}
-		<div class="col-lg-9">
-			<div class="row">
-				<select name="id_parent">
-					{$input.options.html}
-				</select>
-			</div>
-		</div>
-	{else}
-		{$smarty.block.parent}
-	{/if}
-{/block}
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
+/**
+ * Is thrown when adding/editing customer with missing required fields
+ */
+class MissingCustomerRequiredFieldsException extends CustomerException
+{
+    /**
+     * @var string[]
+     */
+    private $missingRequiredFields;
+
+    /**
+     * @param string[] $missingRequiredFields
+     * @param string $message
+     * @param int $code
+     * @param \Exception|null $previous
+     */
+    public function __construct(array $missingRequiredFields, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->missingRequiredFields = $missingRequiredFields;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getMissingRequiredFields()
+    {
+        return $this->missingRequiredFields;
+    }
+}
