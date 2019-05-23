@@ -26,8 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Category\DeleteCategoryRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -118,6 +122,31 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_field' => 'id_order',
                     'icon' => 'picture_as_pdf',
                 ])
+            )
+            ->add((new ActionColumn('action'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => $this->getRowActions(),
+                ])
+            )
+        ;
+    }
+
+    /**
+     * @return RowActionCollection
+     */
+    private function getRowActions()
+    {
+        return (new RowActionCollection())
+            ->add(
+                (new LinkRowAction('view'))
+                    ->setName($this->trans('View', [], 'Admin.Actions'))
+                    ->setIcon('zoom_in')
+                    ->setOptions([
+                        'route' => 'admin_orders_index',
+                        'route_param_name' => 'id_order',
+                        'route_param_field' => 'id_order',
+                    ])
             )
         ;
     }
