@@ -8,6 +8,7 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Menu} = require('../../../../selectors/BO/menu.js');
 const common_scenarios = require('../../../common_scenarios/pages');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 let categoryDataWithoutSubCategory = {
   name: 'Category',
@@ -70,6 +71,7 @@ scenario('Create, edit and delete "CATEGORIES"', () => {
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'design');
 
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createCategory(categoryDataWithSubCategory);
   common_scenarios.checkCategoryBO(categoryDataWithSubCategory);
   common_scenarios.editCategory(categoryDataWithSubCategory, newCategoryData);
