@@ -16,5 +16,11 @@ Feature: Currency Management
       | shop_association | shop1 |
     Then currency "currency1" should be "EUR"
     And currency "currency1" exchange rate should be 0.88
-    And currency "currency1" should have status "enabled"
+    And currency "currency1" should have status enabled
     And currency "currency1" should be available in shop "shop1"
+
+  Scenario: Disabling default currency should not be allowed
+    Given currency "currency2" with "USD" exists
+    And currency "currency2" is default in "shop1" shop
+    When I disable currency "currency2"
+    Then I should get error that default currency cannot be disabled

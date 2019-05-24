@@ -30,8 +30,11 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\ShopFeatureContext;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
@@ -46,6 +49,11 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     private $currencyRegistry = [];
 
+    /**
+     * @var \Exception|null
+     */
+    private $lastException;
+
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
@@ -58,7 +66,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function addNewCurrency($reference, TableNode $node)
     {
         $data = $node->getRowsHash();
-        $shop = $this->shopFeatureContext->getShopFromRegistry($data['shop_association']);
+        /** @var \Shop $shop */
+        $shop = SharedStorage::getStorage()->get($data['shop_association']);
 
         $command = new AddCurrencyCommand(
             $data['iso_code'],
@@ -74,6 +83,34 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currencyId = $this->getCommandBus()->handle($command);
 
         $this->currencyRegistry[$reference]= new Currency($currencyId->getValue());
+    }
+
+    /**
+     * @When I disable currency ":currencyReference"
+     */
+    public function disableCurrency($reference)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        try {
+            $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currency->id));
+        } catch (CannotDisableDefaultCurrencyException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then I should get error that default currency cannot be disabled
+     */
+    public function assertLastErrorIsCurrencyCannotBeDisabled()
+    {
+        if (!$this->lastException instanceof CannotDisableDefaultCurrencyException) {
+            throw new RuntimeException(sprintf(
+                'Last error should be "CannotDisableDefaultCurrencyException", but got "%s"',
+                $this->lastException ? get_class($this->lastException) : 'null'
+            ));
+        }
     }
 
     /**

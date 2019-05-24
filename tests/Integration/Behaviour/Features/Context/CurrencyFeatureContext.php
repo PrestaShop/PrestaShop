@@ -159,16 +159,10 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then currency :reference should have status :status
+     * @Then /^currency "(.*)" should have status (enabled|disabled)$/
      */
     public function assertCurrencyStatus($reference, $status)
     {
-        $statuses = ['enabled', 'disabled'];
-
-        if (!in_array($status, $statuses)) {
-            throw new RuntimeException(sprintf('Available statuses are: %s', implode(',', $statuses)));
-        }
-
         $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($reference);
         $expectedStatus = $status === 'enabled';
 
@@ -205,7 +199,8 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function assertCurrencyIsAvailableInShop($currencyReference, $shopReference)
     {
         $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($currencyReference);
-        $shop = $this->shopFeatureContext->getShopFromRegistry($shopReference);
+        /** @var \Shop $shop */
+        $shop = SharedStorage::getStorage()->get($shopReference);
 
         if (!in_array($shop->id, $currency->getAssociatedShops())) {
             throw new RuntimeException(sprintf(
@@ -213,6 +208,37 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
                 $currencyReference,
                 $shopReference
             ));
+        }
+    }
+
+    /**
+     * @Given currency :reference with :isoCode exists
+     */
+    public function assertCurrencyExists($reference, $isoCode)
+    {
+        $currencyId = Currency::getIdByIsoCode($isoCode);
+
+        if (!$currencyId) {
+            throw new RuntimeException(sprintf('Currency with ISO Code "%s" does not exist', $isoCode));
+        }
+
+        SharedStorage::getStorage()->set($reference, new Currency($currencyId));
+    }
+
+    /**
+     * @Given currency :currencyReference is default in :shopReference shop
+     */
+    public function assertCurrencyIsDefaultInShop($currencyReference, $shopReference)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($currencyReference);
+        /** @var \Shop $shop */
+        $shop = SharedStorage::getStorage()->get($shopReference);
+
+        if ($currency->id !== (int) Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shop->id)) {
+            throw new RuntimeException(
+                sprintf('Currency "%s" is not default currency in shop "%s"', $currencyReference, $shopReference)
+            );
         }
     }
 }

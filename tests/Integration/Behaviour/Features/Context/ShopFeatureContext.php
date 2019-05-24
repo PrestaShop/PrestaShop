@@ -32,11 +32,6 @@ use Shop;
 class ShopFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @var Shop[]
-     */
-    private $shopRegistry = [];
-
-    /**
      * @Given shop :reference with name :shopName exists
      */
     public function shopWithNameExists($reference, $shopName)
@@ -47,20 +42,6 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(sprintf('Shop with name "%s" does not exist', $shopName));
         }
 
-        $this->shopRegistry[$reference] = new Shop($shopId);
-    }
-
-    /**
-     * @param string $reference
-     *
-     * @return Shop
-     */
-    public function getShopFromRegistry($reference)
-    {
-        if (!isset($this->shopRegistry[$reference])) {
-            throw new RuntimeException(sprintf('Shop "%s" does not exist in registry', $reference));
-        }
-
-        return $this->shopRegistry[$reference];
+        SharedStorage::getStorage()->set($reference, new Shop($shopId));
     }
 }
