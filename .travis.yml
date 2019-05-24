@@ -62,6 +62,7 @@ matrix:
   allow_failures:
     - php: 7.2
       env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
+    - php: 7.3
 
 before_install:
   # Avoid Composer authentication issues
