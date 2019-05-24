@@ -30,7 +30,9 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use RuntimeException;
@@ -101,13 +103,41 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I delete currency ":currencyReference"
+     */
+    public function deleteCurrency($reference)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        try {
+            $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currency->id));
+        } catch (CannotDeleteDefaultCurrencyException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @Then I should get error that default currency cannot be disabled
      */
-    public function assertLastErrorIsCurrencyCannotBeDisabled()
+    public function assertLastErrorIsDefaultCurrencyCannotBeDisabled()
     {
         if (!$this->lastException instanceof CannotDisableDefaultCurrencyException) {
             throw new RuntimeException(sprintf(
                 'Last error should be "CannotDisableDefaultCurrencyException", but got "%s"',
+                $this->lastException ? get_class($this->lastException) : 'null'
+            ));
+        }
+    }
+
+    /**
+     * @Then I should get error that default currency cannot be deleted
+     */
+    public function assertLastErrorIsDefaultCurrencyCannotBeDeleted()
+    {
+        if (!$this->lastException instanceof CannotDeleteDefaultCurrencyException) {
+            throw new RuntimeException(sprintf(
+                'Last error should be "CannotDeleteDefaultCurrencyException", but got "%s"',
                 $this->lastException ? get_class($this->lastException) : 'null'
             ));
         }

@@ -24,3 +24,9 @@ Feature: Currency Management
     And currency "currency2" is default in "shop1" shop
     When I disable currency "currency2"
     Then I should get error that default currency cannot be disabled
+
+  Scenario: Deleting default currency should not be allowed
+    Given currency "currency2" with "USD" exists
+    And currency "currency2" is default in "shop1" shop
+    When I delete currency "currency2"
+    Then I should get error that default currency cannot be deleted
