@@ -30,6 +30,7 @@ module.exports = {
     invoices: './js/pages/invoices',
     language: './js/pages/language',
     localization: './js/pages/localization',
+    login: './js/pages/login/index',
     logs: './js/pages/logs',
     main: './js/theme.js',
     maintenance: './js/pages/maintenance',
@@ -52,7 +53,6 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
-    login_page: './js/pages/login/index',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
