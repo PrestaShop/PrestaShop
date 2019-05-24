@@ -41,8 +41,7 @@ use Validate;
 /**
  * @internal
  */
-final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler implements
-    DeleteProductFromOrderHandlerInterface
+final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler implements DeleteProductFromOrderHandlerInterface
 {
     /**
      * {@inheritdoc}

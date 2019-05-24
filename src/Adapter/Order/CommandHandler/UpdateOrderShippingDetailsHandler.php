@@ -39,8 +39,7 @@ use Validate;
 /**
  * @internal
  */
-final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler implements
-    UpdateOrderShippingDetailsHandlerInterface
+final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler implements UpdateOrderShippingDetailsHandlerInterface
 {
     /**
      * {@inheritdoc}

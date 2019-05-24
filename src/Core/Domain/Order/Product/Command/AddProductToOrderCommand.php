@@ -65,12 +65,12 @@ class AddProductToOrderCommand
     private $productQuantity;
 
     /**
-     * @var int|null Invoice id or null if new invoice should be created.
+     * @var int|null invoice id or null if new invoice should be created
      */
     private $orderInvoiceId;
 
     /**
-     * @var bool|null Bool if product is being added using new invoice.
+     * @var bool|null bool if product is being added using new invoice
      */
     private $isFreeShipping;
 

@@ -267,7 +267,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $cart->add();
 
-        Context::getContext()->cart =  $cart;
+        Context::getContext()->cart = $cart;
         Context::getContext()->customer = new Customer($order->id_customer);
 
         return $cart;

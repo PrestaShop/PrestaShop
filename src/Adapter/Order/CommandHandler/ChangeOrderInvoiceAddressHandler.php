@@ -37,8 +37,7 @@ use Validate;
 /**
  * @internal
  */
-final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implements
-    ChangeOrderInvoiceAddressHandlerInterface
+final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implements ChangeOrderInvoiceAddressHandlerInterface
 {
     /**
      * {@inheritdoc}
