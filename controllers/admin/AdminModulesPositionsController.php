@@ -27,8 +27,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 {
     protected $display_key = 0;
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminModulesPositionsController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         parent::__construct();
     }

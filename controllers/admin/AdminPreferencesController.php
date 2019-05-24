@@ -29,8 +29,16 @@
  */
 class AdminPreferencesControllerCore extends AdminController
 {
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminPreferencesController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         $this->className = 'Configuration';
         $this->table = 'configuration';

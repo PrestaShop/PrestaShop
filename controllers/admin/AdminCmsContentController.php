@@ -38,8 +38,16 @@ class AdminCmsContentControllerCore extends AdminController
     /** @var object Category() instance for navigation */
     protected static $category = null;
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminCmsContentController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         /* Get current category */
         $id_cms_category = (int) Tools::getValue('id_cms_category', Tools::getValue('id_cms_category_parent', 1));
