@@ -31,6 +31,7 @@ use Behat\Gherkin\Node\TableNode;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
@@ -65,7 +66,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I add new currency :reference with following properties:
      */
-    public function addNewCurrency($reference, TableNode $node)
+    public function addCurrency($reference, TableNode $node)
     {
         $data = $node->getRowsHash();
         /** @var \Shop $shop */
@@ -84,7 +85,33 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         /** @var CurrencyId $currencyId */
         $currencyId = $this->getCommandBus()->handle($command);
 
-        $this->currencyRegistry[$reference]= new Currency($currencyId->getValue());
+        SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
+    }
+
+    /**
+     * @When I edit currency :reference with following properties:
+     */
+    public function editCurrency($reference, TableNode $node)
+    {
+        $data = $node->getRowsHash();
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        $command = new EditCurrencyCommand((int) $currency->id);
+
+        if (isset($data['iso_code'])) {
+            $command->setIsoCode($data['iso_code']);
+        }
+
+        if (isset($data['exchange_rate'])) {
+            $command->setExchangeRate((float) $data['exchange_rate']);
+        }
+
+        if (isset($data['is_enabled'])) {
+            $command->setIsEnabled($data['is_enabled']);
+        }
+
+        $this->getCommandBus()->handle($command);
     }
 
     /**

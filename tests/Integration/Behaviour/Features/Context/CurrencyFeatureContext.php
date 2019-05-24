@@ -146,7 +146,8 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyIsoCode($reference, $isoCode)
     {
-        $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($reference);
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
 
         if ($currency->iso_code !== $isoCode) {
             throw new RuntimeException(sprintf(
@@ -163,7 +164,8 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyStatus($reference, $status)
     {
-        $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($reference);
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
         $expectedStatus = $status === 'enabled';
 
         if ($currency->active != $expectedStatus) {
@@ -181,9 +183,10 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyExchangeRate($reference, $exchangeRate)
     {
-        $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($reference);
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
 
-        if ($currency->conversion_rate != $exchangeRate) {
+        if ((float) $currency->conversion_rate != (float) $exchangeRate) {
             throw new RuntimeException(sprintf(
                 'Currency "%s" has "%s" exchange rate, but "%s" was expected.',
                 $reference,
@@ -198,7 +201,8 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyIsAvailableInShop($currencyReference, $shopReference)
     {
-        $currency = $this->domainCurrencyFeatureContext->getCurrencyFromRegistry($currencyReference);
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($currencyReference);
         /** @var \Shop $shop */
         $shop = SharedStorage::getStorage()->get($shopReference);
 
