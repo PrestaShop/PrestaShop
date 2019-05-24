@@ -156,7 +156,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             Hook::exec('actionOrderSlipAdd', [
                 'order' => $order,
                 'productList' => $orderDetailList,
-                'qtyList' => $fullQuantityList
+                'qtyList' => $fullQuantityList,
             ], null, false, true, false, $order->id_shop);
 
             $customer = new Customer((int) $order->id_customer);

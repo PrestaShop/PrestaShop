@@ -143,9 +143,6 @@ class AddPaymentCommand
         return $this->paymentCurrencyId;
     }
 
-    /**
-     * @return null
-     */
     public function getOrderInvoiceId()
     {
         return $this->orderInvoiceId;

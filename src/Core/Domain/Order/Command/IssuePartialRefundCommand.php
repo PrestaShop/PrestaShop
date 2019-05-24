@@ -164,9 +164,6 @@ class IssuePartialRefundCommand
         return $this->cartRuleRefundType;
     }
 
-    /**
-     * @return null
-     */
     public function getCartRuleRefundAmount()
     {
         return $this->cartRuleRefundAmount;
