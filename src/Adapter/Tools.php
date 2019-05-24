@@ -246,7 +246,6 @@ class Tools
     }
 
     /**
-<<<<<<< HEAD
      * Delete unicode class from regular expression patterns.
      *
      * @param string $pattern
