@@ -15,10 +15,6 @@ const {Menu} = require('../../../../selectors/BO/menu');
 let promise = Promise.resolve();
 const welcomeScenarios = require('../../../common_scenarios/welcome');
 
-/**
- * This script should be moved to the campaign full when this issue will be fixed
- * https://github.com/PrestaShop/PrestaShop/issues/9950
- **/
 scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
 
   scenario('Login in the Back Office', client => {
