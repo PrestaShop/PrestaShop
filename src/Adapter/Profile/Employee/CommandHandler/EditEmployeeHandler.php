@@ -259,10 +259,10 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      */
     private function updateSecurityToken(Employee $employee)
     {
-        $cacheKey = sha1($employee->email);
+        $cacheKey = sprintf('app.employees_%s', sha1($employee->email));
 
-        if ($this->cache->hasItem("app.employees_${cacheKey}")) {
-            $this->cache->deleteItem("app.employees_${cacheKey}");
+        if ($this->cache->hasItem($cacheKey)) {
+            $this->cache->deleteItem($cacheKey);
         }
 
         $user = $this->userProvider->loadUserByUsername($employee->email);
