@@ -24,37 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Employee;
-
-use Employee;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Employee\EmployeeDefaultPageProviderInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult;
 
 /**
- * Provides default page data for an employee.
+ * Stores data of an authenticating employee.
  */
-final class EmployeeDefaultPageProvider implements EmployeeDefaultPageProviderInterface
+class AuthenticatingEmployee
 {
     /**
-     * @var LegacyContext
+     * @var string
      */
-    private $context;
+    private $defaultPageUrl;
 
     /**
-     * @param LegacyContext $context
+     * @param string $defaultPageUrl
      */
-    public function __construct(LegacyContext $context)
+    public function __construct($defaultPageUrl)
     {
-        $this->context = $context;
+        $this->defaultPageUrl = $defaultPageUrl;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function getDefaultPageUrl($employeeId)
+    public function getDefaultPageUrl()
     {
-        $employee = new Employee($employeeId);
-
-        return $this->context->getAdminLink($employee->getDefaultTabClassName());
+        return $this->defaultPageUrl;
     }
 }

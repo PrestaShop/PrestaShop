@@ -81,7 +81,9 @@ services:
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\AuthenticateEmployeeCommand }
 
-  prestashop.adapter.employee.default_page_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Employee\EmployeeDefaultPageProvider'
+  prestashop.adapter.employee.query_handler.get_employee_for_authentication:
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForAuthenticationHandler'
     arguments:
       - '@prestashop.adapter.legacy.context'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication }

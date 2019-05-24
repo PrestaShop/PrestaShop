@@ -29,7 +29,8 @@ namespace PrestaShopBundle\Security\Admin;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AuthenticateEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Employee\EmployeeDefaultPageProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatingEmployee;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,32 +72,32 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     private $translator;
 
     /**
-     * @var EmployeeDefaultPageProviderInterface
+     * @var CommandBusInterface
      */
-    private $defaultPageProvider;
+    private $queryBus;
 
     /**
      * @param Hashing $hashing
      * @param RouterInterface $router
      * @param CommandBusInterface $commandBus
+     * @param CommandBusInterface $queryBus
      * @param LoggerInterface $logger
      * @param TranslatorInterface $translator
-     * @param EmployeeDefaultPageProviderInterface $defaultPageProvider
      */
     public function __construct(
         Hashing $hashing,
         RouterInterface $router,
         CommandBusInterface $commandBus,
+        CommandBusInterface $queryBus,
         LoggerInterface $logger,
-        TranslatorInterface $translator,
-        EmployeeDefaultPageProviderInterface $defaultPageProvider
+        TranslatorInterface $translator
     ) {
         $this->hashing = $hashing;
         $this->router = $router;
         $this->commandBus = $commandBus;
         $this->logger = $logger;
         $this->translator = $translator;
-        $this->defaultPageProvider = $defaultPageProvider;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -164,7 +165,12 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             ]
         );
 
-        return new RedirectResponse($this->defaultPageProvider->getDefaultPageUrl($userId));
+        $getEmployeeForAuthentication = new GetEmployeeForAuthentication((int) $userId);
+
+        /** @var AuthenticatingEmployee $authenticatingEmployee */
+        $authenticatingEmployee = $this->queryBus->handle($getEmployeeForAuthentication);
+
+        return new RedirectResponse($authenticatingEmployee->getDefaultPageUrl());
     }
 
     /**

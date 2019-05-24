@@ -17,9 +17,9 @@ services:
             - "@prestashop.core.crypto.hashing"
             - "@prestashop.router"
             - "@prestashop.core.command_bus"
+            - "@prestashop.core.query_bus"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
-            - "@prestashop.adapter.employee.default_page_provider"
 
     prestashop.security.role.dynamic_role_hierarchy:
         class: PrestaShopBundle\Security\Role\DynamicRoleHierarchy
