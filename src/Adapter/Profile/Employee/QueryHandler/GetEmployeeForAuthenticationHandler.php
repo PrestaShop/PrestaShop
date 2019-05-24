@@ -24,33 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
+namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use Employee;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeForAuthenticationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatingEmployee;
 
 /**
- * Authenticates employee into back office.
+ * Handles employee authentication command.
  */
-class AuthenticateEmployeeCommand
+final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthenticationHandlerInterface
 {
     /**
-     * @var EmployeeId
+     * @var LegacyContext
      */
-    private $employeeId;
+    private $context;
 
     /**
-     * @param int $employeeId
+     * @param LegacyContext $context
      */
-    public function __construct($employeeId)
+    public function __construct(LegacyContext $context)
     {
-        $this->employeeId = new EmployeeId($employeeId);
+        $this->context = $context;
     }
 
     /**
-     * @return EmployeeId
+     * {@inheritdoc}
      */
-    public function getEmployeeId()
+    public function handle(GetEmployeeForAuthentication $query)
     {
-        return $this->employeeId;
+        $employee = new Employee($query->getEmployeeId()->getValue());
+
+        return new AuthenticatingEmployee(
+            $this->context->getAdminLink($employee->getDefaultTabClassName())
+        );
     }
 }
