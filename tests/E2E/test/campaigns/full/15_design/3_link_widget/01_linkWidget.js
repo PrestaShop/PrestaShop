@@ -188,7 +188,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       test('should change the Front Office language to "English"', () => client.changeLanguage());
       test('should check in the FO if the block is displayed', () => client.waitForVisible(AccessPageFO.home_link_widget.replace('%HOMELINKWIDGET', 'displayHome' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayHome')));
+      test('should scroll to the table ', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayHome')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayHome');
@@ -221,7 +221,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       });
       test('should check in the FO if the block is displayed', () => client.waitForVisible(AccessPageFO.display_nav1_link_widget.replace('%NAVLINKWIDGET', 'displayNav1' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayNav1')));
+      test('should scroll to the table ', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayNav1')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayNav1');
@@ -250,7 +250,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       test('should change the Front Office language to "English"', () => client.changeLanguage());
       test('should check in the FO if the block is displayed', () => client.waitForVisible(AccessPageFO.display_nav2_link_widget.replace('%NAVLINKWIDGET', 'displayNav2' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayNav2')));
+      test('should scroll to the table ', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayNav2')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayNav2');
@@ -279,7 +279,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       test('should change the Front Office language to "English"', () => client.changeLanguage());
       test('should check in the FO if the block is displayed', () => client.waitForVisible(AccessPageFO.nav_full_width_link_widget.replace('%NAVFULLWIDTHLINKWIDGET', 'displayNavFullWidth' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayNavFullWidth')));
+      test('should scroll to the table ', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayNavFullWidth')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayNavFullWidth');
@@ -309,7 +309,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       test('should click on "All products" button', () => client.scrollWaitForExistAndClick(productPage.see_all_products));
       test('should check in the FO if the block is displayed', () => client.waitForVisible(AccessPageFO.nav_left_column_link_widget.replace('%NAVLEFTCOLUMNLINKWIDGET', 'displayLeftColumn' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayLeftColumn')));
+      test('should scroll to the table ', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayLeftColumn')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayLeftColumn');
@@ -341,7 +341,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
       test('should check in the FO if the block is displayed', () => client.waitForVisible(AccessPageFO.nav_shopping_cart_link_widget.replace('%NAVSHOPPINGCARTLINKWIDGET', 'displayShoppingCart' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayShoppingCart')));
+      test('should scroll to the table ', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayShoppingCart')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayShoppingCart');
@@ -373,7 +373,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
       test('should check in the FO if the block is displayed', () => client.waitForVisible(AccessPageFO.nav_shopping_cart_footer_link_widget.replace('%NAVSHOPPINGCARTFOOTERLINKWIDGET', 'displayShoppingCartFooter' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayShoppingCartFooter')));
+      test('should scroll to the table ', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayShoppingCartFooter')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayShoppingCartFooter');
@@ -401,7 +401,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       test('should change the Front Office language to "English"', () => client.changeLanguage());
       test('should check in the FO if the block is displayed', () => client.waitForVisible(AccessPageFO.display_top_link_widget.replace('%DISPLAYTOP', 'displayTop' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayTop')));
+      test('should scroll to the table ', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayTop')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayTop');
