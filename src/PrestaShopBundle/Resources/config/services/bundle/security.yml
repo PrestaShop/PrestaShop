@@ -19,7 +19,6 @@ services:
             - "@prestashop.core.command_bus"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
-            - "@prestashop.adapter.tools"
             - "@prestashop.adapter.employee.default_page_provider"
 
     prestashop.security.role.dynamic_role_hierarchy:

@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AuthenticateEmployeeCommand;
@@ -72,11 +71,6 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     private $translator;
 
     /**
-     * @var Tools
-     */
-    private $tools;
-
-    /**
      * @var EmployeeDefaultPageProviderInterface
      */
     private $defaultPageProvider;
@@ -87,7 +81,6 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param CommandBusInterface $commandBus
      * @param LoggerInterface $logger
      * @param TranslatorInterface $translator
-     * @param Tools $tools
      * @param EmployeeDefaultPageProviderInterface $defaultPageProvider
      */
     public function __construct(
@@ -96,7 +89,6 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         CommandBusInterface $commandBus,
         LoggerInterface $logger,
         TranslatorInterface $translator,
-        Tools $tools,
         EmployeeDefaultPageProviderInterface $defaultPageProvider
     ) {
         $this->hashing = $hashing;
@@ -104,7 +96,6 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $this->commandBus = $commandBus;
         $this->logger = $logger;
         $this->translator = $translator;
-        $this->tools = $tools;
         $this->defaultPageProvider = $defaultPageProvider;
     }
 
@@ -165,7 +156,7 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $this->logger->info(
             $this->translator->trans(
                 'Back office connection from %ip%',
-                ['%ip%' => $this->tools->getIpAddress()],
+                ['%ip%' => $request->getClientIp()],
                 'Admin.Advparameters.Feature'
             ),
             [
