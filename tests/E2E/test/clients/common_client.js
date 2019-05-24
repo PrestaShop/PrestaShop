@@ -148,7 +148,7 @@ class CommonClient {
     let selenium_requestURL = '/wd/hub/session/' + sessionId + '/chromium/send_command' ;
     await chai.request(selenium_hostURL)
               .post(selenium_requestURL)
-              .send({body: JSON.stringify(params)});
+              .send(params);
   }
 
   close() {
