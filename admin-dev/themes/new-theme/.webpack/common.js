@@ -30,6 +30,7 @@ module.exports = {
     invoices: './js/pages/invoices',
     language: './js/pages/language',
     localization: './js/pages/localization',
+    login: './js/pages/login/index',
     logs: './js/pages/logs',
     main: './js/theme.js',
     maintenance: './js/pages/maintenance',
@@ -54,7 +55,6 @@ module.exports = {
     webservice: './js/pages/webservice',
     error: './js/pages/error',
     monitoring: './js/pages/monitoring',
-    login_page: './js/pages/login/index',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
