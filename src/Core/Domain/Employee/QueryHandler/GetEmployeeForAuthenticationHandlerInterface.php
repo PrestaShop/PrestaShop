@@ -24,19 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Employee;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatingEmployee;
 
 /**
- * Describes an employee default page provider.
+ * Interface for service that gets employee data for authentication.
  */
-interface EmployeeDefaultPageProviderInterface
+interface GetEmployeeForAuthenticationHandlerInterface
 {
     /**
-     * Get the default page url for given employee.
+     * @param GetEmployeeForAuthentication $query
      *
-     * @param int $employeeId
-     *
-     * @return string
+     * @return AuthenticatingEmployee
      */
-    public function getDefaultPageUrl($employeeId);
+    public function handle(GetEmployeeForAuthentication $query);
 }

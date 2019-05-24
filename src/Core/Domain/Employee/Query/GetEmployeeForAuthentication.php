@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 /**
- * Authenticates employee into back office.
+ * Gets employee for authentication.
  */
-class AuthenticateEmployeeCommand
+class GetEmployeeForAuthentication
 {
     /**
      * @var EmployeeId
