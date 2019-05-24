@@ -280,17 +280,22 @@ class CommonController extends FrameworkBundleAdminController
     public function resetSearchAction($controller = '', $action = '', $filterId = '')
     {
         $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
+        $employeeId = $this->getUser()->getId();
+        $shopId = $this->getContext()->shop->id;
 
         // for compatibility when $controller and $action are used
         if (!empty($controller) && !empty($action)) {
-            $employeeId = $this->getUser()->getId();
-            $shopId = $this->getContext()->shop->id;
-
-            $adminFiltersRepository->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+            $adminFilter = $adminFiltersRepository->findByEmployeeAndRouteParams(
+                $employeeId, $shopId, $controller, $action
+            );
         }
 
         if (!empty($filterId)) {
-            $adminFiltersRepository->removeByFilterId($filterId);
+            $adminFilter = $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, $filterId);
+        }
+
+        if (isset($adminFilter)) {
+            $adminFiltersRepository->unsetFilters($adminFilter);
         }
 
         return new JsonResponse();
