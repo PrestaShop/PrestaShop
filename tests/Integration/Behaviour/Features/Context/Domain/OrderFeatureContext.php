@@ -52,15 +52,15 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($orderStates as $state) {
             if ($state['name'] === $orderStatus) {
-                $orderStatusId = (int)$state['id_order_state'];
+                $orderStatusId = (int) $state['id_order_state'];
             }
         }
 
         /** @var OrderId $orderId */
         $orderId = $this->getCommandBus()->handle(
             new AddOrderFromBackOfficeCommand(
-                (int)SharedStorage::getStorage()->get($cartReference)->id,
-                (int)Context::getContext()->employee->id,
+                (int) SharedStorage::getStorage()->get($cartReference)->id,
+                (int) Context::getContext()->employee->id,
                 '',
                 $paymentModuleName,
                 $orderStatusId
