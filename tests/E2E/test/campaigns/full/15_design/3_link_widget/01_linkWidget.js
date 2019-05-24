@@ -160,7 +160,7 @@ scenario('Create, edit, delete LinkWidget with different HOOK ', () => {
       test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product));
       test('should check in the FO if the block is displayed', () => client.waitForVisible(productPage.display_footer_product_linkwidget.replace('%DISPLAYFOOTERPRODUCT', 'displayFooterProduct' + " " + date_time)));
       test('should go to the back office the page', () => client.switchWindow(0));
-      test('should to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayFooterProduct')));
+      test('should scroll to the table', () => client.scrollTo(LinkWidget.last_widget_drag_in_displayFooter_block.replace('%HOOK', 'displayFooterProduct')));
     }, 'common_client');
 
     commonLinkWidget.dragAndDropHookBO('displayFooterProduct');
