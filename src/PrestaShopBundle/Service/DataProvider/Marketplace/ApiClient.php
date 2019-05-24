@@ -64,6 +64,7 @@ class ApiClient
     public function setSslVerification($verifySsl)
     {
         $this->toolsAdapter->refreshCaCertFile();
+        $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
     }
 
     /**

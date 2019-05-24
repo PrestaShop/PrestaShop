@@ -114,7 +114,10 @@ swiftmailer:
     spool:     { type: memory }
 
 # Guzzle configuration
-csa_guzzle:
+love_oss_guzzle5:
+    cache:
+        enabled: true
+        adapter: guzzle.cache
     profiler:
         enabled: "%kernel.debug%"
     clients:

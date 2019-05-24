@@ -162,7 +162,7 @@ class ModuleManagerBuilder
         $prestashopAddonsConfig =
             $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
-        $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
+        $clientConfig = $config['love_oss_guzzle5']['clients']['addons_api']['config'];
 
         self::$translator = Context::getContext()->getTranslator();
 
