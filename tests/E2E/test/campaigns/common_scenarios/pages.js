@@ -247,7 +247,6 @@ module.exports = {
         test('should set the "Meta Keywords - ' + pageData.meta_keyword[i] + '" input', () => {
           return promise
             .then(() => client.waitAndSetValue(Pages.Page.meta_keywords_input,pageData.meta_keyword[i]))
-            //.then(() => client.keys())
             .then(() => client.keys('Enter'));
         });
       }
