@@ -2490,7 +2490,41 @@ class AdminOrdersControllerCore extends AdminController
 
         // Check fields validity
         $this->doEditProductValidation($order_detail, $order, isset($order_invoice) ? $order_invoice : null);
+        
+        // Check if Qty is submited
+          if ( Tools::getValue ( 'product_quantity' ) ) {   
+               
+            // check in stock Qty
+            $StockAvailable = StockAvailable::getQuantityAvailableByProduct($order_detail->product_id, $order_detail->id_product_attribute , $order_detail->id_shop);
+            
+            // get the key that make us decide if this product is orderable when out of Qty or not
+            $sql = 'SELECT out_of_stock FROM ps_stock_available WHERE id_product = '.$order_detail->product_id.'';
+            if ($results = Db::getInstance()->ExecuteS($sql))
+                foreach ($results as $row)
+                    $canOrder = $row['out_of_stock'];
 
+            // Check if submited qty is superior to orignal qty
+            if( Tools::getValue('product_quantity') - $order_detail->product_quantity > 0 ){                
+                
+                if($StockAvailable > 0 ){
+                   $addedQty = Tools::getValue('product_quantity') - $order_detail->product_quantity ;
+                    if(  $addedQty > $StockAvailable ){
+                        if (isset($canOrder) && (int)$canOrder != 1  ) {
+                         die(json_encode(array('error' => $this->trans('You already have the maximum quantity available for this product.', array(), 'Admin.Orderscustomers.Notification'))));
+                         return false;
+                        }
+                    }
+    
+                 }else{
+                    if ( isset($canOrder) &&  (int)$canOrder != 1 ) {
+                         die(json_encode(array('error' => $this->trans('You already have the maximum quantity available for this product.', array(), 'Admin.Orderscustomers.Notification'))));
+                         return false;
+                    }
+                 }
+            }   
+            
+        }
+        
         // If multiple product_quantity, the order details concern a product customized
         $product_quantity = 0;
         if (is_array(Tools::getValue('product_quantity'))) {
