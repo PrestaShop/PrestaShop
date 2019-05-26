@@ -317,7 +317,7 @@ class CustomerCore extends ObjectModel
     public function getByEmail($email, $passwd = null, $ignore_guest = true)
     {
         if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd))) {
-            die(Tools::displayError());
+            Tools::displayError();
         }
 
         $result = Db::getInstance()->getRow('
