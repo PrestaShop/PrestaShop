@@ -86,6 +86,10 @@
             {{ form_widget(generalForm.default_status) }}
           </div>
         </div>
+
+        {% block product_general_preferences_form_rest %}
+          {{ form_rest(generalForm) }}
+        {% endblock %}
       </div>
     </div>
     <div class="card-footer">
