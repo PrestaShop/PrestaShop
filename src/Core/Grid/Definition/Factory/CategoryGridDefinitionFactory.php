@@ -193,13 +193,12 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $filters = (new FilterCollection())
             ->add(
-                (new Filter('reduction_type', ChoiceType::class))
-                ->setAssociatedColumn('reduction_type')
+                (new Filter('id_category', TextType::class))
+                ->setAssociatedColumn('id_category')
                 ->setTypeOptions([
                     'required' => false,
-                    'choices' => [
-                        $this->translator->trans('Amount') => 'amount',
-                        $this->translator->trans('Percent') => 'percent',
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                     ],
                 ])
             )
