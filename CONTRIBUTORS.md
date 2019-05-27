@@ -34,7 +34,7 @@ GitHub contributors:
 - alexey-svistunov
 - alexsimple
 - Alfakom-MK
-- Alfonso Jimenez
+- Alfonso Jiménez
 - Ali Shareei
 - Alphacom IT Solutions - Macedonia
 - amatosg
@@ -97,9 +97,9 @@ GitHub contributors:
 - Casper Olsen
 - cava89
 - ccauw
-- Cedric Mouleyre
 - Cédric Fontaine
 - Cédric Geffroy
+- Cédric Mouleyre
 - cgordenne
 - cgordenne_wepika
 - Chafik
@@ -118,7 +118,6 @@ GitHub contributors:
 - codvir
 - Comkwatt
 - comxd
-- Conner
 - Conner Burnett
 - Connie
 - Corentin Delcourt
@@ -220,20 +219,19 @@ GitHub contributors:
 - Francisco Jiménez Cabrera
 - Franck Ribeiro
 - FrancMunoz
-- Francois Gaillard
-- Francois-Marie de Jouvencel
+- François Gaillard
+- François-Marie de Jouvencel
 - Fransuisse
-- Frederic BENOIST
+- Frédéric Benoist
 - Gabriel Arama
 - Gabriel Schwardy
 - Gabriele Manganello
 - Gaelle ITZKOVITZ
-- Galaydyuk Alexandr
 - Gamesh
 - Gaspar Fernandez
-- Geoffray
+- Geoffray Warnants
 - Gerdus van Zyl
-- gfanton
+- Guilhen Fanton
 - ggedamed
 - Giant Leap Lab
 - Ginkosama
@@ -277,7 +275,6 @@ GitHub contributors:
 - Ian Fung
 - idnovate
 - indesign47
-- iNem0o
 - Inetbiz
 - ironwo0d
 - Ish Gupta
@@ -297,12 +294,12 @@ GitHub contributors:
 - Jean-Philippe Beauve
 - jeanbe
 - jeckyl
-- Jeremie Tabet
 - Jérémie Broutier
+- Jérémie Tabet
 - Jeroen Dewaele
 - Jérôme H
 - Jerome Herry
-- Jérôme Nadaud
+- Jérôme Nadaud
 - jessylenne
 - jestemradek
 - Jevgenij Visockij
@@ -318,7 +315,7 @@ GitHub contributors:
 - John Zandbergen
 - John Cocula
 - Jonadabe
-- Jonatan Nunez
+- Jónatan Núñez
 - Jonathan Danse
 - Jonathan Lelievre
 - Jonathan SAHM
@@ -327,13 +324,13 @@ GitHub contributors:
 - Jose Cruz
 - joseantgv
 - jtogrul
-- Juan G. Jordan
+- Juan G. Jordán
 - JuanjoSCu
 - Juha Remes
-- Julien
 - Julien Bouchez
 - Julien Bourdeau
 - Julien Deniau
+- Julien Fenaille
 - Julien Gissinger
 - Julien Martin
 - Julius Zukauskas
@@ -354,9 +351,9 @@ GitHub contributors:
 - Ladel
 - Lathanao
 - ldecoker
-- Lea Mendes Da Silva
+- Léa Mendes Da Silva
 - Leandro F. L
-- Leo
+- Léo
 - Lesley Paone
 - LittleBigDev
 - LOIC ROSSET ltd
@@ -420,7 +417,6 @@ GitHub contributors:
 - Maxime Biloé
 - Maxime Morel-Bailly
 - Maxime Vasse
-- Mbechezi Mlanawo
 - mchelh
 - mchojnacki
 - mdomenjoud
@@ -429,7 +425,7 @@ GitHub contributors:
 - Mehdi Badrani
 - mehdi-ghezal
 - Mehrshad Zakerian
-- melvin
+- Melvin Moustaid
 - Metin EREN
 - Michael Dekker
 - Michael Hjulskov
@@ -437,7 +433,7 @@ GitHub contributors:
 - Michael Salihi
 - Michael Schloh von Bennewitz
 - michaesc
-- Michal Spaček
+- Michal Špaček
 - Michel Antoine
 - Michel Courtade
 - Mickael ANDRIEU
@@ -450,6 +446,7 @@ GitHub contributors:
 - minic studio
 - Mirko Esposito
 - misthero
+- Mlanawo Mbechezi
 - Moisés Gramary Barbosa
 - Molka DJEMAL
 - moncef102
@@ -542,13 +539,12 @@ GitHub contributors:
 - Racochejl
 - Rafael Cunha
 - Raphael
-- Raphael Droz
 - Raphael Malie
 - raphael-homann
+- Raphaël Droz
 - Raúl Rubio
 - raulgundin
 - rav88
-- rblaurin
 - rblaurin
 - Reddy Ntie
 - Rémi Gaillard
@@ -567,13 +563,12 @@ GitHub contributors:
 - Romain Soulard
 - romainberger
 - Roman Gusev
-- Roy
 - Rúben Martins
 - Rudra Sarkar
 - runningz
 - s-duval
 - Sacha
-- Sacha FROMENT
+- Sacha Froment
 - sadlyblue
 - sagaradonis
 - sallemiines
@@ -585,7 +580,7 @@ GitHub contributors:
 - Sandu Velea
 - Sarah Lorenzini
 - Šarūnas Jonušas
-- Saycile
+- Cécile Dubouis
 - sbordun
 - Seb
 - Sebastien
@@ -600,7 +595,7 @@ GitHub contributors:
 - seleda
 - Serge Rivière
 - Sergey P
-- Sergio Quinonez
+- Sergio Quiñonez
 - Serhat Durum
 - Serhii Polishchuk
 - Edouard Seynaeve
