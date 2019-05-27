@@ -26,6 +26,7 @@ GitHub contributors:
 - Alexander Simonchik
 - Alexandra Even
 - Alexandre Alouit
+- Alexandre Debusschere
 - Alexandre Segura
 - alexdee2007
 - AlexEven
@@ -46,10 +47,9 @@ GitHub contributors:
 - andromaque
 - Andy Pieters
 - anegoda1995
-- Angel Guzman Maeso
+- Ángel Guzmán Maeso
 - Ansar Mallouli
 - Anthony Girard
-- antoin_m
 - Antoine LA
 - Antoine Mille
 - Antoine THOMAS
@@ -58,7 +58,7 @@ GitHub contributors:
 - Antonio Intagliata
 - antoniofr
 - AntonLejon
-- Armando Salvador Perez
+- Armando Salvador Pérez
 - Arnaud Lemercier
 - Arnaud Schaeffer
 - Atchworks
@@ -99,8 +99,8 @@ GitHub contributors:
 - cava89
 - ccauw
 - Cedric Mouleyre
-- cedricfontaine
-- cedricgeffroy
+- Cédric Fontaine
+- Cédric Geffroy
 - cgordenne
 - cgordenne_wepika
 - Chafik
@@ -148,7 +148,6 @@ GitHub contributors:
 - Davide
 - Davy Rolink
 - de saint leger
-- Debusschere Alexandre
 - DelecroixQuentin
 - Denis Yurevich
 - Dennis
@@ -181,7 +180,6 @@ GitHub contributors:
 - Dvir Julius
 - Dvir-Julius
 - e-gaulue
-- ecomm360
 - edamart
 - Edouard
 - Edouard Gaulue
@@ -251,7 +249,7 @@ GitHub contributors:
 - grezlikowski
 - gRoussac
 - Grzegorz Zawadzki
-- gskema
+- Gytis Škėma
 - Guilhem Fanton
 - Guillaume DELOINCE
 - Guillaume Durand
@@ -267,12 +265,11 @@ GitHub contributors:
 - Gytis Skėma
 - Ha!*!*y
 - ha99y
-- hadjedjvincent
 - hadrich-hatem
 - harelguy
 - helgvor-stoll
 - hhennes
-- hibatallahAouadni
+- Hibatallah Aouadni
 - hiousi
 - Horia Rudan
 - Howard Noz
@@ -283,7 +280,6 @@ GitHub contributors:
 - indesign47
 - iNem0o
 - Inetbiz
-- iqit-commerce
 - ironwo0d
 - Ish Gupta
 - Ishiki
@@ -355,8 +351,6 @@ GitHub contributors:
 - kiropowered
 - Kjeld Borch Egevang
 - Klemart3D
-- kompilorb
-- kpodemski
 - Krystian Podemski
 - Ladel
 - Lathanao
@@ -393,6 +387,7 @@ GitHub contributors:
 - Manfredi Petruso
 - manuelbcd
 - Marc González Majoral
+- Marcin Sz
 - Marcin Sągol
 - marcinsz101
 - Marco Cervellin
@@ -403,7 +398,7 @@ GitHub contributors:
 - Mark Wienk
 - MarkC
 - Martin Finkenflügel
-- Martin Fojtik
+- Martin Fojtík
 - Marvin Sauraye
 - Mateusz Nastalski
 - Mathias Reker
@@ -445,7 +440,7 @@ GitHub contributors:
 - Michael Schloh von Bennewitz
 - michaesc
 - Michal Spaček
-- Michel ANTOINE
+- Michel Antoine
 - Michel Courtade
 - Mickael ANDRIEU
 - Mickaël Andrieu
@@ -604,13 +599,14 @@ GitHub contributors:
 - Sebastian Madejski
 - Sebastien Monterisi
 - Sébastien Rufer
+- Sébastien Sterckx
 - SebSept
 - seleda
 - Sergey P
 - Sergio Quinonez
 - Serhat Durum
 - Serhii Polishchuk
-- seynaeve
+- Edouard Seynaeve
 - sfroment42
 - shaffe-fr
 - Shagshag
@@ -657,7 +653,7 @@ GitHub contributors:
 - Thomas
 - Thomas Blanc
 - Thomas Ferney
-- Thomas LEVIANDIER
+- Thomas Leviandier
 - Thomas Nabord
 - thomas-aw
 - Threef
@@ -670,7 +666,7 @@ GitHub contributors:
 - Tom Panier
 - Tomas
 - Tomas Ilginis
-- Tomas Liska
+- Tomáš Líška
 - Tomas Votruba
 - Tomasz Slominski
 - tomek
@@ -690,7 +686,7 @@ GitHub contributors:
 - venditdevs
 - Vincent Augagneur
 - Vincent Beudez
-- Vincent HADJEDJ
+- Vincent Hadjedj
 - Vincent Schoener
 - Vincent Terenti
 - Vincent Van den Brink
