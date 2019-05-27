@@ -144,8 +144,8 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                             [
                                 'icon' => 'picture_as_pdf',
                                 'is_link_available_field' => 'is_invoice_available',
-                                'route' => 'admin_orders_index',
-                                'route_param_name' => 'id_order',
+                                'route' => 'admin_orders_generate_invoice_pdf',
+                                'route_param_name' => 'orderId',
                                 'route_param_field' => 'id_order',
                             ],
                             [

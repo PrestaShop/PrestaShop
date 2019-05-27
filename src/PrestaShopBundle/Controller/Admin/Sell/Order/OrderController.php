@@ -60,4 +60,16 @@ class OrderController extends FrameworkBundleAdminController
             ]
         );
     }
+
+    /**
+     * @param int $orderId
+     */
+    public function generateInvoicePdfAction($orderId)
+    {
+        $this->get('prestashop.adapter.pdf.order_invoice_pdf_generator')->generatePDF([$orderId]);
+
+        // When using legacy generator,
+        // we want to be sure that displaying PDF is the last thing this controller will do
+        die;
+    }
 }
