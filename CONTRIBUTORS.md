@@ -91,7 +91,6 @@ GitHub contributors:
 - Burhan
 - Caleydon Media
 - cam.lafit
-- can
 - Captain FLAM
 - Captain-FLAM
 - Carlos Addis
@@ -220,7 +219,7 @@ GitHub contributors:
 - Fourat Achour
 - fram
 - Francisco Jiménez Cabrera
-- FranckRIBEIRO
+- Franck Ribeiro
 - FrancMunoz
 - Francois Gaillard
 - Francois-Marie de Jouvencel
@@ -295,12 +294,12 @@ GitHub contributors:
 - janisVincent
 - Jaume
 - Javsmile
-- jbroutier
 - JEAN
 - Jean-François Viguier
 - jeanbe
 - jeckyl
 - Jeremie Tabet
+- Jérémie Broutier
 - Jeroen Dewaele
 - Jérôme H
 - Jerome Herry
@@ -406,9 +405,9 @@ GitHub contributors:
 - Mathieu Ferment
 - matiasiglesias
 - Mats Rynge
-- Matt75
 - Matteo
 - Matteo Spreafico
+- Matthias Raigne
 - Matthieu Mota
 - MatthieuB
 - Matthieu Deroubaix
