@@ -7,3 +7,9 @@ services:
         arguments:
             - "@=service('prestashop.adapter.legacy.context').getSmarty()"
             - '@prestashop.adapter.pdf.type_provider.invoice'
+
+    prestashop.adapter.pdf.generator.credit_slip:
+      class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+      arguments:
+        - "@=service('prestashop.adapter.legacy.context').getSmarty()"
+        - '@prestashop.adapter.pdf.type_provider.credit_slip'
