@@ -27,9 +27,19 @@
 
 {% block content %}
   {% block credit_slips_listing %}
-    <div class="row">
+    <div class="row justify-content-center">
       <div class="col">
         {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': creditSlipGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block credit_slips_print_pdf %}
+    <div class="row justify-content-center">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/pdf_by_date.html.twig'
+          with {'pdfByDateForm': pdfByDateForm}
+        %}
       </div>
     </div>
   {% endblock %}
