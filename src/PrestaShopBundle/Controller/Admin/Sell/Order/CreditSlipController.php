@@ -26,9 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,6 +62,28 @@ class CreditSlipController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'creditSlipGrid' => $this->presentGrid($creditSlipGrid),
         ]);
+    }
+
+    /**
+     * Provides filters functionality
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.credit_slip'),
+            $request,
+            CreditSlipGridDefinitionFactory::GRID_ID,
+            'admin_credit_slips_index'
+        );
     }
 
     /**
