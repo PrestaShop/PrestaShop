@@ -29,13 +29,14 @@ if (!defined('_PS_MODE_DEV_')) {
     define('_PS_MODE_DEV_', true);
 }
 
-/* Compatibility warning */
-    define('_PS_DISPLAY_COMPATIBILITY_WARNING_', false);
 
 if (_PS_MODE_DEV_ === true) {
     @ini_set('display_errors', 'on');
     @error_reporting(E_ALL | E_STRICT);
     define('_PS_DEBUG_SQL_', true);
+    /* Compatibility warning */
+    define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
+
     
 } else {
     @ini_set('display_errors', 'off');
