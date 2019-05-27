@@ -55,7 +55,7 @@ final class InvoiceByStatusFormHandler extends FormHandler
      * @param FormDataProviderInterface $formDataProvider
      * @param array $formTypes
      * @param string $hookName
-     * @param OrderInvoiceDataProviderInterface $orderInvoiceDataProvider
+     * @param OrderInvoiceDataProviderInterface $creditSlipDataProvider
      * @param PDFGeneratorInterface $pdfGenerator
      */
     public function __construct(
@@ -64,11 +64,11 @@ final class InvoiceByStatusFormHandler extends FormHandler
         FormDataProviderInterface $formDataProvider,
         array $formTypes,
         $hookName,
-        OrderInvoiceDataProviderInterface $orderInvoiceDataProvider,
+        OrderInvoiceDataProviderInterface $creditSlipDataProvider,
         PDFGeneratorInterface $pdfGenerator
     ) {
         parent::__construct($formBuilder, $hookDispatcher, $formDataProvider, $formTypes, $hookName);
-        $this->orderInvoiceDataProvider = $orderInvoiceDataProvider;
+        $this->orderInvoiceDataProvider = $creditSlipDataProvider;
         $this->pdfGenerator = $pdfGenerator;
     }
 

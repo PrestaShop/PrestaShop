@@ -358,3 +358,15 @@ services:
             -
               'options': 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType'
             - 'MerchandiseReturn'
+
+    prestashop.admin.order.credit_slip.pdf_by_date.form_handler:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipPdfByDateFormHandler'
+      arguments:
+        - '@=service("form.factory").createBuilder()'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.admin.order.invoices.by_date.data_provider'
+        -
+          'generate_pdf_by_date': 'PrestaShopBundle\Form\Admin\Type\DateRangeType'
+        - 'CreditSlipsPdfByDate'
+        - '@prestashop.adapter.data_provider.credit_slip'
+        - '@prestashop.adapter.pdf.generator.credit_slip'

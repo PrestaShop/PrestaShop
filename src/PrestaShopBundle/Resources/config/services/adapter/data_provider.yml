@@ -117,3 +117,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().employee'
+
+    prestashop.adapter.data_provider.credit_slip:
+        class: PrestaShop\PrestaShop\Adapter\CreditSlip\CreditSlipDataProvider
+        arguments:
+            - '%database_prefix%'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,26 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
+namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
 use DateTime;
+use PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class InvoiceByDateFormHandler manages the data manipulated using "By date" form
- * in "Sell > Orders > Invoices" page.
+ * Manages pdf generation of creditSlip in Sell > Orders > Credit Slip Generate pdf by date
  */
-final class InvoiceByDateFormHandler extends FormHandler
+final class CreditSlipPdfByDateFormHandler extends FormHandler
 {
     /**
-     * @var OrderInvoiceDataProviderInterface
+     * @var CreditSlipDataProviderInterface
      */
-    private $orderInvoiceDataProvider;
+    private $creditSlipDataProvider;
 
     /**
      * @var PDFGeneratorInterface
@@ -56,7 +55,7 @@ final class InvoiceByDateFormHandler extends FormHandler
      * @param FormDataProviderInterface $formDataProvider
      * @param array $formTypes
      * @param string $hookName
-     * @param OrderInvoiceDataProviderInterface $creditSlipDataProvider
+     * @param CreditSlipDataProviderInterface $creditSlipDataProvider
      * @param PDFGeneratorInterface $pdfGenerator
      */
     public function __construct(
@@ -65,11 +64,11 @@ final class InvoiceByDateFormHandler extends FormHandler
         FormDataProviderInterface $formDataProvider,
         array $formTypes,
         $hookName,
-        OrderInvoiceDataProviderInterface $creditSlipDataProvider,
+        CreditSlipDataProviderInterface $creditSlipDataProvider,
         PDFGeneratorInterface $pdfGenerator
     ) {
         parent::__construct($formBuilder, $hookDispatcher, $formDataProvider, $formTypes, $hookName);
-        $this->orderInvoiceDataProvider = $creditSlipDataProvider;
+        $this->creditSlipDataProvider = $creditSlipDataProvider;
         $this->pdfGenerator = $pdfGenerator;
     }
 
@@ -82,14 +81,14 @@ final class InvoiceByDateFormHandler extends FormHandler
             return $errors;
         }
 
-        // Get invoices by submitted date interval
-        $invoiceCollection = $this->orderInvoiceDataProvider->getByDateInterval(
+        // Get credit slips by submitted date interval
+        $slipsCollection = $this->creditSlipDataProvider->getByDateInterval(
             new DateTime($data['generate_by_date']['date_from']),
             new DateTime($data['generate_by_date']['date_to'])
         );
 
-        // Generate PDF out of found invoices
-        $this->pdfGenerator->generatePDF($invoiceCollection);
+        // Generate PDF out of found credit slips
+        $this->pdfGenerator->generatePDF($slipsCollection);
 
         return [];
     }
