@@ -290,7 +290,7 @@ GitHub contributors:
 - Ivan Shcherbakov
 - ivancasasempere
 - J. Danse
-- Jachym Tousek
+- Jáchym Toušek
 - janisVincent
 - Jaume
 - Javsmile
@@ -312,7 +312,7 @@ GitHub contributors:
 - Joan Juvanteny
 - Jocelyn Fournier
 - Joe Siwiak
-- Joel Sanchez
+- Joel Sánchez
 - joemartin247
 - Joep Hendrix
 - Joe Siwiak
@@ -561,17 +561,16 @@ GitHub contributors:
 - Richard LT
 - Ricki Hirner
 - Rimas Kudelis
-- Riviere Serge
 - Robbie Thompson
 - robert
 - Rokas
 - Rokas Zygmantas
 - Roland Schütz
+- Romain Soulard
 - romainberger
 - Roman Gusev
 - Roy
-- RS
-- Ruben Martins
+- Rúben Martins
 - Rudra Sarkar
 - runningz
 - s-duval
@@ -602,6 +601,7 @@ GitHub contributors:
 - Sébastien Sterckx
 - SebSept
 - seleda
+- Serge Rivière
 - Sergey P
 - Sergio Quinonez
 - Serhat Durum
