@@ -105,8 +105,7 @@ class Ps_Banner extends Module implements WidgetInterface
             $update_images_values = false;
 
             foreach ($languages as $lang) {
-                if (isset($_FILES['BANNER_IMG_' . $lang['id_lang']])
-                    && isset($_FILES['BANNER_IMG_' . $lang['id_lang']]['tmp_name'])
+                if (isset($_FILES['BANNER_IMG_' . $lang['id_lang']], $_FILES['BANNER_IMG_' . $lang['id_lang']]['tmp_name'])
                     && !empty($_FILES['BANNER_IMG_' . $lang['id_lang']]['tmp_name'])) {
                     if ($error = ImageManager::validateUpload($_FILES['BANNER_IMG_' . $lang['id_lang']], 4000000)) {
                         return $error;
