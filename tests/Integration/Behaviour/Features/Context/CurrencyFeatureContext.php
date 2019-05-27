@@ -245,4 +245,16 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
             );
         }
     }
+
+    /**
+     * @Then :isoCode currency should be deleted
+     */
+    public function assertCurrencyIsDeleted($isoCode)
+    {
+        if (Currency::getIdByIsoCode($isoCode)) {
+            throw new RuntimeException(
+                sprintf('Currency with ISO Code "%s" was found.', $isoCode)
+            );
+        }
+    }
 }

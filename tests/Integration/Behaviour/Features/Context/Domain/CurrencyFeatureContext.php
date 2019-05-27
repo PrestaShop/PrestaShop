@@ -108,10 +108,16 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['is_enabled'])) {
-            $command->setIsEnabled($data['is_enabled']);
+            $command->setIsEnabled((bool) $data['is_enabled']);
+        }
+
+        if (isset($data['shop_association'])) {
+            $command->setShopIds([(int) $data['shop_association']]);
         }
 
         $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($reference, new Currency($currency->id));
     }
 
     /**
@@ -168,19 +174,5 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 $this->lastException ? get_class($this->lastException) : 'null'
             ));
         }
-    }
-
-    /**
-     * @param string $reference
-     *
-     * @return Currency
-     */
-    public function getCurrencyFromRegistry($reference)
-    {
-        if (!isset($this->currencyRegistry[$reference])) {
-            throw new RuntimeException(sprintf('Currency "%s" does not exist in registry', $reference));
-        }
-
-        return $this->currencyRegistry[$reference];
     }
 }
