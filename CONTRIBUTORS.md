@@ -83,7 +83,7 @@ GitHub contributors:
 - BigZ
 - BluTiGeS
 - BMS-fenaille
-- Boubker BRIBRI
+- Boubker Bribri
 - brouillon
 - Bruno Desprez
 - Bruno Leveque
@@ -147,7 +147,6 @@ GitHub contributors:
 - Davide
 - Davy Rolink
 - de saint leger
-- DelecroixQuentin
 - Denis Yurevich
 - Dennis
 - Denver Prophit Jr.
@@ -199,7 +198,7 @@ GitHub contributors:
 - F.S
 - Fabien Serny
 - Fabio Chelly
-- Fabuloops
+- Fabrice Pantanella
 - Fatma BOUCHEKOI
 - Fatma Bouchekoua
 - fchellypresta
@@ -284,7 +283,6 @@ GitHub contributors:
 - Ish Gupta
 - Ishiki
 - Iskander (Alex) Sharipov
-- itisco
 - ITBpro.com
 - Ivan
 - Ivan Shcherbakov
@@ -296,6 +294,7 @@ GitHub contributors:
 - Javsmile
 - JEAN
 - Jean-François Viguier
+- Jean-Philippe Beauve
 - jeanbe
 - jeckyl
 - Jeremie Tabet
@@ -306,7 +305,7 @@ GitHub contributors:
 - Jérôme Nadaud
 - jessylenne
 - jestemradek
-- Jevgenij
+- Jevgenij Visockij
 - Joan
 - Joan Juvanteny
 - Jocelyn Fournier
@@ -316,7 +315,7 @@ GitHub contributors:
 - Joep Hendrix
 - Joe Siwiak
 - Johannes Schramm
-- John
+- John Zandbergen
 - John Cocula
 - Jonadabe
 - Jonatan Nunez
@@ -491,7 +490,6 @@ GitHub contributors:
 - Pablo Borowicz
 - paeddl
 - Pan P
-- Pan P.
 - Pan Ploenes
 - Panagiotis Tigas
 - panesarsandeep
@@ -536,6 +534,7 @@ GitHub contributors:
 - psandmore
 - pxls
 - quadrateam
+- Quentin Delecroix
 - Quentin Leonetti
 - Quentin Montant
 - Quentin MONTANT - KIWIK
@@ -551,6 +550,7 @@ GitHub contributors:
 - rav88
 - rblaurin
 - rblaurin
+- Reddy Ntie
 - Rémi Gaillard
 - Remigiusz Jackowski
 - Renaud Sanchez - ChouetteWeb.fr
@@ -612,6 +612,7 @@ GitHub contributors:
 - Shipow
 - Shudrum
 - sidhujag
+- Simon
 - Simon Garny
 - Simone
 - sjousse
