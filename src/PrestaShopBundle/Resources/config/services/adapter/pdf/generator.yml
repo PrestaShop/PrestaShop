@@ -7,3 +7,8 @@ services:
         arguments:
             - "@=service('prestashop.adapter.legacy.context').getSmarty()"
             - '@prestashop.adapter.pdf.type_provider.invoice'
+
+    prestashop.adapter.pdf.order_invoice_pdf_generator:
+        class: PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator
+        arguments:
+          - '@translator'

@@ -4,3 +4,10 @@ admin_orders_index:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
     _legacy_controller: AdminOrders
+
+admin_orders_generate_invoice_pdf:
+  path: /{orderId}/generate-invoice-pdf
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoicePdf
+    _legacy_controller: AdminOrders
