@@ -37,16 +37,6 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     use CartAwareTrait;
 
     /**
-     * @var ShopFeatureContext
-     */
-    private $shopFeatureContext;
-
-    /**
-     * @var Domain\CurrencyFeatureContext
-     */
-    private $domainCurrencyFeatureContext;
-
-    /**
      * @var Currency[]
      */
     protected $currencies = [];
@@ -59,13 +49,6 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function storePreviousCurrencyId()
     {
         $this->previousDefaultCurrencyId = Configuration::get('PS_CURRENCY_DEFAULT');
-    }
-
-    /** @BeforeScenario */
-    public function before(BeforeScenarioScope $scope)
-    {
-        $this->shopFeatureContext = $scope->getEnvironment()->getContext(ShopFeatureContext::class);
-        $this->domainCurrencyFeatureContext = $scope->getEnvironment()->getContext(Domain\CurrencyFeatureContext::class);
     }
 
     /**

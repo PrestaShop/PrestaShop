@@ -43,25 +43,9 @@ use Tests\Integration\Behaviour\Features\Context\ShopFeatureContext;
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var ShopFeatureContext
-     */
-    private $shopFeatureContext;
-
-    /**
-     * @var Currency[]
-     */
-    private $currencyRegistry = [];
-
-    /**
      * @var \Exception|null
      */
     private $lastException;
-
-    /** @BeforeScenario */
-    public function before(BeforeScenarioScope $scope)
-    {
-        $this->shopFeatureContext = $scope->getEnvironment()->getContext(ShopFeatureContext::class);
-    }
 
     /**
      * @When I add new currency :reference with following properties:
