@@ -162,8 +162,6 @@ class AddProductToOrderCommand
         $productPriceTaxExcluded,
         $productQuantity
     ) {
-        // @todo: add integrity checks
-
         $this->orderId = new OrderId($orderId);
         $this->productId = new ProductId($productId);
         $this->combinationId = $combinationId;

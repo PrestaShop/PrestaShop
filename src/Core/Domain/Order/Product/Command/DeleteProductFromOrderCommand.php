@@ -45,11 +45,10 @@ class DeleteProductFromOrderCommand
 
     /**
      * @param int $orderId
+     * @param int $orderDetailId
      */
     public function __construct($orderId, $orderDetailId)
     {
-        // @todo: add integrity checks
-
         $this->orderId = new OrderId($orderId);
         $this->orderDetailId = $orderDetailId;
     }
