@@ -191,7 +191,7 @@ $(document).ready(() => {
     }
   }
 
-  setInterval( function () {
+  setTimeout( function () {
     const promoNameLength = $('.promo-name').length;
 
     if (promoNameLength != nameLength) {
