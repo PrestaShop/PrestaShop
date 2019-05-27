@@ -42,6 +42,7 @@ services:
 
   selenium-chrome:
     image: selenium/standalone-chrome
+    user: "root:root"
     depends_on:
       - "prestashop"
     volumes:
