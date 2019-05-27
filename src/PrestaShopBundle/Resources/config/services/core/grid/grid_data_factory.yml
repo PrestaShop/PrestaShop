@@ -244,3 +244,12 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - '!php/const PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory::GRID_ID'
+
+    prestashop.core.grid.data.factory.order_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.data.factory.order'
+        - '@prestashop.core.localization.locale.repository'
+        - '@prestashop.adapter.legacy.configuration'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+        - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"

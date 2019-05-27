@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\LinkGroupColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -136,14 +137,25 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'date_add',
                 ])
             )
-            ->add((new LinkColumn('pdf'))
+            ->add((new LinkGroupColumn('pdf'))
                 ->setName($this->trans('PDF', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => null,
-                    'route' => 'admin_orders_index',
-                    'route_param_name' => 'id_order',
-                    'route_param_field' => 'id_order',
-                    'icon' => 'picture_as_pdf',
+                        'links' => [
+                            [
+                                'icon' => 'picture_as_pdf',
+                                'is_link_available_field' => 'is_invoice_available',
+                                'route' => 'admin_orders_index',
+                                'route_param_name' => 'id_order',
+                                'route_param_field' => 'id_order',
+                            ],
+                            [
+                                'icon' => 'local_shipping',
+                                'is_link_available_field' => 'delivery_number',
+                                'route' => 'admin_orders_index',
+                                'route_param_name' => 'id_order',
+                                'route_param_field' => 'id_order',
+                            ],
+                        ],
                 ])
             )
             ->add((new ActionColumn('action'))
