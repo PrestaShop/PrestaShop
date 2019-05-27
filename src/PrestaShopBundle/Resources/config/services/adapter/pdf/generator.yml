@@ -23,3 +23,9 @@ services:
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getSmarty()"
       - '@prestashop.adapter.pdf.type_provider.credit_slip'
+
+  prestashop.adapter.pdf.credit_slip_pdf_generator:
+    class: PrestaShop\PrestaShop\Adapter\PDF\CreditSlipPdfGenerator
+    arguments:
+      - '@translator'
+      - '%database_prefix%'

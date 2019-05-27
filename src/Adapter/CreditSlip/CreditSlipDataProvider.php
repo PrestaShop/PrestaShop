@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CreditSlip;
 use DateTimeInterface;
 use Db;
 use ObjectModel;
-use PrestaShop\PrestaShop\Adapter\Entity\OrderSlip;
+use OrderSlip;
 use PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipDataProviderInterface;
 
 /**
