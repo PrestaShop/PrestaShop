@@ -816,6 +816,10 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      */
     protected function manageDeclinatedImagesCRUD($filename_exists, $filename, $image_sizes, $directory)
     {
+        if ($this->wsObject->method == 'POST' && $_POST['_method'] == 'PUT') {
+            $this->wsObject->method = 'PUT';
+        }
+
         switch ($this->wsObject->method) {
             // Display the image
             case 'GET':
