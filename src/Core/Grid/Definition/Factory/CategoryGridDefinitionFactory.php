@@ -135,7 +135,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'name',
                     'route' => 'admin_categories_index',
-                    'route_param_name' => 'id_category',
+                    'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                 ])
             )
