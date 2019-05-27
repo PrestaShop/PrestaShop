@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use OrderSlip;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -92,46 +92,24 @@ class CreditSlipController extends FrameworkBundleAdminController
 
     /**
      * @param int $creditSlipId
-     *
-     * @return RedirectResponse
      */
     public function generatePdfAction($creditSlipId)
     {
-        return $this->redirectToRoute('admin_credit_slips_index');
+        die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF([$creditSlipId]));
     }
 
     /**
-     * @return RedirectResponse
+     * @param Request $request
      */
     public function generatePdfByDateAction(Request $request)
     {
-        $formHandler = $this->get('prestashop.admin.order.credit_slip.pdf_by_date.form_handler');
-        $this->processForm($formHandler, $request);
+        $dateRange = $request->query->get('date_range');
 
-        return $this->redirectToRoute('admin_credit_slips_index');
-    }
+        $slipIds = OrderSlip::getSlipsIdByDate(
+            $dateRange['from'],
+            $dateRange['to']
+        );
 
-    /**
-     * Processes the form in a generic way.
-     *
-     * @param FormHandlerInterface $formHandler
-     * @param Request $request
-     *
-     * @return bool false if an error occurred, true otherwise
-     */
-    private function processForm(FormHandlerInterface $formHandler, Request $request)
-    {
-        $form = $formHandler->getForm();
-        $form->submit($request->request->get($form->getName()));
-
-        if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
-
-                return false;
-            }
-        }
-
-        return true;
+        die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds));
     }
 }

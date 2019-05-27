@@ -8,8 +8,8 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getSmarty()"
             - '@prestashop.adapter.pdf.type_provider.invoice'
 
-    prestashop.adapter.pdf.generator.credit_slip:
-      class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+    prestashop.adapter.pdf.credit_slip_pdf_generator:
+      class: PrestaShop\PrestaShop\Adapter\PDF\CreditSlipPdfGenerator
       arguments:
-        - "@=service('prestashop.adapter.legacy.context').getSmarty()"
-        - '@prestashop.adapter.pdf.type_provider.credit_slip'
+        - '@translator'
+        - '%database_prefix%'

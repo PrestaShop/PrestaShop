@@ -50,6 +50,10 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     private $dateFormat;
 
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param string $dateFormat The format in which date column values should be shown
+     */
     public function __construct(HookDispatcherInterface $hookDispatcher, $dateFormat)
     {
         parent::__construct($hookDispatcher);
