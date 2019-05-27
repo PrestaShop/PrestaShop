@@ -98,6 +98,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                 ])
             )
             ->add(
+                //@todo: Implement button with icon (should be created in another PR)
                 (new LinkColumn('pdf'))
                     ->setName($this->trans('PDF', [], 'Admin.Global'))
                     ->setOptions([
