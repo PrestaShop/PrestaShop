@@ -15,10 +15,19 @@ admin_credit_slips_search:
     _legacy_link: AdminSlip:submitFilterslip
 
 admin_credit_slips_pdf:
-  path: /{creditSlipId}/generate-pdf
+  path: /{creditSlipId}/pdf
   methods: GET
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:generatePdf'
     _legacy_controller: AdminSlip
+    _legacy_parameters:
+      id_order_slip: creditSlipId
   requirements:
     creditSlipId: \d+
+
+admin_credit_slips_pdf_by_date:
+  path: /pdf-by-date
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:generatePdfByDate'
+    _legacy_controller: AdminSlip

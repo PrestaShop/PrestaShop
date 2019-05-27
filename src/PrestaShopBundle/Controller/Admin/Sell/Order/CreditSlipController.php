@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -56,11 +57,13 @@ class CreditSlipController extends FrameworkBundleAdminController
     ) {
         $creditSlipGridFactory = $this->get('prestashop.core.grid.factory.credit_slip');
         $creditSlipGrid = $creditSlipGridFactory->getGrid($creditSlipFilters);
+        $pdfByDateForm = $this->createForm(DateRangeType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/CreditSlip/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'creditSlipGrid' => $this->presentGrid($creditSlipGrid),
+            'pdfByDateForm' => $pdfByDateForm->createView(),
         ]);
     }
 
@@ -93,7 +96,6 @@ class CreditSlipController extends FrameworkBundleAdminController
      */
     public function generatePdfAction($creditSlipId)
     {
-        //@todo: implement action
         return $this->redirectToRoute('admin_credit_slips_index');
     }
 }
