@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -59,14 +60,24 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $configuration;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $orderCountriesChoiceProvider;
+
+    /**
      * @param HookDispatcherInterface $dispatcher
      * @param ConfigurationInterface $configuration
+     * @param FormChoiceProviderInterface $orderCountriesChoiceProvider
      */
-    public function __construct(HookDispatcherInterface $dispatcher, ConfigurationInterface $configuration)
-    {
+    public function __construct(
+        HookDispatcherInterface $dispatcher,
+        ConfigurationInterface $configuration,
+        FormChoiceProviderInterface $orderCountriesChoiceProvider
+    ) {
         parent::__construct($dispatcher);
 
         $this->configuration = $configuration;
+        $this->orderCountriesChoiceProvider = $orderCountriesChoiceProvider;
     }
 
     /**
@@ -109,12 +120,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'new',
                     'true_name' => $this->trans('Yes', [], 'Admin.Global'),
                     'false_name' => $this->trans('No', [], 'Admin.Global'),
-                ])
-            )
-            ->add((new DataColumn('country_name'))
-                ->setName($this->trans('Delivery', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'country_name',
                 ])
             )
             ->add((new DataColumn('customer'))
@@ -172,6 +177,15 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
 
+        if ($this->orderCountriesChoiceProvider->getChoices()) {
+            $columns->addAfter('new', (new DataColumn('country_name'))
+                ->setName($this->trans('Delivery', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'country_name',
+                ])
+            );
+        }
+
         if ($this->configuration->get('PS_B2B_ENABLE')) {
             $columns->addAfter('customer', (new DataColumn('company'))
                 ->setName($this->trans('Company', [], 'Admin.Global'))
@@ -215,12 +229,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                 ])
                 ->setAssociatedColumn('new')
-            )
-            ->add((new Filter('country_name', ChoiceType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('country_name')
             )
             ->add((new Filter('customer', TextType::class))
                 ->setTypeOptions([
@@ -273,6 +281,18 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('actions')
             )
         ;
+
+        $orderCountriesChoices = $this->orderCountriesChoiceProvider->getChoices();
+
+        if (!empty($orderCountriesChoices)) {
+            $filters->add((new Filter('country_name', ChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'choices' => $orderCountriesChoices,
+                ])
+                ->setAssociatedColumn('country_name')
+            );
+        }
 
         return $filters;
     }
