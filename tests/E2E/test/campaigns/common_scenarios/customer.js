@@ -150,7 +150,7 @@ module.exports = {
        * This error is due to the bug described in this issue
        * https://github.com/PrestaShop/PrestaShop/issues/11166
        **/
-      test('should verify that the "Birthday" list exist', () => client.waitForVisible(accountPage.date_birthday_input));
+      test('should verify that the "Birthday" list exist (issue #11166)', () => client.waitForVisible(accountPage.date_birthday_input));
     }, 'customer');
   },
   fillCustomerInfoFromAGuest: function (customerData, password = true) {
