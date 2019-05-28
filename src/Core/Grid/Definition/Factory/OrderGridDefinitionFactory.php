@@ -151,8 +151,8 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                             [
                                 'icon' => 'local_shipping',
                                 'is_link_available_field' => 'delivery_number',
-                                'route' => 'admin_orders_index',
-                                'route_param_name' => 'id_order',
+                                'route' => 'admin_orders_generate_delivery_slip_pdf',
+                                'route_param_name' => 'orderId',
                                 'route_param_field' => 'id_order',
                             ],
                         ],
