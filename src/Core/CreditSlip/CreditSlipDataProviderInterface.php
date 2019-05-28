@@ -31,12 +31,12 @@ use DateTimeInterface;
 interface CreditSlipDataProviderInterface
 {
     /**
-     * Returns credit slips that match the date interval.
+     * Returns credit slip ids that match the date interval.
      *
      * @param DateTimeInterface $dateFrom
      * @param DateTimeInterface $dateTo
      *
      * @return array Collection of OrderSlip objects
      */
-    public function getByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
+    public function getIdsByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
 }

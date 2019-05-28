@@ -26,11 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use OrderSlip;
+use DateTime;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -58,7 +59,10 @@ class CreditSlipController extends FrameworkBundleAdminController
     ) {
         $creditSlipGridFactory = $this->get('prestashop.core.grid.factory.credit_slip');
         $creditSlipGrid = $creditSlipGridFactory->getGrid($creditSlipFilters);
-        $pdfByDateForm = $this->createForm(DateRangeType::class);
+        $pdfByDateForm = $this->createForm(GeneratePdfByDateType::class, [], [
+            'method' => Request::METHOD_GET,
+        ]);
+        $pdfByDateForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/CreditSlip/index.html.twig', [
             'enableSidebar' => true,
@@ -92,34 +96,55 @@ class CreditSlipController extends FrameworkBundleAdminController
 
     /**
      * @param int $creditSlipId
+     *
+     * @throws MissingDataException
      */
     public function generatePdfAction($creditSlipId)
     {
-        die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF([$creditSlipId]));
+        try {
+            die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF([(int) $creditSlipId]));
+        } catch (MissingDataException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+            );
+        }
+
+        return $this->redirectToRoute('admin_credit_slips_index');
     }
 
     /**
      * @param Request $request
+     *
+     * @return RedirectResponse
      */
     public function generatePdfByDateAction(Request $request)
     {
-        $pdfByDateForm = $this->createForm(DateRangeType::class, [], ['method' => Request::METHOD_GET]);
+        $pdfByDateForm = $this->createForm(GeneratePdfByDateType::class, [], ['method' => Request::METHOD_GET]);
         $pdfByDateForm->handleRequest($request);
 
         if ($pdfByDateForm->isSubmitted() && $pdfByDateForm->isValid()) {
             $dateRange = $pdfByDateForm->getData();
+            $creditSlipDataProvider = $this->get('prestashop.adapter.data_provider.credit_slip');
 
-            // @todo: pass date range to pdf generator and retrieve order slips there
-            $slipIds = OrderSlip::getSlipsIdByDate(
-                $dateRange['from'],
-                $dateRange['to']
+            $slipIds = $creditSlipDataProvider->getIdsByDateInterval(
+                new DateTime($dateRange['from']),
+                new DateTime($dateRange['to'])
             );
 
-            $this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds);
-
-            die;
+            try {
+                $this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds);
+//                die;
+            } catch (MissingDataException $e) {
+                $this->addFlash(
+                    'error',
+                    $this->trans('No credit slips found in this date range', 'Admin.Orderscustomers.Feature')
+                );
+            }
         }
 
-        // @todo: redirect response when form contains errors or is not submitted
+        return $this->redirectToRoute('admin_credit_slips_index', [
+            $pdfByDateForm->getName() => $pdfByDateForm->getData(),
+        ]);
     }
 }
