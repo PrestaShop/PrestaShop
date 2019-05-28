@@ -84,7 +84,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new DataColumn('id_credit_slip'))
+            ->add((new DataColumn('id_order_slip'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_order_slip',
@@ -96,7 +96,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'field' => 'id_order',
                 ])
             )
-            ->add((new DateTimeColumn('date_issued'))
+            ->add((new DateTimeColumn('date_add'))
                 ->setName($this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'date_add',
@@ -131,7 +131,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                         'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                     ],
                 ])
-                ->setAssociatedColumn('id_credit_slip')
+                ->setAssociatedColumn('id_order_slip')
             )
             ->add((new Filter('id_order', TextType::class))
                 ->setTypeOptions([
@@ -146,7 +146,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                 ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('date_issued')
+                ->setAssociatedColumn('date_add')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
