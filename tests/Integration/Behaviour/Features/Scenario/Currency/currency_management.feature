@@ -1,9 +1,9 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s currency
 @reset-database-before-feature
 Feature: Currency Management
-  PrestaShop allows BO users to manage customers in the Customers > Customers page
+  PrestaShop allows BO users to manage currencies
   As a BO user
-  I must be able to create, save and edit customers
+  I must be able to create, edit and delete currencies in my shop
 
   Background:
     Given shop "shop1" with name "test_shop" exists
