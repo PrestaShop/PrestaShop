@@ -103,13 +103,23 @@ class CreditSlipController extends FrameworkBundleAdminController
      */
     public function generatePdfByDateAction(Request $request)
     {
-        $dateRange = $request->query->get('date_range');
+        $pdfByDateForm = $this->createForm(DateRangeType::class, [], ['method' => Request::METHOD_GET]);
+        $pdfByDateForm->handleRequest($request);
 
-        $slipIds = OrderSlip::getSlipsIdByDate(
-            $dateRange['from'],
-            $dateRange['to']
-        );
+        if ($pdfByDateForm->isSubmitted() && $pdfByDateForm->isValid()) {
+            $dateRange = $pdfByDateForm->getData();
 
-        die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds));
+            // @todo: pass date range to pdf generator and retrieve order slips there
+            $slipIds = OrderSlip::getSlipsIdByDate(
+                $dateRange['from'],
+                $dateRange['to']
+            );
+
+            $this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds);
+
+            die;
+        }
+
+        // @todo: redirect response when form contains errors or is not submitted
     }
 }
