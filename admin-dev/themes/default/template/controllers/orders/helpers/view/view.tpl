@@ -632,7 +632,10 @@
                   <i class="icon-eye-slash"></i>
                   {l s='Private note' d='Admin.Orderscustomers.Feature'}
                 </div>
-                <form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id});return false;" >
+                <form id="customer_note"
+                      class="form-horizontal"
+                      action="{$link->getAdminLink('AdminCustomers', true, [], ['updateCustomerNote' => 1, 'id_customer' => $customer->id])}"
+                      method="post" onsubmit="saveCustomerNote();return false;" >
                   <div class="form-group">
                     <div class="col-lg-12">
                       <textarea name="note" id="noteContent" class="textarea-autosize" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer->note}</textarea>
