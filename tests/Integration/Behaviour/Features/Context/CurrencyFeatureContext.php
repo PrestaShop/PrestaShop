@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Context;
 use Currency;
 use Configuration;

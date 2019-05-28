@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
@@ -38,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCur
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\ShopFeatureContext;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
