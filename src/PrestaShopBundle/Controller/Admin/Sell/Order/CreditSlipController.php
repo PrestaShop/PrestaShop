@@ -137,7 +137,7 @@ class CreditSlipController extends FrameworkBundleAdminController
             } catch (MissingDataException $e) {
                 $this->addFlash(
                     'error',
-                    $this->trans('No credit slips found in this date range', 'Admin.Orderscustomers.Feature')
+                    $this->trans('No order slips were found for this period.', 'Admin.Orderscustomers.Notification')
                 );
             }
         }
