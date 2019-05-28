@@ -1,9 +1,9 @@
-const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {AccessPageFO} = require('../../../selectors/FO/access_page');
-const {Translations} = require('../../../selectors/BO/international/translations');
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const {Menu} = require('../../../selectors/BO/menu.js');
-const welcomeScenarios = require('../../common_scenarios/welcome');
+const {AccessPageBO} = require('../../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../../selectors/FO/access_page');
+const {Translations} = require('../../../../selectors/BO/international/translations');
+const {AddProductPage} = require('../../../../selectors/BO/add_product_page');
+const {Menu} = require('../../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 scenario('Edit a translation', () => {
