@@ -33,12 +33,18 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\LinkGroupColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Creates definition for Orders grid
@@ -158,7 +164,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ],
                 ])
             )
-            ->add((new ActionColumn('action'))
+            ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => $this->getRowActions(),
@@ -176,6 +182,99 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         return $columns;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        $filters = new FilterCollection();
+
+        $filters
+            ->add((new Filter('id_order', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_order')
+            )
+            ->add((new Filter('reference', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Reference', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('reference')
+            )
+            ->add((new Filter('new', YesAndNoChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('new')
+            )
+            ->add((new Filter('country_name', ChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('country_name')
+            )
+            ->add((new Filter('customer', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Customer', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('customer')
+            )
+            ->add((new Filter('company', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Company', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('company')
+            )
+            ->add((new Filter('total_paid_tax_incl', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Total', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('total_paid_tax_incl')
+            )
+            ->add((new Filter('osname', ChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('osname')
+            )
+            ->add((new Filter('date_add', DateRangeType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('date_add')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route_params' => [
+                        'controller' => 'customer',
+                        'action' => 'index',
+                    ],
+                    'redirect_route' => 'admin_customers_index',
+                ])
+                ->setAssociatedColumn('actions')
+            )
+        ;
+
+        return $filters;
     }
 
     /**
