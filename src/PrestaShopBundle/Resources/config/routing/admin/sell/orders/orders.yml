@@ -11,3 +11,14 @@ admin_orders_generate_invoice_pdf:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoicePdf
     _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_generate_delivery_slip_pdf:
+  path: /{orderId}/generate-delivery-slip-pdf
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateDeliverySlipPdf
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
