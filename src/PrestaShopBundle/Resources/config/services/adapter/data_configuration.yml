@@ -246,3 +246,8 @@ services:
       arguments:
         - '@prestashop.adapter.legacy.configuration'
         - '@prestashop.core.mail_template.theme_catalog'
+
+    prestashop.core.credit_slip.credit_slip_options.configuration:
+      class: 'PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipOptionsConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'

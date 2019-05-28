@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,32 +22,38 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
-{% block content %}
-  {% block credit_slips_listing %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': creditSlipGrid} %}
-      </div>
-    </div>
-  {% endblock %}
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-  {% block credit_slips_print_pdf %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/pdf_by_date.html.twig' %}
-      </div>
-    </div>
-  {% endblock %}
+/**
+ * Defines credit slips options form
+ */
+final class CreditSlipOptionsType extends CommonAbstractType
+{
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
-  {% block credit_slips_options %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/credit_slip_options.html.twig' %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('slip_prefix', TranslatableType::class, [
+            'required' => false,
+            //@todo: Is it ok that legacy doesn't use any validation for this field?
+        ]);
+    }
+}
