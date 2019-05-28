@@ -26,6 +26,11 @@ scenario('Welcome Module', () => {
     test('should reset "Welcome" module', () => common.resetWelcomeModule(client));
   }, 'onboarding');
 
+  /**
+   * Related issue Here
+   * https://github.com/PrestaShop/PrestaShop/issues/13569
+   */
+
   scenario('The first tutorial step : Create the first product ', () => {
     common.firstStep(ProductList);
   }, 'common_client');
