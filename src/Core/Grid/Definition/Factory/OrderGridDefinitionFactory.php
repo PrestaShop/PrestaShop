@@ -65,19 +65,27 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $orderCountriesChoiceProvider;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $orderStatusesChoiceProvider;
+
+    /**
      * @param HookDispatcherInterface $dispatcher
      * @param ConfigurationInterface $configuration
      * @param FormChoiceProviderInterface $orderCountriesChoiceProvider
+     * @param FormChoiceProviderInterface $orderStatusesChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $dispatcher,
         ConfigurationInterface $configuration,
-        FormChoiceProviderInterface $orderCountriesChoiceProvider
+        FormChoiceProviderInterface $orderCountriesChoiceProvider,
+        FormChoiceProviderInterface $orderStatusesChoiceProvider
     ) {
         parent::__construct($dispatcher);
 
         $this->configuration = $configuration;
         $this->orderCountriesChoiceProvider = $orderCountriesChoiceProvider;
+        $this->orderStatusesChoiceProvider = $orderStatusesChoiceProvider;
     }
 
     /**
@@ -260,6 +268,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('osname', ChoiceType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'choices' => $this->orderStatusesChoiceProvider->getChoices(),
                 ])
                 ->setAssociatedColumn('osname')
             )
