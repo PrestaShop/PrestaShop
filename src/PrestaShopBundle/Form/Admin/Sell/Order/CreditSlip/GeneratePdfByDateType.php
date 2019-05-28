@@ -29,12 +29,14 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Valid;
 
 /**
- * Defines form for
+ * Defines form for generating Credit slip PDF
  */
 final class GeneratePdfByDateType extends CommonAbstractType
 {
@@ -59,28 +61,35 @@ final class GeneratePdfByDateType extends CommonAbstractType
 
         $builder
             ->add('from', DatePickerType::class, [
-                'required' => false,
                 'constraints' => [
+                    new NotBlank([
+                        'message' => $blankMessage,
+                    ]),
                     new DateTime([
                         'format' => $dateFormat,
                         'message' => $invalidDateMessage,
-                    ]),
-                    new NotBlank([
-                        'message' => $blankMessage,
                     ]),
                 ],
             ])
             ->add('to', DatePickerType::class, [
-                'required' => false,
                 'constraints' => [
+                    new NotBlank([
+                        'message' => $blankMessage,
+                    ]),
                     new DateTime([
                         'format' => $dateFormat,
                         'message' => $invalidDateMessage,
                     ]),
-                    new NotBlank([
-                        'message' => $blankMessage,
-                    ]),
                 ],
             ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'constraints' => [
+                new Valid(),
+            ],
+        ]);
     }
 }
