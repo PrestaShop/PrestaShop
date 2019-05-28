@@ -5,6 +5,13 @@ admin_orders_index:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
     _legacy_controller: AdminOrders
 
+admin_orders_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:search
+    _legacy_controller: AdminOrders
+
 admin_orders_generate_invoice_pdf:
   path: /{orderId}/generate-invoice-pdf
   methods: [GET]

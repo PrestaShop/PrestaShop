@@ -143,6 +143,12 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'is_paid_field' => 'paid',
                 ])
             )
+            ->add((new DataColumn('payment'))
+                ->setName($this->trans('Payment', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'payment',
+                ])
+            )
             ->add((new ColorColumn('osname'))
                 ->setName($this->trans('Status', [], 'Admin.Global'))
                 ->setOptions([
@@ -264,6 +270,15 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                 ])
                 ->setAssociatedColumn('total_paid_tax_incl')
+            )
+            ->add((new Filter('payment', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Payment', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('payment')
             )
             ->add((new Filter('osname', ChoiceType::class))
                 ->setTypeOptions([
