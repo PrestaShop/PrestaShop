@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
+use Configuration;
 use Currency;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
@@ -72,6 +73,16 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
+            $defaultLang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+            // CLDR locale give us the CLDR reference specification
+            $cldrLocale = $this->localeRepoCLDR->getLocale($defaultLang->locale);
+            // CLDR currency gives data from CLDR reference, for the given language
+            $cldrCurrency = $cldrLocale->getCurrency($entity->iso_code);
+            if (!empty($cldrCurrency)) {
+                // The currency may not be declared in the locale, eg with custom iso code
+                $entity->precision = (int) $cldrCurrency->getDecimalDigits();
+            }
+
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
             if (false === $entity->add()) {
