@@ -65,7 +65,7 @@ scenario('Create, sort, filter, delete and check "Files" in the Back Office', ()
   commonFileScenarios.filterFile('Ps Category', 'name', 3, true);
   commonFileScenarios.sortFile(Files.files_id, 'id', 2, false, true);
   commonFileScenarios.filterFile('0', 'associated', 6);
-  commonFileScenarios.filterFile('6', 'size', 5);
+  commonFileScenarios.filterFile('37.74k', 'size', 5);
   for (let k = 0; k < fileData.length; k++) {
     commonFileScenarios.deleteFile(fileData[k].filename);
   }
