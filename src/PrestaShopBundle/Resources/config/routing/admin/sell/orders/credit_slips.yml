@@ -25,7 +25,7 @@ admin_credit_slips_pdf:
   requirements:
     creditSlipId: \d+
 
-admin_credit_slips_pdf_by_date:
+_admin_credit_slips_pdf_by_date:
   path: /pdf-by-date
   methods: GET
   defaults:
