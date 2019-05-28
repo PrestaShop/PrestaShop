@@ -78,7 +78,7 @@ module.exports = {
     }, 'common_client');
   },
   configureLocalization(defaultConfiguration = false, toggleButton = false, currencyEuro = 'Euro') {
-    scenario('Configuration', client => {
+    scenario('Configure localization', client => {
       if (defaultConfiguration === true) {
         test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
       }

@@ -3,14 +3,14 @@
  * [id="PS-142"][Name="Configuration"]
  **/
 
-const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
-const {AccessPageFO} = require('../../../../../selectors/FO/access_page');
-const {languageFO} = require('../../../../../selectors/FO/index');
-const commonLocalization = require('../../../../common_scenarios/localization');
-const commonCurrency = require('../../../../common_scenarios/currency');
-const {Localization} = require('../../../../../selectors/BO/international/localization');
-const {accountPage} = require('../../../../../selectors/FO/add_account_page');
-var data = require('../../../../../datas/country_language');
+const {AccessPageBO} = require('../../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../../selectors/FO/access_page');
+const {languageFO} = require('../../../../selectors/FO/index');
+const commonLocalization = require('../../../common_scenarios/localization');
+const commonCurrency = require('../../../common_scenarios/currency');
+const {Localization} = require('../../../../selectors/BO/international/localization');
+const {accountPage} = require('../../../../selectors/FO/add_account_page');
+var data = require('../../../../datas/country_language');
 let promise = Promise.resolve();
 
 let defaultLocalUnitsData = {
@@ -41,12 +41,15 @@ scenario('"Configuration"', () => {
       test('should verify that the distance unit is km', () => client.checkAttributeValue(Localization.Localization.local_unit_input.replace('%D', 'distance'), 'value', 'km'));
       test('should verify that the volume unit is L', () => client.checkAttributeValue(Localization.Localization.local_unit_input.replace('%D', 'volume'), 'value', 'L'));
       test('should verify that the dimension unit is cm', () => client.checkAttributeValue(Localization.Localization.local_unit_input.replace('%D', 'dimension'), 'value', 'cm'));
-      test('should click on "View my shop" button then go to the Front Office', () => {
+      test('should click on "View my shop" button', () => {
         return promise
           .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
           .then(() => client.switchWindow(1))
+      });
+      test('should check that the front office language is equal to the browser language', () => {
+        return promise
           .then(() => client.getAttributeInVar(languageFO.html_selector, 'lang', 'language'))
-          .then(() => client.checkLanguage())
+          .then(() => client.getNavigatorLanguage())
           .then((navigatorLanguage) => expect(navigatorLanguage.value).to.contain(tab['language']));
       });
       test('should verify that the selected currency is "Euro"', () => client.waitForExist(AccessPageFO.selected_currency_option.replace("%D", "EUR €")));
@@ -78,6 +81,7 @@ scenario('"Configuration"', () => {
     scenario('Go to Front Office then verify language and currency', client => {
       test('should click on "View my shop" then go to the Front Office', () => {
         return promise
+          .then(() => client.deleteCookieWithoutRefresh())
           .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
           .then(() => client.switchWindow(2));
       });
@@ -87,7 +91,7 @@ scenario('"Configuration"', () => {
        * https://github.com/PrestaShop/PrestaShop/issues/10744
        **/
       test('should verify that the selected language is "Italiano"', () => client.waitForExist(AccessPageFO.selected_language_option.replace("%D", "Italiano")));
-      test('should verify that the selected currency is "Euro"', () => client.waitForExist(AccessPageFO.selected_currency_option.replace("%D", "EUR €")));
+      test('should verify that the selected currency is "Dollar"', () => client.waitForExist(AccessPageFO.selected_currency_option.replace("%D", "USD $")));
       test('should click on the "Accedi" button', () => client.waitForExistAndClick(AccessPageFO.sign_in_button));
       test('should click on "Non hai ancora un account? Creane ora qui uno" button', () => client.waitForExistAndClick(accountPage.create_button));
       test('should set the "nome" input', () => client.waitAndSetValue(accountPage.firstname_input, "Nataly"));
@@ -97,7 +101,7 @@ scenario('"Configuration"', () => {
       test('should click on "Salva" button', () => client.waitForExistAndClick(accountPage.save_account_button));
       test('should click on "Name First name" button', () => client.waitForExistAndClick(accountPage.name_firstname_link));
       test('should click on "Aggiungi il primo indrizzio" button', () => client.waitForExistAndClick(accountPage.add_first_address));
-      test('should verify that the selected language is "Italy"', () => client.waitForExist(accountPage.selected_country_option_list.replace('%D', 'Italia')));
+      test('should verify that the selected country is "Italy"', () => client.waitForExist(accountPage.selected_country_option_list.replace('%D', 'Italy')));
       test('should "Sign out"', () => client.signOutFO(AccessPageFO));
       test('should go back to the Back Office', () => client.switchWindow(0));
     }, 'international');
@@ -107,10 +111,9 @@ scenario('"Configuration"', () => {
     scenario('Delete the "USD" currency', () => {
       commonCurrency.accessToCurrencies();
       commonCurrency.checkCurrencyByIsoCode(currencyData);
-      commonCurrency.deleteCurrency(true, '×\nSuccessful deletion.');
+      commonCurrency.deleteCurrency(true, 'Successful deletion.');
     }, 'common_client');
     scenario('Logout from the Back Office', client => {
       test('should logout successfully from Back Office', () => client.signOutBO());
     }, 'common_client');
-  },
-  'common_client', true);
+  }, 'common_client', true);
