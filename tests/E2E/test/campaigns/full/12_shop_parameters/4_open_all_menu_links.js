@@ -85,7 +85,7 @@ scenario('Open all menu links in the Back Office', () => {
        * Related issue Here
        * https://github.com/PrestaShop/PrestaShop/issues/12506
        */
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.link_widget_submenu, PagesForm.Design.configuration_link_form, "Link widget");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.link_widget_submenu, PagesForm.Design.new_block_button, "Link widget");
     }, 'common_client');
     scenario('Check all the menu links of "Shipping" in the Back Office', client => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Shipping.shipping_menu, Menu.Improve.Shipping.carriers_submenu, PagesForm.Shipping.carrier_form, "Shipping", "Carrier");
