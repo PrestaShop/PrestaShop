@@ -30,11 +30,13 @@ use Context;
 use Db;
 use ObjectModel;
 use PDF;
-use PrestaShop\PrestaShop\Adapter\Entity\OrderSlip;
+use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Validate;
 
+/**
+ * Responsible for generating CreditSlip PDF
+ */
 final class CreditSlipPdfGenerator implements PDFGeneratorInterface
 {
     /**
@@ -50,29 +52,42 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
     }
 
     /**
-     * Generates PDF out of given object and template using legacy generator.
+     * Generates PDF from given data using legacy object models
      *
-     * @param array $objectCollection collection of objects
+     * @param array $creditSlipIds
+     *
+     * @throws MissingDataException
      */
     public function generatePDF(array $creditSlipIds)
     {
-        if (count($creditSlipIds) > 1) {
-            $slipIds = '(' . implode(',', $creditSlipIds) . ')';
-            $slipsList = Db::getInstance()->executeS(
-                'SELECT * FROM ' . $this->dbPrefix . 'order_slip WHERE id_order_slip IN ' . $slipIds
-            );
-            $slipsList = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
-        } else {
-            $slipsList = new OrderSlip((int) $creditSlipIds);
-            if (!Validate::isLoadedObject($slipsList)) {
-                die($this->translator->trans(
-                    'The credit slip cannot be found within your database.',
-                    [],
-                    'Admin.Orderscustomers.Notification'
-                ));
-            }
-        }
-        $pdf = new PDF($slipsList, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
+        $slipsList = $this->getCreditSlipsList($creditSlipIds);
+        $slipsCollection = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
+
+        $pdf = new PDF($slipsCollection, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
         $pdf->render();
+    }
+
+    /**
+     * Gets credit slips array from sql
+     *
+     * @return array
+     *
+     * @throws MissingDataException
+     */
+    private function getCreditSlipsList($creditSlipIds)
+    {
+        if (!empty($creditSlipIds)) {
+            $creditSlipIds = '(' . implode(',', $creditSlipIds) . ')';
+            $slipsList = Db::getInstance()->executeS(
+                'SELECT * FROM ' . $this->dbPrefix .
+                'order_slip WHERE id_order_slip IN ' . $creditSlipIds
+            );
+        }
+
+        if (!empty($slipsList)) {
+            return $slipsList;
+        }
+
+        throw new MissingDataException('Missing data required to generate PDF');
     }
 }

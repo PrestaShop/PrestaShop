@@ -24,39 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CreditSlip;
+namespace PrestaShop\PrestaShop\Core\PDF\Exception;
 
-use DateTimeInterface;
-use OrderSlip;
-use PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Provides Credit Slip data using legacy object model
+ * Thrown when required data for pdf generating is missing
  */
-final class CreditSlipDataProvider implements CreditSlipDataProviderInterface
+class MissingDataException extends CoreException
 {
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * string $dbPrefix
-     */
-    public function __construct(
-        $dbPrefix
-    ) {
-        $this->dbPrefix = $dbPrefix;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdsByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo)
-    {
-        return OrderSlip::getSlipsIdByDate(
-            $dateFrom->format('Y-m-d'),
-            $dateTo->format('Y-m-d')
-        );
-    }
 }

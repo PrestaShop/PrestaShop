@@ -37,20 +37,15 @@
       </h3>
       <div class="card-block row">
         <div class="card-text">
-          <div class="form-group row">
-            {{ ps.label_with_help(('From'|trans({}, 'Admin.Global')), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-            <div class="col-sm">
-              {{ form_errors(pdfByDateForm.from) }}
-              {{ form_widget(pdfByDateForm.from) }}
-            </div>
-          </div>
-          <div class="form-group row">
-            {{ ps.label_with_help(('To'|trans({}, 'Admin.Global')), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-            <div class="col-sm">
-              {{ form_errors(pdfByDateForm.to) }}
-              {{ form_widget(pdfByDateForm.to) }}
-            </div>
-          </div>
+          {% set dateHint = '(Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help') %}
+          {{ ps.form_group_row(pdfByDateForm.from, {}, {
+            'label': 'From'|trans({}, 'Admin.Global'),
+            'help': dateHint
+          }) }}
+          {{ ps.form_group_row(pdfByDateForm.to, {}, {
+            'label': 'To'|trans({}, 'Admin.Global'),
+            'help': dateHint
+          }) }}
         </div>
         {% block credit_slip_pdf_by_date_form_rest %}
           {{ form_rest(pdfByDateForm) }}
