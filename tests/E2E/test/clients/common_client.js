@@ -152,7 +152,7 @@ class CommonClient {
   }
 
   close() {
-    return this.client.end();
+    return this.client.endAll();
   }
 
   closeWindow(id) {
