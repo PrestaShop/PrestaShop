@@ -190,4 +190,5 @@ services:
         arguments:
           - '@prestashop.adapter.legacy.configuration'
           - '@prestashop.adapter.form.choice_provider.order_countries'
+          - '@prestashop.core.form.choice_provider.order_state_by_id'
         public: true
