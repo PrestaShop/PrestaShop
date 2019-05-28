@@ -189,4 +189,5 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
           - '@prestashop.adapter.legacy.configuration'
+          - '@prestashop.adapter.form.choice_provider.order_countries'
         public: true
