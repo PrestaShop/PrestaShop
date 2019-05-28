@@ -156,7 +156,7 @@ class CreditSlipController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process creditSlip options configuration form.
+     * Process credit slip options configuration form.
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
@@ -168,11 +168,11 @@ class CreditSlipController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function saveOptionsAction(Request $request)
+    public function processOptionsAction(Request $request)
     {
-        $creditSlipOptionsFormHandler =
+        $creditSlipOptionsFormHandler = $this->getSlipOptionsFormHandler();
 
-        $creditSlipOptionsForm = $this->getSlipOptionsFormHandler()->getForm();
+        $creditSlipOptionsForm = $creditSlipOptionsFormHandler->getForm();
         $creditSlipOptionsForm->handleRequest($request);
 
         if ($creditSlipOptionsForm->isSubmitted()) {
