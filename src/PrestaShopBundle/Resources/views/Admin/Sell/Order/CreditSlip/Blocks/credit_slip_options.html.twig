@@ -26,7 +26,7 @@
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{{ form_start(pdfByDateForm, {
+{{ form_start(creditSlipOptionsForm, {
   'method': 'GET',
   'action': path('_admin_credit_slips_pdf_by_date')})
 }}
@@ -36,26 +36,21 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      {% set dateHint = '(Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help') %}
-      {{ ps.form_group_row(pdfByDateForm.from, {}, {
-        'label': 'From'|trans({}, 'Admin.Global'),
-        'help': dateHint
-      }) }}
-      {{ ps.form_group_row(pdfByDateForm.to, {}, {
-        'label': 'To'|trans({}, 'Admin.Global'),
-        'help': dateHint
+      {{ ps.form_group_row(creditSlipOptionsForm.options.slip_prefix, {}, {
+        'label': 'Credit slip prefix'|trans({}, 'Admin.Orderscustomers.Feature'),
+        'help': 'Prefix used for credit slips.'|trans({}, 'Admin.Orderscustomers.Help')
       }) }}
     </div>
-    {% block credit_slip_pdf_by_date_form_rest %}
-      {{ form_rest(pdfByDateForm) }}
+    {% block credit_slip_options_form_rest %}
+      {{ form_rest(creditSlipOptionsForm) }}
     {% endblock %}
   </div>
   <div class="card-footer">
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary">
-        {{ 'Generate PDF file by date'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ 'Save'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </button>
     </div>
   </div>
 </div>
-{{ form_end(pdfByDateForm) }}
+{{ form_end(creditSlipOptionsForm) }}
