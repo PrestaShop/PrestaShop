@@ -133,8 +133,7 @@ class CreditSlipController extends FrameworkBundleAdminController
             );
 
             try {
-                $this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds);
-//                die;
+                die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds));
             } catch (MissingDataException $e) {
                 $this->addFlash(
                     'error',
