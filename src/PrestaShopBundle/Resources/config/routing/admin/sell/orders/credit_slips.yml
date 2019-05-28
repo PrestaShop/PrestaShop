@@ -31,3 +31,11 @@ _admin_credit_slips_pdf_by_date:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:generatePdfByDate'
     _legacy_controller: AdminSlip
+
+admin_credit_slips_process_options:
+  path: /options
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:processOptions'
+    _legacy_controller: AdminSlip
+    _legacy_link: AdminSlip:update

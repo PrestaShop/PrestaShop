@@ -27,12 +27,12 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {{ form_start(creditSlipOptionsForm, {
-  'method': 'GET',
-  'action': path('_admin_credit_slips_pdf_by_date')})
+  'method': 'POST',
+  'action': path('admin_credit_slips_process_options')})
 }}
 <div class="card">
   <h3 class="card-header">
-    <i class="material-icons">date_range</i> {{ 'By date'|trans }}
+    <i class="material-icons">settings</i> {{ 'Credit slip options'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
   <div class="card-block row">
     <div class="card-text">

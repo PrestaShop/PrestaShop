@@ -39,6 +39,9 @@ final class CreditSlipOptionsFormDataProvider implements FormDataProviderInterfa
      */
     private $creditSlipOptionsConfiguration;
 
+    /**
+     * @param DataConfigurationInterface $creditSlipOptionsConfiguration
+     */
     public function __construct(DataConfigurationInterface $creditSlipOptionsConfiguration)
     {
         $this->creditSlipOptionsConfiguration = $creditSlipOptionsConfiguration;
@@ -59,6 +62,6 @@ final class CreditSlipOptionsFormDataProvider implements FormDataProviderInterfa
      */
     public function setData(array $data)
     {
-        // TODO: Implement setData() method.
+        return $this->creditSlipOptionsConfiguration->updateConfiguration($data['options']);
     }
 }
