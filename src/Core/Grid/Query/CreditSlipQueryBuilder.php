@@ -121,6 +121,10 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * @param QueryBuilder $qb
+     * @param array $filters
+     */
     private function applyFilters(QueryBuilder $qb, array $filters)
     {
         $availableFiltersMap = [
