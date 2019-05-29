@@ -105,7 +105,7 @@ module.exports = {
                   if (productData.attribute[key].name === attributeData[key - 1].name) {
                     promise = client.scrollWaitForExistAndClick(AddProductPage.attribute_group_name.replace('%NAME', productData.attribute[key].name + date_time), 150, 3000);
                     Object.keys(attributeData[key - 1].values).forEach(function (index) {
-                      client.waitForExistAndClickJs(AddProductPage.attribute_value_checkbox.replace('%ID', global.tab[productData.attribute[key].name + '_id']).replace('%S', index),300);
+                      client.waitForExistAndClickJs(AddProductPage.attribute_value_checkbox.replace('%ID', global.tab[productData.attribute[key].name + '_id']).replace('%S', index), 300);
                     });
                   }
                 });
@@ -498,7 +498,7 @@ module.exports = {
           global.productInfo[j].status = await true;
         }
       }
-      if (i < pagination) {
+      if (i + 1 < pagination) {
         await client.isVisible(productPage.pagination_next);
         await client.clickPageNext(productPage.pagination_next, 3000);
       }
