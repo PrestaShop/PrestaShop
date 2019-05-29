@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\EditEmployeeHandlerInterface;
@@ -37,11 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
-use Psr\Cache\CacheItemPoolInterface;
 use Shop;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Handles command which edits employee using legacy object model
@@ -66,50 +61,18 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $contextEmployeeProvider;
 
     /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
-
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
-
-    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
-     * @param LegacyContext $legacyContext
-     * @param TokenStorageInterface $tokenStorage
-     * @param UserProviderInterface $userProvider
-     * @param CacheItemPoolInterface $cache
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
-        ContextEmployeeProviderInterface $contextEmployeeProvider,
-        LegacyContext $legacyContext,
-        TokenStorageInterface $tokenStorage,
-        UserProviderInterface $userProvider,
-        CacheItemPoolInterface $cache
+        ContextEmployeeProviderInterface $contextEmployeeProvider
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
         $this->contextEmployeeProvider = $contextEmployeeProvider;
-        $this->legacyContext = $legacyContext;
-        $this->tokenStorage = $tokenStorage;
-        $this->userProvider = $userProvider;
-        $this->cache = $cache;
     }
 
     /**
@@ -129,28 +92,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee = new Employee($command->getEmployeeId()->getValue());
 
         $this->assertEmailIsNotAlreadyUsed($employee, $command->getEmail()->getValue());
-
-        $oldEmail = $employee->email;
-
         $this->updateEmployeeWithCommandData($employee, $command);
-
-        // If the edited employee is the one that's logged in at the moment - update data in cookies and session.
-        if ($employee->id == $this->contextEmployeeProvider->getId()) {
-            $isEmailModified = $command->getEmail()->getValue() !== $oldEmail;
-            $isPasswordModified = null !== $command->getPlainPassword();
-
-            if ($isEmailModified) {
-                $this->updateEmailInCookie($employee);
-            }
-
-            if ($isPasswordModified) {
-                $this->updatePasswordInCookie($employee);
-            }
-
-            if ($isEmailModified || $isPasswordModified) {
-                $this->updateSecurityToken($employee);
-            }
-        }
     }
 
     /**
@@ -225,47 +167,5 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
                 'An account already exists for this email address'
             );
         }
-    }
-
-    /**
-     * Update employee password in cookie.
-     *
-     * @param Employee $employee
-     */
-    private function updatePasswordInCookie(Employee $employee)
-    {
-        $this->legacyContext->getContext()->cookie->passwd = $employee->passwd;
-        $this->legacyContext->getContext()->employee->passwd = $employee->passwd;
-        $this->legacyContext->getContext()->cookie->write();
-    }
-
-    /**
-     * Update employee email in cookie.
-     *
-     * @param Employee $employee
-     */
-    private function updateEmailInCookie(Employee $employee)
-    {
-        $this->legacyContext->getContext()->cookie->email = $employee->email;
-        $this->legacyContext->getContext()->employee->email = $employee->email;
-        $this->legacyContext->getContext()->cookie->write();
-    }
-
-    /**
-     * Update security token since the authenticated user was updated.
-     *
-     * @param Employee $employee
-     */
-    private function updateSecurityToken(Employee $employee)
-    {
-        $cacheKey = sprintf('app.employees_%s', sha1($employee->email));
-
-        if ($this->cache->hasItem($cacheKey)) {
-            $this->cache->deleteItem($cacheKey);
-        }
-
-        $user = $this->userProvider->loadUserByUsername($employee->email);
-        $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
-        $this->tokenStorage->setToken($token);
     }
 }

@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+
 /**
  * Stores data of an authenticating employee.
  */
@@ -37,11 +39,25 @@ class AuthenticatingEmployee
     private $defaultPageUrl;
 
     /**
+     * @var Email
+     */
+    private $email;
+
+    /**
+     * @var string
+     */
+    private $hashedPassword;
+
+    /**
+     * @param Email $email
+     * @param string $hashedPassword
      * @param string $defaultPageUrl
      */
-    public function __construct($defaultPageUrl)
+    public function __construct(Email $email, $hashedPassword, $defaultPageUrl)
     {
         $this->defaultPageUrl = $defaultPageUrl;
+        $this->email = $email;
+        $this->hashedPassword = $hashedPassword;
     }
 
     /**
@@ -50,5 +66,21 @@ class AuthenticatingEmployee
     public function getDefaultPageUrl()
     {
         return $this->defaultPageUrl;
+    }
+
+    /**
+     * @return Email
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHashedPassword()
+    {
+        return $this->hashedPassword;
     }
 }
