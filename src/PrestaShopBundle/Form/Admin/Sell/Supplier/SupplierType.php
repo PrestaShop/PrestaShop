@@ -48,6 +48,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class SupplierType extends AbstractType
 {
+    const NAME_LENGTH = 64;
+    const PHONE_LENGTH = 32;
+    const ADDRESS_LENGTH = 128;
+    const POST_CODE_LENGTH = 12;
+    const CITY_NAME_LENGTH = 64;
+    const META_TITLE_LENGTH = 255;
+    const META_DESCRIPTION_LENGTH = 512;
+    const META_KEYWORD_LENGTH = 255;
+
     /**
      * @var array
      */
@@ -96,9 +105,9 @@ class SupplierType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['country_id'] !== 0) {
-            $countryIdForStateChoices = $options['country_id'];
-        } else {
+        $countryIdForStateChoices = $options['country_id'];
+
+        if (null === $options['country_id']) {
             $countryIdForStateChoices = $this->contextCountryId;
         }
 
@@ -111,10 +120,10 @@ class SupplierType extends AbstractType
                         ),
                     ]),
                     new Length([
-                        'max' => 64,
+                        'max' => self::NAME_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 64],
+                            ['%limit%' => self::NAME_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -145,10 +154,10 @@ class SupplierType extends AbstractType
                         'type' => 'phone_number',
                     ]),
                     new Length([
-                        'max' => 32,
+                        'max' => self::PHONE_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 32],
+                            ['%limit%' => self::PHONE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -161,10 +170,10 @@ class SupplierType extends AbstractType
                         'type' => 'phone_number',
                     ]),
                     new Length([
-                        'max' => 32,
+                        'max' => self::PHONE_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 32],
+                            ['%limit%' => self::PHONE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -176,10 +185,10 @@ class SupplierType extends AbstractType
                         'type' => 'address',
                     ]),
                     new Length([
-                        'max' => 128,
+                        'max' => self::ADDRESS_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 128],
+                            ['%limit%' => self::ADDRESS_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -192,10 +201,10 @@ class SupplierType extends AbstractType
                         'type' => 'address',
                     ]),
                     new Length([
-                        'max' => 128,
+                        'max' => self::ADDRESS_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 128],
+                            ['%limit%' => self::ADDRESS_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -208,10 +217,10 @@ class SupplierType extends AbstractType
                         'type' => 'post_code',
                     ]),
                     new Length([
-                        'max' => 12,
+                        'max' => self::POST_CODE_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 12],
+                            ['%limit%' => self::POST_CODE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -228,10 +237,10 @@ class SupplierType extends AbstractType
                         'type' => 'city_name',
                     ]),
                     new Length([
-                        'max' => 64,
+                        'max' => self::CITY_NAME_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 64],
+                            ['%limit%' => self::CITY_NAME_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -268,10 +277,10 @@ class SupplierType extends AbstractType
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => 255,
+                            'max' => self::META_TITLE_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
+                                ['%limit%' => self::META_TITLE_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -287,10 +296,10 @@ class SupplierType extends AbstractType
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => 512,
+                            'max' => self::META_DESCRIPTION_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 512],
+                                ['%limit%' => self::META_DESCRIPTION_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -310,10 +319,10 @@ class SupplierType extends AbstractType
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => 255,
+                            'max' => self::META_KEYWORD_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
+                                ['%limit%' => self::META_KEYWORD_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -346,9 +355,9 @@ class SupplierType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'country_id' => 0,
+                'country_id' => null,
             ])
-            ->setAllowedTypes('country_id', 'integer')
+            ->setAllowedTypes('country_id', ['integer', 'null'])
         ;
     }
 }
