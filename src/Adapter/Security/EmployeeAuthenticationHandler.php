@@ -26,20 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
+use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatingEmployee;
-use PrestaShop\PrestaShop\Core\Security\AuthenticationCredentialsRenewerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Security\EmployeeAuthenticationHandlerInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Renews authentication credentials in web storage.
+ * Handles authentication credentials storage.
  */
-final class EmployeeAuthenticationCredentialsRenewer implements AuthenticationCredentialsRenewerInterface
+final class EmployeeAuthenticationHandler implements EmployeeAuthenticationHandlerInterface
 {
     /**
      * @var LegacyContext
@@ -62,44 +62,67 @@ final class EmployeeAuthenticationCredentialsRenewer implements AuthenticationCr
     private $cache;
 
     /**
-     * @var CommandBusInterface
+     * @var RequestStack
      */
-    private $queryBus;
+    private $requestStack;
 
     /**
      * @param LegacyContext $legacyContext
      * @param TokenStorageInterface $tokenStorage
      * @param UserProviderInterface $userProvider
      * @param CacheItemPoolInterface $cache
-     * @param CommandBusInterface $queryBus
+     * @param RequestStack $requestStack
      */
     public function __construct(
         LegacyContext $legacyContext,
         TokenStorageInterface $tokenStorage,
         UserProviderInterface $userProvider,
         CacheItemPoolInterface $cache,
-        CommandBusInterface $queryBus
+        RequestStack $requestStack
     ) {
         $this->legacyContext = $legacyContext;
         $this->tokenStorage = $tokenStorage;
         $this->userProvider = $userProvider;
         $this->cache = $cache;
-        $this->queryBus = $queryBus;
+        $this->requestStack = $requestStack;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function renewCredentials($userId)
+    public function renewAuthenticationCredentials(AuthenticatedEmployee $authenticatedEmployee)
     {
-        /** @var AuthenticatingEmployee $authenticatingEmployee */
-        $authenticatingEmployee = $this->queryBus->handle(new GetEmployeeForAuthentication($userId));
-
-        $email = $authenticatingEmployee->getEmail()->getValue();
+        $email = $authenticatedEmployee->getEmail()->getValue();
 
         $this->updateEmailInCookie($email);
-        $this->updatePasswordInCookie($authenticatingEmployee->getHashedPassword());
+        $this->updatePasswordInCookie($authenticatedEmployee->getHashedPassword());
         $this->updateSecurityToken($email);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAuthenticationCredentials(AuthenticatedEmployee $authenticatedEmployee)
+    {
+        $employee = new Employee($authenticatedEmployee->getEmployeeId()->getValue());
+
+        // Assign logged in employee to the context
+        $this->legacyContext->getContext()->employee = $employee;
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null !== $request) {
+            $this->legacyContext->getContext()->employee->remote_addr = (int) ip2long($request->getClientIp());
+        }
+
+        // Save employee data to cookie
+        $cookie = $this->legacyContext->getContext()->cookie;
+        $cookie->id_employee = $employee->id;
+        $cookie->email = $employee->email;
+        $cookie->profile = $employee->id_profile;
+        $cookie->passwd = $employee->passwd;
+        $cookie->remote_addr = $employee->remote_addr;
+        $cookie->write();
     }
 
     /**
