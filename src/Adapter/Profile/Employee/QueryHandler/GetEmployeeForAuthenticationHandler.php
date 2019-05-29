@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeForAuthenticationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatingEmployee;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Handles employee authentication command.
@@ -58,6 +59,8 @@ final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthent
         $employee = new Employee($query->getEmployeeId()->getValue());
 
         return new AuthenticatingEmployee(
+            new Email($employee->email),
+            $employee->passwd,
             $this->context->getAdminLink($employee->getDefaultTabClassName())
         );
     }
