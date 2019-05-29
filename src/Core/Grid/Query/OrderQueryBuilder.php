@@ -103,6 +103,8 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->applyPagination($searchCriteria, $qb)
         ;
 
+        $this->applySorting($qb, $searchCriteria);
+
         return $qb;
     }
 
@@ -151,6 +153,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             'id_order' => 'o.id_order',
             'country_name' => 'c.id_country',
             'total_paid_tax_incl' => 'o.total_paid_tax_incl',
+            'osname' => 'os.id_order_state',
         ];
 
         $likeComparisonFilters = [
@@ -242,5 +245,31 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         ;
 
         return $builder;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param SearchCriteriaInterface $criteria
+     */
+    private function applySorting(QueryBuilder $qb, SearchCriteriaInterface $criteria)
+    {
+        $sortableFields = [
+            'id_order' => 'o.id_order',
+            'country_name' => 'c.id_country',
+            'total_paid_tax_incl' => 'o.total_paid_tax_incl',
+            'reference' => 'o.`reference`',
+            'company' => 'cu.`company`',
+            'payment' => 'o.`payment`',
+            'customer' => 'customer',
+            'osname' => 'osl.name',
+            'date_add' => 'o.`date_add`',
+        ];
+
+        if (isset($sortableFields[$criteria->getOrderBy()])) {
+            $qb->orderBy(
+                $sortableFields[$criteria->getOrderBy()],
+                $criteria->getOrderWay()
+            );
+        }
     }
 }
