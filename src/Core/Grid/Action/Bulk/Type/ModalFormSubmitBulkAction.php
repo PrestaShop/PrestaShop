@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,24 +22,38 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig' %}
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-  {% block order_grid_row %}
-    <div class="row">
-      <div class="col-12">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+/**
+ * Bulk actions that submit form in modal
+ */
+final class ModalFormSubmitBulkAction extends AbstractBulkAction
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'modal_form_submit';
+    }
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/order.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'submit_route',
+                'modal_id',
+            ])
+            ->setAllowedTypes('submit_route', 'string')
+            ->setAllowedTypes('modal_id', 'string')
+        ;
+    }
+}

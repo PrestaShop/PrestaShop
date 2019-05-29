@@ -29,3 +29,10 @@ admin_orders_generate_delivery_slip_pdf:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_orders_change_orders_status:
+  path: /change-orders-status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeOrdersStatus
+    _legacy_controller: AdminOrders
