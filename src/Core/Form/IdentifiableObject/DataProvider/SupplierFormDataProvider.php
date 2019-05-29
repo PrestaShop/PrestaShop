@@ -52,18 +52,26 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
     private $defaultShopAssociation;
 
     /**
+     * @var int
+     */
+    private $contextCountryId;
+
+    /**
      * @param CommandBusInterface $bus
      * @param $multistoreEnabled
      * @param int[] $defaultShopAssociation
+     * @param int $contextCountryId
      */
     public function __construct(
         CommandBusInterface $bus,
         $multistoreEnabled,
-        array $defaultShopAssociation
+        array $defaultShopAssociation,
+        $contextCountryId
     ) {
         $this->bus = $bus;
         $this->multistoreEnabled = $multistoreEnabled;
         $this->defaultShopAssociation = $defaultShopAssociation;
+        $this->contextCountryId = $contextCountryId;
     }
 
     /**
@@ -106,6 +114,7 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         $data['is_enabled'] = false;
+        $data['id_country'] = $this->contextCountryId;
 
         if ($this->multistoreEnabled) {
             $data['shop_association'] = $this->defaultShopAssociation;
