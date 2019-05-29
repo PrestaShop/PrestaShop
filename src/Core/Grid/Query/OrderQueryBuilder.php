@@ -91,10 +91,13 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         $qb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
+            ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
             ->addSelect('os.color, o.payment')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')
             ->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new')
         ;
+
+        $qb = $this->applyNewCustomerFilter($qb, $searchCriteria->getFilters());
 
         $this->criteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -108,9 +111,9 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this
-            ->getBaseQueryBuilder($searchCriteria->getFilters())
-            ->addSelect('COUNT(*)')
+        return $this->connection
+            ->createQueryBuilder()
+            ->select('FOUND_ROWS()')
         ;
     }
 
@@ -123,7 +126,6 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
             ->from($this->dbPrefix . 'orders', 'o')
             ->leftJoin('o', $this->dbPrefix . 'customer', 'cu', 'o.id_customer = cu.id_customer')
             ->innerJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
@@ -145,17 +147,6 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->setParameter('context_lang_id', $this->contextLangId, PDO::PARAM_INT)
         ;
 
-        $allowedFilters = [
-            'id_order',
-            'reference',
-            'new',
-            'customer',
-            'company',
-            'total_paid_tax_incl',
-            'date_add',
-            'country_name',
-        ];
-
         $strictComparisonFilters = [
             'id_order' => 'o.id_order',
             'country_name' => 'c.id_country',
@@ -165,6 +156,8 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         $likeComparisonFilters = [
             'reference' => 'o.`reference`',
             'company' => 'cu.`company`',
+            'customer' => 'cu.`lastname`',
+            'payment' => 'o.`payment`',
         ];
 
         $havingLikeComparisonFilters = [
@@ -176,10 +169,6 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         ];
 
         foreach ($filters as $filterName => $filterValue) {
-            if (!in_array($filterName, $allowedFilters)) {
-                continue;
-            }
-
             if (isset($strictComparisonFilters[$filterName])) {
                 $alias = $strictComparisonFilters[$filterName];
 
@@ -210,14 +199,14 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             if (isset($dateComparisonFilters[$filterName])) {
                 $alias = $dateComparisonFilters[$filterName];
 
-                if (isset($value['from'])) {
+                if (isset($filterValue['from'])) {
                     $name = sprintf('%s_from', $filterName);
 
                     $qb->andWhere("$alias >= :$name");
                     $qb->setParameter($name, sprintf('%s %s', $filterValue['from'], '0:0:0'));
                 }
 
-                if (isset($value['to'])) {
+                if (isset($filterValue['to'])) {
                     $name = sprintf('%s_to', $filterName);
 
                     $qb->andWhere("$alias <= :$name");
@@ -229,5 +218,23 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         }
 
         return $qb;
+    }
+
+    private function applyNewCustomerFilter(QueryBuilder $qb, array $filters)
+    {
+        if (!isset($filters['new'])) {
+            return $qb;
+        }
+
+        $builder = $this->connection
+            ->createQueryBuilder()
+            ->select('*')
+            ->from('('.$qb->getSQL().') tmp_table')
+            ->setParameters($qb->getParameters())
+            ->andWhere('new = :new')
+            ->setParameter('new', $filters['new'])
+        ;
+
+        return $builder;
     }
 }
