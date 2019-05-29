@@ -1,7 +1,4 @@
 <?php
-
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
-
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -26,6 +23,10 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+
 class CurrencyCore extends ObjectModel
 {
     public $id;
