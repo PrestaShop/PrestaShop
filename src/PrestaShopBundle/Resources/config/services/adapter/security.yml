@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.security.employee_authentication_credentials_renewer:
+    class: PrestaShop\PrestaShop\Adapter\Security\EmployeeAuthenticationCredentialsRenewer
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@security.token_storage'
+      - '@prestashop.security.admin.provider'
+      - '@prestashop.static_cache.adapter'
+      - '@prestashop.core.query_bus'
