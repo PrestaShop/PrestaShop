@@ -27,10 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use Employee;
+use ErrorException;
 use Exception;
 use Language;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
@@ -41,6 +43,7 @@ use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
 use PrestaShopException;
 use PrestaShopLogger;
 use Shop;
+use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -352,7 +355,17 @@ class ThemeManager implements AddonManagerInterface
         $sandboxPath = $this->getSandboxPath();
         Tools::ZipExtract($source, $sandboxPath);
 
-        $theme_data = (new Parser())->parse(file_get_contents($sandboxPath . '/config/theme.yml'));
+        $themeConfigurationFile = $sandboxPath . '/config/theme.yml';
+
+        if (!file_exists($themeConfigurationFile)) {
+            throw new ThemeConstraintException(
+                'Missing theme configuration file which should be in located in /config/theme.yml',
+                ThemeConstraintException::MISSING_THEME_CONFIGURATION_FILE
+            );
+        }
+
+        $theme_data = (new Parser())->parse(file_get_contents($themeConfigurationFile));
+
         $theme_data['directory'] = $sandboxPath;
         $theme = new Theme($theme_data);
         if (!$this->themeValidator->isValid($theme)) {

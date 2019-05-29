@@ -35,4 +35,9 @@ class ThemeConstraintException extends ThemeException
      * When trying to change theme in multi-shop context
      */
     const RESTRICTED_ONLY_FOR_SINGLE_SHOP = 1;
+
+    /**
+     * When trying to upload zip file which does not contain theme.yml configuration file.
+     */
+    const MISSING_THEME_CONFIGURATION_FILE = 2;
 }

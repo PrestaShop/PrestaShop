@@ -236,11 +236,23 @@ class ThemeController extends AbstractAdminController
 
                 return $this->redirectToRoute('admin_themes_index');
             } catch (ThemeException $e) {
-                $this->addFlash('error', $this->handleImportThemeException($e));
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException(
+                        $e,
+                        $this->handleImportThemeException($e)
+                    )
+                );
 
                 return $this->redirectToRoute('admin_themes_import');
             } catch (OutOfMemoryException $e) {
-                $this->addFlash('error', $this->handleImportThemeException($e));
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException(
+                        $e,
+                        $this->handleImportThemeException($e)
+                    )
+                );
             }
         }
 
@@ -464,13 +476,11 @@ class ThemeController extends AbstractAdminController
     /**
      * @param Exception $e
      *
-     * @return string
+     * @return array
      */
     private function handleImportThemeException(Exception $e)
     {
-        $type = get_class($e);
-
-        $errorMessages = [
+        return [
             ImportedThemeAlreadyExistsException::class => $this->trans(
                 'There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.',
                 'Admin.Design.Notification',
@@ -479,13 +489,11 @@ class ThemeController extends AbstractAdminController
                 ]
             ),
             OutOfMemoryException::class => $e->getMessage(),
+            ThemeConstraintException::class => [
+                ThemeConstraintException::MISSING_THEME_CONFIGURATION_FILE =>
+                 'some meaningful message that themes.yml file is missing',
+            ]
         ];
-
-        if ($errorMessages[$type]) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 
     /**
