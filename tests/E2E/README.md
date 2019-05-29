@@ -152,6 +152,7 @@ Use `TEST_PATH` environement variable to specify which test you want to run.
 >1) if you are running high/01_order/* you must set the **DIR** option
 >2) if you are running high/10_module/* or regular/02_install_module.js you must set the **MODULE** option
 >3) If you have run only the install_upgrade/01_install.js with language different and country different from "en" and "france" you need to reinstall PrestaShop in **English** with setting country to **France** So you can launch the other tests
+>3) if you are running full/11_international/* you must set the **SHOPPATH** option
 
 #### High tests
 
@@ -178,6 +179,7 @@ npm run full-test -- --URL=prestashop.localhost --DIR=DownloadDirectory --MODULE
 > 1) It's not recommended to run all the campaign full tests together, it's safer to run them one by one using the script specific-test.
 > 2) if you are running full/01_order/* or full/16_file/* you must set the **DIR** option
 > 3) if you are running full/10_module/* or regular/02_install_module.js you must set the **MODULE** option
+> 3) if you are running full/11_international/* you must set the **SHOPPATH** option
 
 #### Install and Autoupgrade
 
