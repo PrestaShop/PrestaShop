@@ -23,22 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
-
-{% block content %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig' %}
-
-  {% block order_grid_row %}
-    <div class="row">
-      <div class="col-12">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/order.bundle.js') }}"></script>
-{% endblock %}
+<button id="{{ '%s_grid_bulk_action_%s'|format(grid.id, action.id) }}"
+        class="dropdown-item js-bulk-modal-form-submit-btn"
+        type="button"
+        data-form-submit-url="{{ path(action.options.submit_route) }}"
+        data-modal-id="{{ action.options.modal_id }}"
+>
+  {{ action.name }}
+</button>

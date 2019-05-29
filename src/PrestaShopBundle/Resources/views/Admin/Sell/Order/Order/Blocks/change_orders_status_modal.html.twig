@@ -23,22 +23,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  'id': 'changeOrdersStatusModal',
+  'title': 'Choose an order status'|trans({}, 'Admin.Orderscustomers.Feature'),
+  'closable': true,
+  'actions': [{
+    'type': 'button',
+    'label': 'Update Order Status'|trans({}, 'Admin.Orderscustomers.Feature'),
+    'class': 'btn btn-primary btn-lg js-submit-modal-form-btn',
+  }],
+} %}
+  {% block content %}
+    <div class="modal-body">
+      {{ form_start(changeOrderStatusesForm, {
+        'action': path('admin_orders_change_orders_status'),
+        'attr': {
+          'data-bulk-inputs-id': changeOrderStatusesForm.order_ids.vars.id
+        }
+      }) }}
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig' %}
-
-  {% block order_grid_row %}
-    <div class="row">
-      <div class="col-12">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderGrid} %}
+      <div class="form-group mb-0">
+        {{ form_widget(changeOrderStatusesForm.new_order_status_id) }}
       </div>
+
+      <div class="d-none">
+        {{ form_widget(changeOrderStatusesForm.order_ids) }}
+      </div>
+
+      {{ form_end(changeOrderStatusesForm) }}
     </div>
   {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/order.bundle.js') }}"></script>
-{% endblock %}
+{% endembed %}

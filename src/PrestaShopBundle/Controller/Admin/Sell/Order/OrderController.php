@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -54,12 +55,15 @@ class OrderController extends FrameworkBundleAdminController
     {
         $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
 
+        $changeOrderStatusesForm = $this->createForm(ChangeOrdersStatusType::class);
+
         return $this->render(
             '@PrestaShop/Admin/Sell/Order/Order/index.html.twig',
             [
                 'orderGrid' => $this->presentGrid($orderGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
+                'changeOrderStatusesForm' => $changeOrderStatusesForm->createView(),
             ]
         );
     }
@@ -108,5 +112,16 @@ class OrderController extends FrameworkBundleAdminController
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
         die;
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function changeOrdersStatusAction(Request $request)
+    {
+        $changeOrdersStatusForm =$this->createForm(ChangeOrdersStatusType::class);
+        $changeOrdersStatusForm->handleRequest($request);
+
+        dump($changeOrdersStatusForm->getData());die;
     }
 }
