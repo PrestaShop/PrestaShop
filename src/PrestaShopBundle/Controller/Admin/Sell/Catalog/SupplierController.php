@@ -308,14 +308,22 @@ class SupplierController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
+     * @param Request $request
      * @param int $supplierId
      *
      * @return Response
+     *
+     * @throws SupplierException
      */
     public function editAction(Request $request, $supplierId)
     {
         try {
-            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId);
+            /** @var EditableSupplier $editableSupplier */
+            $editableSupplier = $this->getQueryBus()->handle(new GetSupplierForEditing((int) $supplierId));
+
+            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId, [], [
+                'country_id' => $editableSupplier->getCountryId(),
+            ]);
             $supplierForm->handleRequest($request);
 
             $result = $this->getFormHandler()->handleFor((int) $supplierId, $supplierForm);
@@ -332,9 +340,6 @@ class SupplierController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_suppliers_index');
             }
         }
-
-        /** @var EditableSupplier $editableSupplier */
-        $editableSupplier = $this->getQueryBus()->handle(new GetSupplierForEditing((int) $supplierId));
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
