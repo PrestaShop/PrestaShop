@@ -73,15 +73,15 @@ final class GetSupplierForEditingHandler extends AbstractSupplierHandler impleme
             $address->address1,
             $address->city,
             $address->address2,
-            $address->id_country,
+            (int) $address->id_country,
             $address->postcode,
-            $address->id_state,
+            (int) $address->id_state,
             $address->phone,
             $address->phone_mobile,
             $supplier->meta_title,
             $supplier->meta_description,
             $supplier->meta_keywords,
-            $supplier->active,
+            (bool) $supplier->active,
             $supplier->getAssociatedShops(),
             $this->getLogoImage($supplierId)
         );

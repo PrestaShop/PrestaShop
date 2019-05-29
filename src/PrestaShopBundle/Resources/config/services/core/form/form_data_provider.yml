@@ -103,3 +103,5 @@ services:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+
