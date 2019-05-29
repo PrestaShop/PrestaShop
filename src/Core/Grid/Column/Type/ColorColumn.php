@@ -47,6 +47,8 @@ final class ColorColumn extends AbstractColumn
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setRequired([
                 'field',
