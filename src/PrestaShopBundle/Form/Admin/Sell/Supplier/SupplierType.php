@@ -105,10 +105,12 @@ class SupplierType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $countryIdForStateChoices = $options['country_id'];
+        // By default the country id for states choices is taken from context country id
+        $countryIdForStateChoices = $this->contextCountryId;
 
-        if (null === $options['country_id']) {
-            $countryIdForStateChoices = $this->contextCountryId;
+        // In case custom states country id is provided it is used instead (for example if it's edit action).
+        if (null !== $options['country_id']) {
+            $countryIdForStateChoices = $options['country_id'];
         }
 
         $builder
@@ -354,6 +356,7 @@ class SupplierType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
+            // country_id for states choices provider.
             ->setDefaults([
                 'country_id' => null,
             ])
