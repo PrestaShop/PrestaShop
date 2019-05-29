@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Security\Admin;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AuthenticateEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatingEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Security\EmployeeAuthenticationHandlerInterface;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -59,11 +59,6 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     private $router;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -84,30 +79,35 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     private $formFactory;
 
     /**
+     * @var EmployeeAuthenticationHandlerInterface
+     */
+    private $authenticationHandler;
+
+    /**
      * @param Hashing $hashing
      * @param RouterInterface $router
-     * @param CommandBusInterface $commandBus
      * @param CommandBusInterface $queryBus
      * @param LoggerInterface $logger
      * @param TranslatorInterface $translator
      * @param FormFactoryInterface $formFactory
+     * @param EmployeeAuthenticationHandlerInterface $authenticationHandler
      */
     public function __construct(
         Hashing $hashing,
         RouterInterface $router,
-        CommandBusInterface $commandBus,
         CommandBusInterface $queryBus,
         LoggerInterface $logger,
         TranslatorInterface $translator,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EmployeeAuthenticationHandlerInterface $authenticationHandler
     ) {
         $this->hashing = $hashing;
         $this->router = $router;
-        $this->commandBus = $commandBus;
         $this->logger = $logger;
         $this->translator = $translator;
         $this->queryBus = $queryBus;
         $this->formFactory = $formFactory;
+        $this->authenticationHandler = $authenticationHandler;
     }
 
     /**
@@ -164,11 +164,6 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        $userId = $token->getUser()->getId();
-
-        $authenticationCommand = new AuthenticateEmployeeCommand($userId);
-        $this->commandBus->handle($authenticationCommand);
-
         $this->logger->info(
             $this->translator->trans(
                 'Back office connection from %ip%',
@@ -180,12 +175,15 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             ]
         );
 
+        $userId = $token->getUser()->getId();
         $getEmployeeForAuthentication = new GetEmployeeForAuthentication((int) $userId);
 
-        /** @var AuthenticatingEmployee $authenticatingEmployee */
-        $authenticatingEmployee = $this->queryBus->handle($getEmployeeForAuthentication);
+        /** @var AuthenticatedEmployee $authenticatedEmployee */
+        $authenticatedEmployee = $this->queryBus->handle($getEmployeeForAuthentication);
 
-        return new RedirectResponse($authenticatingEmployee->getDefaultPageUrl());
+        $this->authenticationHandler->setAuthenticationCredentials($authenticatedEmployee);
+
+        return new RedirectResponse($authenticatedEmployee->getDefaultPageUrl());
     }
 
     /**
