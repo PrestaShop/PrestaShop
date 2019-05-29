@@ -20,6 +20,7 @@ services:
             - "@prestashop.core.query_bus"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
+            - "@form.factory"
 
     prestashop.security.role.dynamic_role_hierarchy:
         class: PrestaShopBundle\Security\Role\DynamicRoleHierarchy
