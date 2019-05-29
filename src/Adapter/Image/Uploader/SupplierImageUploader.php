@@ -26,14 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
-use Configuration;
 use Context;
-use ImageManager;
-use ImageType;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
-use PrestaShopException;
+use Supplier;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -47,92 +41,35 @@ final class SupplierImageUploader extends AbstractImageUploader
     public function upload($supplierId, UploadedFile $image)
     {
         $this->checkImageIsAllowedForUpload($image);
-        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+        $tempImageName = $this->createTemporaryImage($image);
+        $this->deleteOldImage($supplierId);
 
-        if (!$temporaryImageName) {
-            throw new ImageUploadException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
-        }
+        $destination = _PS_SUPP_IMG_DIR_ . $supplierId . '.jpg';
+        $this->uploadFromTemp($tempImageName, $destination);
 
-        if (!move_uploaded_file($image->getPathname(), $temporaryImageName)) {
-            throw new ImageUploadException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
+        if (file_exists($destination)) {
+            $this->generateDifferentSize($supplierId, _PS_SUPP_IMG_DIR_, 'suppliers');
         }
-
-        // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-        if (!ImageManager::checkImageMemoryLimit($temporaryImageName)) {
-            throw new MemoryLimitException(
-                'Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.'
-            );
-        }
-        // Copy new image
-        if (!ImageManager::resize($temporaryImageName, _PS_SUPP_IMG_DIR_ . $supplierId . '.jpg')) {
-            throw new ImageOptimizationException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
-        }
-
-        $this->generateDifferentSizeImages($supplierId);
     }
 
     /**
-     * @param int $supplierId
+     * Deletes old image
      *
-     * @return bool
+     * @param $id
      */
-    private function generateDifferentSizeImages($supplierId)
+    private function deleteOldImage($id)
     {
-        $resized = true;
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
+        $supplier = new Supplier($id);
+        $supplier->deleteImage();
 
-        try {
-            /* Generate images with different size */
-            if (isset($_FILES) &&
-                count($_FILES) &&
-                file_exists(_PS_SUPP_IMG_DIR_ . $supplierId . '.jpg')
-            ) {
-                $imageTypes = ImageType::getImagesTypes('suppliers');
+        $currentLogo = _PS_TMP_IMG_DIR_ . 'supplier_mini_' . $id .
+            '_' .
+            Context::getContext()->shop->id .
+            '.jpg'
+        ;
 
-                foreach ($imageTypes as $imageType) {
-                    $resized &= ImageManager::resize(
-                        _PS_SUPP_IMG_DIR_ . $supplierId . '.jpg',
-                        _PS_SUPP_IMG_DIR_ . $supplierId . '-' . stripslashes($imageType['name']) . '.jpg',
-                        (int) $imageType['width'],
-                        (int) $imageType['height']
-                    );
-
-                    if ($generateHighDpiImages) {
-                        $resized &= ImageManager::resize(
-                            _PS_SUPP_IMG_DIR_ . $supplierId . '.jpg',
-                            _PS_SUPP_IMG_DIR_ . $supplierId . '-' . stripslashes($imageType['name']) . '2x.jpg',
-                            (int) $imageType['width'] * 2,
-                            (int) $imageType['height'] * 2
-                        );
-                    }
-                }
-
-                $currentLogo = _PS_TMP_IMG_DIR_ . 'supplier_mini_' . $supplierId .
-                    '_' .
-                    Context::getContext()->shop->id .
-                    '.jpg'
-                ;
-
-                if ($resized && file_exists($currentLogo)) {
-                    unlink($currentLogo);
-                }
-            }
-        } catch (PrestaShopException $e) {
-            throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
+        if (file_exists($currentLogo)) {
+            unlink($currentLogo);
         }
-
-        if (!$resized) {
-            throw new ImageOptimizationException(
-                'Unable to resize one or more of your pictures.'
-            );
-        }
-
-        return $resized;
     }
 }
