@@ -490,7 +490,7 @@ module.exports = {
     await client.signInFO(AccessPageFO);
     await client.changeLanguage();
     await client.scrollWaitForExistAndClick(productPage.see_all_products);
-    for (let i = 0; i <= global.pagination; i++) {
+    for (let i = 0; i < global.pagination; i++) {
       for (let j = 0; j < global.productInfo.length; j++) {
         await client.pause(2000);
         await client.isVisible(AccessPageFO.product_name.replace('%PAGENAME', global.productInfo[j].name.substring(0, 23)));

@@ -27,10 +27,13 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
@@ -54,6 +57,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -141,8 +145,14 @@ class ThemeController extends AbstractAdminController
                     'success',
                     $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
                 );
-            } catch (ShopException $e) {
-                $this->addFlash('error', $this->handleUploadLogosException($e));
+            } catch (DomainException $e) {
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException(
+                        $e,
+                        $this->getLogoUploadErrorMessages($e)
+                    )
+                );
             }
         }
 
@@ -449,28 +459,6 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
-     * Handles exception that was thrown when uploading shop logos.
-     *
-     * @param ShopException $e
-     *
-     * @return string error message for exception
-     */
-    private function handleUploadLogosException(ShopException $e)
-    {
-        $type = get_class($e);
-
-        $errorMessages = [
-            NotSupportedFaviconExtensionException::class => $this->trans('Image format not recognized, allowed formats are: .ico', 'Admin.Notifications.Error'),
-        ];
-
-        if (isset($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
-    }
-
-    /**
      * @param ThemeException $e
      *
      * @return string
@@ -566,5 +554,44 @@ class ThemeController extends AbstractAdminController
         }
 
         return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * Gets exception or exception and its code error mapping.
+     *
+     * @param DomainException $exception
+     *
+     * @return array
+     */
+    private function getLogoUploadErrorMessages(DomainException $exception)
+    {
+        $availableLogoFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS);
+        $availableIconFormat = ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION;
+
+        $logoImageFormatError = $this->trans(
+            'Image format not recognized, allowed format(s) is(are): .%s',
+            'Admin.Notifications.Error',
+            [$availableLogoFormatsImploded]
+        );
+
+        $iconFormatError = $this->trans(
+            'Image format not recognized, allowed format(s) is(are): .%s',
+            'Admin.Notifications.Error',
+            [$availableIconFormat]
+        );
+
+        return [
+            NotSupportedLogoImageExtensionException::class => $logoImageFormatError,
+            NotSupportedFaviconExtensionException::class => $iconFormatError,
+            FileUploadException::class => [
+                UPLOAD_ERR_INI_SIZE => $this->trans(
+                    'File too large (limit of %s bytes).',
+                    'Admin.Notifications.Error',
+                    [
+                        UploadedFile::getMaxFilesize(),
+                    ]
+                ),
+            ],
+        ];
     }
 }
