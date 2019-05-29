@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
-use Configuration;
 use Currency;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
