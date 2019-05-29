@@ -47,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeIts
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -360,10 +359,16 @@ class EmployeeController extends FrameworkBundleAdminController
             $result = $this->getEmployeeFormHandler()->handleFor((int) $employeeId, $employeeForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
+                $employeeId = $result->getIdentifiableObjectId();
+
+                if ($contextEmployeeProvider->getId() === $employeeId) {
+                    $this->renewAuthenticationCredentials($employeeId);
+                }
+
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_employees_edit', [
-                    'employeeId' => $result->getIdentifiableObjectId(),
+                    'employeeId' => $employeeId,
                 ]);
             }
         } catch (Exception $e) {
@@ -537,6 +542,17 @@ class EmployeeController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * Renew authentication credentials for employee.
+     *
+     * @param int $employeeId
+     */
+    private function renewAuthenticationCredentials($employeeId)
+    {
+        $credentialsRenewer = $this->get('prestashop.adapter.security.employee_authentication_credentials_renewer');
+        $credentialsRenewer->renewCredentials($employeeId);
     }
 
     /**
