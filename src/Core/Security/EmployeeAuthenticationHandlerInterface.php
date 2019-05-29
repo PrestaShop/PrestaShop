@@ -24,17 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Security;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AuthenticateEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
 
 /**
- * Describes employee authentication handler.
+ * Contract for service that handles employee authentication.
  */
-interface AuthenticateEmployeeHandlerInterface
+interface EmployeeAuthenticationHandlerInterface
 {
     /**
-     * @param AuthenticateEmployeeCommand $command
+     * Renew authentication credentials.
+     *
+     * @param AuthenticatedEmployee $authenticatedEmployee
      */
-    public function handle(AuthenticateEmployeeCommand $command);
+    public function renewAuthenticationCredentials(AuthenticatedEmployee $authenticatedEmployee);
+
+    /**
+     * Set the authentication credentials.
+     *
+     * @param AuthenticatedEmployee $authenticatedEmployee
+     */
+    public function setAuthenticationCredentials(AuthenticatedEmployee $authenticatedEmployee);
 }
