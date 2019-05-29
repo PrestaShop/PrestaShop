@@ -24,26 +24,72 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Authenticates employee into back office.
+ * Stores data of an authenticated employee.
  */
-class AuthenticateEmployeeCommand
+class AuthenticatedEmployee
 {
+    /**
+     * @var string
+     */
+    private $defaultPageUrl;
+
+    /**
+     * @var Email
+     */
+    private $email;
+
+    /**
+     * @var string
+     */
+    private $hashedPassword;
+
     /**
      * @var EmployeeId
      */
     private $employeeId;
 
     /**
-     * @param int $employeeId
+     * @param EmployeeId $employeeId
+     * @param Email $email
+     * @param string $hashedPassword
+     * @param string $defaultPageUrl
      */
-    public function __construct($employeeId)
+    public function __construct(EmployeeId $employeeId, Email $email, $hashedPassword, $defaultPageUrl)
     {
-        $this->employeeId = new EmployeeId($employeeId);
+        $this->employeeId = $employeeId;
+        $this->defaultPageUrl = $defaultPageUrl;
+        $this->email = $email;
+        $this->hashedPassword = $hashedPassword;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultPageUrl()
+    {
+        return $this->defaultPageUrl;
+    }
+
+    /**
+     * @return Email
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHashedPassword()
+    {
+        return $this->hashedPassword;
     }
 
     /**
