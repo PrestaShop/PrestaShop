@@ -56,6 +56,7 @@ use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\Debug\Exception\OutOfMemoryException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -238,6 +239,8 @@ class ThemeController extends AbstractAdminController
                 $this->addFlash('error', $this->handleImportThemeException($e));
 
                 return $this->redirectToRoute('admin_themes_import');
+            } catch (OutOfMemoryException $e) {
+                $this->addFlash('error', $this->handleImportThemeException($e));
             }
         }
 
@@ -459,11 +462,11 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
-     * @param ThemeException $e
+     * @param Exception $e
      *
      * @return string
      */
-    private function handleImportThemeException(ThemeException $e)
+    private function handleImportThemeException(Exception $e)
     {
         $type = get_class($e);
 
@@ -475,6 +478,7 @@ class ThemeController extends AbstractAdminController
                     '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
                 ]
             ),
+            OutOfMemoryException::class => $e->getMessage(),
         ];
 
         if ($errorMessages[$type]) {
