@@ -135,8 +135,4 @@ final class SupplierImageUploader extends AbstractImageUploader
 
         return $resized;
     }
-
-    private function generateHighDpiImages()
-    {
-    }
 }
