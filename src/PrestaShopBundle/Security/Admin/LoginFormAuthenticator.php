@@ -31,7 +31,9 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AuthenticateEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatingEmployee;
+use PrestaShopBundle\Form\Admin\Login\LoginType;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -77,12 +79,18 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     private $queryBus;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
      * @param Hashing $hashing
      * @param RouterInterface $router
      * @param CommandBusInterface $commandBus
      * @param CommandBusInterface $queryBus
      * @param LoggerInterface $logger
      * @param TranslatorInterface $translator
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         Hashing $hashing,
@@ -90,7 +98,8 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         CommandBusInterface $commandBus,
         CommandBusInterface $queryBus,
         LoggerInterface $logger,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        FormFactoryInterface $formFactory
     ) {
         $this->hashing = $hashing;
         $this->router = $router;
@@ -98,6 +107,7 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $this->logger = $logger;
         $this->translator = $translator;
         $this->queryBus = $queryBus;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -116,11 +126,16 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        $credentials = $request->request->get('login');
+        $form = $this->formFactory->create(LoginType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $credentials = $form->getData();
+        }
 
         return [
-            'username' => $credentials['email'],
-            'password' => $credentials['password'],
+            'username' => $credentials['email'] ?? null,
+            'password' => $credentials['password'] ?? null,
         ];
     }
 
