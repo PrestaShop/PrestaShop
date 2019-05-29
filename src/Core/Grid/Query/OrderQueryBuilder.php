@@ -220,6 +220,12 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         return $qb;
     }
 
+    /**
+     * @param QueryBuilder $qb
+     * @param array $filters
+     *
+     * @return QueryBuilder
+     */
     private function applyNewCustomerFilter(QueryBuilder $qb, array $filters)
     {
         if (!isset($filters['new'])) {
