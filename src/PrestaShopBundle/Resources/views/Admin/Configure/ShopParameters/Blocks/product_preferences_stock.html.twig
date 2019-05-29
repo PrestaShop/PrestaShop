@@ -100,6 +100,10 @@
             {{ form_widget(stockForm.pack_stock_management) }}
           </div>
         </div>
+
+        {% block product_stock_preferences_form_rest %}
+          {{ form_rest(stockForm) }}
+        {% endblock %}
       </div>
     </div>
     <div class="card-footer">

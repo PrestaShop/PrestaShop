@@ -120,6 +120,7 @@ class ControllerTest extends TestCase
             array('AdminLoginController'),
             array('AdminQuickAccessesController'),
             array('AdminCustomerThreadsController'),
+            array('AdminManufacturersController'),
             array('AdminReferrersController'),
             array('AdminAttachmentsController'),
             array('AdminReturnController'),

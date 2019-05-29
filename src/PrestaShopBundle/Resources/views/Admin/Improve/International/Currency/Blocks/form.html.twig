@@ -58,6 +58,10 @@
             'label': 'Shop association'|trans({}, 'Admin.Global'),
           }) }}
         {% endif %}
+
+        {% block currency_form_rest %}
+          {{ form_rest(currencyForm) }}
+        {% endblock %}
       </div>
     </div>
 
@@ -73,6 +77,5 @@
     </div>
 
   </div>
-  {{ form_rest(currencyForm) }}
   {{ form_end(currencyForm) }}
 {% endblock %}
