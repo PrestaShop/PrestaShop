@@ -81,7 +81,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
             // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->locale);
+            $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
             // CLDR currency gives data from CLDR reference, for the given language
             $cldrCurrency = $cldrLocale->getCurrency($entity->iso_code);
             if (!empty($cldrCurrency)) {
