@@ -57,6 +57,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, OrderFilters $filters)
     {
+        $orderKpiFactory = $this->get('prestashop.core.kpi_row.factory.orders');
         $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
 
         $changeOrderStatusesForm = $this->createForm(ChangeOrdersStatusType::class);
@@ -68,6 +69,7 @@ class OrderController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'changeOrderStatusesForm' => $changeOrderStatusesForm->createView(),
+                'orderKpi' => $orderKpiFactory->build(),
             ]
         );
     }

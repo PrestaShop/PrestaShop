@@ -28,6 +28,21 @@
 {% block content %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig' %}
 
+  {% block orders_kpi %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="row">
+            {{ render(controller(
+              'PrestaShopBundle:Admin\\Common:renderKpiRow',
+              { 'kpiRow': orderKpi }
+            )) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
   {% block order_grid_row %}
     <div class="row">
       <div class="col-12">
