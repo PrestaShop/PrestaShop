@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrdersStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -116,12 +119,43 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     *
+     * @return RedirectResponse
      */
     public function changeOrdersStatusAction(Request $request)
     {
         $changeOrdersStatusForm =$this->createForm(ChangeOrdersStatusType::class);
         $changeOrdersStatusForm->handleRequest($request);
 
-        dump($changeOrdersStatusForm->getData());die;
+        $data = $changeOrdersStatusForm->getData();
+
+        try {
+            $this->getCommandBus()->handle(
+                new ChangeOrdersStatusCommand($data['order_ids'], (int) $data['new_order_status_id'])
+            );
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (OrderException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_index');
+    }
+
+    /**
+     * @param OrderException $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(OrderException $e)
+    {
+        return [
+            OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
+                $this->trans(
+                    'Order #%d cannot be loaded',
+                    'Admin.Orderscustomers.Notification',
+                    ['#%d' => $e->getOrderId()->getValue()]
+                ) : '',
+        ];
     }
 }
