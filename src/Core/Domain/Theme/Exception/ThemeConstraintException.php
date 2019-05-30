@@ -39,15 +39,15 @@ class ThemeConstraintException extends ThemeException
     /**
      * When trying to upload zip file which does not contain theme.yml configuration file.
      */
-    const MISSING_THEME_CONFIGURATION_FILE = 2;
+    const MISSING_CONFIGURATION_FILE = 2;
 
     /**
      * Its either theme has missing required files or some required properties in theme.yml
      */
-    const INVALID_THEME_CONFIGURATION = 3;
+    const INVALID_CONFIGURATION = 3;
 
     /**
      * Some mandatory files are missing.
      */
-    const INVALID_THEME_DATA = 4;
+    const INVALID_DATA = 4;
 }

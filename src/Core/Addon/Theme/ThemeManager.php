@@ -365,7 +365,7 @@ class ThemeManager implements AddonManagerInterface
         if (!file_exists($themeConfigurationFile)) {
             throw new ThemeConstraintException(
                 'Missing theme configuration file which should be in located in /config/theme.yml',
-                ThemeConstraintException::MISSING_THEME_CONFIGURATION_FILE
+                ThemeConstraintException::MISSING_CONFIGURATION_FILE
             );
         }
 
@@ -384,7 +384,7 @@ class ThemeManager implements AddonManagerInterface
                         true
                     )
                 ),
-                ThemeConstraintException::INVALID_THEME_DATA,
+                ThemeConstraintException::INVALID_DATA,
                 $exception
             );
         }
@@ -402,7 +402,7 @@ class ThemeManager implements AddonManagerInterface
                         true
                     )
                 ),
-                ThemeConstraintException::INVALID_THEME_CONFIGURATION
+                ThemeConstraintException::INVALID_CONFIGURATION
             );
         }
 
