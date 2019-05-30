@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -140,6 +141,50 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_orders_index');
+    }
+
+    /**
+     * @param OrderFilters $filters
+     *
+     * @return CsvResponse
+     */
+    public function exportAction(OrderFilters $filters)
+    {
+        $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
+
+        $headers = [
+            'id_order' => $this->trans('ID', 'Admin.Global'),
+            'reference' => $this->trans('Reference', 'Admin.Global'),
+            'new' => $this->trans('New client', 'Admin.Orderscustomers.Feature'),
+            'country_name' => $this->trans('Delivery', 'Admin.Global'),
+            'customer' => $this->trans('Customer', 'Admin.Global'),
+            'company' => $this->trans('Company', 'Admin.Global'),
+            'total_paid_tax_incl' => $this->trans('Total', 'Admin.Global'),
+            'payment' => $this->trans('Payment', 'Admin.Global'),
+            'osname' => $this->trans('Payment', 'Admin.Global'),
+            'date_add' => $this->trans('Date', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($orderGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_order' => $record['id_order'],
+                'reference' => $record['reference'],
+                'country_name' => $record['country_name'],
+                'customer' => $record['customer'],
+                'company' => $record['company'],
+                'total_paid_tax_incl' => $record['total_paid_tax_incl'],
+                'payment' => $record['payment'],
+                'osname' => $record['osname'],
+                'date_add' => $record['date_add'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('order_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
