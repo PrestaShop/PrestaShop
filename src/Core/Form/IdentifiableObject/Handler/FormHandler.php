@@ -159,9 +159,11 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
-        $this->hookDispatcher->dispatchWithParameters('actionBeforeCreate' . Container::camelize($form->getName()) . 'FormHandler', [
-            'form_data' => &$data,
-        ]);
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionBeforeCreate' . Container::camelize($form->getName()) . 'FormHandler', [
+                'form_data' => &$data,
+            ]
+        );
 
         $id = $this->dataHandler->create($data);
 
