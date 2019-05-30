@@ -223,6 +223,10 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_employees_bulk_delete' => ['/configure/advanced/employees/bulk-delete', 'AdminEmployees', 'submitBulkdeleteemployee'],
             'admin_employees_create' => ['/configure/advanced/employees/new', 'AdminEmployees', 'addemployee'],
             'admin_employees_edit' => ['/configure/advanced/employees/1000/edit', 'AdminEmployees', 'updateemployee', ['id_employee' => 1000]],
+
+            'admin_international_translations_export_theme' => ['/improve/international/translations/export', 'AdminTranslations', 'submitExport'],
+            'admin_international_translations_add_update_language' => ['/improve/international/translations/add-update-language', 'AdminTranslations', 'submitAddLanguage'],
+            'admin_international_translations_copy_language' => ['/improve/international/translations/copy', 'AdminTranslations', 'submitCopyLang'],
         ];
     }
 
