@@ -75,6 +75,8 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -95,6 +97,8 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Generates invoice PDF for given order
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @param int $orderId
      */
     public function generateInvoicePdfAction($orderId)
@@ -109,6 +113,8 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Generates delivery slip PDF for given order
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @param int $orderId
      */
     public function generateDeliverySlipPdfAction($orderId)
@@ -122,6 +128,8 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @return RedirectResponse
      */
@@ -146,6 +154,8 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @param OrderFilters $filters
      *
      * @return CsvResponse
