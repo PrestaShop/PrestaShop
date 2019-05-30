@@ -347,6 +347,12 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
+    /**
+     * @param $source
+     *
+     * @throws ThemeAlreadyExistsException
+     * @throws ThemeConstraintException
+     */
     private function installFromZip($source)
     {
         $finderClass = get_class($this->finder);
@@ -367,12 +373,37 @@ class ThemeManager implements AddonManagerInterface
         $theme_data = (new Parser())->parse(file_get_contents($themeConfigurationFile));
 
         $theme_data['directory'] = $sandboxPath;
-        $theme = new Theme($theme_data);
+
+        try {
+            $theme = new Theme($theme_data);
+        } catch (ErrorException $exception) {
+            throw new ThemeConstraintException(
+                sprintf(
+                    'Theme data %s is not valid',
+                    var_export(
+                        $theme_data,
+                        true
+                    )
+                ),
+                ThemeConstraintException::INVALID_THEME_DATA,
+                $exception
+            );
+        }
+
         if (!$this->themeValidator->isValid($theme)) {
             $this->filesystem->remove($sandboxPath);
 
-            throw new PrestaShopException(
-                $this->translator->trans('This theme is not valid for PrestaShop 1.7', [], 'Admin.Design.Notification')
+            $this->themeValidator->getErrors($theme->getName());
+
+            throw new ThemeConstraintException(
+                sprintf(
+                    'Theme configuration file is not valid - %s',
+                    var_export(
+                        $this->themeValidator->getErrors($theme->getName()),
+                        true
+                    )
+                ),
+                ThemeConstraintException::INVALID_THEME_CONFIGURATION
             );
         }
 
