@@ -27,6 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Query\GetCreditSlipIdsByDateRange;
+use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
@@ -108,8 +111,9 @@ class CreditSlipController extends FrameworkBundleAdminController
     public function generatePdfAction($creditSlipId)
     {
         try {
-            die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF([(int) $creditSlipId]));
-        } catch (MissingDataException $e) {
+            $creditSlipId = new CreditSlipId((int) $creditSlipId);
+            die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF([$creditSlipId]));
+        } catch (CoreException $e) {
             $this->addFlash(
                 'error',
                 $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
@@ -133,12 +137,10 @@ class CreditSlipController extends FrameworkBundleAdminController
 
         if ($pdfByDateForm->isSubmitted() && $pdfByDateForm->isValid()) {
             $dateRange = $pdfByDateForm->getData();
-            $creditSlipDataProvider = $this->get('prestashop.adapter.data_provider.credit_slip');
-
-            $slipIds = $creditSlipDataProvider->getIdsByDateInterval(
+            $slipIds = $this->getQueryBus()->handle(new GetCreditSlipIdsByDateRange(
                 new DateTime($dateRange['from']),
                 new DateTime($dateRange['to'])
-            );
+            ));
 
             try {
                 die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds));

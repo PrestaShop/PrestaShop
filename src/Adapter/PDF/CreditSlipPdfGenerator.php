@@ -30,8 +30,12 @@ use Context;
 use Db;
 use ObjectModel;
 use PDF;
+use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
+use PrestaShop\PrestaShop\Core\PDF\Exception\PdfException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -54,25 +58,35 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
     /**
      * Generates PDF from given data using legacy object models
      *
-     * @param array $creditSlipIds
+     * @param CreditSlipId[] $creditSlipIds
      *
-     * @throws MissingDataException
+     * @throws PdfException
      */
     public function generatePDF(array $creditSlipIds)
     {
-        $slipsList = $this->getCreditSlipsList($creditSlipIds);
-        $slipsCollection = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
+        $ids = [];
+        foreach ($creditSlipIds as $creditSlipId) {
+            $ids[] = $creditSlipId->getValue();
+        }
 
-        $pdf = new PDF($slipsCollection, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
-        $pdf->render();
+        try {
+            $slipsList = $this->getCreditSlipsList($ids);
+            $slipsCollection = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
+
+            $pdf = new PDF($slipsCollection, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
+            $pdf->render();
+        } catch (PrestaShopException $e) {
+            throw new PdfException('Something went wrong when trying to generate pdf', 0, $e);
+        }
     }
 
     /**
      * Gets credit slips array from sql
      *
-     * @return array
+     * @return int[]
      *
      * @throws MissingDataException
+     * @throws PrestaShopDatabaseException
      */
     private function getCreditSlipsList($creditSlipIds)
     {

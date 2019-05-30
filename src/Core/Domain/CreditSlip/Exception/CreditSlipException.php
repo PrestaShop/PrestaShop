@@ -24,11 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\PDF\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Thrown when required data for pdf generating is missing
+ * Base class for CreditSlip subdomain
  */
-class MissingDataException extends PdfException
+class CreditSlipException extends DomainException
 {
 }
