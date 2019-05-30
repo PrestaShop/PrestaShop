@@ -28,9 +28,7 @@ admin_themes_import:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:import
     _legacy_controller: AdminThemes
-    _legacy_link: AdminThemes:submitAddconfiguration
-    _legacy_parameters:
-      action: importtheme
+    _legacy_link: AdminThemes:importtheme
 
 admin_themes_enable:
   path: /{themeName}/enable/
