@@ -3094,13 +3094,22 @@ class ProductCore extends ObjectModel
                 $specific_price_reduction = $reduction_amount;
 
                 // Adjust taxes if required
-
-                if (!$use_tax && $specific_price['reduction_tax']) {
-                    $specific_price_reduction = $product_tax_calculator->removeTaxes($specific_price_reduction);
-                }
-                if ($use_tax && !$specific_price['reduction_tax']) {
-                    $specific_price_reduction = $product_tax_calculator->addTaxes($specific_price_reduction);
-                }
+		$total_tax = Tax::getProductTaxRate($id_product);
+		$prod = new Product($id_product);
+		$default_tax = Db::getInstance()->getRow('
+			SELECT t.rate
+			FROM `'._DB_PREFIX_.'tax_rules_group` trg
+			INNER JOIN `'._DB_PREFIX_.'tax_rule` tr ON tr.id_tax_rules_group = trg.id_tax_rules_group AND tr.id_country = '.(int)Configuration::get('PS_COUNTRY_DEFAULT').' AND tr.id_state = 0
+			INNER JOIN `'._DB_PREFIX_.'tax` t ON t.id_tax = tr.id_tax
+			WHERE trg.id_tax_rules_group = '.(int)$prod->id_tax_rules_group.'
+			GROUP BY 1');
+		$default_tax = $default_tax['rate'];
+		$difference_tax = (float)$default_tax - (float)$total_tax;
+		if($specific_price['reduction_tax'] == 1){
+			$specific_price_reduction = $specific_price_reduction / (1+($difference_tax/100));
+		} else {
+			$specific_price_reduction = $product_tax_calculator->addTaxes($specific_price_reduction);
+		}
             } else {
                 $specific_price_reduction = $price * $specific_price['reduction'];
             }
