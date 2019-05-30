@@ -489,10 +489,6 @@ class ThemeController extends AbstractAdminController
                 ]
             ),
             OutOfMemoryException::class => $e->getMessage(),
-            ThemeConstraintException::class => [
-                ThemeConstraintException::MISSING_THEME_CONFIGURATION_FILE =>
-                 'some meaningful message that themes.yml file is missing',
-            ]
         ];
     }
 
