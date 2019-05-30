@@ -20,9 +20,7 @@ admin_themes_export_current:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:export
     _legacy_controller: AdminThemes
-    _legacy_link: AdminThemes
-    _legacy_parameters:
-      action: exporttheme
+    _legacy_link: AdminThemes:exporttheme
 
 admin_themes_import:
   path: /import
@@ -40,9 +38,8 @@ admin_themes_enable:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:enable
     _legacy_controller: AdminThemes
-    _legacy_link: AdminThemes
+    _legacy_link: AdminThemes:enableTheme
     _legacy_parameters:
-      action: enableTheme
       theme_name: themeName
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
@@ -53,9 +50,8 @@ admin_themes_delete:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:delete
     _legacy_controller: AdminThemes
-    _legacy_link: AdminThemes
+    _legacy_link: AdminThemes:deleteTheme
     _legacy_parameters:
-      action: deleteTheme
       theme_name: themeName
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
@@ -84,9 +80,8 @@ admin_themes_reset_layouts:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:resetLayouts
     _legacy_controller: AdminThemes
-    _legacy_link: AdminThemes
+    _legacy_link: AdminThemes:resetToDefaults
     _legacy_parameters:
-      action: resetToDefaults
       theme_name: themeName
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
