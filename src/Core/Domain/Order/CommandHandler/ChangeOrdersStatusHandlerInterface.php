@@ -24,33 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Order;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 
-use Order;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrdersStatusCommand;
 
 /**
- * Reusable methods for Order subdomain command/query handlers.
+ * Interface for service that handles changing orders status
  */
-abstract class AbstractOrderHandler
+interface ChangeOrdersStatusHandlerInterface
 {
     /**
-     * @param OrderId $orderId
-     *
-     * @return Order
+     * @param ChangeOrdersStatusCommand $command
      */
-    protected function getOrderObject(OrderId $orderId)
-    {
-        $order = new Order($orderId->getValue());
-
-        if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException(
-                $orderId,
-                sprintf('Order with id "%d" was not found.', $orderId->getValue())
-            );
-        }
-
-        return $order;
-    }
+    public function handle(ChangeOrdersStatusCommand $command);
 }

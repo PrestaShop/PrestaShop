@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -62,6 +63,19 @@ class ChangeOrdersStatusType extends AbstractType
                 'entry_type' => HiddenType::class,
                 'label' => false,
             ])
+        ;
+
+        $builder->get('order_ids')
+            ->addModelTransformer(new CallbackTransformer(
+                static function ($orderIds) {
+                    return $orderIds;
+                },
+                static function (array $orderIds) {
+                    return array_map(static function ($orderId) {
+                        return (int) $orderId;
+                    }, $orderIds);
+                }
+            ))
         ;
     }
 }
