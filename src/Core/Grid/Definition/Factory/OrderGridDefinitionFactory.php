@@ -76,22 +76,30 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $orderStatusesChoiceProvider;
 
     /**
+     * @var string
+     */
+    private $contextDateFormat;
+
+    /**
      * @param HookDispatcherInterface $dispatcher
      * @param ConfigurationInterface $configuration
      * @param FormChoiceProviderInterface $orderCountriesChoiceProvider
      * @param FormChoiceProviderInterface $orderStatusesChoiceProvider
+     * @param string $contextDateFormat
      */
     public function __construct(
         HookDispatcherInterface $dispatcher,
         ConfigurationInterface $configuration,
         FormChoiceProviderInterface $orderCountriesChoiceProvider,
-        FormChoiceProviderInterface $orderStatusesChoiceProvider
+        FormChoiceProviderInterface $orderStatusesChoiceProvider,
+        $contextDateFormat
     ) {
         parent::__construct($dispatcher);
 
         $this->configuration = $configuration;
         $this->orderCountriesChoiceProvider = $orderCountriesChoiceProvider;
         $this->orderStatusesChoiceProvider = $orderStatusesChoiceProvider;
+        $this->contextDateFormat = $contextDateFormat;
     }
 
     /**
@@ -172,6 +180,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Date', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'date_add',
+                    'format' => $this->contextDateFormat,
                 ])
             )
             ->add((new LinkGroupColumn('pdf'))
