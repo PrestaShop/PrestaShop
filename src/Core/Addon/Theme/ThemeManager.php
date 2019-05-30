@@ -32,6 +32,7 @@ use Exception;
 use Language;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
@@ -283,6 +284,12 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
+    /**
+     * @param array $modules
+     * @return $this
+     *
+     * @throws FailedToEnableThemeModuleException
+     */
     private function doEnableModules(array $modules)
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
@@ -292,16 +299,9 @@ class ThemeManager implements AddonManagerInterface
             if (!$moduleManager->isInstalled($moduleName)
                 && !$moduleManager->install($moduleName)
             ) {
-                throw new PrestaShopException(
-                    $this->translator->trans(
-                        'Cannot %action% module %module%. %error_details%',
-                        array(
-                            '%action%' => 'install',
-                            '%module%' => $moduleName,
-                            '%error_details%' => $moduleManager->getError($moduleName),
-                        ),
-                        'Admin.Modules.Notification'
-                    )
+                throw new FailedToEnableThemeModuleException(
+                    $moduleName,
+                    $moduleManager->getError($moduleName)
                 );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
