@@ -150,6 +150,8 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function exportAction(OrderFilters $filters)
     {
+        $isB2bEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_B2B_ENABLE');
+
         $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
 
         $headers = [
@@ -158,27 +160,36 @@ class OrderController extends FrameworkBundleAdminController
             'new' => $this->trans('New client', 'Admin.Orderscustomers.Feature'),
             'country_name' => $this->trans('Delivery', 'Admin.Global'),
             'customer' => $this->trans('Customer', 'Admin.Global'),
-            'company' => $this->trans('Company', 'Admin.Global'),
             'total_paid_tax_incl' => $this->trans('Total', 'Admin.Global'),
             'payment' => $this->trans('Payment', 'Admin.Global'),
-            'osname' => $this->trans('Payment', 'Admin.Global'),
+            'osname' => $this->trans('Status', 'Admin.Global'),
             'date_add' => $this->trans('Date', 'Admin.Global'),
         ];
+
+        if ($isB2bEnabled) {
+            $headers['company'] = $this->trans('Company', 'Admin.Global');
+        }
 
         $data = [];
 
         foreach ($orderGrid->getData()->getRecords()->all() as $record) {
-            $data[] = [
+            $item = [
                 'id_order' => $record['id_order'],
                 'reference' => $record['reference'],
+                'new' => $record['new'],
                 'country_name' => $record['country_name'],
                 'customer' => $record['customer'],
-                'company' => $record['company'],
                 'total_paid_tax_incl' => $record['total_paid_tax_incl'],
                 'payment' => $record['payment'],
                 'osname' => $record['osname'],
                 'date_add' => $record['date_add'],
             ];
+
+            if ($isB2bEnabled) {
+                $item['company'] = $record['company'];
+            }
+
+            $data[] = $item;
         }
 
         return (new CsvResponse())

@@ -265,15 +265,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('customer')
             )
-            ->add((new Filter('company', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search Company', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('company')
-            )
             ->add((new Filter('total_paid_tax_incl', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
@@ -326,6 +317,18 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'choices' => $orderCountriesChoices,
                 ])
                 ->setAssociatedColumn('country_name')
+            );
+        }
+
+        if ($this->configuration->get('PS_B2B_ENABLE')) {
+            $filters->add((new Filter('company', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Company', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('company')
             );
         }
 
