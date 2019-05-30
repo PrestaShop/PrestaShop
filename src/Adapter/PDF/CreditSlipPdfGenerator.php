@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\PDF;
 use Context;
 use Db;
 use ObjectModel;
+use OrderSlip;
 use PDF;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
@@ -83,7 +84,9 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
     /**
      * Gets credit slips array from sql
      *
-     * @return int[]
+     * @param int[] $creditSlipIds
+     *
+     * @return OrderSlip[]
      *
      * @throws MissingDataException
      * @throws PrestaShopDatabaseException

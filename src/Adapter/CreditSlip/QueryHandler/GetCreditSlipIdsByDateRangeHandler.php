@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\CreditSlip\QueryHandler;
 
 use OrderSlip;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception\CreditSlipException;
+use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception\CreditSlipNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Query\GetCreditSlipIdsByDateRange;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\QueryHandler\GetCreditSlipIdsByDateRangeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
@@ -46,17 +47,20 @@ final class GetCreditSlipIdsByDateRangeHandler implements GetCreditSlipIdsByDate
     public function handle(GetCreditSlipIdsByDateRange $query)
     {
         try {
-            $ids = OrderSlip::getSlipsIdByDate(
-                $query->getDateTimeFrom()->format('Y-m-d'),
-                $query->getDateTimeTo()->format('Y-m-d')
-            );
-
+            $from = $query->getDateTimeFrom()->format('Y-m-d');
+            $to = $query->getDateTimeTo()->format('Y-m-d');
+            $ids = OrderSlip::getSlipsIdByDate($from, $to);
             $creditSlipIds = [];
+
             if (!empty($ids)) {
                 foreach ($ids as $id) {
                     $creditSlipIds[] = new CreditSlipId($id);
                 }
             }
+            throw new CreditSlipNotFoundException(
+                sprintf('No credit slips found for date range "%s - %s"', $from, $to),
+                CreditSlipNotFoundException::BY_DATE_RANGE
+            );
         } catch (PrestaShopException $e) {
             throw new CreditSlipException(
                 'Something went wrong when trying to get OrderSlip ids by date range',
