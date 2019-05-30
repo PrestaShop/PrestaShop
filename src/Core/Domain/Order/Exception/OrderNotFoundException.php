@@ -47,7 +47,7 @@ class OrderNotFoundException extends OrderException
      */
     public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
     {
-        parent::__construct($message, $code,  $previous);
+        parent::__construct($message, $code, $previous);
 
         $this->orderId = $orderId;
     }

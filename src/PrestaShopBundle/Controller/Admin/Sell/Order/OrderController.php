@@ -135,7 +135,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function changeOrdersStatusAction(Request $request)
     {
-        $changeOrdersStatusForm =$this->createForm(ChangeOrdersStatusType::class);
+        $changeOrdersStatusForm = $this->createForm(ChangeOrdersStatusType::class);
         $changeOrdersStatusForm->handleRequest($request);
 
         $data = $changeOrdersStatusForm->getData();

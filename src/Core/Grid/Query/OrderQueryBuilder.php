@@ -185,7 +185,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
                 $alias = $likeComparisonFilters[$filterName];
 
                 $qb->andWhere("$alias LIKE :$filterName");
-                $qb->setParameter($filterName, '%'.$filterValue.'%');
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
@@ -194,7 +194,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
                 $alias = $havingLikeComparisonFilters[$filterName];
 
                 $qb->andHaving("$alias LIKE :$filterName");
-                $qb->setParameter($filterName, '%'.$filterValue.'%');
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
@@ -238,7 +238,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         $builder = $this->connection
             ->createQueryBuilder()
             ->select('*')
-            ->from('('.$qb->getSQL().') tmp_table')
+            ->from('(' . $qb->getSQL() . ') tmp_table')
             ->setParameters($qb->getParameters())
             ->andWhere('new = :new')
             ->setParameter('new', $filters['new'])
