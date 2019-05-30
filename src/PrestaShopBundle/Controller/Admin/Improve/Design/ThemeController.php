@@ -495,7 +495,7 @@ class ThemeController extends AbstractAdminController
                     '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
                 ]
             ),
-            OutOfMemoryException::class => $e->getMessage()
+            OutOfMemoryException::class => $e->getMessage(),
         ];
     }
 
@@ -509,14 +509,12 @@ class ThemeController extends AbstractAdminController
         return [
             CannotEnableThemeException::class => $e->getMessage(),
             ThemeConstraintException::class => [
-                ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP =>
-                    $this->trans(
+                ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
                         'You must select a shop from the above list if you wish to choose a theme.',
                         'Admin.Design.Help'
-                    )
+                    ),
             ],
-            FailedToEnableThemeModuleException::class =>
-                $this->trans(
+            FailedToEnableThemeModuleException::class => $this->trans(
                     'Cannot %action% module %module%. %error_details%',
                     'Admin.Modules.Notification',
                     [
@@ -524,7 +522,7 @@ class ThemeController extends AbstractAdminController
                         '%module%' => $e->getModuleName(),
                         '%error_details%' => $e->getMessage(),
                     ]
-                )
+                ),
         ];
     }
 

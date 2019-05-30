@@ -41,10 +41,8 @@ use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
-use PrestaShopException;
 use PrestaShopLogger;
 use Shop;
-use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -286,6 +284,7 @@ class ThemeManager implements AddonManagerInterface
 
     /**
      * @param array $modules
+     *
      * @return $this
      *
      * @throws FailedToEnableThemeModuleException

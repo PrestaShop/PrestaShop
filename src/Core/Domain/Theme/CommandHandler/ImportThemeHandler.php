@@ -32,11 +32,8 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeUploaderInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
-use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
-use Symfony\Component\Debug\Exception\ContextErrorException;
 
 /**
  * Class ImportThemeHandler
@@ -98,8 +95,7 @@ final class ImportThemeHandler implements ImportThemeHandlerInterface
                 0,
                 $e
             );
-        }
-        finally {
+        } finally {
             if (ThemeImportSource::FROM_ARCHIVE === $type) {
                 @unlink($themePath);
             }

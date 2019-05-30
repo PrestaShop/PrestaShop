@@ -11,7 +11,7 @@ class FailedToEnableThemeModuleException extends ThemeException
 
     public function __construct(
         $moduleName,
-        $message = "",
+        $message = '',
         $code = 0,
         $previous = null
     ) {
