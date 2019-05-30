@@ -21,6 +21,7 @@ security:
                     - prestashop.security.admin.login_form_authenticator
             logout:
                 path: /logout
+                handlers: [prestashop.adapter.security.employee_logout_listener]
 
     access_control:
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
