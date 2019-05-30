@@ -159,7 +159,6 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         $likeComparisonFilters = [
             'reference' => 'o.`reference`',
             'company' => 'cu.`company`',
-            'customer' => 'cu.`lastname`',
             'payment' => 'o.`payment`',
         ];
 
