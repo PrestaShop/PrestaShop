@@ -24,39 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CreditSlip;
+namespace PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject;
 
-use DateTimeInterface;
-use OrderSlip;
-use PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception\CreditSlipConstraintException;
 
 /**
- * Provides Credit Slip data using legacy object model
+ * Provides identification data for Credit slip
  */
-final class CreditSlipDataProvider implements CreditSlipDataProviderInterface
+final class CreditSlipId
 {
     /**
-     * @var string
+     * @var int
      */
-    private $dbPrefix;
+    private $creditSlipId;
 
     /**
-     * string $dbPrefix
+     * @param int $creditSlipId
+     *
+     * @throws CreditSlipConstraintException
      */
-    public function __construct(
-        $dbPrefix
-    ) {
-        $this->dbPrefix = $dbPrefix;
+    public function __construct($creditSlipId)
+    {
+        $this->assertIsIntegerGreaterThanZero($creditSlipId);
+        $this->creditSlipId = $creditSlipId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    public function getIdsByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo)
+    public function getValue()
     {
-        return OrderSlip::getSlipsIdByDate(
-            $dateFrom->format('Y-m-d'),
-            $dateTo->format('Y-m-d')
-        );
+        return $this->creditSlipId;
+    }
+
+    /**
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param $value
+     *
+     * @throws CreditSlipConstraintException
+     */
+    private function assertIsIntegerGreaterThanZero($value)
+    {
+        if (!is_int($value) || 0 >= $value) {
+            throw new CreditSlipConstraintException(
+                sprintf('Invalid credit slip id "%s".', var_export($value, true))
+            );
+        }
     }
 }

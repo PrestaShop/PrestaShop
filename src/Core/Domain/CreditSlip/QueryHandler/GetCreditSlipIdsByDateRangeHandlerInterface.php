@@ -24,11 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\PDF\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CreditSlip\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Query\GetCreditSlipIdsByDateRange;
+use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 
 /**
- * Thrown when required data for pdf generating is missing
+ * Interface for handling GetCreditSlipIdsByDateRange query
  */
-class MissingDataException extends PdfException
+interface GetCreditSlipIdsByDateRangeHandlerInterface
 {
+    /**
+     * @param GetCreditSlipIdsByDateRange $query
+     *
+     * @return CreditSlipId[]
+     */
+    public function handle(GetCreditSlipIdsByDateRange $query);
 }

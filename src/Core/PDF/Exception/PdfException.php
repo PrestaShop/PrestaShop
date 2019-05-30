@@ -26,9 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\PDF\Exception;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+
 /**
- * Thrown when required data for pdf generating is missing
+ * Base exception for PDF generation related exceptions
  */
-class MissingDataException extends PdfException
+class PdfException extends CoreException
 {
 }

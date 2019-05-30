@@ -24,19 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\CreditSlip;
+namespace PrestaShop\PrestaShop\Core\Domain\CreditSlip\Query;
 
-use DateTimeInterface;
+use DateTime;
 
-interface CreditSlipDataProviderInterface
+/**
+ * Gets CreditSlipIds for provided date range
+ */
+final class GetCreditSlipIdsByDateRange
 {
     /**
-     * Returns credit slip ids that match the date interval.
-     *
-     * @param DateTimeInterface $dateFrom
-     * @param DateTimeInterface $dateTo
-     *
-     * @return array Collection of OrderSlip objects
+     * @var DateTime
      */
-    public function getIdsByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
+    private $dateTimeFrom;
+
+    /**
+     * @var DateTime
+     */
+    private $dateTimeTo;
+
+    public function __construct($dateTimeFrom, $dateTimeTo)
+    {
+        $this->dateTimeFrom = $dateTimeFrom;
+        $this->dateTimeTo = $dateTimeTo;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateTimeFrom()
+    {
+        return $this->dateTimeFrom;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateTimeTo()
+    {
+        return $this->dateTimeTo;
+    }
 }

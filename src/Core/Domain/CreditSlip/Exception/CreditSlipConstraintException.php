@@ -24,11 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\PDF\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception;
 
 /**
- * Thrown when required data for pdf generating is missing
+ * Is thrown when credit slip constraints are violated
  */
-class MissingDataException extends PdfException
+class CreditSlipConstraintException extends CreditSlipException
 {
+    /**
+     * When id value is not valid
+     */
+    const INVALID_ID = 10;
 }
