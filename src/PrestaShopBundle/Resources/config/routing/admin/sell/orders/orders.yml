@@ -36,3 +36,10 @@ admin_orders_change_orders_status:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeOrdersStatus
     _legacy_controller: AdminOrders
+
+admin_orders_export:
+  path: /export
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:export
+    _legacy_controller: AdminOrders
