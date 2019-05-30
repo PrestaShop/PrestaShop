@@ -287,6 +287,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                     'choices' => $this->orderStatusesChoiceProvider->getChoices(),
+                    'translation_domain' => false,
                 ])
                 ->setAssociatedColumn('osname')
             )
