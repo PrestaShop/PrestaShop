@@ -137,12 +137,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsDefaultCurrencyCannotBeDisabled()
     {
-        if (!$this->lastException instanceof CannotDisableDefaultCurrencyException) {
-            throw new RuntimeException(sprintf(
-                'Last error should be "CannotDisableDefaultCurrencyException", but got "%s"',
-                $this->lastException ? get_class($this->lastException) : 'null'
-            ));
-        }
+        $this->assertLastErrorIs(CannotDisableDefaultCurrencyException::class);
     }
 
     /**
@@ -150,9 +145,18 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsDefaultCurrencyCannotBeDeleted()
     {
-        if (!$this->lastException instanceof CannotDeleteDefaultCurrencyException) {
+        $this->assertLastErrorIs(CannotDeleteDefaultCurrencyException::class);
+    }
+
+    /**
+     * @param string $expectedError
+     */
+    private function assertLastErrorIs($expectedError)
+    {
+        if (!$this->lastException instanceof $expectedError) {
             throw new RuntimeException(sprintf(
-                'Last error should be "CannotDeleteDefaultCurrencyException", but got "%s"',
+                'Last error should be "%s", but got "%s"',
+                $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
             ));
         }
