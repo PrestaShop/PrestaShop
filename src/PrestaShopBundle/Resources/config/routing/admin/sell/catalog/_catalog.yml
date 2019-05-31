@@ -25,3 +25,7 @@ _catalog_price_rules:
 _features:
     resource: "features.yml"
     prefix: /features
+
+_attributes:
+  resource: "attribute.yml"
+  prefix: /attributes

@@ -1,0 +1,15 @@
+admin_attributes_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
+    _legacy_controller: AdminAttributesGroups
+#    _legacy_link: AdminAttributesGroups
+
+#@todo: implement
+admin_attributes_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
+    _legacy_controller: AdminAttributesGroups
