@@ -84,7 +84,14 @@ function getProductUpdateUrl() {
   return dfd.promise();
 }
 
+/**
+ * @param {string} errorMessage
+ */
 function showErrorNextToAddtoCartButton(errorMessage) {
+  if (errorMessage === undefined) {
+    errorMessage = 'An error occurred while processing your request';
+  }
+
   showError($('#product-availability'), errorMessage);
 }
 
@@ -109,7 +116,7 @@ function updateProduct(event, eventType, updateUrl) {
 
   // Can not get product ajax url
   if (updateUrl === null) {
-    showErrorNextToAddtoCartButton('An error occurred while processing your request');
+    showErrorNextToAddtoCartButton();
 
     return;
   }
@@ -158,7 +165,7 @@ function updateProduct(event, eventType, updateUrl) {
         if (textStatus !== 'abort'
             && $('section#main > .ajax-error').length === 0
         ) {
-          showErrorNextToAddtoCartButton('An error occurred while processing your request');
+          showErrorNextToAddtoCartButton();
         }
       },
       success(data, textStatus, errorThrown) {
@@ -214,7 +221,7 @@ function replaceAddToCartSections(data) {
   });
 
   if ($productAddToCart === null) {
-    showErrorNextToAddtoCartButton('An error occurred while processing your request');
+    showErrorNextToAddtoCartButton();
   }
   const $addProductToCart = $('.product-add-to-cart');
   const productAvailabilitySelector = '.add';
@@ -322,7 +329,7 @@ $(document).ready(() => {
       productUpdateUrl => updateProduct(event, eventType, productUpdateUrl)
     ).fail(() => {
       if ($('section#main > .ajax-error').length === 0) {
-        showErrorNextToAddtoCartButton('An error occurred while processing your request');
+        showErrorNextToAddtoCartButton();
       }
     });
   });
