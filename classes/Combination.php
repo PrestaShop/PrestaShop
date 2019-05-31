@@ -226,7 +226,7 @@ class CombinationCore extends ObjectModel
      */
     public function deleteAssociations()
     {
-        if (!$this->id || (int)$this->id === 0) {
+        if ((int) $this->id === 0) {
             return false;
         }
         $result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = ' . (int) $this->id);
