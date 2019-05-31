@@ -56,8 +56,8 @@ final class GeneratePdfByDateType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $dateFormat = 'Y-m-d';
-        $blankMessage = $this->translator->trans('This field is missing', [], 'Admin.Notifications.Error');
-        $invalidDateMessage = $this->translator->trans('Invalid date format', [], 'Admin.Notifications.Error');
+        $blankMessage = $this->translator->trans('This field is required', [], 'Admin.Notifications.Error');
+        $invalidDateMessage = $this->translator->trans('Invalid date format.', [], 'Admin.Notifications.Error');
 
         $builder
             ->add('from', DatePickerType::class, [

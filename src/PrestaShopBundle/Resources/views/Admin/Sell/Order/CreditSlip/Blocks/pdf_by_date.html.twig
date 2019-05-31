@@ -36,7 +36,7 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      {% set dateHint = '(Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help') %}
+      {% set dateHint = 'Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help') %}
       {{ ps.form_group_row(pdfByDateForm.from, {}, {
         'label': 'From'|trans({}, 'Admin.Global'),
         'help': dateHint
