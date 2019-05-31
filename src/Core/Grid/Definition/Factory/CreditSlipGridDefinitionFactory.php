@@ -75,7 +75,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getName()
     {
-        return $this->trans('Credit slips', [], 'Admin.Navigation.Menu');
+        return $this->trans('Credit Slips', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -139,7 +139,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search order ID', [], 'Admin.Orderscustomers.Feature'),
+                        'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('id_order')
