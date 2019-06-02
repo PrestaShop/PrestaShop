@@ -503,7 +503,14 @@ class FrontControllerCore extends Controller
             'token' => Tools::getToken(),
         );
 
-        $modulesVariables = Hook::exec('actionFrontControllerSetVariables', [], null, true);
+        $modulesVariables = Hook::exec(
+            'actionFrontControllerSetVariables',
+            [
+                'templateVars' => &$templateVars,
+            ],
+            null,
+            true
+        );
 
         if (is_array($modulesVariables)) {
             foreach ($modulesVariables as $moduleName => $variables) {
