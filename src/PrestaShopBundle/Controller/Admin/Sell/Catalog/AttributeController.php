@@ -26,8 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -39,6 +43,7 @@ class AttributeController extends FrameworkBundleAdminController
      * Displays Attribute groups > attributes page
      *
      * @param $attributeGroupId
+     * @param AttributeFilters $attributeFilters
      *
      * @return Response
      */
@@ -49,6 +54,26 @@ class AttributeController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
             'attributeGrid' => $this->presentGrid($attributeGrid),
+            'attributeGroupId' => $attributeGroupId,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.attribute'),
+            $request,
+            AttributeGridDefinitionFactory::GRID_ID,
+            'admin_attribute_groups_attributes',
+            ['attributeGroupId']
+        );
     }
 }

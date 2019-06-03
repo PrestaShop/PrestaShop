@@ -10,6 +10,13 @@ admin_attribute_groups_attributes:
 #  requirements:
 #    attributeGroupId: \d+
 
+admin_attribute_groups_attributes_search:
+  path: /{attributeGroupId}/attributes
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:search'
+    _legacy_controller: AdminAttributesGroups
+
 #@todo: implement
 admin_attribute_groups_attributes_create:
   path: /{attributeGroupId}/new

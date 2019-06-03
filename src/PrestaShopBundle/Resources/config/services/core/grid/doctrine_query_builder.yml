@@ -249,5 +249,5 @@ services:
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-            - '@request_stack'
+            - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
         public: true

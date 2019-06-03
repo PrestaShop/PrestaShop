@@ -225,5 +225,5 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-            - '@request_stack'
+            - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
         public: true

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,30 +22,10 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% set layoutHeaderToolbarBtn = {
-  add: {
-    href: path('admin_attribute_groups_attributes_create', { 'attributeGroupId': attributeGroupId}),
-    desc: 'Add new value'|trans({}, 'Admin.Catalog.Feature'),
-    icon: 'add_circle_outline',
-  }
+namespace PrestaShop\PrestaShop\Core\Attribute;
+
+class AttributeGroupIdProvider
+{
 }
-%}
-
-{% block content %}
-  {% block attributes_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': attributeGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}

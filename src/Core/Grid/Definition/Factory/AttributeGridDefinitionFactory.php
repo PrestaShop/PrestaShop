@@ -42,31 +42,30 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines grid for attributes group > attributes list
  */
 final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'attribute';
+
     /**
-     * @var RequestStack
+     * @var int
      */
-    private $requestStack;
+    private $attributeGroupId;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param RequestStack $requestStack
+     * @param int $attributeGroupId
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        RequestStack $requestStack
+        $attributeGroupId
     ) {
         parent::__construct($hookDispatcher);
-        $this->requestStack = $requestStack;
+        $this->attributeGroupId = $attributeGroupId;
     }
-
-    const GRID_ID = 'attribute';
 
     /**
      * {@inheritdoc}
@@ -214,8 +213,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                     'redirect_route' => 'admin_attribute_groups_attributes',
                     'redirect_route_params' => [
-                        'attributeGroupId' => $this->requestStack->getCurrentRequest()
-                            ->attributes->getInt('attributeGroupId'),
+                        'attributeGroupId' => $this->attributeGroupId,
                     ],
                 ])
                 ->setAssociatedColumn('actions')
