@@ -151,6 +151,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $gender = new Gender($customer->id_gender, $context->language->id);
 
         return new CartView(
+            $cart->id,
             [
                 'id' => $customer->id,
                 'first_name' => $customer->firstname,
@@ -160,6 +161,10 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'registration_date' => $customer->date_add,
                 'valid_orders_count' => $customerStats['nb_orders'],
                 'total_spent_since_registration' => $customerStats['total_orders'],
+            ],
+            [
+                'id' => $order->id,
+                'placed_date' => $order->date_add,
             ]
         );
     }
