@@ -30,6 +30,7 @@ use Cart;
 use Context;
 use Currency;
 use Customer;
+use DateTime;
 use Db;
 use Gender;
 use Group;
@@ -150,7 +151,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             'last_name' => $customer->lastname,
             'gender' => $gender->name,
             'email' => $customer->email,
-            'registration_date' => $customer->date_add,
+            'registration_date' => (new DateTime($customer->date_add))->format($context->language->date_format_lite),
             'valid_orders_count' => $customerStats['nb_orders'],
             'total_spent_since_registration' => Tools::displayPrice(
                 $customerStats['total_orders'],
@@ -160,7 +161,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
         $orderInformation = [
             'id' => $order->id,
-            'placed_date' => $order->date_add,
+            'placed_date' => (new DateTime($order->date_add))->format($context->language->date_format_lite),
         ];
 
         $cartSummary = [
