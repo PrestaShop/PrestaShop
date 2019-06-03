@@ -165,6 +165,14 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             [
                 'id' => $order->id,
                 'placed_date' => $order->date_add,
+            ],
+            [
+                'products' => $products,
+                'total_products' => $total_products,
+                'total_discounts' => $total_discounts,
+                'total_wrapping' => $total_wrapping,
+                'total_shipping' => $total_shipping,
+                'total' => $total_price,
             ]
         );
     }
