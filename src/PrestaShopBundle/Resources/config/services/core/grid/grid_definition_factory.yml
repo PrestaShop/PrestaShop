@@ -146,3 +146,10 @@ services:
           - '@prestashop.adapter.shop.context'
           - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
+
+    prestashop.core.grid.definition.factory.attribute:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - '@request_stack'
+      public: true
