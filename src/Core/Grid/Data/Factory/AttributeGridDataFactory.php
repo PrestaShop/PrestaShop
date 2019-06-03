@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides data for attribute grid
@@ -42,20 +41,20 @@ final class AttributeGridDataFactory implements GridDataFactoryInterface
     private $attributeGridDataFactory;
 
     /**
-     * @var RequestStack
+     * @var int
      */
-    private $requestStack;
+    private $attributeGroupId;
 
     /**
      * @param GridDataFactoryInterface $attributeGridDataFactory
-     * @param RequestStack $requestStack
+     * @param int $attributeGroupId
      */
     public function __construct(
         GridDataFactoryInterface $attributeGridDataFactory,
-        RequestStack $requestStack
+        $attributeGroupId
     ) {
         $this->attributeGridDataFactory = $attributeGridDataFactory;
-        $this->requestStack = $requestStack;
+        $this->attributeGroupId = $attributeGroupId;
     }
 
     /**
@@ -84,8 +83,7 @@ final class AttributeGridDataFactory implements GridDataFactoryInterface
     private function applyModification(array $attributes)
     {
         foreach ($attributes as $i => $attribute) {
-            $attributes[$i]['id_attribute_group'] =
-                $this->requestStack->getCurrentRequest()->attributes->getInt('attributeGroupId');
+            $attributes[$i]['id_attribute_group'] = (int) $this->attributeGroupId;
         }
 
         return $attributes;
