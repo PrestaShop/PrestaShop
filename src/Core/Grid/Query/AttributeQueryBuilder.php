@@ -79,7 +79,8 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder()->select('a.id_attribute, al.name AS value, a.position');
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+            ->select('a.id_attribute, al.name AS value, a.position');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -97,16 +98,18 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder();
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('COUNT(DISTINCT a.`id_attribute`)');
 
         return $qb;
     }
 
     /**
-     * Provides main query
+     * @param array $filters
+     *
+     * @return QueryBuilder
      */
-    private function getQueryBuilder()
+    private function getQueryBuilder(array $filters)
     {
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'attribute', 'a')
@@ -127,6 +130,27 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
             'a.id_attribute = al.id_attribute AND al.id_lang = :contextLangId'
         );
 
+        $this->applyFilters($filters, $qb);
+
         return $qb;
+    }
+
+    private function applyFilters(array $filters, QueryBuilder $qb)
+    {
+        $allowedFilters = ['id_attribute', 'value', 'position'];
+
+        foreach ($filters as $filterName => $value) {
+            if (!in_array($filterName, $allowedFilters, true)) {
+                continue;
+            }
+
+            if ('value' === $filterName) {
+                $qb->andWhere('al.`name` LIKE :' . $filterName)
+                    ->setParameter($filterName, '%' . $value . '%');
+                continue;
+            }
+            $qb->andWhere('a.`' . $filterName . '` = :' . $filterName)
+                ->setParameter($filterName, $value);
+        }
     }
 }
