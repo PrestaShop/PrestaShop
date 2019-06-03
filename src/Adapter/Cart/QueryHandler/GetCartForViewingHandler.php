@@ -33,9 +33,8 @@ use Customer;
 use Db;
 use Gender;
 use Group;
-use Image;
-use ImageManager;
 use Order;
+use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
@@ -50,6 +49,19 @@ use Validate;
  */
 final class GetCartForViewingHandler implements GetCartForViewingHandlerInterface
 {
+    /**
+     * @var ImageManager
+     */
+    private $imageManager;
+
+    /**
+     * @param ImageManager $imageManager
+     */
+    public function __construct(ImageManager $imageManager)
+    {
+        $this->imageManager = $imageManager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -131,9 +143,6 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 (int) $id_shop
             );
 
-            $image_product = new Image($image['id_image']);
-            $product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_ . 'p/' . $image_product->getExistingImgPath() . '.jpg', 'product_mini_' . (int) $product['id_product'] . (isset($product['id_product_attribute']) ? '_' . (int) $product['id_product_attribute'] : '') . '.jpg', 45, 'jpg') : '--');
-
             $customized_datas = Product::getAllCustomizedDatas(
                 $context->cart->id,
                 null,
@@ -198,6 +207,8 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $formattedProducts = [];
 
         foreach ($products as $product) {
+            $image = Product::getCover($product['id_product']);
+
             $formattedProduct = [
                 'id' => $product['id_product'],
                 'name' => $product['name'],
@@ -209,14 +220,9 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'cart_quantity' => $product['cart_quantity'],
                 'total_price' => $product['product_total'],
                 'unit_price' => $product['product_price'],
-                'total_price_formatted' => Tools::displayPrice(
-                    $product['product_total'],
-                    $currency
-                ),
-                'unit_price_formatted' => Tools::displayPrice(
-                    $product['product_price'],
-                    $currency
-                ),
+                'total_price_formatted' => Tools::displayPrice($product['product_total'], $currency),
+                'unit_price_formatted' => Tools::displayPrice($product['product_price'], $currency),
+                'image' => $this->imageManager->getThumbnailForListing($image['id_image']),
             ];
 
             if (isset($product['customizationQuantityTotal'])) {
