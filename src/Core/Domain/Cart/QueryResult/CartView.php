@@ -28,5 +28,18 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
 
 class CartView
 {
+    /**
+     * @var array
+     */
+    private $customerInformation;
 
+    public function __construct(array $customerInformation)
+    {
+        $this->customerInformation = $customerInformation;
+    }
+
+    public function getCustomerInformation()
+    {
+        return $this->customerInformation;
+    }
 }

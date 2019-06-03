@@ -26,18 +26,23 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends FrameworkBundleAdminController
 {
     /**
-     * @param $cartId
+     * @param int $cartId
      *
      * @return Response
      */
     public function viewAction($cartId)
     {
-        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/view.html.twig');
+        $cartView = $this->getQueryBus()->handle(new GetCartForViewing((int) $cartId));
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/view.html.twig', [
+            'cartView' => $cartView,
+        ]);
     }
 }

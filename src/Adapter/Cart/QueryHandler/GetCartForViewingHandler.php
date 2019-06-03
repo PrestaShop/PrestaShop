@@ -31,6 +31,7 @@ use Context;
 use Currency;
 use Customer;
 use Db;
+use Gender;
 use Group;
 use Image;
 use ImageManager;
@@ -38,6 +39,7 @@ use Order;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use Product;
 use StockAvailable;
 use Validate;
@@ -144,5 +146,21 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 Product::addProductCustomizationPrice($product, $customized_datas);
             }
         }
+
+        $customerStats = $customer->getStats();
+        $gender = new Gender($customer->id_gender, $context->language->id);
+
+        return new CartView(
+            [
+                'id' => $customer->id,
+                'first_name' => $customer->firstname,
+                'last_name' => $customer->lastname,
+                'gender' => $gender->name,
+                'email' => $customer->email,
+                'registration_date' => $customer->date_add,
+                'valid_orders_count' => $customerStats['nb_orders'],
+                'total_spent_since_registration' => $customerStats['total_orders'],
+            ]
+        );
     }
 }

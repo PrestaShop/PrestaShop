@@ -26,5 +26,12 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {{ dump(cartView) }}
 
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/customer_information.html.twig' %}
+    </div>
+    <div class="col"></div>
+  </div>
 {% endblock %}
