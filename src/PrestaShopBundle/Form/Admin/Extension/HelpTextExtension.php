@@ -24,24 +24,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Util\Url;
+namespace PrestaShopBundle\Form\Admin\Extension;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * gets back url.
+ * Class HelpTextExtension extends every form type with additional help text options.
  */
-class BackUrlProvider
+class HelpTextExtension extends AbstractTypeExtension
 {
     /**
-     * @param Request $request
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getBackUrl(Request $request)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $backUrl = $request->query->get('back');
+        $resolver
+            ->setDefaults([
+                'help' => null,
+            ])
+            ->setAllowedTypes('help', ['null', 'string'])
+        ;
+    }
 
-        return urldecode($backUrl);
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['help'] = isset($options['help']) ? $options['help'] : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtendedType()
+    {
+        return FormType::class;
     }
 }
