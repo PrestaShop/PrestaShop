@@ -25,6 +25,13 @@
 
 {% block grid_pagination %}
   {% if grid.data.records_total > 10 or grid.pagination.offset %}
+
+    {% set route_params = {} %}
+
+    {% for param_name, param_value in app.request.attributes.get('_route_params') %}
+      {% set route_params = route_params|merge({ (param_name) : (param_value) }) %}
+    {% endfor %}
+
     <div class="row">
       <div class="col-md-12">
         {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
@@ -33,9 +40,10 @@
           'total': grid.data.records_total,
           'prefix': grid.form_prefix,
           'caller_route': app.request.attributes.get('_route'),
-          'caller_parameters': app.request.attributes.get('_route_params')
+          'caller_parameters': route_params
         })) }}
       </div>
     </div>
   {% endif %}
 {% endblock %}
+  

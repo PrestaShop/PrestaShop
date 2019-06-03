@@ -248,4 +248,6 @@ services:
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@request_stack'
         public: true
