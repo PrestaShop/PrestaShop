@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,26 +22,32 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{# @todo hardcoded attributegroupID#}
-{% set layoutHeaderToolbarBtn = {
-  add: {
-    href: path('admin_attribute_groups_attributes_create', { 'attributeGroupId': 1}),
-    desc: 'Add new value'|trans({}, 'Admin.Catalog.Feature'),
-    icon: 'add_circle_outline',
-  }
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * Responsible for providing filter values for attribute groups > attributes grid.
+ */
+final class AttributeFilters extends Filters
+{
+    /** @var string */
+    protected $filterId = AttributeGridDefinitionFactory::GRID_ID;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_attribute',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
 }
-%}
-
-{% block content %}
-  {% block attributes_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': attributeGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
-
