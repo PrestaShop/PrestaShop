@@ -63,10 +63,10 @@
                   {% endif %}
                 </a>
               </td>
-              <td>{{ product.unit_price }}</td>
+              <td>{{ product.unit_price_formatted }}</td>
               <td>{{ product.quantity }}</td>
               <td>{{ product.stock_quantity }}</td>
-              <td>{{ product.total_price }}</td>
+              <td>{{ product.total_price_formatted }}</td>
             </tr>
 
             <tr>
@@ -116,37 +116,37 @@
                   {% endif %}
                 </a>
               </td>
-              <td>{{ product.unit_price }}</td>
+              <td>{{ product.unit_price_formatted }}</td>
               <td>{{ product.cart_quantity }}</td>
               <td>{{ product.stock_quantity }}</td>
-              <td></td>
+              <td>{{ product.total_price_formatted }}</td>
             </tr>
           {% endif %}
         {% endfor %}
 
         <tr>
           <td colspan="5">{{ 'Total cost of products:'|trans({}, 'Admin.Orderscustomers.Feature') }}</td>
-          <td class="text-right">{{ cartView.cartSummary.total_products }}</td>
+          <td class="text-right">{{ cartView.cartSummary.total_products_formatted }}</td>
         </tr>
 
         {% if cartView.cartSummary.total_discounts %}
           <tr>
             <td colspan="5">{{ 'Total value of vouchers:'|trans({}, 'Admin.Orderscustomers.Feature') }}</td>
-            <td class="text-right">{{ cartView.cartSummary.total_discounts }}</td>
+            <td class="text-right">{{ cartView.cartSummary.total_discounts_formatted }}</td>
           </tr>
         {% endif %}
 
         {% if cartView.cartSummary.total_wrapping %}
           <tr>
             <td colspan="5">{{ 'Total cost of gift wrapping:'|trans({}, 'Admin.Orderscustomers.Feature') }}</td>
-            <td class="text-right">{{ cartView.cartSummary.total_wrapping }}</td>
+            <td class="text-right">{{ cartView.cartSummary.total_wrapping_formatted }}</td>
           </tr>
         {% endif %}
 
         {% if cartView.cartSummary.total_shipping %}
           <tr>
             <td colspan="5">{{ 'Total shipping costs:'|trans({}, 'Admin.Orderscustomers.Feature') }}</td>
-            <td class="text-right">{{ cartView.cartSummary.total_shipping }}</td>
+            <td class="text-right">{{ cartView.cartSummary.total_shipping_formatted }}</td>
           </tr>
         {% endif %}
 
@@ -155,7 +155,7 @@
             <strong>{{ 'Total'|trans({}, 'Admin.Global') }}</strong>
           </td>
           <td class="text-right">
-            <strong>{{ cartView.cartSummary.total }}</strong>
+            <strong>{{ cartView.cartSummary.total_formatted }}</strong>
           </td>
         </tr>
       </tbody>
