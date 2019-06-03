@@ -1,5 +1,5 @@
 admin_attribute_groups_attributes:
-  path: /attributes
+  path: /{attributeGroupId}/attributes
   methods: GET
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
@@ -12,7 +12,7 @@ admin_attribute_groups_attributes:
 
 #@todo: implement
 admin_attribute_groups_attributes_create:
-  path: /new
+  path: /{attributeGroupId}/new
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
@@ -21,7 +21,7 @@ admin_attribute_groups_attributes_create:
 
 #@todo: implement
 admin_attribute_groups_attributes_edit:
-  path: /{attributeId}/edit
+  path: /{attributeGroupId}/{attributeId}/edit
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'

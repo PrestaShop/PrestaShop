@@ -63,7 +63,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder();
-            $qb->select('COUNT(DISTINCT a.`id_attribute`)')
+        $qb->select('COUNT(DISTINCT a.`id_attribute`)')
         ;
 
         return $qb;
