@@ -45,7 +45,7 @@ class Factory
      * Build a Number specification from a CLDR Locale object.
      *
      * @param CldrLocaleInterface $cldrLocale
-     *                               This CldrLocale object is a low level data object extracted from CLDR data source
+     *                                        This CldrLocale object is a low level data object extracted from CLDR data source
      * @param int $maxFractionDigits
      *                               Max number of digits to display in a number's decimal part
      * @param bool $numberGroupingUsed
@@ -78,8 +78,8 @@ class Factory
      * @param string $localeCode
      *                           The concerned locale
      * @param CldrLocaleInterface $cldrLocale
-     *                               This CldrLocale object is a low level data object extracted from CLDR data source
-     *                               It contains data about the concerned locale
+     *                                        This CldrLocale object is a low level data object extracted from CLDR data source
+     *                                        It contains data about the concerned locale
      * @param Currency $currency
      *                           This Currency object brings missing specification to format a number as a price
      * @param bool $numberGroupingUsed
