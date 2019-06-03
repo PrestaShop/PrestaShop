@@ -118,7 +118,7 @@ class CommonController extends FrameworkBundleAdminController
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $routeName = $request->attributes->get('_route', $request->attributes->get('_route_params', ['_route' => false])['_route']);
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
