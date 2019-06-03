@@ -119,24 +119,6 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 $product['product_total'] = $product['total_wt'];
             }
 
-            $image = [];
-
-            if (isset($product['id_product_attribute']) && (int) $product['id_product_attribute']) {
-                $image = Db::getInstance()->getRow('
-                    SELECT id_image
-                    FROM ' . _DB_PREFIX_ . 'product_attribute_image
-                    WHERE id_product_attribute = ' . (int) $product['id_product_attribute']
-                );
-            }
-
-            if (!isset($image['id_image'])) {
-                $image = Db::getInstance()->getRow('
-                    SELECT id_image 
-                    FROM ' . _DB_PREFIX_ . 'image 
-                    WHERE id_product = ' . (int) $product['id_product'] . ' AND cover = 1'
-                );
-            }
-
             $product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct(
                 $product['id_product'],
                 isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null,
@@ -265,6 +247,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                                         'name' => $item['name'],
                                         'value' => $item['value'],
                                         'type' => 'customizable_file',
+                                        'image' => _THEME_PROD_PIC_DIR_.$item['value'].'_small',
                                     ];
                                 }
                             } elseif (Product::CUSTOMIZE_TEXTFIELD === $type) {

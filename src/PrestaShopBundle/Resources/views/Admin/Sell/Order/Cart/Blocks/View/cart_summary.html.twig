@@ -81,7 +81,11 @@
                       {% endif %}
                     </div>
                     <div class="col-6">
-                      {{ customizationField.value }}
+                      {% if customizationField.type == 'customizable_file' %}
+                        <img src="{{ customizationField.image }}">
+                      {% else %}
+                        {{ customizationField.value }}
+                      {% endif %}
                     </div>
                   </div>
                 {% endfor %}
