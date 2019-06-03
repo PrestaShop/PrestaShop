@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandler
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use Product;
 use StockAvailable;
+use Tools;
 use Validate;
 
 /**
@@ -150,10 +151,11 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $customerStats = $customer->getStats();
         $gender = new Gender($customer->id_gender, $context->language->id);
 
-        $products = $this->prepareProductForView($products);
+        $products = $this->prepareProductForView($products, $currency);
 
         return new CartView(
             $cart->id,
+            $cart->id_currency,
             [
                 'id' => $customer->id,
                 'first_name' => $customer->firstname,
@@ -171,10 +173,15 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             [
                 'products' => $products,
                 'total_products' => $total_products,
+                'total_products_formatted' => Tools::displayPrice($total_products, $currency),
                 'total_discounts' => $total_discounts,
+                'total_discounts_formatted' => Tools::displayPrice($total_discounts, $currency),
                 'total_wrapping' => $total_wrapping,
+                'total_wrapping_formatted' => Tools::displayPrice($total_wrapping, $currency),
                 'total_shipping' => $total_shipping,
+                'total_shipping_formatted' => Tools::displayPrice($total_shipping, $currency),
                 'total' => $total_price,
+                'total_formatted' => Tools::displayPrice($total_price, $currency),
                 'is_tax_included' => $tax_calculation_method,
             ]
         );
@@ -182,10 +189,11 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
     /**
      * @param array $products
+     * @param Currency $currency
      *
      * @return array
      */
-    private function prepareProductForView(array $products)
+    private function prepareProductForView(array $products, Currency $currency)
     {
         $formattedProducts = [];
 
@@ -201,13 +209,29 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'cart_quantity' => $product['cart_quantity'],
                 'total_price' => $product['product_total'],
                 'unit_price' => $product['product_price'],
+                'total_price_formatted' => Tools::displayPrice(
+                    $product['product_total'],
+                    $currency
+                ),
+                'unit_price_formatted' => Tools::displayPrice(
+                    $product['product_price'],
+                    $currency
+                ),
             ];
 
             $productCustomization = [];
 
             if ($product['customizedDatas']) {
                 $formattedProduct['unit_price'] = $product['price_wt'];
+                $formattedProduct['unit_price_formatted'] = Tools::displayPrice(
+                    $product['price_wt'],
+                    $currency
+                );
                 $formattedProduct['total_price'] = $product['total_customization_wt'];
+                $formattedProduct['total_price_formatted'] = Tools::displayPrice(
+                    $product['total_customization_wt'],
+                    $currency
+                );
                 $formattedProduct['quantity'] = $product['customizationQuantityTotal'];
 
                 foreach ($product['customizedDatas'] as $customizationPerAddress) {

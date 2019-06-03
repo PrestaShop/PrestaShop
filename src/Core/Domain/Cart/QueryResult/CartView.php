@@ -49,17 +49,29 @@ class CartView
     private $cartSummary;
 
     /**
+     * @var int
+     */
+    private $currencyId;
+
+    /**
      * @param int $cartId
+     * @param int $currencyId
      * @param array $customerInformation
      * @param array $orderInformation
      * @param array $cartSummary
      */
-    public function __construct($cartId, array $customerInformation, array $orderInformation, array $cartSummary)
-    {
+    public function __construct(
+        $cartId,
+        $currencyId,
+        array $customerInformation,
+        array $orderInformation,
+        array $cartSummary
+    ) {
         $this->customerInformation = $customerInformation;
         $this->orderInformation = $orderInformation;
         $this->cartId = $cartId;
         $this->cartSummary = $cartSummary;
+        $this->currencyId = $currencyId;
     }
 
     /**
@@ -84,6 +96,14 @@ class CartView
     public function getCartId()
     {
         return $this->cartId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCartCurrencyId()
+    {
+        return $this->currencyId;
     }
 
     /**
