@@ -43,6 +43,7 @@ class CartController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/view.html.twig', [
             'cartView' => $cartView,
+            'layoutTitle' => $this->trans('View', 'Admin.Actions'),
         ]);
     }
 }
