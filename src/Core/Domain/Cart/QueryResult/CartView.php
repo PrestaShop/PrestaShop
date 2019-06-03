@@ -33,13 +33,49 @@ class CartView
      */
     private $customerInformation;
 
-    public function __construct(array $customerInformation)
+    /**
+     * @var array
+     */
+    private $orderInformation;
+
+    /**
+     * @var int
+     */
+    private $cartId;
+
+    /**
+     * @param int $cartId
+     * @param array $customerInformation
+     * @param array $orderInformation
+     */
+    public function __construct($cartId, array $customerInformation, array $orderInformation)
     {
         $this->customerInformation = $customerInformation;
+        $this->orderInformation = $orderInformation;
+        $this->cartId = $cartId;
     }
 
+    /**
+     * @return array
+     */
     public function getCustomerInformation()
     {
         return $this->customerInformation;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderInformation()
+    {
+        return $this->orderInformation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCartId()
+    {
+        return $this->cartId;
     }
 }
