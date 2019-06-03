@@ -27,7 +27,7 @@
 namespace LegacyTests\Unit\Core\Localization\Locale;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface as CldrLocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
@@ -49,16 +49,6 @@ class RepositoryTest extends TestCase
         /**
          * Mock the LocaleRepository dependencies :
          */
-        /** CLDR Locale data object */
-        $cldrLocale = $this->getMockBuilder(CldrLocale::class)
-            ->disableOriginalConstructor()
-            ->setMethods([
-                'getDefaultNumberingSystem',
-                'getDecimalPattern',
-                'getCurrencyPattern',
-                'getAllNumberSymbols',
-            ])
-            ->getMock();
 
         $symbolsDataStub = new NumberSymbolsData();
         $symbolsDataStub->setDecimal(',');
@@ -72,7 +62,12 @@ class RepositoryTest extends TestCase
         $symbolsDataStub->setPerMille('‰');
         $symbolsDataStub->setInfinity('∞');
         $symbolsDataStub->setNan('NaN');
-        $cldrLocale->method('getAllNumberSymbols')->willReturn(['latn' => $symbolsDataStub]);
+
+        /** CLDR Locale data object */
+        $cldrLocale = $this->createMock(CldrLocaleInterface::class);
+        $cldrLocale
+            ->method('getAllNumberSymbols')
+            ->willReturn(['latn' => $symbolsDataStub]);
 
         /** CLDR LocaleRepository (returning the data object) */
         $cldrLocaleRepository = $this->getMockBuilder(CldrLocaleRepository::class)
