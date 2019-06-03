@@ -219,6 +219,11 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 ),
             ];
 
+            if (isset($product['customizationQuantityTotal'])) {
+                $formattedProduct['cart_quantity'] =
+                    $product['cart_quantity'] - $product['customizationQuantityTotal'];
+            }
+
             $productCustomization = [];
 
             if ($product['customizedDatas']) {
