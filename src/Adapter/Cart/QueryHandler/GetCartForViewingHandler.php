@@ -144,38 +144,41 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
         $products = $this->prepareProductForView($products, $currency);
 
-        return new CartView(
-            $cart->id,
-            $cart->id_currency,
-            [
-                'id' => $customer->id,
-                'first_name' => $customer->firstname,
-                'last_name' => $customer->lastname,
-                'gender' => $gender->name,
-                'email' => $customer->email,
-                'registration_date' => $customer->date_add,
-                'valid_orders_count' => $customerStats['nb_orders'],
-                'total_spent_since_registration' => $customerStats['total_orders'],
-            ],
-            [
-                'id' => $order->id,
-                'placed_date' => $order->date_add,
-            ],
-            [
-                'products' => $products,
-                'total_products' => $total_products,
-                'total_products_formatted' => Tools::displayPrice($total_products, $currency),
-                'total_discounts' => $total_discounts,
-                'total_discounts_formatted' => Tools::displayPrice($total_discounts, $currency),
-                'total_wrapping' => $total_wrapping,
-                'total_wrapping_formatted' => Tools::displayPrice($total_wrapping, $currency),
-                'total_shipping' => $total_shipping,
-                'total_shipping_formatted' => Tools::displayPrice($total_shipping, $currency),
-                'total' => $total_price,
-                'total_formatted' => Tools::displayPrice($total_price, $currency),
-                'is_tax_included' => $tax_calculation_method,
-            ]
-        );
+        $customerInformation = [
+            'id' => $customer->id,
+            'first_name' => $customer->firstname,
+            'last_name' => $customer->lastname,
+            'gender' => $gender->name,
+            'email' => $customer->email,
+            'registration_date' => $customer->date_add,
+            'valid_orders_count' => $customerStats['nb_orders'],
+            'total_spent_since_registration' => Tools::displayPrice(
+                $customerStats['total_orders'],
+                $currency
+            ),
+        ];
+
+        $orderInformation = [
+            'id' => $order->id,
+            'placed_date' => $order->date_add,
+        ];
+
+        $cartSummary = [
+            'products' => $products,
+            'total_products' => $total_products,
+            'total_products_formatted' => Tools::displayPrice($total_products, $currency),
+            'total_discounts' => $total_discounts,
+            'total_discounts_formatted' => Tools::displayPrice($total_discounts, $currency),
+            'total_wrapping' => $total_wrapping,
+            'total_wrapping_formatted' => Tools::displayPrice($total_wrapping, $currency),
+            'total_shipping' => $total_shipping,
+            'total_shipping_formatted' => Tools::displayPrice($total_shipping, $currency),
+            'total' => $total_price,
+            'total_formatted' => Tools::displayPrice($total_price, $currency),
+            'is_tax_included' => $tax_calculation_method,
+        ];
+
+        return new CartView($cart->id, $cart->id_currency, $customerInformation, $orderInformation, $cartSummary);
     }
 
     /**
@@ -216,10 +219,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
             if ($product['customizedDatas']) {
                 $formattedProduct['unit_price'] = $product['price_wt'];
-                $formattedProduct['unit_price_formatted'] = Tools::displayPrice(
-                    $product['price_wt'],
-                    $currency
-                );
+                $formattedProduct['unit_price_formatted'] = Tools::displayPrice($product['price_wt'], $currency);
                 $formattedProduct['total_price'] = $product['total_customization_wt'];
                 $formattedProduct['total_price_formatted'] = Tools::displayPrice(
                     $product['total_customization_wt'],
