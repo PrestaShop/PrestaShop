@@ -64,7 +64,16 @@ body#checkout {
     .step-edit {
       display: none;
     }
+    &.-unreachable {
+      .step-title {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    }
     &.-current {
+      .step-title {
+        cursor: default;
+      }
       .content {
         display: block;
       }
