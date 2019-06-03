@@ -16,4 +16,4 @@ _manufacturers:
 
 _attributes:
   resource: "attribute.yml"
-  prefix: /attribute-groups/{attributeGroupId}
+  prefix: /attribute-groups
