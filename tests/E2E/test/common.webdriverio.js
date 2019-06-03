@@ -172,7 +172,7 @@ module.exports = {
       options['desiredCapabilities'] = {
         browserName: 'chrome',
         chromeOptions: {
-          args: ['--headless', '--disable-gpu', '--window-size=1270,899', '--disable-dev-shm-usage'],
+          args: ['--headless', '--disable-gpu', '--window-size=1270,899'],
           prefs: {
             'download.default_directory': global.downloadsFolderPath,
           }
