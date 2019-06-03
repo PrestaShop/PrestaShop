@@ -242,3 +242,10 @@ services:
         - '@prestashop.core.query.doctrine_search_criteria_applicator'
         - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
       public: true
+
+    prestashop.core.grid.query_builder.attribute:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttributeQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        public: true

@@ -1,15 +1,50 @@
-admin_attributes_index:
-  path: /
+admin_attribute_groups_attributes:
+  path: /attributes
   methods: GET
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
     _legacy_controller: AdminAttributesGroups
-#    _legacy_link: AdminAttributesGroups
+#    _legacy_link: AdminAttributesGroups:viewattribute_group
+#    _legacy_parameters:
+#      id_attribute_group: attributeGroupId
+#  requirements:
+#    attributeGroupId: \d+
 
 #@todo: implement
-admin_attributes_create:
+admin_attribute_groups_attributes_create:
   path: /new
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
     _legacy_controller: AdminAttributesGroups
+    #    _legacy_link: AdminAttributesGroups:addattribute_group
+
+#@todo: implement
+admin_attribute_groups_attributes_edit:
+  path: /{attributeId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
+    _legacy_controller: AdminAttributesGroups
+#    _legacy_link: AdminAttributesGroups:updateattribute
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+      id_attribute: attributeId
+  requirements:
+    attributeGroupId: \d+
+    attributeId: \d+
+
+#@todo: implement
+admin_attribute_groups_attributes_delete:
+  path: /{attributeId}/delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
+    _legacy_controller: AdminAttributesGroups
+    _legacy_link: AdminAttributesGroups:deleteattribute_group
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+      id_attribute: attributeId
+  requirements:
+    attributeGroupId: \d+
+    attributeId: \d+

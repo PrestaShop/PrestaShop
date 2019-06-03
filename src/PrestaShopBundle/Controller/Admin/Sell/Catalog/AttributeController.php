@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,12 +36,19 @@ use Symfony\Component\HttpFoundation\Response;
 class AttributeController extends FrameworkBundleAdminController
 {
     /**
-     * Displays Attributes page
+     * Displays Attribute groups > attributes page
+     *
+     * @param $attributeGroupId
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction($attributeGroupId, AttributeFilters $attributeFilters)
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig');
+        $attributeGridFactory = $this->get('prestashop.core.grid.factory.attribute');
+        $attributeGrid = $attributeGridFactory->getGrid($attributeFilters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
+            'attributeGrid' => $this->presentGrid($attributeGrid),
+        ]);
     }
 }

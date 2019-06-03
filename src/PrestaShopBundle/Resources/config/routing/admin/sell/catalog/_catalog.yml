@@ -28,4 +28,4 @@ _features:
 
 _attributes:
   resource: "attribute.yml"
-  prefix: /attributes
+  prefix: /attribute-groups/{attributeGroupId}
