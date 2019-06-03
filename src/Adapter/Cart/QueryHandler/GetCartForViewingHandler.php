@@ -150,6 +150,8 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $customerStats = $customer->getStats();
         $gender = new Gender($customer->id_gender, $context->language->id);
 
+        $products = $this->prepareProductForView($products);
+
         return new CartView(
             $cart->id,
             [
@@ -173,7 +175,82 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'total_wrapping' => $total_wrapping,
                 'total_shipping' => $total_shipping,
                 'total' => $total_price,
+                'is_tax_included' => $tax_calculation_method,
             ]
         );
+    }
+
+    /**
+     * @param array $products
+     *
+     * @return array
+     */
+    private function prepareProductForView(array $products)
+    {
+        $formattedProducts = [];
+
+        foreach ($products as $product) {
+            $formattedProduct = [
+                'id' => $product['id_product'],
+                'name' => $product['name'],
+                'attributes' => isset($product['attributes']) ? $product['attributes'] : '',
+                'reference' => $product['name'],
+                'supplier_reference' => $product['supplier_reference'],
+                'stock_quantity' => $product['qty_in_stock'],
+                'customization_quantity' => $product['customizationQuantityTotal'],
+                'cart_quantity' => $product['cart_quantity'],
+                'total_price' => $product['product_total'],
+                'unit_price' => $product['product_price'],
+            ];
+
+            $productCustomization = [];
+
+            if ($product['customizedDatas']) {
+                $formattedProduct['unit_price'] = $product['price_wt'];
+                $formattedProduct['total_price'] = $product['total_customization_wt'];
+                $formattedProduct['quantity'] = $product['customizationQuantityTotal'];
+
+                foreach ($product['customizedDatas'] as $customizationPerAddress) {
+                    foreach ($customizationPerAddress as $customization) {
+                        if (((int) $customization['id_customization'] !== (int) $product['id_customization']) &&
+                            count($customizationPerAddress) === 1
+                        ) {
+                            continue;
+                        }
+
+                        $productCustomization = [
+                            'quantity' => $customization['quantity'],
+                            'fields' => [],
+                        ];
+
+                        foreach ($customization['datas'] as $type => $data) {
+                            if (Product::CUSTOMIZE_FILE === $type) {
+                                foreach ($data as $item) {
+                                    $productCustomization['fields'][] = [
+                                        'name' => $item['name'],
+                                        'value' => $item['value'],
+                                        'type' => 'customizable_file',
+                                    ];
+                                }
+                            } elseif (Product::CUSTOMIZE_TEXTFIELD === $type) {
+                                foreach ($data as $item) {
+                                    $productCustomization['fields'][] = [
+                                        'name' => $item['name'],
+                                        'value' => $item['value'],
+                                        'type' => 'customizable_text_field',
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $formattedProduct['customization'] = $productCustomization;
+
+            $formattedProducts[] = $formattedProduct;
+        }
+
+        return $formattedProducts;
     }
 }

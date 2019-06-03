@@ -41,8 +41,87 @@
       </thead>
       <tbody>
         {% for product in cartView.cartSummary.products %}
-          <td></td>
-          <td></td>
+          {% if product.customization is not empty %}
+            <tr>
+              <td>IMG</td>
+              <td>
+                <a href="{{ path('admin_product_form', {'id': product.id}) }}">
+                  {{ product.name }}
+
+                  {% if product.attributes %}
+                    <br> {{ product.attributes }}
+                  {% endif %}
+                  <br>
+
+                  {% if product.reference %}
+                    {{ 'Ref:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                    {{ product.reference }}
+                  {% endif %}
+
+                  {% if product.reference and product.supplier_reference %}
+                    / {{ product.supplier_reference }}
+                  {% endif %}
+                </a>
+              </td>
+              <td>{{ product.unit_price }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>{{ product.stock_quantity }}</td>
+              <td>{{ product.total_price }}</td>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+                {% for customizationField in product.customization.fields %}
+                  <div class="row">
+                    <div class="col-6 text-right">
+                      {% if customizationField.name %}
+                        <strong>{{ customizationField.name }}</strong>
+                      {% else %}
+                        <strong>{{ 'Text #'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+                      {% endif %}
+                    </div>
+                    <div class="col-6">
+                      {{ customizationField.value }}
+                    </div>
+                  </div>
+                {% endfor %}
+              </td>
+
+              <td></td>
+              <td>{{ product.customization.quantity }}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          {% endif %}
+
+          {% if product.customization is empty or product.cart_quantity > product.customization_quantity %}
+            <tr>
+              <td>IMG</td>
+              <td>
+                <a href="{{ path('admin_product_form', {'id': product.id}) }}">
+                  {{ product.name }}
+
+                  {% if product.attributes %}
+                    <br> {{ product.attributes }}
+                  {% endif %}
+                  <br>
+
+                  {% if product.reference %}
+                    {{ 'Ref:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                    {{ product.reference }}
+                  {% endif %}
+
+                  {% if product.reference and product.supplier_reference %}
+                    / {{ product.supplier_reference }}
+                  {% endif %}
+                </a>
+              </td>
+              <td>{{ product.unit_price }}</td>
+              <td>{{ product.cart_quantity }}</td>
+              <td>{{ product.stock_quantity }}</td>
+              <td></td>
+            </tr>
+          {% endif %}
         {% endfor %}
 
         <tr>
@@ -81,5 +160,18 @@
         </tr>
       </tbody>
     </table>
+
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">
+        {{ 'For this particular customer group, prices are displayed as:'|trans({}, 'Admin.Orderscustomers.Notification') }}
+        <strong>
+          {% if cartView.cartSummary.is_tax_included %}
+            {{ 'Tax included'|trans({}, 'Admin.Global') }}
+          {% else %}
+            {{ 'Tax excluded'|trans({}, 'Admin.Global') }}
+          {% endif %}
+        </strong>
+      </p>
+    </div>
   </div>
 </div>
