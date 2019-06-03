@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -45,6 +44,9 @@ use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Defines grid for attributes group > attributes list
+ */
 final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
@@ -52,6 +54,10 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $requestStack;
 
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param RequestStack $requestStack
+     */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         RequestStack $requestStack
@@ -71,9 +77,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
     }
 
     /**
-     * Get translated grid name.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function getName()
     {
@@ -81,9 +85,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
     }
 
     /**
-     * Get defined columns for grid.
-     *
-     * @return ColumnCollectionInterface
+     * {@inheritdoc}
      */
     protected function getColumns()
     {
@@ -217,7 +219,6 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                 ])
                 ->setAssociatedColumn('actions')
-            )
-            ;
+            );
     }
 }

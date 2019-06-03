@@ -29,12 +29,44 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Provides sql for attributes group > attribute list
+ */
 final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    public function __construct(Connection $connection, $dbPrefix)
-    {
+    /**
+     * @var int
+     */
+    private $contextLangId;
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @param Connection $connection
+     * @param $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     * @param $contextLangId
+     * @param RequestStack $requestStack
+     */
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
+        $contextLangId,
+        RequestStack $requestStack
+    ) {
         parent::__construct($connection, $dbPrefix);
+        $this->contextLangId = $contextLangId;
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -72,7 +104,10 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getQueryBuilder()
     {
         $qb = $this->connection->createQueryBuilder()
-        ->from($this->dbPrefix . 'attribute', 'a');
+            ->from($this->dbPrefix . 'attribute', 'a')
+            ->setParameter('contextLangId', $this->contextLangId)
+            ->setParameter('attributeGroupId', $this->requestStack->getCurrentRequest()->attributes->getInt('attributeGroupId'))
+        ;
 
         $qb->leftJoin(
             'a',
@@ -80,13 +115,13 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
             'ag',
             'a.id_attribute_group = ag.id_attribute_group'
         );
-        $qb->andWhere('ag.id_attribute_group = 1');
+        $qb->andWhere('ag.id_attribute_group = :attributeGroupId');
 
         $qb->leftJoin(
             'a',
             $this->dbPrefix . 'attribute_lang',
             'al',
-            'a.id_attribute = al.id_attribute AND al.id_lang = 1'
+            'a.id_attribute = al.id_attribute AND al.id_lang = :contextLangId'
         );
 
         return $qb;

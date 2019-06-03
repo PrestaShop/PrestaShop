@@ -44,3 +44,8 @@
   {% endblock %}
 {% endblock %}
 
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+{% endblock %}
