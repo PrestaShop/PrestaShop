@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkPOCRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
@@ -116,37 +115,32 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkPOCRowAction('edit'))
+                        ->add((new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_attribute_groups_attributes_edit',
-                                'route_params' => [
-                                    [
-                                        'route_param_name' => 'attributeGroupId',
-                                        'route_param_field' => 'id_attribute_group',
+                                    'route_param_name' => 'attributeGroupId',
+                                    'route_param_field' => 'id_attribute_group',
+                                    'extra_route_params' => [
+                                        'attributeId' => 'id_attribute',
                                     ],
-                                    [
-                                        'route_param_name' => 'attributeId',
-                                        'route_param_field' => 'id_attribute',
-                                    ]
-                                ],
                             ])
                         )
-//                        ->add((new SubmitRowAction('delete'))
-//                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-//                            ->setIcon('delete')
-//                            ->setOptions([
-//                                'route' => 'admin_attribute_groups_attributes_delete',
-//                                'route_param_name' => 'attributeId',
-//                                'route_param_field' => 'id_attribute',
-//                                'confirm_message' => $this->trans(
-//                                    'Delete selected item?',
-//                                    [],
-//                                    'Admin.Notifications.Warning'
-//                                ),
-//                            ])
-//                        ),
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'route' => 'admin_attribute_groups_attributes_delete',
+                                'route_param_name' => 'attributeId',
+                                'route_param_field' => 'id_attribute',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        ),
                 ])
             );
     }
@@ -220,7 +214,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'redirect_route_params' => [
                         'attributeGroupId' => $this->requestStack->getCurrentRequest()
                             ->attributes->getInt('attributeGroupId'),
-                    ]
+                    ],
                 ])
                 ->setAssociatedColumn('actions')
             )
