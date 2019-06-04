@@ -41,12 +41,13 @@ final class GetCategoryStatusHandler implements GetCategoryStatusHandlerInterfac
      */
     public function handle(GetCategoryStatus $query)
     {
-        $category = new Category($query->getCategoryId()->getValue());
+        $categoryId = $query->getCategoryId()->getValue();
+        $category = new Category($categoryId);
 
-        if ($category->id !== $query->getCategoryId()->getValue()) {
+        if ($category->id !== $categoryId) {
             throw new CategoryNotFoundException(
                 $query->getCategoryId(),
-                sprintf('Category with id "%s" was not found.', $query->getCategoryId()->getValue())
+                sprintf('Category with id "%s" was not found.', $categoryId)
             );
         }
 
