@@ -69,7 +69,7 @@ final class TranslationsKpi implements KpiInterface
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(array $options = [])
     {
         $frontOfficeTranslations = $this->configuration->get('FRONTOFFICE_TRANSLATIONS');
 

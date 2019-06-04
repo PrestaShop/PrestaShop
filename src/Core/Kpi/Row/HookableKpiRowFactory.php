@@ -70,9 +70,9 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function build()
+    public function build(array $options = [])
     {
-        $kpiRow = new KpiRow();
+        $kpiRow = new KpiRow($options);
 
         $this->hookDispatcher->dispatchWithParameters($this->getHookName($this->identifier), [
             'kpis' => &$this->kpis,

@@ -34,7 +34,9 @@ interface KpiRowFactoryInterface
     /**
      * Builds a KPI row.
      *
+     * @param array $options
+     *
      * @return KpiRowInterface
      */
-    public function build();
+    public function build(array $options = []);
 }

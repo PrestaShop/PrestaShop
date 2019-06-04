@@ -38,3 +38,11 @@ services:
                 - '@prestashop.adapter.kpi.newsletter_registrations'
             - '@prestashop.core.hook.dispatcher'
             - 'customers'
+
+    prestashop.core.kpi_row.factory.cart:
+        class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
+        arguments:
+            -
+                - '@prestashop.adapter.kpi.shopping_cart_total_kpi'
+            - '@prestashop.core.hook.dispatcher'
+            - 'cart'
