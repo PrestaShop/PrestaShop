@@ -61,6 +61,7 @@ final class LinkRowAction extends AbstractRowAction
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
+            ->setAllowedTypes('extra_route_params', 'array')
             ->setAllowedTypes('confirm_message', 'string')
             ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
         ;

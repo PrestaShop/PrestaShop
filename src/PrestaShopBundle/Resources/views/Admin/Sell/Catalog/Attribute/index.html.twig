@@ -26,7 +26,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% set layoutHeaderToolbarBtn = {
   add: {
-    href: path('admin_attribute_groups_attributes_create', { 'attributeGroupId': attributeGroupId}),
+    href: path('admin_attributes_create', { 'attributeGroupId': attributeGroupId}),
     desc: 'Add new value'|trans({}, 'Admin.Catalog.Feature'),
     icon: 'add_circle_outline',
   }

@@ -28,7 +28,6 @@ _features:
 
 _attributes:
   resource: "attribute.yml"
-  prefix: /attribute-groups/{attributeGroupId}/
-  defaults:
-    requirements:
-      attributeGroupId: \d+
+  prefix: /attribute-groups/{attributeGroupId}/attributes/
+  requirements:
+    attributeGroupId: \d+

@@ -44,12 +44,12 @@ abstract class AbstractAttributeHandler
      *
      * @throws AttributeException
      */
-    public function getAttributeById($attributeId)
+    protected function getAttributeById($attributeId)
     {
         $idValue = $attributeId->getValue();
 
         try {
-            $attribute = new Attribute($attributeId);
+            $attribute = new Attribute($idValue);
 
             if ($attribute->id !== $idValue) {
                 throw new AttributeNotFoundException(
@@ -72,7 +72,7 @@ abstract class AbstractAttributeHandler
      *
      * @throws AttributeException
      */
-    public function deleteAttribute(Attribute $attribute)
+    protected function deleteAttribute(Attribute $attribute)
     {
         try {
             return $attribute->delete();
