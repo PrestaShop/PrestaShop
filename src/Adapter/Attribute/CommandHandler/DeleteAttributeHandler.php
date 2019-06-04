@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Attribute\AbstractAttributeHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\DeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler\DeleteAttributeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\CannotDeleteAttributeException;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\DeleteAttributeException;
 
 /**
  * Handles command which deletes the Attribute using legacy object model
@@ -44,12 +44,12 @@ final class DeleteAttributeHandler extends AbstractAttributeHandler implements D
      */
     public function handle(DeleteAttributeCommand $command)
     {
-        $attribute = $this->getAttributeById($command->getAttributeId()->getValue());
+        $attribute = $this->getAttributeById($command->getAttributeId());
 
         if (false === $this->deleteAttribute($attribute)) {
-            throw new CannotDeleteAttributeException(
+            throw new DeleteAttributeException(
                 sprintf('Failed to delete attribute with id "%s".', $attribute->id),
-                CannotDeleteAttributeException::FAILED_DELETE
+                DeleteAttributeException::FAILED_DELETE
             );
         }
     }
