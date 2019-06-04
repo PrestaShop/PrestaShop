@@ -271,3 +271,10 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
+
+    prestashop.core.grid.defintion.factory.cart:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+        public: true
