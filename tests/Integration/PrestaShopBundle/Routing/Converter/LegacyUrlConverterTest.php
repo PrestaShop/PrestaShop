@@ -84,7 +84,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_customers_create' => ['/sell/customers/new', 'AdminCustomers', 'addcustomer'],
             'admin_customers_edit' => ['/sell/customers/42/edit', 'AdminCustomers', 'updatecustomer', ['id_customer' => 42]],
             'admin_customers_view' => ['/sell/customers/42/view', 'AdminCustomers', 'viewcustomer', ['id_customer' => 42]],
-            'admin_customers_save_private_note' => ['/sell/customers/42/save-private-note', 'AdminCustomers', 'updateCustomerNote', ['id_customer' => 42]],
+            'admin_customers_save_private_note' => ['/sell/customers/42/set-private-note', 'AdminCustomers', 'updateCustomerNote', ['id_customer' => 42]],
             'admin_customers_toggle_status' => ['/sell/customers/42/toggle-status', 'AdminCustomers', 'statuscustomer', ['id_customer' => 42]],
             'admin_customers_transform_guest_to_customer' => ['/sell/customers/42/transform-guest-to-customer', 'AdminCustomers', 'guesttocustomer', ['id_customer' => 42]],
             'admin_customers_toggle_newsletter_subscription' => ['/sell/customers/42/toggle-newsletter-subscription', 'AdminCustomers', 'changeNewsletterVal', ['id_customer' => 42]],
