@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Command;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
 
+/**
+ * Deletes attributes in bulk action
+ */
 final class BulkDeleteAttributeCommand
 {
     /**

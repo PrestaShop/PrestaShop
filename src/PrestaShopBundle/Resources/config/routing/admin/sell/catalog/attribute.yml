@@ -1,5 +1,5 @@
-admin_attribute_groups_attributes:
-  path: /attributes
+admin_attributes_index:
+  path: /
   methods: GET
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
@@ -12,8 +12,8 @@ admin_attribute_groups_attributes:
 #  requirements:
 #    attributeGroupId: \d+
 
-admin_attribute_groups_attributes_search:
-  path: /attributes
+admin_attributes_search:
+  path: /
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:search'
@@ -23,7 +23,7 @@ admin_attribute_groups_attributes_search:
       - 'attributeGroupId'
 
 #@todo: implement
-admin_attribute_groups_attributes_create:
+admin_attributes_create:
   path: /new
   methods: [GET, POST]
   defaults:
@@ -34,7 +34,7 @@ admin_attribute_groups_attributes_create:
     #    _legacy_link: AdminAttributesGroups:addattribute_group
 
 #@todo: implement
-admin_attribute_groups_attributes_edit:
+admin_attributes_edit:
   path: /{attributeId}/edit
   methods: [GET, POST]
   defaults:
@@ -49,7 +49,7 @@ admin_attribute_groups_attributes_edit:
   requirements:
     attributeId: \d+
 
-admin_attribute_groups_attributes_delete:
+admin_attributes_delete:
   path: /{attributeId}/delete
   methods: POST
   defaults:
@@ -62,7 +62,7 @@ admin_attribute_groups_attributes_delete:
       id_attribute_group: attributeGroupId
       id_attribute: attributeId
 
-admin_attribute_groups_attributes_bulk_delete:
+admin_attributes_bulk_delete:
   path: /delete
   methods: POST
   defaults:

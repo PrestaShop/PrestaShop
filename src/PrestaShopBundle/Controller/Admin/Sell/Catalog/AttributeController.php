@@ -49,7 +49,7 @@ class AttributeController extends FrameworkBundleAdminController
      * Displays Attribute groups > attributes page
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attribute_groups_attributes",
+     *     redirectRoute="admin_attributes_index",
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )
      *
@@ -73,7 +73,7 @@ class AttributeController extends FrameworkBundleAdminController
      * Responsible for grid filtering
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attribute_groups_attributes",
+     *     redirectRoute="admin_attributes_index",
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )
      *
@@ -90,7 +90,7 @@ class AttributeController extends FrameworkBundleAdminController
             $this->get('prestashop.core.grid.definition.factory.attribute'),
             $request,
             AttributeGridDefinitionFactory::GRID_ID,
-            'admin_attribute_groups_attributes',
+            'admin_attributes_index',
             ['attributeGroupId']
         );
     }
@@ -99,7 +99,7 @@ class AttributeController extends FrameworkBundleAdminController
      * Deletes attribute
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attribute_groups_attributes",
+     *     redirectRoute="admin_attributes_index",
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )
      *
@@ -120,7 +120,7 @@ class AttributeController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_attribute_groups_attributes', [
+        return $this->redirectToRoute('admin_attributes_index', [
             'attributeGroupId' => $attributeGroupId,
         ]);
     }
@@ -129,7 +129,7 @@ class AttributeController extends FrameworkBundleAdminController
      * Deletes multiple attributes by provided ids from request
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attribute_groups_attributes",
+     *     redirectRoute="admin_attributes_index",
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )
      *
@@ -152,7 +152,7 @@ class AttributeController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_attribute_groups_attributes', [
+        return $this->redirectToRoute('admin_attributes_index', [
             'attributeGroupId' => $attributeGroupId,
         ]);
     }
