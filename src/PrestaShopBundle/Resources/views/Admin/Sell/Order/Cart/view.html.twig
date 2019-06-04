@@ -43,16 +43,22 @@
 
   <div class="row">
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/customer_information.html.twig' %}
+      {% block cart_customer_information %}
+        {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/customer_information.html.twig' %}
+      {% endblock %}
     </div>
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/order_information.html.twig' %}
+      {% block cart_order_information %}
+        {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/order_information.html.twig' %}
+      {% endblock %}
     </div>
   </div>
 
   <div class="row">
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig' %}
+      {% block cart_summary %}
+        {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig' %}
+      {% endblock %}
     </div>
   </div>
 {% endblock %}
