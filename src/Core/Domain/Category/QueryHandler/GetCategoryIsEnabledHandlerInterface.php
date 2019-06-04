@@ -24,33 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler;
 
-use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryStatus;
-use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 
 /**
- * @internal
+ * Interface for service that handles getting category status.
  */
-final class GetCategoryStatusHandler implements GetCategoryStatusHandlerInterface
+interface GetCategoryIsEnabledHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param GetCategoryIsEnabled $query
+     *
+     * @return bool
      */
-    public function handle(GetCategoryStatus $query)
-    {
-        $categoryId = $query->getCategoryId()->getValue();
-        $category = new Category($categoryId);
-
-        if ($category->id !== $categoryId) {
-            throw new CategoryNotFoundException(
-                $query->getCategoryId(),
-                sprintf('Category with id "%s" was not found.', $categoryId)
-            );
-        }
-
-        return (bool) $category->active;
-    }
+    public function handle(GetCategoryIsEnabled $query);
 }

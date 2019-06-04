@@ -24,33 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Query;
+namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use Category;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryIsEnabledHandlerInterface;
 
 /**
- * Get current status (enabled/disabled) for given category.
+ * @internal
  */
-class GetCategoryStatus
+final class GetCategoryIsEnabledHandler implements GetCategoryIsEnabledHandlerInterface
 {
     /**
-     * @var CategoryId
+     * {@inheritdoc}
      */
-    private $categoryId;
-
-    /**
-     * @param int $categoryId
-     */
-    public function __construct($categoryId)
+    public function handle(GetCategoryIsEnabled $query)
     {
-        $this->categoryId = new CategoryId($categoryId);
-    }
+        $categoryId = $query->getCategoryId()->getValue();
+        $category = new Category($categoryId);
 
-    /**
-     * @return CategoryId
-     */
-    public function getCategoryId()
-    {
-        return $this->categoryId;
+        if ($category->id !== $categoryId) {
+            throw new CategoryNotFoundException(
+                $query->getCategoryId(),
+                sprintf('Category with id "%s" was not found.', $categoryId)
+            );
+        }
+
+        return (bool) $category->active;
     }
 }
