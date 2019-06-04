@@ -207,6 +207,7 @@ services:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
             - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+        public: true
 
     prestashop.core.grid.query_builder.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\CatalogPriceRuleQueryBuilder'
@@ -287,4 +288,9 @@ services:
       arguments:
         - '@prestashop.core.query.doctrine_search_criteria_applicator'
         - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+      public: true
+
+    prestashop.core.grid.query_builder.cart:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\CartQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
       public: true
