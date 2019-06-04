@@ -56,7 +56,7 @@ interface KpiRowInterface
     public function isRefreshAllowed();
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getOptions();
 }
