@@ -61,3 +61,16 @@ admin_attribute_groups_attributes_delete:
     _legacy_parameters:
       id_attribute_group: attributeGroupId
       id_attribute: attributeId
+
+admin_attribute_groups_attributes_bulk_delete:
+  path: /delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:bulkDelete'
+    _legacy_controller: AdminAttributesGroups
+    redirectQueryParamsToKeep:
+      - 'attributeGroupId'
+    #    _legacy_link: AdminAttributesGroups:bulkdeleteattribute
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+      id_attribute: attributeId

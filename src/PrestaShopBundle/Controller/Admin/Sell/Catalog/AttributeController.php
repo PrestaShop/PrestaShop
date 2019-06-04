@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\BulkDeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\DeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
@@ -120,5 +121,57 @@ class AttributeController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_attribute_groups_attributes', [
             'attributeGroupId' => $attributeGroupId,
         ]);
+    }
+
+    /**
+     * Deletes multiple attributes by provided ids from request
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attribute_groups_attributes",
+     *     redirectQueryParamsToKeep={"attributeGroupId"}
+     * )
+     *
+     * @param int $attributeGroupId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction($attributeGroupId, Request $request)
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteAttributeCommand(
+                $this->getAttributeIdsFromRequest($request))
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (AttributeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_attribute_groups_attributes', [
+            'attributeGroupId' => $attributeGroupId,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getAttributeIdsFromRequest(Request $request)
+    {
+        $attributeIds = $request->request->get('attribute_bulk');
+
+        if (!is_array($attributeIds)) {
+            return [];
+        }
+
+        foreach ($attributeIds as $i => $attributeId) {
+            $attributeIds[$i] = (int) $attributeId;
+        }
+
+        return $attributeIds;
     }
 }
