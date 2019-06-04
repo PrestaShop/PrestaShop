@@ -79,7 +79,7 @@ final class TopCategoryKpi implements KpiInterface
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(array $options = [])
     {
         $helper = new HelperKpi();
         $helper->id = 'box-top-category';

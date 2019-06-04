@@ -45,12 +45,16 @@ class CartController extends FrameworkBundleAdminController
     public function viewAction(Request $request, $cartId)
     {
         $cartView = $this->getQueryBus()->handle(new GetCartForViewing((int) $cartId));
+        $cartKpi = $this->get('prestashop.core.kpi_row.factory.cart')->build([
+            'cart_id' => $cartId,
+        ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/view.html.twig', [
             'cartView' => $cartView,
             'layoutTitle' => $this->trans('View', 'Admin.Actions'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'cartKpi' => $cartKpi,
         ]);
     }
 }

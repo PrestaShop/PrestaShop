@@ -79,7 +79,7 @@ final class EmptyCategoriesKpi implements KpiInterface
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(array $options = [])
     {
         $helper = new HelperKpi();
         $helper->id = 'box-empty-categories';

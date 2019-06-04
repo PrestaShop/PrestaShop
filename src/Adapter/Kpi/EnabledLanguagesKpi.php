@@ -77,7 +77,7 @@ final class EnabledLanguagesKpi implements KpiInterface
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(array $options = [])
     {
         $enabledLanguages = $this->configuration->get('ENABLED_LANGUAGES');
 

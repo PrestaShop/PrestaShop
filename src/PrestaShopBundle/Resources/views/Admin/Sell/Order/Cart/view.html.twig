@@ -26,6 +26,21 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {% block cart_kpis %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="row">
+            {{ render(controller(
+              'PrestaShopBundle:Admin\\Common:renderKpiRow',
+              { 'kpiRow': cartKpi }
+            )) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
   <div class="row">
     <div class="col">
       {% include '@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/customer_information.html.twig' %}

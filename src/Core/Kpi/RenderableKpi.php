@@ -34,7 +34,9 @@ interface RenderableKpi
     /**
      * Renders the KPI's view.
      *
+     * @param array $options
+     *
      * @return string
      */
-    public function render();
+    public function render(array $options = []);
 }

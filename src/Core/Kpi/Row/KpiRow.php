@@ -44,6 +44,19 @@ final class KpiRow implements KpiRowInterface
     private $kpis = [];
 
     /**
+     * @var array
+     */
+    private $options;
+
+    /**
+     * @param array $options
+     */
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function addKpi(KpiInterface $kpi)
@@ -73,5 +86,13 @@ final class KpiRow implements KpiRowInterface
     public function isRefreshAllowed()
     {
         return $this->allowRefresh;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

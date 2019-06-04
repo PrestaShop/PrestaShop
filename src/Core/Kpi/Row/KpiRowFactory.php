@@ -57,7 +57,7 @@ final class KpiRowFactory implements KpiRowFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function build()
+    public function build(array $options = [])
     {
         $kpiRow = new KpiRow();
 

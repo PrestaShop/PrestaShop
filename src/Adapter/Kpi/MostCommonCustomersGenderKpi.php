@@ -69,7 +69,7 @@ final class MostCommonCustomersGenderKpi implements KpiInterface
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(array $options = [])
     {
         $helper = new HelperKpi();
         $helper->id = 'box-gender';
