@@ -51,6 +51,9 @@ class KpiRowPresenterTest extends TestCase
         $kpiRowMock
             ->method('getKpis')
             ->willReturn([$kpiMock]);
+        $kpiRowMock
+            ->method('getOptions')
+            ->willReturn([]);
         $kpiMock
             ->method('render')
             ->willReturn('abcd');
