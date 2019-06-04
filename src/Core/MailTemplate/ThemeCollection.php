@@ -49,7 +49,7 @@ class ThemeCollection extends AbstractTypedCollection implements ThemeCollection
     public function getByName($themeName)
     {
         /** @var ThemeInterface $theme */
-        foreach ($this as $theme) {
+        foreach ($this->getValues() as $theme) {
             if ($themeName === $theme->getName()) {
                 return $theme;
             }
