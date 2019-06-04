@@ -45,15 +45,15 @@ final class ShoppingCartTotalKpi implements KpiInterface
      */
     public function render(array $options = [])
     {
-        $context = Context::getContext()->getTranslator();
+        $translator = Context::getContext()->getTranslator();
         $cart = new Cart($options['cart_id']);
 
         $helper = new HelperKpi();
         $helper->id = 'box-kpi-cart';
         $helper->icon = 'shopping_cart';
         $helper->color = 'color1';
-        $helper->title = $context->trans('Total Cart', [], 'Admin.Orderscustomers.Feature');
-        $helper->subtitle = $context->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
+        $helper->title = $translator->trans('Total Cart', [], 'Admin.Orderscustomers.Feature');
+        $helper->subtitle = $translator->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
         $helper->value = Tools::displayPrice(
             $this->getCartTotalPrice($cart),
             (int) $cart->id_currency
