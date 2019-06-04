@@ -24,18 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Order;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-class CartController extends FrameworkBundleAdminController
+/**
+ * Filters for Carts grid
+ */
+final class CartFilters extends Filters
 {
-    public function indexAction(Request $request, CartFilters $filters)
-    {
-        $cartGrid = $this->get('prestashop.core.grid.factory.cart')->getGrid($filters);
+    protected $filterId = CartGridDefinitionFactory::GRID_ID;
 
-        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig');
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_cart',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }

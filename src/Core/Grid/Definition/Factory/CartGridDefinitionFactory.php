@@ -89,10 +89,10 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_cart',
                 ])
             )
-            ->add((new DataColumn('id_order'))
+            ->add((new DataColumn('status'))
                 ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
-                    'field' => 'id_order',
+                    'field' => 'status',
                 ])
             )
             ->add((new DataColumn('customer_name'))
@@ -101,12 +101,12 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'customer_name',
                 ])
             )
-            ->add((new DataColumn('cart_total'))
-                ->setName($this->trans('Total', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'customer_name',
-                ])
-            )
+//            ->add((new DataColumn('cart_total'))
+//                ->setName($this->trans('Total', [], 'Admin.Global'))
+//                ->setOptions([
+//                    'field' => 'customer_name',
+//                ])
+//            )
             ->add((new DataColumn('carrier_name'))
                 ->setName($this->trans('Carrier', [], 'Admin.Shipping.Feature'))
                 ->setOptions([

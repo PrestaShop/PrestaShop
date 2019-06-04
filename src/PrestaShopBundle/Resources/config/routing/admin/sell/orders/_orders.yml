@@ -5,3 +5,7 @@ _delivery_slips:
 _invoices:
     resource: "invoices.yml"
     prefix: /invoices/
+
+_carts:
+  resource: "carts.yml"
+  prefix: /carts/
