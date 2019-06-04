@@ -31,7 +31,6 @@ use Context;
 use Currency;
 use Customer;
 use DateTime;
-use Db;
 use Gender;
 use Group;
 use Order;
@@ -248,7 +247,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                                         'name' => $item['name'],
                                         'value' => $item['value'],
                                         'type' => 'customizable_file',
-                                        'image' => _THEME_PROD_PIC_DIR_.$item['value'].'_small',
+                                        'image' => _THEME_PROD_PIC_DIR_ . $item['value'] . '_small',
                                     ];
                                 }
                             } elseif (Product::CUSTOMIZE_TEXTFIELD === $type) {

@@ -80,8 +80,7 @@ class CartController extends FrameworkBundleAdminController
     private function getErrorMessages()
     {
         return [
-            CartNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
     }
 }
