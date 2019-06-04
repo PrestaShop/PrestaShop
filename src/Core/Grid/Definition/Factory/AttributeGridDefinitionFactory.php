@@ -121,7 +121,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_attribute_groups_attributes_edit',
+                                'route' => 'admin_attributes_edit',
                                     'route_param_name' => 'attributeGroupId',
                                     'route_param_field' => 'id_attribute_group',
                                     'extra_route_params' => [
@@ -133,7 +133,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'route' => 'admin_attribute_groups_attributes_delete',
+                                'route' => 'admin_attributes_delete',
                                 'route_param_name' => 'attributeGroupId',
                                 'route_param_field' => 'id_attribute_group',
                                 'extra_route_params' => [
@@ -221,7 +221,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'reset_route_params' => [
                         'filterId' => self::GRID_ID,
                     ],
-                    'redirect_route' => 'admin_attribute_groups_attributes',
+                    'redirect_route' => 'admin_attributes_index',
                     'redirect_route_params' => [
                         'attributeGroupId' => $this->attributeGroupId,
                     ],
@@ -240,7 +240,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('delete_selection'))
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_attribute_groups_attributes_bulk_delete',
+                        'submit_route' => 'admin_attributes_bulk_delete',
                         'route_params' => [
                             'attributeGroupId' => $this->attributeGroupId,
                         ],
