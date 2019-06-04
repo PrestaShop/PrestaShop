@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\BulkDeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\DeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\DeleteAttributeException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -173,5 +175,30 @@ class AttributeController extends FrameworkBundleAdminController
         }
 
         return $attributeIds;
+    }
+
+    /**
+     * Provides translated error messages for exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            AttributeNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            DeleteAttributeException::class => [
+                DeleteAttributeException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteAttributeException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
     }
 }

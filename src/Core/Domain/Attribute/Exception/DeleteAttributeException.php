@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
 /**
  * Is thrown when attribute deletion fails
  */
-class CannotDeleteAttributeException extends AttributeException
+class DeleteAttributeException extends AttributeException
 {
     /**
      * When fails to delete single attribute

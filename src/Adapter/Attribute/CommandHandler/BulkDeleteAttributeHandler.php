@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Attribute\AbstractAttributeHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\BulkDeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler\BulkDeleteAttributeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\CannotDeleteAttributeException;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\DeleteAttributeException;
 
 /**
  * Handles command which deletes attributes in bulk action using legacy object model
@@ -45,13 +45,12 @@ final class BulkDeleteAttributeHandler extends AbstractAttributeHandler implemen
     public function handle(BulkDeleteAttributeCommand $command)
     {
         foreach ($command->getAttributeIds() as $attributeId) {
-            $idValue = $attributeId->getValue();
-            $attribute = $this->getAttributeById($idValue);
+            $attribute = $this->getAttributeById($attributeId);
 
             if (false === $this->deleteAttribute($attribute)) {
-                throw new CannotDeleteAttributeException(
-                    sprintf('Failed to delete attribute with id "%s"', $idValue),
-                    CannotDeleteAttributeException::FAILED_BULK_DELETE
+                throw new DeleteAttributeException(
+                    sprintf('Failed to delete attribute with id "%s"', $attribute->id),
+                    DeleteAttributeException::FAILED_BULK_DELETE
                 );
             }
         }

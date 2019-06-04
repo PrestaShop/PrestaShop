@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
 use Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
 use PrestaShopException;
 
 /**
@@ -36,7 +38,7 @@ use PrestaShopException;
 abstract class AbstractAttributeHandler
 {
     /**
-     * @param int $attributeId
+     * @param AttributeId $attributeId
      *
      * @return Attribute
      *
@@ -44,13 +46,23 @@ abstract class AbstractAttributeHandler
      */
     public function getAttributeById($attributeId)
     {
+        $idValue = $attributeId->getValue();
+
         try {
-            return new Attribute($attributeId);
+            $attribute = new Attribute($attributeId);
+
+            if ($attribute->id !== $idValue) {
+                throw new AttributeNotFoundException(
+                    sprintf('Attribute with id "%s" was not found.', $idValue)
+                );
+            }
         } catch (PrestaShopException $e) {
             throw new AttributeException(
-                sprintf('An error occurred when trying to get attribute with id %s', $attributeId)
+                sprintf('An error occurred when trying to get attribute with id %s', $idValue)
             );
         }
+
+        return $attribute;
     }
 
     /**
