@@ -65,6 +65,7 @@ final class SubmitRowAction extends AbstractRowAction
                 'accessibility_checker' => null,
                 'confirm_message_type' => self::MESSAGE_TYPE_STATIC,
                 'dynamic_message_field' => '',
+                'extra_route_params' => [],
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')

@@ -132,8 +132,11 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'route' => 'admin_attribute_groups_attributes_delete',
-                                'route_param_name' => 'attributeId',
-                                'route_param_field' => 'id_attribute',
+                                'route_param_name' => 'attributeGroupId',
+                                'route_param_field' => 'id_attribute_group',
+                                'extra_route_params' => [
+                                    'attributeId' => 'id_attribute',
+                                ],
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
                                     [],

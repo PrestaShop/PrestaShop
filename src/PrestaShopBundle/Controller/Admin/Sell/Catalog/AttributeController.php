@@ -26,21 +26,29 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\DeleteAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible for Sell > Catalog > Attributes & Features > Attributes page
+ * Responsible for Sell > Catalog > Attributes & Features > Attributes > Attribute
  */
 class AttributeController extends FrameworkBundleAdminController
 {
     /**
      * Displays Attribute groups > attributes page
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attribute_groups_attributes",
+     *     redirectQueryParamsToKeep={"attributeGroupId"}
+     * )
      *
      * @param $attributeGroupId
      * @param AttributeFilters $attributeFilters
@@ -59,6 +67,13 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Responsible for grid filtering
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attribute_groups_attributes",
+     *     redirectQueryParamsToKeep={"attributeGroupId"}
+     * )
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -75,5 +90,35 @@ class AttributeController extends FrameworkBundleAdminController
             'admin_attribute_groups_attributes',
             ['attributeGroupId']
         );
+    }
+
+    /**
+     * Deletes attribute
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attribute_groups_attributes",
+     *     redirectQueryParamsToKeep={"attributeGroupId"}
+     * )
+     *
+     * @param int $attributeGroupId
+     * @param int $attributeId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($attributeGroupId, $attributeId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteAttributeCommand((int) $attributeId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (AttributeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_attribute_groups_attributes', [
+            'attributeGroupId' => $attributeGroupId,
+        ]);
     }
 }
