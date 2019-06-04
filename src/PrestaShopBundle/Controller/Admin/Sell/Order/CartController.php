@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
+use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -54,8 +55,10 @@ class CartController extends FrameworkBundleAdminController
     /**
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request, CartFilters $filters)
     {
+        $cartGrid = $this->get('prestashop.core.grid.factory.cart')->getGrid($filters);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig');
     }
 
