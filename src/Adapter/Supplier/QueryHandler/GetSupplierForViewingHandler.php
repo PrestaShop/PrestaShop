@@ -127,18 +127,25 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
 
                 foreach ($productCombinations as $combination) {
                     $attributeId = $combination['id_product_attribute'];
-                    if (!isset($combinations[$attributeId])) {
+                    if (isset($combinations[$attributeId])) {
+                        $productInfo = Supplier::getProductInformationsBySupplier(
+                            $supplier->id,
+                            $product->id,
+                            $combination['id_product_attribute']
+                        );
                         $combinations[$attributeId] = [
                             'reference' => $combination['reference'],
                             'supplier_reference' => $combination['supplier_reference'],
-                            'wholesale_price' => $locale->formatPrice($combination['wholesale_price'], $currencyCode),
+                            'wholesale_price' => $locale->formatPrice(
+                                $productInfo['product_supplier_price_te'],
+                                $currencyCode//@todo: currency should be taken not from context, but from product_supplier
+                            ),
                             'ean13' => $combination['ean13'],
                             'upc' => $combination['upc'],
                             'quantity' => $combination['quantity'],
                             'attributes' => '',
                         ];
                     }
-
                     $attribute = sprintf(
                         '%s - %s',
                         $combination['group_name'],
@@ -151,6 +158,14 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
 
                     $combinations[$attributeId]['attributes'] .= $attribute;
                 }
+
+                $productInfo = Supplier::getProductInformationsBySupplier(
+                    $supplier->id,
+                    $product->id,
+                    0
+                );
+                $product->wholesale_price = $productInfo['product_supplier_price_te'];
+                $product->supplier_reference = $productInfo['product_supplier_reference'];
                 $products[] = [
                     'id' => $product->id,
                     'name' => $product->name,
