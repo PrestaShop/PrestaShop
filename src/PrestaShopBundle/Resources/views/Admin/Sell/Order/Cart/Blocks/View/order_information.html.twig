@@ -32,7 +32,7 @@
       <div class="col">
         {% if cartView.orderInformation.id %}
           <h2>
-            <a href="{{ getAdminLink('AdminOrders', true, {'id_order': cartView.orderInformation.id}) }}">
+            <a href="{{ getAdminLink('AdminOrders', true, {'id_order': cartView.orderInformation.id, 'vieworder': 1}) }}">
               {{ 'Order #%d'|trans({
                 '%d': cartView.orderInformation.id|format('"%06d')
               }, 'Admin.Orderscustomers.Feature') }}
