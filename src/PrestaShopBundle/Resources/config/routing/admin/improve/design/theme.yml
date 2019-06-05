@@ -12,6 +12,7 @@ admin_themes_upload_logos:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:uploadLogos
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes:submitOptionsconfiguration
 
 admin_themes_export_current:
   path: /export
@@ -19,6 +20,7 @@ admin_themes_export_current:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:export
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes:exporttheme
 
 admin_themes_import:
   path: /import
@@ -26,31 +28,39 @@ admin_themes_import:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:import
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes:importtheme
 
 admin_themes_enable:
-  path: /{themeName}/enable/
+  path: /{themeName}/enable
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:enable
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes:enableTheme
+    _legacy_parameters:
+      theme_name: themeName
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
 
 admin_themes_delete:
-  path: /{themeName}/delete/
+  path: /{themeName}/delete
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:delete
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes:deleteTheme
+    _legacy_parameters:
+      theme_name: themeName
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
 
 admin_themes_adapt_to_rtl_languages:
-  path: /adapt-to-rtl-languages/
+  path: /adapt-to-rtl-languages
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:adaptToRTLLanguages
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes:submitGenerateRTL
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
 
@@ -60,6 +70,7 @@ admin_theme_customize_layouts:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:customizeLayouts
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes:submitConfigureLayouts
 
 admin_themes_reset_layouts:
   path: /{themeName}/reset-layouts
@@ -67,5 +78,8 @@ admin_themes_reset_layouts:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:resetLayouts
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes:resetToDefaults
+    _legacy_parameters:
+      theme_name: themeName
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
