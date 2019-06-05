@@ -308,3 +308,11 @@ services:
         arguments:
             - '@prestashop.core.grid.data.factory.attribute'
             - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
+
+    prestashop.core.grid.data.factory.attribute_group:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.attribute_group'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'attribute'

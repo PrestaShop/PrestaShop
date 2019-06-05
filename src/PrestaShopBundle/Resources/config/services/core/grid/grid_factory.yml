@@ -208,12 +208,12 @@ services:
             - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.grid_factory.product_without_price:
-      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-      arguments:
-        - '@prestashop.core.grid.definition.factory.monitoring.product_without_price'
-        - '@prestashop.core.grid.data.factory.product_without_price'
-        - '@prestashop.core.grid.filter.form_factory'
-        - '@prestashop.core.hook.dispatcher'
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.monitoring.product_without_price'
+            - '@prestashop.core.grid.data.factory.product_without_price'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.order:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -260,5 +260,13 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.attribute'
             - '@prestashop.core.grid.data.factory.attribute_decorator'
-            - '@prestashop.core.grid.filter.cms_page_form_factory'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.attribute_group:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.attribute_group'
+            - '@prestashop.core.grid.data.factory.attribute_group'
+            - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
