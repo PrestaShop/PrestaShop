@@ -36,53 +36,63 @@
         {{ 'Customer'|trans({}, 'Admin.Global') }}
       </h3>
       <div class="card-block row">
-        <div class="card-text">
+        <div class="card-text" style="display: flex; flex-direction: column;">
           {{ ps.form_group_row(customerForm.gender_id, {}, {
-            'label': 'Social title'|trans({}, 'Admin.Global')
+            'label': 'Social title'|trans({}, 'Admin.Global'),
+            'order': 1
           }) }}
 
           {{ ps.form_group_row(customerForm.first_name, {}, {
             'label': 'First name'|trans({}, 'Admin.Global'),
-            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars)
+            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars),
+            'order': 2
           }) }}
 
           {{ ps.form_group_row(customerForm.last_name, {}, {
             'label': 'Last name'|trans({}, 'Admin.Global'),
-            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars)
+            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars),
+            'order': 3
           }) }}
 
           {{ ps.form_group_row(customerForm.email, {}, {
-            'label': 'Email'|trans({}, 'Admin.Global')
+            'label': 'Email'|trans({}, 'Admin.Global'),
+            'order': 4
           }) }}
 
           {{ ps.form_group_row(customerForm.password, {}, {
             'label': 'Password'|trans({}, 'Admin.Global'),
             'help': 'Password should be at least %length% characters long.'|trans({'%length%': minPasswordLength}, 'Admin.Notifications.Info'),
-            'class': isGuest ? 'd-none' : ''
+            'class': isGuest ? 'd-none' : '',
+            'order': 5
           }) }}
 
           {{ ps.form_group_row(customerForm.birthday, {}, {
-            'label': 'Birthday'|trans({}, 'Admin.Orderscustomers.Feature')
+            'label': 'Birthday'|trans({}, 'Admin.Orderscustomers.Feature'),
+            'order': 6
           }) }}
 
           {{ ps.form_group_row(customerForm.is_enabled, {}, {
             'label': 'Enabled'|trans({}, 'Admin.Global'),
-            'help': 'Enable or disable customer login.'|trans({}, 'Admin.Orderscustomers.Help')
+            'help': 'Enable or disable customer login.'|trans({}, 'Admin.Orderscustomers.Help'),
+            'order': 7
           }) }}
 
           {{ ps.form_group_row(customerForm.is_partner_offers_subscribed, {}, {
             'label': 'Partner offers'|trans({}, 'Admin.Orderscustomers.Feature'),
-            'help': 'This customer will receive your ads via email.'|trans({}, 'Admin.Orderscustomers.Help')
+            'help': 'This customer will receive your ads via email.'|trans({}, 'Admin.Orderscustomers.Help'),
+            'order': 8
           }) }}
 
           {{ ps.form_group_row(customerForm.group_ids, {}, {
             'label': 'Group access'|trans({}, 'Admin.Orderscustomers.Feature'),
-            'help': 'Select all the groups that you would like to apply to this customer.'|trans({}, 'Admin.Orderscustomers.Help')
+            'help': 'Select all the groups that you would like to apply to this customer.'|trans({}, 'Admin.Orderscustomers.Help'),
+            'order': 9
           }) }}
 
           {{ ps.form_group_row(customerForm.default_group_id, {}, {
             'label': 'Default customer group'|trans({}, 'Admin.Orderscustomers.Feature'),
-            'help': '%s %s'|format('This group will be the user\'s default group.'|trans({}, 'Admin.Orderscustomers.Help'), 'Only the discount for the selected group will be applied to this customer.'|trans({}, 'Admin.Orderscustomers.Help'))
+            'help': '%s %s'|format('This group will be the user\'s default group.'|trans({}, 'Admin.Orderscustomers.Help'), 'Only the discount for the selected group will be applied to this customer.'|trans({}, 'Admin.Orderscustomers.Help')),
+            'order': 10
           }) }}
 
           {% if isB2bFeatureActive %}
