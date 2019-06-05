@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use Employee as LegacyEmployee;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -35,6 +35,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Employee implements UserInterface, EquatableInterface
 {
+    /**
+     * @var int
+     */
+    private $id;
+
     /**
      * @var string
      */
@@ -56,14 +61,20 @@ class Employee implements UserInterface, EquatableInterface
     private $roles = array();
 
     /**
-     * @param AuthenticatedEmployee $authenticatedEmployee
+     * @var LegacyEmployee
      */
-    public function __construct(AuthenticatedEmployee $authenticatedEmployee)
+    private $data;
+
+    /**
+     * @param object $data The employee legacy object
+     */
+    public function __construct($data)
     {
-        $this->username = $authenticatedEmployee->getEmail()->getValue();
-        $this->password = $authenticatedEmployee->getHashedPassword();
+        $this->username = $data->email;
+        $this->password = $data->passwd;
         $this->salt = '';
-        $this->roles = $authenticatedEmployee->getRoles();
+        $this->data = $data;
+        $this->id = (int) $data->id;
     }
 
     public function __toString()
@@ -109,6 +120,38 @@ class Employee implements UserInterface, EquatableInterface
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * Get the id of the current employee.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param array $roles
+     *
+     * @return Employee
+     */
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Get the data parameter of the current employee.
+     *
+     * @return object
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 
     /**

@@ -7,7 +7,7 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.context'
       - '@security.token_storage'
-      - '@prestashop.security.admin.provider'
+      - '@prestashop.security.admin.user_provider'
       - '@prestashop.static_cache.adapter'
       - '@request_stack'
 

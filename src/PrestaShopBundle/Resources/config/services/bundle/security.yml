@@ -10,7 +10,14 @@ services:
         arguments:
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.static_cache.adapter"
-            - "@prestashop.core.query_bus"
+
+    prestashop.security.admin.user_provider:
+      class: PrestaShopBundle\Security\Admin\UserProvider
+      arguments:
+        - "@prestashop.adapter.legacy.context"
+        - "@prestashop.static_cache.adapter"
+        - "@prestashop.core.query_bus"
+
 
     prestashop.security.admin.login_form_authenticator:
         class: PrestaShopBundle\Security\Admin\LoginFormAuthenticator
@@ -31,5 +38,3 @@ services:
         tags:
             - { name: security.voter }
         public: false
-        arguments:
-            - "@prestashop.core.query_bus"
