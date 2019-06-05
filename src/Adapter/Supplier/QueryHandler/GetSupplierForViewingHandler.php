@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
 use Currency;
-use Locale;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
