@@ -4,3 +4,10 @@ admin_carts_index:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:index
     _legacy_controller: AdminCarts
+
+admin_carts_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:search
+    _legacy_controller: AdminCarts

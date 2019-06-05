@@ -26,12 +26,25 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends FrameworkBundleAdminController
 {
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param CartFilters $filters
+     *
+     * @return Response
+     */
     public function indexAction(Request $request, CartFilters $filters)
     {
         $cartGrid = $this->get('prestashop.core.grid.factory.cart')->getGrid($filters);
@@ -39,5 +52,27 @@ class CartController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig', [
             'cartGrid' => $this->presentGrid($cartGrid),
         ]);
+    }
+
+    /**
+     * Provides filters functionality
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.cart'),
+            $request,
+            CartGridDefinitionFactory::GRID_ID,
+            'admin_carts_index'
+        );
     }
 }
