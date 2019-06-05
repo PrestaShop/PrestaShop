@@ -27,9 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\DeleteCustomerRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartOrderIdColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartTotalColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -48,14 +53,24 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $configuration;
 
     /**
+     * @var string
+     */
+    private $contextDateFormat;
+
+    /**
      * @param HookDispatcherInterface $dispatcher
      * @param ConfigurationInterface $configuration
+     * @param string $contextDateFormat
      */
-    public function __construct(HookDispatcherInterface $dispatcher, ConfigurationInterface $configuration)
-    {
+    public function __construct(
+        HookDispatcherInterface $dispatcher,
+        ConfigurationInterface $configuration,
+        $contextDateFormat
+    ) {
         parent::__construct($dispatcher);
 
         $this->configuration = $configuration;
+        $this->contextDateFormat = $contextDateFormat;
     }
 
     /**
@@ -120,12 +135,37 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Date', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'date_add',
+                    'format' => $this->contextDateFormat,
+                ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_carts_index',
+                                'route_param_name' => 'cartId',
+                                'route_param_field' => 'id_cart',
+                            ])
+                        )
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'route' => 'admin_carts_index',
+                                'route_param_name' => 'cartId',
+                                'route_param_field' => 'id_cart',
+                            ])
+                        )
                 ])
             )
         ;
 
         if ($this->configuration->get('PS_GUEST_CHECKOUT_ENABLED')) {
-            $columns->add((new DataColumn('online'))
+            $columns->addAfter('date_add', (new DataColumn('online'))
                 ->setName($this->trans('Online', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'online',
