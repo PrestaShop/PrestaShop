@@ -26,19 +26,26 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler;
 
+use Access;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AuthenticatingEmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeForAuthenticationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShopException;
 
 /**
  * Handles employee authentication command.
  */
 final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthenticationHandlerInterface
 {
+    const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
+
     /**
      * @var LegacyContext
      */
@@ -57,13 +64,42 @@ final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthent
      */
     public function handle(GetEmployeeForAuthentication $query)
     {
-        $employee = new Employee($query->getEmployeeId()->getValue());
+        try {
+            $employee = $this->getLegacyEmployee($query);
+        } catch (PrestaShopException $e) {
+            throw new AuthenticatingEmployeeNotFoundException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        if (!$employee || !$employee->id) {
+            throw new AuthenticatingEmployeeNotFoundException();
+        }
 
         return new AuthenticatedEmployee(
             new EmployeeId((int) $employee->id),
             new Email($employee->email),
             $employee->passwd,
-            $this->context->getAdminLink($employee->getDefaultTabClassName())
+            $this->context->getAdminLink($employee->getDefaultTabClassName()),
+            (int) $employee->id_profile,
+            array_merge(
+                [self::ROLE_EMPLOYEE],
+                Access::getRoles($employee->id_profile)
+            )
         );
+    }
+
+    /**
+     * Gets legacy employee from authentication query.
+     *
+     * @param GetEmployeeForAuthentication $query
+     *
+     * @return Employee
+     */
+    private function getLegacyEmployee(GetEmployeeForAuthentication $query)
+    {
+        if (null !== $query->getEmployeeId()) {
+            return new Employee($query->getEmployeeId()->getValue());
+        }
+
+        return (new Employee())->getByEmail($query->getEmail());
     }
 }
