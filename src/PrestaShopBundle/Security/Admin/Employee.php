@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -34,11 +35,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Employee implements UserInterface, EquatableInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
-
     /**
      * @var string
      */
@@ -59,20 +55,15 @@ class Employee implements UserInterface, EquatableInterface
      */
     private $roles = array();
 
-    private $data;
-
     /**
-     * Constructor.
-     *
-     * @param object $data The employee legacy object
+     * @param AuthenticatedEmployee $authenticatedEmployee
      */
-    public function __construct($data)
+    public function __construct(AuthenticatedEmployee $authenticatedEmployee)
     {
-        $this->username = $data->email;
-        $this->password = $data->passwd;
+        $this->username = $authenticatedEmployee->getEmail()->getValue();
+        $this->password = $authenticatedEmployee->getHashedPassword();
         $this->salt = '';
-        $this->data = $data;
-        $this->id = (int) $data->id;
+        $this->roles = $authenticatedEmployee->getRoles();
     }
 
     public function __toString()
@@ -121,42 +112,10 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get the id of the current employee.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get the data parameter of the current employee.
-     *
-     * @return object
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
      * Used by Symfony to ensure credentials are removed when logout.
      */
     public function eraseCredentials()
     {
-    }
-
-    /**
-     * @param array $roles
-     *
-     * @return Employee
-     */
-    public function setRoles(array $roles)
-    {
-        $this->roles = $roles;
-
-        return $this;
     }
 
     /**

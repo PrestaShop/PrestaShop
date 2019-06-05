@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\ArgumentResolver;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
 use PrestaShop\PrestaShop\Core\Search\ControllerAction;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
@@ -57,7 +60,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     private $adminFilterRepository;
 
     /**
-     * @var Employee|void
+     * @var Employee|null
      */
     private $employee;
 
@@ -72,6 +75,11 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     private $shopId;
 
     /**
+     * @var int|null
+     */
+    private $employeeId;
+
+    /**
      * SearchParametersResolver constructor.
      *
      * @param SearchParametersInterface $searchParameters
@@ -79,19 +87,29 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      * @param AdminFilterRepository $adminFilterRepository
      * @param EventDispatcherInterface $dispatcher
      * @param int $shopId The Shop id
+     * @param CommandBusInterface $queryBus
      */
     public function __construct(
         SearchParametersInterface $searchParameters,
         TokenStorageInterface $tokenStorage,
         AdminFilterRepository $adminFilterRepository,
         EventDispatcherInterface $dispatcher,
-        $shopId
+        $shopId,
+        CommandBusInterface $queryBus
     ) {
         $this->searchParameters = $searchParameters;
         $this->adminFilterRepository = $adminFilterRepository;
-        $this->employee = $this->getEmployee($tokenStorage);
         $this->shopId = $shopId;
         $this->dispatcher = $dispatcher;
+        $this->employee = $this->getEmployee($tokenStorage);
+
+        if (null !== $this->employee) {
+            /** @var AuthenticatedEmployee $authenticatedEmployee */
+            $authenticatedEmployee = $queryBus->handle(
+                GetEmployeeForAuthentication::fromEmail($this->employee->getUsername())
+            );
+            $this->employeeId = $authenticatedEmployee->getEmployeeId()->getValue();
+        }
     }
 
     /**
@@ -141,7 +159,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     {
         /** @var Filters $savedFilters */
         $savedFilters = $this->searchParameters->getFiltersFromRepository(
-            $this->employee->getId(),
+            $this->employeeId,
             $this->shopId,
             $controller,
             $action,
@@ -190,7 +208,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
 
         $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
-            $this->employee->getId(),
+            $this->employeeId,
             $this->shopId,
             $filtersToSave,
             $controller,
