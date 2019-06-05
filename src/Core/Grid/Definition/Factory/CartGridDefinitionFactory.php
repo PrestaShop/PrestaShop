@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartOrderIdColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -89,7 +90,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_cart',
                 ])
             )
-            ->add((new DataColumn('status'))
+            ->add((new CartOrderIdColumn('status'))
                 ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'status',
