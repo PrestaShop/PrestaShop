@@ -27,10 +27,16 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Customer\DeleteCustomersBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\DeleteCustomerRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartOrderIdColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartTotalColumn;
@@ -241,5 +247,38 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
         ;
 
         return $filters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add(
+                (new LinkGridAction('export'))
+                    ->setName($this->trans('Export', [], 'Admin.Actions'))
+                    ->setIcon('cloud_download')
+                    ->setOptions([
+                        'route' => 'admin_carts_index',
+                    ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_carts_index',
+                    ])
+            )
+        ;
     }
 }
