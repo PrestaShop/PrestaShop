@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class StoreCore
+ * Class StoreCore.
  */
 class StoreCore extends ObjectModel
 {
@@ -99,7 +99,7 @@ class StoreCore extends ObjectModel
             'longitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
             'phone' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
             'fax' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
+            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 255),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -130,25 +130,27 @@ class StoreCore extends ObjectModel
     public function __construct($idStore = null, $idLang = null)
     {
         parent::__construct($idStore, $idLang);
-        $this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_.(int) $this->id.'.jpg')) ? (int) $this->id : false;
+        $this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_ . (int) $this->id . '.jpg')) ? (int) $this->id : false;
         $this->image_dir = _PS_STORE_IMG_DIR_;
     }
 
     /**
-     * Get Stores by language
+     * Get Stores by language.
      *
      * @param $idLang
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     *
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getStores($idLang)
     {
-        $stores = Db::getInstance()->executeS('
+        $stores = Db::getInstance()->executeS(
+            '
             SELECT s.id_store AS `id`, s.*, sl.*
-            FROM '._DB_PREFIX_.'store s
-            '.Shop::addSqlAssociation('store', 's').'
+            FROM ' . _DB_PREFIX_ . 'store s
+            ' . Shop::addSqlAssociation('store', 's') . '
             LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (
             sl.id_store = s.id_store
-            AND sl.id_lang = ' . (int)$idLang . '
+            AND sl.id_lang = ' . (int) $idLang . '
             )
             WHERE s.active = 1'
         );
@@ -157,7 +159,7 @@ class StoreCore extends ObjectModel
     }
 
     /**
-     * Get hours for webservice
+     * Get hours for webservice.
      *
      * @return string
      */
@@ -167,7 +169,7 @@ class StoreCore extends ObjectModel
     }
 
     /**
-     * Set hours for webservice
+     * Set hours for webservice.
      *
      * @param string $hours
      *
@@ -185,7 +187,7 @@ class StoreCore extends ObjectModel
     }
 
     /**
-     * This method is allow to know if a store exists for AdminImportController
+     * This method is allow to know if a store exists for AdminImportController.
      *
      * @return bool
      *
@@ -193,10 +195,11 @@ class StoreCore extends ObjectModel
      */
     public static function storeExists($idStore)
     {
-        $row = Db::getInstance()->getRow('
+        $row = Db::getInstance()->getRow(
+            '
             SELECT `id_store`
-            FROM '._DB_PREFIX_.'store a
-            WHERE a.`id_store` = '.(int) $idStore
+            FROM ' . _DB_PREFIX_ . 'store a
+            WHERE a.`id_store` = ' . (int) $idStore
         );
 
         return isset($row['id_store']);

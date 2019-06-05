@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,8 +29,16 @@
  */
 class AdminPreferencesControllerCore extends AdminController
 {
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminPreferencesController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         $this->className = 'Configuration';
         $this->table = 'configuration';
@@ -42,27 +50,27 @@ class AdminPreferencesControllerCore extends AdminController
             $round_mode = array(
                 array(
                     'value' => PS_ROUND_HALF_UP,
-                    'name' => $this->trans('Round up away from zero, when it is half way there (recommended)', array(), 'Admin.Shopparameters.Feature')
+                    'name' => $this->trans('Round up away from zero, when it is half way there (recommended)', array(), 'Admin.Shopparameters.Feature'),
                 ),
                 array(
                     'value' => PS_ROUND_HALF_DOWN,
-                    'name' => $this->trans('Round down towards zero, when it is half way there', array(), 'Admin.Shopparameters.Feature')
+                    'name' => $this->trans('Round down towards zero, when it is half way there', array(), 'Admin.Shopparameters.Feature'),
                 ),
                 array(
                     'value' => PS_ROUND_HALF_EVEN,
-                    'name' => $this->trans('Round towards the next even value', array(), 'Admin.Shopparameters.Feature')
+                    'name' => $this->trans('Round towards the next even value', array(), 'Admin.Shopparameters.Feature'),
                 ),
                 array(
                     'value' => PS_ROUND_HALF_ODD,
-                    'name' => $this->trans('Round towards the next odd value', array(), 'Admin.Shopparameters.Feature')
+                    'name' => $this->trans('Round towards the next odd value', array(), 'Admin.Shopparameters.Feature'),
                 ),
                 array(
                     'value' => PS_ROUND_UP,
-                    'name' => $this->trans('Round up to the nearest value', array(), 'Admin.Shopparameters.Feature')
+                    'name' => $this->trans('Round up to the nearest value', array(), 'Admin.Shopparameters.Feature'),
                 ),
                 array(
                     'value' => PS_ROUND_DOWN,
-                    'name' => $this->trans('Round down to the nearest value', array(), 'Admin.Shopparameters.Feature')
+                    'name' => $this->trans('Round down to the nearest value', array(), 'Admin.Shopparameters.Feature'),
                 ),
             );
             $activities1 = array(
@@ -86,7 +94,7 @@ class AdminPreferencesControllerCore extends AdminController
                 17 => $this->trans('Services', array(), 'Install'),
                 18 => $this->trans('Shoes and accessories', array(), 'Install'),
                 19 => $this->trans('Sport and Entertainment', array(), 'Install'),
-                20 => $this->trans('Travel', array(), 'Install')
+                20 => $this->trans('Travel', array(), 'Install'),
             );
             $activities2 = array();
             foreach ($activities1 as $value => $name) {
@@ -101,7 +109,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
-                    'default' => '0'
+                    'default' => '0',
                 ),
             );
 
@@ -112,7 +120,7 @@ class AdminPreferencesControllerCore extends AdminController
                 'cast' => 'intval',
                 'type' => 'bool',
                 'default' => '0',
-                'disabled' => (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED'))) ? false : true
+                'disabled' => (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED'))) ? false : true,
             );
 
             $fields = array_merge($fields, array(
@@ -123,7 +131,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'cast' => 'intval',
                     'type' => 'bool',
                     'default' => '0',
-                    'visibility' => Shop::CONTEXT_ALL
+                    'visibility' => Shop::CONTEXT_ALL,
                 ),
                 'PS_ALLOW_HTML_IFRAME' => array(
                     'title' => $this->trans('Allow iframes on HTML fields', array(), 'Admin.Shopparameters.Feature'),
@@ -131,7 +139,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
-                    'default' => '0'
+                    'default' => '0',
                 ),
                 'PS_USE_HTMLPURIFIER' => array(
                     'title' => $this->trans('Use HTMLPurifier Library', array(), 'Admin.Shopparameters.Feature'),
@@ -139,7 +147,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
-                    'default' => '0'
+                    'default' => '0',
                 ),
                 'PS_PRICE_ROUND_MODE' => array(
                     'title' => $this->trans('Round mode', array(), 'Admin.Shopparameters.Feature'),
@@ -148,7 +156,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'cast' => 'intval',
                     'type' => 'select',
                     'list' => $round_mode,
-                    'identifier' => 'value'
+                    'identifier' => 'value',
                 ),
                 'PS_ROUND_TYPE' => array(
                     'title' => $this->trans('Round type', array(), 'Admin.Shopparameters.Feature'),
@@ -158,18 +166,18 @@ class AdminPreferencesControllerCore extends AdminController
                     'list' => array(
                         array(
                             'name' => $this->trans('Round on each item', array(), 'Admin.Shopparameters.Feature'),
-                            'id' => Order::ROUND_ITEM
+                            'id' => Order::ROUND_ITEM,
                         ),
                         array(
                             'name' => $this->trans('Round on each line', array(), 'Admin.Shopparameters.Feature'),
-                            'id' => Order::ROUND_LINE
+                            'id' => Order::ROUND_LINE,
                         ),
                         array(
                             'name' => $this->trans('Round on the total', array(), 'Admin.Shopparameters.Feature'),
-                            'id' => Order::ROUND_TOTAL
+                            'id' => Order::ROUND_TOTAL,
                         ),
                     ),
-                    'identifier' => 'id'
+                    'identifier' => 'id',
                 ),
                 'PS_PRICE_DISPLAY_PRECISION' => array(
                     'title' => $this->trans('Number of decimals', array(), 'Admin.Shopparameters.Feature'),
@@ -177,21 +185,21 @@ class AdminPreferencesControllerCore extends AdminController
                     'validation' => 'isUnsignedInt',
                     'cast' => 'intval',
                     'type' => 'text',
-                    'class' => 'fixed-width-xxl'
+                    'class' => 'fixed-width-xxl',
                 ),
                 'PS_DISPLAY_SUPPLIERS' => array(
                     'title' => $this->trans('Display brands and suppliers', array(), 'Admin.Shopparameters.Feature'),
                     'desc' => $this->trans('Enable brands and suppliers pages on your front office even when their respective modules are disabled.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
-                    'type' => 'bool'
+                    'type' => 'bool',
                 ),
                 'PS_DISPLAY_BEST_SELLERS' => array(
                     'title' => $this->trans('Display best sellers', array(), 'Admin.Shopparameters.Feature'),
                     'desc' => $this->trans('Enable best sellers page on your front office even when its respective module is disabled.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
-                    'type' => 'bool'
+                    'type' => 'bool',
                 ),
                 'PS_MULTISHOP_FEATURE_ACTIVE' => array(
                     'title' => $this->trans('Enable Multistore', array(), 'Admin.Shopparameters.Feature'),
@@ -199,7 +207,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
-                    'visibility' => Shop::CONTEXT_ALL
+                    'visibility' => Shop::CONTEXT_ALL,
                 ),
                 'PS_SHOP_ACTIVITY' => array(
                     'title' => $this->trans('Main Shop Activity', array(), 'Admin.Shopparameters.Feature'),
@@ -207,7 +215,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'cast' => 'intval',
                     'type' => 'select',
                     'list' => $activities2,
-                    'identifier' => 'value'
+                    'identifier' => 'value',
                 ),
             ));
 
@@ -219,36 +227,20 @@ class AdminPreferencesControllerCore extends AdminController
                 }
 
                 $fields['PS_SSL_ENABLED']['type'] = 'disabled';
-                $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.
-                    Tools::getShopDomainSsl().
-                    Tools::safeOutput($requestUri).'">'.
-                    $this->trans('Please click here to check if your shop supports HTTPS.', array(), 'Admin.Shopparameters.Feature').'</a>';
+                $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://' .
+                    Tools::getShopDomainSsl() .
+                    Tools::safeOutput($requestUri) . '">' .
+                    $this->trans('Please click here to check if your shop supports HTTPS.', array(), 'Admin.Shopparameters.Feature') . '</a>';
             }
 
             $this->fields_options = array(
                 'general' => array(
-                    'title' =>    $this->trans('General', array(), 'Admin.Global'),
-                    'icon' =>    'icon-cogs',
-                    'fields' =>    $fields,
+                    'title' => $this->trans('General', array(), 'Admin.Global'),
+                    'icon' => 'icon-cogs',
+                    'fields' => $fields,
                     'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
                 ),
             );
-        }
-    }
-
-    /**
-     * Enable / disable multishop menu if multishop feature is activated
-     *
-     * @param string $value
-     */
-    public function updateOptionPsMultishopFeatureActive($value)
-    {
-        Configuration::updateValue('PS_MULTISHOP_FEATURE_ACTIVE', $value);
-
-        $tab = Tab::getInstanceFromClassName('AdminShopGroup');
-        if (Validate::isLoadedObject($tab)) {
-            $tab->active = (bool)Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
-            $tab->update();
         }
     }
 }

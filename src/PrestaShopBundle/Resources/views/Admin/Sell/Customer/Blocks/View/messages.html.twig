@@ -1,0 +1,62 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">message</i>
+    {{ 'Messages'|trans({}, 'Admin.Global') }}
+    <span class="badge badge-primary rounded">{{ customerInformation.messagesInformation|length }}</span>
+  </h3>
+  <div class="card-body">
+    {% if customerInformation.messagesInformation is not empty %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+          <th>{{ 'Message'|trans({}, 'Admin.Global') }}</th>
+          <th>{{ 'Sent on'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for message in customerInformation.messagesInformation %}
+        <tr>
+          <td>{{ message.status }}</td>
+          <td>
+            <a href="{{ getAdminLink('AdminCustomerThreads', true, {'id_customer_thread': message.customerThreadId, 'viewcustomer_thread': 1}) }}">
+              {{ message.message }}...
+            </a>
+          </td>
+          <td>{{ message.date }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="text-muted text-center mb-0">
+        {{ '%firstname% %lastname% has never contacted you'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+      </p>
+    {% endif %}
+  </div>
+</div>

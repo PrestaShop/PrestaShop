@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.theme.theme_multi_store_settings_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Theme\ThemeMultiStoreSettingsFormDataProvider'
+    arguments:
+      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,11 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 use Cart;
 
 /**
- * provides methods to process cart calculation
+ * provides methods to process cart calculation.
  */
 class Calculator
 {
-
     /**
      * @var \Cart
      */
@@ -60,7 +59,12 @@ class Calculator
     protected $fees;
 
     /**
-     * indicates if cart was already processed
+     * @var CartRuleCalculator
+     */
+    protected $cartRuleCalculator;
+
+    /**
+     * indicates if cart was already processed.
      *
      * @var bool
      */
@@ -70,13 +74,14 @@ class Calculator
     {
         $this->setCart($cart);
         $this->setCarrierId($carrierId);
-        $this->cartRows  = new CartRowCollection();
-        $this->fees      = new Fees();
+        $this->cartRows = new CartRowCollection();
+        $this->fees = new Fees();
         $this->cartRules = new CartRuleCollection();
+        $this->cartRuleCalculator = new CartRuleCalculator();
     }
 
     /**
-     * insert a new cart row in the calculator
+     * insert a new cart row in the calculator.
      *
      * @param CartRow $cartRow cart item row (product+qty informations)
      *
@@ -93,7 +98,7 @@ class Calculator
     }
 
     /**
-     * insert a new cart rule in the calculator
+     * insert a new cart rule in the calculator.
      *
      * @param \PrestaShop\PrestaShop\Core\Cart\CartRuleData $cartRule
      *
@@ -110,7 +115,7 @@ class Calculator
     }
 
     /**
-     * run the whole calculation process: calculate rows, discounts, fees
+     * run the whole calculation process: calculate rows, discounts, fees.
      *
      * @param int $computePrecision
      *
@@ -131,37 +136,43 @@ class Calculator
     }
 
     /**
-     * @param bool $withTaxes
+     * @param bool $ignoreProcessedFlag force getting total even if calculation was not made internaly
      *
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
-    public function getTotal()
+    public function getTotal($ignoreProcessedFlag = false)
     {
-        if (!$this->isProcessed) {
+        if (!$this->isProcessed && !$ignoreProcessedFlag) {
             throw new \Exception('Cart must be processed before getting its total');
         }
 
-        $amount = new AmountImmutable;
+        $amount = new AmountImmutable();
         foreach ($this->cartRows as $cartRow) {
             $rowPrice = $cartRow->getFinalTotalPrice();
             $amount = $amount->add($rowPrice);
         }
         $shippingFees = $this->fees->getFinalShippingFees();
-        $amount = $amount->add($shippingFees);
+        if (null !== $shippingFees) {
+            $amount = $amount->add($shippingFees);
+        }
         $wrappingFees = $this->fees->getFinalWrappingFees();
-        $amount = $amount->add($wrappingFees);
+        if (null !== $wrappingFees) {
+            $amount = $amount->add($wrappingFees);
+        }
 
         return $amount;
     }
 
     /**
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
     public function getRowTotal()
     {
-        $amount = new AmountImmutable;
+        $amount = new AmountImmutable();
         foreach ($this->cartRows as $cartRow) {
             $amount = $amount->add($cartRow->getFinalTotalPrice());
         }
@@ -171,11 +182,12 @@ class Calculator
 
     /**
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
     public function getDiscountTotal()
     {
-        $amount = new AmountImmutable;
+        $amount = new AmountImmutable();
         foreach ($this->cartRules as $cartRule) {
             $amount = $amount->add($cartRule->getDiscountApplied());
         }
@@ -230,7 +242,7 @@ class Calculator
     }
 
     /**
-     * Calculate row total
+     * Calculate row total.
      *
      * @param CartRow $cartRow
      */
@@ -240,7 +252,7 @@ class Calculator
     }
 
     /**
-     * calculate only product rows
+     * calculate only product rows.
      */
     public function calculateRows()
     {
@@ -250,24 +262,43 @@ class Calculator
     }
 
     /**
-     * calculate only cart rules (rows and fees have to be calculated first)
+     * calculate only cart rules (rows and fees have to be calculated first).
      */
     public function calculateCartRules()
     {
-        $cartRuleCalculator = new CartRuleCalculator();
-        $cartRuleCalculator->setCartRules($this->cartRules)
-                           ->setCartRows($this->cartRows)
-                           ->setCalculator($this);
-        $cartRuleCalculator->applyCartRules();
+        $this->cartRuleCalculator->setCartRules($this->cartRules)
+            ->setCartRows($this->cartRows)
+            ->setCalculator($this)
+            ->applyCartRules();
     }
 
     /**
-     * calculate wrapping and shipping fees (rows have to be calculated first)
+     * calculate only cart rules (rows and fees have to be calculated first), but don't process free-shipping discount
+     * (avoid loop on shipping calculation)
+     */
+    public function calculateCartRulesWithoutFreeShipping()
+    {
+        $this->cartRuleCalculator->setCartRules($this->cartRules)
+            ->setCartRows($this->cartRows)
+            ->setCalculator($this)
+            ->applyCartRulesWithoutFreeShipping();
+    }
+
+    /**
+     * calculate wrapping and shipping fees (rows have to be calculated first).
      *
      * @param int $computePrecision
      */
     public function calculateFees($computePrecision)
     {
         $this->fees->processCalculation($this->cart, $this->cartRows, $computePrecision, $this->id_carrier);
+    }
+
+    /**
+     * @return CartRuleCollection
+     */
+    public function getCartRulesData()
+    {
+        return $this->cartRuleCalculator->getCartRulesData();
     }
 }

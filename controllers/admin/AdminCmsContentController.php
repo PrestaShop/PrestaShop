@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,14 +35,22 @@ class AdminCmsContentControllerCore extends AdminController
     /** @var object adminCMS() instance */
     protected $admin_cms;
 
-    /** @var object Category() instance for navigation*/
+    /** @var object Category() instance for navigation */
     protected static $category = null;
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminCmsContentController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         /* Get current category */
-        $id_cms_category = (int)Tools::getValue('id_cms_category', Tools::getValue('id_cms_category_parent', 1));
+        $id_cms_category = (int) Tools::getValue('id_cms_category', Tools::getValue('id_cms_category_parent', 1));
         self::$category = new CMSCategory($id_cms_category);
         if (!Validate::isLoadedObject(self::$category)) {
             die('Category cannot be loaded');
@@ -56,8 +64,8 @@ class AdminCmsContentControllerCore extends AdminController
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
 
         $this->admin_cms_categories = new AdminCmsCategoriesController();
@@ -70,7 +78,7 @@ class AdminCmsContentControllerCore extends AdminController
     }
 
     /**
-     * Return current category
+     * Return current category.
      *
      * @return object
      */
@@ -96,7 +104,7 @@ class AdminCmsContentControllerCore extends AdminController
 
     public function initContent()
     {
-        $id_cms_category = (int)Tools::getValue('id_cms_category');
+        $id_cms_category = (int) Tools::getValue('id_cms_category');
 
         if (!$id_cms_category) {
             $id_cms_category = 1;
@@ -104,18 +112,18 @@ class AdminCmsContentControllerCore extends AdminController
 
         if ($this->display == 'list') {
             $this->page_header_toolbar_btn['new_cms_category'] = array(
-                'href' => self::$currentIndex.'&addcms_category&token='.$this->token,
+                'href' => self::$currentIndex . '&addcms_category&token=' . $this->token,
                 'desc' => $this->trans('Add new page category', array(), 'Admin.Design.Help'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
             $this->page_header_toolbar_btn['new_cms_page'] = array(
-                'href' => self::$currentIndex.'&addcms&id_cms_category='.(int)$id_cms_category.'&token='.$this->token,
+                'href' => self::$currentIndex . '&addcms&id_cms_category=' . (int) $id_cms_category . '&token=' . $this->token,
                 'desc' => $this->trans('Add new page', array(), 'Admin.Design.Help'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
-        $this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
+        $this->page_header_toolbar_title = implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $this->toolbar_title);
 
         if (is_array($this->page_header_toolbar_btn)
             && $this->page_header_toolbar_btn instanceof Traversable
@@ -131,7 +139,7 @@ class AdminCmsContentControllerCore extends AdminController
         } elseif ($this->display == 'edit_page') {
             $this->content .= $this->admin_cms->renderForm();
         } elseif ($this->display == 'list') {
-            $id_cms_category = (int)Tools::getValue('id_cms_category');
+            $id_cms_category = (int) Tools::getValue('id_cms_category');
             if (!$id_cms_category) {
                 $id_cms_category = 1;
             }
@@ -141,8 +149,8 @@ class AdminCmsContentControllerCore extends AdminController
             // Cleaning links
             $cat_bar_index = self::$currentIndex;
             foreach ($cms_tabs as $tab) {
-                if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) {
-                    $cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
+                if (Tools::getValue($tab . 'Orderby') && Tools::getValue($tab . 'Orderway')) {
+                    $cat_bar_index = preg_replace('/&' . $tab . 'Orderby=([a-z _]*)&' . $tab . 'Orderway=([a-z]*)/i', '', self::$currentIndex);
                 }
             }
             $this->context->smarty->assign(array(
@@ -168,12 +176,11 @@ class AdminCmsContentControllerCore extends AdminController
     {
         $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
 
-        $id_cms_category = (int)Tools::getValue('id_cms_category');
-        if ($id_cms_category && $id_cms_category !==1) {
+        $id_cms_category = (int) Tools::getValue('id_cms_category');
+        if ($id_cms_category && $id_cms_category !== 1) {
             $cms_category = new CMSCategory($id_cms_category);
         }
         $id_cms_page = Tools::getValue('id_cms');
-
 
         if ($this->display == 'edit_category') {
             if (Tools::getValue('addcms_category') !== false) {
@@ -221,15 +228,16 @@ class AdminCmsContentControllerCore extends AdminController
     public function ajaxProcessUpdateCmsPositions()
     {
         if ($this->access('edit')) {
-            $id_cms = (int)Tools::getValue('id_cms');
-            $id_category = (int)Tools::getValue('id_cms_category');
-            $way = (int)Tools::getValue('way');
+            $id_cms = (int) Tools::getValue('id_cms');
+            $id_category = (int) Tools::getValue('id_cms_category');
+            $way = (int) Tools::getValue('way');
             $positions = Tools::getValue('cms');
             if (is_array($positions)) {
                 foreach ($positions as $key => $value) {
                     $pos = explode('_', $value);
-                    if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && $pos[2] == $id_cms)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && $pos[2] == $id_cms)) {
                         $position = $key;
+
                         break;
                     }
                 }
@@ -250,15 +258,16 @@ class AdminCmsContentControllerCore extends AdminController
     public function ajaxProcessUpdateCmsCategoriesPositions()
     {
         if ($this->access('edit')) {
-            $id_cms_category_to_move = (int)Tools::getValue('id_cms_category_to_move');
-            $id_cms_category_parent = (int)Tools::getValue('id_cms_category_parent');
-            $way = (int)Tools::getValue('way');
+            $id_cms_category_to_move = (int) Tools::getValue('id_cms_category_to_move');
+            $id_cms_category_parent = (int) Tools::getValue('id_cms_category_parent');
+            $way = (int) Tools::getValue('way');
             $positions = Tools::getValue('cms_category');
             if (is_array($positions)) {
                 foreach ($positions as $key => $value) {
                     $pos = explode('_', $value);
-                    if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_cms_category_parent && $pos[2] == $id_cms_category_to_move)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_cms_category_parent && $pos[2] == $id_cms_category_to_move)) {
                         $position = $key;
+
                         break;
                     }
                 }
@@ -279,14 +288,14 @@ class AdminCmsContentControllerCore extends AdminController
     public function ajaxProcessPublishCMS()
     {
         if ($this->access('edit')) {
-            if ($id_cms = (int)Tools::getValue('id_cms')) {
-                $bo_cms_url = _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/index.php?tab=AdminCmsContent&id_cms='.(int)$id_cms.'&updatecms&token='.$this->token;
+            if ($id_cms = (int) Tools::getValue('id_cms')) {
+                $bo_cms_url = _PS_BASE_URL_ . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/index.php?tab=AdminCmsContent&id_cms=' . (int) $id_cms . '&updatecms&token=' . $this->token;
 
                 if (Tools::getValue('redirect')) {
                     die($bo_cms_url);
                 }
 
-                $cms = new CMS((int)(Tools::getValue('id_cms')));
+                $cms = new CMS((int) (Tools::getValue('id_cms')));
                 if (!Validate::isLoadedObject($cms)) {
                     die('error: invalid id');
                 }

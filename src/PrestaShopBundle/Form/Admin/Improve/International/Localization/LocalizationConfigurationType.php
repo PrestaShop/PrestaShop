@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class LocalizationConfigurationType is responsible for building 'Improve > International > Localization' page
- * 'Configuration' form
+ * 'Configuration' form.
  */
 class LocalizationConfigurationType extends AbstractType
 {
@@ -83,18 +83,21 @@ class LocalizationConfigurationType extends AbstractType
         $builder
             ->add('default_language', ChoiceType::class, [
                 'choices' => $this->languageChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('detect_language_from_browser', SwitchType::class)
             ->add('default_country', ChoiceType::class, [
                 'choices' => $this->countryChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('detect_country_from_browser', SwitchType::class)
             ->add('default_currency', ChoiceType::class, [
                 'choices' => $this->currencyChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('timezone', ChoiceType::class, [
                 'choices' => $this->timezoneChoices,
-            ])
-        ;
+                'choice_translation_domain' => false,
+            ]);
     }
 }

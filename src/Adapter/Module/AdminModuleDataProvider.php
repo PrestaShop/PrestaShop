@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Context;
 use Doctrine\Common\Cache\CacheProvider;
+use Employee;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -34,9 +38,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
-use Module as LegacyModule;
-use Context;
-use Employee;
 use Tools;
 
 /**
@@ -56,17 +57,59 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     protected $moduleActions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
 
+    /**
+     * @var int
+     */
     private $languageISO;
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
+
+    /**
+     * @var Router|null
+     */
     private $router = null;
+
+    /**
+     * @var AddonsInterface
+     */
     private $addonsDataProvider;
+
+    /**
+     * @var CategoriesProvider
+     */
     private $categoriesProvider;
+
+    /**
+     * @var ModuleDataProvider
+     */
     private $moduleProvider;
+
+    /**
+     * @var CacheProvider
+     */
     private $cacheProvider;
+
+    /**
+     * @var Employee
+     */
     private $employee;
 
+    /**
+     * @var array
+     */
     protected $catalog_modules = array();
+
+    /**
+     * @var array
+     */
     protected $catalog_modules_names;
+
+    /**
+     * @var bool
+     */
     public $failed = false;
 
     public function __construct(
@@ -88,23 +131,27 @@ class AdminModuleDataProvider implements ModuleInterface
         $this->employee = $employee;
     }
 
+    /**
+     * @param Router $router
+     */
     public function setRouter(Router $router)
     {
         $this->router = $router;
     }
 
+    /**
+     * Clear the modules information from Addons cache.
+     */
     public function clearCatalogCache()
     {
         if ($this->cacheProvider) {
-            $this->cacheProvider->delete($this->languageISO.self::_CACHEKEY_MODULES_);
+            $this->cacheProvider->delete($this->languageISO . self::_CACHEKEY_MODULES_);
         }
         $this->catalog_modules = array();
     }
 
     /**
-     * Clears module list cache
-     *
-     * @return void
+     * Clears module list cache.
      */
     public function clearModuleListCache()
     {
@@ -115,16 +162,23 @@ class AdminModuleDataProvider implements ModuleInterface
 
     /**
      * @deprecated since version 1.7.3.0
+     *
      * @return array
      */
     public function getAllModules()
     {
-        return LegacyModule::getModulesOnDisk(true,
+        return LegacyModule::getModulesOnDisk(
+            true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
             (int) Context::getContext()->employee->id
         );
     }
 
+    /**
+     * @param array $filters
+     *
+     * @return array
+     */
     public function getCatalogModules(array $filters = array())
     {
         if (count($this->catalog_modules) === 0 && !$this->failed) {
@@ -132,21 +186,27 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules, $filters
+                $this->catalog_modules,
+            $filters
         );
     }
 
+    /**
+     * @param array $filter
+     *
+     * @return array
+     */
     public function getCatalogModulesNames(array $filter = array())
     {
         return array_keys($this->getCatalogModules($filter));
     }
 
-
     /**
-     * Check the permissions of the current context (CLI or employee) for a module
+     * Check the permissions of the current context (CLI or employee) for a module.
      *
      * @param array $actions Actions to check
      * @param string $name The module name
+     *
      * @return array of allowed actions
      */
     protected function filterAllowedActions(array $actions, $name = '')
@@ -157,15 +217,17 @@ class AdminModuleDataProvider implements ModuleInterface
                 $allowedActions[$actionName] = $actions[$actionName];
             }
         }
+
         return $allowedActions;
     }
 
     /**
-     * Check the permissions of the current context (CLI or employee) for a specified action
+     * Check the permissions of the current context (CLI or employee) for a specified action.
      *
      * @param string $action The action called in the module
      * @param string $name (Optionnal for 'install') The module name to check
-     * @return boolean
+     *
+     * @return bool
      */
     public function isAllowedAccess($action, $name = '')
     {
@@ -178,16 +240,21 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         if ('uninstall' === $action) {
-            return ($this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name));
+            return $this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name);
         }
 
-        return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
+        return $this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name);
     }
 
+    /**
+     * @param AddonsCollection $addons
+     * @param null $specific_action
+     *
+     * @return array
+     */
     public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
-        $addons = $addons->toArray();
-        foreach ($addons as &$addon) {
+        foreach ($addons as $addon) {
             $urls = array();
             foreach ($this->moduleActions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(
@@ -279,11 +346,22 @@ class AdminModuleDataProvider implements ModuleInterface
         return $addons;
     }
 
+    /**
+     * @param $moduleId
+     *
+     * @return array
+     */
     public function getModuleAttributesById($moduleId)
     {
         return (array) $this->addonsDataProvider->request('module', array('id_module' => $moduleId));
     }
 
+    /**
+     * @param array $modules
+     * @param array $filters
+     *
+     * @return array
+     */
     protected function applyModuleFilters(array $modules, array $filters)
     {
         if (!count($filters)) {
@@ -314,10 +392,12 @@ class AdminModuleDataProvider implements ModuleInterface
                             }
                         }
                     }
+
                     break;
                 case 'name':
                     // exact given name (should return 0 or 1 result)
                     $search_result[] = $value;
+
                     break;
                 default:
                     // "the switch statement is considered a looping structure for the purposes of continue."
@@ -330,10 +410,13 @@ class AdminModuleDataProvider implements ModuleInterface
         return $modules;
     }
 
+    /**
+     * Load module catalogue. If not in cache, query Addons API.
+     */
     protected function loadCatalogData()
     {
-        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO.self::_CACHEKEY_MODULES_)) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO.self::_CACHEKEY_MODULES_);
+        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO . self::_CACHEKEY_MODULES_)) {
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
         }
 
         if (!$this->catalog_modules) {
@@ -361,7 +444,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     $addons = $this->addonsDataProvider->request($action, $params);
                     foreach ($addons as $addonsType => $addon) {
                         if (empty($addon->name)) {
-                            $this->logger->error(sprintf("The addon with id %s does not have name.", $addon->id));
+                            $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
 
                             continue;
                         }
@@ -369,13 +452,12 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
                         $addon->categoryParent = $this->categoriesProvider
-                            ->getParentCategory($addon->categoryName)
-                        ;
+                            ->getParentCategory($addon->categoryName);
                         if (isset($addon->version)) {
                             $addon->version_available = $addon->version;
                         }
-                        if (! isset($addon->product_type)) {
-                            $addon->productType = isset($addonsType)?rtrim($addonsType, 's'):'module';
+                        if (!isset($addon->product_type)) {
+                            $addon->productType = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
                         } else {
                             $addon->productType = $addon->product_type;
                         }
@@ -383,26 +465,39 @@ class AdminModuleDataProvider implements ModuleInterface
                     }
                 }
 
-                $this->catalog_modules = $listAddons;
-                if ($this->cacheProvider) {
-                    $this->cacheProvider->save($this->languageISO.self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                if (!empty($listAddons)) {
+                    $this->catalog_modules = $listAddons;
+                    if ($this->cacheProvider) {
+                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                    }
+                } else {
+                    $this->fallbackOnCatalogCache();
                 }
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
-                    $this->catalog_modules = array();
-                    $this->failed = true;
                     $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', array('exception' => $e->getMessage()));
                 }
             }
         }
     }
 
+    /**
+     * If cache exists, get the Catalogue from the cache.
+     *
+     * @return array Module loaded from the cache
+     */
     protected function fallbackOnCatalogCache()
     {
         // Fallback on data from cache if exists
         if ($this->cacheProvider) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO.self::_CACHEKEY_MODULES_);
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
         }
+
+        if (!$this->catalog_modules) {
+            $this->catalog_modules = array();
+        }
+
+        $this->failed = true;
 
         return $this->catalog_modules;
     }

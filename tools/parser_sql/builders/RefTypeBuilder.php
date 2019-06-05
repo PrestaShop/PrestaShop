@@ -50,7 +50,6 @@ require_once dirname(__FILE__) . '/../exceptions/UnsupportedFeatureException.php
  *  
  */
 class RefTypeBuilder {
-
     public function build($parsed) {
         if ($parsed === false) {
             return "";
@@ -65,4 +64,3 @@ class RefTypeBuilder {
         throw new UnsupportedFeatureException($parsed);
     }
 }
-?>

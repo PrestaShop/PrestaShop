@@ -1,0 +1,98 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SqlRequestFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.customer_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CustomerFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.group.provider.default_groups_provider'
+      - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
+
+  prestashop.core.form.identifiable_object.data_provider.language_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\LanguageFormDataProvider'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
+  prestashop.core.form.identifiable_object.data_provider.currency_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CurrencyFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+
+  prestashop.core.form.identifiable_object.data_provider.webservice_key_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\WebserviceKeyFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
+
+  prestashop.core.form.identifiable_object.data_provider.meta_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MetaFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.category_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CategoryFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.getCategory()'
+      - '@prestashop.adapter.group.provider.default_groups_provider'
+
+  prestashop.core.form.identifiable_object.data_provider.contact_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ContactFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+
+  prestashop.core.form.identifiable_object.data_provider.cms_page_category_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CmsPageCategoryFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+
+  prestashop.core.form.identifiable_object.data_provider.tax_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.manufacturer_address_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ManufacturerAddressFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+
+  prestashop.core.form.identifiable_object.data_provider.manufacturer_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ManufacturerFormDataProvider'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
+  prestashop.core.form.identifiable_object.data_provider.employee_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EmployeeFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
+  prestashop.core.form.identifiable_object.data_provider.profile_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProfileFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.cms_page_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CmsPageFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 define('_PS_MODE_DEV_', false);
-require(__DIR__.'/../../config/config.inc.php');
+require __DIR__ . '/../../config/config.inc.php';
 
 // useful variables
 
-$language   = Context::getContext()->language;
-$shop       = Context::getContext()->shop;
-$dbPrefix   = _DB_PREFIX_;
+$language = Context::getContext()->language;
+$shop = Context::getContext()->shop;
+$dbPrefix = _DB_PREFIX_;
 
 // Enable URL rewriting
 
@@ -81,7 +80,6 @@ function enableGiftFeature()
 
 enableGiftFeature();
 
-
 echo "- Gift feature display enabled\n";
 
 // Setup modules
@@ -95,9 +93,9 @@ function disableModule($moduleName)
 
 function hookModule($moduleName, $hookName)
 {
-    $dbPrefix   = _DB_PREFIX_;
-    $module     = Module::getInstanceByName($moduleName);
-    $moduleId   = $module->id;
+    $dbPrefix = _DB_PREFIX_;
+    $module = Module::getInstanceByName($moduleName);
+    $moduleId = $module->id;
     Db::getInstance()->execute(
         "DELETE FROM {$dbPrefix}hook_module WHERE id_module=$moduleId"
     );
@@ -138,7 +136,7 @@ echo "- added a required customizable text field to product #1\n";
 Language::checkAndAddLanguage('fr');
 echo "- added French language just so that we have 2\n";
 $languages = Language::getLanguages();
-echo "  Number of languages : ".count($languages)."\n";
+echo '  Number of languages : ' . count($languages) . "\n";
 
 $order = new Order(5);
 $history = new OrderHistory();

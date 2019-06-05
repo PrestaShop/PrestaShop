@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,24 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 
 /**
- * This class manages CCC features configuration for a Shop
+ * This class manages CCC features configuration for a Shop.
  */
 class CombineCompressCacheConfiguration implements DataConfigurationInterface
 {
@@ -104,8 +105,8 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
                         'key' => 'To use Smarty Cache, the directory %directorypath% must be writable.',
                         'domain' => 'Admin.Advparameters.Notification',
                         'parameters' => array(
-                            '%directorypath%' => $this->getThemeCacheFolder()
-                        )
+                            '%directorypath%' => $this->getThemeCacheFolder(),
+                        ),
                     );
                 }
             }
@@ -142,14 +143,15 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Creates Cache folder for the active theme
+     * Creates Cache folder for the active theme.
+     *
      * @return bool
      */
     private function createThemeCacheFolder()
     {
         try {
             $folder = $this->getThemeCacheFolder();
-            $this->filesystem->mkdir($folder, '0777');
+            $this->filesystem->mkdir($folder, PsFileSystem::DEFAULT_MODE_FOLDER);
 
             return true;
         } catch (IOExceptionInterface $e) {
@@ -158,7 +160,8 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Update Cache version of assets if needed
+     * Update Cache version of assets if needed.
+     *
      * @param array the configuration
      */
     private function updateCachesVersionsIfNeeded(array $configuration)
@@ -183,8 +186,10 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Creates .htaccess if Apache optimization feature is enabled
+     * Creates .htaccess if Apache optimization feature is enabled.
+     *
      * @param bool $enabled
+     *
      * @return array not empty in case of error
      */
     private function manageApacheOptimization($enabled)
@@ -194,14 +199,12 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
 
         // feature activation
         if (false === $isCurrentlyEnabled && true === $enabled) {
-            if ($this->tools->generateHtaccess()) {
-                $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
-            } else {
+            $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
+            if (!$this->tools->generateHtaccess()) {
                 $errors = array(
                     'key' => 'Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]',
                     'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' =>
-                    array(
+                    'parameters' => array(
                         '[1]' => '<ul>',
                         '[/1]' => '</ul>',
                         '[2]' => '<li>',
@@ -214,6 +217,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
 
         if (true === $isCurrentlyEnabled && false === $enabled) {
             $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', false);
+            $this->tools->generateHtaccess();
         }
 
         return $errors;

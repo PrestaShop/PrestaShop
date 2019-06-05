@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,12 +15,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
+ *}
+
+{**
+ * @deprecated since 1.7.6, to be removed in the next minor
  *}
 
 {extends file="helpers/view/view.tpl"}
@@ -36,7 +40,7 @@
 			<div class="panel-heading">
 				{$addresse.firstname} {$addresse.lastname}
 				<div class="pull-right">
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&amp;id_address={$addresse.id_address}&amp;editaddresses=1">
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers', true, [], ['id_address' => $addresse.id_address, 'editaddresses' => 1])|escape:'html':'UTF-8'}">
 						<i class="icon-edit"></i>
 						{l s='Edit' d='Admin.Actions'}</a>
 				</div>

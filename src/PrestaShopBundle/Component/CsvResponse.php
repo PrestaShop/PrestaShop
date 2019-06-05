@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -43,7 +43,7 @@ class CsvResponse extends StreamedResponse
     private $data;
 
     /**
-     * @var String Export filename
+     * @var string Export filename
      */
     private $fileName;
 
@@ -58,7 +58,7 @@ class CsvResponse extends StreamedResponse
     private $modeType = self::MODE_PAGINATION;
 
     /**
-     * @var null|int
+     * @var int|null
      */
     private $start = null;
 
@@ -71,14 +71,14 @@ class CsvResponse extends StreamedResponse
      * Constructor.
      *
      * @param callable|null $callback A valid PHP callback or null to set it later
-     * @param int           $status   The response status code
-     * @param array         $headers  An array of response headers
+     * @param int $status The response status code
+     * @param array $headers An array of response headers
      */
     public function __construct($callback = null, $status = 200, $headers = array())
     {
         parent::__construct($callback, $status, $headers);
 
-        if (is_null($callback)) {
+        if (null === $callback) {
             $this->setCallback(array($this, 'processData'));
         }
 
@@ -88,6 +88,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * @param array|callable $data
+     *
      * @return $this
      */
     public function setData($data)
@@ -99,6 +100,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * @param array $headersData
+     *
      * @return $this
      */
     public function setHeadersData(array $headersData)
@@ -110,6 +112,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * @param $modeType int
+     *
      * @return $this
      */
     public function setModeType($modeType)
@@ -121,6 +124,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * @param $start int
+     *
      * @return $this
      */
     public function setStart($start)
@@ -130,9 +134,9 @@ class CsvResponse extends StreamedResponse
         return $this;
     }
 
-
     /**
      * @param $limit int
+     *
      * @return $this
      */
     public function setLimit($limit)
@@ -143,8 +147,11 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param String $fileName
+     * @param string $fileName
+     *
      * @return $this
+     *
+     * @throws \InvalidArgumentException
      */
     public function setFileName($fileName)
     {
@@ -160,7 +167,8 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * Callback function for StreamedResponse
+     * Callback function for StreamedResponse.
+     *
      * @throws \LogicException
      */
     public function processData()
@@ -183,7 +191,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * Process to data export if $this->data is an array
+     * Process to data export if $this->data is an array.
      */
     private function processDataArray()
     {
@@ -198,7 +206,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * Process to data export if $this->data is a callable function
+     * Process to data export if $this->data is a callable function.
      */
     private function processDataCallback()
     {
@@ -226,14 +234,13 @@ class CsvResponse extends StreamedResponse
             }
 
             $this->incrementData();
-
         } while ($count === $this->limit);
 
         $this->dumpFile($handle);
     }
 
     /**
-     * Just init $this->start if it is null
+     * Just init $this->start if it is null.
      */
     private function initStart()
     {
@@ -251,7 +258,8 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * Increment the start data for the process
+     * Increment the start data for the process.
+     *
      * @throws \LogicException
      */
     private function incrementData()

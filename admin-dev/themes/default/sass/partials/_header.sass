@@ -211,10 +211,13 @@ $search-border-color: #bbcdd2
 
 			#employee_links
 				.employee_avatar
-					display: none !important
+					height: auto
+					width: auto
 					img
 						border: none
 						padding: 0
+						width: 3.8rem
+						height: 3.8rem
 
 				@media (max-width: $screen-sm)
 					li
@@ -224,27 +227,65 @@ $search-border-color: #bbcdd2
 						i
 							font-size: 1.3em
 							color: $brand-primary
+				.employee-wrapper
+					&-avatar
+						float: left
+						margin: 0 20px	
+
+					&-profile
+						max-width: 130px
+						text-align: right
+						display: inline-block
+						margin: 0 0 20px
 
 			.employee_name
 				text-align: center
 
 			.dropdown-menu
 				min-width: inherit
-				width: 10.625rem
+				width: 17.5rem
+				padding-top: 10px
 				li
 					font-size: 14px
+					margin: 15px 7px
 					&:hover
 						.material-icons
 							color: white
 					&.username
 						font-weight: 600
-						padding: 16px 0 9px
+						padding: 1rem 0 1.5rem
+						display: inline-block
+						max-width: 120px
+						vertical-align: top
+						white-space: normal
+						margin: 0
 					&.divider
 						border: 1px solid $gray-lighter
+						clear: both
+						width: 90%
+						margin: 0 auto !important
 					a
 						.material-icons
 							padding: 0
 							margin-right: 5px
+							color: #576C72
+							vertical-align: middle
+						&.admin-link
+							border: 1px solid #899EA5
+							border-radius: 1px
+							color: #576C72
+							background-color: inherit
+							&:hover
+								border-color: #25B9D7
+								color: #25B9D7
+								.material-icons
+									color: #25B9D7
+					&.signout
+						a
+							color: #6C868E
+							&:hover
+								color: #25B9D7
+								background-color: inherit
 
 .bo_search_form
 	@extend .hidden-xs
@@ -293,10 +334,7 @@ $search-border-color: #bbcdd2
 #header_quick
 	@extend .hidden-xs
 	@extend .hidden-sm
-
 	font-size: 13px
-	a
-		//color: #6c868e
 
 	.dropdown
 		> a,
@@ -352,7 +390,7 @@ $search-border-color: #bbcdd2
 	.material-icons
 		color: #6c868e
 		font-size: 22px
-		vertical-align: middle
+		vertical-align: bottom
 	#total_notif_number_wrapper
 		display: inline-block
 		line-height: .75rem

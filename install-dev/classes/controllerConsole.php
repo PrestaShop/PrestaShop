@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShopBundle\Install\LanguageList;
 use PrestaShopBundle\Install\AbstractInstall;
+use PrestaShopBundle\Install\LanguageList;
 
 abstract class InstallControllerConsole
 {
@@ -77,10 +77,10 @@ abstract class InstallControllerConsole
     {
         if (!($argc - 1)) {
             $available_arguments = Datas::getInstance()->getArgs();
-            echo 'Arguments available:'."\n";
+            echo 'Arguments available:'.PHP_EOL;
             foreach ($available_arguments as $key => $arg) {
                 $name = isset($arg['name']) ? $arg['name'] : $key;
-                echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '')."\n";
+                echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '').PHP_EOL;
             }
             exit;
         }
@@ -94,10 +94,10 @@ abstract class InstallControllerConsole
         if ($errors !== true) {
             if (count($errors)) {
                 foreach ($errors as $error) {
-                    echo $error."\n";
+                    echo $error.PHP_EOL;
                 }
             }
-            exit;
+            exit(1);
         }
 
         if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/process.php')) {
@@ -153,10 +153,13 @@ abstract class InstallControllerConsole
             if (!is_array($errors)) {
                 $errors = array($errors);
             }
-            echo 'Errors :'."\n";
+            echo 'Errors :'. PHP_EOL;
             foreach ($errors as $error_process) {
+                if (!is_array($error_process)) {
+                    $error_process = [$error_process];
+                }
                 foreach ($error_process as $error) {
-                    echo(is_string($error) ? $error : print_r($error, true))."\n";
+                    echo(is_string($error) ? $error : print_r($error, true)).PHP_EOL;
                 }
             }
             die;

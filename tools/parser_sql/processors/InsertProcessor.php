@@ -30,9 +30,9 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/ColumnListProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/ColumnListProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  * 
@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class InsertProcessor extends AbstractProcessor {
-
     public function process($tokenList, $token_category = 'INSERT') {
         $table = "";
         $cols = array();
@@ -67,9 +66,9 @@ class InsertProcessor extends AbstractProcessor {
 
         unset($tokenList['INTO']);
         $tokenList[$token_category][0] = array('table' => $table, 'columns' => $cols, 'base_expr' => $table,
-                                               'no_quotes' => $this->revokeQuotation($table));
+            'no_quotes' => $this->revokeQuotation($table),
+        );
+
         return $tokenList;
     }
-
 }
-?>

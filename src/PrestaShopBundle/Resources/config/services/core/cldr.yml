@@ -1,0 +1,86 @@
+parameters:
+    ps_cache_dir: !php/const _PS_CACHE_DIR_
+
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.localization.cache.adapter:
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter
+
+    prestashop.core.localization.cldr.cache.adapter:
+        class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+        arguments:
+            - 'CLDR'
+            - 0
+            - '%ps_cache_dir%/localization'
+
+    prestashop.core.localization.locale.repository:
+        class: PrestaShop\PrestaShop\Core\Localization\Locale\Repository
+        arguments:
+            - '@prestashop.core.localization.cldr.locale_repository'
+            - '@prestashop.core.localization.currency.repository'
+
+    prestashop.core.localization.currency.repository:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\Repository
+        arguments:
+            - '@prestashop.core.localization.currency.datasource'
+
+    prestashop.core.localization.cldr.locale_repository:
+        class: PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository
+        arguments:
+            - '@prestashop.core.localization.cldr.locale_data_source'
+
+    prestashop.core.localization.cldr.locale_data_source:
+        class: PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataSource
+        arguments:
+            - '@prestashop.core.localization.cldr.datalayer.top_layer'
+
+    prestashop.core.localization.cldr.datalayer.top_layer: '@prestashop.core.localization.cldr.datalayer.locale_cache'
+
+    prestashop.core.localization.cldr.datalayer.locale_cache:
+        class: PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleCache
+        arguments:
+            - '@prestashop.core.localization.cldr.cache.adapter'
+        calls:
+            - [ 'setLowerLayer', ["@prestashop.core.localization.cldr.datalayer.locale_reference"]]
+
+    prestashop.core.localization.cldr.datalayer.locale_reference:
+        class: PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleReference
+        arguments:
+            - '@prestashop.core.localization.cldr.reader'
+
+    prestashop.core.localization.cldr.reader:
+        class: PrestaShop\PrestaShop\Core\Localization\CLDR\Reader
+
+    prestashop.core.localization.currency.datasource:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataSource
+        arguments:
+            - '@prestashop.core.localization.currency.middleware.top_layer'
+            - '@prestashop.core.localization.currency.middleware.installed'
+
+    prestashop.core.localization.currency.middleware.top_layer: '@prestashop.core.localization.currency.middleware.cache'
+
+    prestashop.core.localization.currency.middleware.cache:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyCache
+        arguments:
+            - '@prestashop.core.localization.cache.adapter'
+        calls:
+            - [ 'setLowerLayer', ["@prestashop.core.localization.currency.middleware.database"]]
+
+    prestashop.core.localization.currency.middleware.database:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'
+        calls:
+            - [ 'setLowerLayer', ["@prestashop.core.localization.currency.middleware.reference"]]
+
+    prestashop.core.localization.currency.middleware.reference:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference
+        arguments:
+            - '@prestashop.core.localization.cldr.locale_repository'
+
+    prestashop.core.localization.currency.middleware.installed:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'

@@ -9,3 +9,19 @@ _localization:
 _geolocation:
     resource: "geolocation.yml"
     prefix: /geolocation/
+
+_language:
+    resource: "language.yml"
+    prefix: /languages/
+
+_currency:
+    resource: "currencies.yml"
+    prefix: /currencies/
+
+_tax:
+    resource: "tax.yml"
+    prefix: /taxes/
+
+_state:
+  resource: "state.yml"
+  prefix: /states/

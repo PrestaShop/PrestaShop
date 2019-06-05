@@ -27,8 +27,8 @@ class Discount extends CommonClient {
 
   setPromoCode(selectorInput, selectorButton, value) {
     return this.client
-      .waitAndSetValue(selectorInput, tab[value])
-      .waitForExistAndClick(selectorButton);
+      .waitAndSetValue(selectorInput, tab[value],2000)
+      .waitForExistAndClick(selectorButton,2000);
   }
 
   checkTotalPrice(selector, option = 'percent') {

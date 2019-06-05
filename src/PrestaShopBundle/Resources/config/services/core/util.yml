@@ -1,0 +1,14 @@
+imports:
+    - { resource: 'util/*' }
+
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.util.url.url_file_checker:
+        class: 'PrestaShop\PrestaShop\Core\Util\Url\UrlFileChecker'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ROOT_DIR_")'
+
+    prestashop.core.uti.back_url_provider:
+        class: PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider

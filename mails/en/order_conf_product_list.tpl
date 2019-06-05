@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -27,20 +27,20 @@
 	<td style="border:1px solid #D6D4D4;">
 		<table class="table">
 			<tr>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 				<td>
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						{$product['reference']}
 					</font>
 				</td>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 			</tr>
 		</table>
 	</td>
 	<td style="border:1px solid #D6D4D4;">
 		<table class="table">
 			<tr>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 				<td>
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						<strong>{$product['name']}</strong>
@@ -54,46 +54,46 @@
 						{hook h='displayProductPriceBlock' product=$product type="unit_price"}
 					</font>
 				</td>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 			</tr>
 		</table>
 	</td>
 	<td style="border:1px solid #D6D4D4;">
 		<table class="table">
 			<tr>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 				<td align="right">
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						{$product['unit_price']}
 					</font>
 				</td>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 			</tr>
 		</table>
 	</td>
 	<td style="border:1px solid #D6D4D4;">
 		<table class="table">
 			<tr>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 				<td align="right">
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						{$product['quantity']}
 					</font>
 				</td>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 			</tr>
 		</table>
 	</td>
 	<td style="border:1px solid #D6D4D4;">
 		<table class="table">
 			<tr>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 				<td align="right">
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						{$product['price']}
 					</font>
 				</td>
-				<td width="10">&nbsp;</td>
+				<td width="5">&nbsp;</td>
 			</tr>
 		</table>
 	</td>
@@ -104,20 +104,20 @@
   		<td colspan="3" style="border:1px solid #D6D4D4;">
   			<table class="table">
   				<tr>
-  					<td width="10">&nbsp;</td>
+  					<td width="5">&nbsp;</td>
   					<td>
   						<font size="2" face="Open-sans, sans-serif" color="#555454">
   							{$customization['customization_text']}
   						</font>
   					</td>
-  					<td width="10">&nbsp;</td>
+  					<td width="5">&nbsp;</td>
   				</tr>
   			</table>
   		</td>
   		<td style="border:1px solid #D6D4D4;">
   			<table class="table">
   				<tr>
-  					<td width="10">&nbsp;</td>
+  					<td width="5">&nbsp;</td>
   					<td align="right">
   						<font size="2" face="Open-sans, sans-serif" color="#555454">
   							{if count($product['customization']) > 1}
@@ -125,7 +125,7 @@
   							{/if}
   						</font>
   					</td>
-  					<td width="10">&nbsp;</td>
+  					<td width="5">&nbsp;</td>
   				</tr>
   			</table>
   		</td>

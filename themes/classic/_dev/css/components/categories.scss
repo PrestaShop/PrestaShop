@@ -19,7 +19,9 @@
 .block-category {
   min-height: 13.75rem;
   margin-bottom: 1.563rem;
-  #category-description {
+  .block-category-inner{
+      display: flex;
+      #category-description {
     p,
     strong {
       font-weight: 400;
@@ -34,14 +36,12 @@
     }
   }
   .category-cover {
-    position: absolute;
-    right: 0.75rem;
-    bottom: 0;
     img {
       width: 141px;
       height: 180px;
     }
   }
+}
 }
 .products-selection {
   .sort-by-row {
@@ -460,5 +460,26 @@
         margin-right: -15px;
       }
     }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .category-cover{
+    display: none;
+  }
+
+  .block-category{
+    min-height: 0;
+    margin-bottom: 0;
+  }
+
+  .card-block{
+    padding: 0;
+  }
+
+  .card{
+    box-shadow: none;
+    background-color: inherit;
+    border: none;
   }
 }

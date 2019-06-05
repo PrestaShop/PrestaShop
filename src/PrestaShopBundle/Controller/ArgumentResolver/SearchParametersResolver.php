@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,18 +27,22 @@
 namespace PrestaShopBundle\Controller\ArgumentResolver;
 
 use PrestaShop\PrestaShop\Core\Search\ControllerAction;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
+use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 use PrestaShopBundle\Security\Admin\Employee;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShop\PrestaShop\Core\Search\Filters;
-use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * If an action inject instance of Filters, this class is responsible of
  * creating it from available sources.
+ *
+ * @deprecated Use FiltersBuilderResolver instead
  */
 class SearchParametersResolver implements ArgumentValueResolverInterface
 {
@@ -58,6 +62,11 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     private $employee;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * @var int
      */
     private $shopId;
@@ -68,19 +77,21 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      * @param SearchParametersInterface $searchParameters
      * @param TokenStorageInterface $tokenStorage
      * @param AdminFilterRepository $adminFilterRepository
+     * @param EventDispatcherInterface $dispatcher
      * @param int $shopId The Shop id
      */
     public function __construct(
         SearchParametersInterface $searchParameters,
         TokenStorageInterface $tokenStorage,
         AdminFilterRepository $adminFilterRepository,
+        EventDispatcherInterface $dispatcher,
         $shopId
-    )
-    {
+    ) {
         $this->searchParameters = $searchParameters;
         $this->adminFilterRepository = $adminFilterRepository;
         $this->employee = $this->getEmployee($tokenStorage);
         $this->shopId = $shopId;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -89,68 +100,129 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     public function supports(Request $request, ArgumentMetadata $argument)
     {
         return is_subclass_of($argument->getType(), Filters::class) &&
-            $this->employee instanceof Employee
-        ;
+            $this->employee instanceof Employee;
     }
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
-        $filtersClass = $argument->getType();
         list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
+        $filtersClass = $argument->getType();
+        /** @var Filters $filters */
+        $filters = $this->buildDefaultFilters($filtersClass);
 
-        $query = $request->query;
-        $doesTheUrlContainsFilters = ($query->has('filters') || $query->has('limit') || $query->has('sortOrder'));
-
-        if ($doesTheUrlContainsFilters) {
-            $filters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
-
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
-                $this->employee->getId(),
-                $this->shopId,
-                $filters->all(),
-                $controller,
-                $action
-            );
-        } else {
-            // do we have a saved search in DB?
-            if ($request->isMethod('GET')) {
-                $filters = $this->searchParameters->getFiltersFromRepository(
-                    $this->employee->getId(),
-                    $this->shopId,
-                    $controller,
-                    $action,
-                    $filtersClass
-                );
-            }
-
-            if (empty($filters)) {
-                $filters = new $filtersClass($filtersClass::getDefaults());
-            }
+        if ($request->isMethod('GET')) {
+            $this->overrideWithSavedFilters($filters, $controller, $action);
         }
 
-        yield $filters;
+        if ($this->overrideWithRequest($request, $filters)) {
+            $this->persistFilters($filters, $controller, $action);
+        }
+
+        $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
+        $this->dispatcher->dispatch(FilterSearchCriteriaEvent::NAME, $filterSearchParametersEvent);
+
+        yield $filterSearchParametersEvent->getSearchCriteria();
+    }
+
+    /**
+     * @param Filters $filters
+     * @param string $controller
+     * @param string $action
+     *
+     * @return bool Indicates if filters have been overridden
+     */
+    private function overrideWithSavedFilters(Filters $filters, $controller, $action)
+    {
+        /** @var Filters $savedFilters */
+        $savedFilters = $this->searchParameters->getFiltersFromRepository(
+            $this->employee->getId(),
+            $this->shopId,
+            $controller,
+            $action,
+            get_class($filters)
+        );
+
+        if ($savedFilters) {
+            $filters->add($savedFilters->all());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Request $request
+     * @param Filters $filters
+     *
+     * @return bool Indicates if filters have been overridden
+     */
+    private function overrideWithRequest(Request $request, Filters $filters)
+    {
+        /** @var Filters $queryFilters */
+        $queryFilters = $this->searchParameters->getFiltersFromRequest($request, get_class($filters));
+        if ($queryFilters->count()) {
+            $filters->add($queryFilters->all());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Filters $filters
+     * @param string $controller
+     * @param string $action
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function persistFilters(Filters $filters, $controller, $action)
+    {
+        //Update the saved filters (which have been modified by the query)
+        $filtersToSave = $filters->all();
+        unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
+
+        $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
+            $this->employee->getId(),
+            $this->shopId,
+            $filtersToSave,
+            $controller,
+            $action
+        );
+    }
+
+    /**
+     * @param string $filtersClass
+     *
+     * @return mixed
+     */
+    private function buildDefaultFilters($filtersClass)
+    {
+        $filters = new $filtersClass($filtersClass::getDefaults());
+
+        return $filters;
     }
 
     /**
      * @param TokenStorageInterface $tokenStorage
      *
-     * @return Employee|void
+     * @return Employee|null
      */
     private function getEmployee(TokenStorageInterface $tokenStorage)
     {
         if (null === $token = $tokenStorage->getToken()) {
-            return;
+            return null;
         }
 
-        if (!is_object($employee = $token->getUser())) {
-            return;
-        }
+        $employee = $token->getUser();
 
-        return $employee;
+        return $employee instanceof Employee ? $employee : null;
     }
 }

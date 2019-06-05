@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,25 +41,20 @@ function handleCheckoutStepChange() {
 
   let currentStepClass = 'js-current-step';
   let currentStepSelector = '.' + currentStepClass;
-  let stepsAfterPersonalInformation = $('#checkout-personal-information-step').nextAll();
 
-  $(currentStepSelector).prevAll().add(stepsAfterPersonalInformation).on(
+  $(currentStepSelector).prevAll().on(
     'click',
     (event) => {
-      let $nextStep = $(event.target).closest('.checkout-step');
-      if (!$nextStep.hasClass('-unreachable')) {
+      const $clickedStep = $(event.target).closest('.checkout-step');
+      if (!$clickedStep.hasClass('-unreachable')) {
         $(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
-        $nextStep.toggleClass('-current');
-        $nextStep.toggleClass(currentStepClass);
-      }
-      prestashop.emit('changedCheckoutStep', {event: event});
-    }
-  );
+        $clickedStep.toggleClass('-current');
+        $clickedStep.toggleClass(currentStepClass);
 
-  $(currentStepSelector + ':not(#checkout-personal-information-step)').nextAll().on(
-    'click',
-    (event) => {
-      $(currentStepSelector + ' button.continue').click();
+        const $nextSteps = $clickedStep.nextAll();
+        $nextSteps.addClass('-unreachable').removeClass('-complete');
+        $('.step-title', $nextSteps).addClass('not-allowed');
+      }
       prestashop.emit('changedCheckoutStep', {event: event});
     }
   );

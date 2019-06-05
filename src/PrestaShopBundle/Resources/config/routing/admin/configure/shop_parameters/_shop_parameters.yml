@@ -17,3 +17,11 @@ _customer_preferences:
 _maintenance:
     resource: "maintenance.yml"
     prefix: /maintenance/
+
+_seo_urls:
+    resource: "meta.yml"
+    prefix: /seo-urls/
+
+_contacts:
+    resource: "contacts.yml"
+    prefix: /contacts/

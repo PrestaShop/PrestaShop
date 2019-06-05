@@ -1,13 +1,15 @@
-admin_geolocation:
+admin_geolocation_index:
     path: /
     methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:index
         _legacy_controller: AdminGeolocation
+        _legacy_link: AdminGeolocation
 
-admin_geolocation_process_form:
+admin_geolocation_save_options:
     path: /process_form
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:processForm
+        _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:saveOptions
         _legacy_controller: AdminGeolocation
+        _legacy_link: AdminGeolocation:update

@@ -1,4 +1,5 @@
 <?php
+
 define('lang_Select', 'Tallózás');
 define('lang_Erase', 'Törlés');
 define('lang_Open', 'Megnyitás');

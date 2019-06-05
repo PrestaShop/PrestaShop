@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class manages Debug mode configuration for a Shop
+ * This class manages Debug mode configuration for a Shop.
  */
 class DebugModeConfiguration implements DataConfigurationInterface
 {
@@ -40,12 +40,12 @@ class DebugModeConfiguration implements DataConfigurationInterface
     private $configuration;
 
     /**
-     * @var DebugMode $debugMode Debug mode manager
+     * @var DebugMode Debug mode manager
      */
     private $debugMode;
 
     /**
-     * @var string $rootDir Path to the application defines path
+     * @var string Path to the application defines path
      */
     private $configDefinesPath;
 
@@ -57,7 +57,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Returns configuration used to manage Debug mode in back office
+     * Returns configuration used to manage Debug mode in back office.
      *
      * @return array
      */
@@ -90,29 +90,33 @@ class DebugModeConfiguration implements DataConfigurationInterface
                     $errors[] = array(
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath)
+                        'parameters' => array($this->configDefinesPath),
                     );
+
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
                     $errors[] = array(
                         'key' => 'Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath)
+                        'parameters' => array($this->configDefinesPath),
                     );
+
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
                     $errors[] = array(
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath)
+                        'parameters' => array($this->configDefinesPath),
                     );
+
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_READ_ACCESS:
                     $errors[] = array(
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath)
+                        'parameters' => array($this->configDefinesPath),
                     );
+
                     break;
                 default:
                     break;
@@ -135,9 +139,10 @@ class DebugModeConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Change Debug mode value if needed
+     * Change Debug mode value if needed.
      *
      * @param $enableStatus
+     *
      * @return int the status of update
      */
     private function updateDebugMode($enableStatus)

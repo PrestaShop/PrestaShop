@@ -1,0 +1,13 @@
+<phpunit bootstrap="bootstrap.php"
+         color="true"
+         stopOnFailure="true"
+>
+  <php>
+    <server name="KERNEL_CLASS" value="AppKernel" />
+  </php>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

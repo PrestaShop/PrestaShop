@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,25 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
-use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
-use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\Facet;
+use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Product\Search\Facet;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
-use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 /**
  * This class is the base class for all front-end "product listing" controllers,
@@ -55,8 +51,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     private function prepareProductForTemplate(array $rawProduct)
     {
         $product = (new ProductAssembler($this->context))
-            ->assembleProduct($rawProduct)
-        ;
+            ->assembleProduct($rawProduct);
 
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
@@ -98,8 +93,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 $this->context->customer ?
                     $this->context->customer->id :
                     null
-            )
-        ;
+            );
     }
 
     /**
@@ -165,7 +159,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'js_enabled' => $this->ajax,
             'activeFilters' => $activeFilters,
             'sort_order' => $result->getCurrentSortOrder()->toString(),
-            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null))
+            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null)),
         ));
     }
 
@@ -200,7 +194,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         return $this->render('catalog/_partials/active_filters', array(
             'activeFilters' => $activeFilters,
-            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null))
+            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null)),
         ));
     }
 
@@ -246,8 +240,6 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 return $provider;
             }
         }
-
-        return;
     }
 
     /**
@@ -278,7 +270,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         }
 
         $resultsPerPage = (int) Tools::getValue('resultsPerPage');
-        if ($resultsPerPage <= 0 || $resultsPerPage > 36) {
+        if ($resultsPerPage <= 0) {
             $resultsPerPage = Configuration::get('PS_PRODUCTS_PER_PAGE');
         }
 
@@ -310,10 +302,15 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         // We're ready to run the actual query!
 
+        /** @var ProductSearchResult $result */
         $result = $provider->runQuery(
             $context,
             $query
         );
+
+        if (Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) {
+            $this->disablePriceControls($result);
+        }
 
         // sort order is useful for template,
         // add it if undefined - it should be the same one
@@ -368,6 +365,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             foreach ($sort_orders as $order) {
                 if (isset($order['current']) && true === $order['current']) {
                     $sort_selected = $order['label'];
+
                     break;
                 }
             }
@@ -395,16 +393,49 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
+     * Removes price information from result (in facet collection and available sorters)
+     * Usually used for catalog mode.
+     *
+     * @param ProductSearchResult $result
+     */
+    protected function disablePriceControls(ProductSearchResult $result)
+    {
+        if ($result->getFacetCollection()) {
+            $filteredFacets = [];
+            /** @var Facet $facet */
+            foreach ($result->getFacetCollection()->getFacets() as $facet) {
+                if ('price' === $facet->getType()) {
+                    continue;
+                }
+                $filteredFacets[] = $facet;
+            }
+            $result->getFacetCollection()->setFacets($filteredFacets);
+        }
+
+        if ($result->getAvailableSortOrders()) {
+            $filteredOrders = [];
+            /** @var SortOrder $sortOrder */
+            foreach ($result->getAvailableSortOrders() as $sortOrder) {
+                if ('price' === $sortOrder->getField()) {
+                    continue;
+                }
+                $filteredOrders[] = $sortOrder;
+            }
+            $result->setAvailableSortOrders($filteredOrders);
+        }
+    }
+
+    /**
      * Pagination is HARD. We let the core do the heavy lifting from
      * a simple representation of the pagination.
      *
      * Generated URLs will include the page number, obviously,
      * but also the sort order and the "q" (facets) parameters.
      *
-     * @param ProductSearchQuery  $query
+     * @param ProductSearchQuery $query
      * @param ProductSearchResult $result
      *
-     * @return an array that makes rendering the pagination very easy
+     * @return array An array that makes rendering the pagination very easy
      */
     protected function getTemplateVarPagination(
         ProductSearchQuery $query,
@@ -414,7 +445,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $pagination
             ->setPage($query->getPage())
             ->setPagesCount(
-                ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
+                (int) ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
             )
         ;
 
@@ -422,19 +453,35 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $itemsShownFrom = ($query->getResultsPerPage() * ($query->getPage() - 1)) + 1;
         $itemsShownTo = $query->getResultsPerPage() * $query->getPage();
 
+        $pages = array_map(function ($link) {
+            $link['url'] = $this->updateQueryString(array(
+                'page' => $link['page'] > 1 ? $link['page'] : null,
+            ));
+
+            return $link;
+        }, $pagination->buildLinks());
+
+        //Filter next/previous link on first/last page
+        $pages = array_filter($pages, function ($page) use ($pagination) {
+            if ('previous' === $page['type'] && 1 === $pagination->getPage()) {
+                return false;
+            }
+            if ('next' === $page['type'] && $pagination->getPagesCount() === $pagination->getPage()) {
+                return false;
+            }
+
+            return true;
+        });
+
         return array(
             'total_items' => $totalItems,
             'items_shown_from' => $itemsShownFrom,
             'items_shown_to' => ($itemsShownTo <= $totalItems) ? $itemsShownTo : $totalItems,
-            'pages' => array_map(function ($link) {
-                $link['url'] = $this->updateQueryString(array(
-                    'page' => $link['page'],
-                ));
-
-                return $link;
-            }, $pagination->buildLinks()),
+            'current_page' => $pagination->getPage(),
+            'pages_count' => $pagination->getPagesCount(),
+            'pages' => $pages,
             // Compare to 3 because there are the next and previous links
-            'should_be_displayed' => (count($pagination->buildLinks()) > 3)
+            'should_be_displayed' => (count($pagination->buildLinks()) > 3),
         );
     }
 
@@ -445,7 +492,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * but not the page number because normally when you change the sort order
      * you want to go back to page one.
      *
-     * @param array  $sortOrders                   the available sort orders
+     * @param array $sortOrders the available sort orders
      * @param string $currentSortOrderURLParameter used to know which of the sort orders (if any) is active
      *
      * @return array

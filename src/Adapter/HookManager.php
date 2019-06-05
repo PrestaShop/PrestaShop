@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Hook;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Bridge to execute hooks in modern pages.
+ */
 class HookManager
 {
     /**
-     * Execute modules for specified hook
+     * Execute modules for specified hook.
      *
      * @param string $hook_name Hook Name
      * @param array $hook_args Parameters for the functions
@@ -61,13 +65,15 @@ class HookManager
             $request = $sfContainer->get('request_stack')->getCurrentRequest();
         }
 
-        if (!is_null($request)) {
+        if (null !== $request) {
             $hook_args = array_merge(array('request' => $request), $hook_args);
 
             // If Symfony application is booted, we use it to dispatch Hooks
-            $hookDispatcher = $sfContainer->get('prestashop.hook.dispatcher');
+            $hookDispatcher = $sfContainer->get('prestashop.core.hook.dispatcher');
 
-            return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();
+            return $hookDispatcher
+                ->dispatchRenderingWithParameters($hook_name, $hook_args)
+                ->getContent();
         } else {
             try {
                 return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);

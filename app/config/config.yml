@@ -2,18 +2,23 @@ imports:
     - { resource: set_parameters.php }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: addons/*.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    env(PS_THEME_NAME): "classic"
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
     translator.class: PrestaShopBundle\Translation\Translator
     translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
     admin_page: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin"
+    env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
+    mail_themes_uri: "/mails/themes"
+    mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
 
 framework:
     assets:
-        version: '1.7.0'
+        version: !php/const \AppKernel::VERSION
 
     #esi:             ~
     secret:          "%secret%"
@@ -39,7 +44,7 @@ monolog:
     handlers:
         main:
             type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            path: '%env(PS_LOG_OUTPUT)%'
             level: notice
         legacy:
             type: service
@@ -60,6 +65,7 @@ twig:
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
         '%kernel.root_dir%/../modules': Modules
+        '%mail_themes_dir%': MailThemes
     globals:
         webpack_server: false
 

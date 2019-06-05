@@ -1,0 +1,76 @@
+admin_suppliers_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:index'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:search'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_view:
+  path: /{supplierId}/products
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:view'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_create:
+  path: /new
+  methods: [GET,POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:create'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_edit:
+  path: /{supplierId}/edit
+  methods: [GET,POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:edit'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_delete:
+  path: /{supplierId}/delete
+  methods: DELETE
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:delete'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkDelete'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_bulk_enable:
+  path: /bulk-enable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkEnable'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_bulk_disable:
+  path: /bulk-disable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkDisable'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_toggle_status:
+  path: /{supplierId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:toggleStatus'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_export:
+  path: /export
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:export'
+    _legacy_controller: AdminSuppliers

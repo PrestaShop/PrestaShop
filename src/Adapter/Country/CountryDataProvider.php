@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Country;
 
-use Country;
 use Configuration;
+use Country;
 
 /**
  * This class will provide data from DB / ORM about Country
@@ -35,7 +35,7 @@ use Configuration;
 class CountryDataProvider
 {
     /**
-     * Return available countries
+     * Return available countries.
      *
      * @param int $id_lang Language ID
      * @param bool $active return only active coutries
@@ -46,11 +46,11 @@ class CountryDataProvider
      */
     public function getCountries($id_lang, $active = false, $contain_states = false, $list_states = true)
     {
-        return Country::getCountries($id_lang, $active = false, $contain_states = false, $list_states = true);
+        return Country::getCountries($id_lang, $active, $contain_states, $list_states);
     }
 
     /**
-     * Get Country IsoCode by Id
+     * Get Country IsoCode by Id.
      *
      * @param int $id Country Id
      *
@@ -64,7 +64,7 @@ class CountryDataProvider
     }
 
     /**
-     * Get country Id by ISO code
+     * Get country Id by ISO code.
      *
      * @param string $isoCode Country ISO code
      *

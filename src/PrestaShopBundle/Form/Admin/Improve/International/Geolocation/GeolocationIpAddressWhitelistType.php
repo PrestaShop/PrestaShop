@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class GeolocationIpAddressWhitelistType is responsible for handling "Improve > International > Localization > Geolocation"
- * IP addresses whitelist form
+ * IP addresses whitelist form.
  */
 class GeolocationIpAddressWhitelistType extends AbstractType
 {
@@ -49,8 +49,7 @@ class GeolocationIpAddressWhitelistType extends AbstractType
                     'col' => 15,
                     'rows' => 30,
                 ],
-            ])
-        ;
+            ]);
 
         $builder->get('geolocation_whitelist')
             ->addModelTransformer(new CallbackTransformer(
@@ -60,7 +59,6 @@ class GeolocationIpAddressWhitelistType extends AbstractType
                 function ($ipWhitelistTextWithNewLines) {
                     return str_replace(["\r\n", "\r", "\n"], ';', $ipWhitelistTextWithNewLines);
                 }
-            ))
-        ;
+            ));
     }
 }

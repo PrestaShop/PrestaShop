@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,9 +30,10 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as PriceSpecificationMap;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 /**
- * Locale entity
+ * Locale entity.
  *
  * This is the main CLDR entry point. For example, Locale is used to format numbers, prices, percentages.
  * To build a Locale instance, use the Locale repository.
@@ -49,7 +50,7 @@ class Locale implements LocaleInterface
     /**
      * The locale code (simplified IETF tag syntax)
      * Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     * eg: fr-FR, en-US
+     * eg: fr-FR, en-US.
      *
      * @var string
      */
@@ -57,21 +58,21 @@ class Locale implements LocaleInterface
 
     /**
      * Number formatter.
-     * Used to format raw numbers in this locale context
+     * Used to format raw numbers in this locale context.
      *
      * @var NumberFormatter
      */
     protected $numberFormatter;
 
     /**
-     * Number formatting specification
+     * Number formatting specification.
      *
      * @var NumberSpecification
      */
     protected $numberSpecification;
 
     /**
-     * Price formatting specifications collection (one spec per currency)
+     * Price formatting specifications collection (one spec per currency).
      *
      * @var PriceSpecificationMap
      */
@@ -81,18 +82,15 @@ class Locale implements LocaleInterface
      * Locale constructor.
      *
      * @param string $localeCode
-     *  The locale code (simplified IETF tag syntax)
-     *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     *  eg: fr-FR, en-US
-     *
+     *                           The locale code (simplified IETF tag syntax)
+     *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     *                           eg: fr-FR, en-US
      * @param NumberSpecification $numberSpecification
-     *  Number specification used when formatting a number
-     *
+     *                                                 Number specification used when formatting a number
      * @param PriceSpecificationMap $priceSpecifications
-     *  Collection of Price specifications (one per installed currency)
-     *
+     *                                                   Collection of Price specifications (one per installed currency)
      * @param NumberFormatter $formatter
-     *  This number formatter will use stored number / price specs
+     *                                   This number formatter will use stored number / price specs
      */
     public function __construct(
         $localeCode,
@@ -100,16 +98,16 @@ class Locale implements LocaleInterface
         PriceSpecificationMap $priceSpecifications,
         NumberFormatter $formatter
     ) {
-        $this->code                = (string)$localeCode;
+        $this->code = (string) $localeCode;
         $this->numberSpecification = $numberSpecification;
         $this->priceSpecifications = $priceSpecifications;
-        $this->numberFormatter     = $formatter;
+        $this->numberFormatter = $formatter;
     }
 
     /**
      * Get this locale's code (simplified IETF tag syntax)
      * Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     * eg: fr-FR, en-US
+     * eg: fr-FR, en-US.
      *
      * @return string
      */
@@ -119,13 +117,13 @@ class Locale implements LocaleInterface
     }
 
     /**
-     * Format a number according to locale rules
+     * Format a number according to locale rules.
      *
      * @param int|float|string $number
-     *  The number to be formatted
+     *                                 The number to be formatted
      *
      * @return string
-     *  The formatted number
+     *                The formatted number
      *
      * @throws Exception\LocalizationException
      */
@@ -138,32 +136,53 @@ class Locale implements LocaleInterface
     }
 
     /**
-     * Format a number as a price
+     * Format a number as a price.
      *
      * @param int|float|string $number
-     *  Number to be formatted as a price
-     *
+     *                                 Number to be formatted as a price
      * @param string $currencyCode
-     *  Currency of the price
+     *                             Currency of the price
      *
      * @return string
-     *  The formatted price
+     *                The formatted price
      *
      * @throws Exception\LocalizationException
      */
     public function formatPrice($number, $currencyCode)
     {
-        $currencyCode = (string)$currencyCode;
-        $priceSpec    = $this->priceSpecifications->get($currencyCode);
+        return $this->numberFormatter->format(
+            $number,
+            $this->getPriceSpecification($currencyCode)
+        );
+    }
+
+    /**
+     * Get price specification
+     *
+     * @param string $currencyCode Currency of the price
+     *
+     * @return PriceSpecification
+     */
+    public function getPriceSpecification($currencyCode)
+    {
+        $currencyCode = (string) $currencyCode;
+        $priceSpec = $this->priceSpecifications->get($currencyCode);
         if (null === $priceSpec) {
             throw new LocalizationException(
-                'Price specification not found for currency "' . $currencyCode . '"'
+                'Price specification not found for currency: "' . $currencyCode . '"'
             );
         }
 
-        return $this->numberFormatter->format(
-            $number,
-            $priceSpec
-        );
+        return $priceSpec;
+    }
+
+    /**
+     * Get number specification
+     *
+     * @return NumberSpecification
+     */
+    public function getNumberSpecification()
+    {
+        return $this->numberSpecification;
     }
 }

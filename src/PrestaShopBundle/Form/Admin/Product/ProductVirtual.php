@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,14 +28,14 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This form class is responsible to generate the virtual product
+ * This form class is responsible to generate the virtual product.
  */
 class ProductVirtual extends CommonAbstractType
 {
@@ -44,7 +44,7 @@ class ProductVirtual extends CommonAbstractType
     private $configuration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -84,7 +84,7 @@ class ProductVirtual extends CommonAbstractType
                     'label' => $this->translator->trans('File', [], 'Admin.Global'),
                     'constraints' => [
                         new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -114,7 +114,7 @@ class ProductVirtual extends CommonAbstractType
                 [
                     'label' => $this->translator->trans('Expiration date', [], 'Admin.Catalog.Feature'),
                     'required' => false,
-                    'attr' => ['placeholder' => 'YYYY-MM-DD']
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
                 ]
             )
             ->add(
@@ -125,7 +125,7 @@ class ProductVirtual extends CommonAbstractType
                     'required' => false,
                     'constraints' => [
                         new Assert\Type(['type' => 'numeric']),
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -133,7 +133,7 @@ class ProductVirtual extends CommonAbstractType
                 FormType\ButtonType::class,
                 [
                     'label' => $this->translator->trans('Save', [], 'Admin.Actions'),
-                    'attr' => ['class' => 'btn-primary pull-right']
+                    'attr' => ['class' => 'btn-primary pull-right'],
                 ]
             );
 

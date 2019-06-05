@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.crypto.hashing:
+    class: 'PrestaShop\PrestaShop\Core\Crypto\Hashing'

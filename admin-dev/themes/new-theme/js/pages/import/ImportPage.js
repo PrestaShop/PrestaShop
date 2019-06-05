@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,8 +28,8 @@ import FormFieldToggle from "./FormFieldToggle";
 const $ = window.$;
 
 export default class ImportPage {
-  init() {
-    new FormFieldToggle().init();
+  constructor() {
+    new FormFieldToggle();
 
     $('.js-from-files-history-btn').on('click', () => this.showFilesHistoryHandler());
     $('.js-close-files-history-block-btn').on('click', () => this.closeFilesHistoryHandler());
@@ -38,6 +38,20 @@ export default class ImportPage {
     $('.js-import-file').on('change', () => this.uploadFile());
 
     this.toggleSelectedFile();
+    this.handleSubmit();
+  }
+
+  /**
+   * Handle submit and add confirm box in case the toggle button about
+   * deleting all entities before import is checked
+   */
+  handleSubmit() {
+    $('.js-import-form').on('submit', function() {
+      const $this = $(this);
+      if ($this.find('input[name="truncate"]:checked').val() === '1') {
+        return confirm(`${$this.data('delete-confirm-message')} ${$.trim($('#entity > option:selected').text().toLowerCase())}?`);
+      }
+    });
   }
 
   /**
@@ -200,11 +214,9 @@ export default class ImportPage {
     const data = new FormData();
     data.append('file', uploadedFile);
 
-    const url = $('.js-import-form').data('file-upload-url');
-
     $.ajax({
       type: 'POST',
-      url: url,
+      url: $('.js-import-form').data('file-upload-url'),
       data: data,
       cache: false,
       contentType: false,

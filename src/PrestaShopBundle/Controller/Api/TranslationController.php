@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,12 +27,15 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\View\TreeBuilder;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
+use Symfony\Component\Validator\Constraints\Locale;
 
 class TranslationController extends ApiController
 {
@@ -47,9 +50,10 @@ class TranslationController extends ApiController
     public $translationService;
 
     /**
-     * Show translations for 1 domain & 1 locale given & 1 theme given (optional)
+     * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listDomainTranslationAction(Request $request)
@@ -58,33 +62,44 @@ class TranslationController extends ApiController
             $queryParamsCollection = $this->queryParams->fromRequest($request);
             $queryParams = $queryParamsCollection->getQueryParams();
 
+            /** @var TranslationService $translationService */
             $translationService = $this->container->get('prestashop.service.translation');
 
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
-            $theme = $request->attributes->get('theme');
-
+            $theme = $request->attributes->get('theme', $this->getSelectedTheme());
+            $module = $request->query->get('module');
             $search = $request->query->get('search');
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search);
+            $icuLocale = Converter::toPrestaShopLocale($locale);
+            $validationErrors = $this->container->get('validator')->validate($icuLocale, [
+                new Locale(),
+            ]);
+
+            // If the locale is invalid, no need to call the translation provider.
+            if ($locale !== 'default' && count($validationErrors) > 0) {
+                throw UnsupportedLocaleException::invalidLocale($locale);
+            }
+
+            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
             $info = array(
-                'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size'])
+                'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             );
 
             $catalog['info'] = array_merge(
                 $catalog['info'],
-                array(
+                [
                     'locale' => $locale,
                     'domain' => $domain,
                     'theme' => $theme,
                     'total_translations' => count($catalog['data']),
                     'total_missing_translations' => 0,
-                )
+                ]
             );
 
             foreach ($catalog['data'] as $message) {
                 if (empty($message['xliff']) && empty($message['database'])) {
-                    $catalog['info']['total_missing_translations']++;
+                    ++$catalog['info']['total_missing_translations'];
                 }
             }
 
@@ -101,9 +116,10 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Show tree for translation page with some params
+     * Show tree for translation page with some params.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listTreeAction(Request $request)
@@ -137,7 +153,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Route to edit translation
+     * Route to edit translation.
      *
      * @param Request $request
      *
@@ -154,8 +170,8 @@ class TranslationController extends ApiController
             $translationService = $this->container->get('prestashop.service.translation');
             $response = [];
             foreach ($translations as $translation) {
-                if (!array_key_exists('theme', $translation)) {
-                    $translation['theme'] = null;
+                if (empty($translation['theme'])) {
+                    $translation['theme'] = $this->getSelectedTheme();
                 }
 
                 try {
@@ -173,19 +189,19 @@ class TranslationController extends ApiController
                 );
             }
 
-             $this->clearCache();
+            $this->clearCache();
 
             return new JsonResponse($response, 200);
-
         } catch (BadRequestHttpException $exception) {
             return $this->handleException($exception);
         }
     }
 
     /**
-     * Route to reset translation
+     * Route to reset translation.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function translationResetAction(Request $request)
@@ -218,10 +234,9 @@ class TranslationController extends ApiController
                 );
             }
 
-             $this->clearCache();
+            $this->clearCache();
 
             return new JsonResponse($response, 200);
-
         } catch (BadRequestHttpException $exception) {
             return $this->handleException($exception);
         }
@@ -229,6 +244,7 @@ class TranslationController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     private function guardAgainstInvalidTranslationBulkRequest(Request $request)
@@ -242,6 +258,7 @@ class TranslationController extends ApiController
             !is_array($decodedContent['translations'])
         ) {
             $message = 'The request body should contain a JSON-encoded array of translations';
+
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }
 
@@ -254,7 +271,7 @@ class TranslationController extends ApiController
     private function guardAgainstInvalidTranslationEditRequest($content)
     {
         $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a "locale", a "domain", a "default" and a "edited" values. '.
+            'a "locale", a "domain", a "default" and a "edited" values. ' .
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
@@ -274,7 +291,7 @@ class TranslationController extends ApiController
     protected function guardAgainstInvalidTranslationResetRequest($content)
     {
         $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a "locale", a "domain" and a "default" values. '.
+            'a "locale", a "domain" and a "default" values. ' .
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
@@ -297,8 +314,8 @@ class TranslationController extends ApiController
      */
     private function getNormalTree($lang, $type, $selected, $search = null)
     {
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected, $search);
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $this->getSelectedTheme());
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $this->getSelectedTheme(), $search);
 
         return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
     }
@@ -313,33 +330,43 @@ class TranslationController extends ApiController
      */
     private function getModulesTree($lang, $type, $selected, $search = null)
     {
-        $moduleProvider = $this->container->get('prestashop.translation.module_provider');
+        $locale = $this->translationService->langToLocale($lang);
+        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
         $moduleProvider->setModuleName($selected);
 
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
+        $treeBuilder = new TreeBuilder($locale, $this->getSelectedTheme());
         $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $type, null, $search);
+        return $this->getCleanTree($treeBuilder, $catalogue, $type, null, $search, $selected);
     }
 
     /**
-     * Make final tree
+     * Make final tree.
      *
      * @param TreeBuilder $treeBuilder
      * @param $catalogue
      * @param $type
      * @param $selected
-     * @param null $search
+     * @param string|null $search
+     * @param string|null $module
      *
      * @return array
      */
-    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null)
+    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null, $module = null)
     {
-        $selected = ('mails' === $type && 'subject' === $selected ? false : $selected);
-
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $selected, $search);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $this->getSelectedTheme(), $search, $module);
 
         return $translationsTree;
+    }
+
+    /**
+     * @return \PrestaShop\PrestaShop\Core\Addon\Theme\Theme
+     *
+     * @todo: When the theme will be selectable in the form, this function should be updated accordingly.
+     */
+    private function getSelectedTheme()
+    {
+        return $this->container->get('prestashop.adapter.legacy.context')->getContext()->shop->theme->getName();
     }
 }

@@ -50,9 +50,9 @@ require_once dirname(__FILE__) . '/TableBracketExpressionBuilder.php';
  *  
  */
 class CreateTableDefinitionBuilder {
-
     protected function buildTableBracketExpression($parsed) {
         $builder = new TableBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -60,7 +60,7 @@ class CreateTableDefinitionBuilder {
         if (!isset($parsed) || $parsed['create-def'] === false) {
             return "";
         }
+
         return $this->buildTableBracketExpression($parsed['create-def']);
     }
 }
-?>

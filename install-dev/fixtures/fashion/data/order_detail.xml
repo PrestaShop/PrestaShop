@@ -77,7 +77,7 @@
             <download_hash/>
         </order_detail>
         <order_detail id="order_detail_3" id_order="2" id_order_invoice="0" id_warehouse="0" id_shop="1"
-                      product_id="The_adventure_begins_Framed_poster" product_attribute_id="product_attribute_73" product_quantity="2"
+                      product_id="The_adventure_begins_Framed_poster" product_attribute_id="product_attribute_75" product_quantity="2"
                       product_quantity_in_stock="3" product_quantity_refunded="0" product_quantity_return="0"
                       product_quantity_reinjected="0" product_price="29.000000" reduction_percent="0.00"
                       reduction_amount="0.000000" reduction_amount_tax_incl="0.000000"

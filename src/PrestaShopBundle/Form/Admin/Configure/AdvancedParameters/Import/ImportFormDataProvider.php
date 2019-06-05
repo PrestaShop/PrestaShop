@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,98 +16,107 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Class ImportFormDataProvider is responsible for providing Import's 1st step form data
+ * Class ImportFormDataProvider is responsible for providing Import's 1st step form data.
  */
-final class ImportFormDataProvider implements FormDataProviderInterface
+final class ImportFormDataProvider implements ImportFormDataProviderInterface
 {
+    /**
+     * @var FileFinder
+     */
+    private $importFileFinder;
+
     /**
      * @var SessionInterface
      */
     private $session;
 
     /**
-     * @var FileFinder
+     * @param FileFinder $importFileFinder
+     * @param SessionInterface $session
      */
-    private $importFileFinder;
-
-    public function __construct(SessionInterface $session, FileFinder $importFileFinder)
-    {
-        $this->session = $session;
+    public function __construct(
+        FileFinder $importFileFinder,
+        SessionInterface $session
+    ) {
         $this->importFileFinder = $importFileFinder;
+        $this->session = $session;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(ImportConfigInterface $importConfig)
     {
         return [
-            'csv' => $this->getSelectedFile(),
-            'entity' => $this->session->get('entity'),
-            'iso_lang' => $this->session->get('iso_lang'),
-            'separator' => $this->session->get('separator', ImportType::DEFAULT_SEPARATOR),
-            'multiple_value_separator' =>
-                $this->session->get('multiple_value_separator', ImportType::DEFAULT_MULTIVALUE_SEPARATOR),
+            'csv' => $this->getSelectedFile($importConfig),
+            'entity' => $importConfig->getEntityType(),
+            'iso_lang' => $importConfig->getLanguageIso(),
+            'separator' => $importConfig->getSeparator(),
+            'multiple_value_separator' => $importConfig->getMultipleValueSeparator(),
+            'truncate' => $importConfig->truncate(),
+            'regenerate' => $importConfig->skipThumbnailRegeneration(),
+            'match_ref' => $importConfig->matchReferences(),
+            'forceIDs' => $importConfig->forceIds(),
+            'sendemail' => $importConfig->sendEmail(),
+            'type_value' => [],
         ];
     }
 
     /**
-     * Data is persisted into session,
-     * so when user comes from 2nd import step to 1st one, data is still saved
-     *
-     * @param array $data
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function setData(array $data)
     {
         $errors = [];
-
-        if (!isset($data['csv']) || empty($data['csv'])) {
+        if (empty($data['csv'])) {
             $errors[] = [
                 'key' => 'To proceed, please upload a file first.',
                 'domain' => 'Admin.Advparameters.Notification',
                 'parameters' => [],
             ];
+        } else {
+            $this->session->set('csv', $data['csv']);
+            $this->session->set('entity', $data['entity']);
+            $this->session->set('iso_lang', $data['iso_lang']);
+            $this->session->set('separator', $data['separator']);
+            $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
+            $this->session->set('truncate', $data['truncate']);
+            $this->session->set('match_ref', $data['match_ref']);
+            $this->session->set('regenerate', $data['regenerate']);
+            $this->session->set('forceIDs', $data['forceIDs']);
+            $this->session->set('sendemail', $data['sendemail']);
         }
-
-        $this->session->set('csv', $data['csv']);
-        $this->session->set('entity', $data['entity']);
-        $this->session->set('iso_lang', $data['iso_lang']);
-        $this->session->set('separator', $data['separator']);
-        $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
 
         return $errors;
     }
 
     /**
-     * Get selected file from session if it exists
-     * and check if file is available in file system.
+     * Get selected file after confirming that it is available in file system.
+     *
+     * @param ImportConfigInterface $importConfig
      *
      * @return string|null
      */
-    protected function getSelectedFile()
+    private function getSelectedFile(ImportConfigInterface $importConfig)
     {
         $importFiles = $this->importFileFinder->getImportFileNames();
-        $selectedFile = $this->session->get('csv');
-
+        $selectedFile = $importConfig->getFileName();
         if ($selectedFile && !in_array($selectedFile, $importFiles)) {
-            $this->session->remove('csv');
             $selectedFile = null;
         }
 

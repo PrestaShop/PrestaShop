@@ -58,39 +58,45 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class SubTreeBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSubQuery($parsed) {
         $builder = new SubQueryBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSelectBracketExpression($parsed) {
         $builder = new SelectBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -115,7 +121,7 @@ class SubTreeBuilder {
 
             $sql .= $delim;
         }
+
         return substr($sql, 0, -strlen($delim));
     }
 }
-?>

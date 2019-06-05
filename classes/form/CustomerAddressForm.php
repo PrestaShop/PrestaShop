@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -112,9 +110,11 @@ class CustomerAddressFormCore extends AbstractForm
             if ($postcode->isRequired()) {
                 $country = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
-                    $postcode->addError($this->translator->trans('Invalid postcode - should look like "%zipcode%"',
+                    $postcode->addError($this->translator->trans(
+                        'Invalid postcode - should look like "%zipcode%"',
                         array('%zipcode%' => $country->zip_code_format),
-                        'Shop.Forms.Errors'));
+                        'Shop.Forms.Errors'
+                    ));
                     $is_valid = false;
                 }
             }
@@ -150,17 +150,35 @@ class CustomerAddressFormCore extends AbstractForm
             $address->alias = $this->translator->trans('My Address', [], 'Shop.Theme.Checkout');
         }
 
-        $this->address = $address;
+        Hook::exec('actionSubmitCustomerAddressForm', array('address' => &$address));
 
-        return $this->persister->save(
-            $this->address,
+        $this->setAddress($address);
+
+        return $this->getPersister()->save(
+            $address,
             $this->getValue('token')
         );
     }
 
+    /**
+     * @return Address
+     */
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * @return CustomerAddressPersister
+     */
+    protected function getPersister()
+    {
+        return $this->persister;
+    }
+
+    protected function setAddress(Address $address)
+    {
+        $this->address = $address;
     }
 
     public function getTemplateVariables()

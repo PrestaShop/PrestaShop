@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
 /**
  * Class LocalizationPackImportConfig is value object which is responsible
- * for storing localization pack configuration for import
+ * for storing localization pack configuration for import.
  */
 final class LocalizationPackImportConfig implements LocalizationPackImportConfigInterface
 {
@@ -48,9 +48,9 @@ final class LocalizationPackImportConfig implements LocalizationPackImportConfig
     private $downloadPackData;
 
     /**
-     * @param string $countryIso       Country ISO code
-     * @param array  $contentToImport  Content that should be impoerted (e.g states, taxes & etc)
-     * @param bool   $downloadPackData Whether pack data should be downloaded from prestashop.com server
+     * @param string $countryIso Country ISO code
+     * @param array $contentToImport Content that should be impoerted (e.g states, taxes & etc)
+     * @param bool $downloadPackData Whether pack data should be downloaded from prestashop.com server
      */
     public function __construct($countryIso, array $contentToImport, $downloadPackData)
     {
@@ -60,7 +60,7 @@ final class LocalizationPackImportConfig implements LocalizationPackImportConfig
     }
 
     /**
-     * Get country ISO code
+     * Get country ISO code.
      *
      * @return string
      */
@@ -70,7 +70,7 @@ final class LocalizationPackImportConfig implements LocalizationPackImportConfig
     }
 
     /**
-     * Get content to import
+     * Get content to import.
      *
      * @return array
      */
@@ -80,7 +80,7 @@ final class LocalizationPackImportConfig implements LocalizationPackImportConfig
     }
 
     /**
-     * Whether pack data should be downloaded
+     * Whether pack data should be downloaded.
      *
      * @return bool
      */

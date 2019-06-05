@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.bundle.grid.response_builder:
+    class: PrestaShopBundle\Service\Grid\ResponseBuilder
+    arguments:
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@router'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,16 +27,16 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This form class is responsible to generate the product attachments
+ * This form class is responsible to generate the product attachments.
  */
 class ProductAttachement extends CommonAbstractType
 {
@@ -45,7 +45,7 @@ class ProductAttachement extends CommonAbstractType
     private $configuration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -70,15 +70,15 @@ class ProductAttachement extends CommonAbstractType
             'constraints' => [
                 new Assert\NotNull(['message' => $this->translator->trans('Please select a file', [], 'Admin.Catalog.Feature')]),
                 new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
-            ]
+            ],
         ])
             ->add('name', TextType::class, [
                 'label' => $this->translator->trans('Filename', [], 'Admin.Global'),
                 'attr' => ['placeholder' => $this->translator->trans('Title', [], 'Admin.Global')],
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Length(['min' => 2])
-                ]
+                    new Assert\Length(['min' => 2]),
+                ],
             ])
             ->add('description', TextType::class, [
                 'label' => $this->translator->trans('Description', [], 'Admin.Global'),
@@ -87,11 +87,11 @@ class ProductAttachement extends CommonAbstractType
             ])
             ->add('add', ButtonType::class, [
                 'label' => $this->translator->trans('Add', [], 'Admin.Actions'),
-                'attr' => ['class' => 'btn-outline-primary pull-right']
+                'attr' => ['class' => 'btn-outline-primary pull-right'],
             ])
             ->add('cancel', ButtonType::class, [
                 'label' => $this->translator->trans('Cancel', [], 'Admin.Actions'),
-                'attr' => ['class' => 'btn-outline-secondary pull-right mr-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm']
+                'attr' => ['class' => 'btn-outline-secondary pull-right mr-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm'],
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

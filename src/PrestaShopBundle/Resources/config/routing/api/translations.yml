@@ -11,6 +11,7 @@ api_translation_domain_catalog:
     defaults:
         _controller: prestashop.core.api.translation.controller:listDomainTranslationAction
         theme: null
+        module: null
 
 api_translation_value_edit:
     path: /edit

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,19 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Security\Annotation;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
 
 /**
- * Forbid access to the page if Demonstration mode is enabled
+ * Forbid access to the page if Demonstration mode is enabled.
  *
  * @Annotation
  */
@@ -56,6 +57,13 @@ class DemoRestricted extends ConfigurationAnnotation
     protected $redirectRoute;
 
     /**
+     * The route params which are used together to generate the redirect route.
+     *
+     * @var array
+     */
+    protected $redirectQueryParamsToKeep = [];
+
+    /**
      * @return string
      */
     public function getDomain()
@@ -64,7 +72,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param string $domain The translation domain name.
+     * @param string $domain the translation domain name
      */
     public function setDomain($domain)
     {
@@ -80,7 +88,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param string $message The message displayed after redirection.
+     * @param string $message the message displayed after redirection
      */
     public function setMessage($message)
     {
@@ -96,7 +104,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param string $redirectRoute The route used for redirection.
+     * @param string $redirectRoute the route used for redirection
      */
     public function setRedirectRoute($redirectRoute)
     {
@@ -121,5 +129,21 @@ class DemoRestricted extends ConfigurationAnnotation
     public function allowArray()
     {
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRedirectQueryParamsToKeep()
+    {
+        return $this->redirectQueryParamsToKeep;
+    }
+
+    /**
+     * @param array $redirectQueryParamsToKeep
+     */
+    public function setRedirectQueryParamsToKeep($redirectQueryParamsToKeep)
+    {
+        $this->redirectQueryParamsToKeep = $redirectQueryParamsToKeep;
     }
 }

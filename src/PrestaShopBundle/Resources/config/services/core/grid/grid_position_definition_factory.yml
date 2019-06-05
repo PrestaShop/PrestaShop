@@ -1,0 +1,19 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.grid.cms_page_category.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'cms_category'
+      $idField: 'id_cms_category'
+      $positionField: 'position'
+      $parentIdField: 'id_parent'
+
+  prestashop.core.grid.cms_page.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'cms'
+      $idField: 'id_cms'
+      $positionField: 'position'
+      $parentIdField: 'id_cms_category'

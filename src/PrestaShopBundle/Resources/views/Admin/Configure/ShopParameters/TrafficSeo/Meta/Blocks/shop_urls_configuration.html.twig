@@ -1,0 +1,115 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+
+{% set shopUrlForm = metaForm.shop_urls %}
+
+{% block shop_urls_configuration %}
+
+  {% set cardHeaderLabel = 'Set shop URL'|trans %}
+  {% if isShopFeatureActive and not isHostMode %}
+    <div class="card">
+      <div class="card-header">
+        <i class="material-icons">settings</i> {{ cardHeaderLabel }}
+      </div>
+      <div class="card-block row">
+        <div class="card-text">
+          <div class="row">
+            <div class="col-sm">
+              <div class="alert alert-info" role="alert">
+                <div class="alert-text">
+                  {{ 'The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Notification') }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if shopUrlForm.children is not empty %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i> {{ cardHeaderLabel }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+            <div class="row">
+              <div class="col-sm">
+                <div class="alert alert-info" role="alert">
+                  <div class="alert-text">
+                    {{ 'Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.'|trans({}, 'Admin.Shopparameters.Notification') }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="form-control-label">
+                {{ 'Shop domain'|trans }}
+              </label>
+              <div class="col-sm">
+                {{ form_errors(shopUrlForm.domain) }}
+                {{ form_widget(shopUrlForm.domain) }}
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="form-control-label">
+                {{ 'SSL domain'|trans }}
+              </label>
+              <div class="col-sm">
+                {{ form_errors(shopUrlForm.domain_ssl) }}
+                {{ form_widget(shopUrlForm.domain_ssl) }}
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="form-control-label">
+                {{ 'Base URI'|trans }}
+              </label>
+              <div class="col-sm">
+                {{ form_errors(shopUrlForm.physical_uri) }}
+                {{ form_widget(shopUrlForm.physical_uri, {'required': false}) }}
+              </div>
+            </div>
+
+            {% block meta_form_rest %}
+              {{ form_rest(shopUrlForm) }}
+            {% endblock %}
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+

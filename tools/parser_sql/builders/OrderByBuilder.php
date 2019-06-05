@@ -52,19 +52,21 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  *  
  */
 class OrderByBuilder {
-
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildOrderByAlias($parsed) {
         $builder = new OrderByAliasBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -83,7 +85,7 @@ class OrderByBuilder {
             $sql .= ", ";
         }
         $sql = substr($sql, 0, -2);
+
         return "ORDER BY " . $sql;
     }
 }
-?>

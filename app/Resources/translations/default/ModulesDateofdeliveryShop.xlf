@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/dateofdelivery/orderDetail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="32dfb655a7b12a2c5662516e82f5d79b">
-        <source>Approximate date of delivery is between %1$s and %2$s</source>
-        <target>Approximate date of delivery is between %1$s and %2$s</target>
-        <note>Context:
-File: modules/dateofdelivery/orderDetail.tpl:26</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/dateofdelivery/beforeCarrier.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c9ed8c0b07828727ca6653924b0498d3">
@@ -35,6 +25,16 @@ File: modules/dateofdelivery/beforeCarrier.tpl:85</note>
         <target>and</target>
         <note>Context:
 File: modules/dateofdelivery/beforeCarrier.tpl:87</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/dateofdelivery/orderDetail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="32dfb655a7b12a2c5662516e82f5d79b">
+        <source>Approximate date of delivery is between %1$s and %2$s</source>
+        <target>Approximate date of delivery is between %1$s and %2$s</target>
+        <note>Context:
+File: modules/dateofdelivery/orderDetail.tpl:26</note>
       </trans-unit>
     </body>
   </file>

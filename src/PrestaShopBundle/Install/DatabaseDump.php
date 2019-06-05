@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,10 +17,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,10 +67,10 @@ class DatabaseDump
     }
 
     /**
-     * Wrapper to easily build mysql commands: sets password, port, user
+     * Wrapper to easily build mysql commands: sets password, port, user.
      *
      * @param string $executable
-     * @param array  $arguments
+     * @param array $arguments
      *
      * @return string
      */
@@ -84,7 +84,7 @@ class DatabaseDump
         );
 
         if ($this->password) {
-            $parts[] = '-p'.escapeshellarg($this->password);
+            $parts[] = '-p' . escapeshellarg($this->password);
         }
 
         $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
@@ -98,6 +98,7 @@ class DatabaseDump
      * @param string $command
      *
      * @return array
+     *
      * @throws Exception
      */
     private function exec($command)
@@ -119,7 +120,7 @@ class DatabaseDump
     private function dump()
     {
         $dumpCommand = $this->buildMySQLCommand('mysqldump', array($this->databaseName));
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile). ' 2> /dev/null';
+        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
         $this->exec($dumpCommand);
     }
 
@@ -134,21 +135,21 @@ class DatabaseDump
     }
 
     /**
-     * Make a database dump
+     * Make a database dump.
      */
     public static function create()
     {
-        $dump = new DatabaseDump();
+        $dump = new static();
 
         $dump->dump();
     }
 
     /**
-     * Restore a database dump
+     * Restore a database dump.
      */
     public static function restoreDb()
     {
-        $dump = new DatabaseDump();
+        $dump = new static();
 
         $dump->restore();
     }

@@ -56,9 +56,9 @@ require_once dirname(__FILE__) . '/IndexTypeBuilder.php';
  *  
  */
 class IndexTypeBuilder {
-
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -77,7 +77,7 @@ class IndexTypeBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }
-?>

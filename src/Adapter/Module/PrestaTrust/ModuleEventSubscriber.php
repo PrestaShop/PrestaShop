@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This class subscribes to the events module installation / uninstallation
- * in order to install or remove its tabs as well
+ * in order to install or remove its tabs as well.
  */
 class ModuleEventSubscriber implements EventSubscriberInterface
 {
@@ -41,10 +41,11 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     private $checker;
 
     /**
-     * These events can be enabled/disabled via the config file
-     * @var boolean
+     * These events can be enabled/disabled via the config file.
+     *
+     * @var bool
      */
-    public $enabled;
+    private $enabled;
 
     public function __construct(PrestaTrustChecker $checker)
     {
@@ -52,7 +53,7 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -67,14 +68,37 @@ class ModuleEventSubscriber implements EventSubscriberInterface
      * if the module is compliant.
      *
      * @param ModuleZipManagementEvent $event
-     * @return void
      */
     public function onNewModule(ModuleZipManagementEvent $event)
     {
         if (!$this->enabled) {
             return;
         }
-        
+
         $this->checker->checkModuleZip($event->getModuleZip());
+    }
+
+    /**
+     * Check if the feature is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Enable / disable the PrestaTrust feature.
+     *
+     * @param bool $enabled
+     *
+     * @return $this
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = (bool) $enabled;
+
+        return $this;
     }
 }

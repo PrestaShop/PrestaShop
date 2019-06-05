@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,9 +59,9 @@ class ConfigurationTestCore
             'log_dir' => 'var/logs',
             'img_dir' => 'img',
             'module_dir' => 'modules',
-            'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
-            'theme_pdf_lang_dir' => 'themes/'._THEME_NAME_.'/pdf/lang/',
-            'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
+            'theme_lang_dir' => 'themes/' . _THEME_NAME_ . '/lang/',
+            'theme_pdf_lang_dir' => 'themes/' . _THEME_NAME_ . '/pdf/lang/',
+            'theme_cache_dir' => 'themes/' . _THEME_NAME_ . '/cache/',
             'translations_dir' => 'translations',
             'customizable_products_dir' => 'upload',
             'virtual_products_dir' => 'download',
@@ -89,7 +89,7 @@ class ConfigurationTestCore
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
-                'fopen' => false,
+                'intl' => false,
             ));
         }
 
@@ -110,6 +110,8 @@ class ConfigurationTestCore
             'mbstring' => false,
             'dom' => false,
             'pdo_mysql' => false,
+            'fopen' => false,
+            'intl' => false,
         );
     }
 
@@ -132,7 +134,7 @@ class ConfigurationTestCore
 
     public static function run($ptr, $arg = 0)
     {
-        if (call_user_func(array('ConfigurationTest', 'test_'.$ptr), $arg)) {
+        if (call_user_func(array('ConfigurationTest', 'test_' . $ptr), $arg)) {
             return 'ok';
         }
 
@@ -141,7 +143,7 @@ class ConfigurationTestCore
 
     public static function test_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
+        return version_compare(substr(PHP_VERSION, 0, 5), '5.6.0', '>=');
     }
 
     public static function test_apache_mod_rewrite()
@@ -156,12 +158,17 @@ class ConfigurationTestCore
 
     public static function test_new_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
+        return version_compare(substr(PHP_VERSION, 0, 5), '5.6.0', '>=');
     }
 
     public static function test_mysql_support()
     {
         return extension_loaded('mysql') || extension_loaded('mysqli') || extension_loaded('pdo_mysql');
+    }
+
+    public static function test_intl()
+    {
+        return extension_loaded('intl');
     }
 
     public static function test_pdo_mysql()
@@ -176,7 +183,7 @@ class ConfigurationTestCore
 
     public static function test_fopen()
     {
-        return ini_get('allow_url_fopen');
+        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
     }
 
     public static function test_system($funcs)
@@ -231,13 +238,13 @@ class ConfigurationTestCore
 
     public static function test_dir($relative_dir, $recursive = false, &$full_report = null)
     {
-        $dir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($relative_dir, '\\/');
+        $dir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($relative_dir, '\\/');
         if (!file_exists($dir) || !$dh = @opendir($dir)) {
             $full_report = sprintf('Directory %s does not exist or is not writable', $dir); // sprintf for future translation
             return false;
         }
         closedir($dh);
-        $dummy = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.uniqid();
+        $dummy = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . uniqid();
         if (@file_put_contents($dummy, 'test')) {
             @unlink($dummy);
             if (!$recursive) {
@@ -261,7 +268,7 @@ class ConfigurationTestCore
 
     public static function test_file($file_relative)
     {
-        $file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file_relative;
+        $file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $file_relative;
 
         return file_exists($file) && is_writable($file);
     }
@@ -338,7 +345,7 @@ class ConfigurationTestCore
 
     public static function test_theme_lang_dir($dir)
     {
-        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($dir, '\\/');
         if (!file_exists($absoluteDir)) {
             return true;
         }
@@ -348,7 +355,7 @@ class ConfigurationTestCore
 
     public static function test_theme_pdf_lang_dir($dir)
     {
-        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($dir, '\\/');
         if (!file_exists($absoluteDir)) {
             return true;
         }
@@ -358,7 +365,7 @@ class ConfigurationTestCore
 
     public static function test_theme_cache_dir($dir)
     {
-        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($dir, '\\/');
         if (!file_exists($absoluteDir)) {
             return true;
         }
@@ -394,6 +401,7 @@ class ConfigurationTestCore
 
         return is_writable($path);
     }
+
     public static function test_dom()
     {
         return extension_loaded('Dom');
@@ -403,7 +411,7 @@ class ConfigurationTestCore
     {
         $return = array();
         foreach (ConfigurationTest::$test_files as $file) {
-            if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file))) {
+            if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR) . str_replace('/', DIRECTORY_SEPARATOR, $file))) {
                 if ($full) {
                     $return[] = $file;
                 } else {

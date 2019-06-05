@@ -54,18 +54,6 @@ class File extends CommonClient {
         }
       });
   }
-
-  checkSortFile() {
-    return this.client
-      .pause(1000)
-      .then(() => {
-        this.client
-          .waitUntil(function () {
-            expect(fileLists.sort()).to.deep.equal(fileSortedLists);
-          }, 1000 * global.tab['filesNumber']);
-      });
-  }
-
   checkFilterFile(searchValue) {
     return this.client
       .pause(1000)

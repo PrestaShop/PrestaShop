@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -82,7 +82,9 @@ class ConsoleWriter
      *
      * @param string $text
      * @param string $color
+     *
      * @return $this
+     *
      * @throws BuildException
      */
     public function displayText($text, $color = self::COLOR_WHITE)
@@ -103,7 +105,7 @@ class ConsoleWriter
             self::COLOR_BROWN => '0;33',
             self::COLOR_YELLOW => '1;33',
             self::COLOR_LIGHT_GRAY => '0;37',
-            self::COLOR_WHITE => '1;37'
+            self::COLOR_WHITE => '1;37',
         );
 
         if (empty($cliColors[$color])) {

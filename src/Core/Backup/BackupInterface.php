@@ -1,0 +1,77 @@
+<?php
+/**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+namespace PrestaShop\PrestaShop\Core\Backup;
+
+use DateTimeInterface;
+
+/**
+ * Interface BackupInterface defines contract for backup.
+ */
+interface BackupInterface
+{
+    /**
+     * Get backup filename.
+     *
+     * @return string
+     */
+    public function getFileName();
+
+    /**
+     * Get complete path to the backup file.
+     *
+     * @return string
+     */
+    public function getFilePath();
+
+    /**
+     * Get URL to backup.
+     *
+     * @return string
+     */
+    public function getUrl();
+
+    /**
+     * Get backup file size in bytes.
+     *
+     * @return string
+     */
+    public function getSize();
+
+    /**
+     * Get backup age in seconds.
+     *
+     * @return int
+     */
+    public function getAge();
+
+    /**
+     * Get backup creation date.
+     *
+     * @return DateTimeInterface
+     */
+    public function getDate();
+}

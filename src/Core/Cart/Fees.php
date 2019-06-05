@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,6 @@ use Tools;
 
 class Fees
 {
-
     /**
      * @var Cart
      */
@@ -59,17 +58,17 @@ class Fees
     protected $finalWrappingFees;
 
     /**
-     * indicates if cart was already processed
+     * indicates if cart was already processed.
      *
      * @var bool
      */
     protected $isProcessed = false;
 
     /**
-     * @param Cart              $cart
+     * @param Cart $cart
      * @param CartRowCollection $cartRowCollection
-     * @param int               $computePrecision
-     * @param int               $id_carrier
+     * @param int $computePrecision
+     * @param int $id_carrier
      */
     public function processCalculation(
         Cart $cart,
@@ -99,11 +98,11 @@ class Fees
                 )
             );
         }
-        $this->finalShippingFees = clone($this->shippingFees);
+        $this->finalShippingFees = clone $this->shippingFees;
 
         // wrapping fees
         if ($cart->gift) {
-            $this->wrappingFees      = new AmountImmutable(
+            $this->wrappingFees = new AmountImmutable(
                 Tools::convertPrice(
                     Tools::ps_round(
                         $cart->getGiftWrappingPrice(true),
@@ -120,9 +119,9 @@ class Fees
                 )
             );
         } else {
-            $this->wrappingFees      = new AmountImmutable();
+            $this->wrappingFees = new AmountImmutable();
         }
-        $this->finalWrappingFees = clone($this->wrappingFees);
+        $this->finalWrappingFees = clone $this->wrappingFees;
         $this->isProcessed = true;
     }
 
@@ -185,5 +184,4 @@ class Fees
             $taxExcluded
         );
     }
-
 }

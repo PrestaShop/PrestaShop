@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,19 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\DataCollector;
 
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * Collect all information about Legacy hooks and make it available
@@ -63,6 +63,7 @@ final class HookDataCollector extends DataCollector
 
     /**
      * Return the list of every dispatched legacy hooks during one request.
+     *
      * @return array
      */
     public function getHooks()
@@ -72,6 +73,7 @@ final class HookDataCollector extends DataCollector
 
     /**
      * Return the list of every called legacy hooks during one request.
+     *
      * @return array
      */
     public function getCalledHooks()
@@ -81,6 +83,7 @@ final class HookDataCollector extends DataCollector
 
     /**
      * Return the list of every uncalled legacy hooks during oHookne request.
+     *
      * @return array
      */
     public function getNotCalledHooks()
@@ -106,7 +109,8 @@ final class HookDataCollector extends DataCollector
 
     /**
      * @param array $hooksList
-     * @return array a better representation of arguments for HTML rendering.
+     *
+     * @return array a better representation of arguments for HTML rendering
      */
     private function stringifyHookArguments(array &$hooksList)
     {

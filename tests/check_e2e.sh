@@ -7,10 +7,7 @@ SELENIUM=$?
 bash travis-scripts/run-functional-tests;
 FUNCTIONAL=$?
 
-bash travis-scripts/test-startertheme;
-STARTER=$?
-
-if [[ "$SELENIUM" == "0" && "$FUNCTIONAL" == "0" && "$STARTER" == "0" ]]; then
+if [[ "$SELENIUM" == "0" && "$FUNCTIONAL" == "0" ]]; then
   echo -e "\e[92mE2E TESTS OK"
   exit 0;
 else

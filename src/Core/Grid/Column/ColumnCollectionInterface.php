@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,12 +30,12 @@ use Countable;
 use Iterator;
 
 /**
- * Interface ColumnCollectionInterface defines contract for grid column collection
+ * Interface ColumnCollectionInterface defines contract for grid column collection.
  */
 interface ColumnCollectionInterface extends Iterator, Countable
 {
     /**
-     * Add column to collection
+     * Add column to collection.
      *
      * @param ColumnInterface $column
      *
@@ -44,9 +44,9 @@ interface ColumnCollectionInterface extends Iterator, Countable
     public function add(ColumnInterface $column);
 
     /**
-     * Add column after given column
+     * Add column after given column.
      *
-     * @param string          $id     Column id
+     * @param string $id Column id
      * @param ColumnInterface $column
      *
      * @return self
@@ -54,7 +54,7 @@ interface ColumnCollectionInterface extends Iterator, Countable
     public function addAfter($id, ColumnInterface $column);
 
     /**
-     * @param string          $id     Column id
+     * @param string $id Column id
      * @param ColumnInterface $column
      *
      * @return self
@@ -62,11 +62,18 @@ interface ColumnCollectionInterface extends Iterator, Countable
     public function addBefore($id, ColumnInterface $column);
 
     /**
-     * Remove column from collection
+     * Remove column from collection.
      *
      * @param string $id
      *
      * @return self
      */
     public function remove($id);
+
+    /**
+     * Get columns as array.
+     *
+     * @return array
+     */
+    public function toArray();
 }

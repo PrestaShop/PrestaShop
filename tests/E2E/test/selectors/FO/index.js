@@ -1,8 +1,9 @@
 module.exports = Object.assign({
     languageFO: {
       language_selector: '//*[@id="_desktop_language_selector"]/div/div/button',
-      language_EN: '//*[@id="_desktop_language_selector"]/div/div/ul/li[1]/a',
-      language_FR: '//*[@id="_desktop_language_selector"]/div/div/ul/li[2]/a'
+      language_option: '//*[@id="_desktop_language_selector"]//a[@data-iso-code="%LANG"]',
+      selected_language_button: '//*[@id="_desktop_language_selector"]//span[@class="expand-more"]',
+      html_selector: '//html'
     }
   },
   require('./access_page'),

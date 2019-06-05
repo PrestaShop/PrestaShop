@@ -51,9 +51,9 @@ require_once dirname(__FILE__) . '/RecordBuilder.php';
  *  
  */
 class ValuesBuilder {
-
     protected function buildRecord($parsed) {
         $builder = new RecordBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -70,7 +70,7 @@ class ValuesBuilder {
             $sql .= ",";
         }
         $sql = substr($sql, 0, -1);
+
         return "VALUES " . $sql;
-    }    
+    }
 }
-?>

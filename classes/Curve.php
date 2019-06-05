@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class CurveCore
 {
     protected $values = array();
@@ -41,15 +40,16 @@ class CurveCore
         ksort($this->values);
         $string = '';
         foreach ($this->values as $key => $value) {
-            $string .= '['.addslashes((string)$key).($time_mode ? '000' : '').','.(float)$value.'],';
+            $string .= '[' . addslashes((string) $key) . ($time_mode ? '000' : '') . ',' . (float) $value . '],';
         }
-        return '{data:['.rtrim($string, ',').']'.(!empty($this->label) ? ',label:"'.$this->label.'"' : '').''.(!empty($this->type) ? ','.$this->type : '').'}';
+
+        return '{data:[' . rtrim($string, ',') . ']' . (!empty($this->label) ? ',label:"' . $this->label . '"' : '') . '' . (!empty($this->type) ? ',' . $this->type : '') . '}';
     }
 
     /** @prototype void public function setPoint(float $x, float $y) */
     public function setPoint($x, $y)
     {
-        $this->values[(string)$x] = (float)$y;
+        $this->values[(string) $x] = (float) $y;
     }
 
     public function setLabel($label)
@@ -70,8 +70,8 @@ class CurveCore
 
     public function getPoint($x)
     {
-        if (array_key_exists((string)$x, $this->values)) {
-            return $this->values[(string)$x];
+        if (array_key_exists((string) $x, $this->values)) {
+            return $this->values[(string) $x];
         }
     }
 }

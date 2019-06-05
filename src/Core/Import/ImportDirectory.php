@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * ImportDirectory class is responsible for returning import directory & data related to it
+ * ImportDirectory class is responsible for returning import directory & data related to it.
  */
 final class ImportDirectory
 {
@@ -48,7 +48,7 @@ final class ImportDirectory
     }
 
     /**
-     * Get path to import directory
+     * Get path to import directory.
      *
      * @return string
      */
@@ -56,11 +56,11 @@ final class ImportDirectory
     {
         return ($this->configuration->get('_PS_HOST_MODE_') ?
                 $this->configuration->get('_PS_ROOT_DIR_') :
-                $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR;
+                $this->configuration->get('_PS_ADMIN_DIR_')) . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
     }
 
     /**
-     * Check if import directory exists
+     * Check if import directory exists.
      *
      * @return bool
      */
@@ -70,7 +70,7 @@ final class ImportDirectory
     }
 
     /**
-     * Check if import directory is writable
+     * Check if import directory is writable.
      *
      * @return bool
      */
@@ -80,7 +80,7 @@ final class ImportDirectory
     }
 
     /**
-     * Check if import directory is readable
+     * Check if import directory is readable.
      *
      * @return bool
      */
@@ -90,7 +90,7 @@ final class ImportDirectory
     }
 
     /**
-     * Use import directory object as a string
+     * Use import directory object as a string.
      *
      * @return string
      */

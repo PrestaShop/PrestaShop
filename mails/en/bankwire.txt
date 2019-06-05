@@ -18,18 +18,19 @@ ACCOUNT OWNER: {bankwire_owner}
 
 ACCOUNT DETAILS: {bankwire_details}
 
-BANK ADDRESS: {bankwire_address} 		 
+BANK ADDRESS: {bankwire_address}
+
+Please specify your order reference in the bankwire description. 		 
 
 You can review your order and download your invoice from the
-"Order history" [{history_url}]
-section of your customer account by clicking "My account"
+"Order history" [{history_url}] section of your
+customer account by clicking "My account"
 [{my_account_url}] on our shop. 
 
 If you have a guest account, you can follow your order via the
-"Guest Tracking"
-[{guest_tracking_url}] section on our
-shop. 
+"Guest Tracking" [{guest_tracking_url}] section on
+our shop. 
 
-{shop_name} [{shop_url}] powered
-by PrestaShop(tm) [http://www.prestashop.com/] 
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
 
