@@ -36,6 +36,8 @@ class CartController extends FrameworkBundleAdminController
     {
         $cartGrid = $this->get('prestashop.core.grid.factory.cart')->getGrid($filters);
 
-        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig');
+        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig', [
+            'cartGrid' => $this->presentGrid($cartGrid),
+        ]);
     }
 }
