@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -42,12 +42,12 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
     {
         parent::setUp();
         $this->fileSystem = new Filesystem();
-        $this->bootKernel();
+        self::bootKernel();
     }
 
     /**
      * @expectedException \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Not enough arguments (missing: "theme, locale, coreOutputFolder").
+     * @expectedExceptionMessage Not enough arguments (missing: "theme, locale").
      */
     public function testMissingArguments()
     {
@@ -87,13 +87,13 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $expectedFiles = [];
         foreach ($themeInfos['coreLayouts'] as $coreLayout) {
-            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $coreLayout . '.html']);
-            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $coreLayout . '.txt']);
+            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, 'en', $coreLayout . '.html']);
+            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, 'en', $coreLayout . '.txt']);
         }
         foreach ($themeInfos['modulesLayouts'] as $moduleName => $moduleLayouts) {
             foreach ($moduleLayouts as $moduleLayout) {
-                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $moduleName, 'mails', $moduleLayout . '.html']);
-                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $moduleName, 'mails', $moduleLayout . '.txt']);
+                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $moduleName, 'mails', 'en', $moduleLayout . '.html']);
+                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$outputFolder, $moduleName, 'mails', 'en', $moduleLayout . '.txt']);
             }
         }
         $this->assertFilesExist($expectedFiles);
@@ -129,13 +129,13 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $expectedFiles = [];
         foreach ($themeInfos['coreLayouts'] as $coreLayout) {
-            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, $coreLayout . '.html']);
-            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, $coreLayout . '.txt']);
+            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, 'en', $coreLayout . '.html']);
+            $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$coreOutputFolder, 'en', $coreLayout . '.txt']);
         }
         foreach ($themeInfos['modulesLayouts'] as $moduleName => $moduleLayouts) {
             foreach ($moduleLayouts as $moduleLayout) {
-                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $moduleName, 'mails', $moduleLayout . '.html']);
-                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $moduleName, 'mails', $moduleLayout . '.txt']);
+                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $moduleName, 'mails', 'en', $moduleLayout . '.html']);
+                $expectedFiles[] = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $moduleName, 'mails', 'en', $moduleLayout . '.txt']);
             }
         }
         $this->assertFilesExist($expectedFiles);
@@ -206,5 +206,10 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $this->fileSystem->mkdir($outputFolder);
 
         return $outputFolder;
+    }
+
+    protected function tearDown()
+    {
+        self::$kernel->shutdown();
     }
 }

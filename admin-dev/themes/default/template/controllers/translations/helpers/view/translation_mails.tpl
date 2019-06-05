@@ -126,13 +126,16 @@
 								// load iframe
 								frame.append('<iframe class="email-frame" />');
 								$.ajax({
-									url:'ajax.php',
+									url:'index.php',
 									type: 'POST',
 									async: false,
 									dataType: 'html',
 									data: {
-										getEmailHTML : true,
-										email : src
+										ajax: 1,
+										controller: 'AdminTranslations',
+										action : 'emailHTML',
+										email : src,
+										token: window.token
 									},
 									success: function(result)
 									{

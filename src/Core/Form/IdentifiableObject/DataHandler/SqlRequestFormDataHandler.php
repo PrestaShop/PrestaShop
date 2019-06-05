@@ -72,7 +72,5 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
             ->setSql($data['sql']);
 
         $this->commandBus->handle($command);
-
-        return $sqlRequestId->getValue();
     }
 }

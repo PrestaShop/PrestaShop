@@ -340,9 +340,13 @@
 {%- endblock form_errors -%}
 
 {%- block form_rest -%}
+  {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
   {% for child in form -%}
     {% if not child.rendered %}
-      {{- form_row(child) -}}
+      {{- ps.form_group_row(child, { attr: child.vars.attr }, {
+        'label': child.vars.label
+      }) -}}
     {% endif %}
   {%- endfor %}
 {% endblock form_rest %}

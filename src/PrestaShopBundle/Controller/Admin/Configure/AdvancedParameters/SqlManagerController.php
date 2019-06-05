@@ -219,7 +219,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
             $result = $this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_sql_requests_index');
@@ -291,7 +291,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     public function deleteBulkAction(Request $request)
     {
         try {
-            $requestSqlIds = $request->request->get('request_sql_bulk');
+            $requestSqlIds = $request->request->get('sql_request_bulk');
             $bulkDeleteSqlRequestCommand = new BulkDeleteSqlRequestCommand($requestSqlIds);
 
             $this->getCommandBus()->handle($bulkDeleteSqlRequestCommand);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -80,7 +80,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a cart rule named "(.+)" that applies a percent discount of (\d+\.\d+)% with priority (\d+), quantity of (.*) and quantity per user (.*)$/
+     * @Given /^there is a cart rule named "(.+)" that applies a percent discount of (\d+\.\d+)% with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
      */
     public function thereIsACartRuleWithNameAndPercentDiscountOf50AndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $percent, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
     {
@@ -88,7 +88,15 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a cart rule named "(.+)" that applies an amount discount of (\d+\.\d+) with priority (\d+), quantity of (.*) and quantity per user (.*)$/
+     * @Given /^there is a cart rule named "(.+)" that applies no discount with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
+     */
+    public function thereIsACartRuleWithNameAndNoDiscountAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
+    {
+        $this->createCartRule($cartRuleName, 0, 0, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
+    }
+
+    /**
+     * @Given /^there is a cart rule named "(.+)" that applies an amount discount of (\d+\.\d+) with priority (\d+), quantity of (\d+) and quantity per user (\d+)$/
      */
     public function thereIsACartRuleWithNameAndAmountDiscountOfAndPriorityOfAndQuantityOfAndQuantityPerUserOf($cartRuleName, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
     {
@@ -155,6 +163,27 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" is restricted to cheapest product$/
+     */
+    public function cartRuleIsRestrictedToCheapestProduct($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->product_restriction = 1;
+        $this->cartRules[$cartRuleName]->reduction_product = -1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" does not apply to already discounted products$/
+     */
+    public function cartRuleDoesNotApplyToDiscountedProduct($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->reduction_exclude_special = 1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
      * @Given /^cart rule "(.+)" offers a gift product "(.+)"$/
      */
     public function cartRuleNamedHasAGiftProductNamed($cartRuleName, $productName)
@@ -162,6 +191,26 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
         $this->cartRules[$cartRuleName]->gift_product = $this->productFeatureContext->getProductWithName($productName)->id;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" offers free shipping$/
+     */
+    public function cartRuleOffersFreeShipping($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->free_shipping = 1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" applies discount only when cart total is above (\d+\.\d+)$/
+     */
+    public function cartRuleAppliesBetween($cartRuleName, $min)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->minimum_amount = $min;
         $this->cartRules[$cartRuleName]->save();
     }
 

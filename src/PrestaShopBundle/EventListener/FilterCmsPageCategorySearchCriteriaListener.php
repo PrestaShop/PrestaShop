@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\EventListener;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageFilters;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -55,9 +56,15 @@ class FilterCmsPageCategorySearchCriteriaListener
      */
     public function onFilterSearchCriteria(FilterSearchCriteriaEvent $event)
     {
-        if (!$event->getSearchCriteria() instanceof CmsPageCategoryFilters) {
+        $isAvailableFilter = $event->getSearchCriteria() instanceof CmsPageCategoryFilters ||
+            $event->getSearchCriteria() instanceof CmsPageFilters
+        ;
+
+        if (!$isAvailableFilter) {
             return;
         }
+
+        $searchCriteriaClass = get_class($event->getSearchCriteria());
 
         $searchCriteria = $event->getSearchCriteria();
 
@@ -69,13 +76,13 @@ class FilterCmsPageCategorySearchCriteriaListener
             $cmsCategoryId = $this->requestStack->getCurrentRequest()->query->getInt('id_cms_category');
 
             if (!$cmsCategoryId) {
-                $cmsCategoryId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
+                $cmsCategoryId = CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID;
             }
 
             $filters['id_cms_category_parent'] = $cmsCategoryId;
         }
 
-        $newSearchCriteria = new CmsPageCategoryFilters([
+        $newSearchCriteria = new $searchCriteriaClass([
             'orderBy' => $searchCriteria->getOrderBy(),
             'sortOrder' => $searchCriteria->getOrderWay(),
             'offset' => $searchCriteria->getOffset(),

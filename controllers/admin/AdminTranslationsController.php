@@ -25,7 +25,6 @@
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 class AdminTranslationsControllerCore extends AdminController
@@ -153,7 +152,7 @@ class AdminTranslationsControllerCore extends AdminController
             'url_submit' => self::$currentIndex . '&submitTranslations' . ucfirst($this->type_selected) . '=1&token=' . $this->token,
             'url_submit_installed_module' => self::$currentIndex . '&submitSelect' . ucfirst($this->type_selected) . '=1&token=' . $this->token,
             'toggle_button' => $this->displayToggleButton(),
-            'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED,
+            'textarea_sized' => self::TEXTAREA_SIZED,
         );
 
         // Call method initForm for a type
@@ -254,7 +253,6 @@ class AdminTranslationsControllerCore extends AdminController
         );
 
         $this->toolbar_scroll = false;
-        $this->base_tpl_view = 'main.tpl';
 
         $this->content .= $this->renderKpis();
         $this->content .= parent::renderView();
@@ -844,11 +842,6 @@ class AdminTranslationsControllerCore extends AdminController
                             }
                         }
 
-                        //fetch cldr datas for the new imported locale
-                        $languageCode = explode('-', Language::getLanguageCodeByIso($iso_code));
-                        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-                        $cldrUpdate->fetchLocale($languageCode[0] . '-' . strtoupper($languageCode[1]));
-
                         /*
                          * @see AdminController::$_conf
                          */
@@ -922,10 +915,6 @@ class AdminTranslationsControllerCore extends AdminController
             if ($success = Language::downloadAndInstallLanguagePack($isoCode, _PS_VERSION_, null, true)) {
                 Language::loadLanguages();
                 Tools::clearAllCache();
-
-                $languageCode = explode('-', Language::getLanguageCodeByIso($isoCode));
-                $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-                $cldrUpdate->fetchLocale($languageCode[0] . '-' . Tools::strtoupper($languageCode[1]));
 
                 /*
                  * @see AdminController::$_conf
@@ -3116,7 +3105,7 @@ class AdminTranslationsControllerCore extends AdminController
                 'count' => $this->total_expression,
                 'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
                 'mod_security_warning' => Tools::apacheModExists('mod_security'),
-                'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED,
+                'textarea_sized' => self::TEXTAREA_SIZED,
                 'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
                 'modules_translations' => isset($this->modules_translations) ? $this->modules_translations : array(),
                 'missing_translations' => $this->missing_translations,
@@ -3322,5 +3311,16 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         return $email_html;
+    }
+
+    /**
+     * Display the HTML content of an email.
+     */
+    public function displayAjaxEmailHTML()
+    {
+        $email = Tools::getValue('email');
+        $this->ajaxRender(
+            AdminTranslationsController::getEmailHTML($email)
+        );
     }
 }

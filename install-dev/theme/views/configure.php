@@ -25,12 +25,6 @@
  */
  $this->displayTemplate('header') ?>
 
-<script type="text/javascript">
-<!--
-var default_iso = '<?php echo $this->session->shop_country ?>';
--->
-</script>
-
 <!-- Configuration form -->
 <div id="infosShopBlock">
 	<h2><?php echo $this->translator->trans('Information about your Store', array(), 'Install'); ?></h2>

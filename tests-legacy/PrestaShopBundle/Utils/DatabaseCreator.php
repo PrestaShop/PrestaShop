@@ -53,7 +53,6 @@ class DatabaseCreator
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);
         $install->populateDatabase();
-        $install->installCldrDatas();
 
         $install->configureShop(array(
             'admin_firstname' => 'puff',
@@ -65,8 +64,6 @@ class DatabaseCreator
         ));
         $install->installFixtures();
         $install->installTheme();
-        $language = new \Language(1);
-        \Context::getContext()->language = $language;
         $install->installModules();
 
         DatabaseDump::create();

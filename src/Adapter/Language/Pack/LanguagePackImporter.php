@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\Pack;
 
-use Exception;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporterInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 
@@ -87,27 +85,9 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
             return $result;
         }
 
-        $this->updateCldr($isoCode);
-
-        return [];
-    }
-
-    /**
-     * Fetches CLDR data for currently updated or added language.
-     *
-     * @param $isoCode
-     *
-     * @throws Exception
-     */
-    private function updateCldr($isoCode)
-    {
         $this->entireCacheClearer->clear();
 
-        $languageCode = $this->languageProvider->getLanguageCodeByIso($isoCode);
-        $languageCode = $this->getFormattedLanguageCode($languageCode);
-
-        $cldrUpdate = new Update($this->translationsDir);
-        $cldrUpdate->fetchLocale($languageCode);
+        return [];
     }
 
     /**

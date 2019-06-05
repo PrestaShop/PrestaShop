@@ -52,40 +52,38 @@ class TreeBuilder
         $provider->setLocale($this->locale);
 
         if ('theme' === $provider->getIdentifier()) {
-            $translations = $provider->getMessageCatalogue()->all();
+            $defaultCatalogue = $provider->getMessageCatalogue();
         } else {
-            $translations = $provider->getDefaultCatalogue()->all();
+            $defaultCatalogue = $provider->getDefaultCatalogue();
         }
 
-        $xliffCatalog = $provider->getXliffCatalogue()->all();
-        $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme)->all();
+        $xliffCatalogue = $provider->getXliffCatalogue();
+        $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme);
 
-        foreach ($translations as $domain => $messages) {
+        $translations = [];
+
+        foreach ($defaultCatalogue->all() as $domain => $messages) {
             $missingTranslations = 0;
-            $domainDatabase = str_replace('.' . $provider->getLocale(), '', $domain);
 
             foreach ($messages as $translationKey => $translationValue) {
                 $data = array(
-                    'xlf' => (array_key_exists($domain, $xliffCatalog) &&
-                    array_key_exists($translationKey, $xliffCatalog[$domain]) ?
-                        $xliffCatalog[$domain][$translationKey] : null),
-                    'db' => (array_key_exists($domainDatabase, $databaseCatalogue) &&
-                    array_key_exists($translationKey, $databaseCatalogue[$domainDatabase]) ?
-                        $databaseCatalogue[$domainDatabase][$translationKey] : null),
+                    'xlf' => $xliffCatalogue->defines($translationKey, $domain)
+                        ? $xliffCatalogue->get($translationKey, $domain)
+                        : null,
+                    'db' => $databaseCatalogue->defines($translationKey, $domain)
+                        ? $databaseCatalogue->get($translationKey, $domain)
+                        : null,
                 );
 
                 // if search is empty or is in catalog default|xlf|database
                 if (empty($search) || $this->dataContainsSearchWord($search, array_merge(array('default' => $translationKey), $data))) {
                     $translations[$domain][$translationKey] = $data;
 
-                    if (
-                        empty($data['xlf']) &&
-                        empty($data['db'])
+                    if (empty($data['xlf'])
+                        && empty($data['db'])
                     ) {
                         ++$missingTranslations;
                     }
-                } else {
-                    unset($translations[$domain][$translationKey]);
                 }
             }
 
@@ -135,12 +133,11 @@ class TreeBuilder
      */
     public function makeTranslationsTree($catalogue)
     {
-        $translationsTree = array();
+        $translationsTree = [];
 
         foreach ($catalogue as $domain => $messages) {
             $tableisedDomain = Inflector::tableize($domain);
-            list($basename) = explode('.', $tableisedDomain);
-            $parts = array_reverse(explode('_', $basename));
+            $parts = array_reverse(explode('_', $tableisedDomain));
             $subtree = &$translationsTree;
 
             while (count($parts) > 0) {
@@ -173,18 +170,19 @@ class TreeBuilder
      * @param Router $router
      * @param null $theme
      * @param null $search
+     * @param null $module
      *
      * @return array
      */
-    public function cleanTreeToApi($tree, Router $router, $theme = null, $search = null)
+    public function cleanTreeToApi($tree, Router $router, $theme = null, $search = null, $module = null)
     {
-        $rootTree = array(
-            'tree' => array(
+        $rootTree = [
+            'tree' => [
                 'total_translations' => 0,
                 'total_missing_translations' => 0,
-                'children' => array(),
-            ),
-        );
+                'children' => [],
+            ],
+        ];
 
         $cleanTree = &$rootTree['tree']['children'];
 
@@ -192,7 +190,7 @@ class TreeBuilder
         foreach ($tree as $k1 => $t1) {
             $index2 = 0;
             if (is_array($t1) && '__' !== substr($k1, 0, 2)) {
-                $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1, $theme, $search);
+                $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1, $this->theme, $search, $module);
 
                 if (array_key_exists('__messages', $t1)) {
                     $nbMessage = count(current($t1['__messages']));
@@ -212,7 +210,7 @@ class TreeBuilder
                 foreach ($t1 as $k2 => $t2) {
                     $index3 = 0;
                     if (is_array($t2) && '__' !== substr($k2, 0, 2)) {
-                        $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $theme, $search);
+                        $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $this->theme, $search, $module);
 
                         if (array_key_exists('__messages', $t2)) {
                             $nbMessage = count(current($t2['__messages']));
@@ -233,7 +231,7 @@ class TreeBuilder
 
                         foreach ($t2 as $k3 => $t3) {
                             if (is_array($t3) && '__' !== substr($k3, 0, 2)) {
-                                $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $theme, $search);
+                                $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $this->theme, $search, $module);
 
                                 if (array_key_exists('__messages', $t3)) {
                                     $nbMessage = count(current($t3['__messages']));
@@ -286,16 +284,18 @@ class TreeBuilder
      * @param $fullName
      * @param bool $theme
      * @param null $search
+     * @param null $module
      *
      * @return mixed
      */
-    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false, $search = null)
+    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false, $search = null, $module = false)
     {
         if (!isset($tree[$index])) {
             $routeParams = array(
                 'locale' => $this->locale,
                 'domain' => $fullName,
                 'theme' => $theme,
+                'module' => $module,
             );
 
             if (!empty($search)) {

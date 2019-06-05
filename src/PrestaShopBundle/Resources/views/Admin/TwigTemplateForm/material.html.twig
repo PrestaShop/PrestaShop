@@ -76,8 +76,8 @@
                  name="{{ form.vars.full_name }}[]"
                  value="{{ choice[choice_value] }}"
                  {% if choice[choice_value] in selected_values %}checked{% endif %}
-                 {% if choice[choice_value] in disabled_values %}disabled{% endif %}
                {% endif %}
+               {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
         >
         <i class="md-checkbox-control"></i>
         {{ choice[choice_label] }}
@@ -93,7 +93,7 @@
              name="{{ form.vars.full_name }}"
              value="{{ choice[choice_value] }}"
              {% if choice[choice_value] in selected_values %}checked{% endif %}
-             {% if choice[choice_value] in disabled_values %}disabled{% endif %}
+             {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
       >
       {{ choice[choice_label] }}
     </label>

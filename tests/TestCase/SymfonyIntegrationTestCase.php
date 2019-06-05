@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\TestCase;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use LegacyTests\Unit\ContextMocker;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
-class SymfonyIntegrationTestCase extends KernelTestCase
+class SymfonyIntegrationTestCase extends WebTestCase
 {
     /**
      * @var ContextMocker
@@ -43,14 +44,26 @@ class SymfonyIntegrationTestCase extends KernelTestCase
      */
     protected $container;
 
+    /**
+     * @var Client
+     */
+    protected $client;
+
     protected function setUp()
     {
         parent::setUp();
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
 
-        $this->bootKernel();
+        $this->client = self::createClient();
+
+        //createClient already creates the kernel
+        //$this->bootKernel();
         $this->container = self::$kernel->getContainer();
+
+        // Global var for SymfonyContainer
+        global $kernel;
+        $kernel = self::$kernel;
     }
 
     protected function tearDown()

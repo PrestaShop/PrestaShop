@@ -140,4 +140,21 @@ class AdminZonesControllerCore extends AdminController
 
         return parent::renderForm();
     }
+
+    /**
+     * Get all zones displayed in a select input.
+     */
+    public function displayAjaxZones()
+    {
+        $this->context->smarty->assign(array(
+            'zones' => Zone::getZones(),
+        ));
+
+        $array = array(
+            'hasError' => false,
+            'errors' => '',
+            'data' => $this->context->smarty->fetch('controllers/zones/select.tpl'),
+        );
+        $this->ajaxRender(json_encode($array));
+    }
 }

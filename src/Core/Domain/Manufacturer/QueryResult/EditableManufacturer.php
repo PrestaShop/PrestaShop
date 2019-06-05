@@ -44,32 +44,32 @@ class EditableManufacturer
     private $name;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedShortDescriptions;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedDescriptions;
 
     /**
-     * @var array|null
+     * @var array
      */
     private $logoImage;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedMetaTitles;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedMetaKeywords;
 
@@ -87,25 +87,25 @@ class EditableManufacturer
      * @param ManufacturerId $manufacturerId
      * @param string $name
      * @param bool $enabled
-     * @param array|null $localizedShortDescriptions
-     * @param array|null $localizedDescriptions
+     * @param array $localizedShortDescriptions
+     * @param array $localizedDescriptions
+     * @param array $localizedMetaTitles
+     * @param array $localizedMetaDescriptions
+     * @param array $localizedMetaKeywords
      * @param array|null $logoImage
-     * @param array|null $localizedMetaTitles
-     * @param array|null $localizedMetaDescriptions
-     * @param array|null $localizedMetaKeywords
      * @param array $associatedShops
      */
     public function __construct(
         ManufacturerId $manufacturerId,
         $name,
-        $enabled = false,
-        array $localizedShortDescriptions = null,
-        array $localizedDescriptions = null,
-        array $localizedMetaTitles = null,
-        array $localizedMetaDescriptions = null,
-        array $localizedMetaKeywords = null,
-        array $logoImage = null,
-        array $associatedShops = []
+        $enabled,
+        array $localizedShortDescriptions,
+        array $localizedDescriptions,
+        array $localizedMetaTitles,
+        array $localizedMetaDescriptions,
+        array $localizedMetaKeywords,
+        $logoImage,
+        array $associatedShops
     ) {
         $this->manufacturerId = $manufacturerId;
         $this->name = $name;
@@ -136,7 +136,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedShortDescriptions()
     {
@@ -144,7 +144,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedDescriptions()
     {
@@ -152,7 +152,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return array|null
+     * @return array
      */
     public function getLogoImage()
     {
@@ -160,7 +160,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedMetaTitles()
     {
@@ -168,7 +168,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedMetaDescriptions()
     {
@@ -176,7 +176,7 @@ class EditableManufacturer
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
     public function getLocalizedMetaKeywords()
     {

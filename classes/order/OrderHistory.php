@@ -349,7 +349,7 @@ class OrderHistoryCore extends ObjectModel
 
         // changes invoice number of order ?
         if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order)) {
-            die($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification'));
+            die(Tools::displayError($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification')));
         }
 
         // the order is valid if and only if the invoice is available and the order is not cancelled
@@ -486,11 +486,17 @@ class OrderHistoryCore extends ObjectModel
             ShopUrl::cacheMainDomainForShop($order->id_shop);
 
             $topic = $result['osname'];
+            $carrierUrl = '';
+            if (Validate::isLoadedObject($carrier = new Carrier((int) $order->id_carrier, $order->id_lang))) {
+                $carrierUrl = $carrier->url;
+            }
             $data = array(
                 '{lastname}' => $result['lastname'],
                 '{firstname}' => $result['firstname'],
                 '{id_order}' => (int) $this->id_order,
                 '{order_name}' => $order->getUniqReference(),
+                '{followup}' => str_replace('@', $order->getWsShippingNumber(), $carrierUrl),
+                '{shipping_number}' => $order->getWsShippingNumber(),
             );
 
             if ($result['module_name']) {

@@ -32,24 +32,66 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class TranslatableType adds translatable inputs with custom inner type to forms.
+ * Language selection uses a dropdown.
  */
 class TranslatableType extends AbstractType
 {
     /**
-     * @var array
+     * @var array List of enabled locales
      */
-    private $locales;
+    private $enabledLocales;
 
     /**
-     * @param array $locales
+     * @var array List of all available locales
      */
-    public function __construct(array $locales)
-    {
-        $this->locales = $locales;
+    private $availableLocales;
+
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
+    /**
+     * @var bool indicates whether to save the selected form language or not
+     */
+    private $saveFormLocaleChoice;
+
+    /**
+     * @var string default form language ID
+     */
+    private $defaultFormLanguageId;
+
+    /**
+     * @var int default language of the shop, used as a fallback when default form language is not set
+     */
+    private $defaultShopLanguageId;
+
+    /**
+     * @param array $availableLocales
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param bool $saveFormLocaleChoice
+     * @param int $defaultFormLanguageId
+     * @param int $defaultShopLanguageId
+     */
+    public function __construct(
+        array $availableLocales,
+        UrlGeneratorInterface $urlGenerator,
+        $saveFormLocaleChoice,
+        $defaultFormLanguageId,
+        $defaultShopLanguageId
+    ) {
+        $this->enabledLocales = $this->filterEnableLocales($availableLocales);
+        $this->availableLocales = $availableLocales;
+        $this->urlGenerator = $urlGenerator;
+        $this->saveFormLocaleChoice = $saveFormLocaleChoice;
+        $this->defaultFormLanguageId = $defaultFormLanguageId;
+        $this->defaultShopLanguageId = $defaultShopLanguageId;
     }
 
     /**
@@ -75,8 +117,14 @@ class TranslatableType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['locales'] = $options['locales'];
-        $view->vars['default_locale'] = reset($options['locales']);
+        $view->vars['default_locale'] = $this->getDefaultLocale($options['locales']);
         $view->vars['hide_locales'] = 1 >= count($options['locales']);
+
+        if ($this->saveFormLocaleChoice) {
+            $view->vars['change_form_language_url'] = $this->urlGenerator->generate(
+                'admin_employees_change_form_language'
+            );
+        }
 
         $this->setErrorsByLocale($view, $form, $options['locales']);
     }
@@ -89,7 +137,14 @@ class TranslatableType extends AbstractType
         $resolver->setDefaults([
             'type' => TextType::class,
             'options' => [],
-            'locales' => $this->locales,
+            'error_bubbling' => false,
+            'only_enabled_locales' => false,
+            'locales' => function (Options $options) {
+                return $options['only_enabled_locales'] ?
+                    $this->enabledLocales :
+                    $this->availableLocales
+                ;
+            },
         ]);
 
         $resolver->setAllowedTypes('locales', 'array');
@@ -244,5 +299,53 @@ class TranslatableType extends AbstractType
     private function doesErrorFormAndCurrentFormMatches(FormInterface $errorForm, FormInterface $currentForm)
     {
         return $errorForm === $currentForm;
+    }
+
+    /**
+     * Get default locale.
+     *
+     * @param array $locales
+     *
+     * @return array
+     */
+    private function getDefaultLocale(array $locales)
+    {
+        if ($this->defaultFormLanguageId) {
+            // Searching for a locale that matches default form language
+            foreach ($locales as $locale) {
+                if ($locale['id_lang'] == $this->defaultFormLanguageId) {
+                    return $locale;
+                }
+            }
+        }
+
+        // Searching for locale that matches default shop language
+        foreach ($locales as $locale) {
+            if ($locale['id_lang'] == $this->defaultShopLanguageId) {
+                return $locale;
+            }
+        }
+
+        return reset($locales);
+    }
+
+    /**
+     * Filters only enabled locales
+     *
+     * @param array $availableLocales
+     *
+     * @return array
+     */
+    private function filterEnableLocales(array $availableLocales)
+    {
+        $enabledLocales = [];
+
+        foreach ($availableLocales as $locale) {
+            if ($locale['active']) {
+                $enabledLocales[] = $locale;
+            }
+        }
+
+        return $enabledLocales;
     }
 }

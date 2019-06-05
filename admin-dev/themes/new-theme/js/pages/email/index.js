@@ -34,6 +34,8 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -48,6 +50,7 @@ $(() => {
   emailLogsGrid.addExtension(new SubmitBulkExtension());
   emailLogsGrid.addExtension(new SubmitGridExtension());
   emailLogsGrid.addExtension(new LinkRowActionExtension());
+  emailLogsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   new EmailSendingTest();
   new SmtpConfigurationToggler();

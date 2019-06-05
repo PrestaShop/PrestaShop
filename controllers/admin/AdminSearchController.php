@@ -25,6 +25,9 @@
  */
 class AdminSearchControllerCore extends AdminController
 {
+    const TOKEN_CHECK_START_POS = 34;
+    const TOKEN_CHECK_LENGTH = 8;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -34,6 +37,23 @@ class AdminSearchControllerCore extends AdminController
     public function getTabSlug()
     {
         return 'ROLE_MOD_TAB_ADMINSEARCHCONF_';
+    }
+
+    public function checkToken()
+    {
+        // Specific check for the ajax request 'searchCron'
+        if (Tools::isSubmit('action')
+            && 'searchCron' === Tools::getValue('action')
+            && substr(
+                _COOKIE_KEY_,
+                static::TOKEN_CHECK_START_POS,
+                static::TOKEN_CHECK_LENGTH
+            ) === Tools::getValue('token')
+        ) {
+            return true;
+        }
+
+        return parent::checkToken();
     }
 
     public function postProcess()
@@ -75,7 +95,15 @@ class AdminSearchControllerCore extends AdminController
                     /* Handle customer ID */
                     if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
                         if (($customer = new Customer($this->query)) && Validate::isLoadedObject($customer)) {
-                            Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer=' . (int) $customer->id . '&viewcustomer' . '&token=' . Tools::getAdminToken('AdminCustomers' . (int) Tab::getIdFromClassName('AdminCustomers') . (int) $this->context->employee->id));
+                            Tools::redirectAdmin($this->context->link->getAdminLink(
+                                'AdminCustomers',
+                                true,
+                                [],
+                                [
+                                    'id_customer' => $customer->id,
+                                    'viewcustomer' => 1,
+                                ]
+                            ));
                         }
                     }
 
@@ -459,5 +487,27 @@ class AdminSearchControllerCore extends AdminController
         return isset($array[$key]) &&
             is_countable($array[$key]) &&
             count($array[$key]);
+    }
+
+    /**
+     * Request triggering the search indexation.
+     *
+     * Kept as GET request for backward compatibility purpose, but should be modified as POST when migrated.
+     * NOTE the token is different for that method, check the method checkToken() for more details.
+     */
+    public function displayAjaxSearchCron()
+    {
+        if (!Tools::getValue('id_shop')) {
+            Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
+        } else {
+            Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, (int) Tools::getValue('id_shop'));
+        }
+
+        // Considering the indexing task can be really long, we ask the PHP process to not stop before 2 hours.
+        ini_set('max_execution_time', 7200);
+        Search::indexation(Tools::getValue('full'));
+        if (Tools::getValue('redirect')) {
+            Tools::redirectAdmin($_SERVER['HTTP_REFERER'] . '&conf=4');
+        }
     }
 }

@@ -183,7 +183,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     'PS_SAV_IMAP_PWD' => array(
                         'title' => $this->trans('IMAP password', array(), 'Admin.Catalog.Feature'),
                         'hint' => $this->trans('Password to use to connect your IMAP server.', array(), 'Admin.Catalog.Help'),
-                        'type' => 'text',
+                        'type' => 'password',
                     ),
                     'PS_SAV_IMAP_DELETE_MSG' => array(
                         'title' => $this->trans('Delete messages', array(), 'Admin.Catalog.Feature'),

@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
+/**
+ * Translation provider for native modules (maintained by the core team)
+ * Translations are provided by Crowdin.
+ */
 class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**
@@ -35,9 +37,7 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
      */
     public function getTranslationDomains()
     {
-        return array(
-            '^Modules*',
-        );
+        return ['^Modules[A-Z]'];
     }
 
     /**
@@ -45,9 +45,7 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
      */
     public function getFilters()
     {
-        return array(
-            '#^Modules*#',
-        );
+        return ['#^Modules[A-Z]#'];
     }
 
     /**
@@ -56,29 +54,6 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
     public function getIdentifier()
     {
         return 'modules';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
     }
 
     /**

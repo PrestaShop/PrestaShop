@@ -14,6 +14,7 @@ services:
     volumes:
       - .docker:/tmp/docker
       - ../../:/var/www/html/
+      - selenium-downloads:/home/seluser/Downloads
     networks:
       - default
 
@@ -41,10 +42,11 @@ services:
 
   selenium-chrome:
     image: selenium/standalone-chrome
+    user: "root:root"
     depends_on:
       - "prestashop"
     volumes:
-      - /dev/shm:/dev/shm
+      - selenium-downloads:/home/seluser/Downloads
     networks:
       default:
         aliases:
@@ -56,3 +58,6 @@ services:
       MYSQL_ROOT_PASSWORD: admin
     networks:
       - default
+
+volumes:
+  selenium-downloads:

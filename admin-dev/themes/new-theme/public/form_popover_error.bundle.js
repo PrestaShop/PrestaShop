@@ -1,5 +1,5 @@
-!function(r){function o(t){if(e[t])return e[t].exports;var n=e[t]={i:t,l:!1,exports:{}};return r[t].call(n.exports,n,n.exports,o),n.l=!0,n.exports}var e={};o.m=r,o.c=e,o.i=function(r){return r},o.d=function(r,e,t){o.o(r,e)||Object.defineProperty(r,e,{configurable:!1,enumerable:!0,get:t})},o.n=function(r){var e=r&&r.__esModule?function(){return r.default}:function(){return r};return o.d(e,"a",e),e},o.o=function(r,o){return Object.prototype.hasOwnProperty.call(r,o)},o.p="",o(o.s=278)}({278:function(r,o){/**
- * 2007-2018 PrestaShop
+window.form_popover_error=function(r){function t(n){if(o[n])return o[n].exports;var e=o[n]={i:n,l:!1,exports:{}};return r[n].call(e.exports,e,e.exports,t),e.l=!0,e.exports}var o={};return t.m=r,t.c=o,t.i=function(r){return r},t.d=function(r,o,n){t.o(r,o)||Object.defineProperty(r,o,{configurable:!1,enumerable:!0,get:n})},t.n=function(r){var o=r&&r.__esModule?function(){return r.default}:function(){return r};return t.d(o,"a",o),o},t.o=function(r,t){return Object.prototype.hasOwnProperty.call(r,t)},t.p="",t(t.s=306)}({306:function(r,t,o){"use strict";/**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,11 +15,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var e=window.$;e(function(){e('[data-toggle="form-popover-error"]').popover();var r=function(r){var t=e(r.currentTarget),n=t.closest(".form-group"),f=n.find(".invalid-feedback-container"),u=n.find(".form-popover-error"),c=f.width();u.css("width",c);var i=o(f,u);u.css("left",i+"px")},o=function(r,o){return r.offset().left-o.offset().left};e(document).on("shown.bs.popover",'[data-toggle="form-popover-error"]',function(o){return r(o)})})}});
+var n=window.$;n(function(){n('[data-toggle="form-popover-error"]').popover({html:!0,content:function(){return o(this)}});var r=function(r){var o=n(r.currentTarget),e=o.closest(".form-group"),u=e.find(".invalid-feedback-container"),f=e.find(".form-popover-error"),i=u.width();f.css("width",i);var c=t(u,f);f.css("left",c+"px")},t=function(r,t){return r.offset().left-t.offset().left},o=function(r){var t=n(r).data("id");return n('.js-popover-error-content[data-id="'+t+'"]').html()};n(document).on("shown.bs.popover",'[data-toggle="form-popover-error"]',function(t){return r(t)})})}});

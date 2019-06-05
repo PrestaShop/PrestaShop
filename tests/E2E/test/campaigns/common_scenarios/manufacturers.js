@@ -41,8 +41,8 @@ module.exports = {
       test('should go to "Brands & Suppliers" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.manufacturers_submenu));
       test('should click on "Add new brand" button', () => client.waitForExistAndClick(Brands.new_brand_button));
       test('should set the "Name" input', () => client.waitAndSetValue(Brands.name_input, brandData.name + date_time));
-      test('should set the "Short Description" input', () => client.setEditorText(Brands.short_description_input, brandData.shortDescription));
-      test('should set the "Description" input', () => client.setEditorText(Brands.description_input, brandData.description));
+      test('should set the "Short Description" input', () => client.setiFrameContent(Brands.short_description_input, brandData.shortDescription,false));
+      test('should set the "Description" input', () => client.setiFrameContent(Brands.description_input, brandData.description,false));
       test('should upload "Picture" to the brand', () => client.uploadPicture(brandData.picture, Brands.image_input, "logo"));
       test('should set the "Meta title" input', () => client.waitAndSetValue(Brands.meta_title_input, brandData.metaTitle));
       test('should set the "Meta description" input', () => client.waitAndSetValue(Brands.meta_description_input, brandData.metaDescription));
@@ -53,9 +53,9 @@ module.exports = {
             .then(() => client.keys('Enter'));
         });
       });
-      test('should click on "Activate" button', () => client.waitForExistAndClick(Brands.active_button));
-      test('should click on "Save" button', () => client.waitForExistAndClick(Brands.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
+      test('should click on "Activate" button', () => client.scrollWaitForExistAndClick(Brands.active_button));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Brands.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, 'Successful creation.'));
     }, 'common_client');
   },
   createBrandAddress: function (brandAddressData) {
@@ -72,8 +72,8 @@ module.exports = {
       test('should set the "Home phone" input', () => client.waitAndSetValue(BrandAddress.phone_input, brandAddressData.homePhone));
       test('should set the "Mobile phone" input', () => client.waitAndSetValue(BrandAddress.mobile_phone_input, brandAddressData.mobilePhone));
       test('should set the "Other" input', () => client.waitAndSetValue(BrandAddress.other_input, brandAddressData.other));
-      test('should click on "Save" button', () => client.waitForExistAndClick(BrandAddress.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(BrandAddress.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, 'Successful creation.'));
     }, 'common_client');
   },
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use DOMElement;
 use DOMAttr;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**
  * Class CSSInlineTransformation applies a transformation on html templates, it downloads
@@ -51,6 +52,10 @@ class CSSInlineTransformation extends AbstractTransformation
      */
     public function apply($templateContent, array $templateVariables)
     {
+        if (MailTemplateInterface::HTML_TYPE != $this->type) {
+            return $templateContent;
+        }
+
         /**
          * For unknown reason Emogrifier modifies href attribute with variables written
          * like this {shop_url} so we temporarily change them to @shop_url@
@@ -58,8 +63,9 @@ class CSSInlineTransformation extends AbstractTransformation
         $templateContent = preg_replace('/\{(\w+)\}/', '@\1@', $templateContent);
 
         $cssContent = $this->getCssContent($templateContent);
-        $inliner = new Emogrifier($templateContent, $cssContent);
-        $templateContent = $inliner->emogrify();
+
+        $cssToInlineStyles = new CssToInlineStyles();
+        $templateContent = $cssToInlineStyles->convert($templateContent, $cssContent);
 
         $converter = new CssToAttributeConverter($templateContent);
         $templateContent = $converter->convertCssToVisualAttributes()->render();

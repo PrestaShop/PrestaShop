@@ -226,11 +226,6 @@ class Formatter
      */
     protected function adjustMinorDigitsZeroes($minorDigits)
     {
-        if (strlen($minorDigits) > $this->numberSpecification->getMaxFractionDigits()) {
-            // Strip any trailing zeroes.
-            $minorDigits = rtrim($minorDigits, '0');
-        }
-
         if (strlen($minorDigits) < $this->numberSpecification->getMinFractionDigits()) {
             // Re-add needed zeroes
             $minorDigits = str_pad(
@@ -238,6 +233,11 @@ class Formatter
                 $this->numberSpecification->getMinFractionDigits(),
                 '0'
             );
+        }
+
+        if (strlen($minorDigits) > $this->numberSpecification->getMaxFractionDigits()) {
+            // Strip any trailing zeroes.
+            $minorDigits = rtrim($minorDigits, '0');
         }
 
         return $minorDigits;

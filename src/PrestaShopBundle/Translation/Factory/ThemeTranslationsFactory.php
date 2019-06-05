@@ -39,7 +39,7 @@ use PrestaShopBundle\Translation\Provider\ThemeProvider;
 class ThemeTranslationsFactory extends TranslationsFactory
 {
     /**
-     * @var ThemeProvider
+     * @var ThemeProvider the theme provider
      */
     private $themeProvider;
 
@@ -77,10 +77,10 @@ class ThemeTranslationsFactory extends TranslationsFactory
     }
 
     /**
-     * @param $locale
-     * @param $domain
+     * @param string $locale the catalogue locale
+     * @param string $domain the catalogue domain
      *
-     * @return mixed
+     * @return string
      */
     protected function removeLocaleFromDomain($locale, $domain)
     {
@@ -88,9 +88,11 @@ class ThemeTranslationsFactory extends TranslationsFactory
     }
 
     /**
-     * @param $themeName
-     * @param $locale
-     * @param null $search
+     * @param string $themeName the theme name
+     * @param string $locale the catalogue locale
+     * @param string|null $search
+     *
+     * @throws ProviderNotFoundException
      *
      * @return array
      */

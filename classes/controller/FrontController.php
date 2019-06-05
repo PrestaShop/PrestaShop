@@ -675,12 +675,14 @@ class FrontControllerCore extends Controller
 
         $html = '';
 
+        $theme = $this->context->shop->theme->getName();
+
         if (is_array($content)) {
             foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
+                $html .= $this->context->smarty->fetch($tpl, null, $theme . $this->getLayout());
             }
         } else {
-            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+            $html = $this->context->smarty->fetch($content, null, $theme . $this->getLayout());
         }
 
         Hook::exec('actionOutputHTMLBefore', array('html' => &$html));
@@ -1526,6 +1528,8 @@ class FrontControllerCore extends Controller
 
         return array(
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
+            'display_prices_tax_incl' => (bool) (new TaxConfiguration())->includeTaxes(),
+            'taxes_enabled' => (bool) Configuration::get('PS_TAX'),
             'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
             'is_b2b' => (bool) Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool) Configuration::isCatalogMode(),

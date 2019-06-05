@@ -46,7 +46,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class TaxController is responsible for handling "Improve > International > Taxes" page.
+ * Responsible for handling "Improve > International > Taxes" page.
  */
 class TaxController extends FrameworkBundleAdminController
 {
@@ -115,6 +115,8 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality.
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -134,6 +136,88 @@ class TaxController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_taxes_index', ['filters' => $filters]);
+    }
+
+    /**
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
+        $taxFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_form_builder');
+
+        try {
+            $taxForm = $taxFormBuilder->getForm();
+            $taxForm->handleRequest($request);
+            $result = $taxFormHandler->handle($taxForm);
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_taxes_index');
+            }
+        } catch (TaxException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Tax/create.html.twig', [
+            'taxForm' => $taxForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
+    }
+
+    /**
+     * Handles tax edit
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_taxes_index",
+     * )
+     *
+     * @param Request $request
+     * @param int $taxId
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $taxId)
+    {
+        $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
+        $taxFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_form_builder');
+
+        try {
+            $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
+            $taxForm->handleRequest($request);
+            $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_taxes_index');
+            }
+        } catch (TaxException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof TaxNotFoundException) {
+                return $this->redirectToRoute('admin_taxes_index');
+            }
+        }
+
+        /** @var EditableTax $editableTax */
+        $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing((int) $taxId));
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Tax/edit.html.twig', [
+            'taxForm' => $taxForm->createView(),
+            'taxName' => $editableTax->getLocalizedNames()[$this->getContextLangId()],
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
     }
 
     /**

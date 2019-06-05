@@ -66,7 +66,7 @@ class FileLoggerCore extends AbstractLogger
     public function getFilename()
     {
         if (empty($this->filename)) {
-            die('Filename is empty.');
+            die(Tools::displayError('Filename is empty.'));
         }
 
         return $this->filename;

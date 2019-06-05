@@ -26,10 +26,17 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 
-class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+/**
+ * Translation provider for a specific native module (maintained by the core team)
+ * Used mainly for the display in the Translations Manager of the Back Office.
+ */
+class ModuleProvider extends AbstractProvider implements SearchProviderInterface, UseModuleInterface
 {
+    /**
+     * @var string the module name
+     */
     private $moduleName;
 
     /**
@@ -37,9 +44,7 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return array(
-            '^Modules' . $this->getModuleDomain() . '*',
-        );
+        return ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
     }
 
     /**
@@ -47,9 +52,7 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getFilters()
     {
-        return array(
-            '#^Modules' . $this->getModuleDomain() . '*#i',
-        );
+        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
     }
 
     /**
@@ -60,6 +63,9 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
         return 'module';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setModuleName($moduleName)
     {
         $this->moduleName = $moduleName;
@@ -70,36 +76,8 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
     /**
      * {@inheritdoc}
      */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultResourceDirectory()
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-    }
-
-    private function getModuleDomain()
-    {
-        return preg_replace('/^ps_(\w+)/', '$1', $this->moduleName);
     }
 }

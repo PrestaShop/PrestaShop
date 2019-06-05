@@ -35,6 +35,16 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
     public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
+        // Compatibility with legacy behavior.
+        // Some controllers can only be used in "All shops" context.
+        // This makes sure that user cannot switch shop contexts
+        // when in one of pages (controller) below.
+        $controllers = ['AdminLanguages', 'AdminProfiles'];
+
+        if (in_array($controllerName, $controllers)) {
+            $this->multishop_context = Shop::CONTEXT_ALL;
+        }
+
         parent::__construct($controllerName, 'new-theme');
 
         $this->title = $title;
@@ -50,14 +60,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
         $this->className = 'LegacyLayout';
-
-        // Compatibility with legacy behavior.
-        // Languages can only be used in "All shops" context.
-        // This makes sure that user cannot switch shop contexts
-        // when on Languages page.
-        if ('AdminLanguages' === $controllerName) {
-            $this->multishop_context = Shop::CONTEXT_ALL;
-        }
     }
 
     public function setMedia($isNewTheme = false)
@@ -87,7 +89,11 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
         $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
+        // @todo remove once the product page has been made responsive
+        $isProductPage = ('AdminProducts' === $this->controller_name);
+
         $vars = array(
+            'viewport_scale' => $isProductPage ? '0.75' : '1',
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
@@ -100,6 +106,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'title' => $this->title ? $this->title : $this->page_header_toolbar_title,
             'toolbar_btn' => $this->page_header_toolbar_btn,
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+            'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
+                'action' => 'toggleMenu',
+            ]),
         );
 
         if ($this->helpLink === false || !empty($this->helpLink)) {

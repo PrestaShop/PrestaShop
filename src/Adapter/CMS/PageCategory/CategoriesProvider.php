@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory;
 
 use Db;
 use DbQuery;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopDatabaseException;
 
 /**
@@ -67,7 +67,7 @@ class CategoriesProvider
      */
     public function getAllNestedCategories()
     {
-        return $this->collectNestedCategoriesIdsAndNames(CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID);
+        return $this->collectNestedCategoriesIdsAndNames(CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID);
     }
 
     /**

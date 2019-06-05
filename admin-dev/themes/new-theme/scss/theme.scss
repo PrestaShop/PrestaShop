@@ -5,7 +5,7 @@
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
-@import "mixins/breakpoints";
+@import "~bootstrap/scss/mixins/breakpoints";
 @import "mixins/cards";
 @import "mixins/hover";
 @import "mixins/stars";
@@ -52,6 +52,8 @@
 @import "pages/meta";
 @import "pages/import_data";
 @import "pages/currency";
+@import "pages/themes_logo";
+@import "pages/cms_page";
 
 // Main Layout
 @import "pages/modules";

@@ -122,7 +122,7 @@ class SortOrder
     {
         list($entity, $field, $direction) = explode('.', $sortOrderConfiguration);
 
-        return new SortOrder($entity, $field, $direction);
+        return new static($entity, $field, $direction);
     }
 
     /**

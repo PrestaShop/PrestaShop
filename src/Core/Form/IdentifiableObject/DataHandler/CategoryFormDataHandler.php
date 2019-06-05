@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -103,8 +103,9 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
     {
         $command = $this->createEditCategoryCommand($categoryId, $data);
 
-        /** @var CategoryId $categoryId */
-        $categoryId = $this->commandBus->handle($command);
+        $this->commandBus->handle($command);
+
+        $categoryId = new CategoryId((int) $categoryId);
 
         $this->uploadImages(
             $categoryId,
@@ -112,8 +113,6 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
             $data['thumbnail_image'],
             $data['menu_thumbnail_images']
         );
-
-        return $categoryId->getValue();
     }
 
     /**
@@ -137,7 +136,10 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedMetaDescriptions($data['meta_description']);
         $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
-        $command->setAssociatedShopIds($data['shop_association']);
+
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
 
         return $command;
     }
@@ -162,7 +164,10 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedMetaDescriptions($data['meta_description']);
         $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
-        $command->setAssociatedShopIds($data['shop_association']);
+
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
 
         return $command;
     }

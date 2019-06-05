@@ -21,3 +21,7 @@ _currency:
 _tax:
     resource: "tax.yml"
     prefix: /taxes/
+
+_state:
+  resource: "state.yml"
+  prefix: /states/

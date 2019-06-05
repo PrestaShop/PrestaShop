@@ -23,76 +23,76 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% block tax_options %}
-  {{ form_start(taxOptionsForm, {'action': path('admin_taxes_save_options')}) }}
-  <div class="card">
-    <h3 class="card-header">
-      {{ 'Tax options'|trans({}, 'Admin.International.Feature') }}
-    </h3>
-    <div class="card-block row">
-      <div class="card-text">
-        <div class="form-group row">
-          <label class="form-control-label" for="{{ taxOptionsForm.options.enable_tax.vars.id }}">
-            {{ 'Enable tax'|trans({}, 'Admin.International.Feature') }}
-          </label>
-          <div class="col-sm">
-            {{ form_widget(taxOptionsForm.options.enable_tax, {'attr': {'class': 'js-enable-tax'}}) }}
-              <small class="form-text">
-                {{ 'Select whether or not to include tax on purchases.'|trans({}, 'Admin.International.Help') }}
-              </small>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="form-control-label" for="{{ taxOptionsForm.options.display_tax_in_cart.vars.id }}">
-            {{ 'Display tax in the shopping cart'|trans({}, 'Admin.International.Feature') }}
-          </label>
-          <div class="col-sm">
-            {{ form_widget(taxOptionsForm.options.display_tax_in_cart, {'attr': {'class': 'js-display-in-cart'}}) }}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(taxOptionsForm, {'action': path('admin_taxes_save_options')}) }}
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Tax options'|trans({}, 'Admin.International.Feature') }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+      <div class="form-group row">
+        <label class="form-control-label" for="{{ taxOptionsForm.options.enable_tax.vars.id }}">
+          {{ 'Enable tax'|trans({}, 'Admin.International.Feature') }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(taxOptionsForm.options.enable_tax, {'attr': {'class': 'js-enable-tax'}}) }}
             <small class="form-text">
-              {{ 'Select whether or not to display tax on a distinct line in the cart.'|trans({}, 'Admin.International.Help') }}
+              {{ 'Select whether or not to include tax on purchases.'|trans({}, 'Admin.International.Help') }}
             </small>
-          </div>
         </div>
-        <div class="form-group row">
-          <label for="{{ taxOptionsForm.options.tax_address_type.vars.id }}" class="form-control-label">
-            {{ 'Based on'|trans({}, 'Admin.International.Feature') }}
-          </label>
-          <div class="col-sm">
-            {{ form_widget(taxOptionsForm.options.tax_address_type) }}
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="form-control-label" for="{{ taxOptionsForm.options.use_eco_tax.vars.id }}">
-            {{ 'Use ecotax'|trans({}, 'Admin.International.Feature') }}
-          </label>
-          <div class="col-sm">
-            {{ form_widget(taxOptionsForm.options.use_eco_tax) }}
-            {% if (taxOptionsForm.options.use_eco_tax.vars.value != 0) %}
-              <small class="form-text">
-                {{ 'If you disable the ecotax, the ecotax for all your products will be set to 0.'|trans({}, 'Admin.International.Help') }}
-              </small>
-            {% endif %}
-          </div>
-        </div>
-        {% if taxOptionsForm.options.eco_tax_rule_group is defined %}
-          <div class="form-group row">
-            <label class="form-control-label" for="{{ taxOptionsForm.options.eco_tax_rule_group.vars.id }}">
-              {{ 'Ecotax'|trans({}, 'Admin.International.Feature') }}
-            </label>
-            <div class="col-sm">
-              {{ form_widget(taxOptionsForm.options.eco_tax_rule_group) }}
-            </div>
-          </div>
-        {% endif %}
       </div>
-    </div>
-    <div class="card-footer">
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-primary">
-          {{ 'Save'|trans({}, 'Admin.Actions') }}
-        </button>
+      <div class="form-group row">
+        <label class="form-control-label" for="{{ taxOptionsForm.options.display_tax_in_cart.vars.id }}">
+          {{ 'Display tax in the shopping cart'|trans({}, 'Admin.International.Feature') }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(taxOptionsForm.options.display_tax_in_cart, {'attr': {'class': 'js-display-in-cart'}}) }}
+          <small class="form-text">
+            {{ 'Select whether or not to display tax on a distinct line in the cart.'|trans({}, 'Admin.International.Help') }}
+          </small>
+        </div>
       </div>
+      <div class="form-group row">
+        <label for="{{ taxOptionsForm.options.tax_address_type.vars.id }}" class="form-control-label">
+          {{ 'Based on'|trans({}, 'Admin.International.Feature') }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(taxOptionsForm.options.tax_address_type) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="form-control-label" for="{{ taxOptionsForm.options.use_eco_tax.vars.id }}">
+          {{ 'Use ecotax'|trans({}, 'Admin.International.Feature') }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(taxOptionsForm.options.use_eco_tax) }}
+          {% if (taxOptionsForm.options.use_eco_tax.vars.value != 0) %}
+            <small class="form-text">
+              {{ 'If you disable the ecotax, the ecotax for all your products will be set to 0.'|trans({}, 'Admin.International.Help') }}
+            </small>
+          {% endif %}
+        </div>
+      </div>
+      {% if taxOptionsForm.options.eco_tax_rule_group is defined %}
+        {{ ps.form_group_row(taxOptionsForm.options.eco_tax_rule_group, {}, {
+          label: 'Ecotax'|trans({}, 'Admin.International.Feature'),
+          help: 'Define the ecotax (e.g. French ecotax: 19.6%).'|trans({}, 'Admin.International.Help')
+        }) }}
+      {% endif %}
+
+      {% block tax_options_rest %}
+        {{ form_rest(taxOptionsForm) }}
+      {% endblock %}
     </div>
   </div>
-  {{ form_end(taxOptionsForm) }}
-{% endblock %}
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+</div>
+{{ form_end(taxOptionsForm) }}

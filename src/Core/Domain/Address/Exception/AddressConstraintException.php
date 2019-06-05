@@ -35,4 +35,9 @@ class AddressConstraintException extends AddressException
      * When address id is not valid
      */
     const INVALID_ID = 10;
+
+    /**
+     * When manufacturer id provided for address is not valid
+     */
+    const INVALID_MANUFACTURER_ID = 20;
 }

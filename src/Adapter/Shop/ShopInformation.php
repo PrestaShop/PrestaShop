@@ -57,6 +57,7 @@ class ShopInformation
         return array(
             'version' => AppKernel::VERSION,
             'url' => $this->context->shop->getBaseURL(),
+            'path' => _PS_ROOT_DIR_,
             'theme' => $this->context->shop->theme->getName(),
         );
     }

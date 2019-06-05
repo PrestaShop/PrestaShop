@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Configuration;
 use Context;
+use Country;
 use Customer;
+use Exception;
+use PrestaShop\PrestaShop\Adapter\Validate;
 
 class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -50,6 +54,43 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer->email = $customerEmail;
         $customer->add();
         $this->customers[$customerName] = $customer;
+    }
+
+    /**
+     * @Given there is customer :reference with email :customerEmail
+     */
+    public function customerExists($reference, $customerEmail)
+    {
+        $data = Customer::getCustomersByEmail($customerEmail);
+        $customer = new Customer($data[0]['id_customer']);
+
+        if (!Validate::isLoadedObject($customer)) {
+            throw new Exception(sprintf('Customer with email "%s" does not exist.', $customerEmail));
+        }
+
+        SharedStorage::getStorage()->set($reference, $customer);
+    }
+
+    /**
+     * @Given customer :reference has address in :isoCode country
+     */
+    public function customerHasAddressInCountry($reference, $isoCode)
+    {
+        $customer = SharedStorage::getStorage()->get($reference);
+        $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
+
+        foreach ($customerAddresses as $address) {
+            $country = new Country($address['id_country']);
+
+            if ($country->iso_code === $isoCode) {
+                return;
+            }
+        }
+
+        throw new Exception(sprintf(
+            'Customer does not have address in "%s" country',
+            $isoCode
+        ));
     }
 
     /**

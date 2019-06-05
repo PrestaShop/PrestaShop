@@ -75,14 +75,12 @@ export default class CategoryPositionExtension {
     const categoryParentId = $categoryPositionContainer.data('id-parent');
     const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
-    let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'category');
+    let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'positions');
 
     let queryParams = {
       id_category_parent: categoryParentId,
       id_category_to_move: categoryId,
-      way: way,
-      ajax: 1,
-      action: 'updatePositions'
+      way: way
     };
 
     if (positions.indexOf('_0&') !== -1) {
@@ -154,16 +152,13 @@ export default class CategoryPositionExtension {
       headers: {
         'cache-control': 'no-cache'
       },
-      data: params
+      data: params,
+      dataType: 'json'
     }).then((response) => {
-      response = JSON.parse(response);
-
-      if (typeof response.message !== 'undefined') {
+      if (response.success) {
         showSuccessMessage(response.message);
       } else {
-        // use legacy error
-        // @todo: update when all category controller is migrated to symfony
-        showErrorMessage(response.errors);
+        showErrorMessage(response.message);
       }
 
       this._updateCategoryIdsAndPositions();

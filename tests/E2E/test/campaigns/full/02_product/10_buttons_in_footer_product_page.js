@@ -11,6 +11,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const common_scenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let firstProductData = {
   name: 'TEST PRODUCT',
@@ -26,7 +27,7 @@ scenario('Check product page buttons', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, firstProductData);
 
   scenario('Testing "Preview" button', client => {
@@ -66,12 +67,8 @@ scenario('Check product page buttons', () => {
   scenario('Testing "Delete" button', () => {
     scenario('Check when clicking on "No" of the delete confirmation modal', client => {
       test('should click on "Delete" icon', () => client.waitForExistAndClick(AddProductPage.delete_button));
-      test('should click on "No" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'No')));
-      test('should go to "Catalog - products" page', () => {
-        return promise
-          .then(() => client.pause(2000))
-          .then(() => client.waitForVisibleAndClick(Menu.Sell.Catalog.products_submenu));
-      });
+      test('should click on "No" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'No'), 2000));
+      test('should go to "Catalog - products" page', () => client.waitForVisibleAndClick(Menu.Sell.Catalog.products_submenu, 2000));
       test('should search for product by name', () => client.searchProductByName("copy of " + firstProductData.name + date_time));
       test('should click on the product name', () => client.waitForExistAndClick(AddProductPage.catalog_product_name));
     }, 'product/check_product');
@@ -133,7 +130,7 @@ scenario('Check product page buttons', () => {
     test('should go back to the Back office', () => client.switchWindow(0));
     test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Reset" button', () => client.waitForExistAndClick(CatalogPage.reset_button));
-    }, 'product/product');
+  }, 'product/product');
 
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from Back Office', () => client.signOutBO());

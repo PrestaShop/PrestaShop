@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
@@ -59,6 +60,8 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param EngineInterface $engine
      * @param LayoutVariablesBuilderInterface $variablesBuilder
      * @param HookDispatcherInterface $hookDispatcher
+     *
+     * @throws TypeException
      */
     public function __construct(
         EngineInterface $engine,
@@ -75,9 +78,12 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     * @throws TypeException
      *
      * @return string
+     *
+     * @throws FileNotFoundException
+     * @throws TypeException
      */
     public function renderHtml(LayoutInterface $layout, LanguageInterface $language)
     {
@@ -88,7 +94,8 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     * @throws FileNotFoundException
+     * @throws TypeException
      *
      * @return string
      */
@@ -102,9 +109,10 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LanguageInterface $language
      * @param string $templateType
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
-     *
      * @return string
+     *
+     * @throws FileNotFoundException
+     * @throws TypeException
      */
     private function render(
         LayoutInterface $layout,
@@ -112,6 +120,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $templateType
     ) {
         $layoutVariables = $this->variablesBuilder->buildVariables($layout, $language);
+        $layoutVariables['templateType'] = $templateType;
         if (MailTemplateInterface::HTML_TYPE === $templateType) {
             $layoutPath = !empty($layout->getHtmlPath()) ? $layout->getHtmlPath() : $layout->getTxtPath();
         } else {
@@ -142,7 +151,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      *
      * @return TransformationCollection
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     * @throws TypeException
      */
     private function getMailLayoutTransformations(LayoutInterface $mailLayout, $templateType)
     {

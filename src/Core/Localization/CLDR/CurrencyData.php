@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,10 +17,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -84,6 +84,13 @@ class CurrencyData
     protected $symbols;
 
     /**
+     * Is the currency used somewhere, or was it deactivated in all territories
+     *
+     * @var bool|null
+     */
+    protected $active;
+
+    /**
      * Override this object's data with another CurrencyData object.
      *
      * @param CurrencyData $currencyData
@@ -100,6 +107,10 @@ class CurrencyData
 
         if (null !== $currencyData->getNumericIsoCode()) {
             $this->setNumericIsoCode($currencyData->getNumericIsoCode());
+        }
+
+        if (null !== $currencyData->isActive()) {
+            $this->setActive($currencyData->isActive());
         }
 
         if (null !== $currencyData->getDecimalDigits()) {
@@ -221,5 +232,23 @@ class CurrencyData
         $this->symbols = $symbols;
 
         return $this;
+    }
+
+    /**
+     * is currency still active in some territory
+     *
+     * @return bool|null
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive($active)
+    {
+        $this->active = (bool) $active;
     }
 }

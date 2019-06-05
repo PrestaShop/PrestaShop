@@ -30,8 +30,10 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
+use Symfony\Component\DependencyInjection\Container;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
  * Class GridPresenter is responsible for presenting grid.
@@ -62,6 +64,7 @@ final class GridPresenter implements GridPresenterInterface
             'id' => $definition->getId(),
             'name' => $definition->getName(),
             'filter_form' => $filterForm->createView(),
+            'form_prefix' => '',
             'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),
             'actions' => [
@@ -87,7 +90,11 @@ final class GridPresenter implements GridPresenterInterface
             ],
         ];
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', [
+        if ($searchCriteria instanceof Filters) {
+            $presentedGrid['form_prefix'] = $searchCriteria->getFilterId();
+        }
+
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridPresenterModifier', [
             'presented_grid' => &$presentedGrid,
         ]);
 
@@ -109,7 +116,7 @@ final class GridPresenter implements GridPresenterInterface
         $positionColumn = $this->getOrderingPosition($grid);
         if (null !== $positionColumn) {
             array_unshift($columns, [
-                'id' => $positionColumn->getId(),
+                'id' => $positionColumn->getId() . '_handle',
                 'name' => $positionColumn->getName(),
                 'type' => 'position_handle',
                 'options' => $positionColumn->getOptions(),

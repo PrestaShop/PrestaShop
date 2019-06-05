@@ -529,6 +529,7 @@ class ProductCore extends ObjectModel
                 'api' => 'products',
                 'fields' => array(
                     'id' => array('required' => true),
+                    'id_product_attribute' => array(),
                     'quantity' => array(),
                 ),
             ),
@@ -2648,7 +2649,7 @@ class ProductCore extends ObjectModel
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql->where('EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1') . ')
+                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP')) . ')
                 WHERE cp.`id_product` = p.`id_product`)');
         }
 
@@ -2737,7 +2738,7 @@ class ProductCore extends ObjectModel
 
             $groups = FrontController::getCurrentCustomerGroups();
             $sql_groups = ' AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1') . ')
+                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP')) . ')
                 WHERE cp.`id_product` = p.`id_product`)';
 
             // Please keep 2 distinct queries because RAND() is an awful way to achieve this result
@@ -2862,7 +2863,7 @@ class ProductCore extends ObjectModel
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql_groups = ' AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1') . ')
+                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP')) . ')
                 WHERE cp.`id_product` = p.`id_product`)';
         }
 
@@ -3297,12 +3298,17 @@ class ProductCore extends ObjectModel
         static $address = null;
         static $context = null;
 
-        if ($address === null) {
-            $address = new Address();
-        }
-
         if ($context == null) {
             $context = Context::getContext()->cloneContext();
+        }
+
+        if ($address === null) {
+            if (is_object($context->cart) && $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != null) {
+                $id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+                $address = new Address($id_address);
+            } else {
+                $address = new Address();
+            }
         }
 
         if ($id_shop !== null && $context->shop->id != (int) $id_shop) {
@@ -6228,6 +6234,9 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesParams($id_product, $id_product_attribute)
     {
+        if ($id_product_attribute == 0) {
+            return [];
+        }
         $id_lang = (int) Context::getContext()->language->id;
         $cache_id = 'Product::getAttributesParams_' . (int) $id_product . '-' . (int) $id_product_attribute . '-' . (int) $id_lang;
 
@@ -6828,7 +6837,7 @@ class ProductCore extends ObjectModel
 
     public function getWsProductBundle()
     {
-        return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM ' . _DB_PREFIX_ . 'pack WHERE id_product_pack = ' . (int) $this->id);
+        return Db::getInstance()->executeS('SELECT id_product_item as id, id_product_attribute_item as id_product_attribute, quantity FROM ' . _DB_PREFIX_ . 'pack WHERE id_product_pack = ' . (int) $this->id);
     }
 
     public function setWsType($type_str)
@@ -6864,8 +6873,12 @@ class ProductCore extends ObjectModel
         Pack::deleteItems($this->id);
 
         foreach ($items as $item) {
+            // Combination of a product is optional, and can be omitted.
+            if (!isset($item['product_attribute_id'])) {
+                $item['product_attribute_id'] = 0;
+            }
             if ((int) $item['id'] > 0) {
-                Pack::addItem($this->id, (int) $item['id'], (int) $item['quantity']);
+                Pack::addItem($this->id, (int) $item['id'], (int) $item['quantity'], (int) $item['product_attribute_id']);
             }
         }
 

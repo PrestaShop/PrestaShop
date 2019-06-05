@@ -10,6 +10,8 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {DeliverySlip} = require('../../../selectors/BO/order');
 const {OrderPage} = require('../../../selectors/BO/order');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+
 let promise = Promise.resolve();
 global.orderInformation = [];
 
@@ -26,6 +28,7 @@ scenario('Test1: Delivery slips PDF', () => {
       }, 'common_client');
       scenario('Login in the Back Office ', client => {
         test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+        welcomeScenarios.findAndCloseWelcomeModal();
         commonOrder.updateStatus("Shipped");
         commonOrder.getDeliveryInformation(i - 1);
       }, 'common_client');
@@ -106,6 +109,10 @@ scenario('Test2: Delivery slips options', () => {
       test('should get the invoice name', () => client.getDocumentName(OrderPage.delivery_slip_document));
       test('should generate the "deliveries" pdf file', () => {
         return promise
+          .then(() => {
+            // for headless, we need to remove attribute 'target' to avoid download in a new Tab
+            if(global.headless)  client.removeAttribute(OrderPage.delivery_slip_document,'target');
+          })
           .then(() => client.waitForExistAndClick(OrderPage.delivery_slip_document))
           .then(() => client.pause(5000));
       });

@@ -318,6 +318,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             return;
         }
 
-        return '<span class="result aligned errorTxt">'.$this->errors[$field].'</span>';
+        return '<span class="result aligned errorTxt">' . Tools::htmlentitiesUTF8($this->errors[$field]) . '</span>';
     }
 }

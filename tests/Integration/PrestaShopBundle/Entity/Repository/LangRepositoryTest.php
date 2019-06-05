@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -38,7 +38,7 @@ class LangRepositoryTest extends KernelTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->bootKernel();
+        self::bootKernel();
     }
 
     public function testInterface()
@@ -55,14 +55,14 @@ class LangRepositoryTest extends KernelTestCase
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
         $availableLocales = ['en-US'];
         foreach ($availableLocales as $availableLocale) {
-            $language = $languageRepository->getByLocale($availableLocale);
+            $language = $languageRepository->getOneByLocale($availableLocale);
             $this->assertNotNull($language);
             $this->assertInstanceOf(LanguageInterface::class, $language);
         }
 
         $notAvailableLocales = ['en-UK', 'en', 'fr'];
         foreach ($notAvailableLocales as $notAvailableLocale) {
-            $language = $languageRepository->getByLocale($notAvailableLocale);
+            $language = $languageRepository->getOneByLocale($notAvailableLocale);
             $this->assertNull($language);
         }
     }
@@ -73,14 +73,14 @@ class LangRepositoryTest extends KernelTestCase
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
         $availableLocales = ['en'];
         foreach ($availableLocales as $availableLocale) {
-            $language = $languageRepository->getByIsoCode($availableLocale);
+            $language = $languageRepository->getOneByIsoCode($availableLocale);
             $this->assertNotNull($language);
             $this->assertInstanceOf(LanguageInterface::class, $language);
         }
 
         $notAvailableLocales = ['en-UK', 'fr'];
         foreach ($notAvailableLocales as $notAvailableLocale) {
-            $language = $languageRepository->getByIsoCode($notAvailableLocale);
+            $language = $languageRepository->getOneByIsoCode($notAvailableLocale);
             $this->assertNull($language);
         }
     }
@@ -91,5 +91,10 @@ class LangRepositoryTest extends KernelTestCase
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
         $locale = $languageRepository->getLocaleByIsoCode('en');
         $this->assertEquals('en-US', $locale);
+    }
+
+    protected function tearDown()
+    {
+        self::$kernel->shutdown();
     }
 }

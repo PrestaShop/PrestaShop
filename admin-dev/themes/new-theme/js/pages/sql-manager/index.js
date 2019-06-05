@@ -32,12 +32,14 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
 class SqlManagerPage {
   constructor() {
-    const requestSqlGrid = new Grid('sqlrequest');
+    const requestSqlGrid = new Grid('sql_request');
     requestSqlGrid.addExtension(new ReloadListActionExtension());
     requestSqlGrid.addExtension(new ExportToSqlManagerExtension());
     requestSqlGrid.addExtension(new FiltersResetExtension());
@@ -46,6 +48,7 @@ class SqlManagerPage {
     requestSqlGrid.addExtension(new SubmitGridExtension());
     requestSqlGrid.addExtension(new SubmitBulkExtension());
     requestSqlGrid.addExtension(new BulkActionCheckboxExtension());
+    requestSqlGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
     $(document).on('change', '.js-db-tables-select', () => this.reloadDbTableColumns());
     $(document).on('click', '.js-add-db-table-to-query-btn', (event) => this.addDbTableToQuery(event));

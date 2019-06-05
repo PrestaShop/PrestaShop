@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -379,7 +379,7 @@ class SearchParametersResolverTest extends TestCase
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|SearchParametersInterface
      */
-    private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = null)
+    private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = [])
     {
         $searchParametersMock = $this->getMockBuilder(SearchParametersInterface::class)
             ->disableOriginalConstructor()
@@ -395,14 +395,12 @@ class SearchParametersResolverTest extends TestCase
             ;
         }
 
-        if (null !== $requestParameters) {
-            $requestFilters = new SampleFilters($requestParameters);
-            $searchParametersMock
-                ->expects($this->once())
-                ->method('getFiltersFromRequest')
-                ->willReturn($requestFilters)
-            ;
-        }
+        $requestFilters = new SampleFilters($requestParameters);
+        $searchParametersMock
+            ->expects(empty($requestParameters) ? $this->any() : $this->once())
+            ->method('getFiltersFromRequest')
+            ->willReturn($requestFilters)
+        ;
 
         return $searchParametersMock;
     }

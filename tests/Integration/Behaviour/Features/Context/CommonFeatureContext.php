@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,6 +49,12 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         self::$kernel = new AppKernel('test', true);
         self::$kernel->boot();
+
+        global $kernel;
+        $kernel = self::$kernel;
+
+        $employee = new \Employee();
+        \Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
     }
 
     /**
@@ -70,6 +76,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function cleanDatabaseHardPrepare()
     {
         DatabaseCreator::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
     /**

@@ -23,7 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import DisplayInCartOptionHandler from './display-in-cart-option-handler';
 import Grid from '../../components/grid/grid';
 import SortingExtension from '../../components/grid/extension/sorting-extension';
 import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
@@ -33,13 +32,16 @@ import SubmitRowActionExtension from '../../components/grid/extension/action/row
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import DisplayInCartOptionHandler from './display-in-cart-option-handler';
+import TranslatableInput from '../../components/translatable-input';
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
 $(() => {
   const taxGrid = new Grid('tax');
 
-  new DisplayInCartOptionHandler();
   taxGrid.addExtension(new ExportToSqlManagerExtension());
   taxGrid.addExtension(new ReloadListActionExtension());
   taxGrid.addExtension(new SortingExtension());
@@ -48,4 +50,8 @@ $(() => {
   taxGrid.addExtension(new SubmitRowActionExtension());
   taxGrid.addExtension(new SubmitBulkExtension());
   taxGrid.addExtension(new BulkActionCheckboxExtension());
+  taxGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+
+  new DisplayInCartOptionHandler();
+  new TranslatableInput();
 });

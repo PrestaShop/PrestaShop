@@ -38,6 +38,8 @@ import ShowcaseCardCloseExtension from '../../components/showcase-card/extension
 import TaggableField from '../../components/taggable-field';
 import TranslatableInput from '../../components/translatable-input';
 import MetaPageNameOptionHandler from './meta-page-name-option-handler';
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 
@@ -52,6 +54,7 @@ $(() => {
   meta.addExtension(new SubmitBulkExtension());
   meta.addExtension(new SubmitRowActionExtension());
   meta.addExtension(new BulkActionCheckboxExtension());
+  meta.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   const helperBlock = new ShowcaseCard('seo-urls-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());

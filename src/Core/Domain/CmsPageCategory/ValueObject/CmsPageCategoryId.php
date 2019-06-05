@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryE
 class CmsPageCategoryId
 {
     /**
+     * ID for the topmost Cms Page category
+     */
+    const ROOT_CMS_PAGE_CATEGORY_ID = 1;
+
+    /**
      * @var int
      */
     private $cmsPageCategoryId;
@@ -45,8 +50,8 @@ class CmsPageCategoryId
      */
     public function __construct($cmsPageCategoryId)
     {
-        $this->assertIsIntegerAndLargerThenZero($cmsPageCategoryId);
-        $this->cmsPageCategoryId = (int) $cmsPageCategoryId;
+        $this->assertIsIntegerGreaterThanZero($cmsPageCategoryId);
+        $this->cmsPageCategoryId = $cmsPageCategoryId;
     }
 
     /**
@@ -58,15 +63,17 @@ class CmsPageCategoryId
     }
 
     /**
+     * Validates that the value is integer and is greater than zero.
+     *
      * @param int $cmsPageCategoryId
      *
      * @throws CmsPageCategoryException
      */
-    private function assertIsIntegerAndLargerThenZero($cmsPageCategoryId)
+    private function assertIsIntegerGreaterThanZero($cmsPageCategoryId)
     {
         if (!is_int($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
             throw new CmsPageCategoryException(
-                sprintf('Invalid cms page category id %s supplied', var_export($cmsPageCategoryId, true))
+                sprintf('Invalid cms page category id %s', var_export($cmsPageCategoryId, true))
             );
         }
     }

@@ -56,7 +56,6 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestashopInstallerException;
@@ -86,11 +85,11 @@ class Install extends AbstractInstall
     public function __construct($settingsFile = null, $bootstrapFile = null)
     {
         if ($bootstrapFile === null) {
-            $bootstrapFile = self::BOOTSTRAP_FILE;
+            $bootstrapFile = static::BOOTSTRAP_FILE;
         }
 
         if ($settingsFile === null) {
-            $settingsFile = self::SETTINGS_FILE;
+            $settingsFile = static::SETTINGS_FILE;
         }
 
         $this->settingsFile = $settingsFile;
@@ -351,28 +350,6 @@ class Install extends AbstractInstall
     }
 
     /**
-     * Install Cldr Datas.
-     */
-    public function installCldrDatas()
-    {
-        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-        $cldrUpdate->init();
-
-        //get each defined languages and fetch cldr datas
-        $langs = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'lang');
-
-        foreach ($langs as $lang) {
-            $cldrRepository = Tools::getCldr(null, $lang['locale']);
-            $language_code = explode('-', $cldrRepository->getCulture());
-            if (count($language_code) == 1) {
-                $cldrUpdate->fetchLocale($language_code['0']);
-            } else {
-                $cldrUpdate->fetchLocale($language_code['0'] . '-' . Tools::strtoupper($language_code[1]));
-            }
-        }
-    }
-
-    /**
      * Initialize the prestashop context with default values during tests.
      */
     public function initializeTestContext()
@@ -468,6 +445,8 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_LANG_DEFAULT', $id_lang);
         Configuration::updateGlobalValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
         Configuration::updateGlobalValue('PS_INSTALL_VERSION', _PS_INSTALL_VERSION_);
+
+        Context::getContext()->language = new LanguageLegacy($id_lang);
 
         return true;
     }
@@ -697,14 +676,14 @@ class Install extends AbstractInstall
 
     public function getLocalizationPackContent($version, $country)
     {
-        if (Install::$_cache_localization_pack_content === null || array_key_exists($country, Install::$_cache_localization_pack_content)) {
+        if (static::$_cache_localization_pack_content === null || array_key_exists($country, static::$_cache_localization_pack_content)) {
             $localizationWarmer = new LocalizationWarmer($version, $country);
             $localization_file_content = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
-            Install::$_cache_localization_pack_content[$country] = $localization_file_content;
+            static::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
-        return isset(Install::$_cache_localization_pack_content[$country]) ? Install::$_cache_localization_pack_content[$country] : false;
+        return isset(static::$_cache_localization_pack_content[$country]) ? static::$_cache_localization_pack_content[$country] : false;
     }
 
     /**

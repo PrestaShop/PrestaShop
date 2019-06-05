@@ -14,11 +14,11 @@ Feature: Cart calculation with carriers
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
     Then cart shipping fees should be 0.0
@@ -37,11 +37,11 @@ Feature: Cart calculation with carriers
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     When I add 1 items of product "product1" in my cart
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
@@ -61,11 +61,11 @@ Feature: Cart calculation with carriers
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     When I add 3 items of product "product1" in my cart
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
@@ -87,11 +87,11 @@ Feature: Cart calculation with carriers
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     When I add 2 items of product "product2" in my cart
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
@@ -113,11 +113,11 @@ Feature: Cart calculation with carriers
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     When I select address "address1" in my cart
     When I select carrier "carrier2" in my cart
     Then cart shipping fees should be 0.0
@@ -136,11 +136,11 @@ Feature: Cart calculation with carriers
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     When I add 1 items of product "product1" in my cart
     When I select address "address1" in my cart
     When I select carrier "carrier2" in my cart
@@ -160,11 +160,11 @@ Feature: Cart calculation with carriers
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     When I add 3 items of product "product1" in my cart
     When I select address "address1" in my cart
     When I select carrier "carrier2" in my cart
@@ -186,11 +186,11 @@ Feature: Cart calculation with carriers
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     When I add 2 items of product "product2" in my cart
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
@@ -199,3 +199,20 @@ Feature: Cart calculation with carriers
     Then cart shipping fees should be 7.7
     Then my cart total should be 163.1 tax included
     Then my cart total using previous calculation method should be 163.1 tax included
+
+  Scenario: free carrier in price range
+    Given I have an empty default cart
+    Given there is a product in the catalog named "product1" with a price of 151.0 and 1000 items in stock
+    Given there is a zone named "zone1"
+    Given there is a country named "country1" and iso code "FR" in zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is an address named "address1" with postcode "1" in state "state1"
+    Given there is a carrier named "carrier1"
+    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 150
+    Given carrier "carrier1" applies shipping fees of 0.0 in zone "zone1" for price between 150 and 1000
+    When I add 1 item of product "product1" in my cart
+    When I select address "address1" in my cart
+    When I select carrier "carrier1" in my cart
+    Then cart shipping fees should be 2.0
+    Then my cart total should be 153.0 tax included
+    Then my cart total using previous calculation method should be 153.0 tax included

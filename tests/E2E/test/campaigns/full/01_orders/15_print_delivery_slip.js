@@ -9,6 +9,7 @@ const {CreateOrder} = require('../../../selectors/BO/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../../common_scenarios/product');
 const commonOrder = require('../../common_scenarios/order');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 global.orderInformation = [];
 let productData = {
@@ -30,17 +31,27 @@ scenario('Print the delivery slips of an order', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, productData);
   commonOrder.createOrderBO(OrderPage, CreateOrder, productData);
   scenario('Change the status', client => {
     test('should check status to be equal to "Awaiting check payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting check payment'));
     test('should set order status to "Shipped"', () => client.updateStatus('Shipped'));
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+    /**
+     * should refresh the page, to pass the error
+     */
+    test('should refresh the page', () => client.refresh());
     test('should check that the status is "Shipped"', () => client.checkTextValue(OrderPage.order_status, 'Shipped'));
   }, 'order');
   commonOrder.getDeliveryInformation(0);
   scenario('Verify all the information on the deliveries slips', client => {
-    test('should click on "View delivery slip" button', () => client.waitForExistAndClick(OrderPage.view_delivery_slip));
+    test('should click on "View delivery slip" button', async () => {
+      await client.waitForVisible(OrderPage.view_delivery_slip);
+      // for headless, we need to remove attribute 'target' to avoid download in a new Tab
+      if(global.headless)  await client.removeAttribute(OrderPage.view_delivery_slip,'target');
+      await client.waitForExistAndClick(OrderPage.view_delivery_slip);
+    });
     test('should click on "DOCUMENTS" subtab', () => client.waitForVisibleAndClick(OrderPage.document_submenu));
     test('should get the delivery slip information', () => {
       return promise

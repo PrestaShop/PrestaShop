@@ -44,7 +44,6 @@ use PrestaShopBundle\Form\Admin\Product\ProductQuantity;
 use PrestaShopBundle\Form\Admin\Product\ProductSeo;
 use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
-use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
@@ -1207,7 +1206,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct($productId);
-        $modelMapper = new ProductAdminModelAdapter(
+        $modelMapper = new AdminModelAdapter(
             $product,
             $this->get('prestashop.adapter.legacy.context'),
             $this->get('prestashop.adapter.admin.wrapper.product'),
@@ -1218,7 +1217,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
             $this->get('prestashop.adapter.shop.context'),
-            $this->get('prestashop.adapter.data_provider.tax')
+            $this->get('prestashop.adapter.data_provider.tax'),
+            $this->get('router')
         );
         $form = $this->createFormBuilder($modelMapper->getFormData());
         switch ($step) {

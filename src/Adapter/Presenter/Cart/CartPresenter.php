@@ -97,6 +97,7 @@ class CartPresenter implements PresenterInterface
         $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::isCatalogMode();
+        $settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
         $settings->include_taxes = $this->includeTaxes();
         $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
@@ -325,7 +326,7 @@ class CartPresenter implements PresenterInterface
         $productsTotalExcludingTax = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
-        $total_discount = $cart->getDiscountSubtotalWithoutGifts();
+        $total_discount = $cart->getDiscountSubtotalWithoutGifts($this->includeTaxes());
         $totalCartAmount = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
 
         $subtotals['products'] = array(
@@ -338,7 +339,7 @@ class CartPresenter implements PresenterInterface
         if ($total_discount) {
             $subtotals['discounts'] = array(
                 'type' => 'discount',
-                'label' => $this->translator->trans('Discount', array(), 'Shop.Theme.Checkout'),
+                'label' => $this->translator->trans('Discount(s)', array(), 'Shop.Theme.Checkout'),
                 'amount' => $total_discount,
                 'value' => $this->priceFormatter->format($total_discount),
             );
@@ -503,7 +504,8 @@ class CartPresenter implements PresenterInterface
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
-                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
+                $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($value);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-' . $cartVoucher['reduction_formatted'];

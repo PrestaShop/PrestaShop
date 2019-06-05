@@ -59,6 +59,10 @@ export default class AsyncToggleColumnExtension {
         }
 
         showErrorMessage(response.message);
+      }).catch((error) => {
+        const response = error.responseJSON;
+
+        showErrorMessage(response.message);
       });
     });
   }

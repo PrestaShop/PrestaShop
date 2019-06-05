@@ -6,6 +6,7 @@ $gray-dark-title: #bbcdd1;
 $gray-dark-hover: #282b30;
 $background-grey: #eaebec;
 $gray-dark-text-hover: #ffffff;
+$gray-dark-divider: #eeeeee;
 $color-separator: #dfdfdf;
 
 // Sizes
@@ -19,7 +20,7 @@ $header-mobile-padding-y: .625rem;
 
 // Imported from bootstrap
 
-$grid-gutter-width: 1.875rem !default;
+$grid-gutter-width: 1.875rem;
 
 $border-radius: 0;
 
@@ -64,10 +65,11 @@ $spacing-widths: (
 );
 $grid-breakpoints: (
   xs: 0,
-  sm: 34em,    // 544px
-  md: 48em,    // 768px
-  lg: 64em,    // 1024px
-  xl: 81.25em  // 1300px
+  sm: 544px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1300px,
+  xxl: 1600px    // PS custom
 );
 
 $card-border-color: #dbe6e9 !default;

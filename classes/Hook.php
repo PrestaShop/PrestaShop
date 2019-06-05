@@ -594,7 +594,7 @@ class HookCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param string $hook_name Get list of modules for this hook if given
+     * @param string|null $hook_name Get list of modules for this hook if given
      *
      * @return array
      */
@@ -691,7 +691,7 @@ class HookCore extends ObjectModel
         }
 
         // If hook_name is given, just get list of modules for this hook
-        if ($hook_name) {
+        if (null !== $hook_name) {
             $retro_hook_name = strtolower(Hook::getRetroHookName($hook_name));
             $hook_name = strtolower($hook_name);
 

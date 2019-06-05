@@ -47,6 +47,7 @@ class PriceFormatter extends BasePricePresenter
 
 class ProductPresenterTest extends UnitTestCase
 {
+    /** @var ProductPresentationSettings */
     private $settings;
     private $product;
     private $language;
@@ -126,10 +127,24 @@ class ProductPresenterTest extends UnitTestCase
         return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter', $field);
     }
 
-    public function testPriceShouldBeShownInCatalogMode()
+    public function testPriceShouldNotBeShownInCatalogMode()
     {
         $this->settings->catalog_mode = true;
+        $this->assertFalse($this->getPresentedProduct('show_price'));
+    }
+
+    public function testPriceShouldBeShownInCatalogModeWithPrices()
+    {
+        $this->settings->catalog_mode = true;
+        $this->settings->catalog_mode_with_prices = true;
         $this->assertTrue($this->getPresentedProduct('show_price'));
+    }
+
+    public function testPriceShouldNotBeShownInCatalogModeWithoutPrices()
+    {
+        $this->settings->catalog_mode = true;
+        $this->settings->catalog_mode_with_prices = false;
+        $this->assertFalse($this->getPresentedProduct('show_price'));
     }
 
     public function testPriceShouldShownInRestrictedCountryMode()
@@ -265,15 +280,21 @@ class ProductPresenterTest extends UnitTestCase
         );
     }
 
-    public function testProductHasOnlyOnSaleFlagIfItHasADiscountAndIsOnSale()
+    public function testProductHasBothOnSaleFlagAndDiscountFlagIfItHasADiscountAndIsOnSale()
     {
         $this->product['reduction'] = true;
         $this->product['on_sale'] = true;
         $this->assertEquals(
-            ['on-sale' => [
-                'type'  => 'on-sale',
-                'label' => 'some label',
-            ]],
+            [
+                'on-sale' => [
+                    'type'  => 'on-sale',
+                    'label' => 'some label',
+                ],
+                'discount' => [
+                    'type'  => 'discount',
+                    'label' => 'some label',
+                ]
+            ],
             $this->getPresentedProduct('flags')
         );
     }

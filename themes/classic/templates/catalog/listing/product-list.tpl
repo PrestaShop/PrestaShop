@@ -34,7 +34,7 @@
     <section id="products">
       {if $listing.products|count}
 
-        <div id="">
+        <div>
           {block name='product_list_top'}
             {include file='catalog/_partials/products-top.tpl' listing=$listing}
           {/block}
@@ -46,7 +46,7 @@
           </div>
         {/block}
 
-        <div id="">
+        <div>
           {block name='product_list'}
             {include file='catalog/_partials/products.tpl' listing=$listing}
           {/block}
@@ -59,9 +59,13 @@
         </div>
 
       {else}
+        <div id="js-product-list-top"></div>
 
-        {include file='errors/not-found.tpl'}
+        <div id="js-product-list">
+          {include file='errors/not-found.tpl'}
+        </div>
 
+        <div id="js-product-list-bottom"></div>
       {/if}
     </section>
 

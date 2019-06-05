@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use Currency;
 use Exception;
+use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopException;
@@ -67,13 +68,21 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function findAll()
+    {
+        return Currency::findAll(false);
+    }
+
+    /**
      * Get a Currency entity instance by ISO code.
      *
      * @param string $isoCode
      *                        An ISO 4217 currency code
-     * @param int|null $idLang
-     *                         Set this parameter if you want the currency in a specific language.
-     *                         If null, default language will be used
+     * @param int|false|null $idLang
+     *                               Set this parameter if you want the currency in a specific language.
+     *                               If null or false, default language will be used
      *
      * @return currency|null
      *                       The asked Currency object, or null if not found
@@ -85,11 +94,29 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
             return null;
         }
 
-        if (null === $idLang) {
+        if (empty($idLang)) {
             $idLang = $this->configuration->get('PS_LANG_DEFAULT');
         }
 
         return new Currency($currencyId, $idLang);
+    }
+
+    /**
+     * Get a Currency entity instance by ISO code.
+     *
+     * @param string $isoCode
+     *                        An ISO 4217 currency code
+     * @param string $locale
+     *                       The locale to use for localized data
+     *
+     * @return currency|null
+     *                       The asked Currency object, or null if not found
+     */
+    public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
+    {
+        $idLang = Language::getIdByLocale($locale);
+
+        return $this->getCurrencyByIsoCode($isoCode, $idLang);
     }
 
     /**

@@ -34,7 +34,7 @@
   <div class="card-block row">
     <div class="card-text">
       {{ ps.form_group_row(categoryForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Actions'),
+        'label': 'Name'|trans({}, 'Admin.Global'),
         'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
       }) }}
 
@@ -123,15 +123,28 @@
 
       {{ renderhook('displayBackOfficeCategory') }}
 
-      {{ ps.form_group_row(categoryForm.meta_title, {}, {
-        'label': 'Meta title'|trans({}, 'Admin.Global'),
-        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
+      {% block category_tool_serp %}
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            <div id="serp-app" data-category-url="{{ categoryUrl }}"></div>
+          </div>
+        </div>
+      {% endblock %}
 
-      {{ ps.form_group_row(categoryForm.meta_description, {}, {
-        'label': 'Meta description'|trans({}, 'Admin.Global'),
-        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
+      <div class="form-group row">
+        {{ ps.label_with_help(('Meta title'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
+        <div class="col-sm">
+          {{ form_widget(categoryForm.meta_title) }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        {{ ps.label_with_help(('Meta description'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
+        <div class="col-sm">
+          {{ form_widget(categoryForm.meta_description) }}
+        </div>
+      </div>
 
       {% set metaKeywordHelp %}
         {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}

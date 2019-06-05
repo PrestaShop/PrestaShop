@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,11 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class DefaultCurrencyInMultiShopException
+ * Is thrown when action associated with currency is done from multi-shop context
+ * and that action cannot be done because the currency is set as default in one of shops
  */
 class DefaultCurrencyInMultiShopException extends CurrencyException
 {
+    /**
+     * When trying to remove default currency in multi-shop context
+     */
     const CANNOT_REMOVE_CURRENCY = 1;
+
+    /**
+     * When trying to disable default currency in multi-shop context
+     */
     const CANNOT_DISABLE_CURRENCY = 2;
 
     /**

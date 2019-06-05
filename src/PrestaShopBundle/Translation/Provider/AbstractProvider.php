@@ -26,20 +26,37 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
-abstract class AbstractProvider implements ProviderInterface
+abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInterface, DatabaseCatalogueInterface
 {
     use TranslationFinderTrait;
 
     const DEFAULT_LOCALE = 'en-US';
 
+    /**
+     * @var LoaderInterface the loader interface
+     */
     private $databaseLoader;
 
+    /**
+     * @var string the resource directory
+     */
     protected $resourceDirectory;
 
+    /**
+     * @var string the Catalogue locale
+     */
     protected $locale;
+
+    /**
+     * @var string the Catalogue domain
+     */
+    protected $domain;
 
     public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
     {
@@ -53,7 +70,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getDirectories()
     {
-        return array($this->getResourceDirectory());
+        return [$this->getResourceDirectory()];
     }
 
     /**
@@ -61,7 +78,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getFilters()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -69,7 +86,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getTranslationDomains()
     {
-        return array('');
+        return [''];
     }
 
     /**
@@ -80,6 +97,9 @@ abstract class AbstractProvider implements ProviderInterface
         return $this->locale;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
@@ -88,13 +108,30 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
      * Get the PrestaShop locale from real locale.
+     *
+     * @deprecated since 1.7.6, to be removed in the next major
      *
      * @return string The PrestaShop locale
      */
     public function getPrestaShopLocale()
     {
-        return str_replace('-', '_', $this->locale);
+        @trigger_error(
+            '`AbstractProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
+            E_USER_DEPRECATED
+        );
+
+        return Converter::toPrestaShopLocale($this->locale);
     }
 
     /**
@@ -117,15 +154,33 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
      */
     public function getDefaultCatalogue($empty = true)
     {
+        $defaultCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($this->getFilters() as $filter) {
+            $filteredCatalogue = $this->getCatalogueFromPaths(
+                [$this->getDefaultResourceDirectory()],
+                $this->locale,
+                $filter
+            );
+            $defaultCatalogue->addCatalogue($filteredCatalogue);
+        }
+
+        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
+            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
+        }
+
+        return $defaultCatalogue;
     }
 
     /**
-     * Get the Catalogue from xliff files only.
+     * {@inheritdoc}
      *
-     * @return MessageCatalogue A MessageCatalogue instance
+     * @throws FileNotFoundException
      */
     public function getXliffCatalogue()
     {
@@ -182,15 +237,17 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @param MessageCatalogue $messageCatalogue
+     * Empties out the catalogue by removing translations but leaving keys
      *
-     * @return MessageCatalogue Empty the catalogue
+     * @param MessageCatalogueInterface $messageCatalogue
+     *
+     * @return MessageCatalogueInterface Empty the catalogue
      */
-    public function emptyCatalogue(MessageCatalogue $messageCatalogue)
+    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
     {
-        foreach ($messageCatalogue as $domain => $messages) {
-            foreach ($messages as $translationKey => $translationValue) {
-                $messageCatalogue[$domain][$translationKey] = '';
+        foreach ($messageCatalogue->all() as $domain => $messages) {
+            foreach (array_keys($messages) as $translationKey) {
+                $messageCatalogue->set($translationKey, '', $domain);
             }
         }
 

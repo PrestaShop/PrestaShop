@@ -6,6 +6,8 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const commonOrder = require('../../common_scenarios/order');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+
 let promise = Promise.resolve();
 
 scenario('Generate and check a Credit slip', () => {
@@ -13,6 +15,7 @@ scenario('Generate and check a Credit slip', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonOrder.enableMerchandise();
   scenario('Create order and generate a credit slip', () => {
     scenario('Login in the Front Office ', client => {

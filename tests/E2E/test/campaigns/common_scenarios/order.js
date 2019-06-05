@@ -26,7 +26,7 @@ module.exports = {
       test('should select product "color Black"', () => client.waitForExistAndClick(productPage.first_product_color));
       test('should set the product "quantity"', () => {
         return promise
-          .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4"))
+          .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4", 500))
           .then(() => client.getTextInVar(CheckoutOrderPage.product_current_price, "first_basic_price"));
       });
       if (checkAvailableQuantity === true) {
@@ -41,7 +41,7 @@ module.exports = {
        * This scenario is based on the bug described in this ticket
        * https://github.com/PrestaShop/PrestaShop/issues/9841
        **/
-      test('should set the quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
+      test('should set the quantity to "4" using the keyboard', () => client.setInputValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
       test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
 
       if (authentication === "create_account" || authentication === "guest") {
@@ -267,6 +267,10 @@ module.exports = {
       test('should go to the orders list', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
       test('should change order state to "Payment accepted"', () => client.changeOrderState(OrderPage, 'Payment accepted'));
+      /**
+       * should refresh the page, to pass the error
+       */
+      test('should refresh the page', () => client.refresh());
       test('should click on "Partial refund" button', () => client.waitForExistAndClick(OrderPage.partial_refund));
       test('should set the "quantity refund" to "2"', () => client.waitAndSetValue(OrderPage.quantity_refund, refundedValue));
       test('should click on "Re-stock products" CheckBox', () => client.waitForExistAndClick(OrderPage.re_stock_product));
@@ -330,7 +334,13 @@ module.exports = {
       test('should get the credit slip name', () => client.getCreditSlipDocumentName(OrderPage.credit_slip_document_name));
       test('should go to "Credit slip" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.credit_slips_submenu));
       test('should click on "Download credit slip" button', async () => {
-        await client.waitForVisibleAndClick(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')), 2000);
+        await client.waitForVisible(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
+        if(global.headless) {
+          await client.enableDownloadForHeadlessMode();
+          // for headless, we need to remove attribute 'target' to avoid download in a new Tab
+          await client.removeAttribute(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')),'target');
+        }
+        await client.waitForExistAndClick(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
         await client.pause(8000);
       });
     }, 'order', close);
@@ -420,6 +430,10 @@ module.exports = {
       test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
       test('should change order state to "' + status + '"', () => client.updateStatus(status));
       test('should click on "Update state" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+      /**
+       * should refresh the page, to pass the error
+       */
+      test('should refresh the page', () => client.refresh());
       test('should check that the status was updated', () => client.waitForVisible(OrderPage.status.replace('%STATUS', status)));
     }, 'order');
   },

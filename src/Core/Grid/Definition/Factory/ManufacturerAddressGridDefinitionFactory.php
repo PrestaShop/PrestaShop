@@ -49,12 +49,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'manufacturer_address';
+
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'manufacturer_address';
+        return self::GRID_ID;
     }
 
     /**
@@ -126,8 +128,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_manufacturers_addresses_edit',
-                                'route_param_name' => 'manufacturerAddressId',
+                                'route' => 'admin_manufacturer_addresses_edit',
+                                'route_param_name' => 'addressId',
                                 'route_param_field' => 'id_address',
                             ])
                         )
@@ -135,7 +137,7 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'route' => 'admin_manufacturers_addresses_delete',
+                                'route' => 'admin_manufacturer_addresses_delete',
                                 'route_param_name' => 'addressId',
                                 'route_param_field' => 'id_address',
                                 'confirm_message' => $this->trans(
@@ -220,10 +222,9 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'manufacturer',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_manufacturers_index',
                 ])
@@ -240,7 +241,7 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ->add((new SubmitBulkAction('delete_manufacturer_address'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_manufacturers_addresses_bulk_delete',
+                    'submit_route' => 'admin_manufacturer_addresses_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
@@ -267,7 +268,7 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                 ->setName($this->trans('Export', [], 'Admin.Actions'))
                 ->setIcon('cloud_download')
                 ->setOptions([
-                    'route' => 'admin_manufacturers_addresses_export',
+                    'route' => 'admin_manufacturer_addresses_export',
                 ])
             )
             ->add((new SimpleGridAction('common_refresh_list'))

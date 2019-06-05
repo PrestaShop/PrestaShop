@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,6 +28,8 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Cart;
 use Combination;
+use Context;
+use SpecificPrice;
 use Configuration;
 use Customization;
 use CustomizationField;
@@ -48,6 +50,11 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      * @var Combination[][]
      */
     protected $combinations = [];
+
+    /**
+     * @var SpecificPrice[][]
+     */
+    protected $specificPrices = [];
 
     /**
      * @var Customization[]
@@ -80,7 +87,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I add (\d+) items of product "(.+)" in my cart$/
+     * @When /^I add (\d+) items? of product "(.+)" in my cart$/
      */
     public function iAddProductNamedInMyCartWithQuantity($productQuantity, $productName)
     {
@@ -233,14 +240,56 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkFixtureExists($this->products, 'Product', $productName);
     }
 
+    /* SPECIFIC PRICE */
+
     /**
-     * @When /^product "(.+)" has following tax rule group id: (\d+)$/
+     * @Given /^product "(.+)" has a specific price named "(.+)" with an amount discount of (\d+\.\d+)$/
      */
-    public function setProductTaxRuleGroupId($productName, $taxRuleGroupId)
+    public function productWithNameHasASpecificPriceWithAmountDiscount($productName, $specificPriceName, $specificPriceDiscount)
     {
-        $this->checkProductWithNameExists($productName);
-        $this->products[$productName]->id_tax_rules_group = $taxRuleGroupId;
-        $this->products[$productName]->save();
+        if (isset($this->specificPrices[$productName][$specificPriceName])) {
+            throw new \Exception('Product named "' . $productName . '" has already a specific price named "' . $specificPriceName . '"');
+        }
+        $specificPrice = new SpecificPrice();
+        $specificPrice->id_product = $this->products[$productName]->id;
+        $specificPrice->price = -1;
+        $specificPrice->reduction = $specificPriceDiscount;
+        $specificPrice->reduction_type = 'amount';
+        $specificPrice->from_quantity = 1;
+        $specificPrice->from = '0000-00-00 00:00:00';
+        $specificPrice->to = '0000-00-00 00:00:00';
+        // set required values from default
+        $specificPrice->id_shop = (int) Context::getContext()->shop->id;
+        $specificPrice->id_currency = (int) Context::getContext()->currency->id;
+        $specificPrice->id_country = (int) Context::getContext()->country->id;
+        $specificPrice->id_group = (int) Context::getContext()->customer->id_shop_group;
+        $specificPrice->id_customer = (int) Context::getContext()->customer->id;
+        $specificPrice->add();
+        $this->specificPrices[$productName][$specificPriceName] = $specificPrice;
+    }
+
+    /**
+     * This hook can be used to perform a database cleaning of added objects
+     *
+     * @AfterScenario
+     */
+    public function cleanSpecificPriceFixtures()
+    {
+        foreach ($this->specificPrices as $productName => $specificPrices) {
+            foreach ($specificPrices as $specificPriceName => $specificPrice) {
+                $specificPrice->delete();
+            }
+        }
+        $this->specificPrices = [];
+    }
+
+    /**
+     * @param $productName
+     * @param $specificPriceName
+     */
+    public function checkSpecificPriceWithNameExists($productName, $specificPriceName)
+    {
+        $this->checkFixtureExists($this->specificPrices[$productName], 'SpecificPrice', $specificPriceName);
     }
 
     /* COMBINATION */

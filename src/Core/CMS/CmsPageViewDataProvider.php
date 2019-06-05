@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\CMS;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageCategoriesBreadcrumbTree;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\Breadcrumb;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Class CmsPageViewDataProvider provides cms page view data for cms listing page.
@@ -58,7 +58,7 @@ final class CmsPageViewDataProvider implements CmsPageViewDataProviderInterface
     public function getView($cmsCategoryParentId)
     {
         return [
-            'root_category_id' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
+            'root_category_id' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
             'breadcrumb_tree' => $this->getBreadcrumbTree($cmsCategoryParentId),
         ];
     }
@@ -68,7 +68,7 @@ final class CmsPageViewDataProvider implements CmsPageViewDataProviderInterface
      *
      * @param int $cmsCategoryParentId
      *
-     * @return CmsPageCategoriesBreadcrumbTree|array
+     * @return Breadcrumb|array
      *
      * @throws CmsPageCategoryException
      */

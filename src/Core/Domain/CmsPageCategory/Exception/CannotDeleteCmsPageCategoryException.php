@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,46 +16,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
-
 /**
- * Class CannotDeleteCmsPageCategoryException
+ * Is thrown on failure when deleting a cms page category
  */
 class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
 {
     /**
-     * @var CmsPageCategoryId
+     * When fails to delete single cms page category
      */
-    private $cmsPageCategoryId;
+    const FAILED_DELETE = 10;
 
     /**
-     * @param int $cmsPageCategoryId
-     * @param string $message
-     * @param int $code
-     * @param null $previous
+     * When fails to delete cms page categories on bulk action
      */
-    public function __construct($cmsPageCategoryId, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-
-        $this->cmsPageCategoryId = $cmsPageCategoryId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCmsPageCategoryId()
-    {
-        return $this->cmsPageCategoryId;
-    }
+    const FAILED_BULK_DELETE = 20;
 }

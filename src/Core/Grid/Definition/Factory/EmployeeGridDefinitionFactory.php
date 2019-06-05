@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -63,11 +64,16 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectUrl;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetUrl
      * @param string $redirectUrl
      */
-    public function __construct($resetUrl, $redirectUrl)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        $resetUrl,
+        $redirectUrl
+    ) {
+        parent::__construct($hookDispatcher);
         $this->resetUrl = $resetUrl;
         $this->redirectUrl = $redirectUrl;
     }
@@ -154,7 +160,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_employees_index',
+                                'route' => 'admin_employees_edit',
                                 'route_param_name' => 'employeeId',
                                 'route_param_field' => 'id_employee',
                             ])
@@ -290,20 +296,14 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_bulk_update_status',
-                    'route_params' => [
-                        'newStatus' => 'enabled',
-                    ],
+                    'submit_route' => 'admin_employees_bulk_enable_status',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_bulk_update_status',
-                    'route_params' => [
-                        'newStatus' => 'disabled',
-                    ],
+                    'submit_route' => 'admin_employees_bulk_disable_status',
                 ])
             )
             ->add(

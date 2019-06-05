@@ -26,11 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
@@ -40,17 +43,21 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotAdaptThemeToRTLLangu
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths;
+use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\AdaptThemeToRTLLanguagesType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
-use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,7 +72,6 @@ class ThemeController extends AbstractAdminController
      *
      * @AdminSecurity(
      *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -91,13 +97,14 @@ class ThemeController extends AbstractAdminController
 
         $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
         $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
-        $logoProvider = $this->get('prestashop.core.shop.logo.logo_provider');
+        /** @var LogosPaths $logoProvider */
+        $logoProvider = $this->getQueryBus()->handle(new GetLogosPaths());
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
             'themeCatalogUrl' => $themeCatalogUrl,
             'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
             'shopLogosForm' => $this->getLogosUploadForm()->createView(),
-            'headerLogoPath' => $logoProvider->getHeaderLogo(),
+            'headerLogoPath' => $logoProvider->getHeaderLogoPath(),
             'mailLogoPath' => $logoProvider->getMailLogoPath(),
             'invoiceLogoPath' => $logoProvider->getInvoiceLogoPath(),
             'faviconPath' => $logoProvider->getFaviconPath(),
@@ -105,6 +112,7 @@ class ThemeController extends AbstractAdminController
             'notUsedThemes' => $themeProvider->getNotUsedThemes(),
             'isDevModeOn' => $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEV_'),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
+            'isMultiShopFeatureUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
             'adaptThemeToRtlLanguagesForm' => $this->getAdaptThemeToRtlLanguageForm()->createView(),
             'isInstalledRtlLanguage' => $installedRtlLanguageChecker->isInstalledRtlLanguage(),
             'shopName' => $this->get('prestashop.adapter.shop.context')->getShopName(),
@@ -130,29 +138,21 @@ class ThemeController extends AbstractAdminController
 
         if ($logosUploadForm->isSubmitted()) {
             $data = $logosUploadForm->getData();
-
             try {
-                $command = new UploadLogosCommand();
+                $this->getShopLogosFormHandler()->save($data['shop_logos']);
 
-                if ($data['header_logo']) {
-                    $command->setUploadedHeaderLogo($data['header_logo']);
-                }
-
-                if ($data['mail_logo']) {
-                    $command->setUploadedMailLogo($data['mail_logo']);
-                }
-
-                if ($data['invoice_logo']) {
-                    $command->setUploadedInvoiceLogo($data['invoice_logo']);
-                }
-
-                if ($data['favicon']) {
-                    $command->setUploadedFavicon($data['favicon']);
-                }
-
-                $this->getCommandBus()->handle($command);
-            } catch (ShopException $e) {
-                $this->addFlash('error', $this->handleUploadLogosException($e));
+                $this->addFlash(
+                    'success',
+                    $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
+                );
+            } catch (DomainException $e) {
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException(
+                        $e,
+                        $this->getLogoUploadErrorMessages($e)
+                    )
+                );
             }
         }
 
@@ -209,7 +209,7 @@ class ThemeController extends AbstractAdminController
         $importThemeForm = $this->createForm(ImportThemeType::class);
         $importThemeForm->handleRequest($request);
 
-        if ($importThemeForm->isSubmitted()) {
+        if ($importThemeForm->isSubmitted() && $importThemeForm->isValid()) {
             $data = $importThemeForm->getData();
             $importSource = null;
 
@@ -264,6 +264,7 @@ class ThemeController extends AbstractAdminController
     {
         try {
             $this->getCommandBus()->handle(new EnableThemeCommand(new ThemeName($themeName)));
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleEnableThemeException($e));
 
@@ -291,6 +292,11 @@ class ThemeController extends AbstractAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteThemeCommand(new ThemeName($themeName)));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleDeleteThemeException($e));
 
@@ -371,8 +377,6 @@ class ThemeController extends AbstractAdminController
     /**
      * Show Front Office theme's pages layout customization.
      *
-     * @DemoRestricted(redirectRoute="admin_themes_index")
-     *
      * @param Request $request
      *
      * @return Response
@@ -430,10 +434,12 @@ class ThemeController extends AbstractAdminController
 
     /**
      * @return FormInterface
+     *
+     * @throws Exception
      */
     protected function getLogosUploadForm()
     {
-        return $this->createForm(ShopLogosType::class);
+        return $this->getShopLogosFormHandler()->getForm();
     }
 
     /**
@@ -445,25 +451,11 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
-     * Handles exception that was thrown when uploading shop logos.
-     *
-     * @param ShopException $e
-     *
-     * @return string error message for exception
+     * @return FormHandlerInterface
      */
-    private function handleUploadLogosException(ShopException $e)
+    private function getShopLogosFormHandler()
     {
-        $type = get_class($e);
-
-        $errorMessages = [
-            NotSupportedFaviconExtensionException::class => $this->trans('Image format not recognized, allowed formats are: .ico', 'Admin.Notifications.Error'),
-        ];
-
-        if (isset($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
+        return $this->get('prestashop.admin.shop_logos_settings.form_handler');
     }
 
     /**
@@ -504,6 +496,15 @@ class ThemeController extends AbstractAdminController
         $errorMessages = [
             CannotEnableThemeException::class => $e->getMessage(),
         ];
+
+        if ($e instanceof ThemeConstraintException &&
+            $e->getCode() === ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP
+        ) {
+            return $this->trans(
+                'You must select a shop from the above list if you wish to choose a theme.',
+                'Admin.Design.Help'
+            );
+        }
 
         if (isset($errorMessages[$type])) {
             return $errorMessages[$type];
@@ -553,5 +554,44 @@ class ThemeController extends AbstractAdminController
         }
 
         return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * Gets exception or exception and its code error mapping.
+     *
+     * @param DomainException $exception
+     *
+     * @return array
+     */
+    private function getLogoUploadErrorMessages(DomainException $exception)
+    {
+        $availableLogoFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS);
+        $availableIconFormat = ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION;
+
+        $logoImageFormatError = $this->trans(
+            'Image format not recognized, allowed format(s) is(are): .%s',
+            'Admin.Notifications.Error',
+            [$availableLogoFormatsImploded]
+        );
+
+        $iconFormatError = $this->trans(
+            'Image format not recognized, allowed format(s) is(are): .%s',
+            'Admin.Notifications.Error',
+            [$availableIconFormat]
+        );
+
+        return [
+            NotSupportedLogoImageExtensionException::class => $logoImageFormatError,
+            NotSupportedFaviconExtensionException::class => $iconFormatError,
+            FileUploadException::class => [
+                UPLOAD_ERR_INI_SIZE => $this->trans(
+                    'File too large (limit of %s bytes).',
+                    'Admin.Notifications.Error',
+                    [
+                        UploadedFile::getMaxFilesize(),
+                    ]
+                ),
+            ],
+        ];
     }
 }

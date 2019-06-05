@@ -77,7 +77,6 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('title', TranslatableType::class, [
-                'error_bubbling' => false,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],

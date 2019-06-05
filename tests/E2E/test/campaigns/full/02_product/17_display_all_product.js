@@ -9,7 +9,7 @@ const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-
+const welcomeScenarios = require('../../common_scenarios/welcome');
 const commonScenarios = require('../../common_scenarios/product');
 
 let promise = Promise.resolve();
@@ -21,7 +21,7 @@ scenario('Display all product', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Check the product pagination in the Back Office', client => {
     test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should select "active product"', () => client.waitAndSelectByValue(ProductList.status_filter, "1"));
@@ -59,7 +59,7 @@ scenario('Display all product', () => {
     });
     test('should get the pagination Products per page value and check the created product in the Front Office', async () => {
       await client.getAttributeInVar(ProductSettings.Pagination.products_per_page_input, "value", "pagination");
-      global.pagination = await Number(Math.trunc(Number(global.productsNumber) / Number(global.tab['pagination'])));
+      global.pagination = await Number(Math.ceil(Number(global.productsNumber) / Number(global.tab['pagination'])));
       await commonScenarios.checkAllProduct(AccessPageFO, productPage, client);
     });
   }, 'product/product');

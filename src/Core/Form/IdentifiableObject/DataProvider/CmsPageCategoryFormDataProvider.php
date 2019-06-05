@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\DTO\EditableCmsPageCategory;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\EditableCmsPageCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
 {
@@ -83,7 +83,7 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'parent_category' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
+            'parent_category' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
             'shop_association' => $this->contextShopIds,
             'is_displayed' => true,
         ];

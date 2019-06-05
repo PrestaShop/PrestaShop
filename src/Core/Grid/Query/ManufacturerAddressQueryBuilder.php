@@ -72,6 +72,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->select('a.id_address, m.name, a.firstname, a.lastname, a.postcode, a.city, cl.name as country');
 
         $this->searchCriteriaApplicator
+            ->applySorting($searchCriteria, $qb)
             ->applyPagination($searchCriteria, $qb)
         ;
 
@@ -98,16 +99,6 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilderByFilters(array $filters)
     {
-        $allowedFilters = [
-            'id_address',
-            'brand',
-            'firstname',
-            'lastname',
-            'postcode',
-            'city',
-            'country',
-        ];
-
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'address', 'a')
@@ -128,25 +119,46 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('a.id_warehouse = 0')
             ->andWhere('a.deleted = 0')
         ;
-        //@todo: Enable filtering when its fixed in another PR
+        $this->applyFilters($qb, $filters);
+
         return $qb;
+    }
 
-        foreach ($filters as $name => $value) {
-            if (!in_array($name, $allowedFilters, true)) {
+    /**
+     * @param QueryBuilder $qb
+     * @param array $filters
+     */
+    private function applyFilters(QueryBuilder $qb, array $filters)
+    {
+        $allowedFiltersMap = [
+            'id_address' => 'a.id_address',
+            'name' => 'm.name',
+            'firstname' => 'a.firstname',
+            'lastname' => 'a.lastname',
+            'postcode' => 'a.postcode',
+            'city' => 'a.city',
+            'country' => 'a.id_country',
+        ];
+        $exactMatchingFilters = ['id_address', 'country'];
+
+        foreach ($filters as $filterName => $value) {
+            if (!array_key_exists($filterName, $allowedFiltersMap)) {
                 continue;
             }
 
-            if ('id_address' === $name) {
-                $qb->andWhere("$name = :$name");
-                $qb->setParameter($name, $value);
+            if (in_array($filterName, $exactMatchingFilters, true)) {
+                if (empty($value)) {
+                    continue;
+                }
+
+                $qb->andWhere($allowedFiltersMap[$filterName] . " = :$filterName")
+                    ->setParameter($filterName, $value);
+
                 continue;
             }
-            if ('name' === $name) {
-                $qb->andHaving("m.$name LIKE :$name");
-                $qb->setParameter($name, '%' . $value . '%');
-            }
+
+            $qb->andWhere($allowedFiltersMap[$filterName] . " LIKE :$filterName")
+                ->setParameter($filterName, '%' . $value . '%');
         }
-
-        return $qb;
     }
 }
