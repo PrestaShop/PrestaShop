@@ -126,7 +126,6 @@ class CustomerFormCore extends AbstractForm
             );
             $birthdayField->setValue($dateBuilt->format('Y-m-d'));
         }
-        
         $this->validateFieldsLengths();
         $this->validateByModules();
 
