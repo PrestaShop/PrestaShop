@@ -175,11 +175,13 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             ]
         );
 
-        $userId = $token->getUser()->getId();
-        $getEmployeeForAuthentication = new GetEmployeeForAuthentication((int) $userId);
+        /** @var UserInterface $user */
+        $user = $token->getUser();
 
         /** @var AuthenticatedEmployee $authenticatedEmployee */
-        $authenticatedEmployee = $this->queryBus->handle($getEmployeeForAuthentication);
+        $authenticatedEmployee = $this->queryBus->handle(
+            GetEmployeeForAuthentication::fromEmail($user->getUsername())
+        );
 
         $this->authenticationHandler->setAuthenticationCredentials($authenticatedEmployee);
 
