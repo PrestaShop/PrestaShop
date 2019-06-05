@@ -110,3 +110,10 @@ admin_carts_delete_product:
     expose: true
   requirements:
     cartId: \d+
+
+admin_carts_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:search
+    _legacy_controller: AdminCarts
