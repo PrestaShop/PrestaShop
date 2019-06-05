@@ -135,7 +135,6 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $allowedFiltersMap = [
             'id_attribute_group' => 'ag.id_attribute_group',
-            'values' => '`values`',
             'name' => 'agl.name',
             'position' => 'ag.position',
         ];
@@ -148,12 +147,6 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('name' === $filterName) {
                 $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
-                continue;
-            }
-
-            if ('values' === $filterName) {
-                $qb->andHaving($allowedFiltersMap[$filterName] . ' = :' . $filterName)
-                    ->setParameter($filterName, $value);
                 continue;
             }
 

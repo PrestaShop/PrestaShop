@@ -91,6 +91,7 @@ final class AttributeGroupGridDefinitionFactory extends AbstractGridDefinitionFa
                 ->setName($this->trans('Values', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'values',
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('position'))
@@ -196,15 +197,6 @@ final class AttributeGroupGridDefinitionFactory extends AbstractGridDefinitionFa
                     ],
                 ])
                 ->setAssociatedColumn('name')
-            )
-            ->add((new Filter('values', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search values', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('values')
             )
             ->add((new Filter('position', TextType::class))
                 ->setTypeOptions([
