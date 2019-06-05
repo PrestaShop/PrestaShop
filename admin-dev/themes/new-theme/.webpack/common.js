@@ -88,6 +88,7 @@ module.exports = {
     order_message: './js/pages/order_message',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
+    attribute_group: './js/pages/attribute-group',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
