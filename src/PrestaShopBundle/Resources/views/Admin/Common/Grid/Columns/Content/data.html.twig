@@ -24,3 +24,13 @@
  *#}
 
 {{ record[column.options.field]|raw }}
+
+{% block content %}
+    {% block carts_listing %}
+      <div class="row">
+        <div class="col-12">
+          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartGrid} %}
+        </div>
+      </div>
+    {% endblock %}
+{% endblock %}

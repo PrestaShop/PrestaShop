@@ -299,6 +299,6 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
           - '@prestashop.core.grid.definition.factory.cart'
-          - '@prestashop.core.grid.data_factory.cart'
+          - '@prestashop.adapter.grid.data_factory.cart_decorator'
           - '@prestashop.core.grid.filter.form_factory'
           - '@prestashop.core.hook.dispatcher'
