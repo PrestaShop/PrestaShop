@@ -122,13 +122,6 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
             'a.id_attribute_group = ag.id_attribute_group'
         );
 
-        $qb->leftJoin(
-            'ag',
-            $this->dbPrefix . 'attribute_group_shop',
-            'ags',
-            'ag.id_attribute_group = ags.id_attribute_group'
-        );
-
         $this->applyFilters($filters, $qb);
 
         return $qb;

@@ -53,6 +53,7 @@ module.exports = {
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
     attribute: './js/pages/attribute',
+    attribute_group: './js/pages/attribute-group',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
