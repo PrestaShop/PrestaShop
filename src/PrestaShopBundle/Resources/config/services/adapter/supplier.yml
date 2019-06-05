@@ -62,7 +62,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler\GetSupplierForViewingHandler'
     arguments:
       - '@prestashop.core.localization.locale.repository'
-      - "@=service('prestashop.adapter.legacy.context').getContext()"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing'
