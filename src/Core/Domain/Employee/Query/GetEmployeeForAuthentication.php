@@ -34,23 +34,69 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 class GetEmployeeForAuthentication
 {
     /**
-     * @var EmployeeId
+     * @var EmployeeId|null
      */
     private $employeeId;
 
     /**
-     * @param int $employeeId
+     * @var string|null
      */
-    public function __construct($employeeId)
+    private $email;
+
+    /**
+     * This query cannot be constructed directly, because it can be built in two ways:
+     * from employee ID or from email.
+     * There are factory methods available for building this query instance.
+     *
+     * @see GetEmployeeForAuthentication::fromEmployeeId()
+     * @see GetEmployeeForAuthentication::fromEmail()
+     *
+     * @param int|null $employeeId
+     * @param string|null $email
+     */
+    private function __construct($employeeId = null, $email = null)
     {
-        $this->employeeId = new EmployeeId($employeeId);
+        $this->employeeId = null !== $employeeId ? new EmployeeId($employeeId) : null;
+        $this->email = $email;
     }
 
     /**
-     * @return EmployeeId
+     * Build query instance from email.
+     *
+     * @param string $email
+     *
+     * @return GetEmployeeForAuthentication
+     */
+    public static function fromEmail($email)
+    {
+        return new self(null, $email);
+    }
+
+    /**
+     * Built query instance from employee ID.
+     *
+     * @param int $employeeId
+     *
+     * @return GetEmployeeForAuthentication
+     */
+    public static function fromEmployeeId($employeeId)
+    {
+        return new self($employeeId);
+    }
+
+    /**
+     * @return EmployeeId|null
      */
     public function getEmployeeId()
     {
         return $this->employeeId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 }

@@ -554,7 +554,9 @@ class EmployeeController extends FrameworkBundleAdminController
     private function renewAuthenticationCredentials($employeeId)
     {
         /** @var AuthenticatedEmployee $authenticatedEmployee */
-        $authenticatedEmployee = $this->getQueryBus()->handle(new GetEmployeeForAuthentication($employeeId));
+        $authenticatedEmployee = $this->getQueryBus()->handle(
+            GetEmployeeForAuthentication::fromEmployeeId($employeeId)
+        );
 
         $authenticationHandler = $this->get('prestashop.adapter.security.employee_authentication_handler');
         $authenticationHandler->renewAuthenticationCredentials($authenticatedEmployee);

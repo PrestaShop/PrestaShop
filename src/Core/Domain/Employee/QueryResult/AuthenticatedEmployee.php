@@ -55,17 +55,37 @@ class AuthenticatedEmployee
     private $employeeId;
 
     /**
+     * @var int
+     */
+    private $profileId;
+
+    /**
+     * @var array
+     */
+    private $roles;
+
+    /**
      * @param EmployeeId $employeeId
      * @param Email $email
      * @param string $hashedPassword
      * @param string $defaultPageUrl
+     * @param int $profileId
+     * @param array $roles
      */
-    public function __construct(EmployeeId $employeeId, Email $email, $hashedPassword, $defaultPageUrl)
-    {
+    public function __construct(
+        EmployeeId $employeeId,
+        Email $email,
+        $hashedPassword,
+        $defaultPageUrl,
+        $profileId,
+        array $roles
+    ) {
         $this->employeeId = $employeeId;
         $this->defaultPageUrl = $defaultPageUrl;
         $this->email = $email;
         $this->hashedPassword = $hashedPassword;
+        $this->profileId = $profileId;
+        $this->roles = $roles;
     }
 
     /**
@@ -98,5 +118,21 @@ class AuthenticatedEmployee
     public function getEmployeeId()
     {
         return $this->employeeId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProfileId()
+    {
+        return $this->profileId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->roles;
     }
 }
