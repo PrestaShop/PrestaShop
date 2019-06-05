@@ -40,6 +40,7 @@ module.exports = {
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
     backup: './js/pages/backup',
+    cart: './js/pages/cart',
     catalog: './js/app/pages/catalog',
     catalog_product: './js/pages/catalog/product',
     catalog_price_rule: './js/pages/catalog-price-rule',
