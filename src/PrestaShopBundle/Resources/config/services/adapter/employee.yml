@@ -49,10 +49,6 @@ services:
       - '@prestashop.core.crypto.hashing'
       - '@prestashop.core.employee.profile_access_checker'
       - '@prestashop.adapter.data_provider.employee'
-      - '@prestashop.adapter.legacy.context'
-      - '@security.token_storage'
-      - '@prestashop.security.admin.provider'
-      - '@prestashop.static_cache.adapter'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand }
 
