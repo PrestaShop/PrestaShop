@@ -27,8 +27,12 @@
 namespace PrestaShopBundle\Security\Voter;
 
 use Access;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Decides on access rights to a Page.
@@ -52,6 +56,19 @@ class PageVoter extends Voter
     const LEVEL_READ = 1;
 
     /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(CommandBusInterface $queryBus)
+    {
+        $this->queryBus = $queryBus;
+    }
+
+    /**
      * Indicates if this voter should pronounce on this attribute and subject.
      *
      * @param string $attribute Rights to test
@@ -73,11 +90,17 @@ class PageVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
+        /** @var UserInterface $user */
         $user = $token->getUser();
-        $employeeProfileId = $user->getData()->id_profile;
+
+        /** @var AuthenticatedEmployee $authenticatedEmployee */
+        $authenticatedEmployee = $this->queryBus->handle(
+            GetEmployeeForAuthentication::fromEmail($user->getUsername())
+        );
+
         $action = $this->buildAction($subject, $attribute);
 
-        return $this->can($action, $employeeProfileId);
+        return $this->can($action, $authenticatedEmployee->getProfileId());
     }
 
     /**

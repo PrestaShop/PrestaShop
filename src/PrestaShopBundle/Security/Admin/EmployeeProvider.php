@@ -26,9 +26,14 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
-use Access;
+use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AuthenticatingEmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,8 +44,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class EmployeeProvider implements UserProviderInterface
 {
-    const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
-
+    /**
+     * @var Context
+     */
     private $legacyContext;
 
     /**
@@ -48,10 +54,24 @@ class EmployeeProvider implements UserProviderInterface
      */
     private $cache;
 
-    public function __construct(LegacyContext $context, CacheItemPoolInterface $cache)
-    {
+    /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
+     * @param LegacyContext $context
+     * @param CacheItemPoolInterface $cache
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(
+        LegacyContext $context,
+        CacheItemPoolInterface $cache,
+        CommandBusInterface $queryBus
+    ) {
         $this->legacyContext = $context->getContext();
         $this->cache = $cache;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -62,8 +82,8 @@ class EmployeeProvider implements UserProviderInterface
      *
      * @return Employee
      *
-     * @throws \Psr\Cache\InvalidArgumentException
-     * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     * @throws InvalidArgumentException
+     * @throws UsernameNotFoundException
      */
     public function loadUserByUsername($username)
     {
@@ -74,24 +94,24 @@ class EmployeeProvider implements UserProviderInterface
             return $cachedEmployee->get();
         }
 
-        $isContextEmployee = null !== $this->legacyContext->employee &&
-            $this->legacyContext->employee->email === $username;
-
-        if ($isContextEmployee || $this->legacyContext->employee->getByEmail($username)) {
-            $employee = new Employee($this->legacyContext->employee);
-            $employee->setRoles(
-                array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
+        try {
+            /** @var AuthenticatedEmployee $authenticatedEmployee */
+            $authenticatedEmployee = $this->queryBus->handle(
+                GetEmployeeForAuthentication::fromEmail($username)
             );
+            $employee = new Employee($authenticatedEmployee);
 
             $cachedEmployee->set($employee);
             $this->cache->save($cachedEmployee);
 
             return $cachedEmployee->get();
+        } catch (AuthenticatingEmployeeNotFoundException $e) {
+            throw new UsernameNotFoundException(
+                sprintf('Username "%s" does not exist.', $username),
+                0,
+                $e
+            );
         }
-
-        throw new UsernameNotFoundException(
-            sprintf('Username "%s" does not exist.', $username)
-        );
     }
 
     /**
@@ -121,6 +141,6 @@ class EmployeeProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'PrestaShopBundle\Security\Admin\Employee';
+        return $class === Employee::class;
     }
 }
