@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -108,7 +110,7 @@ final class AttributeGroupGridDefinitionFactory extends AbstractGridDefinitionFa
                             ->setName($this->trans('View', [], 'Admin.Actions'))
                             ->setIcon('zoom_in')
                             ->setOptions([
-                                'route' => 'admin_attribute_groups_view',
+                                'route' => 'admin_attributes_index',
                                 'route_param_name' => 'attributeGroupId',
                                 'route_param_field' => 'id_attribute_group',
                             ])
@@ -217,6 +219,22 @@ final class AttributeGroupGridDefinitionFactory extends AbstractGridDefinitionFa
                     'redirect_route' => 'admin_attribute_groups_index',
                 ])
                 ->setAssociatedColumn('actions')
+            );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_attribute_groups_bulk_delete',
+                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                    ])
             );
     }
 }
