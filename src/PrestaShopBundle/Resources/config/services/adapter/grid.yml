@@ -17,3 +17,9 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Grid\Action\Row\AccessibilityChecker\CategoryForViewAccessibilityChecker'
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+
+    prestashop.adapter.grid.data_factory.cart_decorator:
+        class: 'PrestaShop\PrestaShop\Adapter\Grid\Data\Factory\CartGridDataFactory'
+        arguments:
+            - '@prestashop.core.grid.data_factory.cart'
+            - '@translator'

@@ -101,12 +101,12 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'customer_name',
                 ])
             )
-//            ->add((new DataColumn('cart_total'))
-//                ->setName($this->trans('Total', [], 'Admin.Global'))
-//                ->setOptions([
-//                    'field' => 'customer_name',
-//                ])
-//            )
+            ->add((new DataColumn('cart_total'))
+                ->setName($this->trans('Total', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'cart_total',
+                ])
+            )
             ->add((new DataColumn('carrier_name'))
                 ->setName($this->trans('Carrier', [], 'Admin.Shipping.Feature'))
                 ->setOptions([
@@ -122,10 +122,10 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
         ;
 
         if ($this->configuration->get('PS_GUEST_CHECKOUT_ENABLED')) {
-            $columns->add((new DataColumn('id_guest'))
+            $columns->add((new DataColumn('online'))
                 ->setName($this->trans('Online', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_guest',
+                    'field' => 'online',
                 ])
             );
         }
