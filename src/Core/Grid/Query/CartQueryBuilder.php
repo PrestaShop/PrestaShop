@@ -51,18 +51,26 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
     private $criteriaApplicator;
 
     /**
+     * @var int
+     */
+    private $contextShopIds;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
+     * @param int $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
+        DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
+        $contextShopIds
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->criteriaApplicator = $criteriaApplicator;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -119,7 +127,10 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
             ->leftJoin('c', $this->dbPrefix . 'currency', 'cr', 'cr.id_currency = c.id_currency')
             ->leftJoin('c', $this->dbPrefix . 'orders', 'o', 'o.id_cart = c.id_cart')
             ->leftJoin('c', '('.$subSql->getSQL().')', 'con', 'con.id_guest = c.id_guest')
+            ->leftJoin('c', $this->dbPrefix . 'shop', 's', 's.id_shop = c.id_shop')
+            ->andWhere('c.id_shop IN (:context_shop_ids)')
             ->setParameter('current_date', date('Y-m-d H:i:s'))
+            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
 
         $strictComparisonFilters = [
