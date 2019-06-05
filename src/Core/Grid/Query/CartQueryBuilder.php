@@ -44,8 +44,8 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name');
         $qb->addSelect('ca.name AS carrier_name, c.date_add, IF(con.id_guest, 1, 0) id_guest');
         $qb->addSelect('
-            IF (IFNULL(o.id_order, "Non ordered") = "Non ordered",
-                IF(TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > 86400, "Abandoned cart", "Non ordered"),
+            IF (IFNULL(o.id_order, "not_ordered") = "not_ordered",
+                IF(TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > 86400, "abandoned_cart", "not_ordered"),
                     o.id_order) AS status
         ');
 
