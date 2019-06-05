@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,9 +26,13 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
-use Access;
 use Context;
+use Employee as LegacyEmployee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AuthenticatingEmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -37,14 +41,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Class EmployeeProvider To retrieve Employee entities for the Symfony security components.
- *
- * @deprecated since 1.7.7 - use \PrestaShopBundle\Security\Admin\UserProvider instead.
+ * Responsible for retrieving Employee entities for the Symfony security components.
  */
-class EmployeeProvider implements UserProviderInterface
+class UserProvider implements UserProviderInterface
 {
-    const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
-
     /**
      * @var Context
      */
@@ -56,13 +56,23 @@ class EmployeeProvider implements UserProviderInterface
     private $cache;
 
     /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
      * @param LegacyContext $context
      * @param CacheItemPoolInterface $cache
+     * @param CommandBusInterface $queryBus
      */
-    public function __construct(LegacyContext $context, CacheItemPoolInterface $cache)
-    {
+    public function __construct(
+        LegacyContext $context,
+        CacheItemPoolInterface $cache,
+        CommandBusInterface $queryBus
+    ) {
         $this->legacyContext = $context->getContext();
         $this->cache = $cache;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -85,24 +95,27 @@ class EmployeeProvider implements UserProviderInterface
             return $cachedEmployee->get();
         }
 
-        $isContextEmployee = null !== $this->legacyContext->employee &&
-            $this->legacyContext->employee->email === $username;
-
-        if ($isContextEmployee || $this->legacyContext->employee->getByEmail($username)) {
-            $employee = new Employee($this->legacyContext->employee);
-            $employee->setRoles(
-                array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
+        try {
+            /** @var AuthenticatedEmployee $authenticatedEmployee */
+            $authenticatedEmployee = $this->queryBus->handle(
+                GetEmployeeForAuthentication::fromEmail($username)
             );
+            $employee = new Employee(
+                new LegacyEmployee($authenticatedEmployee->getEmployeeId()->getValue())
+            );
+            $employee->setRoles($authenticatedEmployee->getRoles());
 
             $cachedEmployee->set($employee);
             $this->cache->save($cachedEmployee);
 
             return $cachedEmployee->get();
+        } catch (AuthenticatingEmployeeNotFoundException $e) {
+            throw new UsernameNotFoundException(
+                sprintf('Username "%s" does not exist.', $username),
+                0,
+                $e
+            );
         }
-
-        throw new UsernameNotFoundException(
-            sprintf('Username "%s" does not exist.', $username)
-        );
     }
 
     /**
@@ -124,7 +137,8 @@ class EmployeeProvider implements UserProviderInterface
     }
 
     /**
-     * Tests if the given class supports the security layer. Here, only Employee class is allowed to be used to authenticate.
+     * Tests if the given class supports the security layer.
+     * Here, only Employee class is allowed to be used to authenticate.
      *
      * @param string $class
      *

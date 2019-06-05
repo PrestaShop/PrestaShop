@@ -30,8 +30,6 @@ use Access;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AuthenticatingEmployeeNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeForAuthenticationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
