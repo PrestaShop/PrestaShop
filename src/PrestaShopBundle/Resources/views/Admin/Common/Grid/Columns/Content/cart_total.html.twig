@@ -23,12 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="text-center">
-  {% if record[column.options.field] matches '/^\\d+$/' %}
-    {{ record[column.options.field] }}
-  {% else %}
-    <span class="badge badge-danger rounded">
+<div class="text-right">
+  {% if record[column.options.is_order_placed_field]%}
+    <span class="badge badge-success rounded">
       {{ record[column.options.field] }}
     </span>
+  {% else %}
+    {{ record[column.options.field] }}
   {% endif %}
 </div>

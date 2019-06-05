@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,35 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="text-center">
-  {% if record[column.options.field] matches '/^\\d+$/' %}
-    {{ record[column.options.field] }}
-  {% else %}
-    <span class="badge badge-danger rounded">
-      {{ record[column.options.field] }}
-    </span>
-  {% endif %}
-</div>
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+final class CartTotalColumn extends AbstractColumn
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'cart_total';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'field',
+                'is_order_placed_field',
+            ])
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('is_order_placed_field', 'string')
+        ;
+    }
+}

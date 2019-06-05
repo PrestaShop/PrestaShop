@@ -107,7 +107,13 @@ final class CartGridDataFactory implements GridDataFactoryInterface
                 $this->translator->trans('Yes', [], 'Admin.Global') :
                 $this->translator->trans('No', [], 'Admin.Global');
 
-            $record['cart_total'] = $this->getCartTotal($record['id_cart']);
+            $context = Context::getContext();
+            $context->cart = new Cart($record['id_cart']);
+            $context->currency = new Currency((int) $context->cart->id_currency);
+            $context->customer = new Customer((int) $context->cart->id_customer);
+
+            $record['cart_total'] = Cart::getTotalCart($context->cart->id, true, Cart::BOTH_WITHOUT_SHIPPING);
+            $record['is_order_placed'] = $context->cart->orderExists();
 
             $modifiedRecords[] = $record;
         }
@@ -115,18 +121,4 @@ final class CartGridDataFactory implements GridDataFactoryInterface
         return new RecordCollection($modifiedRecords);
     }
 
-    /**
-     * @param int $cartId
-     *
-     * @return string
-     */
-    private function getCartTotal($cartId)
-    {
-        $context = Context::getContext();
-        $context->cart = new Cart($cartId);
-        $context->currency = new Currency((int) $context->cart->id_currency);
-        $context->customer = new Customer((int) $context->cart->id_customer);
-
-        return Cart::getTotalCart($cartId, true, Cart::BOTH_WITHOUT_SHIPPING);
-    }
 }
