@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Context;
 use Currency;
 use Configuration;
+use RuntimeException;
 
 class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -120,5 +121,122 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function checkCurrencyWithNameExists($currencyName)
     {
         $this->checkFixtureExists($this->currencies, 'Currency', $currencyName);
+    }
+
+    /**
+     * @Then currency :reference should be :isoCode
+     */
+    public function assertCurrencyIsoCode($reference, $isoCode)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ($currency->iso_code !== $isoCode) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" iso code, but "%s" was expected.',
+                $reference,
+                $currency->iso_code,
+                $isoCode
+            ));
+        }
+    }
+
+    /**
+     * @Then /^currency "(.*)" should have status (enabled|disabled)$/
+     */
+    public function assertCurrencyStatus($reference, $status)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+        $expectedStatus = $status === 'enabled';
+
+        if ($currency->active != $expectedStatus) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has status "%s", but "%s" was expected.',
+                $reference,
+                $currency->active,
+                $expectedStatus
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference exchange rate should be :exchangeRate
+     */
+    public function assertCurrencyExchangeRate($reference, $exchangeRate)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ((float) $currency->conversion_rate != (float) $exchangeRate) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" exchange rate, but "%s" was expected.',
+                $reference,
+                $currency->conversion_rate,
+                $exchangeRate
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :currencyReference should be available in shop :shopReference
+     */
+    public function assertCurrencyIsAvailableInShop($currencyReference, $shopReference)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($currencyReference);
+        /** @var \Shop $shop */
+        $shop = SharedStorage::getStorage()->get($shopReference);
+
+        if (!in_array($shop->id, $currency->getAssociatedShops())) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" is not associated with "%s" shop',
+                $currencyReference,
+                $shopReference
+            ));
+        }
+    }
+
+    /**
+     * @Given currency :reference with :isoCode exists
+     */
+    public function assertCurrencyExists($reference, $isoCode)
+    {
+        $currencyId = Currency::getIdByIsoCode($isoCode);
+
+        if (!$currencyId) {
+            throw new RuntimeException(sprintf('Currency with ISO Code "%s" does not exist', $isoCode));
+        }
+
+        SharedStorage::getStorage()->set($reference, new Currency($currencyId));
+    }
+
+    /**
+     * @Given currency :currencyReference is default in :shopReference shop
+     */
+    public function assertCurrencyIsDefaultInShop($currencyReference, $shopReference)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($currencyReference);
+        /** @var \Shop $shop */
+        $shop = SharedStorage::getStorage()->get($shopReference);
+
+        if ($currency->id !== (int) Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shop->id)) {
+            throw new RuntimeException(
+                sprintf('Currency "%s" is not default currency in shop "%s"', $currencyReference, $shopReference)
+            );
+        }
+    }
+
+    /**
+     * @Then :isoCode currency should be deleted
+     */
+    public function assertCurrencyIsDeleted($isoCode)
+    {
+        if (Currency::getIdByIsoCode($isoCode)) {
+            throw new RuntimeException(
+                sprintf('Currency with ISO Code "%s" was found.', $isoCode)
+            );
+        }
     }
 }
