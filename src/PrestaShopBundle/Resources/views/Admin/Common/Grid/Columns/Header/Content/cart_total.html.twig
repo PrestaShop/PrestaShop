@@ -23,12 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="text-center">
-  {% if record[column.options.field] matches '/^\\d+$/' %}
-    {{ record[column.options.field] }}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% set orderBy, orderWay = grid.sorting.order_by, grid.sorting.order_way %}
+
+<div class="text-right">
+  {% if column.options.sortable is defined and column.options.sortable and grid.data.records_total > 0 %}
+    {{ ps.sortable_column_header(column.name, column.id, orderBy, orderWay, grid.form_prefix) }}
   {% else %}
-    <span class="badge badge-danger rounded">
-      {{ record[column.options.field] }}
-    </span>
+    {{ column.name }}
   {% endif %}
 </div>
