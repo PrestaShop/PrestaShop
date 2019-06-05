@@ -38,7 +38,15 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Creates grid definition for Carts grid
@@ -174,5 +182,64 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         return $columns;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        $filters = (new FilterCollection())
+            ->add((new Filter('id_cart', NumberType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_cart')
+            )
+            ->add((new Filter('status', TextType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('status')
+            )
+            ->add((new Filter('customer_name', TextType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Name', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('customer_name')
+            )
+            ->add((new Filter('carrier_name', TextType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Carrier', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('carrier_name')
+            )
+            ->add((new Filter('date_add', DateRangeType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('date_add')
+            )
+            ->add((new Filter('online', YesAndNoChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('online')
+            )
+        ;
+
+        return $filters;
     }
 }
