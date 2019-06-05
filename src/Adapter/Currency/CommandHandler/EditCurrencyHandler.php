@@ -27,7 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Configuration;
+use Context;
 use Currency;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -39,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShopException;
 use Shop;
 
@@ -55,11 +58,18 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
     private $defaultCurrencyId;
 
     /**
-     * @param int $defaultCurrencyId
+     * @var LocaleRepository
      */
-    public function __construct($defaultCurrencyId)
+    private $localeRepository;
+
+    /**
+     * @param int $defaultCurrencyId
+     * @param LocaleRepository $localeRepository
+     */
+    public function __construct($defaultCurrencyId, LocaleRepository $localeRepository)
     {
         $this->defaultCurrencyId = (int) $defaultCurrencyId;
+        $this->localeRepository = $localeRepository;
     }
 
     /**
@@ -81,8 +91,16 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 );
             }
 
+            if (null !== $command->getIsoCode()) {
+                $this->updateNameAndSymbol(
+                    $entity,
+                    $command->getIsoCode()->getValue()
+                );
+
+                $entity->iso_code = $command->getIsoCode()->getValue();
+            }
+
             $entity->active = $command->isEnabled();
-            $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
 
             $this->assertCurrencyWithIsoCodeDoesNotExist(
@@ -226,6 +244,32 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                     ),
                     DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY
                 );
+            }
+        }
+    }
+
+    /**
+     * @param Currency $entity
+     * @param string $newIsoCode
+     */
+    private function updateNameAndSymbol(Currency $entity, $newIsoCode)
+    {
+        $contextLocale = Context::getContext()->language->getLocale();
+        $locale = $this->localeRepository->getLocale($contextLocale);
+
+        if (null !== $locale) {
+            $currency = $locale->getCurrency($newIsoCode);
+
+            if (null !== $currency) {
+                $langIds = Language::getLanguages(true, false, true);
+
+                $entity->name = [];
+                $entity->symbol = [];
+
+                foreach ($langIds as $langId) {
+                    $entity->name[$langId] = $currency->getDisplayName();
+                    $entity->symbol[$langId] = $currency->getSymbol();
+                }
             }
         }
     }
