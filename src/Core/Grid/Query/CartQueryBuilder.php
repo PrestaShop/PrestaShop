@@ -79,14 +79,14 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getBaseQuery($searchCriteria->getFilters());
-        $qb->addSelect('c.id_cart, c.date_add');
-        $qb->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name');
-        $qb->addSelect('ca.name AS carrier_name, c.date_add, IF(con.id_guest, 1, 0) id_guest');
         $qb->addSelect('
             IF (IFNULL(o.id_order, "not_ordered") = "not_ordered",
                 IF(TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > 86400, "abandoned_cart", "not_ordered"),
                     o.id_order) AS status
         ');
+        $qb->addSelect('c.id_cart, c.date_add');
+        $qb->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name');
+        $qb->addSelect('ca.name AS carrier_name, c.date_add, IF(con.id_guest, 1, 0) id_guest');
 
         $this->criteriaApplicator->applyPagination($searchCriteria, $qb);
 
@@ -135,16 +135,13 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
 
         $strictComparisonFilters = [
             'online' => 'con.id_guest',
+            'status' => 'o.id_order',
         ];
 
         $likeComparisonFilters = [
             'id_cart' => 'c.id_cart',
             'customer_name' => 'cu.lastname',
             'carrier_name' => 'ca.name',
-        ];
-
-        $havingLikeComparisonFilters = [
-            'status' => 'status',
         ];
 
         $dateComparisonFilters = [
@@ -165,15 +162,6 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
                 $alias = $likeComparisonFilters[$filterName];
 
                 $qb->andWhere("$alias LIKE :$filterName");
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
-
-                continue;
-            }
-
-            if (isset($havingLikeComparisonFilters[$filterName])) {
-                $alias = $havingLikeComparisonFilters[$filterName];
-
-                $qb->andHaving("$alias LIKE :$filterName");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;

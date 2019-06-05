@@ -244,6 +244,16 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('online')
             )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'admin_carts_index',
+                ])
+                ->setAssociatedColumn('actions')
+            )
         ;
 
         return $filters;
