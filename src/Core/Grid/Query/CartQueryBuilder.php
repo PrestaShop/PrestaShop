@@ -26,14 +26,45 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
  * Builds queries for cart grid
  */
-final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
+final class CartQueryBuilder implements DoctrineQueryBuilderInterface
 {
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var string
+     */
+    protected $dbPrefix;
+
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $criteriaApplicator;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
+     */
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+        $this->criteriaApplicator = $criteriaApplicator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -48,6 +79,10 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
                 IF(TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > 86400, "abandoned_cart", "not_ordered"),
                     o.id_order) AS status
         ');
+
+        $this->criteriaApplicator->applyPagination($searchCriteria, $qb);
+
+        $this->applySorting($qb, $searchCriteria);
 
         return $qb;
     }
@@ -87,10 +122,22 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('current_date', date('Y-m-d H:i:s'))
         ;
 
-        return $qb;
-
         $strictComparisonFilters = [
-            ''
+            'online' => 'con.id_guest',
+        ];
+
+        $likeComparisonFilters = [
+            'id_cart' => 'c.id_cart',
+            'customer_name' => 'cu.lastname',
+            'carrier_name' => 'ca.name',
+        ];
+
+        $havingLikeComparisonFilters = [
+            'status' => 'status',
+        ];
+
+        $dateComparisonFilters = [
+            'date_add' => 'c.date_add',
         ];
 
         foreach ($filters as $filterName => $filterValue) {
@@ -138,6 +185,31 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param SearchCriteriaInterface $criteria
+     */
+    private function applySorting(QueryBuilder $qb, SearchCriteriaInterface $criteria)
+    {
+        $sortableFields = [
+            'online' => 'con.id_guest',
+            'id_cart' => 'c.id_cart',
+            'customer_name' => 'cu.lastname',
+            'carrier_name' => 'ca.name',
+            'status' => 'status',
+            'date_add' => 'c.date_add',
+        ];
+
+        if (isset($sortableFields[$criteria->getOrderBy()])) {
+            $qb->orderBy(
+                $sortableFields[$criteria->getOrderBy()],
+                $criteria->getOrderWay()
+            );
         }
     }
 }
