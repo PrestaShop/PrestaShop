@@ -45,8 +45,8 @@ final class AttributeGroupFilters extends Filters
         return [
             'limit' => 50,
             'offset' => 0,
-            'orderBy' => 'id_attribute_group',
-            'sortOrder' => 'asc',
+            'orderBy' => 'position',
+            'sortOrder' => 'desc',
             'filters' => [],
         ];
     }

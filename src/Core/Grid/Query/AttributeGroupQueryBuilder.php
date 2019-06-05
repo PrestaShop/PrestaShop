@@ -31,7 +31,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Provides sql for attributes group > attribute list
+ * Provides sql for attributes group list
  */
 final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -73,7 +73,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('ag.id_attribute_group, a.id_attribute, agl.name, ag.position, COUNT(a.id_attribute) AS `values`')
-            ->groupBy('ag.position');
+            ->groupBy('ag.id_attribute_group');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -92,7 +92,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(DISTINCT ag.id_attribute_group)');
+        $qb->select('COUNT(DISTINCT ag.id_attribute_group) AS `values`');
 
         return $qb;
     }
@@ -122,26 +122,49 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
             'a.id_attribute_group = ag.id_attribute_group'
         );
 
-//        $this->applyFilters($filters, $qb);
+        $qb->leftJoin(
+            'ag',
+            $this->dbPrefix . 'attribute_group_shop',
+            'ags',
+            'ag.id_attribute_group = ags.id_attribute_group'
+        );
+
+        $this->applyFilters($filters, $qb);
 
         return $qb;
     }
 
+    /**
+     * @param array $filters
+     * @param QueryBuilder $qb
+     */
     private function applyFilters(array $filters, QueryBuilder $qb)
     {
-        $allowedFilters = ['id_attribute_group', 'values', 'name', 'position'];
+        $allowedFiltersMap = [
+            'id_attribute_group' => 'ag.id_attribute_group',
+            'values' => '`values`',
+            'name' => 'agl.name',
+            'position' => 'ag.position',
+        ];
 
         foreach ($filters as $filterName => $value) {
-            if (!in_array($filterName, $allowedFilters, true)) {
+            if (!array_key_exists($filterName, $allowedFiltersMap)) {
                 continue;
             }
 
-            if ('value' === $filterName) {
-                $qb->andWhere('al.`name` LIKE :' . $filterName)
+            if ('name' === $filterName) {
+                $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
                 continue;
             }
-            $qb->andWhere('a.`' . $filterName . '` = :' . $filterName)
+
+            if ('values' === $filterName) {
+                $qb->andHaving($allowedFiltersMap[$filterName] . ' = :' . $filterName)
+                    ->setParameter($filterName, $value);
+                continue;
+            }
+
+            $qb->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName)
                 ->setParameter($filterName, $value);
         }
     }
