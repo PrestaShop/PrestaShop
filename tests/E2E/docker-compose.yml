@@ -47,6 +47,7 @@ services:
       - "prestashop"
     volumes:
       - selenium-downloads:/home/seluser/Downloads
+    shm_size: 2gb
     networks:
       default:
         aliases:
