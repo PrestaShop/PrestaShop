@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartOrderIdColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartTotalColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -116,7 +115,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_cart',
                 ])
             )
-            ->add((new CartOrderIdColumn('status'))
+            ->add((new DataColumn('status'))
                 ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'status',
