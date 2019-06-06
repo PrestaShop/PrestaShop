@@ -251,3 +251,10 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
         public: true
+
+    prestashop.core.grid.definition.product:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@=service("prestashop.adapter.legacy.configuration").get("PS_STOCK_MANAGEMENT")'
+        public: true
