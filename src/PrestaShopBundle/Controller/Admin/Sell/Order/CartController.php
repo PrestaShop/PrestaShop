@@ -185,8 +185,7 @@ class CartController extends FrameworkBundleAdminController
     private function getErrorMessages()
     {
         return [
-            DeleteCartWithOrderException::class =>
-                $this->trans('An error occurred during deletion.', 'Admin.Notifications.Error'),
+            DeleteCartWithOrderException::class => $this->trans('An error occurred during deletion.', 'Admin.Notifications.Error'),
         ];
     }
 }
