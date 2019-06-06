@@ -168,7 +168,11 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_carts_delete',
                                 'route_param_name' => 'cartId',
                                 'route_param_field' => 'id_cart',
-                                'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
                             ])
                         ),
                 ])
