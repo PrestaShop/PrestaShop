@@ -36,11 +36,14 @@
         {{ 'Customer'|trans({}, 'Admin.Global') }}
       </h3>
       <div class="card-block row">
+{#   ofcourse we will apply this css property to all .card-text classes within the form. as I saw it does not brake anything     #}
         <div class="card-text" style="display: flex; flex-direction: column;">
           {{ ps.form_group_row(customerForm.gender_id, {}, {
             'label': 'Social title'|trans({}, 'Admin.Global'),
             'order': 1
           }) }}
+
+{#    order: 1 -  this ofcousre will be retrieved using OrderPositionExtension #}
 
           {{ ps.form_group_row(customerForm.first_name, {}, {
             'label': 'First name'|trans({}, 'Admin.Global'),

@@ -253,7 +253,6 @@
   {% import '@PrestaShop/Admin/macros.html.twig' as self %}
 
   {% set class = extraVars.class|default('') %}
-
   <div class="form-group row {{ class }}" {% if extraVars.order is defined %} style="order: {{ extraVars.order }}; -webkit-order: {{ extraVars.order }}" {% endif %}>
     {% set extraVars = extraVars|default({}) %}
 
