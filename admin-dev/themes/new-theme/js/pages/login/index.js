@@ -23,7 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import "../../dependencies";
+// Dependencies
+import 'prestakit/dist/js/prestashop-ui-kit';
+import 'jquery-ui-dist/jquery-ui';
+
+// Theme SCSS
+import '../../../scss/theme.scss';
+
 import LoginPage from "./LoginPage";
 
 const $ = window.$;
