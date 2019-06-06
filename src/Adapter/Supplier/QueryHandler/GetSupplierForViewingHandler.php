@@ -128,7 +128,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
 
                 foreach ($productCombinations as $combination) {
                     $attributeId = $combination['id_product_attribute'];
-                    if (isset($combinations[$attributeId])) {
+                    if (!isset($combinations[$attributeId])) {
                         $productInfo = Supplier::getProductInformationsBySupplier(
                             $supplier->id,
                             $product->id,
@@ -157,7 +157,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                         $attribute = sprintf(', %s', $attribute);
                     }
 
-                    $combinations[$attributeId]['attributes'] .= $attribute;
+                    $combinations[$attributeId]['attributes'] = $attribute;
                 }
 
                 $productInfo = Supplier::getProductInformationsBySupplier(
