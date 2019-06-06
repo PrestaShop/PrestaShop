@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\DeleteCartWithOrderException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -35,6 +38,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Manages page "Sell > Orders > Shopping Carts"
+ */
 class CartController extends FrameworkBundleAdminController
 {
     /**
@@ -74,5 +80,38 @@ class CartController extends FrameworkBundleAdminController
             CartGridDefinitionFactory::GRID_ID,
             'admin_carts_index'
         );
+    }
+
+    /**
+     * Deletes given cart
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param int $cartId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($cartId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCartCommand((int) $cartId));
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CartException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            DeleteCartWithOrderException::class =>
+                $this->trans('An error occurred during deletion.', 'Admin.Notifications.Error'),
+        ];
     }
 }
