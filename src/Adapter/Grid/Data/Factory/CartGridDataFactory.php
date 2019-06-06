@@ -103,6 +103,10 @@ final class CartGridDataFactory implements GridDataFactoryInterface
                 $record['carrier_name'] = '--';
             }
 
+            if (empty($record['customer_name'])) {
+                $record['customer_name'] = '--';
+            }
+
             $record['online'] = $record['id_guest'] ?
                 $this->translator->trans('Yes', [], 'Admin.Global') :
                 $this->translator->trans('No', [], 'Admin.Global');

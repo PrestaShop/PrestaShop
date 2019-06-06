@@ -118,6 +118,13 @@ admin_carts_search:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:search
     _legacy_controller: AdminCarts
 
+admin_carts_export:
+  path: /export
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:export
+    _legacy_controller: AdminCarts
+
 admin_carts_delete:
   path: /{cartId}/delete
   methods: [POST]

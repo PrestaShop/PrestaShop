@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\DeleteCartWithOrderException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -205,7 +206,52 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * Changes the cart address information
+     * Exports carts
+     *
+     * @param CartFilters $filters
+     *
+     * @return CsvResponse
+     */
+    public function exportAction(CartFilters $filters)
+    {
+        $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
+        $cartGrid = $cartGridFactory->getGrid($filters);
+
+        $isGuestCheckoutEnabled = $this->configuration->get('PS_GUEST_CHECKOUT_ENABLED');
+
+        $headers = [
+            'id_cart' => $this->trans('ID', 'Admin.Global'),
+            'status' => $this->trans('Order ID', 'Admin.Orderscustomers.Feature'),
+            'customer_name' => $this->trans('Customer', 'Admin.Global'),
+            'cart_total' => $this->trans('Total', 'Admin.Global'),
+            'carrier_name' => $this->trans('Carrier', 'Admin.Shipping.Feature'),
+            'date_add' => $this->trans('Date', 'Admin.Global'),
+        ];
+
+        if ($isGuestCheckoutEnabled) {
+            $headers['online'] = $this->trans('Online', 'Admin.Global');
+        }
+
+        $data = [];
+
+        foreach ($cartGrid->getData()->getRecords()->all() as $record) {
+            $item = [];
+
+            foreach (array_keys($headers) as $header) {
+                $item[$header] = $record[$header];
+            }
+
+            $data[] = $item;
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('cart_' . date('Y-m-d_His') . '.csv')
+        ;
+    }
+
+    /**
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
