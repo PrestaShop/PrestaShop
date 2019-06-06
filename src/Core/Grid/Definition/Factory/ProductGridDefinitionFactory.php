@@ -87,7 +87,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('Category'))
+                (new DataColumn('category'))
                     ->setName($this->trans('Category', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'category',
