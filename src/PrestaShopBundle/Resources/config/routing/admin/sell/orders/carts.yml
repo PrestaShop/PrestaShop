@@ -157,3 +157,12 @@ admin_carts_search:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:search
     _legacy_controller: AdminCarts
+
+admin_carts_delete:
+  path: /{cartId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:delete
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
