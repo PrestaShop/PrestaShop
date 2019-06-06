@@ -49,14 +49,14 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextShopId,
         $contextShopGroupId,
         $isStockManagementEnabled,
-        $isStockSharingEnabled
+        $isStockSharingBetweenShopGroupEnabled
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextLanguageId = $contextLanguageId;
         $this->contextShopId = $contextShopId;
         $this->isStockManagementEnabled = $isStockManagementEnabled;
-        $this->isStockSharingBetweenShopGroupEnabled = $isStockSharingEnabled;
+        $this->isStockSharingBetweenShopGroupEnabled = $isStockSharingBetweenShopGroupEnabled;
         $this->contextShopGroupId = $contextShopGroupId;
     }
 
@@ -86,7 +86,10 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb->select('COUNT(p.`id_product`)');
 
+        return $qb;
     }
 
     /**
