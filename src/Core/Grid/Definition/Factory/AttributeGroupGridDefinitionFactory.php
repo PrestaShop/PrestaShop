@@ -63,7 +63,7 @@ final class AttributeGroupGridDefinitionFactory extends AbstractGridDefinitionFa
      */
     protected function getName()
     {
-        return $this->trans('Attributes', [], 'Admin.Catalog.Feature');
+        return $this->trans('Attribute groups', [], 'Admin.Catalog.Feature');
     }
 
     /**
