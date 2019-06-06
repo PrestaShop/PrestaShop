@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface as CldrLocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
@@ -44,8 +44,8 @@ class Factory
     /**
      * Build a Number specification from a CLDR Locale object.
      *
-     * @param CldrLocale $cldrLocale
-     *                               This CldrLocale object is a low level data object extracted from CLDR data source
+     * @param CldrLocaleInterface $cldrLocale
+     *                                        This CldrLocale object is a low level data object extracted from CLDR data source
      * @param int $maxFractionDigits
      *                               Max number of digits to display in a number's decimal part
      * @param bool $numberGroupingUsed
@@ -55,7 +55,7 @@ class Factory
      *
      * @throws LocalizationException
      */
-    public function buildNumberSpecification(CldrLocale $cldrLocale, $maxFractionDigits, $numberGroupingUsed)
+    public function buildNumberSpecification(CldrLocaleInterface $cldrLocale, $maxFractionDigits, $numberGroupingUsed)
     {
         $decimalPattern = $cldrLocale->getDecimalPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
@@ -77,9 +77,9 @@ class Factory
      *
      * @param string $localeCode
      *                           The concerned locale
-     * @param cldrLocale $cldrLocale
-     *                               This CldrLocale object is a low level data object extracted from CLDR data source
-     *                               It contains data about the concerned locale
+     * @param CldrLocaleInterface $cldrLocale
+     *                                        This CldrLocale object is a low level data object extracted from CLDR data source
+     *                                        It contains data about the concerned locale
      * @param Currency $currency
      *                           This Currency object brings missing specification to format a number as a price
      * @param bool $numberGroupingUsed
@@ -95,7 +95,7 @@ class Factory
      */
     public function buildPriceSpecification(
         $localeCode,
-        CldrLocale $cldrLocale,
+        CldrLocaleInterface $cldrLocale,
         Currency $currency,
         $numberGroupingUsed,
         $currencyDisplayType
