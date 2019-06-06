@@ -145,7 +145,7 @@ class CommonClient {
       }
     };
     let selenium_hostURL= 'http://' + global.selenium_host + ':' + global.selenium_port;
-    let selenium_requestURL= '/wd/hub/session/' + sessionId + '/chromium/send_command';
+    let selenium_requestURL = '/wd/hub/session/' + sessionId + '/chromium/send_command' ;
     await chai.request(selenium_hostURL)
               .post(selenium_requestURL)
               .send(params);
@@ -671,8 +671,8 @@ class CommonClient {
           } else {
             elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
           }
-        } 
-      else {
+        }
+        else {
           if (priceWithCurrency === true) {
             elementsTable[i] = name.normalize('NFKD').replace(/[^\x00-\x7F]/g, '').toLowerCase();
           } else {
@@ -836,13 +836,13 @@ class CommonClient {
         global.tab[value] = count.value;
       });
   }
-/**
+  /**
    * get Current URL
    * @param pause
    * @return current url
    */
   getURL(pause = 0) {
-    return this.client
+     return this.client
      .pause(pause)
      .url();
     }
@@ -858,7 +858,7 @@ class CommonClient {
     return this.client
       .pause(pause)
       .execute(function (selector,isXpath) {
-        if (isXpath) return document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+        if(isXpath) return document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
         else return document.querySelector(selector).click();
       }, selector,isXpath);
   }
@@ -909,7 +909,7 @@ class CommonClient {
         }, selector, value, isXpath);
   }
 
-/**
+  /**
    * remove attribute from selector
    * @param selector, xpath or css selector of the element
    * @param attributeName, attribute to remove
