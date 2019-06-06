@@ -309,4 +309,4 @@ services:
             - '@prestashop.core.grid.query_builder.attribute_group'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
-            - 'attribute'
+            - 'attribute_group'
