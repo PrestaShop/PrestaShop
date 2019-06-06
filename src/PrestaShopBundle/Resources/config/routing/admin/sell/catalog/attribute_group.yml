@@ -51,8 +51,8 @@ admin_attribute_groups_delete:
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:delete'
-    _legacy_controller: AdminAttributeGroups
-    _legacy_link: AdminAttributeGroups:deleteattribute_group
+    _legacy_controller: AdminAttributesGroups
+    _legacy_link: AdminAttributesGroups:deleteattribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
