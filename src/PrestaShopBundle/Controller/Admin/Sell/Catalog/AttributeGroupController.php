@@ -26,6 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\DeleteAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGroupGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -78,5 +83,104 @@ class AttributeGroupController extends FrameworkBundleAdminController
             AttributeGroupGridDefinitionFactory::GRID_ID,
             'admin_attribute_groups_index'
         );
+    }
+
+    /**
+     * Deletes attribute group
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attribute_groups_index",
+     * )
+     *
+     * @param int $attributeGroupId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($attributeGroupId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteAttributeGroupCommand((int) $attributeGroupId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (AttributeGroupException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_attribute_groups_index');
+    }
+
+    /**
+     * Deletes multiple attribute groups by provided ids from request
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attribute_groups_index",
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteAttributeGroupCommand(
+                    $this->getAttributeGroupIdsFromRequest($request))
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (AttributeGroupException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_attribute_groups_index');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getAttributeGroupIdsFromRequest(Request $request)
+    {
+        $attributeGroupIds = $request->request->get('attribute_group_bulk');
+
+        if (!is_array($attributeGroupIds)) {
+            return [];
+        }
+
+        foreach ($attributeGroupIds as $i => $attributeGroupId) {
+            $attributeGroupIds[$i] = (int) $attributeGroupId;
+        }
+
+        return $attributeGroupIds;
+    }
+
+    /**
+     * Provides translated error messages for exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            AttributeGroupNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            DeleteAttributeGroupException::class => [
+                DeleteAttributeGroupException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteAttributeGroupException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
     }
 }
