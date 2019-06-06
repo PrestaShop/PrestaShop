@@ -5,7 +5,7 @@ URL="${URL:-prestashop}"
 MODULE="${MODULE:-}"
 SAUCELABS="${SAUCELABS:-}"
 SCRIPT="${SCRIPT:-index.webdriverio.js}"
-DIR="${DIR:-`mktemp -d`}/"
+DIR="${DIR:-/home/seluser/Downloads/}"
 COMMAND_PARAMETERS="--URL=$URL --HEADLESS --DIR=$DIR"
 
 if [ ! -z "$MODULE" ]; then

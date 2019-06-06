@@ -37,8 +37,16 @@ class AdminRequestSqlControllerCore extends AdminController
         array('value' => 2, 'name' => 'iso-8859-1'),
     );
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminRequestSqlController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         $this->table = 'request_sql';
         $this->className = 'RequestSql';

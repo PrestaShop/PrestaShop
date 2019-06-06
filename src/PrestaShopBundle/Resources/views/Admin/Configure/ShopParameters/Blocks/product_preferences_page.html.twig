@@ -86,6 +86,10 @@
           </div>
         </div>
       </div>
+
+      {% block product_page_preferences_form_rest %}
+        {{ form_rest(pageForm) }}
+      {% endblock %}
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">

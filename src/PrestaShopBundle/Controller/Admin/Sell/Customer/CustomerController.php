@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
@@ -263,7 +264,7 @@ class CustomerController extends AbstractAdminController
      * @param int $customerId
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function savePrivateNoteAction($customerId, Request $request)
     {
@@ -278,6 +279,13 @@ class CustomerController extends AbstractAdminController
                     (int) $customerId,
                     $data['note']
                 ));
+
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json([
+                        'success' => true,
+                        'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+                    ]);
+                }
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             } catch (CustomerException $e) {
@@ -784,6 +792,16 @@ class CustomerController extends AbstractAdminController
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
+            MissingCustomerRequiredFieldsException::class => $this->trans(
+                'The field %s is required.',
+                'Admin.Notifications.Error',
+                [
+                    implode(
+                        ',',
+                        $e instanceof MissingCustomerRequiredFieldsException ? $e->getMissingRequiredFields() : []
+                    ),
+                ]
+            ),
         ];
     }
 }

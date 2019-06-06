@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,22 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
 
-{* Workaround to add compatibility for enable/disable actions to be able to use symfony endpoints *}
-{if isset($migrated_url_enable)}
-  {assign var="url_enable" value=$migrated_url_enable}
-{/if}
+namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
-<a class="list-action-enable{if isset($ajax) && $ajax} ajax_table_link{/if}{if $enabled} action-enabled{else} action-disabled{/if}" href="{$url_enable|escape:'html':'UTF-8'}"{if isset($confirm)} onclick="return confirm('{$confirm}');"{/if} title="{if $enabled}{l s='Enabled' d='Admin.Global'}{else}{l s='Disabled' d='Admin.Global'}{/if}">
-	<i class="icon-check{if !$enabled} hidden{/if}"></i>
-	<i class="icon-remove{if $enabled} hidden{/if}"></i>
-</a>
+/**
+ * This exception on success case has code 0 which is equal to constant UPLOAD_ERR_OK.
+ * On every other case it has one of the following error code constants:
+ *
+ * UPLOAD_ERR_INI_SIZE,
+ * UPLOAD_ERR_FORM_SIZE,
+ * UPLOAD_ERR_PARTIAL,
+ * UPLOAD_ERR_NO_FILE,
+ * UPLOAD_ERR_NO_TMP_DIR,
+ * UPLOAD_ERR_CANT_WRITE,
+ * UPLOAD_ERR_EXTENSION
+ */
+class FileUploadException extends DomainException
+{
+}

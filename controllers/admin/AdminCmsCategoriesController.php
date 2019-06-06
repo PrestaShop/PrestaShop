@@ -34,8 +34,16 @@ class AdminCmsCategoriesControllerCore extends AdminController
 
     protected $position_identifier = 'id_cms_category_to_move';
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminCmsCategoriesController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         $this->is_cms = true;
         $this->table = 'cms_category';

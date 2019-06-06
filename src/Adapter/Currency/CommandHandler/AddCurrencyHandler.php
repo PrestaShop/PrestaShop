@@ -50,11 +50,18 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
     private $localeRepoCLDR;
 
     /**
-     * @param LocaleRepository $localeRepoCLDR
+     * @var Language
      */
-    public function __construct(LocaleRepository $localeRepoCLDR)
+    private $defaultLanguage;
+
+    /**
+     * @param LocaleRepository $localeRepoCLDR
+     * @param Language $defaultLanguage
+     */
+    public function __construct(LocaleRepository $localeRepoCLDR, $defaultLanguageId)
     {
         $this->localeRepoCLDR = $localeRepoCLDR;
+        $this->defaultLanguage = new Language((int) $defaultLanguageId);
     }
 
     /**
@@ -72,6 +79,15 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
+            // CLDR locale give us the CLDR reference specification
+            $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
+            // CLDR currency gives data from CLDR reference, for the given language
+            $cldrCurrency = $cldrLocale->getCurrency($entity->iso_code);
+            if (!empty($cldrCurrency)) {
+                // The currency may not be declared in the locale, eg with custom iso code
+                $entity->precision = (int) $cldrCurrency->getDecimalDigits();
+            }
+
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
             if (false === $entity->add()) {

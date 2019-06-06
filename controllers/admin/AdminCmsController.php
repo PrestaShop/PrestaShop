@@ -35,8 +35,16 @@ class AdminCmsControllerCore extends AdminController
 
     protected $position_identifier = 'id_cms';
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminCmsController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         $this->table = 'cms';
         $this->list_id = 'cms';

@@ -1544,20 +1544,21 @@ function checkLangPack(token){
 
 function redirect(new_page) { window.location = new_page; }
 
-function saveCustomerNote(customerId){
+function saveCustomerNote(){
+  var $customerNoteForm = $('#customer_note');
 	var noteContent = $('#noteContent').val();
-	var data = 'token=' + token_admin_customers + '&tab=AdminCustomers&ajax=1&action=updateCustomerNote&id_customer=' + customerId + '&note=' + encodeURIComponent(noteContent);
+
 	$.ajax({
 		type: "POST",
-		url: "index.php",
-		data: data,
+		url: $customerNoteForm.attr('action'),
+		data: {
+		  'private_note': {
+		    'note': encodeURIComponent(noteContent)
+      }
+    },
 		async : true,
 		success: function(r) {
-
-			if (r == 'ok') {
-				$('#submitCustomerNote').attr('disabled', true);
-			}
-			showSuccessMessage(update_success_msg);
+			showSuccessMessage(r.message);
 		}
 	});
 }
