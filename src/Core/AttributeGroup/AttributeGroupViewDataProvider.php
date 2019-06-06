@@ -24,53 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject;
+namespace PrestaShop\PrestaShop\Core\AttributeGroup;
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\CheckIsColorGroupById;
 
 /**
- * Provides identification data of Attribute
+ * Provides data required for attribute group view action
  */
-final class AttributeId
+final class AttributeGroupViewDataProvider
 {
     /**
-     * @var int
+     * @var CommandBusInterface
      */
-    private $attributeId;
+    private $queryBus;
 
     /**
-     * @param int $attributeId
-     *
-     * @throws AttributeConstraintException
+     * @param CommandBusInterface $queryBus
      */
-    public function __construct($attributeId)
+    public function __construct(CommandBusInterface $queryBus)
     {
-        $this->assertIsIntegerGreaterThanZero($attributeId);
-        $this->attributeId = $attributeId;
+        $this->queryBus = $queryBus;
     }
 
     /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->attributeId;
-    }
-
-    /**
-     * Validates that the value is integer and is greater than zero
+     * @param int $attributeGroupId
      *
-     * @param $value
-     *
-     * @throws AttributeConstraintException
+     * @throws AttributeGroupConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    public function isColorGroup($attributeGroupId)
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new AttributeConstraintException(
-                sprintf('Invalid attribute id "%s".', var_export($value, true)),
-                AttributeConstraintException::INVALID_ID
-            );
-        }
+        return $this->queryBus->handle(new CheckIsColorGroupById($attributeGroupId));
     }
 }

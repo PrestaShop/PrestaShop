@@ -80,7 +80,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('a.id_attribute, a.id_attribute_group, al.name AS value, a.position');
+            ->select('a.id_attribute, a.color, a.id_attribute_group, al.name AS value, a.position');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -135,17 +135,26 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * @param array $filters
+     * @param QueryBuilder $qb
+     */
     private function applyFilters(array $filters, QueryBuilder $qb)
     {
-        $allowedFilters = ['id_attribute', 'value', 'position'];
+        $allowedFiltersMap = [
+            'id_attribute' => 'a.id_attribute',
+            'value' => 'al.name',
+            'position' => 'a.position',
+            'color' => 'a.color',
+        ];
 
         foreach ($filters as $filterName => $value) {
-            if (!in_array($filterName, $allowedFilters, true)) {
+            if (!array_key_exists($filterName, $allowedFiltersMap)) {
                 continue;
             }
 
-            if ('value' === $filterName) {
-                $qb->andWhere('al.`name` LIKE :' . $filterName)
+            if ('value' === $filterName || 'color' === $filterName) {
+                $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
                 continue;
             }
