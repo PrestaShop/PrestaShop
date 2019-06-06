@@ -59,4 +59,20 @@ abstract class AbstractCartHandler
 
         return $cart;
     }
+
+    /**
+     * @param CartId $cartId
+     *
+     * @return Cart
+     */
+    protected function getCart(CartId $cartId)
+    {
+        $cart = new Cart($cartId->getValue());
+
+        if ($cartId->getValue() !== $cart->id) {
+            throw new CartNotFoundException(sprintf('Cart with id "%s" was not found', $cartId->getValue()));
+        }
+
+        return $cart;
+    }
 }
