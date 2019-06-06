@@ -226,6 +226,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
+            - '@prestashop.core.attribute_group.attribute_group_view_data_provider'
         public: true
 
     prestashop.core.grid.definition.factory.attribute_group:

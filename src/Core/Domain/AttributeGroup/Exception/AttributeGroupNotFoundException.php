@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop SA and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,28 +22,13 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% block grid_pagination %}
-  {% if grid.data.records_total > 10 or grid.pagination.offset %}
-    <div class="row">
-      <div class="col-md-12">
-        {% set route_params = {} %}
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
-        {% for param_name, param_value in app.request.attributes.get('_route_params') %}
-          {% set route_params = route_params|merge({ (param_name) : (param_value) }) %}
-        {% endfor %}
-
-        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
-          'limit': grid.pagination.limit,
-          'offset': grid.pagination.offset,
-          'total': grid.data.records_total,
-          'prefix': grid.form_prefix,
-          'caller_route': app.request.attributes.get('_route'),
-          'caller_parameters': route_params
-        })) }}
-      </div>
-    </div>
-  {% endif %}
-{% endblock %}
-
+/**
+ * Is thrown when required attribute group cannot be found
+ */
+class AttributeGroupNotFoundException extends AttributeGroupException
+{
+}

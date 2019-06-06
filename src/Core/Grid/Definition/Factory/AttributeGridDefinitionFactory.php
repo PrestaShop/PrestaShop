@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProvider;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Attribute\AttributeColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -57,15 +59,23 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $attributeGroupId;
 
     /**
+     * @var AttributeGroupViewDataProvider
+     */
+    private $attributeGroupViewDataProvider;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param int $attributeGroupId
+     * @param AttributeGroupViewDataProvider $attributeGroupViewDataProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        $attributeGroupId
+        $attributeGroupId,
+        $attributeGroupViewDataProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->attributeGroupId = $attributeGroupId;
+        $this->attributeGroupViewDataProvider = $attributeGroupViewDataProvider;
     }
 
     /**
@@ -89,7 +99,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columns = (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
                     'bulk_field' => 'id_attribute',
@@ -106,48 +116,60 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'value',
                 ])
-            )
-            ->add((new DataColumn('position'))
-                ->setName($this->trans('Position', [], 'Admin.Global'))
+        );
+
+        if ($this->attributeGroupViewDataProvider->isColorGroup($this->attributeGroupId)) {
+            $columns->add((new AttributeColorColumn('color'))
+                ->setName($this->trans('Color', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
-                    'field' => 'position',
+                    'field' => 'color',
                 ])
-            )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_attributes_edit',
-                                    'route_param_name' => 'attributeGroupId',
-                                    'route_param_field' => 'id_attribute_group',
-                                    'extra_route_params' => [
-                                        'attributeId' => 'id_attribute',
-                                    ],
-                            ])
-                        )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'route' => 'admin_attributes_delete',
+            );
+        }
+
+        $columns->add((new DataColumn('position'))
+            ->setName($this->trans('Position', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'position',
+            ])
+        )
+        ->add((new ActionColumn('actions'))
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    ->add((new LinkRowAction('edit'))
+                        ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                        ->setIcon('edit')
+                        ->setOptions([
+                            'route' => 'admin_attributes_edit',
                                 'route_param_name' => 'attributeGroupId',
                                 'route_param_field' => 'id_attribute_group',
                                 'extra_route_params' => [
                                     'attributeId' => 'id_attribute',
                                 ],
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
-                        ),
-                ])
-            );
+                        ])
+                    )
+                    ->add((new SubmitRowAction('delete'))
+                        ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->setIcon('delete')
+                        ->setOptions([
+                            'route' => 'admin_attributes_delete',
+                            'route_param_name' => 'attributeGroupId',
+                            'route_param_field' => 'id_attribute_group',
+                            'extra_route_params' => [
+                                'attributeId' => 'id_attribute',
+                            ],
+                            'confirm_message' => $this->trans(
+                                'Delete selected item?',
+                                [],
+                                'Admin.Notifications.Warning'
+                            ),
+                        ])
+                    ),
+            ])
+        );
+
+        return $columns;
     }
 
     /**
@@ -186,7 +208,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getFilters()
     {
-        return (new FilterCollection())
+        $filters = (new FilterCollection())
             ->add((new Filter('id_attribute', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
@@ -200,7 +222,7 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search value', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('value')
@@ -228,6 +250,20 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('actions')
             );
+
+        if ($this->attributeGroupViewDataProvider->isColorGroup($this->attributeGroupId)) {
+            $filters->add((new Filter('color', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search color', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('color')
+            );
+        }
+
+        return $filters;
     }
 
     /**

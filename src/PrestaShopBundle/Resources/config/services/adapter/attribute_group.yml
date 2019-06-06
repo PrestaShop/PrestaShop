@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.attribute_group.query_handler.check_is_color_group_by_id_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\CheckIsColorGroupByIdHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\CheckIsColorGroupById'

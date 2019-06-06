@@ -74,18 +74,18 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param bool $isB2bFeatureEnabled
-     * @param bool $isMultistoreFeatureEnabled
+     * @param bool $isMultistoreFeatureEnabledGroup
      * @param array $genderChoices
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $isB2bFeatureEnabled,
-        $isMultistoreFeatureEnabled,
+        $isMultistoreFeatureEnabledGroup,
         array $genderChoices
     ) {
         parent::__construct($hookDispatcher);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
-        $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
+        $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabledGroup;
         $this->genderChoices = $genderChoices;
     }
 
