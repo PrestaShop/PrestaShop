@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Defines column that displays cart total price
+ */
 final class CartTotalColumn extends AbstractColumn
 {
     /**

@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
+/**
+ * Deletes given carts
+ */
 class BulkDeleteCartCommand
 {
     /**
