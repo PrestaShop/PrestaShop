@@ -58,6 +58,8 @@ class CartController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig', [
             'cartGrid' => $this->presentGrid($cartGrid),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
         ]);
     }
 
