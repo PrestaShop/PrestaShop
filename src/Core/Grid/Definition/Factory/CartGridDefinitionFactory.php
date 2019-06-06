@@ -28,15 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Customer\DeleteCustomersBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\DeleteCustomerRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartOrderIdColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartTotalColumn;
@@ -50,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -172,10 +168,9 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_carts_delete',
                                 'route_param_name' => 'cartId',
                                 'route_param_field' => 'id_cart',
-                                'confirm_message' =>
-                                    $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
+                                'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
                             ])
-                        )
+                        ),
                 ])
             )
         ;
@@ -289,8 +284,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([
                         'submit_route' => 'admin_carts_bulk_delete',
-                        'confirm_message' =>
-                            $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                     ])
             )
         ;
