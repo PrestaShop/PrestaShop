@@ -65,7 +65,7 @@ final class ShoppingCartTotalKpi implements KpiInterface
     /**
      * @param Cart $cart
      *
-     * @return string
+     * @return float
      */
     private function getCartTotalPrice(Cart $cart)
     {
