@@ -17,7 +17,9 @@
   color: $gray-darker;
 
   .manufacturer-logo {
-    height: 35px;
+    height: 3.125rem;
+    border: none;
+    margin-bottom: 1rem;
   }
 
   .product-description img {
@@ -224,12 +226,12 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    background: white;
+    background: #000;
     position: absolute;
     left: 0;
     top: 0;
     opacity: 0;
-    background: rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0.6);
     text-align: center;
     cursor: pointer;
     @include transition(opacity .7s ease-in-out);
@@ -237,8 +239,8 @@
       opacity: 1;
     }
     .zoom-in {
-      font-size: 6.25rem;
-      color: $gray;
+      font-size: 3.125rem;
+      color: $btn-primary-color;
     }
   }
 }
