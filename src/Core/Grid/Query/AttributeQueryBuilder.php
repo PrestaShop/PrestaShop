@@ -80,7 +80,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('a.id_attribute, al.name AS value, a.position');
+            ->select('a.id_attribute, a.id_attribute_group, al.name AS value, a.position');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
