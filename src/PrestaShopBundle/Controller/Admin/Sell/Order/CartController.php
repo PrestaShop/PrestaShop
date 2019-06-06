@@ -43,14 +43,15 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\DeleteCartWithOrderException;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\DeleteCartWithOrderException;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -419,6 +420,31 @@ class CartController extends FrameworkBundleAdminController
     private function getCartInfo(int $cartId): CartInformation
     {
         return $this->getQueryBus()->handle(new GetCartInformation($cartId));
+    }
+
+    /**
+     * Bulk delete carts
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $cartIds = $request->request->get('cart_carts_bulk');
+        $cartIds = array_map(static function ($cartId) { return (int) $cartId; }, $cartIds);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCartCommand($cartIds));
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CartException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
     }
 
     /**
