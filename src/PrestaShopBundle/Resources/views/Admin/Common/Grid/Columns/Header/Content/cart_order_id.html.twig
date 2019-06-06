@@ -23,14 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
-{% set orderBy, orderWay = grid.sorting.order_by, grid.sorting.order_way %}
-
 <div class="text-center">
-  {% if column.options.sortable is defined and column.options.sortable and grid.data.records_total > 0 %}
-    {{ ps.sortable_column_header(column.name, column.id, orderBy, orderWay, grid.form_prefix) }}
-  {% else %}
-    {{ column.name }}
-  {% endif %}
+  {% include '@PrestaShop/Admin/Common/Grid/Columns/Header/Content/default.html.twig' %}
 </div>
