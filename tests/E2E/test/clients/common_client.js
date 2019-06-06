@@ -836,7 +836,7 @@ class CommonClient {
         global.tab[value] = count.value;
       });
   }
-  /**
+   /**
    * get Current URL
    * @param pause
    * @return current url
