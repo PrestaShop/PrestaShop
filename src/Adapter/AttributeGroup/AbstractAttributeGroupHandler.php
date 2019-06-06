@@ -64,4 +64,22 @@ abstract class AbstractAttributeGroupHandler
 
         return $attributeGroup;
     }
+
+    /**
+     * @param AttributeGroup $attributeGroup
+     *
+     * @return bool
+     *
+     * @throws AttributeGroupException
+     */
+    protected function deleteAttributeGroup(AttributeGroup $attributeGroup)
+    {
+        try {
+            return $attributeGroup->delete();
+        } catch (PrestaShopException $e) {
+            throw new AttributeGroupException(
+                sprintf('An error occurred when trying to delete attribute with id %s', $attributeGroup->id)
+            );
+        }
+    }
 }

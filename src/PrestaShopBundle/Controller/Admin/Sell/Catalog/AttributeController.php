@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\DeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\DeleteAttributeException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -60,13 +61,22 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function indexAction($attributeGroupId, AttributeFilters $attributeFilters)
     {
-        $attributeGridFactory = $this->get('prestashop.core.grid.factory.attribute');
-        $attributeGrid = $attributeGridFactory->getGrid($attributeFilters);
+        try {
+            $attributeGridFactory = $this->get('prestashop.core.grid.factory.attribute');
+            $attributeGrid = $attributeGridFactory->getGrid($attributeFilters);
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
-            'attributeGrid' => $this->presentGrid($attributeGrid),
-            'attributeGroupId' => $attributeGroupId,
-        ]);
+            return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
+                'attributeGrid' => $this->presentGrid($attributeGrid),
+                'attributeGroupId' => $attributeGroupId,
+            ]);
+        } catch (AttributeGroupException $e) {
+            $this->addFlash('error', $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ));
+
+            return $this->redirectToRoute('admin_attribute_groups_index');
+        }
     }
 
     /**

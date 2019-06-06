@@ -131,9 +131,6 @@ final class AttributeGroupGridDefinitionFactory extends AbstractGridDefinitionFa
                                 'route' => 'admin_attribute_groups_delete',
                                 'route_param_name' => 'attributeGroupId',
                                 'route_param_field' => 'id_attribute_group',
-                                'extra_route_params' => [
-                                    'attributeId' => 'id_attribute',
-                                ],
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
                                     [],
@@ -157,7 +154,7 @@ final class AttributeGroupGridDefinitionFactory extends AbstractGridDefinitionFa
                 ->setOptions([
                     'route' => 'admin_import',
                     'route_params' => [
-                        'import_type' => 'attributes',
+                        'import_type' => 'attribute_groups',
                     ],
                 ])
             )
