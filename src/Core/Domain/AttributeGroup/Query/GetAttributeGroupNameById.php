@@ -24,59 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\AttributeGroup;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\CheckIsColorGroupById;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupNameById;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Provides data required for attribute group view action
+ * Gets attribute name by provided id
  */
-final class AttributeGroupViewDataProvider
+final class GetAttributeGroupNameById
 {
     /**
-     * @var CommandBusInterface
+     * @var AttributeGroupId
      */
-    private $queryBus;
-
-    /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     * @param int $contextLangId
-     */
-    public function __construct(CommandBusInterface $queryBus, $contextLangId)
-    {
-        $this->queryBus = $queryBus;
-        $this->contextLangId = $contextLangId;
-    }
+    private $attributeGroupId;
 
     /**
      * @param int $attributeGroupId
      *
      * @throws AttributeGroupConstraintException
      */
-    public function isColorGroup($attributeGroupId)
+    public function __construct($attributeGroupId)
     {
-        return $this->queryBus->handle(new CheckIsColorGroupById($attributeGroupId));
+        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
     }
 
     /**
-     * Provides the name of attribute group by its id
-     *
-     * @param int $attributeGroupId
-     *
-     * @return string
-     *
-     * @throws AttributeGroupConstraintException
+     * @return AttributeGroupId
      */
-    public function getAttributeGroupNameById($attributeGroupId)
+    public function getAttributeGroupId()
     {
-        return $this->queryBus->handle(new GetAttributeGroupNameById($attributeGroupId))[$this->contextLangId];
+        return $this->attributeGroupId;
     }
 }

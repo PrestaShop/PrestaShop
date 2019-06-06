@@ -6,3 +6,4 @@ services:
     class: 'PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProvider'
     arguments:
       - '@prestashop.core.command_bus'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
