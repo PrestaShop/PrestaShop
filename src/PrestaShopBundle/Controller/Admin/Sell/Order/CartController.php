@@ -48,11 +48,17 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\DeleteCartWithOrderException;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Manages page "Sell > Orders > Shopping Carts"
+ */
 class CartController extends FrameworkBundleAdminController
 {
     /**
@@ -70,6 +76,50 @@ class CartController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig', [
             'cartGrid' => $this->presentGrid($cartGrid),
         ]);
+    }
+
+    /**
+     * Provides filters functionality
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.cart'),
+            $request,
+            CartGridDefinitionFactory::GRID_ID,
+            'admin_carts_index'
+        );
+    }
+
+    /**
+     * Deletes given cart
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param int $cartId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($cartId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCartCommand((int) $cartId));
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CartException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
     }
 
     /**
@@ -377,30 +427,15 @@ class CartController extends FrameworkBundleAdminController
     private function getErrorMessages(Exception $e)
     {
         return [
-            CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             CartRuleValidityException::class => $e->getMessage(),
+            CartNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            DeleteCartWithOrderException::class => $this->trans(
+                'An error occurred during deletion.',
+                'Admin.Notifications.Error'
+            ),
         ];
-    }
-
-    /**
-     * Provides filters functionality
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.cart'),
-            $request,
-            CartGridDefinitionFactory::GRID_ID,
-            'admin_carts_index'
-        );
     }
 }
