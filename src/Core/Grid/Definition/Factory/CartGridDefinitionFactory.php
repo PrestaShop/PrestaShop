@@ -272,7 +272,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Export', [], 'Admin.Actions'))
                     ->setIcon('cloud_download')
                     ->setOptions([
-                        'route' => 'admin_carts_index',
+                        'route' => 'admin_carts_export',
                     ])
             )
         ;
