@@ -54,12 +54,13 @@ class AttributeController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )
      *
+     * @param Request $request
      * @param $attributeGroupId
      * @param AttributeFilters $attributeFilters
      *
      * @return Response
      */
-    public function indexAction($attributeGroupId, AttributeFilters $attributeFilters)
+    public function indexAction(Request $request, $attributeGroupId, AttributeFilters $attributeFilters)
     {
         try {
             $attributeGridFactory = $this->get('prestashop.core.grid.factory.attribute');
@@ -68,6 +69,8 @@ class AttributeController extends FrameworkBundleAdminController
             return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
                 'attributeGrid' => $this->presentGrid($attributeGrid),
                 'attributeGroupId' => $attributeGroupId,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             ]);
         } catch (AttributeGroupException $e) {
             $this->addFlash('error', $this->trans(
