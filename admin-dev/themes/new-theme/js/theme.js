@@ -25,7 +25,9 @@
 
 const $ = global.$;
 
-import './dependencies';
+// Dependencies
+import 'prestakit/dist/js/prestashop-ui-kit';
+import 'jquery-ui-dist/jquery-ui';
 import 'bootstrap-tokenfield';
 import 'eonasdan-bootstrap-datetimepicker';
 import 'jwerty';
@@ -38,6 +40,9 @@ import 'sprintf-js';
 // Plugins CSS
 import 'dropzone/dist/min/dropzone.min.css';
 import 'magnific-popup/dist/magnific-popup.css';
+
+// Theme SCSS
+import '../scss/theme.scss';
 
 // Theme Javascript
 window.Dropzone.autoDiscover = false;
