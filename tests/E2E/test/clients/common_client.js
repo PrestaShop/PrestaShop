@@ -136,7 +136,7 @@ class CommonClient {
   /**
    * Enable download in headless mode
    */
-  async enableDownloadForHeadlessMode() {
+  async enableDownloadForHeadlessMode(){
     let sessionId = await this.client.requestHandler.sessionID;
     let params = {
       'cmd': 'Page.setDownloadBehavior',
@@ -144,11 +144,11 @@ class CommonClient {
         'behavior': 'allow', 'downloadPath': global.downloadsFolderPath
       }
     };
-    let selenium_hostURL = 'http://' + global.selenium_host + ':' + global.selenium_port;
-    let selenium_requestURL = '/wd/hub/session/' + sessionId + '/chromium/send_command';
+    let selenium_hostURL= 'http://' + global.selenium_host + ':' + global.selenium_port;
+    let selenium_requestURL= '/wd/hub/session/' + sessionId + '/chromium/send_command';
     await chai.request(selenium_hostURL)
-      .post(selenium_requestURL)
-      .send(params);
+              .post(selenium_requestURL)
+              .send(params);
   }
 
   close() {
@@ -671,7 +671,8 @@ class CommonClient {
           } else {
             elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
           }
-        } else {
+        } 
+      else {
           if (priceWithCurrency === true) {
             elementsTable[i] = name.normalize('NFKD').replace(/[^\x00-\x7F]/g, '').toLowerCase();
           } else {
@@ -835,17 +836,16 @@ class CommonClient {
         global.tab[value] = count.value;
       });
   }
-
-  /**
+/**
    * get Current URL
    * @param pause
    * @return current url
    */
   getURL(pause = 0) {
     return this.client
-      .pause(pause)
-      .url();
-  }
+     .pause(pause)
+     .url();
+    }
 
   /**
    * perform a javascript click, function waitForExistAndClick sometimes clicks on the wrong element so we rely on JS
