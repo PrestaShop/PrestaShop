@@ -17,7 +17,7 @@ class OrderPositionExtension extends AbstractTypeExtension
     {
         $resolver
             ->setDefaults([
-                'order' => null, // cant thing of better name
+                'order' => null, // not sure if its a good name
             ])
             ->setAllowedTypes('order', ['null', 'int'])
         ;
