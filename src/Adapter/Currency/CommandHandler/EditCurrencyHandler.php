@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyExc
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShopException;
 use Shop;
@@ -63,13 +62,20 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
     private $localeRepository;
 
     /**
+     * @var string
+     */
+    private $contextLocale;
+
+    /**
      * @param int $defaultCurrencyId
      * @param LocaleRepository $localeRepository
+     * @param string $contextLocale
      */
-    public function __construct($defaultCurrencyId, LocaleRepository $localeRepository)
+    public function __construct($defaultCurrencyId, LocaleRepository $localeRepository, $contextLocale)
     {
         $this->defaultCurrencyId = (int) $defaultCurrencyId;
         $this->localeRepository = $localeRepository;
+        $this->contextLocale = $contextLocale;
     }
 
     /**
@@ -254,8 +260,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      */
     private function updateNameAndSymbol(Currency $entity, $newIsoCode)
     {
-        $contextLocale = Context::getContext()->language->getLocale();
-        $locale = $this->localeRepository->getLocale($contextLocale);
+        $locale = $this->localeRepository->getLocale($this->contextLocale);
 
         if (null !== $locale) {
             $currency = $locale->getCurrency($newIsoCode);
