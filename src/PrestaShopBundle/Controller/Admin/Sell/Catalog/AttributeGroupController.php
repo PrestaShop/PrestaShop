@@ -47,17 +47,20 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param AttributeGroupFilters $attributeGroupFilters
      *
      * @return Response
      */
-    public function indexAction(AttributeGroupFilters $attributeGroupFilters)
+    public function indexAction(Request $request, AttributeGroupFilters $attributeGroupFilters)
     {
         $attributeGroupGridFactory = $this->get('prestashop.core.grid.factory.attribute_group');
         $attributeGroupGrid = $attributeGroupGridFactory->getGrid($attributeGroupFilters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/AttributeGroup/index.html.twig', [
             'attributeGroupGrid' => $this->presentGrid($attributeGroupGrid),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
