@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.domain.cart.command_handler.bulk_delete_cart_handler:
+    class: PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\BulkDeleteCartHandler
+    arguments:
+      - '@prestashop.adapter.cart.command_handler.delete_cart_handler'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand
