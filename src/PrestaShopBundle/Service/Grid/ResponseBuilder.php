@@ -59,7 +59,7 @@ class ResponseBuilder
      * @param Request $request
      * @param string $filterId
      * @param string $redirectRoute
-     * @param array $paramsToKeep
+     * @param array $queryParamsToKeep
      *
      * @return RedirectResponse
      */
@@ -68,7 +68,7 @@ class ResponseBuilder
         Request $request,
         $filterId,
         $redirectRoute,
-        array $paramsToKeep = []
+        array $queryParamsToKeep = []
     ) {
         /** @var GridDefinitionInterface $definition */
         $definition = $definitionFactory->getDefinition();
@@ -86,7 +86,7 @@ class ResponseBuilder
             ];
         }
 
-        foreach ($paramsToKeep as $paramName) {
+        foreach ($queryParamsToKeep as $paramName) {
             if ($request->query->has($paramName)) {
                 $redirectParams[$paramName] = $request->query->get($paramName);
             }
