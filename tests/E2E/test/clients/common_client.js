@@ -857,10 +857,10 @@ class CommonClient {
   waitForExistAndClickJs(selector, isXpath = true, pause = 0) {
     return this.client
       .pause(pause)
-      .execute(function (selector, isXpath) {
-        if (isXpath) return document.evaluate(selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+      .execute(function (selector,isXpath) {
+        if (isXpath) return document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
         else return document.querySelector(selector).click();
-      }, selector, isXpath);
+      }, selector,isXpath);
   }
 
 
@@ -875,16 +875,17 @@ class CommonClient {
    */
   setInputValue(selector, value, isXpath = true, pause = 0) {
     return this.client
-      .pause(pause)
-      .execute(function (selector, value, isXpath) {
-        if (isXpath) {
-          document.evaluate(selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = '';
-          document.evaluate(selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = value;
-        } else {
-          document.querySelector(selector).value = '';
-          document.querySelector(selector).value = value;
-        }
-      }, selector, value, isXpath);
+        .pause(pause)
+        .execute(function (selector, value, isXpath) {
+          if(isXpath) {
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = '';
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = value;
+          }
+          else {
+            document.querySelector(selector).value = '';
+            document.querySelector(selector).value = value;
+          }
+        }, selector, value, isXpath);
   }
 
   /**
@@ -897,17 +898,18 @@ class CommonClient {
    */
   setiFrameContent(selector, value, isXpath = true, pause = 0) {
     return this.client
-      .pause(pause)
-      .execute(function (selector, value, isXpath) {
-        if (isXpath) {
-          document.evaluate(selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
-        } else {
-          document.querySelector(selector).contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
-        }
-      }, selector, value, isXpath);
+        .pause(pause)
+        .execute(function (selector, value, isXpath) {
+          if(isXpath) {
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
+          }
+          else {
+            document.querySelector(selector).contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
+          }
+        }, selector, value, isXpath);
   }
 
-  /**
+/**
    * remove attribute from selector
    * @param selector, xpath or css selector of the element
    * @param attributeName, attribute to remove
@@ -916,7 +918,7 @@ class CommonClient {
   removeAttribute(selector, attributeName, isXpath = true) {
     return this.client
       .execute(function (selector, attributeName, isXpath) {
-        if (isXpath) document.evaluate(selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.removeAttribute(attributeName);
+        if(isXpath) document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.removeAttribute(attributeName);
         else document.querySelector(selector).removeAttribute(attributeName);
       }, selector, attributeName, isXpath);
   }
