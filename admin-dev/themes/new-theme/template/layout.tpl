@@ -68,9 +68,8 @@
       <div class="component" id="header-employee-container">
         {include file="components/layout/employee_dropdown.tpl"}
       </div>
+      {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
     </nav>
-
-    {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
   </header>
 {/if}
 
