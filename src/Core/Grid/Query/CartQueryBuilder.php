@@ -78,15 +78,19 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        $dayInSeconds = 86400; // 24h
+
         $qb = $this->getBaseQuery($searchCriteria->getFilters());
+        $qb->addSelect('SQL_CALC_FOUND_ROWS c.id_cart, c.date_add');
         $qb->addSelect('
             IF (IFNULL(o.id_order, "not_ordered") = "not_ordered",
-                IF(TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > 86400, "abandoned_cart", "not_ordered"),
+                IF(TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > :day_in_seconds,
+                 "abandoned_cart", "not_ordered"),
                     o.id_order) AS status
         ');
-        $qb->addSelect('c.id_cart, c.date_add');
         $qb->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name');
         $qb->addSelect('ca.name AS carrier_name, c.date_add, IF(con.id_guest, 1, 0) id_guest');
+        $qb->setParameter('day_in_seconds', $dayInSeconds);
 
         $this->criteriaApplicator->applyPagination($searchCriteria, $qb);
 
@@ -100,8 +104,8 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getBaseQuery($searchCriteria->getFilters());
-        $qb->select('COUNT(c.id_cart)');
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('FOUND_ROWS()');
 
         return $qb;
     }
@@ -113,10 +117,12 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
      */
     private function getBaseQuery(array $filters)
     {
+        $halfHourInSeconds = 1800; // 0.5h
+
         $subSql = $this->connection->createQueryBuilder()
             ->select('co.id_guest')
             ->from($this->dbPrefix . 'connections', 'co')
-            ->where('TIME_TO_SEC(TIMEDIFF(:current_date, co.date_add)) < 1800')
+            ->where('TIME_TO_SEC(TIMEDIFF(:current_date, co.date_add)) < :half_hour_in_seconds')
             ->setMaxResults(1)
         ;
 
@@ -131,10 +137,10 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
             ->andWhere('c.id_shop IN (:context_shop_ids)')
             ->setParameter('current_date', date('Y-m-d H:i:s'))
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('half_hour_in_seconds', $halfHourInSeconds)
         ;
 
         $strictComparisonFilters = [
-            'online' => 'con.id_guest',
             'status' => 'o.id_order',
         ];
 
@@ -142,6 +148,10 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
             'id_cart' => 'c.id_cart',
             'customer_name' => 'cu.lastname',
             'carrier_name' => 'ca.name',
+        ];
+
+        $havingStrictComparison = [
+            'online' => 'id_guest',
         ];
 
         $dateComparisonFilters = [
@@ -163,6 +173,15 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
 
                 $qb->andWhere("$alias LIKE :$filterName");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
+
+                continue;
+            }
+
+            if (isset($havingStrictComparison[$filterName])) {
+                $alias = $havingStrictComparison[$filterName];
+
+                $qb->andHaving("$alias = :$filterName");
+                $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
@@ -196,7 +215,7 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
     private function applySorting(QueryBuilder $qb, SearchCriteriaInterface $criteria)
     {
         $sortableFields = [
-            'online' => 'con.id_guest',
+            'online' => 'id_guest',
             'id_cart' => 'c.id_cart',
             'customer_name' => 'cu.lastname',
             'carrier_name' => 'ca.name',
