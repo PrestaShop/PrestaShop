@@ -117,8 +117,9 @@ class CustomerFormCore extends AbstractForm
 
         // check birthdayField against null case is mandatory
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField) &&
-            Validate::isBirthDate($birthdayField->getValue(), Context::getContext()->language->date_format_lite)
+        if (!empty($birthdayField) 
+            && !empty($birthdayField->getValue())
+            && Validate::isBirthDate($birthdayField->getValue(), Context::getContext()->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
                 Context::getContext()->language->date_format_lite,
