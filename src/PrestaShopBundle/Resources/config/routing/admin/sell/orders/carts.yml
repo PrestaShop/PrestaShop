@@ -20,3 +20,10 @@ admin_carts_delete:
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
+
+admin_carts_bulk_delete:
+  path: /bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:bulkDelete
+    _legacy_controller: AdminCarts

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\DeleteCartWithOrderException;
@@ -95,6 +96,31 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteCartCommand((int) $cartId));
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CartException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
+    }
+
+    /**
+     * Bulk delete carts
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $cartIds = $request->request->get('cart_carts_bulk');
+        $cartIds = array_map(static function ($cartId) { return (int) $cartId; }, $cartIds);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCartCommand($cartIds));
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (CartException $e) {
