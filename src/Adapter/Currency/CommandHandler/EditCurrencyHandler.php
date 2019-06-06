@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Configuration;
-use Context;
 use Currency;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
