@@ -15,33 +15,9 @@ module.exports = {
       });
       test('should set the "Name of the link block in french', () => client.waitAndSetValue(LinkWidget.name_of_the_link_block_input.replace('%lang','2'), name + " " + date_time));
       test('should choose the hook "displayFooter"', () => client.waitAndSelectByVisibleText(LinkWidget.hook_select, hook));
-      test('should select All the "content pages"', async () => {
-        let i = 1;
-        do{
-          await client.isVisible(LinkWidget.select_all_content_page.replace('%POS',i));
-          if(global.isVisible)
-            client.scrollWaitForExistAndClick(LinkWidget.select_all_content_page.replace('%POS',i));
-          i++;
-        }while(global.isVisible);
-      });
-      test('should select All the "product pages"', async () => {
-        let i = 1;
-        do{
-          await client.isVisible(LinkWidget.select_all_product_page.replace('%POS',i));
-          if(global.isVisible)
-            client.scrollWaitForExistAndClick(LinkWidget.select_all_product_page.replace('%POS',i));
-          i++;
-        }while(global.isVisible);
-      });
-      test('should select All the "static content"', async () => {
-        let i = 1;
-        do{
-          await client.isVisible(LinkWidget.select_all_static_content.replace('%POS',i));
-          if(global.isVisible)
-            client.scrollWaitForExistAndClick(LinkWidget.select_all_static_content.replace('%POS',i));
-          i++;
-        }while(global.isVisible);
-      });
+      test('should select All the "content pages"', async () => await client.selectAllOptionsLinkWidget(LinkWidget.select_all_content_page));
+      test('should select All the "product pages"', async () => await client.selectAllOptionsLinkWidget(LinkWidget.select_all_product_page));
+      test('should select All the "static content"', async () => await client.selectAllOptionsLinkWidget(LinkWidget.select_all_static_content));
       test('should set "Name" input in french', () => client.waitAndSetValue(LinkWidget.first_custom_content_name_input.replace('%POS','1').replace('%lang','2'), 'Custom Name ' + date_time));
       test('should set "URL" input in french', () => client.waitAndSetValue(LinkWidget.first_custom_content_url_input.replace('%POS','1').replace('%lang','2'), 'Custom Url ' + date_time));
       test('should switch input language to english', () => {

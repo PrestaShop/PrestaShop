@@ -885,6 +885,23 @@ class CommonClient {
           }
         }, selector, value, isXpath);
   }
+
+  /**
+   * Select/unselect all options in link Widget creation test
+   * @param selectorList, selector to click on
+   * @param i, position if the options
+   * @return {Promise<*>}
+   */
+  async selectAllOptionsLinkWidget(selectorList, i=1) {
+    return this.client
+      .isVisible(selectorList.replace('%POS',i))
+      .then(async (isVisible) => {
+        if(isVisible){
+          await this.scrollWaitForExistAndClick(selectorList.replace('%POS',i));
+          await this.selectAllOptionsLinkWidget(selectorList,i+1)
+        }
+      });
+  }
 }
 
 module.exports = CommonClient;
