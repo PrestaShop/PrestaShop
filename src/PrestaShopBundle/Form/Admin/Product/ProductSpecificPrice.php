@@ -241,11 +241,10 @@ class ProductSpecificPrice extends CommonAbstractType
             )
             ->add(
                 'sp_reduction',
-                FormType\MoneyType::class,
+                FormType\NumberType::class,
                 [
                     'label' => $this->translator->trans('Reduction', [], 'Admin.Catalog.Feature'),
                     'required' => false,
-                    'currency' => $this->currency->iso_code,
                 ]
             )
             ->add(
