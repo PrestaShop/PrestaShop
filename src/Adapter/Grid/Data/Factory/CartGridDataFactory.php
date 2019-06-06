@@ -124,5 +124,4 @@ final class CartGridDataFactory implements GridDataFactoryInterface
 
         return new RecordCollection($modifiedRecords);
     }
-
 }
