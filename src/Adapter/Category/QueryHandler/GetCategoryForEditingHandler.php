@@ -27,8 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
 use Category;
+use Db;
 use ImageManager;
 use ImageType;
+use PDO;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -71,6 +73,25 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             );
         }
 
+        /**
+         * Select recursivly the subcategories in one SQL request
+         *
+         * @see https://dev.mysql.com/doc/refman/8.0/en/with.html
+         */
+        $subcategories = Db::getInstance()->query(
+            'WITH RECURSIVE sub_tree AS (' .
+            'SELECT id_category ' .
+            'FROM ps_category ' .
+            'WHERE id_parent = ' . (int) $category->id . ' ' .
+
+            'UNION ALL ' .
+
+            'SELECT cat.id_category ' .
+            'FROM ps_category cat, sub_tree st ' .
+            'WHERE cat.id_parent = st.id_category) ' .
+            'SELECT * FROM sub_tree;'
+        );
+
         $editableCategory = new EditableCategory(
             $query->getCategoryId(),
             $category->name,
@@ -86,7 +107,8 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             (bool) $category->is_root_category,
             $this->getCoverImage($query->getCategoryId()),
             $this->getThumbnailImage($query->getCategoryId()),
-            $this->getMenuThumbnailImages($query->getCategoryId())
+            $this->getMenuThumbnailImages($query->getCategoryId()),
+            $subcategories->fetchAll(PDO::FETCH_COLUMN)
         );
 
         return $editableCategory;
