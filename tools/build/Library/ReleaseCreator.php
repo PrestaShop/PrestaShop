@@ -175,6 +175,13 @@ class ReleaseCreator
     protected $useZip;
 
     /**
+     * Do we setup the shop version?
+     *
+     * @var bool
+     */
+    protected $setupVersion;
+
+    /**
      * Consisting of prestashop_ and the version. e.g prestashop_1.7.3.4.zip
      *
      * @var string
@@ -196,7 +203,7 @@ class ReleaseCreator
      * @param bool $useZip
      * @param string $destinationDir
      */
-    public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '')
+    public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '', $setupVersion = true)
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -208,6 +215,7 @@ class ReleaseCreator
         );
         $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->version = $version ? $version : $this->getCurrentVersion();
+        $this->setupVersion = $setupVersion;
         $this->zipFileName = "prestashop_$this->version.zip";
 
         if (empty($this->version)) {
@@ -262,9 +270,13 @@ class ReleaseCreator
             ConsoleWriter::COLOR_GREEN
         );
         $this->createTmpProjectDir()
-            ->setFilesConstants()
-            ->setupShopVersion()
-            ->generateLicensesFile()
+            ->setFilesConstants();
+
+        if ($this->setupVersion) {
+            $this->setupShopVersion();
+        }
+
+        $this->generateLicensesFile()
             ->runComposerInstall()
             ->createPackage();
         $endTime = date('H:i:s');
@@ -350,7 +362,7 @@ class ReleaseCreator
 
     /**
      * Get the current version in the project
-     * 
+     *
      * @return string PrestaShop version
      */
     protected function getCurrentVersion()
@@ -477,6 +489,7 @@ class ReleaseCreator
         if (!file_put_contents($this->tempProjectPath . '/LICENSES', $content)) {
             throw new BuildException('Unable to create LICENSES file.');
         }
+
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;

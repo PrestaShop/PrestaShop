@@ -45,6 +45,10 @@ $releaseOptions = [
         'description' => 'Desired release version of PrestaShop',
         'longopt' => 'version:',
     ],
+    'no-setup-version' => [
+        'description' => 'Do not setup the version. Default: false.',
+        'longopt' => 'setup-version',
+    ],
     'no-zip' => [
         'description' => 'Do not zip the release directory. Default: false.',
         'longopt' => 'no-zip',
@@ -100,29 +104,21 @@ foreach ($releaseOptions as $optionName => $option) {
         exit(1);
     }
 }
-$destinationDir = '';
-$useZip = $useInstaller = true;
 
-if (isset($userOptions['version'])) {
-    $version = $userOptions['version'];
-} else {
-    $version = null;
-}
-
-if (isset($userOptions['no-zip'])) {
-    $useZip = false;
-}
-
-if (isset($userOptions['destination-dir'])) {
-    $destinationDir = $userOptions['destination-dir'];
-}
-
-if (isset($userOptions['no-installer'])) {
-    $useInstaller = false;
-}
+$version = isset($userOptions['version']) ? $userOptions['version'] : null;
+$setupVersion = !isset($userOptions['setup-version']);
+$useZip = !isset($userOptions['no-zip']);
+$useInstaller = !isset($userOptions['no-installer']);
+$destinationDir = isset($userOptions['destination-dir']) ? $userOptions['destination-dir'] : '';
 
 try {
-    $releaseCreator = new ReleaseCreator($version, $useInstaller, $useZip, $destinationDir);
+    $releaseCreator = new ReleaseCreator(
+        $version,
+        $useInstaller,
+        $useZip,
+        $destinationDir,
+        $setupVersion
+    );
     $releaseCreator->createRelease();
 } catch (Exception $e) {
     $consoleWrite->displayText(
