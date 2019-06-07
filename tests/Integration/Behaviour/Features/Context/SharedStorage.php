@@ -71,7 +71,6 @@ class SharedStorage
 
     /**
      * @param string $key
-     *
      * @param mixed $resource
      */
     public function set($key, $resource)

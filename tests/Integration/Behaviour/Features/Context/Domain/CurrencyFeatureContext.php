@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext

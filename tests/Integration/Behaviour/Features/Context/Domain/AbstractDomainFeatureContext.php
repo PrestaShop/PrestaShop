@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
