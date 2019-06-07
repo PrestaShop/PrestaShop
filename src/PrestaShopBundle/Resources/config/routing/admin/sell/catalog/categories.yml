@@ -5,7 +5,9 @@ admin_categories_index:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:index
         _legacy_controller: AdminCategories
         _legacy_link: AdminCategories
-        categoryId: ''
+        categoryId: null
+    requirements:
+        categoryId: '\d+'
 
 admin_categories_search:
     path: /search
