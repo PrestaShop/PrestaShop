@@ -81,7 +81,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $subcategories = Db::getInstance()->query(
             'SELECT id_category ' .
             'FROM ( ' .
-            '  SELECT * FROM `'._DB_PREFIX_.'category`' .
+            '  SELECT * FROM `' . _DB_PREFIX_ . 'category`' .
             '  ORDER BY id_parent, id_category' .
             ') category_sorted, ' .
             '(SELECT @pv := ' . (int) $category->id . ') initialisation ' .
