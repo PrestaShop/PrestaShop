@@ -75,8 +75,6 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         /**
          * Select recursivly the subcategories in one SQL request
-         *
-         * @see https://dev.mysql.com/doc/refman/8.0/en/with.html
          */
         $subcategories = Db::getInstance()->query(
             'SELECT id_category ' .
