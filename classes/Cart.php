@@ -3111,6 +3111,7 @@ class CartCore extends ObjectModel
         if (empty($delivery_option) || count($delivery_option) == 0) {
             $this->delivery_option = '';
             $this->id_carrier = 0;
+            static::$cacheDeliveryOption = array();
 
             return;
         }
@@ -3134,6 +3135,7 @@ class CartCore extends ObjectModel
         }
 
         $this->delivery_option = json_encode($delivery_option);
+        static::$cacheDeliveryOption = array();
 
         // update auto cart rules
         CartRule::autoRemoveFromCart();
@@ -3173,7 +3175,7 @@ class CartCore extends ObjectModel
      */
     public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
     {
-        $cache_id = (int) (is_object($default_country) ? $default_country->id : 0) . '-' . (int) $dontAutoSelectOptions;
+        $cache_id = (int) (is_object($default_country) ? $default_country->id : 0) . '-' . (int) $dontAutoSelectOptions . (int) $this->id;
         if (isset(static::$cacheDeliveryOption[$cache_id]) && $use_cache) {
             return static::$cacheDeliveryOption[$cache_id];
         }
