@@ -27,7 +27,9 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\AddWebserviceKeyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\WebserviceKeyId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -89,10 +91,23 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
             $data['shop_association']
         );
 
-        /** @var WebserviceKeyId $webserviceKeyId */
-        $webserviceKeyId = $this->getCommandBus()->handle($command);
+        try {
+            /** @var WebserviceKeyId $webserviceKeyId */
+            $webserviceKeyId = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($reference, new WebserviceKey($webserviceKeyId->getValue()));
+            SharedStorage::getStorage()->set($reference, new WebserviceKey($webserviceKeyId->getValue()));
+        } catch (Exception $e) {
+            $this->lastException = $e;
+        }
+
         SharedStorage::getStorage()->clear($propertiesKey);
+    }
+
+    /**
+     * @Then I should get error that webservice key is duplicate
+     */
+    public function assertLastErrorIsDuplicateWebserviceKey()
+    {
+        $this->assertLastErrorIs(DuplicateWebserviceKeyException::class);
     }
 }

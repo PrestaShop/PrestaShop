@@ -28,3 +28,20 @@ Feature: Webservice key management
     And webservice key "key1" should have "Modify" permission for "employees, customers, manufacturers" resources
     And webservice key "key1" should have "Delete" permission for "suppliers, languages, countries" resources
     And webservice key "key1" should have "Fast view" permission for "taxes, zones" resources
+
+  Scenario: Creating Webservice key with duplicate key should not be allowed
+    Given I specify following properties for new webservice key "key1":
+      | key              | DFS51LTKBBMBGF5QQRG523JMQYEHU4X7 |
+      | description      | Testing webservice key           |
+      | is_enabled       | 1                                |
+      | shop_association | shop1                            |
+    And I specify "View" permission for "addresses, carriers, carts" resources for new webservice key "key1"
+    And I add webservice key "key1" with specified properties
+    Given I specify following properties for new webservice key "key2":
+      | key              | DFS51LTKBBMBGF5QQRG523JMQYEHU4X7 |
+      | description      | Testing webservice key           |
+      | is_enabled       | 1                                |
+      | shop_association | shop1                            |
+    And I specify "View" permission for "addresses, carriers, carts" resources for new webservice key "key2"
+    When I add webservice key "key2" with specified properties
+    Then I should get error that webservice key is duplicate

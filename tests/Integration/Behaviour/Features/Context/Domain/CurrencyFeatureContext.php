@@ -41,11 +41,6 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var \Exception|null
-     */
-    private $lastException;
-
-    /**
      * @When I add new currency :reference with following properties:
      */
     public function addCurrency($reference, TableNode $node)
@@ -146,19 +141,5 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsDefaultCurrencyCannotBeDeleted()
     {
         $this->assertLastErrorIs(CannotDeleteDefaultCurrencyException::class);
-    }
-
-    /**
-     * @param string $expectedError
-     */
-    private function assertLastErrorIs($expectedError)
-    {
-        if (!$this->lastException instanceof $expectedError) {
-            throw new RuntimeException(sprintf(
-                'Last error should be "%s", but got "%s"',
-                $expectedError,
-                $this->lastException ? get_class($this->lastException) : 'null'
-            ));
-        }
     }
 }
