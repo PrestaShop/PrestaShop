@@ -54,3 +54,11 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+        webservice:
+            paths:
+                features: Features/Scenario/Webservice
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\WebserviceKeyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext

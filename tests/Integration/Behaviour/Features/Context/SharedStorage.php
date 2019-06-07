@@ -71,10 +71,21 @@ class SharedStorage
 
     /**
      * @param string $key
+     *
      * @param mixed $resource
      */
     public function set($key, $resource)
     {
         $this->storage[$key] = $resource;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function clear($key)
+    {
+        if (isset($this->storage[$key])) {
+            unset($this->storage[$key]);
+        }
     }
 }

@@ -66,7 +66,7 @@ final class AddWebserviceKeyHandler extends AbstractWebserviceKeyHandler impleme
     {
         if (WebserviceKey::keyExists($key->getValue())) {
             throw new DuplicateWebserviceKeyException(
-                sprintf('Webservice key "%s" alrady exists', $key->getValue())
+                sprintf('Webservice key "%s" already exists', $key->getValue())
             );
         }
     }
