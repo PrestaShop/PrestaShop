@@ -79,17 +79,14 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
          * @see https://dev.mysql.com/doc/refman/8.0/en/with.html
          */
         $subcategories = Db::getInstance()->query(
-            'WITH RECURSIVE sub_tree AS (' .
             'SELECT id_category ' .
-            'FROM ps_category ' .
-            'WHERE id_parent = ' . (int) $category->id . ' ' .
-
-            'UNION ALL ' .
-
-            'SELECT cat.id_category ' .
-            'FROM ps_category cat, sub_tree st ' .
-            'WHERE cat.id_parent = st.id_category) ' .
-            'SELECT * FROM sub_tree;'
+            'FROM ( ' .
+            '  SELECT * FROM `'._DB_PREFIX_.'category`' .
+            '  ORDER BY id_parent, id_category' .
+            ') category_sorted, ' .
+            '(SELECT @pv := ' . (int) $category->id . ') initialisation ' .
+            'WHERE FIND_IN_SET(id_parent, @pv) ' .
+            'AND LENGTH(@pv := CONCAT(@pv, \',\', id_category))'
         );
 
         $editableCategory = new EditableCategory(
