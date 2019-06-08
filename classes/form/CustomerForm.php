@@ -115,7 +115,7 @@ class CustomerFormCore extends AbstractForm
             ));
         }
 
-        // check birthdayField against null case is mandatory
+        // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
         if (!empty($birthdayField) &&
             !empty($birthdayField->getValue()) &&
