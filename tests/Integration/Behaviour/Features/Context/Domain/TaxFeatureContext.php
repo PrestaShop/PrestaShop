@@ -42,14 +42,6 @@ use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpecte
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * "When" steps perform actions, and some of them store the latest result
-     * in this variable so that "Then" action can check its content
-     *
-     * @var mixed
-     */
-    protected $latestResult;
-
-    /**
      * @When I add new tax :taxReference with following properties:
      */
     public function createTaxUsingCommand($taxReference, TableNode $table)
