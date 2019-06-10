@@ -178,4 +178,8 @@
 
     </div>
     {{ form_end(form) }}
+  
+    {% block shop_preferences_form_rest %}
+      {{ form_rest(form) }}
+    {% endblock %}
 {% endblock %}
