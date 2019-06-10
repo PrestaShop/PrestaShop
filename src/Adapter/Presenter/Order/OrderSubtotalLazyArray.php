@@ -171,6 +171,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
         }
 
         $tax = $this->order->total_paid_tax_incl - $this->order->total_paid_tax_excl;
+
         return array(
             'type' => 'tax',
             'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
