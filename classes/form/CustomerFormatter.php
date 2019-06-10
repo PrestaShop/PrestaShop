@@ -122,6 +122,10 @@ class CustomerFormatterCore implements FormFormatterInterface
                     'Shop.Forms.Labels'
                 )
             )
+            ->addAvailableValue(
+                'comment',
+                $this->translator->trans("Not accepted: / \ ` ^ *\nA space is necessary after a \".\"", array(), 'Shop.Forms.Help')
+            )
             ->setRequired(true);
 
         $format['lastname'] = (new FormField())
@@ -132,6 +136,10 @@ class CustomerFormatterCore implements FormFormatterInterface
                     [],
                     'Shop.Forms.Labels'
                 )
+            )
+            ->addAvailableValue(
+                'comment',
+                $this->translator->trans("Not accepted: / \ ` ^ *\nA space is necessary after a \".\"", array(), 'Shop.Forms.Help')
             )
             ->setRequired(true);
 

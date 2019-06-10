@@ -49,9 +49,27 @@ class ValidateConstraintTranslatorCore
      */
     public function translate($validator)
     {
-        if ($validator === 'isName' || $validator === 'isCustomerName') {
+        if ($validator === 'isName') {
             return $this->translator->trans(
                 'Invalid name',
+                [],
+                'Shop.Forms.Errors'
+            );
+        }
+
+        if ($validator === 'isCustomerName') {
+            return $this->translator->trans(
+                'Invalid name',
+                [],
+                'Shop.Forms.Errors'
+            ) . "\n" .
+            $this->translator->trans(
+                'The following characters are not accepted: / \ ` ^ *',
+                [],
+                'Shop.Forms.Errors'
+            ) . "\n" .
+            $this->translator->trans(
+                'The characters . and 。 are allowed only if they are directly followed by a space or the end of the string.',
                 [],
                 'Shop.Forms.Errors'
             );
