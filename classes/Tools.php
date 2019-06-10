@@ -2562,6 +2562,7 @@ class ToolsCore
 
                 // API
                 $ht[] = '    # API';
+                $ht[] = '    RewriteRule ^api$ api/ [L]';
                 $ht[] = '    RewriteRule ^api/(.*)$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]' . PHP_EOL;
 
                 if (!$rewrite_settings) {
