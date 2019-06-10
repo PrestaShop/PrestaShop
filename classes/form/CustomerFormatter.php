@@ -124,7 +124,7 @@ class CustomerFormatterCore implements FormFormatterInterface
             )
             ->addAvailableValue(
                 'comment',
-                $this->translator->trans("Not accepted: / \ ` ^ *\nA space is necessary after a \".\"", array(), 'Shop.Forms.Help')
+                $this->translator->trans("Not accepted: / \ ^ * `\nA space is necessary after a \".\"", [], 'Shop.Forms.Help')
             )
             ->setRequired(true);
 
@@ -139,7 +139,7 @@ class CustomerFormatterCore implements FormFormatterInterface
             )
             ->addAvailableValue(
                 'comment',
-                $this->translator->trans("Not accepted: / \ ` ^ *\nA space is necessary after a \".\"", array(), 'Shop.Forms.Help')
+                $this->translator->trans("Not accepted: / \ ^ * `\nA space is necessary after a \".\"", [], 'Shop.Forms.Help')
             )
             ->setRequired(true);
 

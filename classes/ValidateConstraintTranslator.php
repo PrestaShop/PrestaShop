@@ -62,12 +62,12 @@ class ValidateConstraintTranslatorCore
                 'Invalid name',
                 [],
                 'Shop.Forms.Errors'
-            ) . "\n" .
+            ) . PHP_EOL .
             $this->translator->trans(
-                'The following characters are not accepted: / \ ` ^ *',
+                'The following characters are not accepted: / \ ^ * `',
                 [],
                 'Shop.Forms.Errors'
-            ) . "\n" .
+            ) . PHP_EOL .
             $this->translator->trans(
                 'The characters . and 。 are allowed only if they are directly followed by a space or the end of the string.',
                 [],
