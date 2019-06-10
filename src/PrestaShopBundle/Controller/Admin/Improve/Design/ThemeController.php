@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ResetThemeLayoutsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotAdaptThemeToRTLLanguagesException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
@@ -235,7 +236,13 @@ class ThemeController extends AbstractAdminController
 
                 return $this->redirectToRoute('admin_themes_index');
             } catch (ThemeException $e) {
-                $this->addFlash('error', $this->handleImportThemeException($e));
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException(
+                        $e,
+                        $this->handleImportThemeException($e)
+                    )
+                );
 
                 return $this->redirectToRoute('admin_themes_import');
             }
@@ -266,7 +273,13 @@ class ThemeController extends AbstractAdminController
             $this->getCommandBus()->handle(new EnableThemeCommand(new ThemeName($themeName)));
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (ThemeException $e) {
-            $this->addFlash('error', $this->handleEnableThemeException($e));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException(
+                    $e,
+                    $this->handleEnableThemeException($e)
+                )
+            );
 
             return $this->redirectToRoute('admin_themes_index');
         }
@@ -459,15 +472,13 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
-     * @param ThemeException $e
+     * @param Exception $e
      *
-     * @return string
+     * @return array
      */
-    private function handleImportThemeException(ThemeException $e)
+    private function handleImportThemeException(Exception $e)
     {
-        $type = get_class($e);
-
-        $errorMessages = [
+        return [
             ImportedThemeAlreadyExistsException::class => $this->trans(
                 'There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.',
                 'Admin.Design.Notification',
@@ -476,41 +487,33 @@ class ThemeController extends AbstractAdminController
                 ]
             ),
         ];
-
-        if ($errorMessages[$type]) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 
     /**
      * @param ThemeException $e
      *
-     * @return string
+     * @return array
      */
     private function handleEnableThemeException(ThemeException $e)
     {
-        $type = get_class($e);
-
-        $errorMessages = [
+        return [
             CannotEnableThemeException::class => $e->getMessage(),
+            ThemeConstraintException::class => [
+                ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
+                        'You must select a shop from the above list if you wish to choose a theme.',
+                        'Admin.Design.Help'
+                    ),
+            ],
+            FailedToEnableThemeModuleException::class => $this->trans(
+                    'Cannot %action% module %module%. %error_details%',
+                    'Admin.Modules.Notification',
+                    [
+                        '%action%' => strtolower($this->trans('Install', 'Admin.Actions')),
+                        '%module%' => $e->getModuleName(),
+                        '%error_details%' => $e->getMessage(),
+                    ]
+                ),
         ];
-
-        if ($e instanceof ThemeConstraintException &&
-            $e->getCode() === ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP
-        ) {
-            return $this->trans(
-                'You must select a shop from the above list if you wish to choose a theme.',
-                'Admin.Design.Help'
-            );
-        }
-
-        if (isset($errorMessages[$type])) {
-            return $errorMessages[$type];
-        }
-
-        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 
     /**

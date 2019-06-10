@@ -27,10 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use Employee;
+use ErrorException;
 use Exception;
 use Language;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
@@ -38,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
-use PrestaShopException;
 use PrestaShopLogger;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
@@ -280,6 +282,13 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
+    /**
+     * @param array $modules
+     *
+     * @return $this
+     *
+     * @throws FailedToEnableThemeModuleException
+     */
     private function doEnableModules(array $modules)
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
@@ -289,16 +298,9 @@ class ThemeManager implements AddonManagerInterface
             if (!$moduleManager->isInstalled($moduleName)
                 && !$moduleManager->install($moduleName)
             ) {
-                throw new PrestaShopException(
-                    $this->translator->trans(
-                        'Cannot %action% module %module%. %error_details%',
-                        array(
-                            '%action%' => 'install',
-                            '%module%' => $moduleName,
-                            '%error_details%' => $moduleManager->getError($moduleName),
-                        ),
-                        'Admin.Modules.Notification'
-                    )
+                throw new FailedToEnableThemeModuleException(
+                    $moduleName,
+                    $moduleManager->getError($moduleName)
                 );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
@@ -344,6 +346,12 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
+    /**
+     * @param $source
+     *
+     * @throws ThemeAlreadyExistsException
+     * @throws ThemeConstraintException
+     */
     private function installFromZip($source)
     {
         $finderClass = get_class($this->finder);
@@ -352,14 +360,49 @@ class ThemeManager implements AddonManagerInterface
         $sandboxPath = $this->getSandboxPath();
         Tools::ZipExtract($source, $sandboxPath);
 
-        $theme_data = (new Parser())->parse(file_get_contents($sandboxPath . '/config/theme.yml'));
+        $themeConfigurationFile = $sandboxPath . '/config/theme.yml';
+
+        if (!file_exists($themeConfigurationFile)) {
+            throw new ThemeConstraintException(
+                'Missing theme configuration file which should be in located in /config/theme.yml',
+                ThemeConstraintException::MISSING_CONFIGURATION_FILE
+            );
+        }
+
+        $theme_data = (new Parser())->parse(file_get_contents($themeConfigurationFile));
+
         $theme_data['directory'] = $sandboxPath;
-        $theme = new Theme($theme_data);
+
+        try {
+            $theme = new Theme($theme_data);
+        } catch (ErrorException $exception) {
+            throw new ThemeConstraintException(
+                sprintf(
+                    'Theme data %s is not valid',
+                    var_export(
+                        $theme_data,
+                        true
+                    )
+                ),
+                ThemeConstraintException::INVALID_DATA,
+                $exception
+            );
+        }
+
         if (!$this->themeValidator->isValid($theme)) {
             $this->filesystem->remove($sandboxPath);
 
-            throw new PrestaShopException(
-                $this->translator->trans('This theme is not valid for PrestaShop 1.7', [], 'Admin.Design.Notification')
+            $this->themeValidator->getErrors($theme->getName());
+
+            throw new ThemeConstraintException(
+                sprintf(
+                    'Theme configuration file is not valid - %s',
+                    var_export(
+                        $this->themeValidator->getErrors($theme->getName()),
+                        true
+                    )
+                ),
+                ThemeConstraintException::INVALID_CONFIGURATION
             );
         }
 
