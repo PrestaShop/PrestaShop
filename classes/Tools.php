@@ -2686,8 +2686,8 @@ class ToolsCore
             $ht[] = '<IfModule mod_setenvif.c>';
             $ht[] = '    <IfModule mod_headers.c>';
             $ht[] = '        <FilesMatch "\.(bmp|cur|gif|ico|jpe?g|png|svgz?|webp)$">';
-            $ht[] = '        SetEnvIf Origin ":" IS_CORS';
-            $ht[] = '        Header set Access-Control-Allow-Origin "*" env=IS_CORS';
+            $ht[] = '            SetEnvIf Origin ":" IS_CORS';
+            $ht[] = '            Header set Access-Control-Allow-Origin "*" env=IS_CORS';
             $ht[] = '        </FilesMatch>';
             $ht[] = '    </IfModule>';
             $ht[] = '</IfModule>' . PHP_EOL;
