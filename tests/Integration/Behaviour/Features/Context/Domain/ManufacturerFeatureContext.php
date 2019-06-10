@@ -79,18 +79,74 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then manufacturer :reference name in default language and default shop should be :name
+     * @Then manufacturer :reference name should be :name
      */
-    public function assertManufacturerPropertiesAreCorrect($reference, $name)
+    public function assertManufacturerName($reference, $name)
     {
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
-        if ($manufacturer->name[$this->defaultLangId] !== $name) {
+        if ($manufacturer->name !== $name) {
             throw new RuntimeException(sprintf(
                 'Manufacturer "%s" has "%s" name, but "%s" was expected.',
                 $reference,
                 $manufacturer->name,
                 $name
+            ));
+        }
+    }
+
+    /**
+     * @Then manufacturer :reference :field in default language should be :value
+     */
+    public function assertFieldValue($reference, $field, $value)
+    {
+        /** @var Manufacturer $manufacturer */
+        $manufacturer = SharedStorage::getStorage()->get($reference);
+
+        if ($manufacturer->$field[$this->defaultLangId] !== $value) {
+            throw new RuntimeException(sprintf(
+                'Manufacturer "%s" has "%s" %s, but "%s" was expected.',
+                $reference,
+                $manufacturer->$field[$this->defaultLangId],
+                $field,
+                $value
+            ));
+        }
+    }
+
+    /**
+     * @Then manufacturer :reference :field field in default language should be empty
+     */
+    public function assertFieldIsEmpty($reference, $field)
+    {
+        $manufacturer = SharedStorage::getStorage()->get($reference);
+
+        if ($manufacturer->$field[$this->defaultLangId] !== '') {
+            throw new RuntimeException(sprintf(
+                'Manufacturer "%s" has "%s" %s, but it was expected to be empty',
+                $reference,
+                $manufacturer->$field[$this->defaultLangId],
+                $field
+            ));
+        }
+    }
+
+    /**
+     * @Then /^manufacturer "(.*)" should be (enabled|disabled)?$/
+     */
+    public function assertStatus($reference, $expectedStatus)
+    {
+        /** @var Manufacturer $manufacturer */
+        $manufacturer = SharedStorage::getStorage()->get($reference);
+        $expectedStatus === 'enabled' ? $expectedStatusBool = true : $expectedStatusBool = false;
+        $actualStatusBool = (bool) $manufacturer->active;
+
+        if ($actualStatusBool !== $expectedStatusBool) {
+            throw new RuntimeException(sprintf(
+                'Manufacturer "%s" is %s, but it was expected to be %s',
+                $reference,
+                $actualStatusBool ? 'enabled' : 'disabled',
+                $expectedStatus
             ));
         }
     }
