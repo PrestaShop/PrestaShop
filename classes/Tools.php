@@ -2539,7 +2539,7 @@ class ToolsCore
         foreach ($medias as $media) {
             foreach ($media as $media_url) {
                 if ($media_url) {
-                    $media_domains .= '  RewriteCond %{HTTP_HOST} ^' . $media_url . '$ [OR]' . PHP_EOL;
+                    $media_domains .= '    RewriteCond %{HTTP_HOST} ^' . $media_url . '$ [OR]' . PHP_EOL;
                 }
             }
         }
@@ -2830,10 +2830,11 @@ class ToolsCore
             $ht[] = '    ExpiresByType text/x-cross-domain-policy "access plus 1 week"';
             $ht[] = '</IfModule>' . PHP_EOL;
 
+            // Force compression for mangled `Accept-Encoding` request headers
             $ht[] = '<IfModule mod_deflate.c>';
             $ht[] = '    <IfModule mod_setenvif.c>';
-            $ht[] = '        SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
-            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding';
+            $ht[] = '        SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding';
+            $ht[] = '        RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding';
             $ht[] = '    </IfModule>';
             $ht[] = '</IfModule>' . PHP_EOL;
         }
