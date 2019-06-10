@@ -30,10 +30,14 @@ use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
 class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 {
@@ -117,6 +121,15 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I delete manufacturer with id :id
+     */
+    public function deleteManufacturerById($id)
+    {
+        $command = new DeleteManufacturerCommand((int) $id);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
      * @Then manufacturer :reference name should be :name
      */
     public function assertManufacturerName($reference, $name)
@@ -186,6 +199,29 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
                 $actualStatusBool ? 'enabled' : 'disabled',
                 $expectedStatus
             ));
+        }
+    }
+
+    /**
+     * @Given manufacturer with id :id exists
+     */
+    public function assertManufacturerExistsById($id)
+    {
+        $query = new GetManufacturerForEditing((int) $id);
+        $this->getQueryBus()->handle($query);
+    }
+
+    /**
+     * @Then manufacturer with id :id should not be found
+     */
+    public function assertManufacturerNotFoundById($id)
+    {
+        try {
+            $query = new GetManufacturerForEditing((int) $id);
+            $this->getQueryBus()->handle($query);
+
+            throw new NoExceptionAlthoughExpectedException(sprintf('Manufacturer with id %s exists', $id));
+        } catch (ManufacturerNotFoundException $e) {
         }
     }
 }

@@ -35,3 +35,8 @@ Feature: Manufacturer management
     And manufacturer "manufacturer-3" "meta_description" in default language should be "meta description field filled after edit action"
     And manufacturer "manufacturer-3" "meta_keywords" field in default language should be empty
     And manufacturer "manufacturer-3" should be enabled
+
+  Scenario: Deleting manufacturer
+    Given manufacturer with id "3" exists
+    When I delete manufacturer with id "3"
+    Then manufacturer with id "3" should not be found
