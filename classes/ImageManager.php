@@ -177,6 +177,9 @@ class ImageManagerCore
             return !($error = self::ERROR_FILE_NOT_EXIST);
         }
 
+        if (preg_match('/\/img\/(p|c|m|s|st)\/(\d+\/)*\d+\.(jpg|jpeg|png|gif)$/Us', $destinationFile)) {
+            return @copy($sourceFile, $destinationFile);
+        }
         list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
         $rotate = 0;
         if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
