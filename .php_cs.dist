@@ -34,6 +34,7 @@ return PhpCsFixer\Config::create()
         'self_accessor' => false,
         'yoda_style' => null,
         'non_printable_character' => true,
+        'combine_consecutive_issets' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');
