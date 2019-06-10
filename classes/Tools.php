@@ -2602,7 +2602,7 @@ class ToolsCore
                         $ht[] = $media_domains;
                     }
                     $ht[] = '    # Category URL';
-                    $ht[] = '    RewriteRule ^c\/([a-z_-]+|[0-9]+-[\.*_a-z0-9-]*(?:-[0-9]+)?)\/.+\.(bmp|cur|gif|ico|jpe?g|png|svgz?|webp)$ %{ENV:REWRITEBASE}img/c/$1.$2 [NC,L]';
+                    $ht[] = '    RewriteRule ^c\/([a-z_-]+|[0-9]+-[\.*_a-z0-9-]*(?:-[0-9]+)?)\/.+\.(bmp|cur|gif|ico|jpe?g|png|svgz?|webp)$ %{ENV:REWRITEBASE}img/c/$1.$2 [NC,L]' . PHP_EOL;
                 }
 
                 // Rewrite URL of AlphaImageLoader for IE and fancybox
