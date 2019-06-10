@@ -29,10 +29,15 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use RuntimeException;
 use Tax;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
@@ -47,7 +52,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I add new tax :taxReference with following properties:
      */
-    public function createATaxUsingCommand($taxReference, TableNode $table)
+    public function createTaxUsingCommand($taxReference, TableNode $table)
     {
         $defaultLang = Configuration::get('PS_LANG_DEFAULT');
 
@@ -74,6 +79,39 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxId = $commandBus->handle($command);
 
         SharedStorage::getStorage()->set($taxReference, new Tax($taxId->getValue()));
+    }
+
+    /**
+     * @When I edit tax :taxReference with following properties:
+     */
+    public function editTaxUsingCommand($taxReference, TableNode $table)
+    {
+        $defaultLang = Configuration::get('PS_LANG_DEFAULT');
+
+        $data = $table->getRowsHash();
+        $commandBus = $this->getCommandBus();
+
+        /** @var Tax $tax */
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $taxId = (int) $tax->id;
+        $command = new EditTaxCommand($taxId);
+        $command->setLocalizedNames([$defaultLang => $data['name']]);
+        $command->setRate($data['rate']);
+
+        $commandBus->handle($command);
+
+        SharedStorage::getStorage()->set($taxReference, new Tax($taxId));
+    }
+
+    /**
+     * @When I delete tax with id :id
+     */
+    public function deleteTaxUsingCommand($id)
+    {
+        $commandBus = $this->getCommandBus();
+        $command = new DeleteTaxCommand((int) $id);
+
+        $commandBus->handle($command);
     }
 
     /**
@@ -112,5 +150,29 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
                 $rate
             ));
         }
+    }
+
+    /**
+     * @Then Tax with id :id should not exist
+     */
+    public function assertTaxByIdShouldNotExist($id)
+    {
+        try {
+            $query = new GetTaxForEditing((int) $id);
+            $this->getQueryBus()->handle($query);
+
+            throw new NoExceptionAlthoughExpectedException();
+        } catch (TaxNotFoundException $e) {
+        }
+    }
+
+    /**
+     * @Given Tax with id :id exists
+     */
+    public function assertTaxExistsById($id)
+    {
+        $query = new GetTaxForEditing((int) $id);
+
+        $this->getQueryBus()->handle($query);
     }
 }
