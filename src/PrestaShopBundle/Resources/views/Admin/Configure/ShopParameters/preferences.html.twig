@@ -33,14 +33,14 @@
 {% block content %}
     {{ form_start(form, {'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
     <div class="row justify-content-center">
-        {% block preferences_form_general %}
-            <div class="col-xl-10">
-                <div class="card">
-                    <h3 class="card-header">
-                        <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
-                    </h3>
-                    <div class="card-block row">
-                        <div class="card-text">
+        <div class="col-xl-10">
+            <div class="card">
+                <h3 class="card-header">
+                    <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
+                </h3>
+                <div class="card-block row">
+                    <div class="card-text">
+                        {% block preferences_form_general %}
                             <div class="form-group row">
                                 {{ ps.label_with_help(
                                     ('Enable SSL'|trans),
@@ -165,21 +165,20 @@
                                     {{ form_widget(generalForm.shop_activity) }}
                                 </div>
                             </div>
-                        </div>
+                        {% endblock %}
+
+                        {% block shop_preferences_form_rest %}
+                          {{ form_rest(form) }}
+                        {% endblock %}
                     </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-                        </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
                     </div>
                 </div>
             </div>
-        {% endblock %}
-
+        </div>
     </div>
     {{ form_end(form) }}
-  
-    {% block shop_preferences_form_rest %}
-      {{ form_rest(form) }}
-    {% endblock %}
 {% endblock %}
