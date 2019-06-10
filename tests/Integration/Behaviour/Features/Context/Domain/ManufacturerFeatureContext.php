@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -37,12 +38,12 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var string default language id from database configs
+     * @var int default language id from configs
      */
     private $defaultLangId;
 
     /**
-     * @var string default shop id from database configs
+     * @var int default shop id from configs
      */
     private $defaultShopId;
 
@@ -55,7 +56,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I add new manufacturer :reference with following properties:
      */
-    public function addManufacturerWithDefaultLangForDefaultShop($reference, TableNode $node)
+    public function createManufacturerWithDefaultLang($reference, TableNode $node)
     {
         $data = $node->getRowsHash();
 
@@ -76,6 +77,43 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturerId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId->getValue()));
+    }
+
+    /**
+     * @When I edit manufacturer :reference with following properties:
+     */
+    public function editManufacturerWithDefaultLang($reference, TableNode $node)
+    {
+        $manufacturer = SharedStorage::getStorage()->get($reference);
+        $manufacturerId = (int) $manufacturer->id;
+        $data = $node->getRowsHash();
+        $command = new EditManufacturerCommand($manufacturerId);
+
+        if (isset($data['name'])) {
+            $command->setName($data['name']);
+        }
+        if (isset($data['enabled'])) {
+            $command->setEnabled((bool) $data['enabled']);
+        }
+        if (isset($data['short_description'])) {
+            [$this->defaultLangId => $command->setLocalizedShortDescriptions($data['short_description'])];
+        }
+        if (isset($data['description'])) {
+            [$this->defaultLangId => $command->setLocalizedDescriptions($data['description'])];
+        }
+        if (isset($data['meta_title'])) {
+            [$this->defaultLangId => $command->setLocalizedMetaTitles($data['meta_title'])];
+        }
+        if (isset($data['meta_description'])) {
+            [$this->defaultLangId => $command->setLocalizedMetaDescriptions($data['meta_description'])];
+        }
+        if (isset($data['meta_keywords'])) {
+            [$this->defaultLangId => $command->setLocalizedMetaKeywords($data['meta_keywords'])];
+        }
+
+        $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId));
     }
 
     /**
