@@ -42,14 +42,21 @@ use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpecte
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
     /**
+     * @var int default language id from configuration
+     */
+    private $defaultLangId;
+
+    public function __construct()
+    {
+        $this->defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+    }
+
+    /**
      * @When I add new tax :taxReference with following properties:
      */
     public function createTaxUsingCommand($taxReference, TableNode $table)
     {
-        $defaultLang = Configuration::get('PS_LANG_DEFAULT');
-
         $data = $table->getRowsHash();
-        $commandBus = $this->getCommandBus();
         $mandatoryFields = [
             'name',
             'rate',
@@ -62,13 +69,13 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         }
 
         $command = new AddTaxCommand(
-           [$defaultLang => $data['name']],
+           [$this->defaultLangId => $data['name']],
             $data['rate'],
             isset($data['is_enabled']) ? $data['is_enabled'] : null
         );
 
         /** @var TaxId $taxId */
-        $taxId = $commandBus->handle($command);
+        $taxId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($taxReference, new Tax($taxId->getValue()));
     }
@@ -78,19 +85,16 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
      */
     public function editTaxUsingCommand($taxReference, TableNode $table)
     {
-        $defaultLang = Configuration::get('PS_LANG_DEFAULT');
-
         $data = $table->getRowsHash();
-        $commandBus = $this->getCommandBus();
 
         /** @var Tax $tax */
         $tax = SharedStorage::getStorage()->get($taxReference);
         $taxId = (int) $tax->id;
         $command = new EditTaxCommand($taxId);
-        $command->setLocalizedNames([$defaultLang => $data['name']]);
+        $command->setLocalizedNames([$this->defaultLangId => $data['name']]);
         $command->setRate($data['rate']);
 
-        $commandBus->handle($command);
+        $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($taxReference, new Tax($taxId));
     }
@@ -100,10 +104,9 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteTaxUsingCommand($id)
     {
-        $commandBus = $this->getCommandBus();
         $command = new DeleteTaxCommand((int) $id);
 
-        $commandBus->handle($command);
+        $this->getCommandBus()->handle($command);
     }
 
     /**
@@ -111,12 +114,10 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertTaxNameInDefaultLang($taxReference, $name)
     {
-        $defaultLang = Configuration::get('PS_LANG_DEFAULT');
-
         /** @var Tax $tax */
         $tax = SharedStorage::getStorage()->get($taxReference);
 
-        if ($tax->name[$defaultLang] !== $name) {
+        if ($tax->name[$this->defaultLangId] !== $name) {
             throw new RuntimeException(sprintf(
                 'Tax "%s" has "%s" name, but "%s" was expected.',
                 $taxReference,
