@@ -266,7 +266,6 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
 
             if (null !== $currency) {
                 $langIds = Language::getLanguages(true, false, true);
-
                 $entity->name = [];
                 $entity->symbol = [];
 
