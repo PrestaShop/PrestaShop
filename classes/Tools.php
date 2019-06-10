@@ -2727,7 +2727,6 @@ class ToolsCore
             $ht[] = '                                  "text/calendar" \\';
             $ht[] = '                                  "text/css" \\';
             $ht[] = '                                  "text/html" \\';
-            $ht[] = '                                  "text/javascript" \\';
             $ht[] = '                                  "text/plain" \\';
             $ht[] = '                                  "text/markdown" \\';
             $ht[] = '                                  "text/vcard" \\';
