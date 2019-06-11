@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use RuntimeException;
@@ -74,6 +75,44 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         $cmsPageId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new \CMS($cmsPageId->getValue()));
+    }
+
+    /**
+     * @When I edit cms page :reference with following properties:
+     */
+    public function editCmsPage($reference, TableNode $node)
+    {
+        $cmsId = (int) SharedStorage::getStorage()->get($reference)->id;
+        $command = new EditCmsPageCommand($cmsId);
+        $data = $node->getRowsHash();
+
+        if (isset($data['meta_title'])) {
+            $command->setLocalizedTitle([$this->defaultLangId => $data['meta_title']]);
+        }
+        if (isset($data['head_seo_title'])) {
+            $command->setLocalizedMetaTitle([$this->defaultLangId => $data['head_seo_title']]);
+        }
+        if (isset($data['meta_description'])) {
+            $command->setLocalizedMetaDescription([$this->defaultLangId => $data['meta_description']]);
+        }
+        if (isset($data['meta_keywords'])) {
+            $command->setLocalizedMetaKeyword([$this->defaultLangId => $data['meta_keywords']]);
+        }
+        if (isset($data['link_rewrite'])) {
+            $command->setLocalizedFriendlyUrl([$this->defaultLangId => $data['link_rewrite']]);
+        }
+        if (isset($data['content'])) {
+            $command->setLocalizedContent([$this->defaultLangId => $data['content']]);
+        }
+        if (isset($data['indexation'])) {
+            $command->setIsIndexedForSearch((bool) $data['indexation']);
+        }
+        if (isset($data['active'])) {
+            $command->setIsDisplayed((bool) $data['active']);
+        }
+
+        $this->getCommandBus()->handle($command);
+        SharedStorage::getStorage()->set($reference, new \CMS($cmsId));
     }
 
     /**
