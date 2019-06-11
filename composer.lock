@@ -5291,16 +5291,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "ac633cf74c348a20ce38f8c7a0bc4c4b1770a5fe"
+                "reference": "8d7034b4a76170944efcc6894d27e9e308b447d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/ac633cf74c348a20ce38f8c7a0bc4c4b1770a5fe",
-                "reference": "ac633cf74c348a20ce38f8c7a0bc4c4b1770a5fe",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/8d7034b4a76170944efcc6894d27e9e308b447d6",
+                "reference": "8d7034b4a76170944efcc6894d27e9e308b447d6",
                 "shasum": ""
             },
             "require": {
