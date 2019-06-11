@@ -170,7 +170,7 @@
           >
           {if isset($field.availableValues.comment)}
             <span class="form-control-comment">
-              {$field.availableValues.comment|strip_tags|nl2br nofilter}
+              {$field.availableValues.comment|nl2br nofilter}
             </span>
           {/if}
         {/block}
