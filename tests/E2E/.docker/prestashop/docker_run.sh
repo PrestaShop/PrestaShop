@@ -10,7 +10,7 @@ fi
 cp -n -R /tmp/data-ps/prestashop/* /var/www/html
 
 if [ -f /var/www/html/config/settings.inc.php -o -f /var/www/html/app/config/parameters.php ]; then
-  echo "\n* Remove PrestaShop configuraiton files...";
+  echo "\n* Remove PrestaShop configuration files...";
   rm -f /var/www/html/config/settings.inc.php
   rm -f /var/www/html/app/config/parameters.php
   rm -f /var/www/html/app/config/parameters.yml
