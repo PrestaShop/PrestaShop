@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -24,32 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace Tests\Unit\Core\MailTemplate;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\MailTemplate\Theme;
+use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollection;
 
-/**
- * Class MailThemeCollection is a collection of MailThemeInterface elements.
- */
-class ThemeCollection extends AbstractTypedCollection implements ThemeCollectionInterface
+class ThemeCollectionTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function getType()
+    public function testGetByName()
     {
-        return ThemeInterface::class;
-    }
-
-    /**
-     * @param string $themeName
-     *
-     * @return ThemeInterface|null
-     */
-    public function getByName($themeName)
-    {
-        return $this->filter(function (ThemeInterface $theme) use ($themeName) {
-            return $themeName === $theme->getName();
-        })->first();
+        $theme1 = new Theme('theme1');
+        $theme2 = new Theme('theme2');
+        $theme3 = new Theme('theme1');
+        $collection = new ThemeCollection([
+            $theme1,
+            $theme2,
+            $theme3,
+        ]);
+        $this->assertEquals(3, $collection->count());
+        $this->assertEquals($theme1, $collection->getByName('theme1'));
+        $this->assertEquals($theme2, $collection->getByName('theme2'));
+        $this->assertEquals(null, $collection->getByName('theme3'));
     }
 }
