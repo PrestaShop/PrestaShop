@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -24,36 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace Tests\Unit\Core\MailTemplate;
 
-/**
- * Interface ThemeCollectionInterface contains a list of themes to
- * generate mail templates. Modules can add/remove their own through the hook:
- *  ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK = actionListMailThemes
- */
-interface ThemeCollectionInterface extends \IteratorAggregate, \Countable
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\MailTemplate\Theme;
+use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollection;
+
+class ThemeCollectionTest extends TestCase
 {
-    /**
-     * @param ThemeInterface $theme
-     *
-     * @return bool
-     */
-    public function contains($theme);
-
-    /**
-     * @param ThemeInterface $theme
-     */
-    public function add($theme);
-
-    /**
-     * @param ThemeInterface $theme
-     */
-    public function remove($theme);
-
-    /**
-     * @param string $themeName
-     *
-     * @return ThemeInterface|null
-     */
-    public function getByName($themeName);
+    public function testGetByName()
+    {
+        $theme1 = new Theme('theme1');
+        $theme2 = new Theme('theme2');
+        $theme3 = new Theme('theme1');
+        $collection = new ThemeCollection([
+            $theme1,
+            $theme2,
+            $theme3,
+        ]);
+        $this->assertEquals(3, $collection->count());
+        $this->assertEquals($theme1, $collection->getByName('theme1'));
+        $this->assertEquals($theme2, $collection->getByName('theme2'));
+        $this->assertEquals(null, $collection->getByName('theme3'));
+    }
 }
