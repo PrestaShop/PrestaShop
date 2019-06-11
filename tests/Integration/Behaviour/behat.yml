@@ -78,3 +78,9 @@ default:
             contexts:
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+        cms_page:
+            paths:
+                features: Features/Scenario/CmsPage
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CmsPageFeatureContext
