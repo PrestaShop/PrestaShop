@@ -27,10 +27,17 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\FailedToSendEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShopBundle\Form\Admin\Login\ForgotPasswordType;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
@@ -47,21 +54,75 @@ class AuthorizationController extends FrameworkBundleAdminController
     public function loginAction()
     {
         $authenticationUtils = $this->get('security.authentication_utils');
-        $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
-        $loginForm = $this->createForm(LoginType::class);
-        $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
         $authenticationError = $authenticationUtils->getLastAuthenticationError();
 
         if (null !== $authenticationError) {
             $errorMessage = $this->getErrorMessageForException(
                 $authenticationError,
-                $this->getErrorMessages($authenticationError)
+                $this->getErrorMessages()
             );
         }
 
-        return $this->render('@PrestaShop/Admin/Login/index.html.twig', [
-            'loginForm' => $loginForm->createView(),
+        $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
+
+        return $this->renderLoginPage([
+            'errorMessage' => $errorMessage ?? null,
             'forgotPasswordForm' => $forgotPasswordForm->createView(),
+        ]);
+    }
+
+    /**
+     * Handle sending reset password link to the employee.
+     *
+     * @DemoRestricted(redirectRoute="_admin_login")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function sendResetPasswordLinkAction(Request $request)
+    {
+        $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
+        $forgotPasswordForm->handleRequest($request);
+
+        if ($forgotPasswordForm->isSubmitted() && $forgotPasswordForm->isValid()) {
+            try {
+                $this->getCommandBus()->handle(
+                    new SendResetPasswordEmailCommand($forgotPasswordForm->getData()['email'])
+                );
+
+                $this->addFlash(
+                    'success',
+                    $this->trans(
+                        'Please, check your mailbox. A link to reset your password has been sent to you.',
+                        'Admin.Login.Notification'
+                    )
+                );
+            } catch (DomainException $e) {
+                $this->getErrorMessageForException($e, $this->getErrorMessages());
+            }
+        }
+
+        return $this->renderLoginPage([
+            'showResetPasswordForm' => true,
+            'forgotPasswordForm' => $forgotPasswordForm->createView(),
+        ]);
+    }
+
+    /**
+     * Render the login page.
+     *
+     * @param array $templateVars
+     *
+     * @return Response
+     */
+    private function renderLoginPage(array $templateVars = [])
+    {
+        $loginForm = $this->createForm(LoginType::class);
+        $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
+
+        return $this->render('@PrestaShop/Admin/Login/index.html.twig', $templateVars + [
+            'loginForm' => $loginForm->createView(),
             'shopName' => $this->configuration->get('PS_SHOP_NAME'),
             'prestashopVersion' => $this->configuration->get('_PS_VERSION_'),
             'imgDir' => $this->configuration->get('_PS_IMG_'),
@@ -69,18 +130,15 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $this->configuration->get('PS_LANG_DEFAULT')
             ),
             'currentYear' => (new DateTime())->format('Y'),
-            'errorMessage' => isset($errorMessage) ? $errorMessage : null,
         ]);
     }
 
     /**
      * Get all authorization error messages.
      *
-     * @param AuthenticationException $e
-     *
      * @return array
      */
-    private function getErrorMessages(AuthenticationException $e)
+    private function getErrorMessages()
     {
         $employeeDoesNotExistMessage = $this->trans(
             'The employee does not exist, or the password provided is incorrect.',
@@ -90,6 +148,23 @@ class AuthorizationController extends FrameworkBundleAdminController
         return [
             BadCredentialsException::class => $employeeDoesNotExistMessage,
             UsernameNotFoundException::class => $employeeDoesNotExistMessage,
+            DomainConstraintException::class => $this->trans(
+                'Invalid email address.',
+                'Admin.Notifications.Error'
+            ),
+            EmployeeNotFoundException::class => $this->trans(
+                'This account does not exist.',
+                'Admin.Login.Notification'
+            ),
+            PasswordResetTooFrequentException::class => $this->trans(
+                'You can reset your password every %interval% minute(s) only. Please try again later.',
+                'Admin.Login.Notification',
+                ['%interval%' => $this->configuration->get('PS_PASSWD_TIME_BACK')]
+            ),
+            FailedToSendEmailException::class => $this->trans(
+                'An error occurred while attempting to reset your password.',
+                'Admin.Login.Notification'
+            ),
         ];
     }
 }

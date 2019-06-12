@@ -6,7 +6,14 @@ _admin_login:
     condition: 'not (request.getBaseUrl() matches "/\\/index\.php/" and request.query.has("controller"))'
     defaults:
         _controller: PrestaShopBundle:Admin\Authorization:login
-        _legacy_controller: AdminLogin
+        _legacy_controller: AdminLogin:submitLogin
+
+_admin_reset_password:
+    path: /reset
+    methods: [POST]
+    defaults:
+      _controller: PrestaShopBundle:Admin\Authorization:sendResetPasswordLink
+      _legacy_controller: AdminLogin:submitReset
 
 _admin_logout:
     path: /logout
