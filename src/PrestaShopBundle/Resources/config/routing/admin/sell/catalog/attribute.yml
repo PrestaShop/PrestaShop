@@ -6,6 +6,7 @@ admin_attributes_index:
     _legacy_controller: AdminAttributesGroups
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
+# @todo: add legacy links after whole page migration to all of these routes
 #    _legacy_link: AdminAttributesGroups:viewattribute_group
 #    _legacy_parameters:
 #      id_attribute_group: attributeGroupId

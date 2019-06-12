@@ -26,8 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProvider;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -98,7 +99,8 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      *
-     * @throws AttributeGroupConstraintException
+     * @throws AttributeGroupException
+     * @throws AttributeGroupNotFoundException
      */
     protected function getColumns()
     {
