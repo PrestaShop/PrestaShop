@@ -33,5 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeComma
  */
 interface SwitchDebugModelHandlerInterface
 {
+    /**
+     * @param SwitchDebugModeCommand $command
+     */
     public function handle(SwitchDebugModeCommand $command);
 }
