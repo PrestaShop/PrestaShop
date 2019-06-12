@@ -32,6 +32,8 @@
     </div>
     <div class="card-block row">
       <div class="card-text">
+        {{ form_errors(metaForm) }}
+
         {{ ps.form_group_row(metaForm.page_name, {
           'attr': {
             'class': 'js-meta-page-name',

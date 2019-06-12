@@ -32,6 +32,7 @@
   </div>
   <div class="card-block row">
     <div class="card-text">
+      {{ form_errors(addressForm) }}
 
       {{ ps.form_group_row(addressForm.id_manufacturer, {}, {
         'label': 'Brand'|trans({}, 'Admin.Catalog.Feature'),
