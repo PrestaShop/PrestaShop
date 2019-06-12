@@ -40,4 +40,16 @@ class ThemeCollection extends AbstractTypedCollection implements ThemeCollection
     {
         return ThemeInterface::class;
     }
+
+    /**
+     * @param string $themeName
+     *
+     * @return ThemeInterface|null
+     */
+    public function getByName($themeName)
+    {
+        return $this->filter(function (ThemeInterface $theme) use ($themeName) {
+            return $themeName === $theme->getName();
+        })->first();
+    }
 }

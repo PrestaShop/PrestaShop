@@ -252,3 +252,21 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionManufacturerGridPresenterModifier', 'Modify manufacturer grid template data', 'This hook allows to modify data which is about to be used in template for manufacturer grid', '1 '),
   (NULL, 'actionManufacturerAddressGridPresenterModifier', 'Modify manufacturer address grid template data', 'This hook allows to modify data which is about to be used in template for manufacturer address grid', '1 '),
   (NULL, 'actionCmsPageGridPresenterModifier', 'Modify cms page grid template data', 'This hook allows to modify data which is about to be used in template for cms page grid', '1 ');
+
+INSERT IGNORE INTO `PREFIX_authorization_role` (`slug`) VALUES
+  ('ROLE_MOD_TAB_ADMINMODULESMANAGE_CREATE'),
+  ('ROLE_MOD_TAB_ADMINMODULESMANAGE_READ'),
+  ('ROLE_MOD_TAB_ADMINMODULESMANAGE_UPDATE'),
+  ('ROLE_MOD_TAB_ADMINMODULESMANAGE_DELETE');
+
+INSERT IGNORE INTO `PREFIX_authorization_role` (`slug`) VALUES
+  ('ROLE_MOD_TAB_ADMINMODULESCATALOG_CREATE'),
+  ('ROLE_MOD_TAB_ADMINMODULESCATALOG_READ'),
+  ('ROLE_MOD_TAB_ADMINMODULESCATALOG_UPDATE'),
+  ('ROLE_MOD_TAB_ADMINMODULESCATALOG_DELETE');
+
+INSERT IGNORE INTO `PREFIX_authorization_role` (`slug`) VALUES
+  ('ROLE_MOD_TAB_ADMINPARENTMODULESCATALOG_CREATE'),
+  ('ROLE_MOD_TAB_ADMINPARENTMODULESCATALOG_READ'),
+  ('ROLE_MOD_TAB_ADMINPARENTMODULESCATALOG_UPDATE'),
+  ('ROLE_MOD_TAB_ADMINPARENTMODULESCATALOG_DELETE');

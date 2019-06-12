@@ -22,14 +22,23 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-{if $errors|count}
-  <div class="help-block">
-    {block name='form_errors'}
-      <ul>
-        {foreach $errors as $error}
-          <li class="alert alert-danger">{$error|nl2br nofilter}</li>
-        {/foreach}
-      </ul>
-    {/block}
-  </div>
-{/if}
+
+<div class="card-block cart-summary-subtotals-container">
+
+  {foreach from=$cart.subtotals item="subtotal"}
+    {if $subtotal.value && $subtotal.type !== 'tax'}
+      <div class="cart-summary-line cart-summary-subtotals" id="cart-subtotal-{$subtotal.type}">
+
+        <span class="label">
+            {$subtotal.label}
+        </span>
+
+        <span class="value">
+          {$subtotal.value}
+        </span>
+      </div>
+    {/if}
+  {/foreach}
+
+</div>
+
