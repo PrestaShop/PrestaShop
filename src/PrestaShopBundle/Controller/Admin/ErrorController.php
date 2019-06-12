@@ -39,7 +39,7 @@ class ErrorController extends FrameworkBundleAdminController
     /**
      * Enables debug mode from error page (500 for example)
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], 'AdminPerformance')")
      *
      * @param Request $request
      *
