@@ -95,7 +95,7 @@ final class CartGridDataFactory implements GridDataFactoryInterface
                     );
                     break;
                 case 'not_ordered':
-                    $record['status'] = $this->translator->trans('Not ordered', [], 'Admin.Orderscustomers.Feature');
+                    $record['status'] = $this->translator->trans('Not placed', [], 'Admin.Orderscustomers.Feature');
                     break;
             }
 

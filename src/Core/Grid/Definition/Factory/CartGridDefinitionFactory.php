@@ -217,7 +217,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('customer_name', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search Name', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
@@ -226,7 +226,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('carrier_name', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search Carrier', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search carrier', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
