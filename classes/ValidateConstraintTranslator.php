@@ -69,7 +69,7 @@ class ValidateConstraintTranslatorCore
                 'Shop.Forms.Errors'
             ) . PHP_EOL .
             $this->translator->trans(
-                'A space is required after . and 。',
+                'A space is required after "." and "。"',
                 [],
                 'Shop.Forms.Errors'
             );
