@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -49,6 +51,14 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      * @var int
      */
     private $defaultShopId;
+
+    /**
+     * "When" steps perform actions, and some of them store the latest result
+     * in this variable so that "Then" action can check its content
+     *
+     * @var mixed
+     */
+    private $latestResult;
 
     public function __construct()
     {
@@ -79,6 +89,60 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         $cmsPageId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new \CMS($cmsPageId->getValue()));
+    }
+
+    /**
+     * @When I attempt to create cms page :reference with empty title
+     */
+    public function attemptToCreateCmsPageWithEmptyTitle($reference)
+    {
+        $command = new AddCmsPageCommand(
+            CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
+            [$this->defaultLangId => ''],
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            true,
+            true,
+            [$this->defaultShopId]
+        );
+        try {
+            $cmsPageId = $this->getCommandBus()->handle($command);
+            SharedStorage::getStorage($reference, new \CMS((int) $cmsPageId->getValue()));
+
+            throw new NoExceptionAlthoughExpectedException('Cms page creation expected to fail, but it succeeded');
+        } catch (\Exception $e) {
+            $this->latestResult = $e;
+        }
+    }
+
+    /**
+     * @When I attempt to create cms page :reference with cms category id :id
+     */
+    public function attemptToCreateCmsPageWithCategoryId($reference, $id)
+    {
+        $command = new AddCmsPageCommand(
+            (int) $id,
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            [$this->defaultLangId => 'test'],
+            true,
+            true,
+            [$this->defaultShopId]
+        );
+        try {
+            $cmsPageId = $this->getCommandBus()->handle($command);
+            SharedStorage::getStorage($reference, new \CMS((int) $cmsPageId->getValue()));
+
+            throw new NoExceptionAlthoughExpectedException('Cms page creation expected to fail, but it succeeded');
+        } catch (\Exception $e) {
+            $this->latestResult = $e;
+        }
     }
 
     /**
@@ -120,6 +184,26 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I attempt to edit cms page :reference providing illegal content value :value
+     */
+    public function editCmsPageProvidingIllegalContent($reference, $value)
+    {
+        $cmsId = (int) SharedStorage::getStorage()->get($reference)->id;
+        $command = new EditCmsPageCommand($cmsId);
+        $command->setLocalizedContent(
+            [$this->defaultLangId => $value]
+        );
+        try {
+            $this->getCommandBus()->handle($command);
+            SharedStorage::getStorage()->set($reference, new \CMS($cmsId));
+
+            throw new NoExceptionAlthoughExpectedException('Cms page was edited, but it was expected editing to fail');
+        } catch (\Exception $e) {
+            $this->latestResult = $e;
+        }
+    }
+
+    /**
      * @When I delete cms page with id :id
      */
     public function deleteCmsPageById($id)
@@ -140,7 +224,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given cms page with id :id should not exist
      */
-    public function assertCmsPageDoesNotExist($id)
+    public function assertCmsPageDoesNotExistById($id)
     {
         $query = new GetCmsPageForEditing((int) $id);
 
@@ -149,6 +233,24 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
 
             throw new NoExceptionAlthoughExpectedException('Cms page exists. Expected it to be deleted');
         } catch (CmsPageNotFoundException $e) {
+        }
+    }
+
+    /**
+     * @Then cms page :reference does not exist
+     */
+    public function assertCmsPageDoesNotExistByReference($reference)
+    {
+        try {
+            $cms = SharedStorage::getStorage()->get($reference);
+            $query = new GetCmsPageForEditing((int) $cms->id);
+            $this->getQueryBus()->handle($query);
+
+            throw new NoExceptionAlthoughExpectedException('Cms page exists. Expected it to not exist');
+        } catch (\Exception $e) {
+            if ($e instanceof NoExceptionAlthoughExpectedException) {
+                throw $e;
+            }
         }
     }
 
@@ -220,6 +322,44 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
                 $cmsPage->$field[$this->defaultLangId],
                 $field
             ));
+        }
+    }
+
+    /**
+     * @Then /^I should get error message '(.+)'$/
+     */
+    public function assertExceptionWasThrown($message)
+    {
+        if ($this->latestResult instanceof NoExceptionAlthoughExpectedException) {
+            throw $this->latestResult;
+        }
+
+        if ($this->latestResult instanceof \Exception) {
+            if ($this->latestResult->getMessage() !== $message) {
+                throw new RuntimeException(sprintf(
+                    'Got error message "%s", but expected %s', $this->latestResult->getMessage(), $message)
+                );
+            }
+
+            return true;
+        }
+
+        throw new NoExceptionAlthoughExpectedException('No exception was thrown in latest result');
+    }
+
+    /**
+     * @Given cms category with id :id does not exist
+     */
+    public function assertCmsCategoryWithIdDoesNotExist($id)
+    {
+        try {
+            $query = new GetCmsPageCategoryForEditing((int) $id);
+            $this->getQueryBus()->handle($query);
+
+            throw new NoExceptionAlthoughExpectedException(sprintf(
+                'Cms category with id "%s" expected to not exist, but it exists', $id)
+            );
+        } catch (CmsPageCategoryNotFoundException $e) {
         }
     }
 }
