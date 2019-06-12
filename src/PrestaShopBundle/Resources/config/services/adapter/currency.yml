@@ -30,6 +30,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditCurrencyHandler'
         arguments:
           - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+          - '@prestashop.core.localization.cldr.locale_repository'
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand' }
 

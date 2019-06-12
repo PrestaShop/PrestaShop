@@ -8,6 +8,7 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Menu} = require('../../../../selectors/BO/menu.js');
 const common_scenarios = require('../../../common_scenarios/pages');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 let categoryDataWithoutSubCategory = {
   name: 'Category',
@@ -59,10 +60,6 @@ let pageData = {
   page_content: 'page content'
 };
 
-/**
- * This script should be moved to the campaign full when this issue will be fixed
- * https://github.com/PrestaShop/PrestaShop/issues/9712
- **/
 scenario('Create, edit and delete "CATEGORIES"', () => {
 
   scenario('Login in the Back Office', client => {
@@ -70,6 +67,7 @@ scenario('Create, edit and delete "CATEGORIES"', () => {
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'design');
 
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createCategory(categoryDataWithSubCategory);
   common_scenarios.checkCategoryBO(categoryDataWithSubCategory);
   common_scenarios.editCategory(categoryDataWithSubCategory, newCategoryData);

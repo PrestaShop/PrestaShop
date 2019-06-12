@@ -239,6 +239,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             $categoryFormOptions = [
                 'id_category' => (int) $categoryId,
+                'subcategories' => $editableCategory->getSubCategories(),
             ];
 
             $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
