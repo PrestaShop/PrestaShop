@@ -256,6 +256,11 @@ class CmsPageController extends FrameworkBundleAdminController
                     'cmsPageId' => $cmsPageId,
                 ]),
             ]);
+
+            /** @var EditableCmsPage $editableCmsPage */
+            $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
+            $previewUrl = $editableCmsPage->getPreviewUrl();
+
             $form->handleRequest($request);
             $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
 
@@ -274,10 +279,6 @@ class CmsPageController extends FrameworkBundleAdminController
 
                 return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
             }
-
-            /** @var EditableCmsPage $editableCmsPage */
-            $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
-            $previewUrl = $editableCmsPage->getPreviewUrl();
         } catch (DomainException $e) {
             $this->addFlash(
                 'error',
