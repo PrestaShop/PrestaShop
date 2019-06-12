@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -481,5 +482,32 @@ class FrameworkBundleAdminController extends Controller
             $exceptionType,
             $exceptionCode
         );
+    }
+
+    /**
+     * Sets error messages raised from module.
+     *
+     * @param ModuleException $e
+     */
+    protected function setModuleErrorMessages(ModuleException $e)
+    {
+        $moduleErrors = [];
+
+        foreach ($e->getErrors() as $error) {
+            if (is_string($error)) {
+                $moduleErrors[] = $error;
+            }
+        }
+
+        if (empty($moduleErrors)) {
+            $this->addFlash(
+                'error',
+                $this->getFallbackErrorMessage(get_class($e), $e->getCode())
+            );
+        }
+
+        foreach ($moduleErrors as $moduleError) {
+            $this->addFlash('error', $moduleError);
+        }
     }
 }
