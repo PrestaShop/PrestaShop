@@ -492,13 +492,13 @@ module.exports = {
     await client.scrollWaitForExistAndClick(productPage.see_all_products);
     for (let i = 0; i < global.pagination; i++) {
       for (let j = 0; j < global.productInfo.length; j++) {
-        await client.pause(2000);
+        await client.pause(500);
         await client.isVisible(AccessPageFO.product_name.replace('%PAGENAME', global.productInfo[j].name.substring(0, 23)));
         if (global.isVisible) {
           global.productInfo[j].status = await true;
         }
       }
-      if (i < pagination) {
+      if (i+1 < pagination) {
         await client.isVisible(productPage.pagination_next);
         await client.clickPageNext(productPage.pagination_next, 3000);
       }
