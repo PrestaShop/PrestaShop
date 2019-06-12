@@ -27,21 +27,21 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Configuration\Command;
 
 /**
- * Switches debug mode to expected status
+ * Switches debug mode on/off
  */
 class SwitchDebugModeCommand
 {
     /**
      * @var bool
      */
-    private $expectedStatus;
+    private $enableDebugMode;
 
     /**
-     * @param bool $expectedStatus
+     * @param bool $enableDebugMode
      */
-    public function __construct($expectedStatus)
+    public function __construct($enableDebugMode)
     {
-        $this->expectedStatus = $expectedStatus;
+        $this->enableDebugMode = $enableDebugMode;
     }
 
     /**
@@ -49,6 +49,6 @@ class SwitchDebugModeCommand
      */
     public function enableDebugMode()
     {
-        return true === $this->expectedStatus;
+        return true === $this->enableDebugMode;
     }
 }

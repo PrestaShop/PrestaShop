@@ -42,6 +42,9 @@ final class SwitchDebugModeHandler implements SwitchDebugModelHandlerInterface
      */
     private $debugMode;
 
+    /**
+     * @param DebugMode $debugMode
+     */
     public function __construct(DebugMode $debugMode)
     {
         $this->debugMode = $debugMode;
@@ -52,14 +55,16 @@ final class SwitchDebugModeHandler implements SwitchDebugModelHandlerInterface
      */
     public function handle(SwitchDebugModeCommand $command)
     {
-        if ($command->enableDebugMode()) {
-            if (!$this->debugMode->isDebugModeEnabled()) {
-                $this->debugMode->enable();
-            }
+        $isDebugModeEnabled = $this->debugMode->isDebugModeEnabled();
+
+        if (!$isDebugModeEnabled && $command->enableDebugMode()) {
+            $this->debugMode->enable();
 
             return;
         }
 
-        $this->debugMode->disable();
+        if ($isDebugModeEnabled) {
+            $this->debugMode->disable();
+        }
     }
 }
