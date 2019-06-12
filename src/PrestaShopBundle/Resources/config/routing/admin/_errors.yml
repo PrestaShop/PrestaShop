@@ -3,3 +3,4 @@ admin_errors_enable_debug_mode:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Error:enableDebugMode
+    _legacy_controller: AdminPerformance
