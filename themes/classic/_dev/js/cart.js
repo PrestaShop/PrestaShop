@@ -270,6 +270,8 @@ $(document).ready(() => {
       const $discountInput = $('[name=discount_name]');
 
       $discountInput.val($code.text());
+      // Show promo code field
+      $('#promo-code').collapse('show');
 
       return false;
     }
