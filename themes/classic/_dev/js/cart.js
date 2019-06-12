@@ -260,6 +260,23 @@ $(document).ready(() => {
     }
   );
 
+  const $promoCode = $('#promo-code');
+  const $timeoutEffect = 400;
+  $promoCode.on('hidden.bs.collapse', () => {
+    $('.promo-code-button').show($timeoutEffect);
+  });
+
+  $body.on(
+    'click',
+    '.promo-code-button',
+    (event) => {
+      event.preventDefault();
+
+      $promoCode.collapse('toggle');
+      $(event.currentTarget).hide($timeoutEffect);
+    }
+  );
+
   $body.on(
     'click',
     '.js-discount .code',
@@ -271,7 +288,7 @@ $(document).ready(() => {
 
       $discountInput.val($code.text());
       // Show promo code field
-      $('#promo-code').collapse('show');
+      $promoCode.collapse('show');
 
       return false;
     }
