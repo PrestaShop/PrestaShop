@@ -63,7 +63,7 @@ final class SwitchDebugModeHandler implements SwitchDebugModeHandlerInterface
             return;
         }
 
-        if ($isDebugModeEnabled) {
+        if ($isDebugModeEnabled && !$command->enableDebugMode()) {
             $this->debugMode->disable();
         }
     }
