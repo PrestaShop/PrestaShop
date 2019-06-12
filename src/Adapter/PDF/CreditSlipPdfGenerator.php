@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use Context;
-use Db;
+use Doctrine\DBAL\Connection;
 use ObjectModel;
 use OrderSlip;
 use PDF;
@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\PDF\Exception\PdfException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -48,12 +47,30 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
      * @var TranslatorInterface
      */
     private $translator;
+
+    /**
+     * @var string
+     */
     private $dbPrefix;
 
-    public function __construct(TranslatorInterface $translator, $dbPrefix)
-    {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param string $dbPrefix
+     * @param Connection $connection
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        $dbPrefix,
+        Connection $connection
+    ) {
         $this->translator = $translator;
         $this->dbPrefix = $dbPrefix;
+        $this->connection = $connection;
     }
 
     /**
@@ -89,16 +106,18 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
      * @return OrderSlip[]
      *
      * @throws MissingDataException
-     * @throws PrestaShopDatabaseException
      */
     private function getCreditSlipsList($creditSlipIds)
     {
         if (!empty($creditSlipIds)) {
-            $creditSlipIds = '(' . implode(',', $creditSlipIds) . ')';
-            $slipsList = Db::getInstance()->executeS(
-                'SELECT * FROM ' . $this->dbPrefix .
-                'order_slip WHERE id_order_slip IN ' . $creditSlipIds
-            );
+            $qb = $this->connection->createQueryBuilder()
+                ->select('*')
+                ->from($this->dbPrefix . 'order_slip', 'os')
+                ->where('id_order_slip IN (:creditSlipIds)')
+                ->setParameter('creditSlipIds', $creditSlipIds, Connection::PARAM_INT_ARRAY)
+            ;
+
+            $slipsList = $qb->execute()->fetchAll();
         }
 
         if (!empty($slipsList)) {

@@ -29,3 +29,4 @@ services:
     arguments:
       - '@translator'
       - '%database_prefix%'
+      - '@doctrine.dbal.default_connection'

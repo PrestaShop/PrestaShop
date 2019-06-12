@@ -50,17 +50,18 @@ final class GetCreditSlipIdsByDateRangeHandler implements GetCreditSlipIdsByDate
             $from = $query->getDateTimeFrom()->format('Y-m-d');
             $to = $query->getDateTimeTo()->format('Y-m-d');
             $ids = OrderSlip::getSlipsIdByDate($from, $to);
-            $creditSlipIds = [];
 
-            if (!empty($ids)) {
-                foreach ($ids as $id) {
-                    $creditSlipIds[] = new CreditSlipId($id);
-                }
+            if (empty($ids)) {
+                throw new CreditSlipNotFoundException(sprintf(
+                    'No credit slips found for date range "%s - %s"', $from, $to),
+                    CreditSlipNotFoundException::BY_DATE_RANGE
+                );
             }
-            throw new CreditSlipNotFoundException(
-                sprintf('No credit slips found for date range "%s - %s"', $from, $to),
-                CreditSlipNotFoundException::BY_DATE_RANGE
-            );
+
+            $creditSlipIds = [];
+            foreach ($ids as $id) {
+                $creditSlipIds[] = new CreditSlipId($id);
+            }
         } catch (PrestaShopException $e) {
             throw new CreditSlipException(
                 'Something went wrong when trying to get OrderSlip ids by date range',

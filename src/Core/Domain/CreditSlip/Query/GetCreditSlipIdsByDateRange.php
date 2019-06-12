@@ -43,6 +43,10 @@ final class GetCreditSlipIdsByDateRange
      */
     private $dateTimeTo;
 
+    /**
+     * @param DateTime $dateTimeFrom
+     * @param DateTime $dateTimeTo
+     */
     public function __construct($dateTimeFrom, $dateTimeTo)
     {
         $this->dateTimeFrom = $dateTimeFrom;
