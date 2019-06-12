@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\AddCmsPageHandlerIn
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotAddCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShopException;
 
 /**
@@ -77,13 +78,17 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
      * @return CMS
      *
      * @throws PrestaShopException
+     * @throws CmsPageCategoryException
      */
     protected function createCmsFromCommand(AddCmsPageCommand $command)
     {
+        $cmsCategoryId = $command->getCmsPageCategory()->getValue();
+        $this->assertCmsCategoryExists($cmsCategoryId);
+
         $cms = new CMS();
+        $cms->id_cms_category = $cmsCategoryId;
         $cms->meta_title = $command->getLocalizedTitle();
         $cms->head_seo_title = $command->getLocalizedMetaTitle();
-        $cms->id_cms_category = $command->getCmsPageCategory()->getValue();
         $cms->meta_description = $command->getLocalizedMetaDescription();
         $cms->meta_keywords = $command->getLocalizedMetaKeyword();
         $cms->link_rewrite = $command->getLocalizedFriendlyUrl();

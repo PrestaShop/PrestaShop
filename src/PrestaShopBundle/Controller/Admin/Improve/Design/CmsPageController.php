@@ -251,12 +251,26 @@ class CmsPageController extends FrameworkBundleAdminController
         $cmsPageId = (int) $cmsPageId;
 
         try {
+            /** @var EditableCmsPage $editableCmsPage */
+            $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
+            $previewUrl = $editableCmsPage->getPreviewUrl();
+
             $form = $this->getCmsPageFormBuilder()->getFormFor($cmsPageId, [], [
                 'action' => $this->generateUrl('admin_cms_pages_edit', [
                     'cmsPageId' => $cmsPageId,
                 ]),
             ]);
             $form->handleRequest($request);
+        } catch (CmsPageException $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_cms_pages_index');
+        }
+
+        try {
             $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
 
             if ($result->isSubmitted() && $result->isValid()) {
@@ -274,19 +288,11 @@ class CmsPageController extends FrameworkBundleAdminController
 
                 return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
             }
-
-            /** @var EditableCmsPage $editableCmsPage */
-            $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
-            $previewUrl = $editableCmsPage->getPreviewUrl();
         } catch (Exception $e) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($e, $this->getErrorMessages())
             );
-
-            if ($e instanceof CmsPageNotFoundException) {
-                return $this->redirectToRoute('admin_cms_pages_index');
-            }
         }
 
         return $this->render(
@@ -298,7 +304,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'previewUrl' => $previewUrl,
                 'cmsUrl' => $this->get('prestashop.adapter.shop.url.cms_provider')
-                ->getUrl($cmsPageId, '{friendy-url}'),
+                    ->getUrl($cmsPageId, '{friendy-url}'),
             ]
         );
     }
