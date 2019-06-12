@@ -70,6 +70,16 @@ class RouterTest extends TestCase
                 'https://www.prestashop.com/test?arg1=value&arg2=value&_token=a_random_token',
                 'a_random_token',
             ],
+            [
+                'prestashop.com/test?arg1=value&arg2=value',
+                'prestashop.com/test?arg1=value&arg2=value&_token=a_random_token',
+                'a_random_token',
+            ],
+            [
+                'http://www.prestashop.com/test?arg1=value&arg2=value',
+                'http://www.prestashop.com/test?arg1=value&arg2=value&_token=a_random_token',
+                'a_random_token',
+            ],
         ];
     }
 }
