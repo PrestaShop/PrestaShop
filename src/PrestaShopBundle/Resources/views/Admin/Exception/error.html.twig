@@ -61,17 +61,17 @@
                   <input type="hidden" name="_redirect_url" value="{{ app.request.requestUri }}">
 
                   <button class="btn btn-outline-secondary" type="submit">
-                    {{ 'Enable debug mode' }}
+                    {{ 'Enable debug mode'|trans({}, 'Admin.Actions') }}
                   </button>
                 </form>
                 <button class="btn btn-primary js-go-back-btn ml-3" type="button">
-                  {{ 'Back to previous page' }}
+                  {{ 'Back to previous page'|trans({}, 'Admin.Actions') }}
                 </button>
               </div>
 
               <p class="mt-3">
                 <a href="{{ documentation_link('debug_mode') }}" target="_blank">
-                  {{ 'Learn more about debug mode' }}
+                  {{ 'Learn more about debug mode'|trans({}, 'Admin.Actions') }}
                   <i class="material-icons">arrow_right_alt</i>
                 </a>
               </p>
