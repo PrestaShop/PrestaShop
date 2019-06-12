@@ -19,7 +19,7 @@ if [ ! -d $DIR_PATH ]; then
 fi
 
 echo "Clear docker..."
-docker system prune -f
+docker system prune -a -f
 docker image prune -f
 docker volume prune -f
 
