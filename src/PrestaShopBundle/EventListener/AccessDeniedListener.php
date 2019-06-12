@@ -71,21 +71,25 @@ class AccessDeniedListener
     {
         if (!$event->isMasterRequest()
             || !$event->getException() instanceof AccessDeniedException
-            || !$securityConfigurations = $event->getRequest()->attributes->get('_security')
         ) {
             return;
         }
 
-        foreach ($securityConfigurations as $securityConfiguration) {
-            if ($securityConfiguration instanceof AdminSecurity) {
-                $event->allowCustomResponseCode();
+        if ($securityConfigurations = $event->getRequest()->attributes->get('_security')) {
+            foreach ($securityConfigurations as $securityConfiguration) {
+                if ($securityConfiguration instanceof AdminSecurity) {
+                    $event->allowCustomResponseCode();
 
-                $event->setResponse(
-                    $this->getAccessDeniedResponse($event->getRequest(), $securityConfiguration)
-                );
+                    $event->setResponse(
+                        $this->getAccessDeniedResponse($event->getRequest(), $securityConfiguration)
+                    );
 
-                return;
+                    return;
+                }
             }
+        } else {
+            // Redirect to login page
+            $event->setResponse(new RedirectResponse($this->router->generate('_admin_login')));
         }
     }
 

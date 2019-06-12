@@ -24,5 +24,9 @@ security:
                 handlers: [prestashop.adapter.security.employee_logout_listener]
 
     access_control:
+        # Login page is accessible for everyone
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Password reset page is accessible for everyone
+        - { path: ^/reset$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Every other page is accessible only for employees
         - { path: ^/, roles: ROLE_EMPLOYEE }
