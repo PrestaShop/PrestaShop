@@ -62,22 +62,33 @@ class Router extends BaseRouter
         $this->userProvider = $userProvider;
     }
 
+    /**
+     * Appends token to the url as _token parameter.
+     *
+     * @param string $url
+     * @param string $token
+     *
+     * @return string
+     */
     public static function generateTokenizedUrl($url, $token)
     {
         if (TokenInUrls::isDisabled()) {
             return $url;
         }
-        $components = parse_url($url);
-        $baseUrl = (isset($components['path']) ? $components['path'] : '');
-        $queryParams = array();
-        if (isset($components['query'])) {
-            $query = $components['query'];
 
-            parse_str($query, $queryParams);
-        }
+        // Extract query string
+        $query = parse_url($url, PHP_URL_QUERY);
 
+        // Convert query string into $queryParams array
+        $queryParams = [];
+        parse_str($query, $queryParams);
+
+        // Include token to the query array
         $queryParams['_token'] = $token;
 
-        return $baseUrl . '?' . http_build_query($queryParams, '', '&');
+        $tokenizedQuery = http_build_query($queryParams, '', '&');
+
+        // Replace old query string with the new tokenized one
+        return $query ? str_replace($query, $tokenizedQuery, $url) : $url.'?'.$tokenizedQuery;
     }
 }
