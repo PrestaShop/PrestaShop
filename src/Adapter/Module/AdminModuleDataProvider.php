@@ -248,7 +248,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     /**
      * @param AddonsCollection $addons
-     * @param null|string $specific_action
+     * @param string|null $specific_action
      *
      * @return AddonsCollection
      */
