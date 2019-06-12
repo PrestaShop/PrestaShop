@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,38 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Class EmployeeNotFoundException is thrown when employee cannot be found.
+ * Send reset password email to an employee.
  */
-class EmployeeNotFoundException extends EmployeeException
+class SendResetPasswordEmailCommand
 {
     /**
-     * @var EmployeeId
+     * @var Email
      */
-    private $employeeId;
+    private $email;
 
     /**
-     * @param EmployeeId|null $employeeId
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
+     * @param $email
      */
-    public function __construct(EmployeeId $employeeId = null, $message = '', $code = 0, $previous = null)
+    public function __construct($email)
     {
-        parent::__construct($message, $code, $previous);
-
-        $this->employeeId = $employeeId;
+        $this->email = new Email($email);
     }
 
     /**
-     * @return EmployeeId| null
+     * @return Email
      */
-    public function getEmployeeId()
+    public function getEmail()
     {
-        return $this->employeeId;
+        return $this->email;
     }
 }

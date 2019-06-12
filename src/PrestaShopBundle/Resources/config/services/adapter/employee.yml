@@ -76,3 +76,12 @@ services:
       - '@prestashop.adapter.legacy.context'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication }
+
+  prestashop.adapter.employee.command_handler.send_reset_password_email:
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\SendResetPasswordEmailHandler'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@translator'
+      - '@router'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand }

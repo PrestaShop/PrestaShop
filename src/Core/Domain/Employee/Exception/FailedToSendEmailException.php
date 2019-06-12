@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,36 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-
 /**
- * Class EmployeeNotFoundException is thrown when employee cannot be found.
+ * Thrown when email sending to an employee failed.
  */
-class EmployeeNotFoundException extends EmployeeException
+class FailedToSendEmailException extends EmployeeException
 {
-    /**
-     * @var EmployeeId
-     */
-    private $employeeId;
-
-    /**
-     * @param EmployeeId|null $employeeId
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
-     */
-    public function __construct(EmployeeId $employeeId = null, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-
-        $this->employeeId = $employeeId;
-    }
-
-    /**
-     * @return EmployeeId| null
-     */
-    public function getEmployeeId()
-    {
-        return $this->employeeId;
-    }
 }
