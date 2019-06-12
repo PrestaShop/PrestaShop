@@ -45,7 +45,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
     public function handle(DeleteCartRuleFromOrderCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
-        $orderCartRule = new OrderCartRule($command->getOrderCartRule());
+        $orderCartRule = new OrderCartRule($command->getOrderCartRuleId());
 
         if (!Validate::isLoadedObject($orderCartRule) || $orderCartRule->id_order != $order->id) {
             throw new OrderException('Invalid order cart rule provided.');

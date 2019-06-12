@@ -100,6 +100,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         }
 
+        // @todo: use dedicated processing to deal with this issue (commas instead of colons
         $shippingCostAmount = (float) str_replace(',', '.', $command->getShippingCostRefundAmount()) ?: false;
 
         if ($amount === 0 && $shippingCostAmount === 0) {
@@ -110,18 +111,20 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             throw new OrderException('Please enter an amount to proceed with your refund.');
         }
 
-        $choosen = false;
+        $chosen = false;
         $voucher = 0;
 
         if ($command->getCartRuleRefundType() === 1) {
-            $amount -= $voucher = (float) 99; //@todo: get order_discount_price
+            //@todo: Check if it matches order_discount_price in legacy
+            $amount -= $voucher = (float) $order->total_discounts;
         } elseif ($command->getCartRuleRefundType() === 2) {
-            $choosen = true;
+            $chosen = true;
             $amount = $voucher = $command->getCartRuleRefundAmount();
         }
 
         if ($shippingCostAmount > 0) {
             if (!$command->getTaxMethod()) {
+                // @todo: use https://github.com/PrestaShop/decimal for price computations
                 $tax = new Tax();
                 $tax->rate = $order->carrier_tax_rate;
                 $taxCalculator = new TaxCalculator([$tax]);
@@ -145,7 +148,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 $orderDetailList,
                 $shippingCostAmount,
                 $voucher,
-                $choosen,
+                $chosen,
                 $command->getTaxMethod() ? false : true
             );
 
@@ -161,6 +164,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
             $customer = new Customer((int) $order->id_customer);
 
+            // @todo: use private method to send mail
             $params = [
                 '{lastname}' => $customer->lastname,
                 '{firstname}' => $customer->firstname,
@@ -171,6 +175,8 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $translator = Context::getContext()->getTranslator();
             $orderLanguage = new Language((int) $order->id_lang);
 
+            // @todo: use a dedicated Mail class (see #13945)
+            // @todo: remove this @and have a proper error handling
             @Mail::Send(
                 (int) $order->id_lang,
                 'credit_slip',
@@ -266,6 +272,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 '{voucher_num}' => $cartRule->code,
             ];
 
+            // @todo: use private method to send mail and later a decoupled mail sender
             $orderLanguage = new Language((int) $order->id_lang);
 
             @Mail::Send(

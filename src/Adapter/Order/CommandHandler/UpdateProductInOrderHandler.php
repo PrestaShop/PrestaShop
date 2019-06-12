@@ -78,6 +78,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         $product_quantity = $command->getQuantity();
 
+        // @todo: use https://github.com/PrestaShop/decimal for price computations
         $product_price_tax_incl = Tools::ps_round(Tools::getValue('product_price_tax_incl'), 2);
         $product_price_tax_excl = Tools::ps_round(Tools::getValue('product_price_tax_excl'), 2);
         $total_products_tax_incl = $product_price_tax_incl * $product_quantity;
@@ -222,6 +223,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         }
 
         // Clean price
+
+        // @todo: make sure clean
         $product_price_tax_incl = str_replace(',', '.', $command->getPriceTaxIncluded());
         $product_price_tax_excl = str_replace(',', '.', $command->getPriceTaxExcluded());
 

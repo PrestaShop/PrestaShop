@@ -67,10 +67,16 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $translator;
 
     /**
+     * @var Context
+     */
+    private $context;
+
+    /**
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
     {
+        $this->context = Context::getContext();
         $this->translator = $translator;
     }
 
@@ -80,6 +86,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     public function handle(AddProductToOrderCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
+
+        $oldCartRules = $this->context->cart->getCartRules();
 
         $this->assertOrderWasNotShipped($order);
 
@@ -117,6 +125,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         );
 
         // update totals amount of order
+        // @todo: use https://github.com/PrestaShop/decimal for prices computations
         $order->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $order->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 
@@ -161,8 +170,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         Hook::exec('actionOrderEdited', ['order' => $order]);
 
-        $oldCartRules = Context::getContext()->cart->getCartRules();
-        $newCartRules = Context::getContext()->cart->getCartRules();
+        $newCartRules = $this->context->cart->getCartRules();
 
         sort($oldCartRules);
         sort($newCartRules);
@@ -185,6 +193,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $orderCartRule->value_tax_excl = $values['tax_excl'];
             $orderCartRule->add();
 
+            // @todo: use https://github.com/PrestaShop/decimal
             $order->total_discounts += $orderCartRule->value;
             $order->total_discounts_tax_incl += $orderCartRule->value;
             $order->total_discounts_tax_excl += $orderCartRule->value_tax_excl;
@@ -267,8 +276,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $cart->add();
 
-        Context::getContext()->cart = $cart;
-        Context::getContext()->customer = new Customer($order->id_customer);
+        $this->context->cart = $cart;
+        $this->context->customer = new Customer($order->id_customer);
 
         return $cart;
     }
@@ -305,6 +314,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         );
 
         if ($command->getProductPriceTaxIncluded() != $initialProductPriceTaxIncl) {
+            // @todo: use private method to create specific price object
             $specificPrice = new SpecificPrice();
             $specificPrice->id_shop = 0;
             $specificPrice->id_shop_group = 0;
@@ -397,6 +407,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         // Create Cart rule in order to make free shipping
         if ($isFreeShipping) {
+            // @todo: use private method to create cart rule
             $freeShippingCartRule = new CartRule();
             $freeShippingCartRule->id_customer = $order->id_customer;
             $freeShippingCartRule->name = [
@@ -443,6 +454,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $carrier = new Carrier((int) $order->id_carrier);
         $taxCalculator = $carrier->getTaxCalculator($invoice_address);
 
+        // @todo: use https://github.com/PrestaShop/decimal to compute prices and taxes
         $invoice->total_paid_tax_excl = Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
         $invoice->total_paid_tax_incl = Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
         $invoice->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);

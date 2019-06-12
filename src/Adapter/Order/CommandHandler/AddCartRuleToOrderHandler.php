@@ -209,8 +209,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                throw new OrderException('The discount type is invalid.');
         }
 
-        $res = true;
+        $result = true;
         foreach ($cartRules as &$cartRule) {
+            // @todo: move to separate private method
             $cartRuleObj = new CartRule();
             $cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
             $cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
@@ -228,16 +229,17 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
             $cartRuleObj->active = 0;
 
-            if ($res = $cartRuleObj->add()) {
+            if ($result = $cartRuleObj->add()) {
                 $cartRule['id'] = $cartRuleObj->id;
             } else {
                 break;
             }
         }
 
-        if ($res) {
+        if ($result) {
             foreach ($cartRules as $orderInvoiceId => $cartRule) {
                 // Create OrderCartRule
+                // @todo: move to separate private method
                 $orderCartRule = new OrderCartRule();
                 $orderCartRule->id_order = $order->id;
                 $orderCartRule->id_cart_rule = $cartRule['id'];
@@ -245,7 +247,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 $orderCartRule->name = $command->getCartRuleName();
                 $orderCartRule->value = $cartRule['value_tax_incl'];
                 $orderCartRule->value_tax_excl = $cartRule['value_tax_excl'];
-                $res &= $orderCartRule->add();
+                $result &= $orderCartRule->add();
 
                 $order->total_discounts += $orderCartRule->value;
                 $order->total_discounts_tax_incl += $orderCartRule->value;
@@ -256,10 +258,10 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             }
 
             // Update Order
-            $res &= $order->update();
+            $result &= $order->update();
         }
 
-        if (!$res) {
+        if (!$result) {
             throw new OrderException('An error occurred during the OrderCartRule creation');
         }
     }
