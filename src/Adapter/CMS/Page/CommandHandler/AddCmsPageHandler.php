@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\AddCmsPageHandlerIn
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotAddCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShopException;
 
 /**
@@ -42,9 +41,6 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws CmsPageException
-     * @throws PrestaShopException
      */
     public function handle(AddCmsPageCommand $command)
     {
@@ -76,9 +72,6 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
      * @param AddCmsPageCommand $command
      *
      * @return CMS
-     *
-     * @throws PrestaShopException
-     * @throws CmsPageCategoryException
      */
     protected function createCmsFromCommand(AddCmsPageCommand $command)
     {

@@ -49,7 +49,6 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
      * @return CMS
      *
      * @throws CmsPageException
-     * @throws CmsPageNotFoundException
      */
     protected function getCmsPageIfExistsById($cmsId)
     {
