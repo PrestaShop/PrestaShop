@@ -28,11 +28,15 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
 class CmsPageFeatureContext extends AbstractDomainFeatureContext
 {
@@ -113,6 +117,39 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle($command);
         SharedStorage::getStorage()->set($reference, new \CMS($cmsId));
+    }
+
+    /**
+     * @When I delete cms page with id :id
+     */
+    public function deleteCmsPageById($id)
+    {
+        $command = new DeleteCmsPageCommand((int) $id);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Given cms page with id :id exists
+     */
+    public function assertCmsPageExistsById($id)
+    {
+        $query = new GetCmsPageForEditing((int) $id);
+        $this->getQueryBus()->handle($query);
+    }
+
+    /**
+     * @Given cms page with id :id should not exist
+     */
+    public function assertCmsPageDoesNotExist($id)
+    {
+        $query = new GetCmsPageForEditing((int) $id);
+
+        try {
+            $this->getQueryBus()->handle($query);
+
+            throw new NoExceptionAlthoughExpectedException('Cms page exists. Expected it to be deleted');
+        } catch (CmsPageNotFoundException $e) {
+        }
     }
 
     /**

@@ -41,5 +41,10 @@ Feature: CmsPage Management
     And cms page "cmspage-1" indexation for search engines should be disabled
     And cms page "cmspage-1" should be displayed
 
+  Scenario:
+    Given cms page with id "1" exists
+    When I delete cms page with id "1"
+    Then cms page with id "1" should not exist
+
 
 
