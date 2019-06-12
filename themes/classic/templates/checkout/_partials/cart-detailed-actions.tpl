@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='cart_detailed_actions'}
-  <div class="checkout cart-detailed-actions card-block{if $cart.discounts|count > 0} with-promo-code{/if}">
+  <div class="checkout cart-detailed-actions card-block">
     {if $cart.minimalPurchaseRequired}
       <div class="alert alert-warning" role="alert">
         {$cart.minimalPurchaseRequired}
