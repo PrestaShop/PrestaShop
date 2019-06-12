@@ -62,7 +62,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
         // Update order detail amount
         foreach ($order->getOrderDetailList() as $orderDetail) {
             $order_detail = new OrderDetail($orderDetail['id_order_detail']);
-
+            // @todo: use private method to handle this
             $fields = [
                 'ecotax',
                 'product_price',
@@ -107,6 +107,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
         }
 
         // Update order && order_invoice amount
+        // @todo: use private method to handle this
         $fields = [
             'total_discounts',
             'total_discounts_tax_incl',

@@ -80,6 +80,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     {
         if ($orderDetail->id_order_invoice != 0) {
             $order_invoice = new OrderInvoice($orderDetail->id_order_invoice);
+            // @todo: use https://github.com/PrestaShop/decimal for price computations
             $order_invoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
             $order_invoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
             $order_invoice->total_products -= $orderDetail->total_price_tax_excl;
@@ -99,6 +100,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      */
     private function updateOrder(Order $order, OrderDetail $orderDetail)
     {
+        // @todo: use https://github.com/PrestaShop/decimal for price computations
         $order->total_paid -= $orderDetail->total_price_tax_incl;
         $order->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
         $order->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;

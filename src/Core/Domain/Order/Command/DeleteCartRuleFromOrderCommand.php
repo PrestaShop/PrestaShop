@@ -41,16 +41,16 @@ class DeleteCartRuleFromOrderCommand
     /**
      * @var int
      */
-    private $orderCartRule;
+    private $orderCartRuleId;
 
     /**
      * @param int $orderId
-     * @param int $orderCartRule
+     * @param int $orderCartRuleId
      */
-    public function __construct($orderId, $orderCartRule)
+    public function __construct($orderId, $orderCartRuleId)
     {
         $this->orderId = new OrderId($orderId);
-        $this->orderCartRule = $orderCartRule;
+        $this->orderCartRuleId = $orderCartRuleId;
     }
 
     /**
@@ -64,8 +64,8 @@ class DeleteCartRuleFromOrderCommand
     /**
      * @return int
      */
-    public function getOrderCartRule()
+    public function getOrderCartRuleId()
     {
-        return $this->orderCartRule;
+        return $this->orderCartRuleId;
     }
 }

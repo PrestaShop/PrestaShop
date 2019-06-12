@@ -45,7 +45,7 @@ class AddCartRuleToOrderCommand
     private $cartRuleName;
 
     /**
-     * @var string
+     * @var int
      */
     private $cartRuleType;
 
@@ -61,6 +61,10 @@ class AddCartRuleToOrderCommand
 
     /**
      * @param int $orderId
+     * @param string $cartRuleName
+     * @param int $cartRuleType
+     * @param float $value
+     * @param null $orderInvoiceId
      */
     public function __construct($orderId, $cartRuleName, $cartRuleType, $value, $orderInvoiceId = null)
     {
@@ -90,7 +94,7 @@ class AddCartRuleToOrderCommand
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getCartRuleType()
     {
