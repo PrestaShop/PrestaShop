@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command;
 use DateTime;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Adds new catalog price rule with provided data
@@ -66,6 +67,11 @@ class AddCatalogPriceRuleCommand
     private $fromQuantity;
 
     /**
+     * @var Reduction
+     */
+    private $reduction;
+
+    /**
      * @var bool
      */
     private $includeTax;
@@ -86,25 +92,15 @@ class AddCatalogPriceRuleCommand
     private $dateTimeTo;
 
     /**
-     * @var string
-     */
-    private $reductionType;
-
-    /**
-     * @var float
-     */
-    private $reduction;
-
-    /**
      * @param string $name
      * @param int $currencyId
      * @param int $countryId
      * @param int $groupId
      * @param int $fromQuantity
-     * @param float $reduction
+     * @param string $reductionType
+     * @param float $reductionValue
      * @param int $shopId
      * @param bool $includeTax
-     * @param string $reductionType
      * @param float $price
      */
     public function __construct(
@@ -113,10 +109,10 @@ class AddCatalogPriceRuleCommand
         $countryId,
         $groupId,
         $fromQuantity,
-        $reduction,
+        $reductionType,
+        $reductionValue,
         $shopId,
         $includeTax,
-        $reductionType,
         $price
     ) {
         $this->name = $name;
@@ -124,10 +120,9 @@ class AddCatalogPriceRuleCommand
         $this->countryId = $countryId;
         $this->groupId = $groupId;
         $this->fromQuantity = $fromQuantity;
-        $this->reduction = $reduction;
+        $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->shopId = $shopId;
         $this->price = $price;
-        $this->reductionType = $reductionType;
         $this->includeTax = $includeTax;
     }
 
@@ -180,6 +175,14 @@ class AddCatalogPriceRuleCommand
     }
 
     /**
+     * @return Reduction
+     */
+    public function getReduction()
+    {
+        return $this->reduction;
+    }
+
+    /**
      * @return float
      */
     public function getPrice()
@@ -204,27 +207,11 @@ class AddCatalogPriceRuleCommand
     }
 
     /**
-     * @return string
-     */
-    public function getReductionType()
-    {
-        return $this->reductionType;
-    }
-
-    /**
      * @return bool
      */
     public function isTaxIncluded()
     {
         return $this->includeTax;
-    }
-
-    /**
-     * @return float
-     */
-    public function getReduction()
-    {
-        return $this->reduction;
     }
 
     /**
