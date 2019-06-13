@@ -34,8 +34,10 @@ use OrderHistory;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrdersStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrdersStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use StockAvailable;
 
 /**
@@ -56,16 +58,17 @@ final class ChangeOrdersStatusHandler implements ChangeOrdersStatusHandlerInterf
             );
         }
 
+        $ordersWithFailedToUpdateStatus = [];
+        $ordersWithFailedToSendEmail = [];
+        $ordersWithAssignedStatus = [];
+
         foreach ($command->getOrderIds() as $orderId) {
-            $order = new Order($orderId->getValue());
-
-            if ($order->id !== $orderId->getValue()) {
-                throw new OrderNotFoundException($orderId);
-            }
-
+            $order = $this->getOrderObject($orderId);
             $currentOrderState = $order->getCurrentOrderState();
 
             if ($currentOrderState->id === $orderState->id) {
+                $ordersWithAssignedStatus[] = $orderId;
+
                 continue;
             }
 
@@ -83,15 +86,53 @@ final class ChangeOrdersStatusHandler implements ChangeOrdersStatusHandlerInterf
                 $templateVars['{followup}'] = str_replace('@', $order->shipping_number, $carrier->url);
             }
 
-            if ($history->addWithemail(true, $templateVars)) {
-                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    foreach ($order->getProducts() as $product) {
-                        if (StockAvailable::dependsOnStock($product['product_id'])) {
-                            StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
-                        }
+            if (!$history->add()) {
+                $ordersWithFailedToUpdateStatus[] = $orderId;
+
+                continue;
+            }
+
+            if (!$history->sendEmail($order, $templateVars)) {
+                $ordersWithFailedToSendEmail[] = $orderId;
+
+                continue;
+            }
+
+            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                foreach ($order->getProducts() as $product) {
+                    if (StockAvailable::dependsOnStock($product['product_id'])) {
+                        StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
                     }
                 }
             }
         }
+
+        if (!empty($ordersWithFailedToUpdateStatus)
+            || !empty($ordersWithFailedToSendEmail)
+            || !empty($ordersWithAssignedStatus)
+        ) {
+            throw new ChangeOrderStatusException(
+                $ordersWithFailedToUpdateStatus,
+                $ordersWithFailedToSendEmail,
+                $ordersWithAssignedStatus,
+                'Failed to update status or sent email when changing order status.'
+            );
+        }
+    }
+
+    /**
+     * @param OrderId $orderId
+     *
+     * @return Order
+     */
+    private function getOrderObject(OrderId $orderId)
+    {
+        $order = new Order($orderId->getValue());
+
+        if ($order->id !== $orderId->getValue()) {
+            throw new OrderNotFoundException($orderId);
+        }
+
+        return $order;
     }
 }

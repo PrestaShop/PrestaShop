@@ -27,8 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrdersStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
@@ -146,6 +148,8 @@ class OrderController extends FrameworkBundleAdminController
             );
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (ChangeOrderStatusException $e) {
+            $this->handleChangeOrderStatusException($e);
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -225,5 +229,39 @@ class OrderController extends FrameworkBundleAdminController
                     ['#%d' => $e->getOrderId()->getValue()]
                 ) : '',
         ];
+    }
+
+    /**
+     * @param ChangeOrderStatusException $e
+     */
+    private function handleChangeOrderStatusException(ChangeOrderStatusException $e)
+    {
+        $orderIds = array_merge(
+            $e->getOrdersWithFailedToUpdateStatus(),
+            $e->getOrdersWithFailedToSendEmail()
+        );
+
+        /** @var OrderId $orderId */
+        foreach ($orderIds as $orderId) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.',
+                    'Admin.Orderscustomers.Notification',
+                    ['#%d' => $orderId->getValue()]
+                )
+            );
+        }
+
+        foreach ($e->getOrdersWithAssignedStatus() as $orderId) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Order #%d has already been assigned this status.',
+                    'Admin.Orderscustomers.Notification',
+                    ['#%d' => $orderId->getValue()]
+                )
+            );
+        }
     }
 }
