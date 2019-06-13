@@ -377,8 +377,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT COUNT(*)
 		FROM `' . _DB_PREFIX_ . 'category` c
 		' . Shop::addSqlAssociation('category', 'c') . '
-		AND c.active = 1
-		AND c.nright = c.nleft + 1'
+		AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY')
         );
         $used = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
@@ -386,8 +385,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `' . _DB_PREFIX_ . 'category` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON c.id_category = cp.id_category
 		' . Shop::addSqlAssociation('category', 'c') . '
-		AND c.active = 1
-		AND c.nright = c.nleft + 1'
+		AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY')
         );
 
         return (int) ($total - $used);
