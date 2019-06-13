@@ -26,9 +26,9 @@
 const $ = window.$;
 
 /**
- * Enables/disables 'include_tax' field depending from 'reduction_type' field value
+ * Shows/hides 'include_tax' field depending from 'reduction_type' field value
  */
-export default class IncludeTaxFieldAvailabilityHandler {
+export default class IncludeTaxFieldVisibilityHandler {
   constructor(sourceSelector, targetSelector) {
     this.$sourceSelector = sourceSelector;
     this.$targetSelector = targetSelector;
@@ -39,16 +39,15 @@ export default class IncludeTaxFieldAvailabilityHandler {
   }
 
   /**
-   * When source value is 1, target field is disabled, else enabled
+   * When source value is 'percentage', target field is shown, else hidden
    *
    * @private
    */
   _handle() {
-    let disabled = false;
+    $(this.$targetSelector).fadeIn();
 
     if ($(`${this.$sourceSelector}`).val() === 'percentage') {
-      disabled = true;
+      $(this.$targetSelector).fadeOut();
     }
-    $(this.$targetSelector).prop('disabled', disabled);
   }
 }
