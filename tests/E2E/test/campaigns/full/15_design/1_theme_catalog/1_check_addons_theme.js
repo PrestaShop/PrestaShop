@@ -28,7 +28,7 @@ scenario('Check the addons theme in the Back Office', () => {
         .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
         .then(() => client.pause(1000));
     });
-    test('should click on "Discover all of the themes" button', () => client.scrollWaitForExistAndClick(ThemeCatalog.discover_all_of_the_theme_button, 1000));
+    test('should click on "Discover all of the themes" button', () => client.waitForExistAndClick(ThemeCatalog.discover_all_of_the_theme_button, 1000));
     test('should check that the page is well opened', () => {
       return promise
         .then(() => client.switchWindow(1))
