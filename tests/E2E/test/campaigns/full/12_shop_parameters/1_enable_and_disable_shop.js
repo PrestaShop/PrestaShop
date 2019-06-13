@@ -6,7 +6,8 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
-const maintenance_messages = {en: 'We are currently disabled our shop and will be back really soon.', fr: 'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.'};
+const maintenance_messages = {en: 'We are currently disabled our shop and will be back really soon.',
+  fr: 'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.'};
 
 scenario('Configure shop in the Back Office', () => {
   scenario('Login in the Back Office', client => {
