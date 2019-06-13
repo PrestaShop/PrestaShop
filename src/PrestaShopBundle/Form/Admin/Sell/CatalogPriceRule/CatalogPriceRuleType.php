@@ -163,15 +163,15 @@ class CatalogPriceRuleType extends AbstractType
                 'required' => false,
                 'date_format' => $dateTimeFormat,
             ])
-            ->add('include_tax', ChoiceType::class, [
-                'placeholder' => false,
-                'required' => false,
-                'choices' => $this->taxInclusionChoices,
-            ])
             ->add('reduction_type', ChoiceType::class, [
                 'placeholder' => false,
                 'required' => false,
                 'choices' => $this->priceReductionTypeChoices,
+            ])
+            ->add('include_tax', ChoiceType::class, [
+                'placeholder' => false,
+                'required' => false,
+                'choices' => $this->taxInclusionChoices,
             ])
             ->add('reduction', NumberType::class, [
                 'scale' => 6,
