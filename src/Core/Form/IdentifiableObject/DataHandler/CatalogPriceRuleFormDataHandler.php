@@ -128,6 +128,10 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
      */
     private function fillCommandWithData(EditCatalogPriceRuleCommand $command, array $data)
     {
+        if ($data['leave_initial_price']) {
+            $data['price'] = -1;
+        }
+
         $command->setName($data['name']);
         $command->setShopId((int) $data['id_shop']);
         $command->setCurrencyId((int) $data['id_currency']);
