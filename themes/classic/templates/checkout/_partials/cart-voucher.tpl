@@ -41,41 +41,50 @@
             </ul>
           {/block}
         {/if}
-        <p>
-          <a class="collapse-button promo-code-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
+
+        <p class="promo-code-button display-promo{if $cart.discounts|count > 0} with-discounts{/if}">
+          <a class="collapse-button" href="#promo-code">
             {l s='Have a promo code?' d='Shop.Theme.Checkout'}
           </a>
         </p>
-        <div class="promo-code collapse{if $cart.discounts|count > 0} in{/if}" id="promo-code">
-          {block name='cart_voucher_form'}
-            <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
-              <input type="hidden" name="token" value="{$static_token}">
-              <input type="hidden" name="addDiscount" value="1">
-              <input class="promo-input" type="text" name="discount_name" placeholder="{l s='Promo code' d='Shop.Theme.Checkout'}">
-              <button type="submit" class="btn btn-primary"><span>{l s='Add' d='Shop.Theme.Actions'}</span></button>
-            </form>
-          {/block}
-          {block name='cart_voucher_notifications'}
-            <div class="alert alert-danger js-error" role="alert">
-              <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>
-            </div>
-          {/block}
-          {if $cart.discounts|count > 0}
-            <p class="block-promo promo-highlighted">
-              {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
-            </p>
-            <ul class="js-discount card-block promo-discounts">
+
+        <div id="promo-code" class="collapse{if $cart.discounts|count > 0} in{/if}">
+          <div class="promo-code">
+            {block name='cart_voucher_form'}
+              <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
+                <input type="hidden" name="token" value="{$static_token}">
+                <input type="hidden" name="addDiscount" value="1">
+                <input class="promo-input" type="text" name="discount_name" placeholder="{l s='Promo code' d='Shop.Theme.Checkout'}">
+                <button type="submit" class="btn btn-primary"><span>{l s='Add' d='Shop.Theme.Actions'}</span></button>
+              </form>
+            {/block}
+
+            {block name='cart_voucher_notifications'}
+              <div class="alert alert-danger js-error" role="alert">
+                <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>
+              </div>
+            {/block}
+
+            <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">
+              {l s='Close' d='Shop.Theme.Checkout'}
+            </a>
+          </div>
+        </div>
+
+        {if $cart.discounts|count > 0}
+          <p class="block-promo promo-highlighted">
+            {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
+          </p>
+          <ul class="js-discount card-block promo-discounts">
             {foreach from=$cart.discounts item=discount}
               <li class="cart-summary-line">
-                <span class="label"><span class="code">{$discount.code}</span> - {$discount.name}</span>
+                <span class="label">
+                  <span class="code">{$discount.code}</span> - {$discount.name}
+                </span>
               </li>
             {/foreach}
-            </ul>
-          {/if}
-          <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">
-            {l s='Close' d='Shop.Theme.Checkout'}
-          </a>
-        </div>
+          </ul>
+        {/if}
       </div>
     </div>
   {/block}
