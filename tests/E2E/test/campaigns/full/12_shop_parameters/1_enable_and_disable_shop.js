@@ -6,7 +6,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
-const maintenance_messages = {en: 'We are currently disabled our shop and will be back really soon.',
+const maintenance_messages = {en: 'We have currently disabled our shop and will be back really soon.',
   fr: 'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.'};
 
 scenario('Configure shop in the Back Office', () => {
@@ -41,8 +41,6 @@ scenario('Configure shop in the Back Office', () => {
         .then(() => client.getText(ShopParameters.maintenance_message))
         .then((text) => expect(Object.values(maintenance_messages)).to.include(text))
     });
-      /*client.checkTextValue(ShopParameters.maintenance_message,
-      'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.', 'contain'));*/
   }, 'common_client');
 
   scenario('Enable shop in the Back Office', client => {
