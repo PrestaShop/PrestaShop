@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Exception;
 
 use Exception;
-use Throwable;
 
 /**
  * Exception that is thrown in modules context.
@@ -42,9 +41,9 @@ class ModuleException extends Exception
     /**
      * @param string $message
      * @param int $code
-     * @param Throwable|null $previous
+     * @param Exception|null $previous
      */
-    public function __construct($message = "", $code = 0, Throwable $previous = null)
+    public function __construct($message = "", $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
