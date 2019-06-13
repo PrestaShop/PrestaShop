@@ -87,7 +87,7 @@ class International extends CommonClient {
   }
 
   moveFile(downloadsFolderPath, filename, destinationFolder) {
-    exec(' mv ' + downloadsFolderPath + '/' + filename.split('.')[0] + '.' + filename.split('.')[1] + ' ' + destinationFolder,
+    exec(' mv ' + downloadsFolderPath + filename.split('.')[0] + '.' + filename.split('.')[1] + ' ' + destinationFolder,
       (error) => {
         if (error !== null) {
           console.log(`exec error: ${error}`);
