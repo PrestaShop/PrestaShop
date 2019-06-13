@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Builds "reset password" form
@@ -46,12 +47,31 @@ class ResetPasswordType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $lengthMessage = $this->trans(
+            'The password is not in a valid format.',
+            [],
+            'Admin.Login.Notification'
+        );
+
         $builder
             ->add('reset_password', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'invalid_message' => $this->trans(
+                    'The password and its confirmation do not match. Please double check both passwords.',
+                    [],
+                    'Admin.Login.Notification'
+                ),
                 'first_options' => [
                     'attr' => [
                         'placeholder' => $this->trans('Password', [], 'Admin.Global'),
+                    ],
+                    'constraints' => [
+                        new Length([
+                            'min' => 5,
+                            'max' => 72,
+                            'minMessage' => $lengthMessage,
+                            'maxMessage' => $lengthMessage,
+                        ]),
                     ],
                 ],
                 'second_options' => [
@@ -73,5 +93,34 @@ class ResetPasswordType extends AbstractType
             ->setRequired('email')
             ->setAllowedTypes('email', 'string')
         ;
+    }
+
+    /**
+     * @param int $maxLength
+     * @param int|null $minLength
+     *
+     * @return Length
+     */
+    private function getLengthConstraint($maxLength)
+    {
+        $options = [
+            'max' => $maxLength,
+            'maxMessage' => $this->trans(
+                'This field cannot be longer than %limit% characters',
+                ['%limit%' => $maxLength],
+                'Admin.Notifications.Error'
+            ),
+        ];
+
+        if (null !== $minLength) {
+            $options['min'] = $minLength;
+            $options['minMessage'] = $this->trans(
+                'This field cannot be shorter than %limit% characters',
+                ['%limit%' => $minLength],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        return new Length($options);
     }
 }

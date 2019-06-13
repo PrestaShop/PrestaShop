@@ -93,5 +93,10 @@ services:
 
   prestashop.adapter.employee.command_handler.reset_password:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ResetPasswordHandler'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.crypto.hashing'
+      - '@prestashop.adapter.legacy.context'
+      - '@translator'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand }
