@@ -27,14 +27,21 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\FailedToSendEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidPasswordException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordInformationMissingException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordReset;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\PasswordResettingEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShopBundle\Form\Admin\Login\ForgotPasswordType;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
+use PrestaShopBundle\Form\Admin\Login\ResetPasswordType;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,6 +62,7 @@ class AuthorizationController extends FrameworkBundleAdminController
     {
         $authenticationUtils = $this->get('security.authentication_utils');
         $authenticationError = $authenticationUtils->getLastAuthenticationError();
+        $loginForm = $this->createForm(LoginType::class);
 
         if (null !== $authenticationError) {
             $errorMessage = $this->getErrorMessageForException(
@@ -66,6 +74,7 @@ class AuthorizationController extends FrameworkBundleAdminController
         $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
 
         return $this->renderLoginPage([
+            'loginForm' => $loginForm->createView(),
             'errorMessage' => $errorMessage ?? null,
             'forgotPasswordForm' => $forgotPasswordForm->createView(),
         ]);
@@ -80,8 +89,9 @@ class AuthorizationController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function sendResetPasswordLinkAction(Request $request)
+    public function forgotPasswordAction(Request $request)
     {
+        $loginForm = $this->createForm(LoginType::class);
         $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
         $forgotPasswordForm->handleRequest($request);
 
@@ -104,8 +114,58 @@ class AuthorizationController extends FrameworkBundleAdminController
         }
 
         return $this->renderLoginPage([
-            'showResetPasswordForm' => true,
+            'loginForm' => $loginForm->createView(),
+            'showLoginForm' => false,
             'forgotPasswordForm' => $forgotPasswordForm->createView(),
+            'showForgotPasswordForm' => true,
+        ]);
+    }
+
+    /**
+     * Handle password resetting.
+     *
+     * @DemoRestricted(redirectRoute="_admin_login")
+     *
+     * @param Request $request
+     * @param int $employeeId
+     * @param string $resetToken generated password reset token
+     *
+     * @return Response
+     */
+    public function resetPasswordAction(Request $request, $employeeId, $resetToken)
+    {
+        try {
+            /** @var PasswordResettingEmployee $employee */
+            $employee = $this->getQueryBus()->handle(new GetEmployeeForPasswordReset((int)$employeeId));
+        } catch (DomainException $e) {
+            //@todo
+        }
+
+        $resetPasswordForm = $this->createForm(ResetPasswordType::class, null, [
+            'email' => $employee->getEmail()->getValue(),
+        ]);
+        $resetPasswordForm->handleRequest($request);
+
+        if ($resetPasswordForm->isSubmitted() && $resetPasswordForm->isValid()) {
+            try {
+                $this->getCommandBus()->handle(new ResetPasswordCommand(
+                    $employee->getEmployeeId()->getValue(),
+                    $employee->getEmail()->getValue(),
+                    $resetToken,
+                    $resetPasswordForm->getData()['reset_password']
+                ));
+            } catch (DomainException $e) {
+                //@todo
+            }
+        }
+
+        return $this->renderLoginPage([
+            'showLoginForm' => false,
+            'showForgotPasswordForm' => false,
+            'showResetPasswordForm' => true,
+            'resetPasswordForm' => $resetPasswordForm->createView(),
+            'employeeId' => $employeeId,
+            'resetToken' => $resetToken,
         ]);
     }
 
@@ -118,11 +178,9 @@ class AuthorizationController extends FrameworkBundleAdminController
      */
     private function renderLoginPage(array $templateVars = [])
     {
-        $loginForm = $this->createForm(LoginType::class);
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
 
         return $this->render('@PrestaShop/Admin/Login/index.html.twig', $templateVars + [
-            'loginForm' => $loginForm->createView(),
             'shopName' => $this->configuration->get('PS_SHOP_NAME'),
             'prestashopVersion' => $this->configuration->get('_PS_VERSION_'),
             'imgDir' => $this->configuration->get('_PS_IMG_'),
@@ -130,6 +188,9 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $this->configuration->get('PS_LANG_DEFAULT')
             ),
             'currentYear' => (new DateTime())->format('Y'),
+            'showLoginForm' => true,
+            'showForgotPasswordForm' => false,
+            'showResetPasswordForm' => false,
         ]);
     }
 
@@ -142,6 +203,11 @@ class AuthorizationController extends FrameworkBundleAdminController
     {
         $employeeDoesNotExistMessage = $this->trans(
             'The employee does not exist, or the password provided is incorrect.',
+            'Admin.Login.Notification'
+        );
+
+        $missingInformationMessage = $this->trans(
+            'Some identification information is missing.',
             'Admin.Login.Notification'
         );
 
@@ -163,6 +229,12 @@ class AuthorizationController extends FrameworkBundleAdminController
             ),
             FailedToSendEmailException::class => $this->trans(
                 'An error occurred while attempting to reset your password.',
+                'Admin.Login.Notification'
+            ),
+            ResetPasswordInformationMissingException::class => $missingInformationMessage,
+            InvalidEmployeeIdException::class => $missingInformationMessage,
+            InvalidPasswordException::class => $this->trans(
+                'The password is not in a valid format.',
                 'Admin.Login.Notification'
             ),
         ];

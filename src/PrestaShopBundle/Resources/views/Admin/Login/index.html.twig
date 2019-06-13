@@ -87,12 +87,16 @@
     <div class="card login-card flip-card-inner">
       <div class="card-block">
         <div class="card-text pb-3 mx-auto flip-card-back">
-          <div class="js-login-form-container{% if showResetPasswordForm is defined and showResetPasswordForm %} d-none{% endif %}">
-            {% include '@PrestaShop/Admin/Login/Blocks/login_form.html.twig' %}
-          </div>
-          <div class="js-forgot-form-container{% if showResetPasswordForm is not defined or not showResetPasswordForm %} d-none{% endif %}">
-            {% include '@PrestaShop/Admin/Login/Blocks/forgot_password_form.html.twig' %}
-          </div>
+          {% if showResetPasswordForm %}
+            {% include '@PrestaShop/Admin/Login/Blocks/reset_password_form.html.twig' %}
+          {% else %}
+            <div class="js-login-form-container{% if not showLoginForm %} d-none{% endif %}">
+              {% include '@PrestaShop/Admin/Login/Blocks/login_form.html.twig' %}
+            </div>
+            <div class="js-forgot-form-container{% if not showForgotPasswordForm %} d-none{% endif %}">
+              {% include '@PrestaShop/Admin/Login/Blocks/forgot_password_form.html.twig' %}
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
