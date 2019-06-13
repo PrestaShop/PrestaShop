@@ -935,7 +935,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $row['real_value'] = $row['reduction'] * 100;
                     $discountPrice = $price - $price * $row['reduction'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
-                        if ($row['reduction_tax'] == 0) {
+                        if ($row['reduction_tax'] == 0 && !$row['price']) {
                             $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
                         } else {
                             $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction']));
