@@ -32,8 +32,8 @@ use Context;
 use Order;
 use OrderHistory;
 use OrderState;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrdersStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrdersStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\BulkChangeOrderStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -43,12 +43,12 @@ use StockAvailable;
 /**
  * @internal
  */
-final class ChangeOrdersStatusHandler implements ChangeOrdersStatusHandlerInterface
+final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandlerInterface
 {
     /**
-     * @param ChangeOrdersStatusCommand $command
+     * @param BulkChangeOrderStatusCommand $command
      */
-    public function handle(ChangeOrdersStatusCommand $command)
+    public function handle(BulkChangeOrderStatusCommand $command)
     {
         $orderState = new OrderState($command->getNewOrderStatusId());
 

@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrdersStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 
 /**
  * Interface for service that handles changing orders status
  */
-interface ChangeOrdersStatusHandlerInterface
+interface BulkChangeOrderStatusHandlerInterface
 {
     /**
-     * @param ChangeOrdersStatusCommand $command
+     * @param BulkChangeOrderStatusCommand $command
      */
-    public function handle(ChangeOrdersStatusCommand $command);
+    public function handle(BulkChangeOrderStatusCommand $command);
 }
