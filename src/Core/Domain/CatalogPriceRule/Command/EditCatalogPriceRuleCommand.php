@@ -30,6 +30,7 @@ use DateTime;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Edits catalog price rule with given data
@@ -87,17 +88,12 @@ class EditCatalogPriceRuleCommand
     private $dateTimeTo;
 
     /**
-     * @var string|null
-     */
-    private $reductionType;
-
-    /**
      * @var bool|null
      */
     private $includeTax;
 
     /**
-     * @var float|null
+     * @var Reduction
      */
     private $reduction;
 
@@ -268,22 +264,6 @@ class EditCatalogPriceRuleCommand
     }
 
     /**
-     * @return string|null
-     */
-    public function getReductionType()
-    {
-        return $this->reductionType;
-    }
-
-    /**
-     * @param string|null $reductionType
-     */
-    public function setReductionType($reductionType)
-    {
-        $this->reductionType = $reductionType;
-    }
-
-    /**
      * @return bool|null
      */
     public function isTaxIncluded()
@@ -300,7 +280,7 @@ class EditCatalogPriceRuleCommand
     }
 
     /**
-     * @return float|null
+     * @return Reduction|null
      */
     public function getReduction()
     {
@@ -308,11 +288,12 @@ class EditCatalogPriceRuleCommand
     }
 
     /**
-     * @param float|null $reduction
+     * @param $type
+     * @param $value
      */
-    public function setReduction($reduction)
+    public function setReduction($type, $value)
     {
-        $this->reduction = $reduction;
+        $this->reduction = new Reduction($type, $value);
     }
 
     /**
