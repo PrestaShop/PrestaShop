@@ -38,6 +38,8 @@
     </h3>
     <div class="card-block row">
       <div class="card-text">
+        {{ form_errors(employeeForm) }}
+
         {{ ps.form_group_row(employeeForm.firstname, {}, {
           'label': 'First name'|trans({}, 'Admin.Global')
         }) }}
