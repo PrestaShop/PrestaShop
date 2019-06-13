@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
@@ -133,6 +134,8 @@ class CurrencyController extends FrameworkBundleAdminController
             }
         } catch (CurrencyException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
@@ -173,6 +176,8 @@ class CurrencyController extends FrameworkBundleAdminController
             }
         } catch (CurrencyException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/edit.html.twig', [

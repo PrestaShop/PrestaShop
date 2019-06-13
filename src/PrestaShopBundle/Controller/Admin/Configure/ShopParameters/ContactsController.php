@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -141,6 +142,8 @@ class ContactsController extends FrameworkBundleAdminController
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
             );
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/create.html.twig', [
@@ -183,6 +186,8 @@ class ContactsController extends FrameworkBundleAdminController
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
             );
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/edit.html.twig', [

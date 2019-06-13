@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -139,6 +140,8 @@ class CategoryController extends FrameworkBundleAdminController
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
@@ -187,6 +190,8 @@ class CategoryController extends FrameworkBundleAdminController
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
@@ -254,6 +259,8 @@ class CategoryController extends FrameworkBundleAdminController
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
@@ -319,6 +326,8 @@ class CategoryController extends FrameworkBundleAdminController
             }
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();

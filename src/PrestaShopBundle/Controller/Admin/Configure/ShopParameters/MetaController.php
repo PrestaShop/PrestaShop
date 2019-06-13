@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
@@ -173,6 +174,8 @@ class MetaController extends FrameworkBundleAdminController
             }
         } catch (MetaException $exception) {
             $this->addFlash('error', $this->handleException($exception));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
@@ -208,6 +211,8 @@ class MetaController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($e));
 
             return $this->redirectToRoute('admin_metas_index');
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [

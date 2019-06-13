@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
@@ -218,6 +219,8 @@ class CmsPageController extends FrameworkBundleAdminController
                 'error',
                 $this->getErrorMessageForException($e, $this->getErrorMessages())
             );
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render(
@@ -234,7 +237,9 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
-     *  @AdminSecurity(
+     * Edit CMS page action.
+     *
+     * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
@@ -287,6 +292,8 @@ class CmsPageController extends FrameworkBundleAdminController
             if ($e instanceof CmsPageNotFoundException) {
                 return $this->redirectToRoute('admin_cms_pages_index');
             }
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render(
@@ -340,6 +347,8 @@ class CmsPageController extends FrameworkBundleAdminController
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages())
             );
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render(
@@ -392,6 +401,8 @@ class CmsPageController extends FrameworkBundleAdminController
             if ($exception instanceof CmsPageCategoryNotFoundException) {
                 return $this->redirectToParentIndexPage((int) $cmsCategoryId);
             }
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render(

@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -125,6 +126,8 @@ class LanguageController extends FrameworkBundleAdminController
             }
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Language/create.html.twig', [
@@ -168,6 +171,8 @@ class LanguageController extends FrameworkBundleAdminController
             if ($e instanceof LanguageNotFoundException) {
                 return $this->redirectToRoute('admin_languages_index');
             }
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         /** @var EditableLanguage $editableLanguage */

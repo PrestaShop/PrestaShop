@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -132,6 +133,8 @@ class ProfileController extends FrameworkBundleAdminController
             }
         } catch (ProfileException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/create.html.twig', [
@@ -178,6 +181,8 @@ class ProfileController extends FrameworkBundleAdminController
             if ($e instanceof ProfileNotFoundException) {
                 return $this->redirectToRoute('admin_profiles_index');
             }
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         /** @var EditableProfile $editableProfiler */

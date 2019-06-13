@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierSta
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;

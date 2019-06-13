@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -178,7 +179,11 @@ class SqlManagerController extends FrameworkBundleAdminController
         $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
         $sqlRequestForm->handleRequest($request);
 
-        $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
+        try {
+            $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
+        }
 
         if (null !== $result->getIdentifiableObjectId()) {
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
@@ -231,6 +236,8 @@ class SqlManagerController extends FrameworkBundleAdminController
             );
 
             return $this->redirectToRoute('admin_sql_requests_index');
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [

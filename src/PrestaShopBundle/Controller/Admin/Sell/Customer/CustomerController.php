@@ -152,6 +152,8 @@ class CustomerController extends AbstractAdminController
             }
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [

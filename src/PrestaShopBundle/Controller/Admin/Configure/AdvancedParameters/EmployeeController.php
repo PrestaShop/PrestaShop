@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationE
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
@@ -46,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeIts
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -292,6 +292,8 @@ class EmployeeController extends FrameworkBundleAdminController
             }
         } catch (EmployeeException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         $templateVars = [
@@ -367,6 +369,8 @@ class EmployeeController extends FrameworkBundleAdminController
             }
         } catch (EmployeeException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         try {

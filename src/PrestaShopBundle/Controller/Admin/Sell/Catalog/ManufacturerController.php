@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoun
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\UpdateManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
+use PrestaShop\PrestaShop\Core\Exception\ModuleException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
@@ -158,6 +159,8 @@ class ManufacturerController extends FrameworkBundleAdminController
             }
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/add.html.twig', [
@@ -232,6 +235,8 @@ class ManufacturerController extends FrameworkBundleAdminController
             if ($e instanceof ManufacturerNotFoundException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         /** @var EditableManufacturer $editableManufacturer */
@@ -572,6 +577,8 @@ class ManufacturerController extends FrameworkBundleAdminController
             if ($e instanceof ManufacturerConstraintException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/create.html.twig', [
@@ -626,6 +633,8 @@ class ManufacturerController extends FrameworkBundleAdminController
             if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
+        } catch (ModuleException $e) {
+            $this->setModuleErrorMessages($e);
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
