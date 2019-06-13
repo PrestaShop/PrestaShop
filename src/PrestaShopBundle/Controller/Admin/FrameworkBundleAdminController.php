@@ -493,7 +493,7 @@ class FrameworkBundleAdminController extends Controller
     {
         $moduleErrors = [];
 
-        foreach ($e->getErrors() as $error) {
+        foreach ($e->getMessages() as $error) {
             if (is_string($error)) {
                 $moduleErrors[] = $error;
             }

@@ -27,43 +27,52 @@
 namespace PrestaShop\PrestaShop\Core\Exception;
 
 use Exception;
+use Throwable;
 
+/**
+ * Exception that is thrown in modules context.
+ */
 class ModuleException extends Exception
 {
     /**
      * @var string[]
      */
-    private $errors;
+    private $messages = [];
 
-    public function __construct(array $errors, $message = "", $code = 0, $previous = null)
+    /**
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
+    public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
-        $this->setErrors($errors);
         parent::__construct($message, $code, $previous);
+
+        if (!empty($message)) {
+            $this->messages[] = $message;
+        }
     }
 
     /**
-     * @param string[] $errors
+     * Build exception instance with an array of messages.
      *
-     * @return ModuleException
+     * @param string[] $messages
+     *
+     * @return self
      */
-    public static function buildFromArray(array $errors)
+    public static function buildWithMessages(array $messages)
     {
-        return new self($errors);
+        $instance = new self();
+        $instance->messages = $messages;
+
+        return $instance;
     }
 
     /**
      * @return string[]
      */
-    public function getErrors()
+    public function getMessages()
     {
-        return $this->errors;
-    }
-
-    /**
-     * @param string[] $errors
-     */
-    private function setErrors(array $errors)
-    {
-        $this->errors = $errors;
+        return $this->messages;
     }
 }
