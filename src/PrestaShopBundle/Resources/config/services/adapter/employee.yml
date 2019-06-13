@@ -85,3 +85,13 @@ services:
       - '@router'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand }
+
+  prestashop.adapter.employee.query_handler.get_employee_for_password_reset:
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForPasswordResetHandler'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordReset }
+
+  prestashop.adapter.employee.command_handler.reset_password:
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ResetPasswordHandler'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand }
