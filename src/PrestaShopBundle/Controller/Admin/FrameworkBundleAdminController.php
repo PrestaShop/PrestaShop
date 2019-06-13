@@ -465,6 +465,12 @@ class FrameworkBundleAdminController extends Controller
         $exceptionType = get_class($e);
         $exceptionCode = $e->getCode();
 
+        $this->get('prestashop.core.hook.dispatcher')->dispatchWithParameters('actionGetErrorMessagesInController', [
+            'controller_name' => get_class($this),
+            'exception' => $e,
+            'messages' => &$messages,
+        ]);
+
         if (isset($messages[$exceptionType])) {
             $message = $messages[$exceptionType];
 

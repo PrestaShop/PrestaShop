@@ -736,7 +736,7 @@ class CustomerController extends AbstractAdminController
      */
     private function getErrorMessages(CustomerException $e)
     {
-        $mapping = [
+        return [
             CustomerNotFoundException::class => $this->trans(
                 'This customer does not exist.',
                 'Admin.Orderscustomers.Notification'
@@ -803,12 +803,5 @@ class CustomerController extends AbstractAdminController
                 ]
             ),
         ];
-
-        $this->get('prestashop.core.hook.dispatcher')->dispatchWithParameters('actionGetErrorMessagesCustomerController', [
-            'exception' => $e,
-            'mapping' => &$mapping,
-        ]);
-
-        return $mapping;
     }
 }
