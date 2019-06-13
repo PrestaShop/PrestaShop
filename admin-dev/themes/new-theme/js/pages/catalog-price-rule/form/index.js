@@ -26,8 +26,12 @@
 import PriceFieldAvailabilityHandler
   from './price-field-availability-handler';
 
+import IncludeTaxFieldAvailabilityHandler
+  from './include-tax-field-availability-handler';
+
 const $ = window.$;
 
 $(() => {
   new PriceFieldAvailabilityHandler('#catalog_price_rule_leave_initial_price', '#catalog_price_rule_price');
+  new IncludeTaxFieldAvailabilityHandler('#catalog_price_rule_reduction_type', '#catalog_price_rule_include_tax');
 });

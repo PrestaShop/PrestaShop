@@ -26,26 +26,29 @@
 const $ = window.$;
 
 /**
- * Enables/disables 'price' field depending from 'leave_initial_price' field checkbox value
+ * Enables/disables 'include_tax' field depending from 'reduction_type' field value
  */
-export default class PriceFieldAvailabilityHandler {
-  constructor(checkboxSelector, targetSelector) {
-    this.$sourceSelector = checkboxSelector;
+export default class IncludeTaxFieldAvailabilityHandler {
+  constructor(sourceSelector, targetSelector) {
+    this.$sourceSelector = sourceSelector;
     this.$targetSelector = targetSelector;
     this._handle();
-    $(checkboxSelector).on('change', () => this._handle());
+    $(sourceSelector).on('change', () => this._handle());
 
     return {};
   }
 
   /**
-   * When checkbox value is 1, target field is disabled, else enabled
+   * When source value is 1, target field is disabled, else enabled
    *
    * @private
    */
   _handle() {
-    const checkboxVal = $(`${this.$sourceSelector}`).is(':checked');
+    let disabled = false;
 
-    $(this.$targetSelector).prop('disabled', checkboxVal);
+    if ($(`${this.$sourceSelector}`).val() === 'percentage') {
+      disabled = true;
+    }
+    $(this.$targetSelector).prop('disabled', disabled);
   }
 }
