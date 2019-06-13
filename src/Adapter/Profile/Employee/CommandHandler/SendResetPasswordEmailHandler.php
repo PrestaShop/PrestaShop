@@ -119,7 +119,7 @@ final class SendResetPasswordEmailHandler implements SendResetPasswordEmailHandl
 
         $employeeLanguage = new Language((int) $employee->id_lang);
 
-        $mailWasSent = Mail::Send(
+        $mailWasSent = Mail::send(
             $employee->id_lang,
             'password_query',
             $this->translator->trans(

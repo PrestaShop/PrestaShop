@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdExcept
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidPasswordException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordInformationMissingException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordTokenExpiredException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\UnableToResetPasswordException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordReset;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\PasswordResettingEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
@@ -109,7 +111,7 @@ class AuthorizationController extends FrameworkBundleAdminController
                     )
                 );
             } catch (DomainException $e) {
-                $this->getErrorMessageForException($e, $this->getErrorMessages());
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
 
@@ -138,7 +140,9 @@ class AuthorizationController extends FrameworkBundleAdminController
             /** @var PasswordResettingEmployee $employee */
             $employee = $this->getQueryBus()->handle(new GetEmployeeForPasswordReset((int)$employeeId));
         } catch (DomainException $e) {
-            //@todo
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('_admin_reset_password');
         }
 
         $resetPasswordForm = $this->createForm(ResetPasswordType::class, null, [
@@ -155,7 +159,7 @@ class AuthorizationController extends FrameworkBundleAdminController
                     $resetPasswordForm->getData()['reset_password']
                 ));
             } catch (DomainException $e) {
-                //@todo
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
 
@@ -235,6 +239,14 @@ class AuthorizationController extends FrameworkBundleAdminController
             InvalidEmployeeIdException::class => $missingInformationMessage,
             InvalidPasswordException::class => $this->trans(
                 'The password is not in a valid format.',
+                'Admin.Login.Notification'
+            ),
+            ResetPasswordTokenExpiredException::class => $this->trans(
+                'Your password reset request expired. Please start again.',
+                'Admin.Login.Notification'
+            ),
+            UnableToResetPasswordException::class => $this->trans(
+                'An error occurred while attempting to change your password.',
                 'Admin.Login.Notification'
             ),
         ];
