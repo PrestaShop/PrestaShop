@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -52,8 +53,8 @@ final class CreditSlipOptionsType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('slip_prefix', TranslatableType::class, [
+            'type' => TextType::class,
             'required' => false,
-            //@todo: Is it ok that legacy doesn't use any validation for this field?
         ]);
     }
 }

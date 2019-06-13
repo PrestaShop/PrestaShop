@@ -34,6 +34,7 @@
   <h3 class="card-header">
     <i class="material-icons">date_range</i> {{ 'By date'|trans }}
   </h3>
+
   <div class="card-block row">
     <div class="card-text">
       {% set dateHint = 'Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help') %}
@@ -41,6 +42,7 @@
         'label': 'From'|trans({}, 'Admin.Global'),
         'help': dateHint
       }) }}
+
       {{ ps.form_group_row(pdfByDateForm.to, {}, {
         'label': 'To'|trans({}, 'Admin.Global'),
         'help': dateHint
@@ -50,6 +52,7 @@
       {{ form_rest(pdfByDateForm) }}
     {% endblock %}
   </div>
+
   <div class="card-footer">
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary">

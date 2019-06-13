@@ -31,9 +31,11 @@
   'action': path('admin_credit_slips_process_options')})
 }}
 <div class="card">
+
   <h3 class="card-header">
     <i class="material-icons">settings</i> {{ 'Credit slip options'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
+
   <div class="card-block row">
     <div class="card-text">
       {{ ps.form_group_row(creditSlipOptionsForm.options.slip_prefix, {}, {
@@ -45,6 +47,7 @@
       {{ form_rest(creditSlipOptionsForm) }}
     {% endblock %}
   </div>
+
   <div class="card-footer">
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary">
@@ -52,5 +55,6 @@
       </button>
     </div>
   </div>
+
 </div>
 {{ form_end(creditSlipOptionsForm) }}
