@@ -895,3 +895,11 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    form.type.reset_password:
+        class: 'PrestaShopBundle\Form\Admin\Login\ResetPasswordType'
+        public: true
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
