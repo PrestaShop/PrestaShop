@@ -194,9 +194,10 @@
     text-align: center;
     padding: 0 0 1rem;
 
-    &[aria-expanded="true"] {
+    &.with-discounts {
       display: none;
     }
+
     &.cancel-promo {
       color: $brand-primary;
       margin-bottom: 0;
