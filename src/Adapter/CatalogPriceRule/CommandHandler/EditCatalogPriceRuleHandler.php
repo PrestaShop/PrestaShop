@@ -109,14 +109,12 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
         if (null !== $command->getDateTimeTo()) {
             $specificPriceRule->to = $command->getDateTimeTo()->format('Y-m-d H:i:s');
         }
-        if (null !== $command->getReductionType()) {
-            $specificPriceRule->reduction_type = $command->getReductionType();
-        }
         if (null !== $command->isTaxIncluded()) {
             $specificPriceRule->reduction_tax = $command->isTaxIncluded();
         }
         if (null !== $command->getReduction()) {
-            $specificPriceRule->reduction = $command->getReduction();
+            $specificPriceRule->reduction_type = $command->getReduction()->getType();
+            $specificPriceRule->reduction = $command->getReduction()->getValue();
         }
 
         return $specificPriceRule;
