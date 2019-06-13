@@ -105,7 +105,7 @@ class WebserviceController extends FrameworkBundleAdminController
             }
         } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-        }  catch (ModuleException $e) {
+        } catch (ModuleException $e) {
             $this->setModuleErrorMessages($e);
         }
 
