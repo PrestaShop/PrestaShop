@@ -106,7 +106,7 @@ final class SendResetPasswordEmailHandler implements SendResetPasswordEmailHandl
             '_admin_reset_password',
             [
                 'employeeId' => (int) $employee->id,
-                'reset_token' => $employee->reset_password_token,
+                'resetToken' => $employee->reset_password_token,
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
