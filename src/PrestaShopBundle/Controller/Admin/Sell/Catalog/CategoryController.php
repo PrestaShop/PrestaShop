@@ -134,7 +134,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $categoryForm->getData()['id_parent'],
+                    'categoryId' => $categoryForm->getData()['id_parent'],
                 ]);
             }
         } catch (CategoryException $e) {
@@ -182,7 +182,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                    'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
         } catch (CategoryException $e) {
@@ -237,6 +237,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             $categoryFormOptions = [
                 'id_category' => (int) $categoryId,
+                'subcategories' => $editableCategory->getSubCategories(),
             ];
 
             $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
@@ -248,7 +249,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $categoryForm->getData()['id_parent'],
+                    'categoryId' => $categoryForm->getData()['id_parent'],
                 ]);
             }
         } catch (CategoryException $e) {
@@ -313,7 +314,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                    'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
         } catch (CategoryException $e) {
@@ -713,7 +714,10 @@ class CategoryController extends FrameworkBundleAdminController
             ];
         }
 
-        $categoryId = $request->query->get('id_category', $this->configuration->getInt('PS_HOME_CATEGORY'));
+        $categoryId = $request->attributes->get('categoryId');
+        if (empty($categoryId)) {
+            $categoryId = $this->configuration->getInt('PS_HOME_CATEGORY');
+        }
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_categories_create', ['id_parent' => $categoryId]),

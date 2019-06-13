@@ -35,6 +35,8 @@
       </h3>
       <div class="card-block row">
         <div class="card-text">
+          {{ form_errors(requestSqlForm) }}
+
           <div class="form-group row">
             <label for="{{ requestSqlForm.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
 

@@ -161,24 +161,25 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
      */
     public function getTax()
     {
-        $tax = $this->order->total_paid_tax_incl - $this->order->total_paid_tax_excl;
-        if ((float) $tax && Configuration::get('PS_TAX_DISPLAY')) {
+        if (!Configuration::get('PS_TAX_DISPLAY')) {
             return array(
                 'type' => 'tax',
-                'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
-                'amount' => $tax,
-                'value' => $this->priceFormatter->format(
-                    $tax,
-                    Currency::getCurrencyInstance((int) $this->order->id_currency)
-                ),
+                'label' => null,
+                'amount' => null,
+                'value' => '',
             );
         }
 
+        $tax = $this->order->total_paid_tax_incl - $this->order->total_paid_tax_excl;
+
         return array(
             'type' => 'tax',
-            'label' => null,
-            'amount' => null,
-            'value' => '',
+            'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
+            'amount' => $tax,
+            'value' => $this->priceFormatter->format(
+                $tax,
+                Currency::getCurrencyInstance((int) $this->order->id_currency)
+            ),
         );
     }
 

@@ -33,6 +33,8 @@
     </h3>
     <div class="card-block row">
       <div class="card-text">
+        {{ form_errors(webserviceKeyForm) }}
+
         {{ ps.form_group_row(webserviceKeyForm.key, {}, {
           'label': 'Key'|trans({}, 'Admin.Advparameters.Feature'),
           'help': 'Webservice account key.'|trans({}, 'Admin.Advparameters.Feature')
