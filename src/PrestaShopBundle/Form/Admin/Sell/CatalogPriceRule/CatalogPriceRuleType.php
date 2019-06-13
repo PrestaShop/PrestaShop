@@ -167,6 +167,7 @@ class CatalogPriceRuleType extends AbstractType
                 'placeholder' => false,
                 'required' => false,
                 'choices' => $this->priceReductionTypeChoices,
+                //@todo: constraints reduction types
             ])
             ->add('include_tax', ChoiceType::class, [
                 'placeholder' => false,
@@ -175,6 +176,7 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('reduction', NumberType::class, [
                 'scale' => 6,
+                //@todo: constraints max reduction
                 'constraints' => [
                     new GreaterThanOrEqual([
                         'value' => 0,
