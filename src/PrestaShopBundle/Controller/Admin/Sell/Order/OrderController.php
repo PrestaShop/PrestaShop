@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrdersStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -144,7 +144,7 @@ class OrderController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(
-                new ChangeOrdersStatusCommand($data['order_ids'], (int) $data['new_order_status_id'])
+                new BulkChangeOrderStatusCommand($data['order_ids'], (int) $data['new_order_status_id'])
             );
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));

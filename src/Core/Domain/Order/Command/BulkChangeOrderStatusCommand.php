@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 /**
  * Changes status for given orders.
  */
-class ChangeOrdersStatusCommand
+class BulkChangeOrderStatusCommand
 {
     /**
      * @var OrderId[]

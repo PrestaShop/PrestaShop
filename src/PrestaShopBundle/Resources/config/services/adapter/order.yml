@@ -100,8 +100,8 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
 
-  prestashop.adapter.order.command_handler.change_orders_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrdersStatusHandler
+  prestashop.adapter.order.command_handler.bulk_change_order_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\BulkChangeOrderStatusHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrdersStatusCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand'
