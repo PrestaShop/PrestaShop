@@ -99,6 +99,13 @@
                       {{ form_widget(generalForm.tos_cms_id) }}
                     </div>
                 </div>
+                <div class="form-group row">
+                    {{ ps.label_with_help(('Display order statistics based on'|trans), ('Select on which kind of date to base the dashboard statistics on.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    <div class="col-sm">
+                      {{ form_errors(generalForm.order_stats_column_id) }}
+                      {{ form_widget(generalForm.order_stats_column_id) }}
+                    </div>
+                </div>
 
                 {% block order_general_preferences_form_rest %}
                   {{ form_rest(generalForm) }}
