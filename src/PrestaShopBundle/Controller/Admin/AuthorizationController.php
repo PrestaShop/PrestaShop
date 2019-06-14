@@ -160,6 +160,13 @@ class AuthorizationController extends FrameworkBundleAdminController
                     $resetToken,
                     $resetPasswordForm->getData()['reset_password']
                 ));
+
+                $this->addFlash('success', $this->trans(
+                    'The password has been changed successfully.',
+                    'Admin.Login.Notification'
+                ));
+
+                return $this->redirectToRoute('_admin_login');
             } catch (DomainException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
