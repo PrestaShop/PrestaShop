@@ -1266,10 +1266,10 @@ module.exports = {
     }, 'common_client');
     scenario('Specific price: Country', client => {
       this.addSpecificPrice(client);
-      test('should click on "Country" select and choose "France" from the dropdown list', async () => {
-        await client.waitForExistAndClick(AddProductPage.specific_price_for_country_select);
-        await client.waitAndSetValue(AddProductPage.specific_price_for_country_search_input, "Algeria");
-        await client.waitForVisibleAndClick(AddProductPage.specific_price_for_country_option.replace('%C', 'Algeria'));
+      test('should click on "Country" select and choose "Algeria" from the dropdown list', () => client.selectByVisibleText(AddProductPage.specific_price_for_country_select, 'Algeria'));
+      test('should set the "Apply a discount of" input', async () => {
+        await client.scrollTo(AddProductPage.specific_price_discount_input,50);
+        await client.waitAndSetValue(AddProductPage.specific_price_discount_input, '5')
       });
       test('should set the "Apply a discount of" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, '5'));
       test('should choose the "Percentage" from the specific price type', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_type_select, 'percentage'));
@@ -1308,10 +1308,7 @@ module.exports = {
     }, 'common_client');
     scenario('Specific price: Group', client => {
       this.addSpecificPrice(client);
-      test('should click on "Group" select and choose "Client" from the dropdown list', async () => {
-        await client.waitForExistAndClick(AddProductPage.specific_price_for_group_select);
-        await client.waitForVisibleAndClick(AddProductPage.specific_price_for_group_option.replace('%C', 'Customer'));
-      });
+      test('should select "Customer" from the dropdown list', () => client.selectByVisibleText(AddProductPage.specific_price_for_group_select,'Customer'));
       test('should set the "Apply a discount of" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, '25'));
       test('should choose the "Percentage" from the specific price type', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_type_select, 'percentage'));
       test('should click on "Apply" button', () => client.scrollWaitForExistAndClick(AddProductPage.specific_price_save_button));
@@ -1535,9 +1532,10 @@ module.exports = {
       test('should click on "Save" button', () => client.scrollWaitForExistAndClick(AddProductPage.save_product_button));
       test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
       test('should click on "Add a specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 50, 2000));
-      test('should click on "Currency" select', async () => {
-        await client.waitForExistAndClick(AddProductPage.specific_price_for_currency_select, 2000);
-        await client.waitForVisibleAndClick(AddProductPage.specific_price_for_currency_option.replace('%C', 'Euro'));
+      test('should click on "Currency" select', () => client.selectByVisibleText(AddProductPage.specific_price_for_currency_select,'Euro'));
+      test('should set the "Apply a discount of" input', async () => {
+        await client.waitForVisible(AddProductPage.specific_price_discount_input,2000);
+        await client.waitAndSetValue(AddProductPage.specific_price_discount_input, '3');
       });
       test('should click on "Apply" button', () => client.scrollWaitForExistAndClick(AddProductPage.specific_price_save_button,100));
       test('should click on "Save" button', () => client.scrollWaitForExistAndClick(AddProductPage.save_product_button,100));
