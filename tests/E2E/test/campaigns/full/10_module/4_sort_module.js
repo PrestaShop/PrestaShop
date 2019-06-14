@@ -26,7 +26,7 @@ scenario('Check sort module by "Name"', () => {
      * This error is based on the bug described in this ticket
      * https://github.com/PrestaShop/ps_mbo/issues/82
      **/
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Name', 'displayName', 'data-name', false, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Name', 'name', 'data-name', false, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Increasing price', 'price', 'data-price', true, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Decreasing price', 'price-desc', 'data-price', true, false);
     /**
@@ -48,7 +48,7 @@ scenario('Check sort module by "Name"', () => {
      * This error is based on the bug described in this ticket
      * https://github.com/PrestaShop/ps_mbo/issues/82
      **/
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Name', 'displayName', 'data-name', false, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Name', 'name', 'data-name', false, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Increasing price', 'price', 'data-price', true, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Decreasing price', 'price-desc', 'data-price', true, false);
     test('should verify if the modules displayed are only modules of the selected category', () => client.checkNumberModule(ModulePage.modules_number_span, tab['modules_number']));
