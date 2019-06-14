@@ -55,8 +55,10 @@ class InstallFixturesFashion extends XmlLoader
          */
         /** @var Ps_Facetedsearch */
         $facetedSearch = Module::getInstanceByName('ps_facetedsearch');
-        $facetedSearch->buildLayeredCategories();
-        $facetedSearch->rebuildLayeredCache();
-        $facetedSearch->fullPricesIndexProcess(0, false);
+        if ($facetedSearch) {
+            $facetedSearch->buildLayeredCategories();
+            $facetedSearch->rebuildLayeredCache();
+            $facetedSearch->fullPricesIndexProcess(0, false);
+        }
     }
 }
