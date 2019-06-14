@@ -34,7 +34,6 @@ use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
 use Context;
-use Employee;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -182,8 +181,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $product = $this->productFeatureContext->getProductWithName($productName);
 
         // need to disable some behaviour to avoid mocking the world !
-        $adminOrderController = new class extends AdminOrdersControllerCore
-        {
+        $adminOrderController = new class() extends AdminOrdersControllerCore {
             public function access($action, $disable = false)
             {
                 return true;
@@ -191,8 +189,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 
             public function createTemplate($tpl_name)
             {
-                return new class
-                {
+                return new class() {
                     public function fetch()
                     {
                         return true;

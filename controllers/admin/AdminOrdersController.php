@@ -2104,7 +2104,8 @@ class AdminOrdersControllerCore extends AdminController
         )));
     }
 
-    protected function addProductToOrder(Order $order, $product_informations, $invoice_informations = [], $warehouseId = false){
+    protected function addProductToOrder(Order $order, $product_informations, $invoice_informations = [], $warehouseId = false)
+    {
         if (!Validate::isLoadedObject($order)) {
             die(json_encode(array(
                 'result' => false,
