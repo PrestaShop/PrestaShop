@@ -209,8 +209,8 @@ module.exports = {
   DisableEnableModule: async function (client, ModulePage) {
     test('should click on "Disable" button for the first module', async () => {
       await client.getAttributeInVar(ModulePage.first_module_bloc, 'data-tech-name', 'moduleTechName');
-      await client.getModuleButtonName(ModulePage, tab['moduleTechName'], ModulePage.module_action_link);
-      await client.clickOnDisableModuleButton(ModulePage, tab['moduleTechName']);
+      await client.getModuleButtonName(ModulePage, global.tab['moduleTechName'], ModulePage.module_action_link);
+      await client.clickOnDisableModuleButton(ModulePage, global.tab['moduleTechName']);
       await client.waitForVisibleAndClick(ModulePage.confirmation_disable_module);
       await client.waitForExistAndClick(AddProductPage.close_validation_button);
       await client.refresh(); //To verify
@@ -219,14 +219,14 @@ module.exports = {
       await client.waitForExistAndClick(ModulePage.status_list);
       await client.waitForExistAndClick(ModulePage.status_option_link.replace('%ID', 0));
     });
-    test('should search for the module "' + tab['moduleTechName'] + '"', async () => {
-      await client.waitAndSetValue(ModulePage.module_selection_input, tab['moduleTechName']);
+    test('should search for the module "' + global.tab['moduleTechName'] + '"', async () => {
+      await client.waitAndSetValue(ModulePage.module_selection_input, global.tab['moduleTechName']);
       await client.waitForExistAndClick(ModulePage.selection_search_button);
     });
-    test('should check if the disabled  module is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', tab['moduleTechName']), 2000));
+    test('should check if the disabled  module is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', global.tab['moduleTechName']), 2000));
     test('should click on "Enable" button', async () => {
-      await client.getModuleButtonName(ModulePage, tab['moduleTechName']);
-      await client.clickOnEnableModuleButton(ModulePage, tab['moduleTechName']);
+      await client.getModuleButtonName(ModulePage, global.tab['moduleTechName']);
+      await client.clickOnEnableModuleButton(ModulePage, global.tab['moduleTechName']);
       await client.waitForExistAndClick(AddProductPage.close_validation_button);
       await client.refresh(); //To verify
     });
