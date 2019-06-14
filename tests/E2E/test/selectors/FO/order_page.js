@@ -5,7 +5,7 @@ module.exports = {
     blockcart_modal: '#blockcart-modal',
     continue_shopping_button: '//*[@id="blockcart-modal"]//div[@class="cart-content-btn"]//button',
     proceed_to_checkout_button: '//*[@id="main"]//div[contains(@class,"checkout")]//a',
-    promo_code_link: '//*[@id="main"]//a[contains(@class, "promo-code")]',
+    promo_code_link: '//*[@id="main"]//a[contains(@href, "promo-code")]',
     promo_code_input: '//*[@id="promo-code"]//input[contains(@class, "promo-input")]',
     promo_code_add_button: '//*[@id="promo-code"]//button[@type="submit"]/span[text()="Add"]',
     remove_voucher_button: '(//*[@id="main"]//a[@data-link-action="remove-voucher"])[2]',
