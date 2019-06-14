@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
@@ -213,7 +214,7 @@ class CmsPageController extends FrameworkBundleAdminController
                     'open_preview' => 1,
                 ]);
             }
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($e, $this->getErrorMessages())
@@ -278,7 +279,7 @@ class CmsPageController extends FrameworkBundleAdminController
             /** @var EditableCmsPage $editableCmsPage */
             $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
             $previewUrl = $editableCmsPage->getPreviewUrl();
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($e, $this->getErrorMessages())

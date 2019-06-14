@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
@@ -137,7 +138,7 @@ class CategoryController extends FrameworkBundleAdminController
                     'categoryId' => $categoryForm->getData()['id_parent'],
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -185,7 +186,7 @@ class CategoryController extends FrameworkBundleAdminController
                     'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -252,7 +253,7 @@ class CategoryController extends FrameworkBundleAdminController
                     'categoryId' => $categoryForm->getData()['id_parent'],
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -317,7 +318,7 @@ class CategoryController extends FrameworkBundleAdminController
                     'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
