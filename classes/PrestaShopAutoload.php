@@ -286,9 +286,9 @@ class PrestaShopAutoload
                 } elseif (substr($file, -4) == '.php') {
                     $content = file_get_contents($rootDir . $path . $file);
 
-                    $namespacePattern = '[\\a-z0-9_]*[\\]';
+                    $namespacePattern = '[\\\\a-z0-9_]*[\\\\]';
                     $pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>' . basename($file, '.php') . '(?:Core)?)'
-                                . '(?:\s+extends\s+' . $namespacePattern . '[a-z][a-z0-9_]*)?(?:\s+implements\s+' . $namespacePattern . '[a-z][\\a-z0-9_]*(?:\s*,\s*' . $namespacePattern . '[a-z][\\a-z0-9_]*)*)?\s*\{#i';
+                                . '(?:\s+extends\s+' . $namespacePattern . '[a-z][a-z0-9_]*)?(?:\s+implements\s+' . $namespacePattern . '[a-z][\\\\a-z0-9_]*(?:\s*,\s*' . $namespacePattern . '[a-z][\\\\a-z0-9_]*)*)?\s*\{#i';
 
                     //DONT LOAD CLASS WITH NAMESPACE - PSR4 autoloaded from composer
                     $usesNamespace = false;
