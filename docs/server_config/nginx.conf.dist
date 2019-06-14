@@ -124,7 +124,10 @@ server {
 
     # Installation sandbox
     rewrite ^(/install(?:-dev)?/sandbox)/(.*) /$1/test.php last;
-
+    
+    # FIX PROBLEM OF URL REWRITING
+    try_files $uri $uri/ /index.php$is_args$args;
+    
     # [REQUIRED EDIT] Change this block to your admin folder
     location /admin-dev/ {
         if (!-e $request_filename) {
