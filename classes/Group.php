@@ -269,12 +269,9 @@ class GroupCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $has_active_column
-     *
      * @return bool
      */
-    public static function isCurrentlyUsed($table = null, $has_active_column = false)
+    public static function isCurrentlyUsed()
     {
         return (bool) (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'group`') > 3);
     }
