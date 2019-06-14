@@ -39,7 +39,7 @@ scenario('Check sort module by "Name"', () => {
     test('should select "Administration" from categories list', async () => {
       await client.waitForExistAndClick(ModulePage.categories_list);
       await client.getTextInVar(ModulePage.categories_option_number_span.replace('%CAT', 'Administration'), "category_modules_number");
-      await client.getAttributeInVar(ModulePage.categories_by_name_option.replace('%CAT', 'Administration'), 'data-category-display-ref-menu', 'categoryRef');
+      await client.getAttributeInVar(ModulePage.categories_by_name_option.replace('%CAT', 'Administration'), 'data-category-ref', 'categoryRef');
       await client.waitForExistAndClick(ModulePage.categories_option_link.replace('%CAT', 'Administration'));
     });
     test('should get module number', () => client.getModuleNumber(ModulePage.modules_number_span, 'modules_number'));
