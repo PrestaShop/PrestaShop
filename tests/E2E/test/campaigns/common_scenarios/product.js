@@ -817,6 +817,7 @@ module.exports = {
     test('should save then duplicate product with "ALT + SHIFT + D"', async () => {
       await client.keys(["\uE00A", "\uE008", "\u0044"]);
       await client.checkTextValue(AddProductPage.success_panel, 'Product successfully duplicated.');
+      await client.pause(3000);
     });
     test('should save then go to catalog page with "ALT+ SHIFT + Q"', async () => {
       await client.keys(["\uE00A", "\uE008", "\u0051"]);
