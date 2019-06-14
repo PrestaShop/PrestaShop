@@ -1244,10 +1244,7 @@ module.exports = {
     test('should click on "Cancel" button', () => client.scrollWaitForExistAndClick(AddProductPage.specific_price_cancel_button, 150, 3000));
     scenario('Specific price: Currency', client => {
       test('should click on "Add a specific price" button', () => client.waitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 3000));
-      test('should click on "Currency" select', async () => {
-        await client.waitForExistAndClick(AddProductPage.specific_price_for_currency_select, 2000);
-        await client.waitForVisibleAndClick(AddProductPage.specific_price_for_currency_option.replace('%C', 'Euro'));
-      });
+      test('should select "Euro" on "Currency" select', () => client.selectByVisibleText(AddProductPage.specific_price_for_currency_select,'Euro'));
       test('should set the "Apply a discount of" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, '10', 2000));
       test('should choose the "Percentage" from the specific price type', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_type_select, 'percentage'));
       test('should click on "Apply" button', () => client.scrollWaitForExistAndClick(AddProductPage.specific_price_save_button));
@@ -1271,7 +1268,6 @@ module.exports = {
         await client.scrollTo(AddProductPage.specific_price_discount_input,50);
         await client.waitAndSetValue(AddProductPage.specific_price_discount_input, '5')
       });
-      test('should set the "Apply a discount of" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, '5'));
       test('should choose the "Percentage" from the specific price type', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_type_select, 'percentage'));
       test('should click on "Apply" button', () => client.scrollWaitForExistAndClick(AddProductPage.specific_price_save_button));
       test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
@@ -1408,8 +1404,8 @@ module.exports = {
     }, 'common_client');
     scenario('Specific price: Date', client => {
       this.addSpecificPrice(client);
-      test('should set the "Date available from" input', () => client.waitAndSetValue(AddProductPage.specific_price_available_from_input, common.getCustomDate(-1), 2000));
-      test('should set the "Date to" input', () => client.waitAndSetValue(AddProductPage.specific_price_to_input, common.getCustomDate(1)));
+      test('should set the "Date available from" input', async () => await client.setInputValue(AddProductPage.specific_price_available_from_input, common.getCustomDate(-1),true,2000));
+      test('should set the "Date to" input', async () => await client.setInputValue(AddProductPage.specific_price_to_input, common.getCustomDate(1),true));
       test('should set the "Apply a discount of" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, '10'));
       test('should choose the "Percentage" from the specific price type', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_type_select, 'percentage'));
       test('should click on "Apply" button', () => client.scrollWaitForExistAndClick(AddProductPage.specific_price_save_button));
@@ -1749,13 +1745,16 @@ module.exports = {
       test('should click on "SAVE" button', () => {
         return promise
           .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
-          .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle))
+          .then(() => client.scrollWaitForExistAndClick(AddProductPage.product_online_toggle))
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 1000))
           .then(() => client.waitForExistAndClick(AddProductPage.save_product_button));
       });
       test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
       scenario('Fill "Options" form', client => {
         test('should click on "Options" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
         test('should verify that the default visibility is "Everywhere"', () => client.isSelected(AddProductPage.options_visibility_option.replace('%O', 'both')));
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
+        test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
         test('should click on "Preview" button', () => {
           return promise
             .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
@@ -1772,7 +1771,7 @@ module.exports = {
         });
         test('should check that the product is well displayed', async () => {
           await client.clickPageNext(productPage.pagination_number_link.replace('%NUM', Math.ceil(Number(global.pagination))), 2000);
-          await client.isExisting(productPage.product_name_link.replace('%S', data.virtual.name + date_time), 3000);
+          await client.waitForExist(productPage.product_name_link.replace('%S', data.virtual.name + date_time), 3000);
         });
         test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.virtual.name + date_time));
         test('should check that the product is well displayed', () => client.scrollWaitForExistAndClick(SearchProductPage.product_result_name));
@@ -1788,8 +1787,13 @@ module.exports = {
         test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
         test('should go to the Front Office', () => client.switchWindow(1));
         this.clickOnPreviewLink(client, AddProductPage.preview_link, AccessPageFO.logo_home_page);
+        test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'PA' + date_time));
+        test('should check that the product is well displayed', async () => {
+          await client.waitForExist(SearchProductPage.product_result_name);
+          await client.waitForExistAndClick(productPage.first_product_all);
+        });
         test('should check that the second name for product is well displayed', () => client.checkTextValue(AccessPageFO.product_name_title, 'PA' + date_time));
-        test('should check that the category "Clothes" is well displayed', () => client.isExisting(AccessPageFO.page_category.replace('%CATEGORY', 'Clothes')));
+        test('should check that the category "Clothes" is well displayed', () => client.waitForExist(AccessPageFO.page_category.replace('%CATEGORY', 'Clothes')));
         this.chooseVisibility(client, SearchProductPage, productPage, 'Catalog Only', 'catalog');
         this.chooseVisibility(client, SearchProductPage, productPage, 'nowhere', 'none');
         test('should go back to the Back Office', () => client.closeWindow(0));
@@ -1842,7 +1846,7 @@ module.exports = {
         test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
         test('should go to the Front Office', () => client.switchWindow(1));
         test('should search with "First Tag"', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'First Tag'));
-        test('should check that the product is well displayed', () => client.isExisting(SearchProductPage.product_result_name));
+        test('should check that the product is well displayed', () => client.waitForExist(SearchProductPage.product_result_name));
         test('should go back to the Back Office', () => client.closeWindow(0));
         test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
         test('should search for the product', () => client.searchProductByName('PA' + global.date_time));
@@ -1948,13 +1952,13 @@ module.exports = {
       test('should check that the product does not exist', () => client.isNotExisting(productPage.product_name_link.replace('%S', data.virtual.name + date_time)));
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.virtual.name + date_time));
       test('should check that the product is well displayed', async () => {
-        await client.isExisting(SearchProductPage.product_result_name);
+        await client.waitForExist(SearchProductPage.product_result_name);
         await client.waitForExistAndClick(productPage.first_product_all);
       });
     } else if (visibilityValue === 'catalog') {
       test('should check that the product is well displayed', async () => {
         await client.clickPageNext(productPage.pagination_number_link.replace('%NUM', Math.ceil(Number(global.pagination))), 3000);
-        await client.isExisting(productPage.product_name_link.replace('%S', 'PA' + date_time), 3000)
+        await client.waitForExist(productPage.product_name_link.replace('%S', 'PA' + date_time), 3000)
       });
       test('should go to the "Home" page', () => client.waitForExistAndClick(AccessPageFO.logo_home_page));
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.virtual.name + date_time));
