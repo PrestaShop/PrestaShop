@@ -1157,8 +1157,8 @@ module.exports = {
     });
     test('should set the "Price (tax incl.)" input', () => client.waitAndSetValue(AddProductPage.product_pricing_ttc_input, '8.5'));
     test('should check that the "Price (tax excl.)" is equal to "7.083333"', () => client.checkAttributeValue(AddProductPage.product_pricing_ht_input, 'value', '7.083333'));
-    test('should check that the "Price (tax incl.)" is equal to "€8.5" in the banner "Final retail price" (issue #13516 )', () => client.checkTextValue(AddProductPage.banner_tax_included_span, '€8.5', 'equal', 1000));
-    test('should check that the "Price (tax excl.)" is equal to "€7.08" in the banner "Final retail price" (issue #13516)', () => client.checkTextValue(AddProductPage.banner_tax_excluded_span, '€7.08', 'equal', 1000));
+    test('should check that the "Price (tax incl.)" is equal to "€8.50" in the banner "Final retail price"', () => client.checkTextValue(AddProductPage.banner_tax_included_span, '€8.50', 'equal', 1000));
+    test('should check that the "Price (tax excl.)" is equal to "€7.08" in the banner "Final retail price"', () => client.checkTextValue(AddProductPage.banner_tax_excluded_span, '€7.08', 'equal', 1000));
     test('should set the "Price (tax incl.)" input', () => client.waitAndSetValue(AddProductPage.product_pricing_ttc_input, '9,5'));
     test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 3000));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
@@ -1261,7 +1261,7 @@ module.exports = {
         await client.waitForExistAndClick(AccessPageFO.currency_list_select);
         await client.waitForVisibleAndClick(AccessPageFO.currency_list_element.replace('%NAME', 'DZD'));
       });
-      test('should check that the product price is equal to "DZD10"', () => client.checkTextValue(productPage.product_price, 'DZD10'));
+      test('should check that the product price is equal to "DZD9.5"', () => client.checkTextValue(productPage.product_price, 'DZD9.50'));
       test('should verify that the discount does not exist', () => client.isNotExisting(CheckoutOrderPage.product_discount_details));
     }, 'common_client');
     scenario('Specific price: Country', client => {
