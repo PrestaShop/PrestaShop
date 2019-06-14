@@ -475,6 +475,9 @@ class FrameworkBundleAdminController extends Controller
         ]);
         if (is_array($whitelist)) {
             foreach ($whitelist as $whitelistItem) {
+                if (!is_string($whitelistItem) && !is_object($whitelistItem)) {
+                    continue;
+                }
                 if ($e instanceof $whitelistItem) {
                     return $e->getMessage();
                 }
