@@ -31,6 +31,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleEloquentException;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -462,6 +463,24 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getErrorMessageForException(Exception $e, array $messages)
     {
+        if ($e instanceof ModuleEloquentException) {
+            return $e->getMessage();
+        }
+
+        $whitelist = [];
+        $this->get('prestashop.core.hook.dispatcher')->dispatchWithParameters('actionGetEloquentExceptionsFromModule', [
+            'controller_name' => get_class($this),
+            'exception' => $e,
+            'whitelist' => &$whitelist,
+        ]);
+        if (is_array($whitelist)) {
+            foreach ($whitelist as $whitelistItem) {
+                if ($e instanceof $whitelistItem) {
+                    return $e->getMessage();
+                }
+            }
+        }
+
         $exceptionType = get_class($e);
         $exceptionCode = $e->getCode();
 

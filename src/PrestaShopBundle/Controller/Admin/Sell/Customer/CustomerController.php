@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
@@ -149,7 +150,7 @@ class CustomerController extends AbstractAdminController
 
                 return $this->redirectToRoute('admin_customers_index');
             }
-        } catch (CustomerException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -191,7 +192,7 @@ class CustomerController extends AbstractAdminController
 
                 return $this->redirectToRoute('admin_customers_index');
             }
-        } catch (CustomerException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             if ($e instanceof CustomerNotFoundException) {
                 return $this->redirectToRoute('admin_customers_index');
@@ -734,7 +735,7 @@ class CustomerController extends AbstractAdminController
      *
      * @return array
      */
-    private function getErrorMessages(CustomerException $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             CustomerNotFoundException::class => $this->trans(
