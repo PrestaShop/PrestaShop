@@ -251,7 +251,9 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionTaxGridPresenterModifier', 'Modify tax grid template data', 'This hook allows to modify data which is about to be used in template for tax grid', '1 '),
   (NULL, 'actionManufacturerGridPresenterModifier', 'Modify manufacturer grid template data', 'This hook allows to modify data which is about to be used in template for manufacturer grid', '1 '),
   (NULL, 'actionManufacturerAddressGridPresenterModifier', 'Modify manufacturer address grid template data', 'This hook allows to modify data which is about to be used in template for manufacturer address grid', '1 '),
-  (NULL, 'actionCmsPageGridPresenterModifier', 'Modify cms page grid template data', 'This hook allows to modify data which is about to be used in template for cms page grid', '1 ');
+  (NULL, 'actionCmsPageGridPresenterModifier', 'Modify cms page grid template data', 'This hook allows to modify data which is about to be used in template for cms page grid', '1 '),
+  (NULL, 'actionGetEloquentExceptionsFromModule', 'Enable direct exception message display in data forms', 'This hook allows to provide to the Core a list of Exception classes whose behavior should be the same
+        as a ModuleEloquentException (i.e exception message must be displayed to end-user)', '1 ');
 
 INSERT IGNORE INTO `PREFIX_authorization_role` (`slug`) VALUES
   ('ROLE_MOD_TAB_ADMINMODULESMANAGE_CREATE'),

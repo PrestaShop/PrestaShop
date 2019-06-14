@@ -2110,5 +2110,12 @@
       <description>This hook allows to modify data which is about to be used in template for cms page grid
       </description>
     </hook>
+    <hook id="actionGetEloquentExceptionsFromModule">
+      <name>actionGetEloquentExceptionsFromModule</name>
+      <title>Enable direct exception message display in data forms</title>
+      <description>This hook allows to provide to the Core a list of Exception classes whose behavior should be the same
+        as a ModuleEloquentException (i.e exception message must be displayed to end-user)
+      </description>
+    </hook>
   </entities>
 </entity_hook>
