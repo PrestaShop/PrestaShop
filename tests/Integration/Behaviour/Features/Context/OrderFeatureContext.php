@@ -26,11 +26,15 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use AdminOrdersControllerCore;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Configuration;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
+use Context;
+use Employee;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -40,6 +44,17 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      * @var Order[]
      */
     protected $orders = [];
+
+    /**
+     * @var ProductFeatureContext
+     */
+    protected $productFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+    }
 
     /**
      * @When /^I validate my cart using payment module (fake)$/
@@ -157,6 +172,54 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @When /^(\d+) items? of product "(.+)" are added in my cart order, with prices (\d+\.\d+) tax excluded and (\d+\.\d+) tax included$/
+     */
+    public function addProductInCartOrder($quantity, $productName, $priceTaxExcl, $priceTaxIncl)
+    {
+        $cart = $this->getCurrentCart();
+        $order = $this->getCurrentCartOrder();
+        $this->productFeatureContext->checkProductWithNameExists($productName);
+        $product = $this->productFeatureContext->getProductWithName($productName);
+
+        // need to disable some behaviour to avoid mocking the world !
+        $adminOrderController = new class extends AdminOrdersControllerCore
+        {
+            public function access($action, $disable = false)
+            {
+                return true;
+            }
+
+            public function createTemplate($tpl_name)
+            {
+                return new class
+                {
+                    public function fetch()
+                    {
+                        return true;
+                    }
+                };
+            }
+        };
+
+        // here we call a protected method
+        $reflection = new \ReflectionClass(AdminOrdersControllerCore::class);
+        $method = $reflection->getMethod('addProductToOrder');
+        $method->setAccessible(true);
+
+        // expected arguments from ajax call
+        $productData = [
+            'product_id' => $product->id,
+            'product_price_tax_excl' => $priceTaxExcl,
+            'product_price_tax_incl' => $priceTaxIncl,
+            'product_quantity' => $quantity,
+        ];
+        $method->invokeArgs($adminOrderController, [$order, $productData]);
+
+        // restore correct cart since previous method has overridden it
+        Context::getContext()->cart = $cart;
+    }
+
+    /**
      * @Then /^current cart order should have a discount in position (\d+) with an amount of (.+) tax included and (.+) tax excluded$/
      */
     public function checkOrderDiscount($position, $discountTaxIncluded, $discountTaxExcluded)
@@ -185,6 +248,20 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                     $discountTaxIncluded,
                     $orderCartRule->value_tax_excl
                 )
+            );
+        }
+    }
+
+    /**
+     * @Then /^current cart order should have no discount$/
+     */
+    public function checkOrderNoDiscount()
+    {
+        $order = $this->getCurrentCartOrder();
+        $orderCartRulesData = $order->getCartRules();
+        if (!empty($orderCartRulesData)) {
+            throw new Exception(
+                sprintf('Order should have no cart rule')
             );
         }
     }
