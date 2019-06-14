@@ -98,7 +98,7 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
 
         $employee = new Employee();
 
-        // Legacy condition
+        // Legacy condition. Employee object is loaded in $employee->getByEmail() call, so it must go first.
         $employeeFound = $employee->getByEmail($command->getEmail()->getValue())
             && $employee
             && $employee->id == $command->getEmployeeId()->getValue()

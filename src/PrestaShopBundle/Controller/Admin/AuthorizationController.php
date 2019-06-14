@@ -96,6 +96,7 @@ class AuthorizationController extends FrameworkBundleAdminController
         $loginForm = $this->createForm(LoginType::class);
         $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
         $forgotPasswordForm->handleRequest($request);
+        $showForgotPasswordForm = true;
 
         if ($forgotPasswordForm->isSubmitted() && $forgotPasswordForm->isValid()) {
             try {
@@ -110,6 +111,7 @@ class AuthorizationController extends FrameworkBundleAdminController
                         'Admin.Login.Notification'
                     )
                 );
+                $showForgotPasswordForm = false;
             } catch (DomainException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
@@ -119,7 +121,7 @@ class AuthorizationController extends FrameworkBundleAdminController
             'loginForm' => $loginForm->createView(),
             'showLoginForm' => false,
             'forgotPasswordForm' => $forgotPasswordForm->createView(),
-            'showForgotPasswordForm' => true,
+            'showForgotPasswordForm' => $showForgotPasswordForm,
         ]);
     }
 
@@ -142,7 +144,7 @@ class AuthorizationController extends FrameworkBundleAdminController
         } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            return $this->redirectToRoute('_admin_reset_password');
+            return $this->redirectToRoute('_admin_login');
         }
 
         $resetPasswordForm = $this->createForm(ResetPasswordType::class, null, [
