@@ -520,7 +520,7 @@ class CartControllerCore extends FrontController
                 } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
                     // check quantity after cart quantity update
                     $this->{$ErrorKey}[] = $this->trans(
-                        'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
+                        'The item %product% in your cart is no longer available in this quantity.',
                         array('%product%' => $product->name),
                         'Shop.Notifications.Error'
                     );
