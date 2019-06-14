@@ -772,7 +772,10 @@ module.exports = {
   },
 
   CheckButtonsInFooterProduct(productType, productData, client) {
-    test('should click on "Delete" icon', () => client.waitForExistAndClick(AddProductPage.delete_button));
+    test('should click on "Delete" icon', async () => {
+      await client.waitForExistAndClick(AddProductPage.delete_button);
+      await client.waitForVisible(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'No'))
+    });
     test('should click on "No" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'No')));
     test('should go to "Catalog > products" page', () => {
       return promise
@@ -781,8 +784,11 @@ module.exports = {
     });
     test('should search for product by name', () => client.searchProductByName(productData.name + date_time));
     test('should click on the product name', () => client.waitForExistAndClick(AddProductPage.catalog_product_name));
-    test('should click on "Delete" icon', () => client.waitForExistAndClick(AddProductPage.delete_button));
-    test('should click on "No" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'Yes')));
+    test('should click on "Delete" icon', async () => {
+      await client.waitForExistAndClick(AddProductPage.delete_button);
+      await client.waitForVisible(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'Yes'))
+    });
+    test('should click on "Yes" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'Yes')));
     test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.success_panel, 'Product successfully deleted.', 'equal', 2000));
     test('should click on "New product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
     if (productType === 'virtual') {
