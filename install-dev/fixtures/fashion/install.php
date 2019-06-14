@@ -42,4 +42,21 @@ class InstallFixturesFashion extends XmlLoader
 
         return $this->createEntity('customer', $identifier, 'Customer', $data, $data_lang);
     }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function populateFromXmlFiles()
+    {
+        parent::populateFromXmlFiles();
+
+        /**
+         * Refresh facetedsearch cache
+         */
+        /** @var Ps_Facetedsearch */
+        $facetedSearch = Module::getInstanceByName('ps_facetedsearch');
+        $facetedSearch->buildLayeredCategories();
+        $facetedSearch->rebuildLayeredCache();
+        $facetedSearch->fullPricesIndexProcess(0, false);
+    }
 }
