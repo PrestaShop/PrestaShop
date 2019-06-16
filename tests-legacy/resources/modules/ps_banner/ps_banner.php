@@ -54,11 +54,11 @@ class Ps_Banner extends Module implements WidgetInterface
 
     public function install()
     {
-        return (parent::install() &&
+        return parent::install() &&
             $this->registerHook('displayHome') &&
             $this->registerHook('actionObjectLanguageAddAfter') &&
             $this->installFixtures() &&
-            $this->disableDevice(Context::DEVICE_MOBILE));
+            $this->disableDevice(Context::DEVICE_MOBILE);
     }
 
     public function hookActionObjectLanguageAddAfter($params)
