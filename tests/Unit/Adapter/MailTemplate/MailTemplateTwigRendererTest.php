@@ -61,8 +61,6 @@ class MailTemplateTwigRendererTest extends TestCase
         $this->assertNotNull($generator);
     }
 
-    /**
-     */
     public function testFileNotFound()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\FileNotFoundException::class);

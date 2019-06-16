@@ -98,8 +98,6 @@ class ContainerBuilderTest extends TestCase
         $this->assertInstanceOf(AdminRepository::class, $adminRepository);
     }
 
-    /**
-     */
     public function testNoAdminServicesInFront()
     {
         $this->setExpectedException(\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException::class);
@@ -108,8 +106,6 @@ class ContainerBuilderTest extends TestCase
         $container->get('ps_banner.admin_repository');
     }
 
-    /**
-     */
     public function testNoFrontServicesInAdmin()
     {
         $this->setExpectedException(\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException::class);

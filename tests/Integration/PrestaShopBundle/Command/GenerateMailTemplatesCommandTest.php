@@ -45,8 +45,6 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         self::bootKernel();
     }
 
-    /**
-     */
     public function testMissingArguments()
     {
         $this->setExpectedException(\Symfony\Component\Console\Exception\RuntimeException::class, 'Not enough arguments (missing: "theme, locale").');

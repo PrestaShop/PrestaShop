@@ -45,8 +45,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertCount(2, $collection);
     }
 
-    /**
-     */
     public function testInvalidConstructor()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type Tests\\Unit\\Core\\Data\\InvalidCollectionTestElement, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');
@@ -56,8 +54,6 @@ class AbstractTypedCollectionTest extends TestCase
         ]);
     }
 
-    /**
-     */
     public function testPartialInvalidConstructor()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type Tests\\Unit\\Core\\Data\\InvalidCollectionTestElement, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');
@@ -84,8 +80,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertFalse($elementRemoved);
     }
 
-    /**
-     */
     public function testInvalidRemoveElement()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type Tests\\Unit\\Core\\Data\\InvalidCollectionTestElement, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');
@@ -112,8 +106,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertEquals($element, $collection->offsetGet(1));
     }
 
-    /**
-     */
     public function testInvalidOffsetSet()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type Tests\\Unit\\Core\\Data\\InvalidCollectionTestElement, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');
@@ -138,8 +130,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertTrue($collection->contains($element));
     }
 
-    /**
-     */
     public function testInvalidContains()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type Tests\\Unit\\Core\\Data\\InvalidCollectionTestElement, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');
@@ -172,8 +162,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertEquals('element', $collection->indexOf($element));
     }
 
-    /**
-     */
     public function testInvalidIndexOf()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type Tests\\Unit\\Core\\Data\\InvalidCollectionTestElement, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');
@@ -199,8 +187,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertEquals($element, $collection['element']);
     }
 
-    /**
-     */
     public function testInvalidSet()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type Tests\\Unit\\Core\\Data\\InvalidCollectionTestElement, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');
@@ -225,8 +211,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertEquals($element, $collection[0]);
     }
 
-    /**
-     */
     public function testInvalidAdd()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type Tests\\Unit\\Core\\Data\\InvalidCollectionTestElement, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');
@@ -255,8 +239,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertEquals($elementMock, $collection[0]);
     }
 
-    /**
-     */
     public function testInvalidString()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\TypeException::class, 'Invalid element type string, expected Tests\\Unit\\Core\\Data\\CollectionTestElement');

@@ -162,8 +162,6 @@ class FolderThemeCatalogTest extends TestCase
         $this->assertEquals('modern', $theme->getName());
     }
 
-    /**
-     */
     public function testInvalidTheme()
     {
         $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException::class, 'Invalid requested theme "unknown", only available themes are: classic, modern');

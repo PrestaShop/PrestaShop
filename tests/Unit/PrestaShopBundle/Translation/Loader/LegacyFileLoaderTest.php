@@ -67,8 +67,6 @@ class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->verifyCatalogue($catalogue, $expected);
     }
 
-    /**
-     */
     public function testItThrowsAnExceptionIfKeyIsInvalid()
     {
         $this->setExpectedException(\PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException::class);
