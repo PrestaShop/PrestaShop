@@ -26,7 +26,6 @@
 
 namespace LegacyTests\PrestaShopBundle\Model\Product;
 
-use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

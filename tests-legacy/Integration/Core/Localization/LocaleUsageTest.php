@@ -27,7 +27,6 @@
 
 namespace LegacyTests\Integration\Core\Localization;
 
-use Cache;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
@@ -35,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Tests\TestCase\SymfonyIntegrationTestCase;
-use AppKernel;
 
 class LocaleUsageTest extends SymfonyIntegrationTestCase
 {
