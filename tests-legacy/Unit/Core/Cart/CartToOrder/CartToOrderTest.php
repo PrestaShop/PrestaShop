@@ -115,7 +115,7 @@ class CartToOrderTest extends CartTaxesTest
         Context::getContext()->updateCustomer($customer);
 
         // copy to order
-        $paymentModule = new PaymentModuleFake;
+        $paymentModule = new PaymentModuleFake();
         $paymentModule->validateOrder(
             $this->cart->id,
             Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
