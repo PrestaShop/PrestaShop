@@ -193,10 +193,11 @@ class LocaleTest extends TestCase
      * When asking for the number symbols of this system
      * Then an exception should be raised
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetNumberSymbolsByNumberingSystemWithUnknownNumberingSystem()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->cldrLocale->getNumberSymbolsByNumberingSystem('foobar');
     }
 
@@ -224,10 +225,11 @@ class LocaleTest extends TestCase
      * When asking for decimal pattern of this system
      * Then an exception should be raised
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetDecimalPatternWithUnknownNumberingSystem()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->cldrLocale->getDecimalPattern('foobar');
     }
 
@@ -255,10 +257,11 @@ class LocaleTest extends TestCase
      * When asking for percentage pattern of this system
      * Then an exception should be raised
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetPercentPatternWithUnknownNumberingSystem()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->cldrLocale->getPercentPattern('foobar');
     }
 
@@ -286,10 +289,11 @@ class LocaleTest extends TestCase
      * When asking for currency (price formatting) pattern of this system
      * Then an exception should be raised
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetCurrencyPatternWithUnknownNumberingSystem()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->cldrLocale->getCurrencyPattern('foobar');
     }
 

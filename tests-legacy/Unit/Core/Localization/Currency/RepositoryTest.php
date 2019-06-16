@@ -147,10 +147,11 @@ class RepositoryTest extends TestCase
      * When asking the currency repository for the corresponding Currency
      * Then an exception should be raised
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetCurrencyWithUnknownCode()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->currencyRepository->getCurrency('foo', 'bar');
     }
 }

@@ -99,19 +99,21 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function testNoAdminServicesInFront()
     {
+        $this->setExpectedException(\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException::class);
+
         $container = ContainerBuilder::getContainer('front', true);
         $container->get('ps_banner.admin_repository');
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function testNoFrontServicesInAdmin()
     {
+        $this->setExpectedException(\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException::class);
+
         $container = ContainerBuilder::getContainer('admin', true);
         $container->get('ps_banner.front_repository');
     }

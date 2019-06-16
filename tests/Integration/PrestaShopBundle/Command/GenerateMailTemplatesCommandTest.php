@@ -46,11 +46,11 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Not enough arguments (missing: "theme, locale").
      */
     public function testMissingArguments()
     {
+        $this->setExpectedException(\Symfony\Component\Console\Exception\RuntimeException::class, 'Not enough arguments (missing: "theme, locale").');
+
         $application = new Application(static::$kernel);
 
         $command = $application->find('prestashop:mail:generate');

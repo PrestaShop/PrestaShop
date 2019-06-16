@@ -163,11 +163,11 @@ class FolderThemeCatalogTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid requested theme "unknown", only available themes are: classic, modern
      */
     public function testInvalidTheme()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException::class, 'Invalid requested theme "unknown", only available themes are: classic, modern');
+
         /** @var HookDispatcherInterface $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()

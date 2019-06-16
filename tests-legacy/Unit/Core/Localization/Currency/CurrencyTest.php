@@ -131,10 +131,11 @@ class CurrencyTest extends TestCase
      * When requesting the currency symbol for the said locale code
      * Then an exception should be raised
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetSymbolWithUnknownLocaleCode()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->currency->getSymbol('foobar');
     }
 
@@ -173,10 +174,11 @@ class CurrencyTest extends TestCase
      * When requesting the currency name for the said locale code
      * Then an exception should be raised
      *
-     * @expectedException  \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetNameWithUnknownLocaleCode()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->currency->getName('foobar');
     }
 }

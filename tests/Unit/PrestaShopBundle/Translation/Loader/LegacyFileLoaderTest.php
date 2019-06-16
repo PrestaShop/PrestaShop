@@ -68,10 +68,11 @@ class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException
      */
     public function testItThrowsAnExceptionIfKeyIsInvalid()
     {
+        $this->setExpectedException(\PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException::class);
+
         $path = '/some/path/to/module/translations/';
         $locale = 'fr-FR';
         $translations = [

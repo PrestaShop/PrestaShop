@@ -62,10 +62,11 @@ class MailTemplateTwigRendererTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\FileNotFoundException
      */
     public function testFileNotFound()
     {
+        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\FileNotFoundException::class);
+
         $templatePaths = [
             MailTemplateInterface::HTML_TYPE => 'path/to/non_existent_template.html.twig',
         ];
