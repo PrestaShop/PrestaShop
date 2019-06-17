@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 
 /**
  * Provides valid reduction values
@@ -61,12 +61,13 @@ class Reduction
     /**
      * @param string $type
      * @param float $value
+     *
+     * @throws DomainConstraintException
      */
     public function __construct($type, $value)
     {
         $this->assertIsAllowedType($type);
-        $this->assertIsNotNegativeNumber($value);
-        $this->assertIsValidPercentage($type, $value);
+        $this->assertIsValidValue($type, $value);
         $this->type = $type;
         $this->value = $value;
     }
@@ -89,31 +90,19 @@ class Reduction
 
     /**
      * @param string $type
+     *
+     * @throws DomainConstraintException
      */
     private function assertIsAllowedType($type)
     {
         if ($type !== self::TYPE_AMOUNT && $type !== self::TYPE_PERCENTAGE) {
-            throw new CatalogPriceRuleConstraintException(sprintf(
+            throw new DomainConstraintException(sprintf(
                 'The reduction type "%s" is invalid. Valid types are: "%s", "%s".',
                 var_export($type, true),
                     self::TYPE_AMOUNT,
                     self::TYPE_PERCENTAGE
                 ),
-                CatalogPriceRuleConstraintException::INVALID_REDUCTION_TYPE
-            );
-        }
-    }
-
-    /**
-     * @param $value
-     */
-    private function assertIsNotNegativeNumber($value)
-    {
-        if (!is_numeric($value) || 0 > $value) {
-            throw new CatalogPriceRuleConstraintException(sprintf(
-                'Invalid reduction type "%s". It must be positive number',
-                var_export($value, true)),
-                CatalogPriceRuleConstraintException::INVALID_REDUCTION_VALUE
+                DomainConstraintException::INVALID_REDUCTION_TYPE
             );
         }
     }
@@ -121,16 +110,38 @@ class Reduction
     /**
      * @param $type
      * @param $value
+     *
+     * @throws DomainConstraintException
      */
-    private function assertIsValidPercentage($type, $value)
+    private function assertIsValidValue($type, $value)
     {
-        if (self::TYPE_PERCENTAGE === $type && self::MAX_ALLOWED_PERCENTAGE < $value) {
-            throw new CatalogPriceRuleConstraintException(sprintf(
-                'Invalid reduction percentage value "%s". Maximum allowed is %s%%',
-                $value,
-                self::MAX_ALLOWED_PERCENTAGE),
-                CatalogPriceRuleConstraintException::INVALID_REDUCTION_VALUE
+        if (self::TYPE_PERCENTAGE === $type) {
+            if (!$this->assertIsNotNegativeNumber($value) || self::MAX_ALLOWED_PERCENTAGE < $value) {
+                throw new DomainConstraintException(sprintf(
+                    'Invalid reduction percentage "%s". It must be from 0 to %s%%',
+                    $value,
+                    self::MAX_ALLOWED_PERCENTAGE),
+                    DomainConstraintException::INVALID_REDUCTION_PERCENTAGE
+                );
+            }
+        }
+
+        if (!$this->assertIsNotNegativeNumber($value)) {
+            throw new DomainConstraintException(sprintf(
+                'Invalid reduction amount "%s". It cannot be less than 0',
+                $value),
+                DomainConstraintException::INVALID_REDUCTION_AMOUNT
             );
         }
+    }
+
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
+    private function assertIsNotNegativeNumber($value)
+    {
+        return is_numeric($value) && 0 <= $value;
     }
 }

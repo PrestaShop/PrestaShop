@@ -40,14 +40,4 @@ class CatalogPriceRuleConstraintException extends CatalogPriceRuleException
      * When date-time format is invalid
      */
     const INVALID_DATETIME = 20;
-
-    /**
-     * When reduction type is not valid
-     */
-    const INVALID_REDUCTION_TYPE = 30;
-
-    /**
-     * When reduction value is not valid
-     */
-    const INVALID_REDUCTION_VALUE = 40;
 }

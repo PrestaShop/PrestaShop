@@ -55,6 +55,7 @@ final class PriceReductionTypeChoiceProvider implements FormChoiceProviderInterf
         return [
             $this->translator->trans('Amount', [], 'Admin.Global') => 'amount',
             $this->translator->trans('Percentage', [], 'Admin.Global') => 'percentage',
+            'l' => 'tt',
         ];
     }
 }
