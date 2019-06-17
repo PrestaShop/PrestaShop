@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandl
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Handles command which gets catalog price rule for editing using legacy object model
@@ -47,7 +49,7 @@ final class GetCatalogPriceRuleForEditingHandler extends AbstractCatalogPriceRul
         $specificPriceRule = $this->getSpecificPriceRule($catalogPriceRuleId);
 
         return new EditableCatalogPriceRule(
-            (int) $specificPriceRule->id,
+            new CatalogPriceRuleId((int) $specificPriceRule->id),
             $specificPriceRule->name,
             (int) $specificPriceRule->id_shop,
             (int) $specificPriceRule->id_currency,
@@ -57,9 +59,8 @@ final class GetCatalogPriceRuleForEditingHandler extends AbstractCatalogPriceRul
             (float) $specificPriceRule->price,
             $specificPriceRule->from,
             $specificPriceRule->to,
-            $specificPriceRule->reduction_type,
-            (bool) $specificPriceRule->reduction_tax,
-            (float) $specificPriceRule->reduction
+            new Reduction($specificPriceRule->reduction_type, (float) $specificPriceRule->reduction),
+            (bool) $specificPriceRule->reduction_tax
         );
     }
 }
