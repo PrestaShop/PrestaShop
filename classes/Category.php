@@ -111,7 +111,7 @@ class CategoryCore extends ObjectModel
             'position' => array('type' => self::TYPE_INT),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
             'link_rewrite' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
             'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
@@ -387,7 +387,7 @@ class CategoryCore extends ObjectModel
         $deletedChildren = $allCat = $this->getAllChildren();
         $allCat[] = $this;
         foreach ($allCat as $cat) {
-            /* @var Category $cat */
+            // @var Category $cat
             $cat->deleteLite();
             if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
@@ -396,14 +396,14 @@ class CategoryCore extends ObjectModel
                 // Delete associated restrictions on cart rules
                 CartRule::cleanProductRuleIntegrity('categories', array($cat->id));
                 Category::cleanPositions($cat->id_parent);
-                /* Delete Categories in GroupReduction */
+                // Delete Categories in GroupReduction
                 if (GroupReduction::getGroupsReductionByCategoryId((int) $cat->id)) {
                     GroupReduction::deleteCategory($cat->id);
                 }
             }
         }
 
-        /* Rebuild the nested tree */
+        // Rebuild the nested tree
         if (!$this->hasMultishopEntries() && !$this->doNotRegenerateNTree) {
             Category::regenerateEntireNtree();
         }
@@ -444,7 +444,7 @@ class CategoryCore extends ObjectModel
      */
     public function calcLevelDepth()
     {
-        /* Root category */
+        // Root category
         if (!$this->id_parent) {
             return 0;
         }
@@ -574,19 +574,19 @@ class CategoryCore extends ObjectModel
         if (!is_numeric($idParentCategory)) {
             throw new PrestaShopException('id category is not numeric');
         }
-        /* Gets all children */
+        // Gets all children
         $sql = new DbQuery();
         $sql->select('c.`id_category`, c.`id_parent`, c.`level_depth`');
         $sql->from('category', 'c');
         $sql->where('c.`id_parent` = ' . (int) $idParentCategory);
         $categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-        /* Gets level_depth */
+        // Gets level_depth
         $sql = new DbQuery();
         $sql->select('c.`level_depth`');
         $sql->from('category', 'c');
         $sql->where('c.`id_category` = ' . (int) $idParentCategory);
         $level = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-        /* Updates level_depth for all children */
+        // Updates level_depth for all children
         foreach ($categories as $subCategory) {
             Db::getInstance()->update(
                 'category',
@@ -595,7 +595,7 @@ class CategoryCore extends ObjectModel
                 ),
                 '`id_category` = ' . (int) $subCategory['id_category']
             );
-            /* Recursive call */
+            // Recursive call
             $this->recalculateLevelDepth($subCategory['id_category']);
         }
     }
@@ -962,7 +962,7 @@ class CategoryCore extends ObjectModel
         $front = in_array($context->controller->controller_type, array('front', 'modulefront'));
         $idSupplier = (int) Tools::getValue('id_supplier');
 
-        /* Return only the number of products */
+        // Return only the number of products
         if ($getTotal) {
             $sql = 'SELECT COUNT(cp.`id_product`) AS total
 					FROM `' . _DB_PREFIX_ . 'product` p
@@ -2339,7 +2339,7 @@ class CategoryCore extends ObjectModel
         $return = Db::getInstance()->execute($sql);
         // we have to update position for every new entries
         foreach ($tabCategories as $category) {
-            /* @var Category $category */
+            // @var Category $category
             $category->addPosition(Category::getLastPosition($category->id_parent, $idShop), $idShop);
         }
 

@@ -138,11 +138,11 @@ class AdminModulesPositionsControllerCore extends AdminController
                     $this->errors[] = $this->trans('Hook cannot be loaded.', array(), 'Admin.Modules.Notification');
                 } else {
                     if ($new_hook !== $id_hook) {
-                        /* Connect module to a newer hook */
+                        // Connect module to a newer hook
                         if (!$module->registerHook($hook->name, Shop::getContextListShopID())) {
                             $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Modules.Notification');
                         }
-                        /* Unregister module from hook & exceptions linked to module */
+                        // Unregister module from hook & exceptions linked to module
                         if (!$module->unregisterHook($id_hook, Shop::getContextListShopID())
                             || !$module->unregisterExceptions($id_hook, Shop::getContextListShopID())) {
                             $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', array(), 'Admin.Modules.Notification');
@@ -503,7 +503,7 @@ class AdminModulesPositionsControllerCore extends AdminController
     public function ajaxProcessGetHookableList()
     {
         if ($this->access('view')) {
-            /* PrestaShop demo mode */
+            // PrestaShop demo mode
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }
@@ -548,11 +548,11 @@ class AdminModulesPositionsControllerCore extends AdminController
     public function ajaxProcessGetHookableModuleList()
     {
         if ($this->access('view')) {
-            /* PrestaShop demo mode */
+            // PrestaShop demo mode
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }
-            /* PrestaShop demo mode*/
+            // PrestaShop demo mode
 
             $hook_name = Tools::getValue('hook');
             $hookableModulesList = array();
@@ -578,7 +578,7 @@ class AdminModulesPositionsControllerCore extends AdminController
     public function ajaxProcessSaveHook()
     {
         if ($this->access('edit')) {
-            /* PrestaShop demo mode */
+            // PrestaShop demo mode
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }

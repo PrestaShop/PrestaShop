@@ -464,7 +464,7 @@ class AdminOrdersControllerCore extends AdminController
             ShopUrl::cacheMainDomainForShop((int) $order->id_shop);
         }
 
-        /* Update shipping number and carrier */
+        // Update shipping number and carrier
         if (Tools::isSubmit('submitShippingNumber') && isset($order)) {
             if ($this->access('edit')) {
                 $tracking_number = Tools::getValue('shipping_tracking_number');
@@ -522,7 +522,7 @@ class AdminOrdersControllerCore extends AdminController
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('submitState') && isset($order)) {
-            /* Change order status, add a new entry in order history and send an e-mail to the customer if needed */
+            // Change order status, add a new entry in order history and send an e-mail to the customer if needed
             if ($this->access('edit')) {
                 $order_state = new OrderState(Tools::getValue('id_order_state'));
 
@@ -578,7 +578,7 @@ class AdminOrdersControllerCore extends AdminController
                 } elseif (!Tools::getValue('message')) {
                     $this->errors[] = $this->trans('The message cannot be blank.', array(), 'Admin.Orderscustomers.Notification');
                 } else {
-                    /* Get message rules and and check fields validity */
+                    // Get message rules and and check fields validity
                     $rules = call_user_func(array('Message', 'getValidationRules'), 'Message');
                     foreach ($rules['required'] as $field) {
                         if (($value = Tools::getValue($field)) == false && (string) $value != '0') {
@@ -1089,7 +1089,7 @@ class AdminOrdersControllerCore extends AdminController
                             $cartrule->id_customer = $order->id_customer;
                             $now = time();
                             $cartrule->date_from = date('Y-m-d H:i:s', $now);
-                            $cartrule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+                            $cartrule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); // 1 year
                             $cartrule->active = 1;
 
                             $products = $order->getProducts(false, $full_product_list, $full_quantity_list);
@@ -1459,7 +1459,7 @@ class AdminOrdersControllerCore extends AdminController
                                 } elseif ($order->hasInvoice()) {
                                     $order_invoices_collection = $order->getInvoicesCollection();
                                     foreach ($order_invoices_collection as $order_invoice) {
-                                        /* @var OrderInvoice $order_invoice */
+                                        // @var OrderInvoice $order_invoice
                                         $cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
                                         $cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
@@ -1634,7 +1634,7 @@ class AdminOrdersControllerCore extends AdminController
         $time = time();
         $kpis = array();
 
-        /* The data generation is located in AdminStatsControllerCore */
+        // The data generation is located in AdminStatsControllerCore
 
         $helper = new HelperKpi();
         $helper->id = 'box-conversion-rate';
@@ -2363,7 +2363,7 @@ class AdminOrdersControllerCore extends AdminController
 
         $invoice_array = array();
         foreach ($invoice_collection as $invoice) {
-            /* @var OrderInvoice $invoice */
+            // @var OrderInvoice $invoice
             $invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int) $order->id_shop);
             $invoice_array[] = $invoice;
         }
@@ -2621,7 +2621,7 @@ class AdminOrdersControllerCore extends AdminController
 
         $invoice_array = array();
         foreach ($invoice_collection as $invoice) {
-            /* @var OrderInvoice $invoice */
+            // @var OrderInvoice $invoice
             $invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int) $order->id_shop);
             $invoice_array[] = $invoice;
         }
@@ -2732,7 +2732,7 @@ class AdminOrdersControllerCore extends AdminController
 
         $invoice_array = array();
         foreach ($invoice_collection as $invoice) {
-            /* @var OrderInvoice $invoice */
+            // @var OrderInvoice $invoice
             $invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int) $order->id_shop);
             $invoice_array[] = $invoice;
         }

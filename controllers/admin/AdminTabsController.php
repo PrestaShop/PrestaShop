@@ -269,13 +269,13 @@ class AdminTabsControllerCore extends AdminController
 
     public function postProcess()
     {
-        /* PrestaShop demo mode */
+        // PrestaShop demo mode
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
 
             return;
         }
-        /* PrestaShop demo mode*/
+        // PrestaShop demo mode
 
         if (($id_tab = (int) Tools::getValue('id_tab')) && ($direction = Tools::getValue('move')) && Validate::isLoadedObject($tab = new Tab($id_tab))) {
             if ($tab->move($direction)) {

@@ -40,7 +40,7 @@ class CurrencyManager
      */
     public function updateDefaultCurrency()
     {
-        /* Set conversion rate of default currency to 1 */
+        // Set conversion rate of default currency to 1
         ObjectModel::updateMultishopTable('Currency', ['conversion_rate' => 1], 'a.id_currency');
 
         $tmpContext = Shop::getContext();

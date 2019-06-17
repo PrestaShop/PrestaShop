@@ -828,7 +828,7 @@ class ValidateCore
      */
     public static function isUnsignedId($id)
     {
-        return Validate::isUnsignedInt($id); /* Because an id could be equal to zero when there is no association */
+        return Validate::isUnsignedInt($id); // Because an id could be equal to zero when there is no association
     }
 
     public static function isNullOrUnsignedId($id)

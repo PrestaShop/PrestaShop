@@ -137,7 +137,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             }
         }
 
-        /* Manage Dates interval */
+        // Manage Dates interval
         if (!empty($wheres['date_from']) && !empty($wheres['date_to'])) {
             $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
             $qb->setParameters(array(
@@ -146,7 +146,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             ));
         }
 
-        /* Manage Employee filter */
+        // Manage Employee filter
         if (!empty($wheres['employee'])) {
             $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
             $qb->setParameter('employee', '%' . $wheres['employee'] . '%');

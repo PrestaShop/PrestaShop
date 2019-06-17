@@ -221,9 +221,7 @@ class ModuleManager implements AddonManagerInterface
             'to_update' => array(),
         );
 
-        /*
-         * @var \PrestaShop\PrestaShop\Adapter\Module\Module
-         */
+        // @var \PrestaShop\PrestaShop\Adapter\Module\Module
         foreach ($installedProducts as $installedProduct) {
             if ($this->shouldRecommendConfigurationForModule($installedProduct)) {
                 $modules->to_configure[] = (object) $installedProduct;

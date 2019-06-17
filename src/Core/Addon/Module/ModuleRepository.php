@@ -432,7 +432,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $path = $this->modulePath . $name;
         $php_file_path = $path . '/' . $name . '.php';
 
-        /* Data which design the module class */
+        // Data which design the module class
         $attributes = array('name' => $name);
 
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)

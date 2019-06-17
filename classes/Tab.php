@@ -69,7 +69,7 @@ class TabCore extends ObjectModel
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'hide_host_mode' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'icon' => array('type' => self::TYPE_STRING, 'size' => 64),
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64),
         ),
     );
@@ -133,7 +133,7 @@ class TabCore extends ObjectModel
             $context = Context::getContext();
         }
 
-        /* Right management */
+        // Right management
         $slug = 'ROLE_MOD_TAB_' . strtoupper(self::getClassNameById($idTab));
 
         foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
@@ -221,7 +221,7 @@ class TabCore extends ObjectModel
     {
         $cacheId = 'Tab::getTab_' . (int) $idLang . '-' . (int) $idTab;
         if (!Cache::isStored($cacheId)) {
-            /* Tabs selection */
+            // Tabs selection
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
                 '
 				SELECT *

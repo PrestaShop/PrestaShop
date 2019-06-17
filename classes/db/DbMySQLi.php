@@ -373,7 +373,7 @@ class DbMySQLiCore extends Db
             $value = 'MyISAM';
         }
 
-        /* MySQL >= 5.6 */
+        // MySQL >= 5.6
         $sql = 'SHOW ENGINES';
         $result = $this->link->query($sql);
         while ($row = $result->fetch_assoc()) {

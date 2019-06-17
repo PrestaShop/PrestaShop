@@ -142,7 +142,7 @@ class AdminCartsControllerCore extends AdminController
         $time = time();
         $kpis = array();
 
-        /* The data generation is located in AdminStatsControllerCore */
+        // The data generation is located in AdminStatsControllerCore
         $helper = new HelperKpi();
         $helper->id = 'box-conversion-rate';
         $helper->icon = 'icon-sort-by-attributes-alt';
@@ -224,7 +224,7 @@ class AdminCartsControllerCore extends AdminController
         $products = $cart->getProducts();
         $summary = $cart->getSummaryDetails();
 
-        /* Display order information */
+        // Display order information
         $id_order = (int) Order::getIdByCartId($cart->id);
         $order = new Order($id_order);
         if (Validate::isLoadedObject($order)) {

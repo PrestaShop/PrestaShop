@@ -41,7 +41,7 @@ class OrderReturnStateCore extends ObjectModel
         'fields' => array(
             'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
         ),
     );

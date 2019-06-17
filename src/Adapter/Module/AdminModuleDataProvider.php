@@ -50,7 +50,7 @@ class AdminModuleDataProvider implements ModuleInterface
 {
     const _CACHEKEY_MODULES_ = '_addons_modules';
 
-    const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
+    const _DAY_IN_SECONDS_ = 86400; // Cache for One Day
 
     /**
      * @var array of defined and callable module actions

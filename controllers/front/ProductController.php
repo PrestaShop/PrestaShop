@@ -827,7 +827,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 if ($error || (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))) {
                     return false;
                 }
-                /* Original file */
+                // Original file
                 if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
                     $this->errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Shop.Notifications.Error');
                 } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', $product_picture_width, $product_picture_height)) {

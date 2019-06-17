@@ -416,7 +416,7 @@ class HelperTreeCategoriesCore extends TreeCore
         return parent::render($data);
     }
 
-    /* Override */
+    // Override
     public function renderNodes($data = null)
     {
         if (!isset($data)) {

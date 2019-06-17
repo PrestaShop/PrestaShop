@@ -215,7 +215,7 @@ class AdminGroupsControllerCore extends AdminController
         $genders = array(0 => '?');
         $genders_icon = array('default' => 'unknown.gif');
         foreach (Gender::getGenders() as $gender) {
-            /* @var Gender $gender */
+            // @var Gender $gender
             $genders_icon[$gender->id] = '../genders/' . (int) $gender->id . '.jpg';
             $genders[$gender->id] = $gender->name;
         }

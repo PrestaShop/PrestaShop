@@ -90,9 +90,7 @@ class AdminTranslationsControllerCore extends AdminController
                             ->getList();
     }
 
-    /*
-     * Set the type which is selected
-     */
+    // Set the type which is selected
     public function setTypeSelected($type_selected)
     {
         $this->type_selected = $type_selected;
@@ -842,9 +840,7 @@ class AdminTranslationsControllerCore extends AdminController
                             }
                         }
 
-                        /*
-                         * @see AdminController::$_conf
-                         */
+                        // @see AdminController::$_conf
                         $this->redirect(false, (isset($conf) ? $conf : '15'));
                     }
                 }
@@ -916,9 +912,7 @@ class AdminTranslationsControllerCore extends AdminController
                 Language::loadLanguages();
                 Tools::clearAllCache();
 
-                /*
-                 * @see AdminController::$_conf
-                 */
+                // @see AdminController::$_conf
                 $this->redirect(false, '15');
             } elseif (is_array($success) && count($success) > 0) {
                 foreach ($success as $error) {
@@ -1432,7 +1426,7 @@ class AdminTranslationsControllerCore extends AdminController
         $time = time();
         $kpis = array();
 
-        /* The data generation is located in AdminStatsControllerCore */
+        // The data generation is located in AdminStatsControllerCore
 
         $helper = new HelperKpi();
         $helper->id = 'box-languages';
@@ -1487,13 +1481,13 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $this->getInformations();
 
-        /* PrestaShop demo mode */
+        // PrestaShop demo mode
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
 
             return;
         }
-        /* PrestaShop demo mode */
+        // PrestaShop demo mode
 
         try {
             if (Tools::isSubmit('submitCopyLang')) {
@@ -1819,7 +1813,7 @@ class AdminTranslationsControllerCore extends AdminController
         $name_var = $this->translations_informations[$this->type_selected]['var'];
         $GLOBALS[$name_var] = $this->fileExists();
 
-        /* List templates to parse */
+        // List templates to parse
         $files_by_directory = $this->getFileToParseByTypeTranslation();
         $count = 0;
         $tabs_array = array();
@@ -1841,7 +1835,7 @@ class AdminTranslationsControllerCore extends AdminController
                         // Parse this content
                         $matches = $this->userParseFile($content, $this->type_selected, $file_type);
 
-                        /* Get string translation */
+                        // Get string translation
                         foreach ($matches as $key) {
                             if (empty($key)) {
                                 $this->errors[] = $this->trans('Empty string found, please edit: "%file%"', array('%file%' => $file_path), 'Admin.International.Notification');
@@ -2112,7 +2106,7 @@ class AdminTranslationsControllerCore extends AdminController
                     // Parse this content
                     $matches = $this->userParseFile($content, $this->type_selected, 'tpl');
 
-                    /* Get string translation for each tpl file */
+                    // Get string translation for each tpl file
                     foreach ($matches as $english_string) {
                         if (empty($english_string)) {
                             $this->errors[] = $this->trans('There is an error in template, an empty string has been found. Please edit: "%file%"', array('%file%' => $file_path), 'Admin.International.Notification');
@@ -2212,7 +2206,7 @@ class AdminTranslationsControllerCore extends AdminController
         $GLOBALS[$name_var] = $this->fileExists();
         $count_empty = array();
 
-        /* List files to parse */
+        // List files to parse
         $string_to_translate = array();
         $file_by_directory = $this->getFileToParseByTypeTranslation();
 

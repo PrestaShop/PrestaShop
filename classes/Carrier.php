@@ -120,7 +120,7 @@ class CarrierCore extends ObjectModel
         'multilang' => true,
         'multilang_shop' => true,
         'fields' => array(
-            /* Classic fields */
+            // Classic fields
             'id_reference' => array('type' => self::TYPE_INT),
             'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
@@ -141,7 +141,7 @@ class CarrierCore extends ObjectModel
             'position' => array('type' => self::TYPE_INT),
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-            /* Lang fields */
+            // Lang fields
             'delay' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 512),
         ),
     );
@@ -642,7 +642,7 @@ class CarrierCore extends ObjectModel
             $countries[$country['id_country']] = $country;
         }
         foreach ($states as &$state) {
-            if (isset($countries[$state['id_country']])) { /* Does not keep the state if its country has been disabled and not selected */
+            if (isset($countries[$state['id_country']])) { // Does not keep the state if its country has been disabled and not selected
                 if ($state['active'] == 1) {
                     $countries[$state['id_country']]['states'][] = $state;
                 }

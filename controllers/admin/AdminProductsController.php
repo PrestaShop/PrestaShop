@@ -125,7 +125,7 @@ class AdminProductsControllerCore extends AdminController
             return;
         }
 
-        /* Additional fields */
+        // Additional fields
         foreach (Language::getIDs(false) as $id_lang) {
             if (isset($_POST['meta_keywords_' . $id_lang])) {
                 $_POST['meta_keywords_' . $id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_' . $id_lang]));
@@ -205,12 +205,12 @@ class AdminProductsControllerCore extends AdminController
         }
         parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $this->context->shop->id);
 
-        /* update product quantity with attributes ...*/
+        // update product quantity with attributes ...
         $nb = count($this->_list);
         if ($this->_list) {
             $context = $this->context->cloneContext();
             $context->shop = clone $context->shop;
-            /* update product final price */
+            // update product final price
             for ($i = 0; $i < $nb; ++$i) {
                 if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP) {
                     $context->shop = new Shop((int) $this->_list[$i]['id_shop_default']);
@@ -610,7 +610,7 @@ class AdminProductsControllerCore extends AdminController
         $id_image = (int) Tools::getValue('id_image');
         $image = new Image((int) $id_image);
         if (Validate::isLoadedObject($image)) {
-            /* Update product image/legend */
+            // Update product image/legend
             // @todo : move in processEditProductImage
             if (Tools::getIsset('editImage')) {
                 if ($image->cover) {
@@ -619,7 +619,7 @@ class AdminProductsControllerCore extends AdminController
 
                 $_POST['id_image'] = $image->id;
             } elseif (Tools::getIsset('coverImage')) {
-                /* Choose product cover image */
+                // Choose product cover image
                 Image::deleteCover($image->id_product);
                 $image->cover = 1;
                 if (!$image->update()) {
@@ -631,7 +631,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->redirect_after = self::$currentIndex . '&id_product=' . $image->id_product . '&id_category=' . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '') . '&action=Images&addproduct' . '&token=' . $this->token;
                 }
             } elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection')) {
-                /* Choose product image position */
+                // Choose product image position
                 $image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
                 $this->redirect_after = self::$currentIndex . '&id_product=' . $image->id_product . '&id_category=' . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '') . '&add' . $this->table . '&action=Images&token=' . $this->token;
             }
@@ -1512,7 +1512,7 @@ class AdminProductsControllerCore extends AdminController
     {
         $this->display = 'content';
         $res = true;
-        /* Delete product image */
+        // Delete product image
         $id_image = $id_image ? $id_image : (int) Tools::getValue('id_image');
 
         $image = new Image($id_image);
@@ -1628,7 +1628,7 @@ class AdminProductsControllerCore extends AdminController
      */
     public function addProductImage($product, $method = 'auto')
     {
-        /* Updating an existing product image */
+        // Updating an existing product image
         if ($id_image = (int) Tools::getValue('id_image')) {
             $image = new Image((int) $id_image);
             if (!Validate::isLoadedObject($image)) {
@@ -1850,7 +1850,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $id = (int) Tools::getValue('id_' . $this->table);
-        /* Update an existing product */
+        // Update an existing product
         if (isset($id) && !empty($id)) {
             /** @var Product $object */
             $object = new $this->className((int) $id);
@@ -2269,7 +2269,7 @@ class AdminProductsControllerCore extends AdminController
                 return true;
             }
         } else {
-            /* unactive download product if checkbox not checked */
+            // unactive download product if checkbox not checked
             if ($edit == 1) {
                 $id_product_download = (int) ProductDownload::getIdFromIdProduct((int) $product->id);
                 if (!$id_product_download) {
@@ -2319,11 +2319,11 @@ class AdminProductsControllerCore extends AdminController
     public function updateTags($languages, $product)
     {
         $tag_success = true;
-        /* Reset all tags for THIS product */
+        // Reset all tags for THIS product
         if (!Tag::deleteTagsForProduct((int) $product->id)) {
             $this->errors[] = $this->trans('An error occurred while attempting to delete previous tags.', array(), 'Admin.Catalog.Notification');
         }
-        /* Assign tags to this product */
+        // Assign tags to this product
         foreach ($languages as $language) {
             if ($value = Tools::getValue('tags_' . $language['id_lang'])) {
                 $tag_success &= Tag::addTags($language['id_lang'], (int) $product->id, $value);

@@ -77,7 +77,7 @@ class ManufacturerCore extends ObjectModel
             'date_add' => array('type' => self::TYPE_DATE),
             'date_upd' => array('type' => self::TYPE_DATE),
 
-            /* Lang fields */
+            // Lang fields
             'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'short_description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -406,7 +406,7 @@ class ManufacturerCore extends ObjectModel
         $groups = FrontController::getCurrentCustomerGroups();
         $sqlGroups = count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP');
 
-        /* Return only the number of products */
+        // Return only the number of products
         if ($getTotal) {
             $sql = '
 				SELECT p.`id_product`

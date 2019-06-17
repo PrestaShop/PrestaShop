@@ -66,7 +66,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected $customizationFields = [];
 
-    /* PRODUCTS */
+    // PRODUCTS
 
     /**
      * @param $productName
@@ -240,7 +240,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkFixtureExists($this->products, 'Product', $productName);
     }
 
-    /* SPECIFIC PRICE */
+    // SPECIFIC PRICE
 
     /**
      * @Given /^product "(.+)" has a specific price named "(.+)" with an amount discount of (\d+\.\d+)$/
@@ -292,7 +292,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkFixtureExists($this->specificPrices[$productName], 'SpecificPrice', $specificPriceName);
     }
 
-    /* COMBINATION */
+    // COMBINATION
 
     /**
      * @Given /^product "(.+)" has a combination named "(.+)" with (.*) items in stock$/
@@ -409,7 +409,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkFixtureExists($this->combinations[$productName], 'Combination', $combinationName);
     }
 
-    /* CUSTOMIZATION */
+    // CUSTOMIZATION
 
     /**
      * @Given /^product "(.+)" has a customization field named "(.+)"$/
@@ -564,7 +564,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkFixtureExists($this->customizationsInCart, 'Customization for product named ' . $productName, $productName);
     }
 
-    /* PACK */
+    // PACK
 
     /**
      * @Given /^product "(.+)" is a pack containing (\d+) items of product "(.+)"$/

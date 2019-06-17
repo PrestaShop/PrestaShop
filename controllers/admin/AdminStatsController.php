@@ -637,12 +637,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     true,
                     date('Y-m-d', strtotime('-31 day')),
                     date('Y-m-d', strtotime('-1 day')),
-                    false /*'day'*/
+                    false // 'day'
                 );
                 $orders = AdminStatsController::getOrders(
                     date('Y-m-d', strtotime('-31 day')),
                     date('Y-m-d', strtotime('-1 day')),
-                    false /*'day'*/
+                    false // 'day'
                 );
 
                 // $data = array();
@@ -879,7 +879,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
                 foreach ($themes as $theme) {
-                    /* @var Theme $theme */
+                    // @var Theme $theme
                     foreach ($languages as $language) {
                         $kpi_key = substr(strtoupper($theme->getName() . '_' . $language['iso_code']), 0, 16);
                         $total += ConfigurationKPI::get('TRANSLATE_TOTAL_' . $kpi_key);

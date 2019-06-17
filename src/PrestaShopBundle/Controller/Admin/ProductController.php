@@ -480,7 +480,7 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
 
-        /* @var Form $form */
+        // @var Form $form
         $form->handleRequest($request);
         $formData = $form->getData();
         $formData['step3']['combinations'] = $combinationsList;
@@ -521,7 +521,7 @@ class ProductController extends FrameworkBundleAdminController
 
                     $product = $productSaveResult;
 
-                    /* @var Product $product */
+                    // @var Product $product
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
                     $adminProductController->processSpecificPricePriorities();
@@ -907,16 +907,16 @@ class ProductController extends FrameworkBundleAdminController
         /** @var $logger LoggerInterface */
         $logger = $this->get('logger');
 
-        /* @var HookDispatcher $hookDispatcher */
+        // @var HookDispatcher $hookDispatcher
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
 
-        /* Initialize router params variable. */
+        // Initialize router params variable.
         $routerParams = [];
 
         try {
             switch ($action) {
                 case 'sort':
-                    /* Change position_ordering to position */
+                    // Change position_ordering to position
                     $routerParams['orderBy'] = 'position';
 
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');

@@ -88,7 +88,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
         $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         try {
-            /* Generate images with different size */
+            // Generate images with different size
             if (isset($_FILES) &&
                 count($_FILES) &&
                 file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')

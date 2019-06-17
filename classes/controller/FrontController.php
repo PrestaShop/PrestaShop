@@ -310,7 +310,7 @@ class FrontControllerCore extends Controller
             Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
         }
 
-        /* Theme is missing */
+        // Theme is missing
         if (!is_dir(_PS_THEME_DIR_)) {
             throw new PrestaShopException(
                 $this->trans(
@@ -359,7 +359,7 @@ class FrontControllerCore extends Controller
             Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
         }
 
-        /* Cart already exists */
+        // Cart already exists
         if ((int) $this->context->cookie->id_cart) {
             if (!isset($cart)) {
                 $cart = new Cart($this->context->cookie->id_cart);
@@ -376,7 +376,7 @@ class FrontControllerCore extends Controller
                 && !FrontController::isInWhitelistForGeolocation()
                 && !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1', '::1'))
             ) {
-                /* Delete product of cart, if user can't make an order from his country */
+                // Delete product of cart, if user can't make an order from his country
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart);
             } elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency) {
@@ -388,7 +388,7 @@ class FrontControllerCore extends Controller
                 $cart->id_currency = (int) $currency->id;
                 $cart->update();
             }
-            /* Select an address if not set */
+            // Select an address if not set
             if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
                 !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
                 $to_update = false;
@@ -838,7 +838,7 @@ class FrontControllerCore extends Controller
     protected function geolocationManagement($defaultCountry)
     {
         if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1', '::1'))) {
-            /* Check if Maxmind Database exists */
+            // Check if Maxmind Database exists
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
                     $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
@@ -869,7 +869,7 @@ class FrontControllerCore extends Controller
                 }
 
                 if (isset($this->context->cookie->iso_code_country) && ($idCountry = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {
-                    /* Update defaultCountry */
+                    // Update defaultCountry
                     if ($defaultCountry->iso_code != $this->context->cookie->iso_code_country) {
                         $defaultCountry = new Country($idCountry);
                     }

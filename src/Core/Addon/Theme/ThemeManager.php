@@ -164,7 +164,7 @@ class ThemeManager implements AddonManagerInterface
             return false;
         }
 
-        /* if file exits, remove it and use YAML configuration file instead */
+        // if file exits, remove it and use YAML configuration file instead
         @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name . '/shop' . $this->shop->id . '.json');
 
         $theme = $this->themeRepository->getInstanceByName($name);

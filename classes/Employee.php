@@ -82,7 +82,7 @@ class EmployeeCore extends ObjectModel
     /** @var bool, false */
     public $bo_menu = 1;
 
-    /* Deprecated */
+    // Deprecated
     public $bo_show_screencast = false;
 
     /** @var bool Status */
@@ -93,7 +93,7 @@ class EmployeeCore extends ObjectModel
 
     public $remote_addr;
 
-    /* employee notifications */
+    // employee notifications
     public $id_last_order;
     public $id_last_customer_message;
     public $id_last_customer;
@@ -478,7 +478,7 @@ class EmployeeCore extends ObjectModel
     public function isLoggedBack()
     {
         if (!Cache::isStored('isLoggedBack' . $this->id)) {
-            /* Employee is valid only if it can be load and if cookie password is the same as database one */
+            // Employee is valid only if it can be load and if cookie password is the same as database one
             $result = (
                 $this->id && Validate::isUnsignedId($this->id) && Context::getContext()->cookie && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
                     && (!isset(Context::getContext()->cookie->remote_addr) || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))

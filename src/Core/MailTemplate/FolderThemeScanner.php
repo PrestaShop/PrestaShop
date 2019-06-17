@@ -113,7 +113,7 @@ final class FolderThemeScanner
         $moduleFinder = new Finder();
         $moduleFinder->directories()->in($moduleLayoutsFolder)->depth(0);
 
-        /* @var SplFileInfo $moduleFolder */
+        // @var SplFileInfo $moduleFolder
         foreach ($moduleFinder as $moduleFolder) {
             $this->addLayoutsFromFolder($collection, $moduleFolder->getRealPath(), $moduleFolder->getFilename());
         }

@@ -1294,7 +1294,7 @@ class WebserviceRequestCore
         $objects = array();
         $filters = $this->manageFilters();
 
-        /* If we only need to display the synopsis, analyzing the first row is sufficient */
+        // If we only need to display the synopsis, analyzing the first row is sufficient
         if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], array('blank', 'synopsis'))) {
             $filters = array('sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1');
         }
@@ -1460,7 +1460,7 @@ class WebserviceRequestCore
                     $postponeNTreeRegeneration = true;
                 }
 
-                /* @var ObjectModel $object */
+                // @var ObjectModel $object
                 if (isset($this->resourceConfiguration['objectMethods']['delete'])) {
                     $result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
                 } else {
@@ -1536,7 +1536,7 @@ class WebserviceRequestCore
             /** @var SimpleXMLElement $xmlEntity */
             $attributes = $xmlEntity->children();
 
-            /* @var ObjectModel $object */
+            // @var ObjectModel $object
             if ($this->method == 'POST') {
                 $object = new $this->resourceConfiguration['retrieveData']['className']();
             } elseif ($this->method == 'PUT') {
@@ -1589,7 +1589,7 @@ class WebserviceRequestCore
                     $i18n = true;
                     if (isset($attributes->$fieldName, $attributes->$fieldName->language)) {
                         foreach ($attributes->$fieldName->language as $lang) {
-                            /* @var SimpleXMLElement $lang */
+                            // @var SimpleXMLElement $lang
                             $object->{$fieldName}[(int) $lang->attributes()->id] = (string) $lang;
                         }
                     } else {

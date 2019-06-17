@@ -52,7 +52,7 @@ class AttachmentCore extends ObjectModel
             'file_name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 128),
             'file_size' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 
-            /* Lang fields */
+            // Lang fields
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
             'description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
         ),

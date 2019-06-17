@@ -331,7 +331,7 @@ class AdminStoresControllerCore extends AdminController
     {
         if (isset($_POST['submitAdd' . $this->table])) {
             $langs = Language::getLanguages(false);
-            /* Cleaning fields */
+            // Cleaning fields
             foreach ($_POST as $kp => $vp) {
                 if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'))) {
                     $_POST[$kp] = trim($vp);
@@ -343,11 +343,11 @@ class AdminStoresControllerCore extends AdminController
                 }
             }
 
-            /* Rewrite latitude and longitude to 8 digits */
+            // Rewrite latitude and longitude to 8 digits
             $_POST['latitude'] = number_format((float) $_POST['latitude'], 8);
             $_POST['longitude'] = number_format((float) $_POST['longitude'], 8);
 
-            /* If the selected country does not contain states */
+            // If the selected country does not contain states
             $id_state = (int) Tools::getValue('id_state');
             $id_country = (int) Tools::getValue('id_country');
             $country = new Country((int) $id_country);
@@ -356,7 +356,7 @@ class AdminStoresControllerCore extends AdminController
                 $this->errors[] = $this->trans('You\'ve selected a state for a country that does not contain states.', array(), 'Admin.Advparameters.Notification');
             }
 
-            /* If the selected country contains states, then a state have to be selected */
+            // If the selected country contains states, then a state have to be selected
             if ((int) $country->contains_states && !$id_state) {
                 $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.Shopparameters.Notification');
             }
@@ -369,7 +369,7 @@ class AdminStoresControllerCore extends AdminController
             }
 
             $postcode = Tools::getValue('postcode');
-            /* Check zip code format */
+            // Check zip code format
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
                 $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
             } elseif (empty($postcode) && $country->need_zip_code) {
@@ -377,7 +377,7 @@ class AdminStoresControllerCore extends AdminController
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
                 $this->errors[] = $this->trans('The Zip/postal code is invalid.', array(), 'Admin.Notifications.Error');
             }
-            /* Store hours */
+            // Store hours
             foreach ($langs as $lang) {
                 $hours = array();
                 for ($i = 1; $i < 8; ++$i) {

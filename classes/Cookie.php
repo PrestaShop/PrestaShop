@@ -215,7 +215,7 @@ class CookieCore
             return false;
         }
 
-        /* Customer is valid only if it can be load and if cookie password is the same as database one */
+        // Customer is valid only if it can be load and if cookie password is the same as database one
         if ($this->logged == 1 && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int) ($this->id_customer), $this->passwd)) {
             return true;
         }
@@ -233,7 +233,7 @@ class CookieCore
     public function isLoggedBack()
     {
         Tools::displayAsDeprecated('Use Employee::isLoggedBack() instead');
-        /* Employee is valid only if it can be load and if cookie password is the same as database one */
+        // Employee is valid only if it can be load and if cookie password is the same as database one
         return $this->id_employee
             && Validate::isUnsignedId($this->id_employee)
             && Employee::checkPassword((int) $this->id_employee, $this->passwd)
@@ -292,18 +292,18 @@ class CookieCore
     public function update($nullValues = false)
     {
         if (isset($_COOKIE[$this->_name])) {
-            /* Decrypt cookie content */
+            // Decrypt cookie content
             $content = $this->cipherTool->decrypt($_COOKIE[$this->_name]);
             //printf("\$content = %s<br />", $content);
 
-            /* Get cookie checksum */
+            // Get cookie checksum
             $tmpTab = explode('¤', $content);
             array_pop($tmpTab);
             $content_for_checksum = implode('¤', $tmpTab) . '¤';
             $checksum = crc32($this->_salt . $content_for_checksum);
             //printf("\$checksum = %s<br />", $checksum);
 
-            /* Unserialize cookie content */
+            // Unserialize cookie content
             $tmpTab = explode('¤', $content);
             foreach ($tmpTab as $keyAndValue) {
                 $tmpTab2 = explode('|', $keyAndValue);
@@ -311,7 +311,7 @@ class CookieCore
                     $this->_content[$tmpTab2[0]] = $tmpTab2[1];
                 }
             }
-            /* Check if cookie has not been modified */
+            // Check if cookie has not been modified
             if (!isset($this->_content['checksum']) || $this->_content['checksum'] != $checksum) {
                 $this->logout();
             }
@@ -388,7 +388,7 @@ class CookieCore
 
         $cookie = '';
 
-        /* Serialize cookie content */
+        // Serialize cookie content
         if (isset($this->_content['checksum'])) {
             unset($this->_content['checksum']);
         }
@@ -396,10 +396,10 @@ class CookieCore
             $cookie .= $key . '|' . $value . '¤';
         }
 
-        /* Add checksum to cookie */
+        // Add checksum to cookie
         $cookie .= 'checksum|' . crc32($this->_salt . $cookie);
         $this->_modified = false;
-        /* Cookies are encrypted for evident security reasons */
+        // Cookies are encrypted for evident security reasons
         return $this->encryptAndSetCookie($cookie);
     }
 

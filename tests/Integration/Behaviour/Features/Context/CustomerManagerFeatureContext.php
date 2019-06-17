@@ -207,7 +207,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         $this->assertCustomerReferenceExistsInRegistry($customerReference);
 
         $queryBus = $this->getQueryBus();
-        /* @var EditableCustomer $result */
+        // @var EditableCustomer $result
         try {
             $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
 

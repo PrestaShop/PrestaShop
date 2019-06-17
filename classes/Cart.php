@@ -1327,7 +1327,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        /* If we have a product combination, the minimal quantity is set with the one of this combination */
+        // If we have a product combination, the minimal quantity is set with the one of this combination
         if (!empty($id_product_attribute)) {
             $minimal_quantity = (int) Attribute::getAttributeMinimalQty($id_product_attribute);
         } else {
@@ -1358,7 +1358,7 @@ class CartCore extends ObjectModel
             'auto_add_cart_rule' => $auto_add_cart_rule,
         );
 
-        /* @deprecated deprecated since 1.6.1.1 */
+        // @deprecated deprecated since 1.6.1.1
         // Hook::exec('actionBeforeCartUpdateQty', $data);
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
@@ -1375,7 +1375,7 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        /* Check if the product is already in the cart */
+        // Check if the product is already in the cart
         $cartProductQuantity = $this->getProductQuantity(
             $id_product,
             $id_product_attribute,
@@ -1383,7 +1383,7 @@ class CartCore extends ObjectModel
             (int) $id_address_delivery
         );
 
-        /* Update quantity if product already exist */
+        // Update quantity if product already exist
         if (!empty($cartProductQuantity['quantity'])) {
             $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
             $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
@@ -1423,7 +1423,7 @@ class CartCore extends ObjectModel
                     LIMIT 1'
             );
         } elseif ($operator == 'up') {
-            /* Add product to the cart */
+            // Add product to the cart
 
             $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                         FROM ' . _DB_PREFIX_ . 'product p
@@ -1518,12 +1518,12 @@ class CartCore extends ObjectModel
             }
         }
 
-        /* Deletion */
+        // Deletion
         if (!empty($id_customization) && (int) $quantity < 1) {
             return $this->_deleteCustomization((int) $id_customization, (int) $id_product, (int) $id_product_attribute);
         }
 
-        /* Quantity update */
+        // Quantity update
         if (!empty($id_customization)) {
             $result = Db::getInstance()->getRow('SELECT `quantity` FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_customization` = ' . (int) $id_customization);
             if ($result && Db::getInstance()->numRows()) {
@@ -1691,7 +1691,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        /* Get customization quantity */
+        // Get customization quantity
         $result = Db::getInstance()->getRow('
             SELECT SUM(`quantity`) AS \'quantity\'
             FROM `' . _DB_PREFIX_ . 'customization`
@@ -1704,7 +1704,7 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        /* If the product still possesses customization it does not have to be deleted */
+        // If the product still possesses customization it does not have to be deleted
         if (Db::getInstance()->numRows() && (int) $result['quantity']) {
             return Db::getInstance()->execute(
                 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
@@ -1727,7 +1727,7 @@ class CartCore extends ObjectModel
             );
         }
 
-        /* Product deletion */
+        // Product deletion
         $result = Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
         WHERE `id_product` = ' . (int) $id_product . '

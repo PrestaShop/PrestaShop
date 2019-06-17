@@ -26,16 +26,16 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 @ini_set('max_execution_time', 0);
-/* No max line limit since the lines can be more than 4096. Performance impact is not significant. */
+// No max line limit since the lines can be more than 4096. Performance impact is not significant.
 define('MAX_LINE_SIZE', 0);
 
-/* Used for validatefields diying without user friendly error or not */
+// Used for validatefields diying without user friendly error or not
 define('UNFRIENDLY_ERROR', false);
 
-/* this value set the number of columns visible on each page */
+// this value set the number of columns visible on each page
 define('MAX_COLUMNS', 6);
 
-/* correct Mac error on eof */
+// correct Mac error on eof
 @ini_set('auto_detect_line_endings', '1');
 
 class AdminImportControllerCore extends AdminController
@@ -53,9 +53,9 @@ class AdminImportControllerCore extends AdminController
     public static $validators = array(
         'active' => array('AdminImportController', 'getBoolean'),
         'tax_rate' => array('AdminImportController', 'getPrice'),
-        /* Tax excluded */
+        // Tax excluded
         'price_tex' => array('AdminImportController', 'getPrice'),
-        /* Tax included */
+        // Tax included
         'price_tin' => array('AdminImportController', 'getPrice'),
         'reduction_price' => array('AdminImportController', 'getPrice'),
         'reduction_percent' => array('AdminImportController', 'getPrice'),
@@ -902,7 +902,7 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::setLocale();
         for ($current_line = 0; $current_line < 10 && $line = fgetcsv($handle, MAX_LINE_SIZE, $glue); ++$current_line) {
-            /* UTF-8 conversion */
+            // UTF-8 conversion
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
@@ -1522,7 +1522,7 @@ class AdminImportControllerCore extends AdminController
                 return;
             }
 
-            /* No automatic nTree regeneration for import */
+            // No automatic nTree regeneration for import
             $category->doNotRegenerateNTree = true;
 
             // If id category AND id category already in base, trying to update
@@ -4589,7 +4589,7 @@ class AdminImportControllerCore extends AdminController
 
     public function postProcess()
     {
-        /* PrestaShop demo mode */
+        // PrestaShop demo mode
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
 
@@ -4668,7 +4668,7 @@ class AdminImportControllerCore extends AdminController
                 case $this->entities[$import_type = $this->trans('Categories', array(), 'Admin.Global')]:
                     $doneCount += $this->categoryImport($offset, $limit, $crossStepsVariables, $validateOnly);
                     if ($doneCount < $limit && !$validateOnly) {
-                        /* Import has finished, we can regenerate the categories nested tree */
+                        // Import has finished, we can regenerate the categories nested tree
                         Category::regenerateEntireNtree();
                     }
                     $clearCache = true;

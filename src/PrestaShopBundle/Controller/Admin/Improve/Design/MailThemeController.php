@@ -484,7 +484,7 @@ class MailThemeController extends FrameworkBundleAdminController
 
         /** @var LayoutInterface $layout */
         $layout = null;
-        /* @var LayoutInterface $layoutInterface */
+        // @var LayoutInterface $layoutInterface
         foreach ($theme->getLayouts() as $layoutInterface) {
             if ($layoutInterface->getName() == $layoutName
                 && $layoutInterface->getModuleName() == $module

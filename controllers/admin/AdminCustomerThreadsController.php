@@ -562,7 +562,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $time = time();
         $kpis = array();
 
-        /* The data generation is located in AdminStatsControllerCore */
+        // The data generation is located in AdminStatsControllerCore
 
         $helper = new HelperKpi();
         $helper->id = 'box-pending-messages';
