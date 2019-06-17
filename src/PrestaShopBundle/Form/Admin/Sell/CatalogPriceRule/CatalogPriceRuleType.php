@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction as ReductionConstraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\ReductionType;
 use Symfony\Component\Form\AbstractType;
@@ -164,7 +164,7 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('reduction', ReductionType::class, [
                 'constraints' => [
-                    new ReductionConstraint(),
+                    new Reduction(),
                 ],
             ])
         ;
