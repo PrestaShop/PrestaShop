@@ -56,11 +56,11 @@ class PrimitiveUtils
                 break;
 
             case self::TYPE_INTEGER:
-                return intval($element);
+                return (int) $element;
                 break;
 
             case self::TYPE_DOUBLE:
-                return floatval($element);
+                return (float) $element;
                 break;
 
             case self::TYPE_STRING:
@@ -188,7 +188,7 @@ class PrimitiveUtils
             return false;
         }
 
-        return boolval($element);
+        return (bool) $element;
     }
 
     /**
@@ -231,8 +231,8 @@ class PrimitiveUtils
      */
     public static function castStringIntegerIntoInteger($element)
     {
-        if (intval($element) !== 0) {
-            return intval($element);
+        if ((int) $element !== 0) {
+            return (int) $element;
         }
 
         switch ($element) {
