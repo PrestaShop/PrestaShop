@@ -30,10 +30,9 @@ use League\Tactician\Handler\CommandNameExtractor\CommandNameExtractor;
 use League\Tactician\Handler\Locator\HandlerLocator;
 use League\Tactician\Middleware;
 use PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry;
-use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 
 /**
- * Registers every command that was executed when system is in debug mode.
+ * Registers every command that was executed in system
  */
 final class CommandRegisterMiddleware implements Middleware
 {
@@ -48,30 +47,22 @@ final class CommandRegisterMiddleware implements Middleware
     private $commandNameExtractor;
 
     /**
-     * @var EnvironmentInterface
-     */
-    private $environment;
-
-    /**
      * @var ExecutedCommandRegistry
      */
     private $executedCommandRegistry;
 
     /**
-     * @param EnvironmentInterface $environment
      * @param HandlerLocator $handlerLocator
      * @param CommandNameExtractor $commandNameExtractor
      * @param ExecutedCommandRegistry $executedCommandRegistry
      */
     public function __construct(
-        EnvironmentInterface $environment,
         HandlerLocator $handlerLocator,
         CommandNameExtractor $commandNameExtractor,
         ExecutedCommandRegistry $executedCommandRegistry
     ) {
         $this->handlerLocator = $handlerLocator;
         $this->commandNameExtractor = $commandNameExtractor;
-        $this->environment = $environment;
         $this->executedCommandRegistry = $executedCommandRegistry;
     }
 
@@ -80,12 +71,10 @@ final class CommandRegisterMiddleware implements Middleware
      */
     public function execute($command, callable $next)
     {
-        if ($this->environment->isDebug()) {
-            $commandName = $this->commandNameExtractor->extract($command);
-            $handler = $this->handlerLocator->getHandlerForCommand($commandName);
+        $commandName = $this->commandNameExtractor->extract($command);
+        $handler = $this->handlerLocator->getHandlerForCommand($commandName);
 
-            $this->executedCommandRegistry->register($command, $handler);
-        }
+        $this->executedCommandRegistry->register($command, $handler);
 
         return $next($command);
     }

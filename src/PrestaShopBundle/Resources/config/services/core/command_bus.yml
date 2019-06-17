@@ -18,7 +18,6 @@ services:
     prestashop.core.command_bus.middleware.command_register_middleware:
       class: PrestaShop\PrestaShop\Core\CommandBus\Middleware\CommandRegisterMiddleware
       arguments:
-        - '@prestashop.adapter.environment'
         - '@tactician.handler.locator.symfony'
         - '@tactician.handler.command_name_extractor.class_name'
         - '@prestashop.core.command_bus.executed_command_registry'
