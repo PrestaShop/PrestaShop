@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -53,8 +54,8 @@ final class PriceReductionTypeChoiceProvider implements FormChoiceProviderInterf
     public function getChoices()
     {
         return [
-            $this->translator->trans('Amount', [], 'Admin.Global') => 'amount',
-            $this->translator->trans('Percentage', [], 'Admin.Global') => 'percentage',
+            $this->translator->trans('Amount', [], 'Admin.Global') => Reduction::TYPE_AMOUNT,
+            $this->translator->trans('Percentage', [], 'Admin.Global') => Reduction::TYPE_PERCENTAGE,
         ];
     }
 }
