@@ -27,9 +27,10 @@
 namespace PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ReductionByType;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction as ReductionConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\ReductionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -80,11 +81,6 @@ class CatalogPriceRuleType extends AbstractType
     private $taxInclusionChoices;
 
     /**
-     * @var array
-     */
-    private $priceReductionTypeChoices;
-
-    /**
      * @param TranslatorInterface $translator
      * @param $isMultishopEnabled
      * @param array $currencyByIdChoices
@@ -92,7 +88,6 @@ class CatalogPriceRuleType extends AbstractType
      * @param array $groupByIdChoices
      * @param array $shopByIdChoices
      * @param array $taxInclusionChoices
-     * @param array $priceReductionTypeChoices
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -101,8 +96,7 @@ class CatalogPriceRuleType extends AbstractType
         array $countryByIdChoices,
         array $groupByIdChoices,
         array $shopByIdChoices,
-        array $taxInclusionChoices,
-        array $priceReductionTypeChoices
+        array $taxInclusionChoices
     ) {
         $this->translator = $translator;
         $this->isMultishopEnabled = $isMultishopEnabled;
@@ -111,7 +105,6 @@ class CatalogPriceRuleType extends AbstractType
         $this->groupByIdChoices = $groupByIdChoices;
         $this->shopByIdChoices = $shopByIdChoices;
         $this->taxInclusionChoices = $taxInclusionChoices;
-        $this->priceReductionTypeChoices = $priceReductionTypeChoices;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -165,27 +158,14 @@ class CatalogPriceRuleType extends AbstractType
                 'required' => false,
                 'date_format' => $dateTimeFormat,
             ])
-            ->add('reduction_type', ChoiceType::class, [
-                'placeholder' => false,
-                'required' => false,
-                'choices' => $this->priceReductionTypeChoices,
-            ])
             ->add('include_tax', ChoiceType::class, [
                 'placeholder' => false,
                 'required' => false,
                 'choices' => $this->taxInclusionChoices,
             ])
-            ->add('reduction', NumberType::class, [
-                'scale' => 6,
+            ->add('reduction', ReductionType::class, [
                 'constraints' => [
-                    new ReductionByType([
-                        'reductionTypePath' => 'parent.all[reduction_type].data',
-                        'message' => $this->translator->trans(
-                            'Maximum allowed reduction is %max%',
-                            ['%max%' => Reduction::MAX_ALLOWED_PERCENTAGE . '%'],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
+                    new ReductionConstraint($this->getReductionMessages()),
                 ],
             ])
         ;
@@ -236,5 +216,29 @@ class CatalogPriceRuleType extends AbstractType
             [$this->translator->trans('All groups', [], 'Admin.Global') => 0],
             $this->groupByIdChoices
         );
+    }
+
+    private function getReductionMessages()
+    {
+        return [
+            'invalidTypeMessage' => $this->translator->trans(
+                'Reduction type %type% is invalid. Allowed types are: %types%',
+                [
+                    '%type%' => '"{{ value }}"',
+                    '%types%' => '"' . Reduction::TYPE_AMOUNT . '", "' . Reduction::TYPE_PERCENTAGE . '"',
+                ],
+                'Admin.Notifications.Error'
+            ),
+            'invalidPercentageMessage' => $this->translator->trans(
+                'Reduction value must be from 0 to %max%',
+                ['%max%' => Reduction::MAX_ALLOWED_PERCENTAGE . '%'],
+                'Admin.Notifications.Error'
+            ),
+            'invalidAmountMessage' => $this->translator->trans(
+                'Reduction value cannot be negative',
+                [],
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }

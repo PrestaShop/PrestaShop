@@ -86,8 +86,8 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
             (int) $data['id_country'],
             (int) $data['id_group'],
             (int) $data['from_quantity'],
-            $data['reduction_type'],
-            (float) $data['reduction'],
+            $data['reduction']['type'],
+            (float) $data['reduction']['value'],
             (int) $data['id_shop'],
             (bool) $data['include_tax'],
             (float) $data['price']
@@ -140,7 +140,7 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
         $command->setFromQuantity((int) $data['from_quantity']);
         $command->setPrice((float) $data['price']);
         $command->setIncludeTax((bool) $data['include_tax']);
-        $command->setReduction($data['reduction_type'], (float) $data['reduction']);
+        $command->setReduction($data['reduction']['type'], (float) $data['reduction']['value']);
 
         if ($data['from']) {
             $command->setDateTimeFrom($data['from']);

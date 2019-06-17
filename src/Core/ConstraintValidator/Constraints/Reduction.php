@@ -26,37 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\ReductionByTypeValidator;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\ReductionValidator;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
  * Provides reduction validation by reduction type
  */
-final class ReductionByType extends Constraint
+final class Reduction extends Constraint
 {
-    public $message = '%s is invalid.';
+    public $invalidTypeMessage = 'Reduction type is invalid.';
 
-    /**
-     * @var string
-     */
-    public $reductionTypePath;
+    public $invalidAmountMessage = 'Reduction value is invalid.';
+
+    public $invalidPercentageMessage = 'Reduction value is invalid.';
 
     /**
      * {@inheritdoc}
      */
     public function validatedBy()
     {
-        return ReductionByTypeValidator::class;
-    }
-
-    public function __construct($options = null)
-    {
-        if (is_array($options)) {
-            if (!isset($options['reductionTypePath'])) {
-                throw new ConstraintDefinitionException(sprintf('The "%s" constraint requires "reductionTypePath" option to be set.', \get_class($this)));
-            }
-        }
-        parent::__construct($options);
+        return ReductionValidator::class;
     }
 }
