@@ -148,7 +148,8 @@ class CMSCategoryCore extends ObjectModel
             foreach ($subcats as &$subcat) {
                 if (!$subcat['id_cms_category']) {
                     break;
-                } elseif (!is_array($excluded_ids_array) || !in_array($subcat['id_cms_category'], $excluded_ids_array)) {
+                }
+                if (!is_array($excluded_ids_array) || !in_array($subcat['id_cms_category'], $excluded_ids_array)) {
                     $categ = new CMSCategory($subcat['id_cms_category'], $id_lang);
                     $categ->name = CMSCategory::hideCMSCategoryPosition($categ->name);
                     $children[] = $categ->recurseLiteCategTree($max_depth, $currentDepth + 1, $id_lang, $excluded_ids_array);

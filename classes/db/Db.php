@@ -715,7 +715,8 @@ abstract class DbCore
             }
 
             return $nrows;
-        } elseif ($this->is_cache_enabled && $this->last_cached) {
+        }
+        if ($this->is_cache_enabled && $this->last_cached) {
             return Cache::getInstance()->get($this->last_query_hash . '_nrows');
         }
     }

@@ -417,7 +417,8 @@ class AdminStatusesControllerCore extends AdminController
 
         if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state')) {
             return $this->renderOrderStatusForm();
-        } elseif (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state')) {
+        }
+        if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state')) {
             return $this->renderOrderReturnsForm();
         } else {
             return parent::renderForm();
@@ -597,7 +598,8 @@ class AdminStatusesControllerCore extends AdminController
             }
 
             return parent::postProcess();
-        } elseif (Tools::isSubmit('delete' . $this->table)) {
+        }
+        if (Tools::isSubmit('delete' . $this->table)) {
             $order_state = new OrderState(Tools::getValue('id_order_state'), $this->context->language->id);
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.Shopparameters.Notification');

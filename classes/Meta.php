@@ -297,15 +297,20 @@ class MetaCore extends ObjectModel
             || in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
             if ($pageName == 'product' && ($idProduct = Tools::getValue('id_product'))) {
                 return Meta::getProductMetas($idProduct, $idLang, $pageName);
-            } elseif ($pageName == 'category' && ($idCategory = Tools::getValue('id_category'))) {
+            }
+            if ($pageName == 'category' && ($idCategory = Tools::getValue('id_category'))) {
                 return Meta::getCategoryMetas($idCategory, $idLang, $pageName, $title);
-            } elseif ($pageName == 'manufacturer' && ($idManufacturer = Tools::getValue('id_manufacturer'))) {
+            }
+            if ($pageName == 'manufacturer' && ($idManufacturer = Tools::getValue('id_manufacturer'))) {
                 return Meta::getManufacturerMetas($idManufacturer, $idLang, $pageName);
-            } elseif ($pageName == 'supplier' && ($idSupplier = Tools::getValue('id_supplier'))) {
+            }
+            if ($pageName == 'supplier' && ($idSupplier = Tools::getValue('id_supplier'))) {
                 return Meta::getSupplierMetas($idSupplier, $idLang, $pageName);
-            } elseif ($pageName == 'cms' && ($idCms = Tools::getValue('id_cms'))) {
+            }
+            if ($pageName == 'cms' && ($idCms = Tools::getValue('id_cms'))) {
                 return Meta::getCmsMetas($idCms, $idLang, $pageName);
-            } elseif ($pageName == 'cms' && ($idCmsCategory = Tools::getValue('id_cms_category'))) {
+            }
+            if ($pageName == 'cms' && ($idCmsCategory = Tools::getValue('id_cms_category'))) {
                 return Meta::getCmsCategoryMetas($idCmsCategory, $idLang, $pageName);
             }
         }
