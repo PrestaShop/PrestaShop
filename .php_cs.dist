@@ -1,10 +1,10 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()->in([
-    __DIR__.'/src',
-    __DIR__.'/classes',
-    __DIR__.'/controllers',
-    __DIR__.'/tests',
+    __DIR__ . '/src',
+    __DIR__ . '/classes',
+    __DIR__ . '/controllers',
+    __DIR__ . '/tests',
 ]);
 
 return PhpCsFixer\Config::create()
@@ -22,8 +22,8 @@ return PhpCsFixer\Config::create()
             'noise_remaining_usages' => false,
             'noise_remaining_usages_exclude' => [],
         ],
-        'function_to_constant' => false,
-        'no_alias_functions' => false,
+        'function_to_constant' => true,
+        'no_alias_functions' => true,
         'non_printable_character' => false,
         'phpdoc_summary' => false,
         'phpdoc_align' => [
@@ -33,8 +33,19 @@ return PhpCsFixer\Config::create()
         'psr4' => false,
         'self_accessor' => false,
         'yoda_style' => null,
-        'non_printable_character' => true,
+        'align_multiline_comment' => [
+            'comment_type' => 'phpdocs_only',
+        ],
+        'array_indentation' => true,
         'combine_consecutive_issets' => true,
+        'combine_consecutive_unsets' => true,
+        'single_line_comment_style' => true,
+        'logical_operators' => true,
+        'no_short_echo_tag' => true,
+        'modernize_types_casting' => true,
+        'no_mixed_echo_print' => true,
+        'no_closing_tag' => true,
+        'single_blank_line_at_eof' => true,
     ])
     ->setFinder($finder)
-    ->setCacheFile(__DIR__.'/var/.php_cs.cache');
+    ->setCacheFile(__DIR__ . '/var/.php_cs.cache');
