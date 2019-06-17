@@ -2339,7 +2339,9 @@ class CategoryCore extends ObjectModel
         $return = Db::getInstance()->execute($sql);
         // we have to update position for every new entries
         foreach ($tabCategories as $category) {
-            // @var Category $category
+            /**
+             * @var Category $category
+             */
             $category->addPosition(Category::getLastPosition($category->id_parent, $idShop), $idShop);
         }
 
