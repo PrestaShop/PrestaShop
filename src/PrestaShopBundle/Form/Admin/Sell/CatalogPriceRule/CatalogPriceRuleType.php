@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ReductionByType;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -167,7 +169,6 @@ class CatalogPriceRuleType extends AbstractType
                 'placeholder' => false,
                 'required' => false,
                 'choices' => $this->priceReductionTypeChoices,
-                //@todo: constraints reduction types
             ])
             ->add('include_tax', ChoiceType::class, [
                 'placeholder' => false,
@@ -176,13 +177,12 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('reduction', NumberType::class, [
                 'scale' => 6,
-                //@todo: constraints max reduction
                 'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
+                    new ReductionByType([
+                        'reductionTypePath' => 'parent.all[reduction_type].data',
                         'message' => $this->translator->trans(
-                            '%s is invalid.',
-                            [],
+                            'Maximum allowed reduction is %max%',
+                            ['%max%' => Reduction::MAX_ALLOWED_PERCENTAGE . '%'],
                             'Admin.Notifications.Error'
                         ),
                     ]),
