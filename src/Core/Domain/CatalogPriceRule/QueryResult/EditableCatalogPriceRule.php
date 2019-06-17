@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Provides data for editing CatalogPriceRule
@@ -84,21 +85,17 @@ class EditableCatalogPriceRule
     private $to;
 
     /**
-     * @var string
-     */
-    private $reductionType;
-    /**
      * @var bool
      */
     private $includeTax;
 
     /**
-     * @var float
+     * @var Reduction
      */
     private $reduction;
 
     /**
-     * @param int $catalogPriceRuleId
+     * @param CatalogPriceRuleId $catalogPriceRuleId
      * @param string $name
      * @param int $shopId
      * @param int $currencyId
@@ -108,12 +105,11 @@ class EditableCatalogPriceRule
      * @param float $price
      * @param string $from
      * @param string $to
-     * @param string $reductionType
+     * @param Reduction $reduction
      * @param bool $includeTax
-     * @param float $reduction
      */
     public function __construct(
-        $catalogPriceRuleId,
+        CatalogPriceRuleId $catalogPriceRuleId,
         $name,
         $shopId,
         $currencyId,
@@ -123,9 +119,8 @@ class EditableCatalogPriceRule
         $price,
         $from,
         $to,
-        $reductionType,
-        $includeTax,
-        $reduction
+        $reduction,
+        $includeTax
     ) {
         $this->catalogPriceRuleId = $catalogPriceRuleId;
         $this->name = $name;
@@ -137,9 +132,8 @@ class EditableCatalogPriceRule
         $this->price = $price;
         $this->from = $from;
         $this->to = $to;
-        $this->reductionType = $reductionType;
-        $this->includeTax = $includeTax;
         $this->reduction = $reduction;
+        $this->includeTax = $includeTax;
     }
 
     /**
@@ -223,11 +217,11 @@ class EditableCatalogPriceRule
     }
 
     /**
-     * @return string
+     * @return Reduction
      */
-    public function getReductionType()
+    public function getReduction()
     {
-        return $this->reductionType;
+        return $this->reduction;
     }
 
     /**
@@ -236,13 +230,5 @@ class EditableCatalogPriceRule
     public function isTaxIncluded()
     {
         return $this->includeTax;
-    }
-
-    /**
-     * @return float
-     */
-    public function getReduction()
-    {
-        return $this->reduction;
     }
 }
