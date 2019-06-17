@@ -859,8 +859,8 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <note>Line: 157</note>
       </trans-unit>
       <trans-unit id="5c5e72eebcde206a52ce9117b00cf8de">
-        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1]. Then, configure your menu module.]]></source>
-        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1]. Then, configure your menu module.]]></target>
+        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></source>
+        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></target>
         <note>Line: 46</note>
       </trans-unit>
     </body>

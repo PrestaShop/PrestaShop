@@ -73,7 +73,7 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
 
         if (!$this->optionsChecker->canBeChanged()) {
             $errors[] = [
-                'key' => 'You can\'t change the value of this configuration field in the context of this shop .',
+                'key' => 'You cannot change the value of this configuration field in the context of this shop.',
                 'parameters' => [],
                 'domain' => 'Admin.Notifications.Warning',
             ];

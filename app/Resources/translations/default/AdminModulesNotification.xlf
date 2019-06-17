@@ -458,8 +458,8 @@ Comment: Confirm uninstall</note>
         <note>Line: 252</note>
       </trans-unit>
       <trans-unit id="36afe9cd7ae90209b47f81a9a6fc51fb">
-        <source>Parse error detected in main class of module %module%! %parse_error%</source>
-        <target>Parse error detected in main class of module %module%! %parse_error%</target>
+        <source>Parse error detected in main class of module %module%: %parse_error%</source>
+        <target>Parse error detected in main class of module %module%: %parse_error%</target>
         <note>Line: 228</note>
       </trans-unit>
     </body>

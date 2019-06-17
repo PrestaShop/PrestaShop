@@ -296,7 +296,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('firstname', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search first name', [], 'Admin.Orderscustomers.Help'),
+                        'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
@@ -306,7 +306,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('lastname', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search last name', [], 'Admin.Orderscustomers.Help'),
+                        'placeholder' => $this->trans('Search last name', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
@@ -359,7 +359,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('company', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search company', [], 'Admin.Orderscustomers.Help'),
+                        'placeholder' => $this->trans('Search company', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])

@@ -45,7 +45,7 @@
         <div class="col-sm">
           {{ form_widget(categoryForm.active) }}
           <small class="form-text">
-            {{ 'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1]. Then, configure your menu module.'|trans({
+            {{ 'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.'|trans({
               '[1]': '<a href="' ~ path('admin_module_manage') ~ '" class="_blank">',
               '[/1]': '</a>'
             }, 'Admin.Catalog.Help')|raw }}

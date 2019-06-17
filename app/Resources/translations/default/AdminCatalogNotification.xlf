@@ -598,8 +598,8 @@
         <note>Line: 241</note>
       </trans-unit>
       <trans-unit id="504ca7ea96dde692360e88a97e98fc91">
-        <source>Missing %s value in custom[%s] for language %s</source>
-        <target>Missing %s value in custom[%s] for language %s</target>
+        <source>Missing %s value in custom [%s] for language %s</source>
+        <target>Missing %s value in custom [%s] for language %s</target>
         <note>Line: 251</note>
       </trans-unit>
     </body>

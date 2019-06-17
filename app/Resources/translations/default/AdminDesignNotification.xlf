@@ -216,8 +216,8 @@
         <note>Line: 362</note>
       </trans-unit>
       <trans-unit id="0e8ea2c717a31a3efd2fd99c5782be88">
-        <source>There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.</source>
-        <target>There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.</target>
+        <source>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</source>
+        <target>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</target>
         <note>Line: 484</note>
       </trans-unit>
       <trans-unit id="2cca9f161ea0cc1102ad4be82b15cbfb">

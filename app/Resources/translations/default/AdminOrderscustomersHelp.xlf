@@ -154,25 +154,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/CustomerGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e98936d7a5973d99a4b50b1f43400494">
-        <source>Search first name</source>
-        <target>Search first name</target>
-        <note>Line: 299</note>
-      </trans-unit>
-      <trans-unit id="402456650e9401a17e766d619ef691ec">
-        <source>Search last name</source>
-        <target>Search last name</target>
-        <note>Line: 309</note>
-      </trans-unit>
-      <trans-unit id="159b53bd16ff77184a5603620e54f761">
-        <source>Search company</source>
-        <target>Search company</target>
-        <note>Line: 362</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">

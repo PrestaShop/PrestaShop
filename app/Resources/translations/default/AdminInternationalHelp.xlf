@@ -245,35 +245,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/LanguageGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="14b65dabcecbbcb0724ed1efe27c6335">
-        <source>Search ID</source>
-        <target>Search ID</target>
-        <note>Line: 192</note>
-      </trans-unit>
-      <trans-unit id="542f59279cd5d73dfbdb069ce0833b0a">
-        <source>Search name</source>
-        <target>Search name</target>
-        <note>Line: 202</note>
-      </trans-unit>
-      <trans-unit id="9e947741f4358ea97d1abdd977d2768e">
-        <source>Search iso code</source>
-        <target>Search iso code</target>
-        <note>Line: 212</note>
-      </trans-unit>
-      <trans-unit id="0534d3a8a5d85f380852d74575f77744">
-        <source>Search code</source>
-        <target>Search code</target>
-        <note>Line: 222</note>
-      </trans-unit>
-      <trans-unit id="5009286a303ef99a9b58979e866476a1">
-        <source>Search date format</source>
-        <target>Search date format</target>
-        <note>Line: 242</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4ef5571f164a6a7fcc9f4625d14e260b">
