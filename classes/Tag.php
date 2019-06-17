@@ -78,7 +78,8 @@ class TagCore extends ObjectModel
     {
         if (!parent::add($autoDate, $nullValues)) {
             return false;
-        } elseif (isset($_POST['products'])) {
+        }
+        if (isset($_POST['products'])) {
             return $this->setProducts(Tools::getValue('products'));
         }
 

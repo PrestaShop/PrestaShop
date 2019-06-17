@@ -301,21 +301,25 @@ class TreeCore
         ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
                 $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
-        } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
+        }
+        if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
                 $this->getContext()->controller->getTemplatePath()
         ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
-        } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
+        }
+        if ($this->getContext()->controller instanceof AdminController && isset($controller_name)
             && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
                 . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
                 . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
-        } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
+        }
+        if (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
                 . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
                     . $this->getTemplateDirectory() . $template;
-        } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
+        }
+        if (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template;

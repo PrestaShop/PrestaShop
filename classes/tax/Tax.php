@@ -107,7 +107,8 @@ class TaxCore extends ObjectModel
             $res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
 
             return $res;
-        } elseif (parent::update($null_values)) {
+        }
+        if (parent::update($null_values)) {
             return $this->_onStatusChange();
         }
 

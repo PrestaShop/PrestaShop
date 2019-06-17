@@ -269,7 +269,8 @@ class MediaCore
             if (!@filemtime($fileUri) || @filesize($fileUri) === 0) {
                 if (!defined('_PS_HOST_MODE_')) {
                     return false;
-                } elseif (!@filemtime($fileUriHostMode) || @filesize($fileUriHostMode) === 0) {
+                }
+                if (!@filemtime($fileUriHostMode) || @filesize($fileUriHostMode) === 0) {
                     return false;
                 } else {
                     $mediaUri = $mediaUriHostMode;
@@ -459,7 +460,8 @@ class MediaCore
 
         if (@file_exists($fileUri . $file) || (defined('_PS_HOST_MODE_') && @file_exists($fileUriHostMode . $file))) {
             return Media::getCSSPath($folder . $file);
-        } elseif (@file_exists($fileUri . $name . '/' . $file) || (defined('_PS_HOST_MODE_') && @file_exists($fileUriHostMode . $name . '/' . $file))) {
+        }
+        if (@file_exists($fileUri . $name . '/' . $file) || (defined('_PS_HOST_MODE_') && @file_exists($fileUriHostMode . $name . '/' . $file))) {
             return Media::getCSSPath($folder . $name . '/' . $file);
         } else {
             return false;

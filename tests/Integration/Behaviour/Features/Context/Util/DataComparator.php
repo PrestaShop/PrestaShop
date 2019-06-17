@@ -65,7 +65,8 @@ class DataComparator
                     $expectedAsString = ($castedExpectedElement) ? 'true' : 'false';
 
                     throw new Exception("Real $key is " . $realAsString . ' / expected ' . $expectedAsString);
-                } elseif ($realElementType === 'array') {
+                }
+                if ($realElementType === 'array') {
                     sort($realElement);
                     sort($castedExpectedElement);
 
@@ -81,7 +82,8 @@ class DataComparator
                     }
 
                     throw new Exception("Real $key is $realAsString / expected $expectedAsString");
-                } elseif ($realElementType === 'datetime') {
+                }
+                if ($realElementType === 'datetime') {
                     $realAsString = $realElement->format('Y/m/d H:i:s');
                     $expectedAsString = $castedExpectedElement->format('Y/m/d H:i:s');
 

@@ -3209,9 +3209,11 @@ exit;
                 $fullpath = $path . '/' . $file;
                 if (is_link($fullpath)) {
                     return false;
-                } elseif (!is_dir($fullpath) && !@chmod($fullpath, $filemode)) {
+                }
+                if (!is_dir($fullpath) && !@chmod($fullpath, $filemode)) {
                     return false;
-                } elseif (!Tools::chmodr($fullpath, $filemode)) {
+                }
+                if (!Tools::chmodr($fullpath, $filemode)) {
                     return false;
                 }
             }
@@ -4322,7 +4324,8 @@ function cmpPriceAsc($a, $b)
 {
     if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
         return -1;
-    } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
+    }
+    if ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
         return 1;
     }
 
@@ -4333,7 +4336,8 @@ function cmpPriceDesc($a, $b)
 {
     if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
         return 1;
-    } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
+    }
+    if ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
         return -1;
     }
 

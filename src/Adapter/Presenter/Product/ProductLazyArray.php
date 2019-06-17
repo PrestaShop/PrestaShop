@@ -256,7 +256,8 @@ class ProductLazyArray extends AbstractLazyArray
     {
         if ($this->product['quantity'] > 0) {
             return Configuration::get('PS_LABEL_DELIVERY_TIME_AVAILABLE', $this->language->id);
-        } elseif ($this->product['allow_oosp']) {
+        }
+        if ($this->product['allow_oosp']) {
             return Configuration::get('PS_LABEL_DELIVERY_TIME_OOSBOA', $this->language->id);
         }
 

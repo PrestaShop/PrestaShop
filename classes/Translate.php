@@ -349,7 +349,8 @@ class TranslateCore
     {
         if (!empty($args) && self::isSprintfString($string)) {
             return vsprintf($string, $args);
-        } elseif (!empty($args)) {
+        }
+        if (!empty($args)) {
             return strtr($string, $args);
         }
 
