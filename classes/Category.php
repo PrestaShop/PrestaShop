@@ -386,8 +386,8 @@ class CategoryCore extends ObjectModel
 
         $deletedChildren = $allCat = $this->getAllChildren();
         $allCat[] = $this;
+        /** @var Category $cat */
         foreach ($allCat as $cat) {
-            // @var Category $cat
             $cat->deleteLite();
             if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
@@ -2338,10 +2338,8 @@ class CategoryCore extends ObjectModel
 
         $return = Db::getInstance()->execute($sql);
         // we have to update position for every new entries
+        /** @var Category $category */
         foreach ($tabCategories as $category) {
-            /**
-             * @var Category $category
-             */
             $category->addPosition(Category::getLastPosition($category->id_parent, $idShop), $idShop);
         }
 
