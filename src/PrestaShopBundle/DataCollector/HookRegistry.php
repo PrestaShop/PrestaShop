@@ -48,7 +48,6 @@ final class HookRegistry
 
     public function __construct()
     {
-        $a = 1;
         $this->hooks = array(
             self::HOOK_CALLED => array(),
             self::HOOK_NOT_CALLED => array(),
