@@ -40,13 +40,16 @@ use Validate;
  */
 final class ShoppingCartTotalKpi implements KpiInterface
 {
+    /** @var array */
+    private $options;
+
     /**
      * {@inheritdoc}
      */
-    public function render(array $options = [])
+    public function render()
     {
         $translator = Context::getContext()->getTranslator();
-        $cart = new Cart($options['cart_id']);
+        $cart = new Cart($this->options['cart_id']);
 
         $helper = new HelperKpi();
         $helper->id = 'box-kpi-cart';
@@ -60,6 +63,16 @@ final class ShoppingCartTotalKpi implements KpiInterface
         );
 
         return $helper->generate();
+    }
+
+    /**
+     * Sets options for Kpi
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
     }
 
     /**

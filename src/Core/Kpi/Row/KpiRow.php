@@ -61,6 +61,11 @@ final class KpiRow implements KpiRowInterface
      */
     public function addKpi(KpiInterface $kpi)
     {
+        // setOptions() is optional & not part of interface to avoid BC break
+        if (method_exists($kpi, 'setOptions')) {
+            $kpi->setOptions($this->options);
+        }
+
         $this->kpis[] = $kpi;
     }
 

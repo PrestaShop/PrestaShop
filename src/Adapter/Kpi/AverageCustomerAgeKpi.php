@@ -64,7 +64,7 @@ final class AverageCustomerAgeKpi implements KpiInterface
     /**
      * {@inheritdoc}
      */
-    public function render(array $options = [])
+    public function render()
     {
         $helper = new HelperKpi();
         $helper->id = 'box-age';

@@ -69,7 +69,7 @@ final class MainCountryKpi implements KpiInterface
     /**
      * {@inheritdoc}
      */
-    public function render(array $options = [])
+    public function render()
     {
         $mainCountry = $this->configuration->get('MAIN_COUNTRY');
 
