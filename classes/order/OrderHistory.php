@@ -611,8 +611,8 @@ class OrderHistoryCore extends ObjectModel
             }
 
             return $this->addWithemail();
-        } else {
-            return $this->add();
         }
+
+        return $this->add();
     }
 }

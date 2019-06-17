@@ -233,11 +233,10 @@ class AddressCore extends ObjectModel
             $this->deleteCartAddress();
 
             return parent::delete();
-        } else {
-            $this->deleted = true;
-
-            return $this->update();
         }
+        $this->deleted = true;
+
+        return $this->update();
     }
 
     /**

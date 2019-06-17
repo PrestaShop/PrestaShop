@@ -852,9 +852,9 @@ class LanguageCore extends ObjectModel
         // Instantiate the Language object if we found it.
         if ($id_lang) {
             return new Language($id_lang);
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

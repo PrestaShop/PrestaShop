@@ -140,15 +140,15 @@ class CustomerMessageCore extends ObjectModel
 				LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
 				WHERE 1' . Shop::addSqlRestriction()
             );
-        } else {
-            return (int) Db::getInstance()->getValue(
+        }
+
+        return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'customer_message cm
 				LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
 				WHERE ' . $where . Shop::addSqlRestriction()
             );
-        }
     }
 
     /**

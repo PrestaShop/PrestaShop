@@ -710,11 +710,10 @@ abstract class PaymentModuleCore extends Module
             }
 
             return true;
-        } else {
-            $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
-            PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
-            die(Tools::displayError($error));
         }
+        $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
+        PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
+        die(Tools::displayError($error));
     }
 
     /**

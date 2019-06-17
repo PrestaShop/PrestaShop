@@ -1324,11 +1324,10 @@ class CarrierCore extends ObjectModel
     {
         if ($use_average_tax_of_products) {
             return ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
-        } else {
-            $tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
-
-            return $tax_manager->getTaxCalculator();
         }
+        $tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
+
+        return $tax_manager->getTaxCalculator();
     }
 
     /**

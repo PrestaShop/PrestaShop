@@ -1156,9 +1156,9 @@ class AdminControllerCore extends Controller
             $this->object = $this->loadObject();
 
             return $this->processUpdate();
-        } else {
-            return $this->processAdd();
         }
+
+        return $this->processAdd();
     }
 
     /**
@@ -1740,11 +1740,10 @@ class AdminControllerCore extends Controller
             }
 
             return $this->object;
-        } else {
-            $this->errors[] = $this->trans('The object cannot be loaded (the identifier is missing or invalid)', array(), 'Admin.Notifications.Error');
-
-            return false;
         }
+        $this->errors[] = $this->trans('The object cannot be loaded (the identifier is missing or invalid)', array(), 'Admin.Notifications.Error');
+
+        return false;
     }
 
     /**
@@ -4144,9 +4143,9 @@ class AdminControllerCore extends Controller
 
         if (isset($result)) {
             return $result;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     protected function ajaxProcessOpenHelp()
@@ -4816,9 +4815,9 @@ class AdminControllerCore extends Controller
             )
         ) {
             return AdminController::LEVEL_VIEW;
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
     /**

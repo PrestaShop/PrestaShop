@@ -1212,9 +1212,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
         if ($str_errors . $str_error_delete) {
             return array('hasError' => true, 'errors' => array($str_errors . $str_error_delete));
-        } else {
-            return array('hasError' => false, 'errors' => '');
         }
+
+        return array('hasError' => false, 'errors' => '');
     }
 
     protected function getEncoding($structure)

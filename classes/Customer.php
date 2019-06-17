@@ -658,9 +658,9 @@ class CustomerCore extends ObjectModel
         $res = Db::getInstance()->executeS($sql);
         if (count($res) === 1) {
             return $res[0];
-        } else {
-            return $res;
         }
+
+        return $res;
     }
 
     /**

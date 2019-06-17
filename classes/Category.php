@@ -427,9 +427,8 @@ class CategoryCore extends ObjectModel
             $category = new Category($idCategory);
             if ($category->isRootCategoryForAShop()) {
                 return false;
-            } else {
-                $return &= $category->delete();
             }
+            $return &= $category->delete();
         }
 
         return $return;
@@ -1439,16 +1438,15 @@ class CategoryCore extends ObjectModel
             }
 
             return Cache::retrieve($key);
-        } else {
-            $sql = new DbQuery();
-            $sql->select('c.*, cl.*');
-            $sql->from('category', 'c');
-            $sql->leftJoin('category_lang', 'cl', 'c.`id_category` = cl.`id_category` AND `id_lang` = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl'));
-            $sql->where('`name` LIKE \'%' . pSQL($query) . '%\'');
-            $sql->where('c.`id_category` != ' . (int) Configuration::get('PS_HOME_CATEGORY'));
-
-            return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         }
+        $sql = new DbQuery();
+        $sql->select('c.*, cl.*');
+        $sql->from('category', 'c');
+        $sql->leftJoin('category_lang', 'cl', 'c.`id_category` = cl.`id_category` AND `id_lang` = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl'));
+        $sql->where('`name` LIKE \'%' . pSQL($query) . '%\'');
+        $sql->where('c.`id_category` != ' . (int) Configuration::get('PS_HOME_CATEGORY'));
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     /**
@@ -1845,16 +1843,15 @@ class CategoryCore extends ObjectModel
 
         if (count($results) === 1) {
             return 0;
-        } else {
-            $maxPosition = (int) Db::getInstance()->getValue('
+        }
+        $maxPosition = (int) Db::getInstance()->getValue('
 				SELECT MAX(cs.`position`)
 				FROM `' . _DB_PREFIX_ . 'category` c
 				LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` cs
 				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop . ')
 				WHERE c.`id_parent` = ' . (int) $idCategoryParent);
 
-            return 1 + $maxPosition;
-        }
+        return 1 + $maxPosition;
     }
 
     /**

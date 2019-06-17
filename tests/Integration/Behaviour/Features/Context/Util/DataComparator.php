@@ -86,9 +86,8 @@ class DataComparator
                     $expectedAsString = $castedExpectedElement->format('Y/m/d H:i:s');
 
                     throw new Exception("Real $key is $realAsString / expected $expectedAsString");
-                } else {
-                    throw new Exception("Real $key is " . $realElement . ' / expected ' . $castedExpectedElement);
                 }
+                throw new Exception("Real $key is " . $realElement . ' / expected ' . $castedExpectedElement);
             }
         }
     }

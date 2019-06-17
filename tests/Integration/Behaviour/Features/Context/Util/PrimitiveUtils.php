@@ -90,11 +90,10 @@ class PrimitiveUtils
             case self::TYPE_NULL:
                 if (('null' === $element) || ('Null' === $element) || ('NULL' === $element)) {
                     return;
-                } else {
-                    return $element;
                 }
 
-            // no break
+                    return $element;
+
             case self::TYPE_OBJECT:
             case self::TYPE_RESOURCE:
             case self::TYPE_UNKNOWN:
@@ -163,9 +162,10 @@ class PrimitiveUtils
             case self::TYPE_NULL:
                 if ((null === $element1) && (null === $element2)) {
                     return true;
-                } else {
-                    return false;
                 }
+
+                    return false;
+
                 break;
 
             case self::TYPE_UNKNOWN:

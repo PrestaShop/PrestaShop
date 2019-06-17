@@ -226,9 +226,9 @@ class SortOrder
                 $this->setField('name');
 
                 return 'm.';
-            } else {
-                return 'p.';
             }
+
+            return 'p.';
         } elseif ($this->entity === 'manufacturer') {
             return 'm.';
         }
@@ -245,9 +245,9 @@ class SortOrder
             return $this->getLegacyPrefix() . $this->field;
         } elseif ($this->entity === 'manufacturer' && $this->field === 'name') {
             return 'manufacturer_name';
-        } else {
-            return $this->field;
         }
+
+        return $this->field;
     }
 
     /**

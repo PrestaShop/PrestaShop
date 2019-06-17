@@ -391,12 +391,12 @@ class ToolsCore
                 $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
 
                 return $ips[0];
-            } else {
-                return $_SERVER['HTTP_X_FORWARDED_FOR'];
             }
-        } else {
-            return $_SERVER['REMOTE_ADDR'];
+
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
+
+        return $_SERVER['REMOTE_ADDR'];
     }
 
     /**
@@ -436,9 +436,9 @@ class ToolsCore
     {
         if (Tools::usingSecureMode()) {
             return 'https://';
-        } else {
-            return 'http://';
         }
+
+        return 'http://';
     }
 
     /**
@@ -706,14 +706,13 @@ class ToolsCore
         $cookie->id_currency = (int) $currency->id;
         if ($currency->isAssociatedToShop()) {
             return $currency;
-        } else {
-            // get currency from context
-            $currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
-            if (isset($currency[0]) && $currency[0]['id_currency']) {
-                $cookie->id_currency = $currency[0]['id_currency'];
+        }
+        // get currency from context
+        $currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
+        if (isset($currency[0]) && $currency[0]['id_currency']) {
+            $cookie->id_currency = $currency[0]['id_currency'];
 
-                return Currency::getCurrencyInstance((int) $cookie->id_currency);
-            }
+            return Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
 
         return $currency;
@@ -912,9 +911,9 @@ class ToolsCore
             }
 
             return $res;
-        } else {
-            return call_user_func_array('array_replace', func_get_args());
         }
+
+        return call_user_func_array('array_replace', func_get_args());
     }
 
     /**
@@ -1321,9 +1320,9 @@ class ToolsCore
         }
         if ($page === true) {
             return Tools::hash($context->customer->id . $context->customer->passwd . $_SERVER['SCRIPT_NAME']);
-        } else {
-            return Tools::hash($context->customer->id . $context->customer->passwd . $page);
         }
+
+        return Tools::hash($context->customer->id . $context->customer->passwd . $page);
     }
 
     /**
@@ -1643,10 +1642,9 @@ class ToolsCore
                     $truncate .= Tools::substr($tag[3], 0, $left + $entities_length);
 
                     break;
-                } else {
-                    $truncate .= $tag[3];
-                    $total_length += $content_length;
                 }
+                $truncate .= $tag[3];
+                $total_length += $content_length;
 
                 if ($total_length >= $length) {
                     break;
@@ -3219,9 +3217,9 @@ exit;
         closedir($dh);
         if (@chmod($path, $filemode)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -3279,11 +3277,11 @@ exit;
     {
         if (is_numeric($value)) {
             return $value;
-        } else {
-            $value_length = strlen($value);
-            $qty = (int) substr($value, 0, $value_length - 1);
-            $unit = Tools::strtolower(substr($value, $value_length - 1));
-            switch ($unit) {
+        }
+        $value_length = strlen($value);
+        $qty = (int) substr($value, 0, $value_length - 1);
+        $unit = Tools::strtolower(substr($value, $value_length - 1));
+        switch ($unit) {
                 case 'k':
                     $qty *= 1024;
 
@@ -3298,8 +3296,7 @@ exit;
                     break;
             }
 
-            return $qty;
-        }
+        return $qty;
     }
 
     /**
@@ -3773,9 +3770,9 @@ exit;
     {
         if (version_compare(PHP_VERSION, '5.2.9', '<')) {
             return array_unique($array);
-        } else {
-            return array_unique($array, SORT_REGULAR);
         }
+
+        return array_unique($array, SORT_REGULAR);
     }
 
     /**

@@ -165,13 +165,12 @@ class EntityRepository
             return null;
         } elseif (count($rows) > 1) {
             throw new Exception('Too many rows returned.');
-        } else {
-            $data = $rows[0];
-            $entity = $this->getNewEntity();
-            $entity->hydrate($data);
-
-            return $entity;
         }
+        $data = $rows[0];
+        $entity = $this->getNewEntity();
+        $entity->hydrate($data);
+
+        return $entity;
     }
 
     protected function hydrateMany(array $rows)
@@ -206,9 +205,9 @@ class EntityRepository
 
         if ($one) {
             return $this->hydrateOne($rows);
-        } else {
-            return $this->hydrateMany($rows);
         }
+
+        return $this->hydrateMany($rows);
     }
 
     /**

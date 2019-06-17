@@ -328,21 +328,20 @@ class AdminFilter
                     }
 
                     return sprintf('BETWEEN %f AND %f', $matches['min'], $matches['max']);
-                } else {
-                    $subjectWithoutOperator = str_replace($operator, '', $subject);
-
-                    $flag = FILTER_DEFAULT;
-                    if ($filter === FILTER_SANITIZE_NUMBER_FLOAT) {
-                        $flag = FILTER_FLAG_ALLOW_FRACTION;
-                    }
-
-                    $filteredSubjectWithoutOperator = filter_var($subjectWithoutOperator, $filter, $flag);
-                    if (!$filteredSubjectWithoutOperator) {
-                        $filteredSubjectWithoutOperator = 0;
-                    }
-
-                    return $operator . $filteredSubjectWithoutOperator;
                 }
+                $subjectWithoutOperator = str_replace($operator, '', $subject);
+
+                $flag = FILTER_DEFAULT;
+                if ($filter === FILTER_SANITIZE_NUMBER_FLOAT) {
+                    $flag = FILTER_FLAG_ALLOW_FRACTION;
+                }
+
+                $filteredSubjectWithoutOperator = filter_var($subjectWithoutOperator, $filter, $flag);
+                if (!$filteredSubjectWithoutOperator) {
+                    $filteredSubjectWithoutOperator = 0;
+                }
+
+                return $operator . $filteredSubjectWithoutOperator;
             };
         };
 

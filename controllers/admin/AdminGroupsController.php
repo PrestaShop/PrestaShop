@@ -507,9 +507,9 @@ class AdminGroupsControllerCore extends AdminController
     {
         if (!Validate::isPrice($reduction) || $reduction > 100 || $reduction < 0) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     public function ajaxProcessAddCategoryReduction()

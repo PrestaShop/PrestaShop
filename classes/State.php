@@ -166,9 +166,9 @@ class StateCore extends ObjectModel
             }
 
             return $result;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

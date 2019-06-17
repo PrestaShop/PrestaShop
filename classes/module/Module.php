@@ -439,9 +439,9 @@ abstract class ModuleCore implements ModuleInterface
     {
         if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min'], '<') || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max'], '>')) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     public static function updateTranslationsAfterInstall($update = true)
@@ -1785,14 +1785,13 @@ abstract class ModuleCore implements ModuleInterface
         } elseif (stripos($untrusted_modules_list_content, $module_name) !== false) {
             // If the module is already in the untrusted list, then return 0 (untrusted)
             return 0;
-        } else {
-            // If the module isn't in one of the xml files
-            // It might have been uploaded recenlty so we check
-            // Addons API and clear XML files to be regenerated next time
-            self::deleteTrustedXmlCache();
-
-            return (int) Module::checkModuleFromAddonsApi($module_name);
         }
+        // If the module isn't in one of the xml files
+        // It might have been uploaded recenlty so we check
+        // Addons API and clear XML files to be regenerated next time
+        self::deleteTrustedXmlCache();
+
+        return (int) Module::checkModuleFromAddonsApi($module_name);
     }
 
     /**
@@ -1884,9 +1883,8 @@ abstract class ModuleCore implements ModuleInterface
 
         if ($success) {
             return true;
-        } else {
-            Context::getContext()->getTranslator()->trans('Trusted and Untrusted XML have not been generated properly', array(), 'Admin.Modules.Notification');
         }
+        Context::getContext()->getTranslator()->trans('Trusted and Untrusted XML have not been generated properly', array(), 'Admin.Modules.Notification');
     }
 
     /**
@@ -1904,15 +1902,14 @@ abstract class ModuleCore implements ModuleInterface
             return false;
         } elseif ($obj->module_key === '') {
             return false;
-        } else {
-            $params = array(
+        }
+        $params = array(
                 'module_name' => $obj->name,
                 'module_key' => $obj->module_key,
             );
-            $xml = Tools::addonsRequest('check_module', $params);
+        $xml = Tools::addonsRequest('check_module', $params);
 
-            return (bool) (strpos($xml, 'success') !== false);
-        }
+        return (bool) (strpos($xml, 'success') !== false);
     }
 
     /**
@@ -2414,27 +2411,26 @@ abstract class ModuleCore implements ModuleInterface
     {
         if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null) {
             return Context::getContext()->getTranslator()->trans('No template found for module', array(), 'Admin.Modules.Notification') . ' ' . basename($file, '.php') . (_PS_MODE_DEV_ ? ' (' . $template . ')' : '');
-        } else {
-            $this->smarty->assign(array(
+        }
+        $this->smarty->assign(array(
                 'module_dir' => __PS_BASE_URI__ . 'modules/' . basename($file, '.php') . '/',
                 'module_template_dir' => ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__) . 'modules/' . basename($file, '.php') . '/',
                 'allow_push' => $this->allow_push,
             ));
 
-            if ($cache_id !== null) {
-                Tools::enableCache();
-            }
-
-            $result = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->fetch();
-
-            if ($cache_id !== null) {
-                Tools::restoreCacheSettings();
-            }
-
-            $this->resetCurrentSubTemplate($template, $cache_id, $compile_id);
-
-            return $result;
+        if ($cache_id !== null) {
+            Tools::enableCache();
         }
+
+        $result = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->fetch();
+
+        if ($cache_id !== null) {
+            Tools::restoreCacheSettings();
+        }
+
+        $this->resetCurrentSubTemplate($template, $cache_id, $compile_id);
+
+        return $result;
     }
 
     /**
@@ -2526,9 +2522,9 @@ abstract class ModuleCore implements ModuleInterface
             return _PS_MODULE_DIR_ . $this->name . '/views/templates/front/' . $template;
         } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $this->name . '/' . $template)) {
             return _PS_MODULE_DIR_ . $this->name . '/' . $template;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function isCached($template, $cache_id = null, $compile_id = null)
@@ -2876,9 +2872,9 @@ abstract class ModuleCore implements ModuleInterface
             if (isset(Hook::$preloadModulesFromHooks[$id_hook])) {
                 if (isset(Hook::$preloadModulesFromHooks[$id_hook]['module_position'][$this->id])) {
                     return Hook::$preloadModulesFromHooks[$id_hook]['module_position'][$this->id];
-                } else {
-                    return 0;
                 }
+
+                return 0;
             }
         }
         $result = Db::getInstance()->getRow('
@@ -3015,9 +3011,8 @@ abstract class ModuleCore implements ModuleInterface
 
         if (!file_exists($path_override)) {
             return false;
-        } else {
-            file_put_contents($path_override, preg_replace('#(\r\n|\r)#ism', "\n", file_get_contents($path_override)));
         }
+        file_put_contents($path_override, preg_replace('#(\r\n|\r)#ism', "\n", file_get_contents($path_override)));
 
         $pattern_escape_com = '#(^\s*?\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
         // Check if there is already an override file, if not, we just need to copy the file

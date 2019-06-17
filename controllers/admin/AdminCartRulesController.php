@@ -587,9 +587,9 @@ class AdminCartRulesControllerCore extends AdminController
                 'products' => $products,
                 'found' => true,
             );
-        } else {
-            return array('found' => false, 'notfound' => $this->trans('No product has been found.', array(), 'Admin.Catalog.Notification'));
         }
+
+        return array('found' => false, 'notfound' => $this->trans('No product has been found.', array(), 'Admin.Catalog.Notification'));
     }
 
     public function ajaxProcessSearchProducts()
