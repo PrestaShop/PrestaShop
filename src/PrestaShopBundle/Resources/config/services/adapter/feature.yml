@@ -23,3 +23,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.feature.accented_url:
+        class: 'PrestaShop\PrestaShop\Adapter\Feature\AccentedUrlFeature'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

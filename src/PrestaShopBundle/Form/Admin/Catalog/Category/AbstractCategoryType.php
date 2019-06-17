@@ -62,6 +62,11 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $multistoreFeature;
 
     /**
+     * @var FeatureInterface
+     */
+    private $accentedUrlFeature;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
@@ -71,12 +76,14 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        FeatureInterface $accentedUrlFeature
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multistoreFeature = $multistoreFeature;
+        $this->accentedUrlFeature = $accentedUrlFeature;
     }
 
     /**
@@ -212,7 +219,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'options' => [
                     'constraints' => [
                         new Regex([
-                            'pattern' => '/^[_a-zA-Z0-9\-]+$/',
+                            'pattern' => $this->accentedUrlFeature->isActive() ? '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u' : '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                     ],
