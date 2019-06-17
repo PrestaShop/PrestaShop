@@ -9,6 +9,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
 const common = require('../../common_scenarios/shop_parameters');
 const {Performance} = require('../../../selectors/BO/advancedParameters/performance');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 /**
@@ -19,12 +20,8 @@ scenario('Open all menu links in the Back Office', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
-    test('should check and click on "Stop the OnBoarding" button', () => {
-      return promise
-        .then(() => client.isVisible(OnBoarding.stop_button))
-        .then(() => client.stopOnBoarding(OnBoarding.stop_button))
-    });
-  }, 'onboarding');
+  }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   common.enablePrestashopDebugMode(Menu, Performance);
 
   scenario('Go to "Dashboard" page in the Back Office', client => {

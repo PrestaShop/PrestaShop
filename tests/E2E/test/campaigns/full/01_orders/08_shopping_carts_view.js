@@ -11,6 +11,7 @@ const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {ShoppingCart} = require('../../../selectors/BO/order');
 const {accountPage} = require('../../../selectors/FO/add_account_page');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 /**
@@ -22,6 +23,7 @@ scenario('Shopping carts view', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Add products to the cart in the Front Office', () => {
     scenario('Go to the Front Office', client => {
       test('should go to the "Front Office"', () => {

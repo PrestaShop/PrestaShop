@@ -10,7 +10,8 @@ const commonLocalization = require('../../../common_scenarios/localization');
 const commonCurrency = require('../../../common_scenarios/currency');
 const {Localization} = require('../../../../selectors/BO/international/localization');
 const {accountPage} = require('../../../../selectors/FO/add_account_page');
-var data = require('../../../../datas/country_language');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
+const data = require('../../../../datas/country_language');
 let promise = Promise.resolve();
 
 let defaultLocalUnitsData = {
@@ -33,6 +34,7 @@ scenario('"Configuration"', () => {
       test('should open the browser', () => client.open());
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
     }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
     commonLocalization.importLocalization('United', 'United States');
     commonLocalization.importLocalization('Italia', 'Italia');
     commonLocalization.configureLocalization();

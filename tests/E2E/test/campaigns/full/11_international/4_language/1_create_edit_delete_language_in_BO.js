@@ -8,6 +8,7 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const common_scenarios = require('../../../common_scenarios/localization');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 let languageData = [{
   name: 'Spanish',
@@ -60,6 +61,7 @@ scenario('Create, edit, delete and check "Languages" in the Back Office', () => 
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
 
   scenario('Test 1: Create, check language in the Back Office and check it in the Front Office', () => {
     common_scenarios.createLanguage(languageData[0]);
