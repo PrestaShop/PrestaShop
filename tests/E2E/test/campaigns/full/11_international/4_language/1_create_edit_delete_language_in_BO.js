@@ -67,7 +67,10 @@ scenario('Create, edit, delete and check "Languages" in the Back Office', () => 
     common_scenarios.createLanguage(languageData[0]);
     common_scenarios.checkLanguageBO(languageData[0]);
     scenario('Go to the Front Office', client => {
-      test('should go to the Front Office', () => client.accessToFO(AccessPageFO));
+      test('should go to the Front Office', async () => {
+        await client.pause(500);
+        await client.accessToFO(AccessPageFO);
+      });
     }, 'common_client');
     common_scenarios.checkLanguageFO(languageData[0]);
   }, 'common_client');
@@ -111,7 +114,10 @@ scenario('Create, edit, delete and check "Languages" in the Back Office', () => 
     common_scenarios.deleteLanguage(languageData[1].name);
     common_scenarios.deleteLanguage(languageEditedData[1].name);
     scenario('Go to the Front Office', client => {
-      test('should go to the Front Office', () => client.accessToFO(AccessPageFO));
+      test('should go to the Front Office', async () => {
+        await client.pause(500);
+        await client.accessToFO(AccessPageFO);
+      });
     }, 'common_client');
     common_scenarios.checkLanguageFO(languageData[1], true);
   }, 'common_client');
