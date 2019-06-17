@@ -293,7 +293,9 @@ class ModuleManager implements AddonManagerInterface
             $source = null;
         }
 
-        if ($this->moduleProvider->isInstalled($name)) {
+        if ($this->moduleProvider->isInstalled($name)
+            && $this->moduleProvider->isOnDisk($name)
+        ) {
             return $this->upgrade($name, 'latest', $source);
         }
 

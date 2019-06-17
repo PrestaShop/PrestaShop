@@ -266,7 +266,10 @@ class AdminModuleDataProvider implements ModuleInterface
                 'module_name' => $addon->attributes->get('name'),
             ));
 
-            if ($addon->database->has('installed') && $addon->database->getBoolean('installed')) {
+            if ($addon->database->has('installed')
+                && $addon->database->getBoolean('installed')
+                && $addon->disk->getBoolean('is_present')
+            ) {
                 if (!$addon->database->getBoolean('active')) {
                     $url_active = 'enable';
                     unset(

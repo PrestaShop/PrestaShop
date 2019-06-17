@@ -233,7 +233,8 @@ class ModuleRepository implements ModuleRepositoryInterface
 
             // Part Two : Remove module not installed if specified
             if ($filter->status != AddonListFilterStatus::ALL) {
-                if ($module->database->get('installed') == 1
+                if (($module->database->get('installed') == 1
+                        && $module->disk->get('is_present') == 1)
                     && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
