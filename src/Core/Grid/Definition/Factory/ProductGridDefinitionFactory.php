@@ -65,13 +65,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'id_product',
                     ])
             )
-            ->add(
-                (new ImageColumn('image'))
-                    ->setName($this->trans('Image', [], 'Admin.Global'))
-                    ->setOptions([
-                        'src_field' => 'image',
-                    ])
-            )
+//            ->add(
+//                (new ImageColumn('image'))
+//                    ->setName($this->trans('Image', [], 'Admin.Global'))
+//                    ->setOptions([
+//                        'src_field' => 'image',
+//                    ])
+//            )
             ->add(
                 (new DataColumn('name'))
                     ->setName($this->trans('Name', [], 'Admin.Global'))

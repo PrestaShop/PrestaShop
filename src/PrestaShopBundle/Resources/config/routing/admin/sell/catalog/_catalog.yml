@@ -2,6 +2,11 @@ _products:
     resource: "products/products.yml"
     prefix: /products/
 
+# todo: remove v2 once list is migrated
+_products_v2:
+    resource: "products_v2/products.yml"
+    prefix: /products/v2/
+
 _categories:
     resource: "categories.yml"
     prefix: /categories/

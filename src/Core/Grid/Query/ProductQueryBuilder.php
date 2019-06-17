@@ -73,6 +73,10 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('cl.`name` AS `category`')
         ;
 
+        if ($this->isStockManagementEnabled) {
+            $qb->addSelect('sa.`quantity`');
+        }
+
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)

@@ -1,0 +1,5 @@
+admin_products_index:
+  path: /
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:index'
