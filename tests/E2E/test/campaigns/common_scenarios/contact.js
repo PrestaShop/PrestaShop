@@ -103,7 +103,7 @@ module.exports = {
       test('should upload an attachment', () => client.uploadPicture(messageData.attachment, ContactUsPageFO.attachment_file, 'filestyle'));
       test('should set the contact\'s "Description"', () => client.waitAndSetValue(ContactUsPageFO.message_textarea, messageData.message));
       test('should click on "Send" button', () => client.waitForExistAndClick(ContactUsPageFO.send_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(ContactUsPageFO.success_panel, 'Your message has been successfully sent to our team.'));
+      test('should verify the appearance of the green validation (issue #9566)', () => client.checkTextValue(ContactUsPageFO.success_panel, 'Your message has been successfully sent to our team.'));
     }, 'common_client');
   },
   checkCustomerService: function (contactData, messageData, isUpdated = false, isDeleted = false) {
