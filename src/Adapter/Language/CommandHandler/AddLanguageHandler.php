@@ -100,6 +100,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         $language = new Language();
         $language->name = $command->getName();
         $language->iso_code = $command->getIsoCode()->getValue();
+        $language->locale = strtolower($language->iso_code) . '-' . strtoupper($language->iso_code);
         $language->language_code = $command->getTagIETF()->getValue();
         $language->date_format_lite = $command->getShortDateFormat();
         $language->date_format_full = $command->getFullDateFormat();

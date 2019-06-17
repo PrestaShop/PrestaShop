@@ -188,7 +188,7 @@ class TranslateCore
 
         $name = $module instanceof Module ? $module->name : $module;
 
-        if (null !== $locale) {
+        if (!empty($locale)) {
             $iso = Language::getIsoByLocale($locale);
         }
 
