@@ -34,7 +34,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Validates reduction value according to provided reduction type by its property path
+ * Validates reduction type and value
  */
 final class ReductionValidator extends ConstraintValidator
 {
@@ -71,21 +71,25 @@ final class ReductionValidator extends ConstraintValidator
      */
     private function buildViolation(ReductionConstraint $constraint, $value, $exceptionCode)
     {
-        $message = $constraint->invalidAmountMessage;
-        $params = ['{{ value }}' => $value['value']];
+        $message = $constraint->invalidAmountValueMessage;
+        $params = ['%value%' => $value['value']];
 
         if (DomainConstraintException::INVALID_REDUCTION_PERCENTAGE === $exceptionCode) {
-            $message = $constraint->invalidPercentageMessage;
+            $message = $constraint->invalidPercentageValueMessage;
+            $params['%max%'] = Reduction::MAX_ALLOWED_PERCENTAGE;
         }
 
         if (DomainConstraintException::INVALID_REDUCTION_TYPE === $exceptionCode) {
             $message = $constraint->invalidTypeMessage;
-            $params = ['{{ value }}' => $value['type']];
+            $params = [
+                '%type%' => $value['type'],
+                '%types%' => Reduction::TYPE_AMOUNT . ', ' . Reduction::TYPE_PERCENTAGE,
+            ];
         }
 
         $this->context->buildViolation($message, $params)
             ->setTranslationDomain('Admin.Notifications.Error')
-            ->setParameter('%s', $this->formatValue($value))
+            ->setParameters($params)
             ->addViolation()
         ;
     }

@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction as ReductionConstraint;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\ReductionType;
 use Symfony\Component\Form\AbstractType;
@@ -165,7 +164,7 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('reduction', ReductionType::class, [
                 'constraints' => [
-                    new ReductionConstraint($this->getReductionMessages()),
+                    new ReductionConstraint(),
                 ],
             ])
         ;
@@ -216,29 +215,5 @@ class CatalogPriceRuleType extends AbstractType
             [$this->translator->trans('All groups', [], 'Admin.Global') => 0],
             $this->groupByIdChoices
         );
-    }
-
-    private function getReductionMessages()
-    {
-        return [
-            'invalidTypeMessage' => $this->translator->trans(
-                'Reduction type %type% is invalid. Allowed types are: %types%',
-                [
-                    '%type%' => '"{{ value }}"',
-                    '%types%' => '"' . Reduction::TYPE_AMOUNT . '", "' . Reduction::TYPE_PERCENTAGE . '"',
-                ],
-                'Admin.Notifications.Error'
-            ),
-            'invalidPercentageMessage' => $this->translator->trans(
-                'Reduction value must be from 0 to %max%',
-                ['%max%' => Reduction::MAX_ALLOWED_PERCENTAGE . '%'],
-                'Admin.Notifications.Error'
-            ),
-            'invalidAmountMessage' => $this->translator->trans(
-                'Reduction value cannot be negative',
-                [],
-                'Admin.Notifications.Error'
-            ),
-        ];
     }
 }
