@@ -24,17 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
- * Defines interface for service that handles command which saves private note for customer
+ * Class ReferrerInformation holds information about customer referrer.
  */
-interface SavePrivateNoteForCustomerHandlerInterface
+class ReferrerInformation
 {
     /**
-     * @param SavePrivateNoteForCustomerCommand $command
+     * @var string
      */
-    public function handle(SavePrivateNoteForCustomerCommand $command);
+    private $date;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $shop;
+
+    /**
+     * @param string $date
+     * @param string $name
+     * @param string $shop
+     */
+    public function __construct($date, $name, $shop)
+    {
+        $this->date = $date;
+        $this->name = $name;
+        $this->shop = $shop;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShop()
+    {
+        return $this->shop;
+    }
 }

@@ -24,17 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Interface ToggleCategoryStatusHandlerInterface.
+ * Get current status (enabled/disabled) for given category.
  */
-interface ToggleCategoryStatusHandlerInterface
+class GetCategoryIsEnabled
 {
     /**
-     * @param ToggleCategoryStatusCommand $command
+     * @var CategoryId
      */
-    public function handle(ToggleCategoryStatusCommand $command);
+    private $categoryId;
+
+    /**
+     * @param int $categoryId
+     */
+    public function __construct($categoryId)
+    {
+        $this->categoryId = new CategoryId($categoryId);
+    }
+
+    /**
+     * @return CategoryId
+     */
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
 }

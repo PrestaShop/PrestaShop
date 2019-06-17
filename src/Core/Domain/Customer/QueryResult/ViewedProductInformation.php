@@ -24,33 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
- * Class ToggleCategoryStatusCommand toggles given category status.
+ * Class ViewedProductInformation holds information about product that customer has viewed.
  */
-class ToggleCategoryStatusCommand
+class ViewedProductInformation
 {
     /**
-     * @var CategoryId
+     * @var int
      */
-    private $categoryId;
+    private $productId;
 
     /**
-     * @param int $categoryId
+     * @var string
      */
-    public function __construct($categoryId)
+    private $productName;
+
+    /**
+     * @var string
+     */
+    private $productUrl;
+
+    /**
+     * @param int $productId
+     * @param string $productName
+     * @param string $productUrl
+     */
+    public function __construct($productId, $productName, $productUrl)
     {
-        $this->categoryId = new CategoryId($categoryId);
+        $this->productId = $productId;
+        $this->productName = $productName;
+        $this->productUrl = $productUrl;
     }
 
     /**
-     * @return CategoryId
+     * @return int
      */
-    public function getCategoryId()
+    public function getProductId()
     {
-        return $this->categoryId;
+        return $this->productId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductName()
+    {
+        return $this->productName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductUrl()
+    {
+        return $this->productUrl;
     }
 }

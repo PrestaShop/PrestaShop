@@ -24,31 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Class GeneralInformation.
+ * Sets private note about customer that can only be seen in Back Office
  */
-class GeneralInformation
+class SetPrivateNoteAboutCustomerCommand
 {
+    /**
+     * @var CustomerId
+     */
+    private $customerId;
+
     /**
      * @var string
      */
     private $privateNote;
 
     /**
-     * @var string
+     * @param int $customerId
+     * @param string $privateNote
      */
-    private $customerBySameEmailExists;
+    public function __construct($customerId, $privateNote)
+    {
+        $this->assertPrivateNoteIsString($privateNote);
+
+        $this->customerId = new CustomerId($customerId);
+        $this->privateNote = $privateNote;
+    }
 
     /**
-     * @param string $privateNote
-     * @param bool $customerBySameEmailExists
+     * @return CustomerId
      */
-    public function __construct($privateNote, $customerBySameEmailExists)
+    public function getCustomerId()
     {
-        $this->privateNote = $privateNote;
-        $this->customerBySameEmailExists = $customerBySameEmailExists;
+        return $this->customerId;
     }
 
     /**
@@ -60,10 +73,17 @@ class GeneralInformation
     }
 
     /**
-     * @return string
+     * @param string $privateNote
+     *
+     * @throws CustomerConstraintException
      */
-    public function getCustomerBySameEmailExists()
+    private function assertPrivateNoteIsString($privateNote)
     {
-        return $this->customerBySameEmailExists;
+        if (!is_string($privateNote)) {
+            throw new CustomerConstraintException(
+                'Invalid private note provided. Private note must be a string.',
+                CustomerConstraintException::INVALID_PRIVATE_NOTE
+            );
+        }
     }
 }

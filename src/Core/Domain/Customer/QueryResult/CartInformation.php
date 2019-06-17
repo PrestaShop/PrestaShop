@@ -24,61 +24,80 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
- * Class ViewedProductInformation holds information about product that customer has viewed.
+ * Class CustomerCartInformation.
  */
-class ViewedProductInformation
+class CartInformation
 {
     /**
-     * @var int
+     * @var string
      */
-    private $productId;
+    private $cartId;
 
     /**
      * @var string
      */
-    private $productName;
+    private $cartCreationDate;
 
     /**
      * @var string
      */
-    private $productUrl;
+    private $cartTotal;
 
     /**
-     * @param int $productId
-     * @param string $productName
-     * @param string $productUrl
+     * @var string
      */
-    public function __construct($productId, $productName, $productUrl)
-    {
-        $this->productId = $productId;
-        $this->productName = $productName;
-        $this->productUrl = $productUrl;
-    }
+    private $carrierName;
 
     /**
-     * @return int
+     * @param string $cartId
+     * @param string $cartCreationDate
+     * @param string $cartTotal
+     * @param string $carrierName
      */
-    public function getProductId()
-    {
-        return $this->productId;
+    public function __construct(
+        $cartId,
+        $cartCreationDate,
+        $cartTotal,
+        $carrierName
+    ) {
+        $this->cartId = $cartId;
+        $this->cartCreationDate = $cartCreationDate;
+        $this->cartTotal = $cartTotal;
+        $this->carrierName = $carrierName;
     }
 
     /**
      * @return string
      */
-    public function getProductName()
+    public function getCartId()
     {
-        return $this->productName;
+        return $this->cartId;
     }
 
     /**
      * @return string
      */
-    public function getProductUrl()
+    public function getCartCreationDate()
     {
-        return $this->productUrl;
+        return $this->cartCreationDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCartTotal()
+    {
+        return $this->cartTotal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCarrierName()
+    {
+        return $this->carrierName;
     }
 }

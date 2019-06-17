@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,26 +22,35 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="card">
-  <h3 class="card-header">
-    <i class="material-icons">visibility_off</i>
-    {{ 'Add a private note'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </h3>
-  <div class="card-body clearfix">
-    <div class="alert alert-info" role="alert">
-      <p class="alert-text">
-        {{ 'This note will be displayed to all employees but not to customers.'|trans({}, 'Admin.Orderscustomers.Help') }}
-      </p>
-    </div>
+namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
-    {{ form_start(privateNoteForm, {'action': path('admin_customers_set_private_note', {'customerId': customerInformation.customerId.value})}) }}
-      {{ form_widget(privateNoteForm.note) }}
+use Category;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryIsEnabledHandlerInterface;
 
-      <button class="btn btn-primary float-right mt-3" type="submit">
-        {{ 'Save'|trans({}, 'Admin.Actions') }}
-      </button>
-    {{ form_end(privateNoteForm) }}
-  </div>
-</div>
+/**
+ * @internal
+ */
+final class GetCategoryIsEnabledHandler implements GetCategoryIsEnabledHandlerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(GetCategoryIsEnabled $query)
+    {
+        $categoryId = $query->getCategoryId()->getValue();
+        $category = new Category($categoryId);
+
+        if ($category->id !== $categoryId) {
+            throw new CategoryNotFoundException(
+                $query->getCategoryId(),
+                sprintf('Category with id "%s" was not found.', $categoryId)
+            );
+        }
+
+        return (bool) $category->active;
+    }
+}

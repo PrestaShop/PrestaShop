@@ -24,96 +24,76 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
- * Class DiscountInformation.
+ * Class CustomerMessageInformation holds customer message information.
  */
-class DiscountInformation
+class MessageInformation
 {
     /**
      * @var int
      */
-    private $discountId;
+    private $customerThreadId;
 
     /**
      * @var string
      */
-    private $code;
+    private $message;
 
     /**
      * @var string
      */
-    private $name;
+    private $status;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $isActive;
+    private $date;
 
     /**
-     * @var int
+     * @param int $customerThreadId
+     * @param string $message
+     * @param string $status
+     * @param string $date
      */
-    private $availableQuantity;
-
-    /**
-     * @param int $discountId
-     * @param string $code
-     * @param string $name
-     * @param bool $isActive
-     * @param int $availableQuantity
-     */
-    public function __construct(
-        $discountId,
-        $code,
-        $name,
-        $isActive,
-        $availableQuantity
-    ) {
-        $this->discountId = $discountId;
-        $this->code = $code;
-        $this->name = $name;
-        $this->isActive = $isActive;
-        $this->availableQuantity = $availableQuantity;
+    public function __construct($customerThreadId, $message, $status, $date)
+    {
+        $this->customerThreadId = $customerThreadId;
+        $this->message = $message;
+        $this->status = $status;
+        $this->date = $date;
     }
 
     /**
      * @return int
      */
-    public function getDiscountId()
+    public function getCustomerThreadId()
     {
-        return $this->discountId;
+        return $this->customerThreadId;
     }
 
     /**
      * @return string
      */
-    public function getCode()
+    public function getMessage()
     {
-        return $this->code;
+        return $this->message;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getStatus()
     {
-        return $this->name;
+        return $this->status;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isActive()
+    public function getDate()
     {
-        return $this->isActive;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAvailableQuantity()
-    {
-        return $this->availableQuantity;
+        return $this->date;
     }
 }

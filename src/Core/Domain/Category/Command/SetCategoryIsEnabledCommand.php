@@ -24,46 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class GroupInformation holds customer group information.
+ * Class ToggleCategoryStatusCommand toggles given category status.
  */
-class GroupInformation
+class SetCategoryIsEnabledCommand
 {
     /**
-     * @var int
+     * @var CategoryId
      */
-    private $groupId;
+    private $categoryId;
 
     /**
-     * @var string
+     * @var bool
      */
-    private $name;
+    private $isEnabled;
 
     /**
-     * @param int $groupId
-     * @param string $name
+     * @param int $categoryId
+     * @param bool $isEnabled
      */
-    public function __construct($groupId, $name)
+    public function __construct($categoryId, $isEnabled)
     {
-        $this->groupId = $groupId;
-        $this->name = $name;
+        $this->categoryId = new CategoryId($categoryId);
+        $this->isEnabled = $isEnabled;
     }
 
     /**
-     * @return int
+     * @return CategoryId
      */
-    public function getGroupId()
+    public function getCategoryId()
     {
-        return $this->groupId;
+        return $this->categoryId;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getName()
+    public function isEnabled()
     {
-        return $this->name;
+        return $this->isEnabled;
     }
 }

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerComman
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
@@ -254,7 +254,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * Save private note for customer.
+     * Set private note about customer.
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
@@ -266,7 +266,7 @@ class CustomerController extends AbstractAdminController
      *
      * @return Response
      */
-    public function savePrivateNoteAction($customerId, Request $request)
+    public function setPrivateNoteAction($customerId, Request $request)
     {
         $privateNoteForm = $this->createForm(PrivateNoteType::class);
         $privateNoteForm->handleRequest($request);
@@ -275,7 +275,7 @@ class CustomerController extends AbstractAdminController
             $data = $privateNoteForm->getData();
 
             try {
-                $this->getCommandBus()->handle(new SavePrivateNoteForCustomerCommand(
+                $this->getCommandBus()->handle(new SetPrivateNoteAboutCustomerCommand(
                     (int) $customerId,
                     $data['note']
                 ));
