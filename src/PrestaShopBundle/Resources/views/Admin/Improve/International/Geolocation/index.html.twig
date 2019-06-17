@@ -54,11 +54,11 @@
       <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
       </div>
-
-      {% block geolocation_form_rest %}
-        {{ form_rest(geolocationForm) }}
-      {% endblock %}
     </div>
+
+    {% block geolocation_form_rest %}
+      {{ form_rest(geolocationForm) }}
+    {% endblock %}
   {{ form_end(geolocationForm) }}
 {% endblock %}
 
