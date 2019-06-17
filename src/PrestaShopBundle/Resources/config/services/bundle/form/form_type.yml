@@ -918,7 +918,15 @@ services:
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
             - '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.tax_inclusion").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.reduction:
+        class: 'PrestaShopBundle\Form\Admin\Type\ReductionType'
+        parent: 'form.type.common_type'
+        arguments:
             - '@=service("prestashop.core.form.choice_provider.price_reduction_type").getChoices()'
+        public: true
         tags:
             - { name: form.type }
 

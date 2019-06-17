@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\editableCatalogPriceRule;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Provides data for catalog price rule add/edit forms
@@ -76,9 +77,11 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
             'leave_initial_price' => $leaveInitialPrice,
             'from' => $editableCatalogPriceRule->getFrom(),
             'to' => $editableCatalogPriceRule->getTo(),
-            'reduction_type' => $editableCatalogPriceRule->getReductionType(),
             'include_tax' => $editableCatalogPriceRule->isTaxIncluded(),
-            'reduction' => $editableCatalogPriceRule->getReduction(),
+            'reduction' => [
+                'type' => $editableCatalogPriceRule->getReductionType(),
+                'value' => $editableCatalogPriceRule->getReduction(),
+            ],
         ];
 
         return $data;
@@ -92,7 +95,10 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
         return [
             'from_quantity' => 1,
             'leave_initial_price' => true,
-            'reduction' => 0,
+            'reduction' => [
+                'type' => Reduction::TYPE_AMOUNT,
+                'value' => 0,
+            ],
         ];
     }
 }
