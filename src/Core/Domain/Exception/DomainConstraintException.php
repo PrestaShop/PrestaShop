@@ -40,4 +40,19 @@ class DomainConstraintException extends DomainException
      * Used when invalid money amount is provided
      */
     const INVALID_MONEY_AMOUNT = 2;
+
+    /**
+     * When price reduction type is not within defined types
+     */
+    const INVALID_REDUCTION_TYPE = 3;
+
+    /**
+     * When price reduction percentage value is not valid
+     */
+    const INVALID_REDUCTION_PERCENTAGE = 4;
+
+    /**
+     * When price reduction amount value is not valid
+     */
+    const INVALID_REDUCTION_AMOUNT = 5;
 }

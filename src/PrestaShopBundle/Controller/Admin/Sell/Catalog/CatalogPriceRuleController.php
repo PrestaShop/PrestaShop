@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPric
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\UpdateCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
@@ -208,7 +207,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_catalog_price_rules_index');
             }
-        } catch (CatalogPriceRuleException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof CatalogPriceRuleNotFoundException) {
