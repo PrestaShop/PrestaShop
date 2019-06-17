@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Endpoints;
 
-use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use LegacyTests\Unit\ContextMocker;
 use PHPUnit\Framework\TestCase;
 

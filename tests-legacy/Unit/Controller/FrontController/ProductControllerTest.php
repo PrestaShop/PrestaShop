@@ -29,7 +29,6 @@ namespace LegacyTests\Unit\Controller\FrontController;
 use Currency;
 use Language;
 use LocalizationPack;
-use LegacyTests\TestCase\IntegrationTestCase;
 use LegacyTests\Unit\ContextMocker;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Cache\LocalizationWarmer;
