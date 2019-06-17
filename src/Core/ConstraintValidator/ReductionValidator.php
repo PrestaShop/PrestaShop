@@ -77,9 +77,7 @@ final class ReductionValidator extends ConstraintValidator
         if (DomainConstraintException::INVALID_REDUCTION_PERCENTAGE === $exceptionCode) {
             $message = $constraint->invalidPercentageValueMessage;
             $params['%max%'] = Reduction::MAX_ALLOWED_PERCENTAGE;
-        }
-
-        if (DomainConstraintException::INVALID_REDUCTION_TYPE === $exceptionCode) {
+        } elseif (DomainConstraintException::INVALID_REDUCTION_TYPE === $exceptionCode) {
             $message = $constraint->invalidTypeMessage;
             $params = [
                 '%type%' => $value['type'],
