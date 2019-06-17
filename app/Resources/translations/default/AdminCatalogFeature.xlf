@@ -273,42 +273,42 @@
       <trans-unit id="f8a09f634b7b3ede2da34607da2aaebe">
         <source>Available quantity</source>
         <target>Available quantity</target>
-        <note>Line: 124</note>
+        <note>Line: 128</note>
       </trans-unit>
       <trans-unit id="e78b6f4eb3be046f4d25c07ce54954d4">
         <source>Ref:</source>
         <target>Ref:</target>
-        <note>Line: 88</note>
+        <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="ccf096490d2671f3ea97ea9289eee5b1">
         <source>EAN13:</source>
         <target>EAN13:</target>
-        <note>Line: 89</note>
+        <note>Line: 93</note>
       </trans-unit>
       <trans-unit id="af7448c885be0d8acd5eb84322176570">
         <source>UPC:</source>
         <target>UPC:</target>
-        <note>Line: 90</note>
+        <note>Line: 94</note>
       </trans-unit>
       <trans-unit id="647b89b705fafd7d44aa6f01a5cb4711">
         <source>Qty:</source>
         <target>Qty:</target>
-        <note>Line: 91</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="1caa6ff629641a4eb20f190f7a0539ca">
         <source>Attribute name</source>
         <target>Attribute name</target>
-        <note>Line: 119</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="52eb5928a34db3e3da7ba52b0644273b">
         <source>EAN13</source>
         <target>EAN13</target>
-        <note>Line: 121</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
         <source>UPC</source>
         <target>UPC</target>
-        <note>Line: 122</note>
+        <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>
@@ -340,7 +340,7 @@
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
-        <note>Line: 1097</note>
+        <note>Line: 1100</note>
       </trans-unit>
     </body>
   </file>
@@ -832,27 +832,27 @@
       <trans-unit id="55caa82d08a11359bf043f8e2a1d4ad1">
         <source>List of brands</source>
         <target>List of brands</target>
-        <note>Line: 155</note>
+        <note>Line: 163</note>
       </trans-unit>
       <trans-unit id="2d993f0eea2cfe4881542ab187d1c350">
         <source>Brand addresses</source>
         <target>Brand addresses</target>
-        <note>Line: 260</note>
+        <note>Line: 268</note>
       </trans-unit>
       <trans-unit id="7c7c12e999629a6bf8dac0cb2119c261">
         <source>Choose the brand</source>
         <target>Choose the brand</target>
-        <note>Line: 473</note>
+        <note>Line: 481</note>
       </trans-unit>
       <trans-unit id="804f1e6cd9e6d68208f39932da191f61">
         <source>Edit Addresses</source>
         <target>Edit Addresses</target>
-        <note>Line: 641</note>
+        <note>Line: 649</note>
       </trans-unit>
       <trans-unit id="6bc011e375bcee14786bb43acdf00a8a">
         <source>Add address</source>
         <target>Add address</target>
-        <note>Line: 704</note>
+        <note>Line: 712</note>
       </trans-unit>
     </body>
   </file>
@@ -904,42 +904,42 @@
       <trans-unit id="428a70e43c5371126c0fb675e98c61d5">
         <source>List of empty categories:</source>
         <target>List of empty categories:</target>
-        <note>Line: 114</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="0181e2b8568143a3608fea8e657a81cb">
         <source>List of products with combinations but without available quantities for sale:</source>
         <target>List of products with combinations but without available quantities for sale:</target>
-        <note>Line: 159</note>
+        <note>Line: 158</note>
       </trans-unit>
       <trans-unit id="d06aa90bdc7545b64a808ef956b20b77">
         <source>List of products without combinations and without available quantities for sale:</source>
         <target>List of products without combinations and without available quantities for sale:</target>
-        <note>Line: 204</note>
+        <note>Line: 203</note>
       </trans-unit>
       <trans-unit id="40be52ec4b8eab2321f116914858ce6a">
         <source>List of disabled products</source>
         <target>List of disabled products</target>
-        <note>Line: 235</note>
+        <note>Line: 234</note>
       </trans-unit>
       <trans-unit id="c205cafb2813572f3f96669cf2b97cf0">
         <source>List of products without images</source>
         <target>List of products without images</target>
-        <note>Line: 267</note>
+        <note>Line: 266</note>
       </trans-unit>
       <trans-unit id="eaff59412c15abca3419aee22b02d726">
         <source>List of products without description</source>
         <target>List of products without description</target>
-        <note>Line: 304</note>
+        <note>Line: 303</note>
       </trans-unit>
       <trans-unit id="3368abb84d65a50813d1ed17708ec130">
         <source>List of products without price</source>
         <target>List of products without price</target>
-        <note>Line: 336</note>
+        <note>Line: 335</note>
       </trans-unit>
       <trans-unit id="bcaad756615668f5e8e0447aa36f4f22">
         <source>Product disabled</source>
         <target>Product disabled</target>
-        <note>Line: 448</note>
+        <note>Line: 470</note>
       </trans-unit>
     </body>
   </file>
@@ -1087,12 +1087,12 @@
       <trans-unit id="5f573e91e5eaa092e00a4c4df393c0cb">
         <source>Add new root category</source>
         <target>Add new root category</target>
-        <note>Line: 696</note>
+        <note>Line: 712</note>
       </trans-unit>
       <trans-unit id="d0d4e3688fdaee5afa292083b855e143">
         <source>Add new category</source>
         <target>Add new category</target>
-        <note>Line: 705</note>
+        <note>Line: 724</note>
       </trans-unit>
     </body>
   </file>
@@ -2349,42 +2349,42 @@
       <trans-unit id="52b68aaa602d202c340d9e4e9157f276">
         <source>Parent category</source>
         <target>Parent category</target>
-        <note>Line: 57</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="86a230fec38eb3957d48a8ffdfcb4722">
         <source>%group_name% - All people without a valid customer account.</source>
         <target>%group_name% - All people without a valid customer account.</target>
-        <note>Line: 168</note>
+        <note>Line: 182</note>
       </trans-unit>
       <trans-unit id="8a11a183559fcb803b95e9a2e3efb47d">
         <source>%group_name% - Customer who placed an order with the guest checkout.</source>
         <target>%group_name% - Customer who placed an order with the guest checkout.</target>
-        <note>Line: 169</note>
+        <note>Line: 183</note>
       </trans-unit>
       <trans-unit id="7ed584948027b1d0117b1c73f80ea50f">
         <source>%group_name% - All people who have created an account on this site.</source>
         <target>%group_name% - All people who have created an account on this site.</target>
-        <note>Line: 170</note>
+        <note>Line: 184</note>
       </trans-unit>
       <trans-unit id="4ae362f049719078c429941bed5dd440">
         <source>Category thumbnail</source>
         <target>Category thumbnail</target>
-        <note>Line: 87</note>
+        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="eea317348d82718d49f9a79189dc0f93">
         <source>Menu thumbnails</source>
         <target>Menu thumbnails</target>
-        <note>Line: 102</note>
+        <note>Line: 104</note>
       </trans-unit>
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
-        <note>Line: 156</note>
+        <note>Line: 170</note>
       </trans-unit>
       <trans-unit id="8987d8bb6500cb0889946c2655e930b6">
         <source>Category cover image</source>
         <target>Category cover image</target>
-        <note>Line: 72</note>
+        <note>Line: 74</note>
       </trans-unit>
     </body>
   </file>
@@ -2421,12 +2421,12 @@
       <trans-unit id="c1069a480848e06782b81b8bea9c0c94">
         <source>Short description</source>
         <target>Short description</target>
-        <note>Line: 50</note>
+        <note>Line: 52</note>
       </trans-unit>
       <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
         <source>Meta title</source>
         <target>Meta title</target>
-        <note>Line: 76</note>
+        <note>Line: 78</note>
       </trans-unit>
     </body>
   </file>

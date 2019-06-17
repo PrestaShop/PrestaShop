@@ -362,32 +362,32 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="14a966a005ea5262cd09332f4e50b7b1">
         <source>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</source>
         <target>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</target>
-        <note>Line: 63</note>
+        <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
         <source>Password should be at least %num% characters long.</source>
         <target>Password should be at least %num% characters long.</target>
-        <note>Line: 78</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="0b2827832fff3d973ee0ed2e6c7d4b23">
         <source>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</source>
         <target>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</target>
-        <note>Line: 204</note>
+        <note>Line: 206</note>
       </trans-unit>
       <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
         <source>This page will be displayed just after login.</source>
         <target>This page will be displayed just after login.</target>
-        <note>Line: 209</note>
+        <note>Line: 211</note>
       </trans-unit>
       <trans-unit id="d970370797ba19bba5524b480d3526fb">
         <source>Allow or disallow this employee to log in to the Admin panel.</source>
         <target>Allow or disallow this employee to log in to the Admin panel.</target>
-        <note>Line: 219</note>
+        <note>Line: 221</note>
       </trans-unit>
       <trans-unit id="1a7f0b984884e66e95a86b9b5d857b5b">
         <source>Select the shops the employee is allowed to access.</source>
         <target>Select the shops the employee is allowed to access.</target>
-        <note>Line: 234</note>
+        <note>Line: 236</note>
       </trans-unit>
     </body>
   </file>
@@ -448,7 +448,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="a5cb039db72d4c240b6cca34b48d61bc">
         <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
         <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
-        <note>Line: 43</note>
+        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>

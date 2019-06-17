@@ -78,7 +78,7 @@
       <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
         <source>Price per unit</source>
         <target>Price per unit</target>
-        <note>Line: 926</note>
+        <note>Line: 929</note>
       </trans-unit>
     </body>
   </file>
@@ -87,32 +87,32 @@
       <trans-unit id="ac104da0cd80e52437b67aefa351e177">
         <source>List of MySQL Tables</source>
         <target>List of MySQL Tables</target>
-        <note>Line: 32</note>
+        <note>Line: 36</note>
       </trans-unit>
       <trans-unit id="1ee79b4b20638d135b8ae8122f7770b9">
         <source>Please choose a table.</source>
         <target>Please choose a table.</target>
-        <note>Line: 104</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="1a696d8e9ac51e281e1cf1b646ddcc96">
         <source>Add table name to SQL query</source>
         <target>Add table name to SQL query</target>
-        <note>Line: 41</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="1938087a74c4d20f5454850ffbaf0e26">
         <source>List of attributes for this MySQL table</source>
         <target>List of attributes for this MySQL table</target>
-        <note>Line: 47</note>
+        <note>Line: 51</note>
       </trans-unit>
       <trans-unit id="1141c5086ed62bf696bccf7de6b885bd">
         <source>Add attribute to SQL query</source>
         <target>Add attribute to SQL query</target>
-        <note>Line: 90</note>
+        <note>Line: 94</note>
       </trans-unit>
       <trans-unit id="004bf6c9a40003140292e97330236c53">
         <source>Action</source>
         <target>Action</target>
-        <note>Line: 81</note>
+        <note>Line: 85</note>
       </trans-unit>
     </body>
   </file>
@@ -121,7 +121,7 @@
       <trans-unit id="526a00f8a3c4c865b9c1834f38b5e2c6">
         <source>SQL query result</source>
         <target>SQL query result</target>
-        <note>Line: 30</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
@@ -276,7 +276,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="bbed49e90ee59ac450e80b492f452d0e">
         <source>Edit this SQL query</source>
         <target>Edit this SQL query</target>
-        <note>Line: 101</note>
+        <note>Line: 109</note>
       </trans-unit>
     </body>
   </file>
@@ -1417,32 +1417,32 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="e3a918d60c36cd5892cd6913d72f68d9">
         <source>You are currently connected as %username%</source>
         <target>You are currently connected as %username%</target>
-        <note>Line: 170</note>
+        <note>Line: 172</note>
       </trans-unit>
       <trans-unit id="ed688d6bd2aad0e1ae319ba23e60bb68">
         <source>Sign out from PrestaShop Addons</source>
         <target>Sign out from PrestaShop Addons</target>
-        <note>Line: 179</note>
+        <note>Line: 181</note>
       </trans-unit>
       <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
         <source>Sign in</source>
         <target>Sign in</target>
-        <note>Line: 184</note>
+        <note>Line: 186</note>
       </trans-unit>
       <trans-unit id="d52c376b3badee6132116bb9af74d0d2">
         <source>Subscribe to PrestaShop newsletter</source>
         <target>Subscribe to PrestaShop newsletter</target>
-        <note>Line: 203</note>
+        <note>Line: 205</note>
       </trans-unit>
       <trans-unit id="435a2d71a0c6c33cd2c917b00b8e0da1">
         <source>Default page</source>
         <target>Default page</target>
-        <note>Line: 208</note>
+        <note>Line: 210</note>
       </trans-unit>
       <trans-unit id="57452e2dda1a10cfe2cc34c575e6b9d0">
         <source>Permission profile</source>
         <target>Permission profile</target>
-        <note>Line: 228</note>
+        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
         <source>Employees</source>
@@ -1564,12 +1564,12 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="dddc702fcffceb2ac77291954897d747">
         <source>SQL query</source>
         <target>SQL query</target>
-        <note>Line: 47</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="9b5c3d6674b3af1946fb50faae7079e2">
         <source>SQL query name</source>
         <target>SQL query name</target>
-        <note>Line: 39</note>
+        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>
@@ -1587,7 +1587,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="51ba9470e0c6fcc53b976a6854b0f2e0">
         <source>Set the resource permissions for this key:</source>
         <target>Set the resource permissions for this key:</target>
-        <note>Line: 54</note>
+        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="58af3456f86b42c86f963d896a62644f">
         <source>Webservice Accounts</source>
@@ -1597,22 +1597,22 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="20eebdc752ee86d49f5d090759b237aa">
         <source>Webservice account key.</source>
         <target>Webservice account key.</target>
-        <note>Line: 38</note>
+        <note>Line: 40</note>
       </trans-unit>
       <trans-unit id="d08ccf52b4cdd08e41cfb99ec42e0b29">
         <source>Permissions</source>
         <target>Permissions</target>
-        <note>Line: 62</note>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
         <source>Key</source>
         <target>Key</target>
-        <note>Line: 37</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="52699c78843b98f98620186a59b0a3fa">
         <source>Key description</source>
         <target>Key description</target>
-        <note>Line: 42</note>
+        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>

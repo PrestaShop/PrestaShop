@@ -294,12 +294,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="12a7a93d72ded50311b52c7d0a853e3c">
         <source>Take advantage of our exclusive offers:</source>
         <target>Take advantage of our exclusive offers:</target>
-        <note>Line: 65</note>
+        <note>Line: 76</note>
       </trans-unit>
       <trans-unit id="ec211f7c20af43e742bf2570c3cb84f9">
         <source>Add</source>
         <target>Add</target>
-        <note>Line: 55</note>
+        <note>Line: 58</note>
       </trans-unit>
     </body>
   </file>

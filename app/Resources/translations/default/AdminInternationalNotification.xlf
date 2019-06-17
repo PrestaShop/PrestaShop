@@ -254,12 +254,12 @@ Comment: @todo Throw exception</note>
       <trans-unit id="bb01c8c21884e974df8517110c92b22a">
         <source>The translation was added successfully, but the language has not been created.</source>
         <target>The translation was added successfully, but the language has not been created.</target>
-        <note>Line: 472</note>
+        <note>Line: 489</note>
       </trans-unit>
       <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
         <source>Cannot add configuration %1$s for %2$s language</source>
         <target>Cannot add configuration %1$s for %2$s language</target>
-        <note>Line: 1504</note>
+        <note>Line: 1521</note>
       </trans-unit>
     </body>
   </file>

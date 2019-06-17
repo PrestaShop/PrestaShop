@@ -80,12 +80,12 @@
       <trans-unit id="e07269088946aa33a280b8c05529b46c">
         <source>Cannot parse feed.</source>
         <target>Cannot parse feed.</target>
-        <note>Line: 667</note>
+        <note>Line: 663</note>
       </trans-unit>
       <trans-unit id="6f775dff2aa88bce2301e5d5309c5f7e">
         <source>No default currency</source>
         <target>No default currency</target>
-        <note>Line: 674</note>
+        <note>Line: 670</note>
       </trans-unit>
     </body>
   </file>
@@ -133,6 +133,11 @@
         <source>Error while uploading image; please change your server's settings.</source>
         <target>Error while uploading image; please change your server's settings.</target>
         <note>Line: 480</note>
+      </trans-unit>
+      <trans-unit id="2ab146a83f61d2896a472f52f353b321">
+        <source>Image format not recognized, allowed formats are: .ico</source>
+        <target>Image format not recognized, allowed formats are: .ico</target>
+        <note>Line: 477</note>
       </trans-unit>
     </body>
   </file>
@@ -196,11 +201,6 @@
         <source>%1$s is too long. Maximum length: %2$d</source>
         <target>%1$s is too long. Maximum length: %2$d</target>
         <note>Line: 1243</note>
-      </trans-unit>
-      <trans-unit id="2deae2efe4b65df80c188a31fed3cc17">
-        <source>The field %s is required.</source>
-        <target>The field %s is required.</target>
-        <note>Line: 1453</note>
       </trans-unit>
     </body>
   </file>
@@ -280,63 +280,63 @@
       <trans-unit id="df2751083713a6a971814c07d88c3eb5">
         <source>The 'From' date format is invalid (YYYY-MM-DD)</source>
         <target>The 'From' date format is invalid (YYYY-MM-DD)</target>
-        <note>Line: 889</note>
+        <note>Line: 906</note>
       </trans-unit>
       <trans-unit id="f500b8d6f94abcca48cda7c033c64996">
         <source>The 'To' date format is invalid (YYYY-MM-DD)</source>
         <target>The 'To' date format is invalid (YYYY-MM-DD)</target>
-        <note>Line: 897</note>
+        <note>Line: 914</note>
       </trans-unit>
       <trans-unit id="83379252d4737a0b2a63a9388bb36890">
         <source>An error occurred while attempting to delete the image. (cannot load object).</source>
         <target>An error occurred while attempting to delete the image. (cannot load object).</target>
-        <note>Line: 1004</note>
+        <note>Line: 1021</note>
       </trans-unit>
       <trans-unit id="2a0c56d5a5183a9b65b8e2817f75ded2">
         <source>You cannot delete this item.</source>
         <target>You cannot delete this item.</target>
-        <note>Line: 1091
+        <note>Line: 1108
 Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       </trans-unit>
       <trans-unit id="efb49241363bce74c7d7899333cdebb5">
         <source>An error occurred when attempting to update the required fields.</source>
         <target>An error occurred when attempting to update the required fields.</target>
-        <note>Line: 1297</note>
+        <note>Line: 1314</note>
       </trans-unit>
       <trans-unit id="204c3558e41366f3d558ce8e01426a22">
         <source>field %s is required.</source>
         <target>field %s is required.</target>
-        <note>Line: 1452</note>
+        <note>Line: 1469</note>
       </trans-unit>
       <trans-unit id="c2c0e06097c62422199e29a5574e9fc4">
         <source>Cannot add configuration %s</source>
         <target>Cannot add configuration %s</target>
-        <note>Line: 1515</note>
+        <note>Line: 1532</note>
       </trans-unit>
       <trans-unit id="2782e6f430c2658c79aecfcecdc0d0e8">
         <source>The field %field_name% is required at least in %lang%.</source>
         <target>The field %field_name% is required at least in %lang%.</target>
-        <note>Line: 3690</note>
+        <note>Line: 3713</note>
       </trans-unit>
       <trans-unit id="114eadc70de249729e9287a6b450c6e0">
         <source>The %field_name% field (%lang%) is invalid.</source>
         <target>The %field_name% field (%lang%) is invalid.</target>
-        <note>Line: 3725</note>
+        <note>Line: 3748</note>
       </trans-unit>
       <trans-unit id="b4186b9ed7c957a1cd9f4e7ce916e603">
         <source>%s: Incorrect value</source>
         <target>%s: Incorrect value</target>
-        <note>Line: 3931</note>
+        <note>Line: 3954</note>
       </trans-unit>
       <trans-unit id="c87956ad745e55231c633c03fe0f0d5b">
         <source>An error occurred while assigning a zone to the selection.</source>
         <target>An error occurred while assigning a zone to the selection.</target>
-        <note>Line: 4175</note>
+        <note>Line: 4198</note>
       </trans-unit>
       <trans-unit id="93463ceee9a3d376b18ee618bc2fffe4">
         <source>You must select at least one element to assign a new zone.</source>
         <target>You must select at least one element to assign a new zone.</target>
-        <note>Line: 4177</note>
+        <note>Line: 4200</note>
       </trans-unit>
     </body>
   </file>
@@ -532,11 +532,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
   </file>
   <file original="controllers/admin/AdminModulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5dcea1234ac01d22f40ffc81d0bc4c2f">
-        <source>File too large (limit of %s bytes).</source>
-        <target>File too large (limit of %s bytes).</target>
-        <note>Line: 585</note>
-      </trans-unit>
       <trans-unit id="c9b70823c0ee73b2ce964dfd16a10ddc">
         <source>File upload was not completed.</source>
         <target>File upload was not completed.</target>
@@ -564,12 +559,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="aeca1e74dd7d86d85886996651937da9">
         <source>No valid value for field exceptions has been defined.</source>
         <target>No valid value for field exceptions has been defined.</target>
-        <note>Line: 174</note>
+        <note>Line: 182</note>
       </trans-unit>
       <trans-unit id="0ce2f4a4f40a2d23525b5b02bcfe611f">
         <source>An error occurred while transplanting the module to its hook.</source>
         <target>An error occurred while transplanting the module to its hook.</target>
-        <note>Line: 107</note>
+        <note>Line: 115</note>
       </trans-unit>
     </body>
   </file>
@@ -1028,17 +1023,17 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="a62d7ffa591311c930a2017b07e55394">
         <source>The object cannot be loaded (the identifier is missing or invalid)</source>
         <target>The object cannot be loaded (the identifier is missing or invalid)</target>
-        <note>Line: 447</note>
+        <note>Line: 475</note>
       </trans-unit>
       <trans-unit id="df3c280f0aaf0cb0d5c25ab322a8bcf9">
         <source>You do not have permission to update this.</source>
         <target>You do not have permission to update this.</target>
-        <note>Line: 300</note>
+        <note>Line: 328</note>
       </trans-unit>
       <trans-unit id="044bfaec90b16e5caf72b70a5ae4c872">
         <source>You need permission to add this.</source>
         <target>You need permission to add this.</target>
-        <note>Line: 530</note>
+        <note>Line: 558</note>
       </trans-unit>
     </body>
   </file>
@@ -1116,26 +1111,31 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="0f411b3d0a4cca67f710f4b5d181154a">
         <source>Cannot send test email for theme %theme% because it is not your current theme</source>
         <target>Cannot send test email for theme %theme% because it is not your current theme</target>
-        <note>Line: 279</note>
+        <note>Line: 283</note>
       </trans-unit>
       <trans-unit id="042b67d6d246fe6ddf24d6d5b3c7e511">
         <source>Cannot send test email for layout %layout%</source>
         <target>Cannot send test email for layout %layout%</target>
-        <note>Line: 343</note>
+        <note>Line: 347</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2ab146a83f61d2896a472f52f353b321">
-        <source>Image format not recognized, allowed formats are: .ico</source>
-        <target>Image format not recognized, allowed formats are: .ico</target>
-        <note>Line: 463</note>
+      <trans-unit id="5dcea1234ac01d22f40ffc81d0bc4c2f">
+        <source>File too large (limit of %s bytes).</source>
+        <target>File too large (limit of %s bytes).</target>
+        <note>Line: 591</note>
       </trans-unit>
       <trans-unit id="1bdd228669c9dd995eb664737e60786e">
         <source>You do not have permission to edit this.</source>
         <target>You do not have permission to edit this.</target>
-        <note>Line: 381</note>
+        <note>Line: 404</note>
+      </trans-unit>
+      <trans-unit id="4dedf35a15365e00b8a151fc1daed3af">
+        <source>Image format not recognized, allowed format(s) is(are): .%s</source>
+        <target>Image format not recognized, allowed format(s) is(are): .%s</target>
+        <note>Line: 581</note>
       </trans-unit>
     </body>
   </file>
@@ -1232,12 +1232,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="10f97f4fea6d1ff9ffd1ed3260d6220d">
         <source>Unable to delete associated images.</source>
         <target>Unable to delete associated images.</target>
-        <note>Line: 720</note>
+        <note>Line: 739</note>
       </trans-unit>
       <trans-unit id="2b4de48b49648d3323f20b6371f7e3c1">
         <source>You cannot upload more files</source>
         <target>You cannot upload more files</target>
-        <note>Line: 741</note>
+        <note>Line: 760</note>
       </trans-unit>
     </body>
   </file>
@@ -1252,6 +1252,15 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <source>Max file size allowed is "%s" bytes.</source>
         <target>Max file size allowed is "%s" bytes.</target>
         <note>Line: 701</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2deae2efe4b65df80c188a31fed3cc17">
+        <source>The field %s is required.</source>
+        <target>The field %s is required.</target>
+        <note>Line: 796</note>
       </trans-unit>
     </body>
   </file>
@@ -1302,7 +1311,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="87ecb83d305a6af0e0438a0587e31de8">
         <source>%s is invalid.</source>
         <target>%s is invalid.</target>
-        <note>Line: 212</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
@@ -1403,7 +1412,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="c4cb30b5b82b83b374d454c004b3194a">
         <source>%error_message% - Language: %language_name%</source>
         <target>%error_message% - Language: %language_name%</target>
-        <note>Line: 219</note>
+        <note>Line: 221</note>
       </trans-unit>
     </body>
   </file>

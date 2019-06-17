@@ -79,7 +79,7 @@
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
-        <note>Line: 38</note>
+        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>
@@ -88,7 +88,7 @@
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 60</note>
+        <note>Line: 62</note>
       </trans-unit>
     </body>
   </file>

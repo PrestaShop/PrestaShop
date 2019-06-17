@@ -144,32 +144,32 @@
       <trans-unit id="341ee6bf57abde84135c32f55a607de2">
         <source>Do you want to send this message to the customer?</source>
         <target>Do you want to send this message to the customer?</target>
-        <note>Line: 824</note>
+        <note>Line: 827</note>
       </trans-unit>
       <trans-unit id="dc8d1b4e8c9bdf1eed97eb9ed5877a43">
         <source>Do you want to overwrite your existing message?</source>
         <target>Do you want to overwrite your existing message?</target>
-        <note>Line: 829</note>
+        <note>Line: 832</note>
       </trans-unit>
       <trans-unit id="44f36e0e113ab5d842c47691364f6eb4">
         <source>This product cannot be returned.</source>
         <target>This product cannot be returned.</target>
-        <note>Line: 889</note>
+        <note>Line: 892</note>
       </trans-unit>
       <trans-unit id="b8d649752e2493d7d761b05cc255c3fd">
         <source>Quantity to cancel is greater than quantity available.</source>
         <target>Quantity to cancel is greater than quantity available.</target>
-        <note>Line: 889</note>
+        <note>Line: 892</note>
       </trans-unit>
       <trans-unit id="49641a1085f245fe45d45881544d1cec">
         <source>For this customer group, prices are displayed as: [1]%tax_method%[/1]</source>
         <target>For this customer group, prices are displayed as: [1]%tax_method%[/1]</target>
-        <note>Line: 994</note>
+        <note>Line: 997</note>
       </trans-unit>
       <trans-unit id="ef5f330df17f8c955005c26466c2463c">
         <source>Merchandise returns are disabled</source>
         <target>Merchandise returns are disabled</target>
-        <note>Line: 1004</note>
+        <note>Line: 1007</note>
       </trans-unit>
     </body>
   </file>
@@ -178,12 +178,12 @@
       <trans-unit id="9cdca3c7972c48111e79648c942ac672">
         <source>The message was successfully sent to the customer.</source>
         <target>The message was successfully sent to the customer.</target>
-        <note>Line: 462</note>
+        <note>Line: 479</note>
       </trans-unit>
       <trans-unit id="1923e1e610686f1182bf54f573b86921">
         <source>A partial refund was successfully created.</source>
         <target>A partial refund was successfully created.</target>
-        <note>Line: 482</note>
+        <note>Line: 499</note>
       </trans-unit>
     </body>
   </file>
@@ -863,7 +863,7 @@
       <trans-unit id="9e2dcf2660b82a0204f668565417010a">
         <source>An account already exists for this email address:</source>
         <target>An account already exists for this email address:</target>
-        <note>Line: 484</note>
+        <note>Line: 512</note>
       </trans-unit>
     </body>
   </file>
@@ -872,22 +872,22 @@
       <trans-unit id="c0498039cc042a1109b53933dc33b2e7">
         <source>A default customer group must be selected in group box.</source>
         <target>A default customer group must be selected in group box.</target>
-        <note>Line: 740</note>
+        <note>Line: 750</note>
       </trans-unit>
       <trans-unit id="8562db06e3931e51ac8c456b56088b02">
         <source>This customer does not exist.</source>
         <target>This customer does not exist.</target>
-        <note>Line: 731</note>
+        <note>Line: 741</note>
       </trans-unit>
       <trans-unit id="4383b950a18d0fd893e237148f5f58ca">
         <source>This customer already exists as a non-guest.</source>
         <target>This customer already exists as a non-guest.</target>
-        <note>Line: 777</note>
+        <note>Line: 787</note>
       </trans-unit>
       <trans-unit id="beaa75cbedc3443661b894ed66c76b13">
         <source>An error occurred while updating customer information.</source>
         <target>An error occurred while updating customer information.</target>
-        <note>Line: 781</note>
+        <note>Line: 791</note>
       </trans-unit>
     </body>
   </file>
