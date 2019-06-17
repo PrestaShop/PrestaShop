@@ -51,6 +51,11 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
     private $identifier;
 
     /**
+     * @var array
+     */
+    private $options = [];
+
+    /**
      * @param KpiInterface[] $kpis
      * @param HookDispatcherInterface $hookDispatcher
      * @param string $identifier
@@ -70,9 +75,9 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function build(array $options = [])
+    public function build()
     {
-        $kpiRow = new KpiRow($options);
+        $kpiRow = new KpiRow($this->options);
 
         $this->hookDispatcher->dispatchWithParameters($this->getHookName($this->identifier), [
             'kpis' => &$this->kpis,
@@ -85,6 +90,16 @@ final class HookableKpiRowFactory implements KpiRowFactoryInterface
 
             return $kpiRow;
         }
+    }
+
+    /**
+     * Set options for kpi row
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
     }
 
     /**

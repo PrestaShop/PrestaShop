@@ -61,7 +61,8 @@ class CartController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_carts_index');
         }
 
-        $cartKpi = $this->get('prestashop.core.kpi_row.factory.cart')->build([
+        $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.cart');
+        $kpiRowFactory->setOptions([
             'cart_id' => $cartId,
         ]);
 
@@ -70,7 +71,7 @@ class CartController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('View', 'Admin.Actions'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'cartKpi' => $cartKpi,
+            'cartKpi' => $kpiRowFactory->build(),
         ]);
     }
 

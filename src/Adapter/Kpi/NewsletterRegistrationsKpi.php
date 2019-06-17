@@ -69,7 +69,7 @@ final class NewsletterRegistrationsKpi implements KpiInterface
     /**
      * {@inheritdoc}
      */
-    public function render(array $options = [])
+    public function render()
     {
         $helper = new HelperKpi();
         $helper->id = 'box-newsletter';
