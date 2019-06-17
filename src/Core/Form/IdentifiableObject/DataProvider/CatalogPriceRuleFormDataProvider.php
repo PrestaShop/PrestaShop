@@ -79,8 +79,8 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
             'to' => $editableCatalogPriceRule->getTo(),
             'include_tax' => $editableCatalogPriceRule->isTaxIncluded(),
             'reduction' => [
-                'type' => $editableCatalogPriceRule->getReductionType(),
-                'value' => $editableCatalogPriceRule->getReduction(),
+                'type' => $editableCatalogPriceRule->getReduction()->getType(),
+                'value' => $editableCatalogPriceRule->getReduction()->getValue(),
             ],
         ];
 
