@@ -30,15 +30,15 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\ReductionValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Provides reduction validation by reduction type
+ * Constraint for validating reduction
  */
 final class Reduction extends Constraint
 {
-    public $invalidTypeMessage = 'Reduction type is invalid.';
+    public $invalidTypeMessage = 'Reduction type "%type%" is invalid. Allowed types are: %types%.';
 
-    public $invalidAmountMessage = 'Reduction value is invalid.';
+    public $invalidAmountValueMessage = 'Reduction value "%value%" is invalid. Value cannot be negative';
 
-    public $invalidPercentageMessage = 'Reduction value is invalid.';
+    public $invalidPercentageValueMessage = 'Reduction value "%value%" is invalid. Allowed values from 0 to %max%';
 
     /**
      * {@inheritdoc}
