@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -63,7 +63,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $multistoreFeature;
 
     /**
-     * @var Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
 
@@ -72,14 +72,14 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multistoreFeature
-     * @param Configuration $configuration
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
         FeatureInterface $multistoreFeature,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
