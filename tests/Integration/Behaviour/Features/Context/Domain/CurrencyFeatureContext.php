@@ -35,16 +35,10 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var \Exception|null
-     */
-    private $lastException;
-
     /**
      * @When I add new currency :reference with following properties:
      */
@@ -146,19 +140,5 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsDefaultCurrencyCannotBeDeleted()
     {
         $this->assertLastErrorIs(CannotDeleteDefaultCurrencyException::class);
-    }
-
-    /**
-     * @param string $expectedError
-     */
-    private function assertLastErrorIs($expectedError)
-    {
-        if (!$this->lastException instanceof $expectedError) {
-            throw new RuntimeException(sprintf(
-                'Last error should be "%s", but got "%s"',
-                $expectedError,
-                $this->lastException ? get_class($this->lastException) : 'null'
-            ));
-        }
     }
 }
