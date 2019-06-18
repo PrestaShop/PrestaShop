@@ -71,6 +71,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`active`')
             ->addSelect('pl.`name`')
             ->addSelect('cl.`name` AS `category`')
+            ->addSelect('img_shop.`id_image`')
         ;
 
         if ($this->isStockManagementEnabled) {
@@ -125,6 +126,12 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'category_lang',
                 'cl',
                 'cl.`id_category` = ps.`id_category_default` AND cl.`id_lang` = :id_lang AND cl.`id_shop` = :id_shop'
+            )
+            ->leftJoin(
+                'ps',
+                $this->dbPrefix . 'image_shop',
+                'img_shop',
+                'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
             )
         ;
 
