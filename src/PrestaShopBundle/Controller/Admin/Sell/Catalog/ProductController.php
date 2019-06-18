@@ -30,6 +30,26 @@ class ProductController extends FrameworkBundleAdminController
 
     public function toggleAction($productId)
     {
+//        todo: implement
+    }
 
+    public function previewAction($productId)
+    {
+//        todo: implement
+    }
+
+    public function editAction($productId)
+    {
+//        todo: implement
+    }
+
+    public function duplicateProductAction($productId)
+    {
+//        todo: implement
+    }
+
+    public function deleteAction($productId)
+    {
+//        todo: implement
     }
 }
