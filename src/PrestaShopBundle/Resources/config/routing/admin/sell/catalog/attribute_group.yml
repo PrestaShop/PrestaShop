@@ -39,8 +39,7 @@ admin_attribute_groups_edit:
   path: /{attributeGroupId}/edit
   methods: [GET, POST]
   defaults:
-    #todo: implement edit
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:index'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:edit'
     _legacy_controller: AdminAttributesGroups
 #    _legacy_link: AdminAttributesGroups:updateattribute_group
     _legacy_parameters:
@@ -72,7 +71,6 @@ admin_attribute_groups_export:
   path: /export
   methods: GET
   defaults:
-    #todo: implement export
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:index'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:export'
     _legacy_controller: AdminAttributesGroups
     _legacy_link: AdminAttributesGroups:exportattribute_group
