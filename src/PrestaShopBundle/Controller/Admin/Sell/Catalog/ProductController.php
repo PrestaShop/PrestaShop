@@ -27,4 +27,9 @@ class ProductController extends FrameworkBundleAdminController
             'productGrid' => $this->presentGrid($productGrid),
         ]);
     }
+
+    public function toggleAction($productId)
+    {
+
+    }
 }
