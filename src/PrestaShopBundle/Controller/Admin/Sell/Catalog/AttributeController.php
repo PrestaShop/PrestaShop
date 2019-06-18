@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\DeleteAttributeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -65,21 +66,18 @@ class AttributeController extends FrameworkBundleAdminController
         try {
             $attributeGridFactory = $this->get('prestashop.core.grid.factory.attribute');
             $attributeGrid = $attributeGridFactory->getGrid($attributeFilters);
-
-            return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
-                'attributeGrid' => $this->presentGrid($attributeGrid),
-                'attributeGroupId' => $attributeGroupId,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            ]);
         } catch (AttributeGroupException $e) {
-            $this->addFlash('error', $this->trans(
-                'The object cannot be loaded (or found)',
-                'Admin.Notifications.Error'
-            ));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_attribute_groups_index');
         }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
+            'attributeGrid' => $this->presentGrid($attributeGrid),
+            'attributeGroupId' => $attributeGroupId,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -197,11 +195,14 @@ class AttributeController extends FrameworkBundleAdminController
      */
     private function getErrorMessages()
     {
+        $notFoundMessage = $this->trans(
+            'The object cannot be loaded (or found)',
+            'Admin.Notifications.Error'
+        );
+
         return [
-            AttributeNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
-                'Admin.Notifications.Error'
-            ),
+            AttributeNotFoundException::class => $notFoundMessage,
+            AttributeGroupNotFoundException::class => $notFoundMessage,
             DeleteAttributeException::class => [
                 DeleteAttributeException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
