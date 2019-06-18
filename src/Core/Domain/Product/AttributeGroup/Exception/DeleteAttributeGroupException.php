@@ -24,48 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception;
 
 /**
- * Deletes attributes in bulk action
+ * Is thrown when deleting attribute group fails
  */
-final class BulkDeleteAttributeCommand
+class DeleteAttributeGroupException extends AttributeGroupException
 {
     /**
-     * @var AttributeId[]
+     * When trying to delete single attribute group fails
      */
-    private $attributeIds;
+    const FAILED_DELETE = 10;
 
     /**
-     * @param int[] $attributeIds
-     *
-     * @throws AttributeConstraintException
+     * When deleting in bulk action fails
      */
-    public function __construct(array $attributeIds)
-    {
-        $this->setAttributeIds($attributeIds);
-    }
-
-    /**
-     * @return AttributeId[]
-     */
-    public function getAttributeIds()
-    {
-        return $this->attributeIds;
-    }
-
-    /**
-     * @param array $attributeIds
-     *
-     * @throws AttributeConstraintException
-     */
-    private function setAttributeIds(array $attributeIds)
-    {
-        foreach ($attributeIds as $attributeId) {
-            $this->attributeIds[] = new AttributeId($attributeId);
-        }
-    }
+    const FAILED_BULK_DELETE = 20;
 }

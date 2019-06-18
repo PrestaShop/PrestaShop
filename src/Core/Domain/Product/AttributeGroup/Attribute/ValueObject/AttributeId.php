@@ -24,18 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeConstraintException;
 
 /**
- * Deletes Attribute by provided id
+ * Provides identification data of Attribute
  */
-final class DeleteAttributeCommand
+final class AttributeId
 {
     /**
-     * @var AttributeId
+     * @var int
      */
     private $attributeId;
 
@@ -46,14 +45,32 @@ final class DeleteAttributeCommand
      */
     public function __construct($attributeId)
     {
-        $this->attributeId = new AttributeId($attributeId);
+        $this->assertIsIntegerGreaterThanZero($attributeId);
+        $this->attributeId = $attributeId;
     }
 
     /**
-     * @return AttributeId
+     * @return int
      */
-    public function getAttributeId()
+    public function getValue()
     {
         return $this->attributeId;
+    }
+
+    /**
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param $value
+     *
+     * @throws AttributeConstraintException
+     */
+    private function assertIsIntegerGreaterThanZero($value)
+    {
+        if (!is_int($value) || 0 >= $value) {
+            throw new AttributeConstraintException(
+                sprintf('Invalid attribute id "%s".', var_export($value, true)),
+                AttributeConstraintException::INVALID_ID
+            );
+        }
     }
 }

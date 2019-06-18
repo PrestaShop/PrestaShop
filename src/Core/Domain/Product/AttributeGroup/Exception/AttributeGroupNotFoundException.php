@@ -24,13 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception;
 
 /**
- * Base exception for attribute group subdomain
+ * Is thrown when required attribute group cannot be found
  */
-class AttributeGroupException extends DomainException
+class AttributeGroupNotFoundException extends AttributeGroupException
 {
 }

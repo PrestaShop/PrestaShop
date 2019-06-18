@@ -24,15 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Is thrown when attribute group constraints are violated
+ * Deletes attribute group by provided id
  */
-class AttributeGroupConstraintException extends AttributeGroupException
+final class DeleteAttributeGroupCommand
 {
     /**
-     * When attribute group Id contains invalid values
+     * @var AttributeGroupId
      */
-    const INVALID_ID = 10;
+    private $attributeGroupId;
+
+    /**
+     * @param int $attributeGroupId
+     *
+     * @throws AttributeGroupConstraintException
+     */
+    public function __construct($attributeGroupId)
+    {
+        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
+    }
+
+    /**
+     * @return AttributeGroupId
+     */
+    public function getAttributeGroupId()
+    {
+        return $this->attributeGroupId;
+    }
 }
