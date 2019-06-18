@@ -7,6 +7,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonProductScenarios = require('../../common_scenarios/product');
 const commonFileScenarios = require('../../common_scenarios/file');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 const {Files} = require('../../../selectors/BO/catalogpage/files');
 
 let fileData = [{
@@ -51,6 +52,7 @@ scenario('Create, sort, filter, delete and check "Files" in the Back Office', ()
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   for (let i = 0; i < fileData.length; i++) {
     commonFileScenarios.createFile(fileData[i].filename, fileData[i].description, fileData[i].file);
     commonFileScenarios.checkFile(fileData[i].filename, fileData[i].description);
@@ -65,7 +67,7 @@ scenario('Create, sort, filter, delete and check "Files" in the Back Office', ()
   commonFileScenarios.filterFile('Ps Category', 'name', 3, true);
   commonFileScenarios.sortFile(Files.files_id, 'id', 2, false, true);
   commonFileScenarios.filterFile('0', 'associated', 6);
-  commonFileScenarios.filterFile('6', 'size', 5);
+  commonFileScenarios.filterFile('37.74k', 'size', 5);
   for (let k = 0; k < fileData.length; k++) {
     commonFileScenarios.deleteFile(fileData[k].filename);
   }

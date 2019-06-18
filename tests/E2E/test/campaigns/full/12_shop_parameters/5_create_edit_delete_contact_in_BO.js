@@ -6,9 +6,10 @@
  * [id="PS-210"][Name="Bulk actions"]
  **/
 
-const {AccessPageBO} = require('../../../../selectors/BO/access_page');
-const {AccessPageFO} = require('../../../../selectors/FO/access_page');
-const commonScenarios = require('../../../common_scenarios/contact');
+const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../selectors/FO/access_page');
+const commonScenarios = require('../../common_scenarios/contact');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let contactData = {
   title: 'Service',
@@ -29,6 +30,7 @@ scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Test 1: Create, check a "Contact" in the Back Office and check it in the Front Office', () => {
     commonScenarios.createContact(contactData);
     commonScenarios.checkContactBO(contactData);
@@ -43,11 +45,6 @@ scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
     commonScenarios.checkCustomerService(contactData, messageData);
   }, 'common_client');
   scenario('Test 2: Edit, check a "Contact" in the Back Office and check it in the Front Office', client => {
-    test('should check and click on "Stop the OnBoarding" button', () => {
-      return promise
-        .then(() => client.isVisible(OnBoarding.stop_button))
-        .then(() => client.stopOnBoarding(OnBoarding.stop_button));
-    });
     commonScenarios.editContact(contactData);
     commonScenarios.checkContactBO(contactData);
     scenario('Go to the Front Office', client => {
