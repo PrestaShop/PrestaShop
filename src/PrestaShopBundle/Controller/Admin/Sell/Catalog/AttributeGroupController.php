@@ -64,6 +64,24 @@ class AttributeGroupController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function createAction()
+    {
+        //@todo: implement in antoher pr
+        return $this->redirectToRoute('admin_attribute_groups_index');
+    }
+
+    public function editAction($attributeGroupId)
+    {
+        //@todo: implement in antoher pr
+        return $this->redirectToRoute('admin_attribute_groups_index');
+    }
+
+    public function exportAction($attributeGroupId)
+    {
+        //@todo: implement in antoher pr
+        return $this->redirectToRoute('admin_attribute_groups_index');
+    }
+
     /**
      * Responsible for grid filtering
      *

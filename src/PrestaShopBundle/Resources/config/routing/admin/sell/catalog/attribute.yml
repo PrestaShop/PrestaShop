@@ -23,23 +23,21 @@ admin_attributes_search:
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
 
-#@todo: implement
 admin_attributes_create:
   path: /new
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:create'
     _legacy_controller: AdminAttributesGroups
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
     #    _legacy_link: AdminAttributesGroups:addattribute_group
 
-#@todo: implement
 admin_attributes_edit:
   path: /{attributeId}/edit
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:edit'
     _legacy_controller: AdminAttributesGroups
     redirectQueryParamsToKeep:
       - 'attributeGroupId'
