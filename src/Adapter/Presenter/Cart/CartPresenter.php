@@ -505,6 +505,16 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
                 $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+                $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
+                $currencyTo = new \Currency($cart->id_currency);
+                if ($currencyFrom->conversion_rate == 0) {
+                    $value = 0;
+                } else {
+                    // convert to default currency
+                    $value /= $currencyFrom->conversion_rate;
+                    // convert to destination currency
+                    $value *= $currencyTo->conversion_rate;
+                }
                 $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($value);
             }
 
