@@ -24,53 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
- * Provides identification data of Attribute
+ * Deletes attributes in bulk action
  */
-final class AttributeId
+final class BulkDeleteAttributeCommand
 {
     /**
-     * @var int
+     * @var AttributeId[]
      */
-    private $attributeId;
+    private $attributeIds;
 
     /**
-     * @param int $attributeId
+     * @param int[] $attributeIds
      *
      * @throws AttributeConstraintException
      */
-    public function __construct($attributeId)
+    public function __construct(array $attributeIds)
     {
-        $this->assertIsIntegerGreaterThanZero($attributeId);
-        $this->attributeId = $attributeId;
+        $this->setAttributeIds($attributeIds);
     }
 
     /**
-     * @return int
+     * @return AttributeId[]
      */
-    public function getValue()
+    public function getAttributeIds()
     {
-        return $this->attributeId;
+        return $this->attributeIds;
     }
 
     /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param $value
+     * @param array $attributeIds
      *
      * @throws AttributeConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function setAttributeIds(array $attributeIds)
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new AttributeConstraintException(
-                sprintf('Invalid attribute id "%s".', var_export($value, true)),
-                AttributeConstraintException::INVALID_ID
-            );
+        foreach ($attributeIds as $attributeId) {
+            $this->attributeIds[] = new AttributeId($attributeId);
         }
     }
 }

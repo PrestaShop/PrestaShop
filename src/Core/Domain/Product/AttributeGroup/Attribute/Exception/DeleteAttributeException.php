@@ -24,11 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception;
 
 /**
- * Is thrown when required attribute group cannot be found
+ * Is thrown when attribute deletion fails
  */
-class AttributeGroupNotFoundException extends AttributeGroupException
+class DeleteAttributeException extends AttributeException
 {
+    /**
+     * When fails to delete single attribute
+     */
+    const FAILED_DELETE = 10;
+
+    /**
+     * When deleting fails in bulk action
+     */
+    const FAILED_BULK_DELETE = 20;
 }

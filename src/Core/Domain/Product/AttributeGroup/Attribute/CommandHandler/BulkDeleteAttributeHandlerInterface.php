@@ -24,20 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand;
 
 /**
- * Is thrown when deleting attribute group fails
+ * Interface for handling command which deletes attributes in bulk action
  */
-class DeleteAttributeGroupException extends AttributeGroupException
+interface BulkDeleteAttributeHandlerInterface
 {
     /**
-     * When trying to delete single attribute group fails
+     * @param BulkDeleteAttributeCommand $command
      */
-    const FAILED_DELETE = 10;
-
-    /**
-     * When deleting in bulk action fails
-     */
-    const FAILED_BULK_DELETE = 20;
+    public function handle(BulkDeleteAttributeCommand $command);
 }

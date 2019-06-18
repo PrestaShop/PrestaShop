@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\DeleteAttributeGroupCommand;
 
 /**
  * Interface for handling command which deletes attribute group

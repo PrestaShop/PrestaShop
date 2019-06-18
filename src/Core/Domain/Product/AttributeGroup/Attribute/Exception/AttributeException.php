@@ -24,15 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Is thrown when attribute constraints are violated
+ * Base exception for attribute subdomain
  */
-class AttributeConstraintException extends AttributeException
+class AttributeException extends DomainException
 {
-    /**
-     * When attribute id contains invalid values
-     */
-    const INVALID_ID = 10;
 }

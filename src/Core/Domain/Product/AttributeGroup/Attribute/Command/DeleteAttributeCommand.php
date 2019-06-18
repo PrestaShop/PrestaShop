@@ -24,13 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
- * Base exception for attribute subdomain
+ * Deletes Attribute by provided id
  */
-class AttributeException extends DomainException
+final class DeleteAttributeCommand
 {
+    /**
+     * @var AttributeId
+     */
+    private $attributeId;
+
+    /**
+     * @param int $attributeId
+     *
+     * @throws AttributeConstraintException
+     */
+    public function __construct($attributeId)
+    {
+        $this->attributeId = new AttributeId($attributeId);
+    }
+
+    /**
+     * @return AttributeId
+     */
+    public function getAttributeId()
+    {
+        return $this->attributeId;
+    }
 }

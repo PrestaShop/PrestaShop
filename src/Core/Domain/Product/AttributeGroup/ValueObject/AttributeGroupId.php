@@ -24,48 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupConstraintException;
 
 /**
- * Deletes attribute groups in bulk action by provided ids
+ * Provides attribute group identification data
  */
-final class BulkDeleteAttributeGroupCommand
+final class AttributeGroupId
 {
     /**
-     * @var AttributeGroupId[]
+     * @var int
      */
-    private $attributeGroupIds;
+    private $attributeGroupId;
 
     /**
-     * @param int[] $attributeGroupIds
+     * @param int $attributeGroupId
      *
      * @throws AttributeGroupConstraintException
      */
-    public function __construct(array $attributeGroupIds)
+    public function __construct($attributeGroupId)
     {
-        $this->setAttributeGroupIds($attributeGroupIds);
+        $this->assertIsIntegerGreaterThanZero($attributeGroupId);
+        $this->attributeGroupId = $attributeGroupId;
     }
 
     /**
-     * @return AttributeGroupId[]
+     * @return mixed
      */
-    public function getAttributeGroupIds()
+    public function getAttributeGroupId()
     {
-        return $this->attributeGroupIds;
+        return $this->attributeGroupId;
     }
 
     /**
-     * @param array $attributeGroupIds
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->attributeGroupId;
+    }
+
+    /**
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param $value
      *
      * @throws AttributeGroupConstraintException
      */
-    private function setAttributeGroupIds(array $attributeGroupIds)
+    private function assertIsIntegerGreaterThanZero($value)
     {
-        foreach ($attributeGroupIds as $attributeGroupId) {
-            $this->attributeGroupIds[] = new AttributeGroupId($attributeGroupId);
+        if (!is_int($value) || 0 >= $value) {
+            throw new AttributeGroupConstraintException(
+                sprintf('Invalid attribute group id "%s".', var_export($value, true)),
+                AttributeGroupConstraintException::INVALID_ID
+            );
         }
     }
 }

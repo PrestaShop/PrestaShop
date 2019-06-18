@@ -24,17 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\BulkDeleteAttributeCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception;
 
 /**
- * Interface for handling command which deletes attributes in bulk action
+ * Thrown when required attribute cannot be found
  */
-interface BulkDeleteAttributeHandlerInterface
+class AttributeNotFoundException extends AttributeException
 {
-    /**
-     * @param BulkDeleteAttributeCommand $command
-     */
-    public function handle(BulkDeleteAttributeCommand $command);
 }

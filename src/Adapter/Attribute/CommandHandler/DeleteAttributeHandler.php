@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\AbstractAttributeHandler;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\DeleteAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler\DeleteAttributeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\DeleteAttributeException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\DeleteAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\CommandHandler\DeleteAttributeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\DeleteAttributeException;
 
 /**
  * Handles command which deletes the Attribute using legacy object model

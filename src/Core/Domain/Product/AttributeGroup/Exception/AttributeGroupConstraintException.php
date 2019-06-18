@@ -24,17 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\DeleteAttributeCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception;
 
 /**
- * Interface for handling command which deletes Attribute
+ * Is thrown when attribute group constraints are violated
  */
-interface DeleteAttributeHandlerInterface
+class AttributeGroupConstraintException extends AttributeGroupException
 {
     /**
-     * @param DeleteAttributeCommand $command
+     * When attribute group Id contains invalid values
      */
-    public function handle(DeleteAttributeCommand $command);
+    const INVALID_ID = 10;
 }

@@ -24,36 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\BulkDeleteAttributeGroupCommand;
 
 /**
- * Deletes attribute group by provided id
+ * Interface for handling command which deletes mutliple attribute groups
  */
-final class DeleteAttributeGroupCommand
+interface BulkDeleteAttributeGroupHandlerInterface
 {
     /**
-     * @var AttributeGroupId
+     * @param BulkDeleteAttributeGroupCommand $command
      */
-    private $attributeGroupId;
-
-    /**
-     * @param int $attributeGroupId
-     *
-     * @throws AttributeGroupConstraintException
-     */
-    public function __construct($attributeGroupId)
-    {
-        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-    }
-
-    /**
-     * @return AttributeGroupId
-     */
-    public function getAttributeGroupId()
-    {
-        return $this->attributeGroupId;
-    }
+    public function handle(BulkDeleteAttributeGroupCommand $command);
 }
