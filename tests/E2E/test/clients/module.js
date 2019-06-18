@@ -59,7 +59,7 @@ class Module extends CommonClient {
 
   getModuleButtonName(ModulePage, moduleTechName, selector = ModulePage.module_action_href) {
     return this.client.getText(selector.split('%moduleTechName').join(moduleTechName)).then(function (text) {
-      buttonText = text.toUpperCase();
+      buttonText = text.toString().toUpperCase();
     });
   }
 

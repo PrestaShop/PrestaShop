@@ -130,13 +130,13 @@ module.exports = {
       for (let i = 0; i < (parseInt(tab['modules_number'])); i++) {
         if (installedMbo && attribute === 'data-price') {
           if (byCategory === 1) {
-            await client.getModulePrice(ModulePage.category_price_module_span.replace('%IND', tab['categoryRef']), attribute, i, false);
+            await client.getModulePrice(ModulePage.category_price_module_span.replace('%IND', global.tab['categoryRef']), attribute, i, false);
           } else {
-            await client.getModulePrice(ModulePage.price_module_span, attribute, i, false);
+            await client.getModulePrice(ModulePage.price_module_div, attribute, i, false);
           }
         } else {
           if (byCategory === 1) {
-            await client.getModuleField(ModulePage.category_module_list.replace('%IND', tab['categoryRef']), attribute, i, false);
+            await client.getModuleField(ModulePage.category_module_list.replace('%IND', global.tab['categoryRef']), attribute, i, false);
           } else {
             await client.getModuleField(ModulePage.module_list, attribute, i, false);
           }
@@ -150,7 +150,7 @@ module.exports = {
           if (byCategory === 1) {
             await client.getModulePrice(ModulePage.category_price_module_span.replace('%IND', tab['categoryRef']), attribute, i, true);
           } else {
-            await client.getModulePrice(ModulePage.price_module_span, attribute, i, true);
+            await client.getModulePrice(ModulePage.price_module_div, attribute, i, true);
           }
         } else {
           if (byCategory === 1) {
@@ -209,8 +209,8 @@ module.exports = {
   DisableEnableModule: async function (client, ModulePage) {
     test('should click on "Disable" button for the first module', async () => {
       await client.getAttributeInVar(ModulePage.first_module_bloc, 'data-tech-name', 'moduleTechName');
-      await client.getModuleButtonName(ModulePage, tab['moduleTechName'], ModulePage.module_action_link);
-      await client.clickOnDisableModuleButton(ModulePage, tab['moduleTechName']);
+      await client.getModuleButtonName(ModulePage, global.tab['moduleTechName'], ModulePage.module_action_link);
+      await client.clickOnDisableModuleButton(ModulePage, global.tab['moduleTechName']);
       await client.waitForVisibleAndClick(ModulePage.confirmation_disable_module);
       await client.waitForExistAndClick(AddProductPage.close_validation_button);
       await client.refresh(); //To verify
@@ -219,14 +219,14 @@ module.exports = {
       await client.waitForExistAndClick(ModulePage.status_list);
       await client.waitForExistAndClick(ModulePage.status_option_link.replace('%ID', 0));
     });
-    test('should search for the module "' + tab['moduleTechName'] + '"', async () => {
-      await client.waitAndSetValue(ModulePage.module_selection_input, tab['moduleTechName']);
+    test('should search for the module "' + global.tab['moduleTechName'] + '"', async () => {
+      await client.waitAndSetValue(ModulePage.module_selection_input, global.tab['moduleTechName']);
       await client.waitForExistAndClick(ModulePage.selection_search_button);
     });
-    test('should check if the disabled  module is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', tab['moduleTechName']), 2000));
+    test('should check if the disabled  module is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', global.tab['moduleTechName']), 2000));
     test('should click on "Enable" button', async () => {
-      await client.getModuleButtonName(ModulePage, tab['moduleTechName']);
-      await client.clickOnEnableModuleButton(ModulePage, tab['moduleTechName']);
+      await client.getModuleButtonName(ModulePage, global.tab['moduleTechName']);
+      await client.clickOnEnableModuleButton(ModulePage, global.tab['moduleTechName']);
       await client.waitForExistAndClick(AddProductPage.close_validation_button);
       await client.refresh(); //To verify
     });
@@ -234,7 +234,7 @@ module.exports = {
       await client.waitForExistAndClick(ModulePage.status_list);
       await client.waitForExistAndClick(ModulePage.status_option_link.replace('%ID', 1));
     });
-    test('should search for the module "' + tab['moduleTechName'] + '"', async () => {
+    test('should search for the module "' + global.tab['moduleTechName'] + '"', async () => {
       await client.waitAndSetValue(ModulePage.module_selection_input, tab['moduleTechName']);
       await client.waitForExistAndClick(ModulePage.selection_search_button);
     });
