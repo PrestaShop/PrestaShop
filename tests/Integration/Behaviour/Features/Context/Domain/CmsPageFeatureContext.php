@@ -53,12 +53,12 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     private $defaultShopId;
 
     /**
-     * "When" steps perform actions, and some of them store the latest result
-     * in this variable so that "Then" action can check its content
+     * "When" steps perform actions, and some of them store the latest exception
+     * in this variable so that "Then" action can check it
      *
      * @var mixed
      */
-    private $latestResult;
+    private $latestException;
 
     public function __construct()
     {
@@ -73,7 +73,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $node->getRowsHash();
         $command = new AddCmsPageCommand(
-            CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
+            (int) $data['id_cms_category'],
             [$this->defaultLangId => $data['meta_title']],
             [$this->defaultLangId => $data['head_seo_title']],
             [$this->defaultLangId => $data['meta_description']],
@@ -92,56 +92,32 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I attempt to create cms page :reference with empty title
+     * @When I add new cms page :reference with empty title
      */
-    public function attemptToCreateCmsPageWithEmptyTitle($reference)
+    public function createCmsPageWithEmptyTitle($reference)
     {
-        $command = new AddCmsPageCommand(
-            CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
-            [$this->defaultLangId => ''],
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            true,
-            true,
-            [$this->defaultShopId]
-        );
-        try {
-            $cmsPageId = $this->getCommandBus()->handle($command);
-            SharedStorage::getStorage($reference, new \CMS((int) $cmsPageId->getValue()));
+        $rows = $this->getValidDataRowsForCmsPageCreation();
+        $rows['meta_title'] = '';
 
-            throw new NoExceptionAlthoughExpectedException('Cms page creation expected to fail, but it succeeded');
+        try {
+            $this->createCmsPage($reference, $this->getTableNodeFromRows($rows));
         } catch (\Exception $e) {
-            $this->latestResult = $e;
+            $this->latestException = $e;
         }
     }
 
     /**
-     * @When I attempt to create cms page :reference with cms category id :id
+     * @When I create cms page :reference with cms category id :id
      */
-    public function attemptToCreateCmsPageWithCategoryId($reference, $id)
+    public function createCmsPageWithProvidedCategoryId($reference, $id)
     {
-        $command = new AddCmsPageCommand(
-            (int) $id,
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            [$this->defaultLangId => 'test'],
-            true,
-            true,
-            [$this->defaultShopId]
-        );
-        try {
-            $cmsPageId = $this->getCommandBus()->handle($command);
-            SharedStorage::getStorage($reference, new \CMS((int) $cmsPageId->getValue()));
+        $rows = $this->getValidDataRowsForCmsPageCreation();
+        $rows['id_cms_category'] = (int) $id;
 
-            throw new NoExceptionAlthoughExpectedException('Cms page creation expected to fail, but it succeeded');
+        try {
+            $this->createCmsPage($reference, $this->getTableNodeFromRows($rows));
         } catch (\Exception $e) {
-            $this->latestResult = $e;
+            $this->latestException = $e;
         }
     }
 
@@ -184,22 +160,30 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I attempt to edit cms page :reference providing illegal content value :value
+     * @When I edit cms page :reference providing illegal content value :value
      */
     public function editCmsPageProvidingIllegalContent($reference, $value)
     {
-        $cmsId = (int) SharedStorage::getStorage()->get($reference)->id;
-        $command = new EditCmsPageCommand($cmsId);
-        $command->setLocalizedContent(
-            [$this->defaultLangId => $value]
-        );
         try {
-            $this->getCommandBus()->handle($command);
-            SharedStorage::getStorage()->set($reference, new \CMS($cmsId));
-
-            throw new NoExceptionAlthoughExpectedException('Cms page was edited, but it was expected editing to fail');
+            $this->editCmsPage($reference, new TableNode([
+                ['content', $value],
+            ]));
         } catch (\Exception $e) {
-            $this->latestResult = $e;
+            $this->latestException = $e;
+        }
+    }
+
+    /**
+     * @When I edit cms page :reference providing empty title
+     */
+    public function editCmsPageProvidingEmptyTitle($reference)
+    {
+        try {
+            $this->editCmsPage($reference, new TableNode([
+                ['meta_title', ''],
+            ]));
+        } catch (\Exception $e) {
+            $this->latestException = $e;
         }
     }
 
@@ -257,12 +241,12 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^cms page "(.*)" indexation for search engines should be (enabled|disabled)?$/
      */
-    public function assertIndexation($reference, $status)
+    public function assertIndexationStatus($reference, $status)
     {
         /** @var \CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($reference);
-        $statusBool = $status === 'enabled' ? true : false;
-        if ($statusBool !== (bool) $cmsPage->indexation) {
+        $isEnabled = $status === 'enabled' ? true : false;
+        if ($isEnabled !== (bool) $cmsPage->indexation) {
             throw new RuntimeException(sprintf(
                 'Cms page "%s" indexation is %s, but it was expected to be %s',
                 $reference,
@@ -275,12 +259,12 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^cms page "(.*)" should be (displayed|not displayed)?$/
      */
-    public function assertIsActive($reference, $status)
+    public function assertDisplayStatus($reference, $status)
     {
         /** @var \CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($reference);
-        $statusBool = $status === 'displayed' ? true : false;
-        if ($statusBool !== (bool) $cmsPage->active) {
+        $isEnabled = $status === 'displayed' ? true : false;
+        if ($isEnabled !== (bool) $cmsPage->active) {
             throw new RuntimeException(sprintf(
                 'Cms page "%s" is %s, but it was expected to be %s',
                 $reference,
@@ -291,7 +275,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then cms page :reference :field in default language should be :value
+     * @Then /^cms page "(.+)" "(.+)" in default language should be '([^']+)'$/
      */
     public function assertFieldValue($reference, $field, $value)
     {
@@ -330,14 +314,10 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertExceptionWasThrown($message)
     {
-        if ($this->latestResult instanceof NoExceptionAlthoughExpectedException) {
-            throw $this->latestResult;
-        }
-
-        if ($this->latestResult instanceof \Exception) {
-            if ($this->latestResult->getMessage() !== $message) {
+        if ($this->latestException instanceof \Exception) {
+            if ($this->latestException->getMessage() !== $message) {
                 throw new RuntimeException(sprintf(
-                    'Got error message "%s", but expected %s', $this->latestResult->getMessage(), $message)
+                    'Got error message "%s", but expected %s', $this->latestException->getMessage(), $message)
                 );
             }
 
@@ -361,5 +341,42 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             );
         } catch (CmsPageCategoryNotFoundException $e) {
         }
+    }
+
+    /**
+     * Provides reusable valid data rows for cms creation.
+     *
+     * @return array
+     */
+    private function getValidDataRowsForCmsPageCreation()
+    {
+        return [
+            'id_cms_category' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
+            'meta_title' => 'Special delivery options',
+            'head_seo_title' => 'delivery options',
+            'meta_description' => 'Our special delivery options',
+            'meta_keywords' => 'delivery,configure,special',
+            'link_rewrite' => 'delivery-options',
+            'content' => '<div> <h5> Delivery <img src="../delivery/options.jpg" alt="" /></h5> </div>',
+            'indexation' => 1,
+            'active' => 1,
+        ];
+    }
+
+    /**
+     * Formats TableNode from given data rows
+     *
+     * @param array $rows
+     *
+     * @return TableNode
+     */
+    private function getTableNodeFromRows(array $rows)
+    {
+        $formattedData = [];
+        foreach ($rows as $key => $value) {
+            $formattedData[] = [$key, $value];
+        }
+
+        return new TableNode($formattedData);
     }
 }
