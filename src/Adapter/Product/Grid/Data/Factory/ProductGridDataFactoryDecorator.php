@@ -3,11 +3,15 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 
 use Configuration;
+use Currency;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use Product;
 
 /**
@@ -26,16 +30,36 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     private $productImageProvider;
 
     /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
+     * @var int
+     */
+    private $defaultCurrencyId;
+
+    /**
      * @param GridDataFactoryInterface $productGridDataFactory
      * @param ImageProviderInterface $productImageProvider
+     * @param string $contextLocale
+     * @param int $defaultCurrencyId
      */
     public function __construct(
         GridDataFactoryInterface $productGridDataFactory,
-        ImageProviderInterface $productImageProvider
+        ImageProviderInterface $productImageProvider,
+        Repository $localeRepository,
+        $contextLocale,
+        $defaultCurrencyId
     ) {
-
         $this->productGridDataFactory = $productGridDataFactory;
         $this->productImageProvider = $productImageProvider;
+
+        $this->locale = $localeRepository->getLocale(
+            $contextLocale
+        );
+
+        $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
     /**
@@ -65,9 +89,20 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      */
     private function applyModification(array $products)
     {
+        $currency = new Currency($this->defaultCurrencyId);
+
         foreach ($products as $i => $product) {
             $products[$i]['image'] = $this->productImageProvider->getPath($product['id_image']);
-            $products[$i]['price_tax_included'] = $this->getPriceWithTax($product);
+            //todo: maybe a priceColumn would be a better idea?
+            $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
+                $products[$i]['price_tax_excluded'],
+                $currency->iso_code
+            );
+
+            $products[$i]['price_tax_included'] = $this->locale->formatPrice(
+                $this->getPriceWithTax($product),
+                $currency->iso_code
+            );
         }
 
         return $products;
