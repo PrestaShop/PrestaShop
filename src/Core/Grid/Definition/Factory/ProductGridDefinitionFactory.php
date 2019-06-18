@@ -111,6 +111,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new DataColumn('price_tax_included'))
+                    ->setName($this->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'))
+                    ->setOptions([
+                        'field' => 'price_tax_included',
+                    ])
+            )
+            ->add(
                 (new ToggleColumn('active'))
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
@@ -173,7 +180,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         //todo: test on or off
         if ($this->isStockManagementEnabled) {
             $columns->addAfter(
-                'price_tax_excluded',
+                'price_tax_included',
                 (new DataColumn('quantity'))
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([

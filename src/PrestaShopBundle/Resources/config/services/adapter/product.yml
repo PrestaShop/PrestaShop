@@ -69,3 +69,9 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\ImageThumbnailProvider'
         arguments:
           - '@prestashop.core.image.parser.image_tag_source_parser'
+
+    prestashop.adapter.product.grid.data.factory.product_decorator:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator'
+        arguments:
+          - '@prestashop.core.grid.data.factory.product'
+          - '@prestashop.adapter.product.image_thumbnail_provider'
