@@ -3,3 +3,9 @@ admin_products_index:
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:index'
+
+admin_products_toggle_status:
+  path: /{productId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:toggle'

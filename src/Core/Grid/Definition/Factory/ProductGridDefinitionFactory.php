@@ -5,6 +5,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
@@ -101,10 +102,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('active'))
+                (new ToggleColumn('active'))
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'active'
+                        'field' => 'active',
+                        'primary_field' => 'id_product',
+                        'route' => 'admin_products_toggle_status',
+                        'route_param_name' => 'productId',
                     ])
             )
         ;
