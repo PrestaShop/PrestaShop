@@ -55,6 +55,20 @@
         {{ prestashopVersion }}
       </div>
 
+      {% if isInsecureMode %}
+        <div class="alert alert-warning mt-1" role="alert">
+          <div class="alert-text">
+            <p>
+            {% if canAccessInsecureMode %}
+              {{ 'SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.'|trans({}, 'Admin.Login.Notification') }}
+            {% else %}
+              {{ 'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]'|trans({'[1]': '<a href="' ~ secureUrl ~ '">', '[/1]': '</a>'}, 'Admin.Login.Notification')|raw }}
+            {% endif %}
+            </p>
+          </div>
+        </div>
+      {% endif %}
+
       {% if app.session.flashbag.peek('error')|length() > 0 %}
         <div class="alert alert-danger mt-1" role="alert">
           <div class="alert-text">
