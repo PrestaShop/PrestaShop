@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,38 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
-final class DateTimeColumn extends AbstractColumn
+/**
+ * Defines reusable values for DateTime
+ */
+final class DateTime
 {
     /**
-     * {@inheritdoc}
+     * DateTime value which should be considered same as null
      */
-    public function getType()
-    {
-        return 'date_time';
-    }
+    const NULL_VALUE = '0000-00-00 00:00:00';
 
     /**
-     * {@inheritdoc}
+     * This class is not supposed to be initialized as its purpose is to define constants
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function __construct()
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'format' => 'Y-m-d H:i:s',
-                'empty_data' => '',
-            ])
-            ->setAllowedTypes('format', 'string')
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('empty_data', 'string');
     }
 }
