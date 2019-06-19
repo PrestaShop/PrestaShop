@@ -212,7 +212,7 @@ class ModuleManager implements AddonManagerInterface
     /**
      * @return object
      *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedProduct
+     * @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedModule
      */
     protected function groupModulesByInstallationProgress()
     {
