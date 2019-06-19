@@ -193,10 +193,10 @@ class TreeToolbarCore implements ITreeToolbarCore
         return $this;
     }
 
+    /** @var ITreeToolbarButton $action */
     public function render()
     {
         foreach ($this->getActions() as $action) {
-            // @var ITreeToolbarButton $action
             $action->setAttribute('data', $this->getData());
         }
 

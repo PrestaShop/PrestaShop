@@ -470,6 +470,11 @@ class MailThemeController extends FrameworkBundleAdminController
      * @param string $layoutName
      * @param string $module
      *
+     * @var ThemeCatalogInterface $themeCatalog
+     * @var ThemeInterface $theme
+     * @var LayoutInterface $layout
+     * @var LayoutInterface $layoutInterface
+     *
      * @return LayoutInterface
      *
      * @throws FileNotFoundException
@@ -477,14 +482,9 @@ class MailThemeController extends FrameworkBundleAdminController
      */
     private function getMailLayout($themeName, $layoutName, $module)
     {
-        /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
-        /** @var ThemeInterface $theme */
         $theme = $themeCatalog->getByName($themeName);
-
-        /** @var LayoutInterface $layout */
         $layout = null;
-        // @var LayoutInterface $layoutInterface
         foreach ($theme->getLayouts() as $layoutInterface) {
             if ($layoutInterface->getName() == $layoutName
                 && $layoutInterface->getModuleName() == $module

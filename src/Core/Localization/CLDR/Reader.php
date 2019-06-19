@@ -302,6 +302,8 @@ class Reader implements ReaderInterface
      *
      * @todo use $supplementalData for non-occidental digits
      *
+     * @var $system SimplexmlElemen
+     *
      * @see  http://cldr.unicode.org/development/development-process/design-proposals/resolution-of-cldr-files
      */
     protected function mapLocaleData(SimpleXMLElement $xmlLocaleData, $supplementalData)
@@ -336,7 +338,6 @@ class Reader implements ReaderInterface
         if (isset($numbersData->otherNumberingSystems)) {
             $numberingSystems = [];
             foreach ($numbersData->otherNumberingSystems->children() as $system) {
-                // @var $system SimplexmlElement
                 $numberingSystems[$system->getName()] = (string) $system;
             }
             $localeData->setNumberingSystems($numberingSystems);

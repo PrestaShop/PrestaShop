@@ -374,6 +374,9 @@ class CategoryCore extends ObjectModel
      *
      * @return bool `true` if successfully deleted
      *
+     * @var Category $cat
+     * @var Category $cat
+     *
      * @throws PrestaShopException
      */
     public function delete()
@@ -386,7 +389,7 @@ class CategoryCore extends ObjectModel
 
         $deletedChildren = $allCat = $this->getAllChildren();
         $allCat[] = $this;
-        /** @var Category $cat */
+
         foreach ($allCat as $cat) {
             $cat->deleteLite();
             if (!$cat->hasMultishopEntries()) {
@@ -2320,6 +2323,8 @@ class CategoryCore extends ObjectModel
      *
      * @param array $categories
      *
+     * @var Category $category
+     *
      * @return bool Indicates whether the Categories were successfully added to the given Shop
      */
     public static function addToShop(array $categories, $idShop)
@@ -2338,7 +2343,6 @@ class CategoryCore extends ObjectModel
 
         $return = Db::getInstance()->execute($sql);
         // we have to update position for every new entries
-        /** @var Category $category */
         foreach ($tabCategories as $category) {
             $category->addPosition(Category::getLastPosition($category->id_parent, $idShop), $idShop);
         }

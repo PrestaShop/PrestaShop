@@ -32,7 +32,9 @@ class AdminModulesControllerCore extends AdminController
         // 'bloctopmenu' => array('advancedtopmenu'),
         'blocklayered' => array('pm_advancedsearch4'),
     );
-    // @var array map with $_GET keywords and their callback
+    /**
+     * @var array map with keywords and their callback
+     */
     protected $map = array(
         'check' => 'check',
         'install' => 'install',
@@ -96,7 +98,6 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['payment_security']['name'] = $this->trans('Site certification & Fraud prevention', [], 'Admin.Modules.Feature');
         $this->list_modules_categories['pricing_promotion']['name'] = $this->trans('Pricing & Promotion', [], 'Admin.Modules.Feature');
         $this->list_modules_categories['quick_bulk_update']['name'] = $this->trans('Quick / Bulk update', [], 'Admin.Modules.Feature');
-        // $this->list_modules_categories['search_filter']['name'] = $this->trans('Search & Filter', [], 'Admin.Modules.Feature');
         $this->list_modules_categories['seo']['name'] = $this->trans('SEO', [], 'Admin.Catalog.Feature');
         $this->list_modules_categories['shipping_logistics']['name'] = $this->trans('Shipping & Logistics', [], 'Admin.Modules.Feature');
         $this->list_modules_categories['slideshows']['name'] = $this->trans('Slideshows', [], 'Admin.Modules.Feature');

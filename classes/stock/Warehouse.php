@@ -510,6 +510,8 @@ class WarehouseCore extends ObjectModel
      *
      * @param int $id_product
      *
+     * @var WarehouseProductLocation $pack_warehouse
+     *
      * @return array|bool id_warehouse or false
      */
     public static function getPackWarehouses($id_product, $id_shop = null)
@@ -532,7 +534,6 @@ class WarehouseCore extends ObjectModel
 
         // fills $list
         foreach ($pack_warehouses as $pack_warehouse) {
-            // @var WarehouseProductLocation $pack_warehouse
             $list['pack_warehouses'][] = (int) $pack_warehouse->id_warehouse;
         }
 

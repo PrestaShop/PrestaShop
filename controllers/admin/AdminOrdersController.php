@@ -453,6 +453,9 @@ class AdminOrdersControllerCore extends AdminController
         return parent::renderList();
     }
 
+    /**
+     * @var OrderInvoice
+     */
     public function postProcess()
     {
         // If id_order is sent, we instanciate a new Order object
@@ -1459,7 +1462,6 @@ class AdminOrdersControllerCore extends AdminController
                                 } elseif ($order->hasInvoice()) {
                                     $order_invoices_collection = $order->getInvoicesCollection();
                                     foreach ($order_invoices_collection as $order_invoice) {
-                                        // @var OrderInvoice $order_invoice
                                         $cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
                                         $cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
@@ -2077,6 +2079,9 @@ class AdminOrdersControllerCore extends AdminController
         }
     }
 
+    /**
+     * @var OrderInvoice
+     */
     public function ajaxProcessAddProductOnOrder()
     {
         // Load object
@@ -2363,7 +2368,6 @@ class AdminOrdersControllerCore extends AdminController
 
         $invoice_array = array();
         foreach ($invoice_collection as $invoice) {
-            // @var OrderInvoice $invoice
             $invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int) $order->id_shop);
             $invoice_array[] = $invoice;
         }
@@ -2477,6 +2481,9 @@ class AdminOrdersControllerCore extends AdminController
         )));
     }
 
+    /**
+     * @var OrderInvoice
+     */
     public function ajaxProcessEditProductOnOrder()
     {
         // Return value
@@ -2621,7 +2628,6 @@ class AdminOrdersControllerCore extends AdminController
 
         $invoice_array = array();
         foreach ($invoice_collection as $invoice) {
-            // @var OrderInvoice $invoice
             $invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int) $order->id_shop);
             $invoice_array[] = $invoice;
         }
@@ -2679,6 +2685,9 @@ class AdminOrdersControllerCore extends AdminController
         )));
     }
 
+    /**
+     * @var OrderInvoice
+     */
     public function ajaxProcessDeleteProductLine()
     {
         $res = true;
@@ -2732,7 +2741,6 @@ class AdminOrdersControllerCore extends AdminController
 
         $invoice_array = array();
         foreach ($invoice_collection as $invoice) {
-            // @var OrderInvoice $invoice
             $invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int) $order->id_shop);
             $invoice_array[] = $invoice;
         }

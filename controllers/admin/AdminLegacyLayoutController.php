@@ -89,7 +89,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
         $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
-        // @todo remove once the product page has been made responsive
+        /** @todo remove once the product page has been made responsive */
         $isProductPage = ('AdminProducts' === $this->controller_name);
 
         $vars = array(

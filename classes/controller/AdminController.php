@@ -4846,13 +4846,14 @@ class AdminControllerCore extends Controller
      *
      * @var Currency $currency
      * @var PriceSpecification $priceSpecification
-     * 
+     *
      * @return array
      */
     private function preparePriceSpecifications(Context $context)
     {
         $currency = $context->currency;
         $priceSpecification = $context->getCurrentLocale()->getPriceSpecification($currency->iso_code);
+
         if (empty($priceSpecification)) {
             return [];
         }
@@ -4869,6 +4870,7 @@ class AdminControllerCore extends Controller
      * @param Context $context
      *
      * @var NumberSpecification $numberSpecification
+     *
      * @return array
      */
     private function prepareNumberSpecifications(Context $context)

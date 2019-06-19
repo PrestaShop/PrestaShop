@@ -51,10 +51,11 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @var ProfileId @profileId
      */
     public function create(array $data)
     {
-        /** @var ProfileId $profileId */
         $profileId = $this->bus->handle(new AddProfileCommand($data['name']));
 
         return $profileId->getValue();
@@ -62,10 +63,11 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @var ProfileId @profileId
      */
     public function update($profileId, array $data)
     {
-        // @var ProfileId $profileId
         $this->bus->handle(new EditProfileCommand($profileId, $data['name']));
     }
 }

@@ -418,6 +418,9 @@ class ProductController extends FrameworkBundleAdminController
      * @param int $id The product ID
      * @param Request $request
      *
+     * @var Form $form
+     * @var Product $product
+     *
      * @return array|Response Template vars
      *
      * @throws \LogicException
@@ -480,7 +483,6 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
 
-        // @var Form $form
         $form->handleRequest($request);
         $formData = $form->getData();
         $formData['step3']['combinations'] = $combinationsList;
@@ -521,7 +523,6 @@ class ProductController extends FrameworkBundleAdminController
 
                     $product = $productSaveResult;
 
-                    // @var Product $product
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
                     $adminProductController->processSpecificPricePriorities();
@@ -882,6 +883,11 @@ class ProductController extends FrameworkBundleAdminController
      * @param Request $request
      * @param string $action The action to apply on the selected products
      *
+     * @var $productProvider ProductInterfaceProvider
+     * @var $productUpdater ProductInterfaceUpdater
+     * @var $logger LoggerInterface
+     * @var HookDispatcher $hookDispatcher
+     *
      * @throws Exception if action not properly set or unknown
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -898,16 +904,9 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
-        /** @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-
-        /** @var $productUpdater ProductInterfaceUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-
-        /** @var $logger LoggerInterface */
         $logger = $this->get('logger');
-
-        // @var HookDispatcher $hookDispatcher
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
 
         // Initialize router params variable.

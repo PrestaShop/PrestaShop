@@ -137,9 +137,9 @@ class WebserviceRequestCore
 
     /**
      * The current object to support, it extends the PrestaShop ObjectModel.
-     *
-     * @var ObjectModel
      */
+
+    /** @var ObjectModel @object */
     protected $_object;
 
     /**
@@ -486,6 +486,8 @@ class WebserviceRequestCore
      * @param string $params
      * @param string $inputXml
      *
+     * @var ObjectModel $object
+     *
      * @return array Returns an array of results (headers, content, type of resource...)
      */
     public function fetch($key, $method, $url, $params, $bad_class_name, $inputXml = null)
@@ -529,7 +531,6 @@ class WebserviceRequestCore
                 // Method below set a particular fonction to use on the price field for products entity
                 // @see WebserviceRequest::getPriceForProduct() method
                 // @see WebserviceOutputBuilder::setSpecificField() method
-                //$this->objOutput->setSpecificField($this, 'getPriceForProduct', 'price', 'products');
                 if (isset($this->urlFragments['price'])) {
                     $this->objOutput->setVirtualField($this, 'specificPriceForCombination', 'combinations', $this->urlFragments['price']);
                     $this->objOutput->setVirtualField($this, 'specificPriceForProduct', 'products', $this->urlFragments['price']);
@@ -562,7 +563,6 @@ class WebserviceRequestCore
                 if (!isset($this->resourceList[$this->urlSegment[0]]['specific_management']) || !$this->resourceList[$this->urlSegment[0]]['specific_management']) {
                     // load resource configuration
                     if ($this->urlSegment[0] != '') {
-                        /** @var ObjectModel $object */
                         $object = new $this->resourceList[$this->urlSegment[0]]['class']();
                         if (isset($this->resourceList[$this->urlSegment[0]]['parameters_attribute'])) {
                             $this->resourceConfiguration = $object->getWebserviceParameters($this->resourceList[$this->urlSegment[0]]['parameters_attribute']);
@@ -1423,6 +1423,8 @@ class WebserviceRequestCore
      * Execute DELETE method on a PrestaShop entity.
      *
      * @return bool
+     *
+     * @var ObjectModel $object
      */
     protected function executeEntityDelete()
     {
@@ -1460,7 +1462,6 @@ class WebserviceRequestCore
                     $postponeNTreeRegeneration = true;
                 }
 
-                // @var ObjectModel $object
                 if (isset($this->resourceConfiguration['objectMethods']['delete'])) {
                     $result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
                 } else {
@@ -1488,6 +1489,8 @@ class WebserviceRequestCore
      * save Entity Object from XML.
      *
      * @param int $successReturnCode
+     *
+     * @var ObjectModel $object
      *
      * @return bool
      */
@@ -1536,7 +1539,6 @@ class WebserviceRequestCore
             /** @var SimpleXMLElement $xmlEntity */
             $attributes = $xmlEntity->children();
 
-            // @var ObjectModel $object
             if ($this->method == 'POST') {
                 $object = new $this->resourceConfiguration['retrieveData']['className']();
             } elseif ($this->method == 'PUT') {

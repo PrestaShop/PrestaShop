@@ -179,6 +179,8 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @Then /^if I query customer customer "(.+)" I should get a Customer with properties:$/
+     *
+     * @var EditableCustomer @result
      */
     public function assertQueryCustomerProperties($customerReference, TableNode $table)
     {
@@ -188,7 +190,6 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         $this->assertCustomerReferenceExistsInRegistry($customerReference);
 
         $queryBus = $this->getQueryBus();
-        /** @var EditableCustomer $result */
         $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
 
         $serializer = CommonFeatureContext::getContainer()->get('serializer');
@@ -201,13 +202,15 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @Then /^if I query customer customer "(.+)" I should get an error '(.+)'$/
+     *
+     * @var EditableCustomer @result
      */
     public function assertQueryReturnsErrormessage($customerReference, $errorMessage)
     {
         $this->assertCustomerReferenceExistsInRegistry($customerReference);
 
         $queryBus = $this->getQueryBus();
-        // @var EditableCustomer $result
+
         try {
             $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
 

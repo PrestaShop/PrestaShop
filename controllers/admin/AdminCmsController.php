@@ -331,6 +331,7 @@ class AdminCmsControllerCore extends AdminController
         $this->displayListFooter($token);
     }
 
+    /** @var CMS $object */
     public function postProcess()
     {
         if (Tools::isSubmit('viewcms') && ($id_cms = (int) Tools::getValue('id_cms'))) {
@@ -400,7 +401,6 @@ class AdminCmsControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex . '&id_cms_category=' . $cms->id_cms_category . '&conf=4&token=' . Tools::getAdminTokenLite('AdminCmsContent'));
             }
         } elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position'))) {
-            // @var CMS $object
             if (!$this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!Validate::isLoadedObject($object = $this->loadObject())) {

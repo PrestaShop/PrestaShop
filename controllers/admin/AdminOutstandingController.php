@@ -26,6 +26,8 @@
 
 /**
  * @property OrderInvoice $object
+ *
+ * @var Risk @risk
  */
 class AdminOutstandingControllerCore extends AdminController
 {
@@ -54,7 +56,6 @@ class AdminOutstandingControllerCore extends AdminController
 
         $risks = array();
         foreach (Risk::getRisks() as $risk) {
-            // @var Risk $risk
             $risks[$risk->id] = $risk->name;
         }
 

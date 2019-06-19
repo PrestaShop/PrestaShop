@@ -253,6 +253,8 @@ class CMSCategoryCore extends ObjectModel
      * Directly call the parent of delete, in order to avoid recursion.
      *
      * @return bool Deletion result
+     *
+     * @var CMSCategory $cmsCategory
      */
     private function deleteLite()
     {
@@ -270,7 +272,6 @@ class CMSCategoryCore extends ObjectModel
         $cmsCategories = $this->getAllChildren();
         $cmsCategories[] = $this;
         foreach ($cmsCategories as $cmsCategory) {
-            // @var CMSCategory
             $cmsCategory->deleteCMS();
             $cmsCategory->deleteLite();
             CMSCategory::cleanPositions($cmsCategory->id_parent);

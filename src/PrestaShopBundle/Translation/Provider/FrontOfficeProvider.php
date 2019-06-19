@@ -79,7 +79,9 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
         return parent::getDatabaseCatalogue($themeName);
     }
 
-    // {@inheritdoc}
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultResourceDirectory()
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';

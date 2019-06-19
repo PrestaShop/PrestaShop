@@ -305,12 +305,12 @@ class AdminSearchControllerCore extends AdminController
         );
     }
 
+    /** @var Gender $gender */
     protected function initCustomerList()
     {
         $genders_icon = array('default' => 'unknown.gif');
         $genders = array(0 => $this->trans('?', array(), 'Admin.Global'));
         foreach (Gender::getGenders() as $gender) {
-            // @var Gender $gender
             $genders_icon[$gender->id] = '../genders/' . (int) $gender->id . '.jpg';
             $genders[$gender->id] = $gender->name;
         }

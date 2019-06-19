@@ -6659,6 +6659,8 @@ class ProductCore extends ObjectModel
      * Remove all downloadable files for product and its attributes.
      *
      * @return bool
+     *
+     * @var ProductDownload $product_download
      */
     public function deleteDownload()
     {
@@ -6666,7 +6668,6 @@ class ProductCore extends ObjectModel
         $collection_download = new PrestaShopCollection('ProductDownload');
         $collection_download->where('id_product', '=', $this->id);
         foreach ($collection_download as $product_download) {
-            // @var ProductDownload $product_download
             $result &= $product_download->delete($product_download->checkFile());
         }
 

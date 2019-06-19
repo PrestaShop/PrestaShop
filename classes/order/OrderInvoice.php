@@ -687,6 +687,8 @@ class OrderInvoiceCore extends ObjectModel
      * @since 1.5.0.2
      *
      * @return float Total paid
+     *
+     * @var OrderPayment $payment
      */
     public function getTotalPaid()
     {
@@ -695,7 +697,6 @@ class OrderInvoiceCore extends ObjectModel
             $amount = 0;
             $payments = OrderPayment::getByInvoiceId($this->id);
             foreach ($payments as $payment) {
-                // @var OrderPayment $payment
                 $amount += $payment->amount;
             }
             Cache::store($cache_id, $amount);

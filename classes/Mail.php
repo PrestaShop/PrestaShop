@@ -127,6 +127,8 @@ class MailCore extends ObjectModel
      * @param string $replyTo Reply-To recipient address
      * @param string $replyToName Reply-To recipient name
      *
+     * @var Swift_Address $recipient
+     *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
     public static function send(
@@ -606,7 +608,6 @@ class MailCore extends ObjectModel
                     $recipientsBcc = [];
                 }
                 foreach (array_merge($recipientsTo, $recipientsCc, $recipientsBcc) as $email => $recipient_name) {
-                    // @var Swift_Address $recipient
                     $mail->id = null;
                     $mail->recipient = Tools::substr($email, 0, 255);
                     $mail->add();

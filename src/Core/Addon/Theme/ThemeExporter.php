@@ -96,6 +96,8 @@ class ThemeExporter
     /**
      * @param Theme $theme
      * @param $cacheDir
+     *
+     * @var \PrestaShopBundle\Entity\Lang
      */
     protected function copyTranslations(Theme $theme, $cacheDir)
     {
@@ -106,7 +108,6 @@ class ThemeExporter
 
         $languages = $this->langRepository->findAll();
         if (count($languages) > 0) {
-            // @var \PrestaShopBundle\Entity\Lang
             foreach ($languages as $lang) {
                 $locale = $lang->getLocale();
                 $catalogueDir = $this->translationsExporter->exportCatalogues($theme->getName(), $locale);

@@ -26,7 +26,9 @@
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
-// Class CustomerCore
+/**
+ * Class CustomerCore
+ */
 class CustomerCore extends ObjectModel
 {
     /** @var int $id Customer ID */

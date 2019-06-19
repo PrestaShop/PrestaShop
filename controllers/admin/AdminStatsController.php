@@ -627,6 +627,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         return $expenses;
     }
 
+    /** @var Theme $theme */
     public function displayAjaxGetKpi()
     {
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
@@ -879,7 +880,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
                 foreach ($themes as $theme) {
-                    // @var Theme $theme
                     foreach ($languages as $language) {
                         $kpi_key = substr(strtoupper($theme->getName() . '_' . $language['iso_code']), 0, 16);
                         $total += ConfigurationKPI::get('TRANSLATE_TOTAL_' . $kpi_key);

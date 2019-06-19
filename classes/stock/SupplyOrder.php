@@ -211,6 +211,8 @@ class SupplyOrderCore extends ObjectModel
      * Checks all products in this order and calculate prices
      * Applies the global discount if necessary.
      */
+
+    /** @var SupplyOrderDetail $entry */
     protected function calculatePrices()
     {
         $this->total_te = 0;
@@ -227,7 +229,6 @@ class SupplyOrderCore extends ObjectModel
         $entries = $this->getEntriesCollection();
 
         foreach ($entries as $entry) {
-            // @var SupplyOrderDetail $entry
             // applys global discount rate on each product if possible
             if ($is_discount) {
                 $entry->applyGlobalDiscount((float) $this->discount_rate);
