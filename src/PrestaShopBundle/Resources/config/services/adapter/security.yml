@@ -15,3 +15,9 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Security\EmployeeLogoutListener
     arguments:
       - '@prestashop.adapter.legacy.context'
+
+  prestashop.adapter.security.secure_mode_checker:
+    class: PrestaShop\PrestaShop\Adapter\Security\SecureModeChecker
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.tools'
