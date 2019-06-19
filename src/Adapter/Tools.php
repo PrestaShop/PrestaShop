@@ -244,4 +244,14 @@ class Tools
     {
         return LegacyTools::getAdminImageUrl($fileName, $escapeHtmlEntities);
     }
+
+    /**
+     * Checks if current request is using SSL.
+     *
+     * @return bool
+     */
+    public function isUsingSecureMode()
+    {
+        return LegacyTools::usingSecureMode();
+    }
 }
