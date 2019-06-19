@@ -47,6 +47,7 @@ use PrestaShopBundle\Form\Admin\Login\ResetPasswordType;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
@@ -58,9 +59,11 @@ class AuthorizationController extends FrameworkBundleAdminController
     /**
      * Render and handle login page.
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
         $authenticationUtils = $this->get('security.authentication_utils');
         $authenticationError = $authenticationUtils->getLastAuthenticationError();
@@ -78,7 +81,7 @@ class AuthorizationController extends FrameworkBundleAdminController
 
         $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
 
-        return $this->renderLoginPage([
+        return $this->renderLoginPage($request, [
             'loginForm' => $loginForm->createView(),
             'forgotPasswordForm' => $forgotPasswordForm->createView(),
         ]);
@@ -119,7 +122,7 @@ class AuthorizationController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->renderLoginPage([
+        return $this->renderLoginPage($request, [
             'loginForm' => $loginForm->createView(),
             'showLoginForm' => false,
             'forgotPasswordForm' => $forgotPasswordForm->createView(),
@@ -174,7 +177,7 @@ class AuthorizationController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->renderLoginPage([
+        return $this->renderLoginPage($request, [
             'showLoginForm' => false,
             'showForgotPasswordForm' => false,
             'showResetPasswordForm' => true,
@@ -187,13 +190,22 @@ class AuthorizationController extends FrameworkBundleAdminController
     /**
      * Render the login page.
      *
+     * @param Request $request
      * @param array $templateVars
      *
      * @return Response
      */
-    private function renderLoginPage(array $templateVars = [])
+    private function renderLoginPage(Request $request, array $templateVars = [])
     {
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
+        $secureModeChecker = $this->get('prestashop.adapter.security.secure_mode_checker');
+        $isInsecureMode = false;
+        $canAccessInsecureMode = false;
+
+        if ($secureModeChecker->isSslActivated() && !$secureModeChecker->isSslUsed()) {
+            $isInsecureMode = true;
+            $canAccessInsecureMode = $secureModeChecker->canIpAccessInsecureMode($request->getClientIp());
+        }
 
         return $this->render('@PrestaShop/Admin/Login/index.html.twig', $templateVars + [
             'shopName' => $this->configuration->get('PS_SHOP_NAME'),
@@ -206,6 +218,11 @@ class AuthorizationController extends FrameworkBundleAdminController
             'showLoginForm' => true,
             'showForgotPasswordForm' => false,
             'showResetPasswordForm' => false,
+            'isInsecureMode' => $isInsecureMode,
+            'canAccessInsecureMode' => $canAccessInsecureMode,
+            'secureUrl' => $secureModeChecker->secureUrl(
+                $this->generateUrl('_admin_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ),
         ]);
     }
 

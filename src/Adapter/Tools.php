@@ -280,12 +280,12 @@ class Tools
     }
 
     /**
-     * Get IP address of the user.
+     * Checks if current request is using SSL.
      *
-     * @return string
+     * @return bool
      */
-    public function getIpAddress()
+    public function isUsingSecureMode()
     {
-        return LegacyTools::getRemoteAddr();
+        return LegacyTools::usingSecureMode();
     }
 }
