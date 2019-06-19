@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f87418ad16c41cc273e0979bf1125c6d",
+    "content-hash": "fe0b3ad3e5d26bdff11728790d0a1b0c",
     "packages": [
         {
             "name": "analog/analog",
@@ -3593,25 +3593,39 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v2.2.0",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "ff3cb50836afbba5bf1ae2fd286ea9a48072aeea"
+                "reference": "e2b6045ddf3421bda6474b4834d97495c9c106ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/ff3cb50836afbba5bf1ae2fd286ea9a48072aeea",
-                "reference": "ff3cb50836afbba5bf1ae2fd286ea9a48072aeea",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/e2b6045ddf3421bda6474b4834d97495c9c106ba",
+                "reference": "e2b6045ddf3421bda6474b4834d97495c9c106ba",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "doctrine/collections": "^1.4",
+                "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.0"
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "mockery/mockery": "^1.2",
+                "phpunit/phpunit": "~5.7",
+                "prestashop/php-coding-standards": "dev-master"
             },
             "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\FacetedSearch\\Controller\\": "src/Controller/",
+                    "PrestaShop\\Module\\FacetedSearch\\": "src/",
+                    "PrestaShop\\Module\\FacetedSearch\\Tests\\": "tests/php/FacetedSearch"
+                },
+                "classmap": [
+                    "ps_facetedsearch.php"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
@@ -3624,7 +3638,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2018-09-03T10:34:18+00:00"
+            "time": "2019-06-19T09:39:30+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",

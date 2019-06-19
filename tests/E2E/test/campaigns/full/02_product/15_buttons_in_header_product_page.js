@@ -67,6 +67,7 @@ scenario('Check that the buttons in header product page works successfully', () 
     test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
     test('should go to the Front Office', () => {
       return promise
+        .then(() => client.waitForExistAndClick(AddProductPage.close_validation_button))
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
         .then(() => client.switchWindow(1));
     });

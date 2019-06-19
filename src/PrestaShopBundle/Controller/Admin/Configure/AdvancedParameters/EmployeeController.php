@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
@@ -290,7 +291,7 @@ class EmployeeController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_employees_index');
             }
-        } catch (EmployeeException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -365,7 +366,7 @@ class EmployeeController extends FrameworkBundleAdminController
                     'employeeId' => $result->getIdentifiableObjectId(),
                 ]);
             }
-        } catch (EmployeeException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -464,11 +465,11 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Get human readable error messages.
      *
-     * @param EmployeeException $e
+     * @param Exception $e
      *
      * @return array
      */
-    protected function getErrorMessages($e)
+    protected function getErrorMessages(Exception $e)
     {
         return [
             InvalidEmployeeIdException::class => $this->trans(

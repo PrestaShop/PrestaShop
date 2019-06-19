@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
@@ -409,11 +410,13 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Gets error by exception type.
      *
-     * @param SupplierException $exception
+     * @param Exception $exception
      *
      * @return string
+     *
+     * @todo use FrameworkAdminBundleController::getErrorMessageForException() instead
      */
-    private function handleException(SupplierException $exception)
+    private function handleException(Exception $exception)
     {
         if (0 !== $exception->getCode()) {
             return $this->getExceptionMessageByExceptionCode($exception);
@@ -425,11 +428,11 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Gets by exception type
      *
-     * @param SupplierException $exception
+     * @param Exception $exception
      *
      * @return string
      */
-    private function getExceptionMessageByType(SupplierException $exception)
+    private function getExceptionMessageByType(Exception $exception)
     {
         $exceptionTypeDictionary = [
             SupplierNotFoundException::class => $this->trans(
@@ -467,11 +470,11 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Gets exception message by exception code.
      *
-     * @param SupplierException $exception
+     * @param Exception $exception
      *
      * @return string
      */
-    private function getExceptionMessageByExceptionCode(SupplierException $exception)
+    private function getExceptionMessageByExceptionCode(Exception $exception)
     {
         $exceptionConstraintDictionary = [
             SupplierConstraintException::class => [

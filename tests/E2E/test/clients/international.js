@@ -11,10 +11,10 @@ class International extends CommonClient {
       .selectByVisibleText(selector, value)
   }
 
-  checkLanguage() {
+  getNavigatorLanguage() {
     return this.client
       .execute(function () {
-        return (navigator.language);
+        return (document.documentElement.lang);
       })
   }
 

@@ -603,6 +603,11 @@ class CommonClient {
       .refresh();
   }
 
+  deleteCookieWithoutRefresh() {
+    return this.client
+      .deleteCookie()
+  }
+
   middleClick(selector, globalVisibility = true, pause = 2000) {
     if (globalVisibility) {
       return this.client

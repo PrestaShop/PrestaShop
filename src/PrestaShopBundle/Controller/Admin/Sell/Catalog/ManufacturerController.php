@@ -26,7 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use DomainException;
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
@@ -50,7 +51,6 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDe
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
@@ -156,7 +156,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-        } catch (CoreException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -226,7 +226,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-        } catch (CoreException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof ManufacturerNotFoundException) {
