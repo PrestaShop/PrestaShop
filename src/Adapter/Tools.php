@@ -288,4 +288,17 @@ class Tools
     {
         return LegacyTools::usingSecureMode();
     }
+
+    /**
+     * Generate a random password.
+     *
+     * @param int $length
+     * @param string $flag
+     *
+     * @return bool|string
+     */
+    public function generatePassword($length = 8, $flag = 'ALPHANUMERIC')
+    {
+        return LegacyTools::passwdGen($length, $flag);
+    }
 }

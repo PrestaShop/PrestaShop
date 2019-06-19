@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordReset
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\PasswordResettingEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Security\Exception\UnableToRenameAdminDirectoryException;
 use PrestaShopBundle\Form\Admin\Login\ForgotPasswordType;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
 use PrestaShopBundle\Form\Admin\Login\ResetPasswordType;
@@ -197,17 +198,39 @@ class AuthorizationController extends FrameworkBundleAdminController
      */
     private function renderLoginPage(Request $request, array $templateVars = [])
     {
+        $tools = $this->get('prestashop.adapter.tools');
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
         $secureModeChecker = $this->get('prestashop.adapter.security.secure_mode_checker');
+        $boAccessPrerequisitesHandler = $this->get(
+            'prestashop.adapter.security.backoffice_access_prerequisites_handler'
+        );
         $isInsecureMode = false;
         $canAccessInsecureMode = false;
+        $installDirectoryExists = $boAccessPrerequisitesHandler->installDirectoryExists();
+        $adminDirectoryRenamed = $boAccessPrerequisitesHandler->isAdminDirectoryRenamed();
+        $newAdminDirectoryName = '';
+
+        if (!$adminDirectoryRenamed) {
+            try {
+                $newAdminDirectoryName = $boAccessPrerequisitesHandler->renameAdminDirectory();
+
+                return $this->redirect(sprintf(
+                    '%s/%s/%s/',
+                    $tools->getShopDomainSsl(true),
+                    $newAdminDirectoryName,
+                    $this->generateUrl('_admin_login', [], UrlGeneratorInterface::RELATIVE_PATH)
+                ));
+            } catch (UnableToRenameAdminDirectoryException $e) {
+                $newAdminDirectoryName = $e->getDestinationName();
+            }
+        }
 
         if ($secureModeChecker->isSslActivated() && !$secureModeChecker->isSslUsed()) {
             $isInsecureMode = true;
             $canAccessInsecureMode = $secureModeChecker->canIpAccessInsecureMode($request->getClientIp());
         }
 
-        return $this->render('@PrestaShop/Admin/Login/index.html.twig', $templateVars + [
+        $templateVars += [
             'shopName' => $this->configuration->get('PS_SHOP_NAME'),
             'prestashopVersion' => $this->configuration->get('_PS_VERSION_'),
             'imgDir' => $this->configuration->get('_PS_IMG_'),
@@ -223,7 +246,24 @@ class AuthorizationController extends FrameworkBundleAdminController
             'secureUrl' => $secureModeChecker->secureUrl(
                 $this->generateUrl('_admin_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
             ),
-        ]);
+            'installDirectoryExists' => $installDirectoryExists,
+            'adminDirectoryRenamed' => $adminDirectoryRenamed,
+            'newAdminDirectoryName' => $newAdminDirectoryName,
+            'newAdminDirectoryUrl' => sprintf(
+                '%s%s%s',
+                $tools->getShopDomainSsl(true),
+                $this->configuration->get('__PS_BASE_URI__'),
+                $newAdminDirectoryName
+            ),
+        ];
+
+        if (!$adminDirectoryRenamed || $installDirectoryExists) {
+            $templateVars['showLoginForm'] = false;
+            $templateVars['showForgotPasswordForm'] = false;
+            $templateVars['showResetPasswordForm'] = false;
+        }
+
+        return $this->render('@PrestaShop/Admin/Login/index.html.twig', $templateVars);
     }
 
     /**
