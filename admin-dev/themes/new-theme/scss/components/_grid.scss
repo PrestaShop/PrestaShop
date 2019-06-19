@@ -119,6 +119,8 @@ table .column-filters td:last-child .grid-reset-button {
         // Styling for specific column types
         // ---------------------------------
         td {
+          word-break: break-word;
+
           &.draggable-type {
             .draggable-column {
               color: transparent;

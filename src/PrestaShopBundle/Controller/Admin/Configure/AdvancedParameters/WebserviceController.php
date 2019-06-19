@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -102,7 +102,7 @@ class WebserviceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_webservice_keys_index');
             }
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -140,7 +140,7 @@ class WebserviceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_webservice_keys_index');
             }
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 

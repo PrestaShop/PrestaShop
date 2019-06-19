@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Install\XmlLoader;
 
 /**
@@ -41,5 +42,22 @@ class InstallFixturesFashion extends XmlLoader
         }
 
         return $this->createEntity('customer', $identifier, 'Customer', $data, $data_lang);
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function populateFromXmlFiles()
+    {
+        parent::populateFromXmlFiles();
+
+        /**
+         * Refresh facetedsearch cache
+         */
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+        if ($moduleManager->isInstalled('ps_facetedsearch')) {
+            $moduleManager->reset('ps_facetedsearch');
+        }
     }
 }

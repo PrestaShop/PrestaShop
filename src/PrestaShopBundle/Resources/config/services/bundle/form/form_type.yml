@@ -567,7 +567,8 @@ services:
         parent: 'form.type.translatable.aware'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-            - '@prestashop.adapter.multistore_feature'
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.legacy.configuration'
         public: true
 
     form.type.category.delete_categories:

@@ -65,6 +65,7 @@ module.exports = {
       await client.pause(4000);
       await client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productName + date_time));
       await client.middleClickWhenVisible(productPage.productLink.replace('%PRODUCTNAME', productName + date_time));
+      await client.pause(1000);
       if (i !== global.pagination) {
         await client.isVisible(productPage.pagination_next);
         if (global.isVisible) {

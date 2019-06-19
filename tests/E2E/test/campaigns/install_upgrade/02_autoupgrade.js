@@ -100,12 +100,17 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   /**
-   * Here we delete the scenario "Check the existence of "Top sellers block" and "New products block""
-   * because of the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-3195*
-   * and we reproduce it in broken_tests campaign
+   * This scenario is based on the bug described in this ticket
+   * https://github.com/PrestaShop/PrestaShop/issues/11873
    **/
-  /** TODO :Check the existence of "Top sellers block" and "New products block"*/
+
+  scenario('Check the existence of "Top sellers block" and "New products block"', client => {
+    test('should set the language of shop to "English"', () => client.changeLanguage());
+    test('should check the existence of "Top sellers" block', () => client.waitForVisible(AccessPageFO.top_sellers_block));
+    test('should check the existence of "New products" block', () => client.waitForVisible(AccessPageFO.new_products_block));
+  }, 'installation');
+
+  /****** END *****/
 
   orderCommonScenarios.createOrderFO("connected");
 

@@ -2006,7 +2006,7 @@ class AdminControllerCore extends Controller
             'version' => _PS_VERSION_,
             'lang_iso' => $this->context->language->iso_code,
             'full_language_code' => $this->context->language->language_code,
-            'full_cldr_language_code' => $this->context->currentLocale->getCode(),
+            'full_cldr_language_code' => $this->context->getCurrentLocale()->getCode(),
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
             'base_url' => $this->context->shop->getBaseURL(),
@@ -4851,7 +4851,7 @@ class AdminControllerCore extends Controller
         /* @var Currency */
         $currency = $context->currency;
         /* @var PriceSpecification */
-        $priceSpecification = $context->currentLocale->getPriceSpecification($currency->iso_code);
+        $priceSpecification = $context->getCurrentLocale()->getPriceSpecification($currency->iso_code);
         if (empty($priceSpecification)) {
             return [];
         }
@@ -4872,7 +4872,7 @@ class AdminControllerCore extends Controller
     private function prepareNumberSpecifications(Context $context)
     {
         /* @var NumberSpecification */
-        $numberSpecification = $context->currentLocale->getNumberSpecification();
+        $numberSpecification = $context->getCurrentLocale()->getNumberSpecification();
         if (empty($numberSpecification)) {
             return [];
         }
