@@ -40,12 +40,12 @@ class EditSupplierCommand
     private $supplierId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $name;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
     private $localizedDescriptions;
 
@@ -110,12 +110,12 @@ class EditSupplierCommand
     private $localizedMetaKeywords;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $enabled;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $associatedShops;
 
@@ -138,7 +138,7 @@ class EditSupplierCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getName()
     {
@@ -146,7 +146,7 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      */
     public function setName($name)
     {
@@ -162,7 +162,7 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string[] $localizedDescriptions
+     * @param string[]|null $localizedDescriptions
      */
     public function setLocalizedDescriptions($localizedDescriptions)
     {
@@ -362,7 +362,7 @@ class EditSupplierCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
     public function isEnabled()
     {
@@ -370,7 +370,7 @@ class EditSupplierCommand
     }
 
     /**
-     * @param bool $enabled
+     * @param bool|null $enabled
      */
     public function setEnabled($enabled)
     {
@@ -378,7 +378,7 @@ class EditSupplierCommand
     }
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getAssociatedShops()
     {
@@ -386,7 +386,7 @@ class EditSupplierCommand
     }
 
     /**
-     * @param array $associatedShops
+     * @param array|null $associatedShops
      */
     public function setAssociatedShops($associatedShops)
     {
