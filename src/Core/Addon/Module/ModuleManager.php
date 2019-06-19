@@ -210,26 +210,26 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Module\Module
-     *
      * @return object
+     *
+     * @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedProduct
      */
     protected function groupModulesByInstallationProgress()
     {
-        $installedProducts = $this->moduleRepository->getInstalledModules();
+        $installedModules = $this->moduleRepository->getInstalledModules();
 
         $modules = (object) array(
             'to_configure' => array(),
             'to_update' => array(),
         );
 
-        foreach ($installedProducts as $installedProduct) {
-            if ($this->shouldRecommendConfigurationForModule($installedProduct)) {
-                $modules->to_configure[] = (object) $installedProduct;
+        foreach ($installedModules as $installedModule) {
+            if ($this->shouldRecommendConfigurationForModule($installedModule)) {
+                $modules->to_configure[] = (object) $installedModule;
             }
 
-            if ($installedProduct->canBeUpgraded()) {
-                $modules->to_update[] = (object) $installedProduct;
+            if ($installedModule->canBeUpgraded()) {
+                $modules->to_update[] = (object) $installedModule;
             }
         }
 
@@ -237,26 +237,26 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param Module $installedProduct
+     * @param Module $installedModule
      *
      * @return bool
      */
-    protected function shouldRecommendConfigurationForModule(Module $installedProduct)
+    protected function shouldRecommendConfigurationForModule(Module $installedModule)
     {
-        $warnings = $this->getModuleInstallationWarnings($installedProduct);
+        $warnings = $this->getModuleInstallationWarnings($installedModule);
 
         return !empty($warnings);
     }
 
     /**
-     * @param Module $installedProduct
+     * @param Module $installedModule
      *
      * @return array
      */
-    protected function getModuleInstallationWarnings(Module $installedProduct)
+    protected function getModuleInstallationWarnings(Module $installedModule)
     {
-        if ($installedProduct->hasValidInstance()) {
-            return $installedProduct->getInstance()->warning;
+        if ($installedModule->hasValidInstance()) {
+            return $installedModule->getInstance()->warning;
         }
 
         return array();
