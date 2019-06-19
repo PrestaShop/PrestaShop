@@ -52,8 +52,10 @@ final class DateTimeColumn extends AbstractColumn
             ])
             ->setDefaults([
                 'format' => 'Y-m-d H:i:s',
+                'empty_data' => '',
             ])
             ->setAllowedTypes('format', 'string')
-            ->setAllowedTypes('field', 'string');
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('empty_data', 'string');
     }
 }

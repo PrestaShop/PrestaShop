@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,12 +22,24 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set valueToDisplay = record[column.id]|date(column.options.format) %}
+namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
-{% if record[column.id] == constant('PrestaShop\\PrestaShop\\Core\\Util\\DateTime\\DateTime::NULL_VALUE') %}
-  {% set valueToDisplay = column.options.empty_data %}
-{% endif %}
+/**
+ * Defines reusable values for DateTime
+ */
+final class DateTime
+{
+    /**
+     * DateTime value which should be considered same as null
+     */
+    const NULL_VALUE = '0000-00-00 00:00:00';
 
-{{ valueToDisplay }}
+    /**
+     * This class is not supposed to be initialized as its purpose is to define constants
+     */
+    public function __construct()
+    {
+    }
+}
