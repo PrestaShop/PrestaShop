@@ -67,9 +67,12 @@ class AuthorizationController extends FrameworkBundleAdminController
         $loginForm = $this->createForm(LoginType::class);
 
         if (null !== $authenticationError) {
-            $errorMessage = $this->getErrorMessageForException(
-                $authenticationError,
-                $this->getErrorMessages()
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException(
+                    $authenticationError,
+                    $this->getErrorMessages()
+                )
             );
         }
 
@@ -77,7 +80,6 @@ class AuthorizationController extends FrameworkBundleAdminController
 
         return $this->renderLoginPage([
             'loginForm' => $loginForm->createView(),
-            'errorMessage' => $errorMessage ?? null,
             'forgotPasswordForm' => $forgotPasswordForm->createView(),
         ]);
     }
