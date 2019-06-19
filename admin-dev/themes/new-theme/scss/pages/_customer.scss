@@ -1,0 +1,7 @@
+// Special case for customer page the table has too many columns to fit the screen so we allow an horizontal scroll
+.admincustomers {
+  .content-div {
+    width: fit-content;
+    max-width: fit-content;
+  }
+}
