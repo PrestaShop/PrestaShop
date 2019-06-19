@@ -76,6 +76,9 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
 
         if (null !== $command->getIsoCode()) {
             $language->iso_code = $command->getIsoCode()->getValue();
+            if (false !== ($languageDetails = Language::getLangDetails($command->getIsoCode()->getValue()))) {
+                $language->locale = $languageDetails['locale'];
+            }
         }
 
         if (null !== $command->getTagIETF()) {
