@@ -70,7 +70,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new cms page :reference with following properties:
+     * @When I add new CMS page :reference with following properties:
      */
     public function createCmsPage($reference, TableNode $node)
     {
@@ -79,7 +79,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new cms page :reference with empty title
+     * @When I add new CMS page :reference with empty title
      */
     public function createCmsPageWithEmptyTitle($reference)
     {
@@ -94,7 +94,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I create cms page :reference with cms category id :id
+     * @When I create CMS page :reference with cms category id :id
      */
     public function createCmsPageWithProvidedCategoryId($reference, $id)
     {
@@ -109,7 +109,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit cms page :reference with following properties:
+     * @When I edit CMS page :reference with following properties:
      */
     public function editCmsPage($reference, TableNode $node)
     {
@@ -147,7 +147,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit cms page :reference providing illegal content value :value
+     * @When I edit CMS page :reference providing illegal content value :value
      */
     public function editCmsPageProvidingIllegalContent($reference, $value)
     {
@@ -161,7 +161,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit cms page :reference providing empty title
+     * @When I edit CMS page :reference providing empty title
      */
     public function editCmsPageProvidingEmptyTitle($reference)
     {
@@ -175,7 +175,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete cms page with id :id
+     * @When I delete CMS page with id :id
      */
     public function deleteCmsPageById($id)
     {
@@ -184,7 +184,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given cms page with id :id exists
+     * @Given CMS page with id :id exists
      */
     public function assertCmsPageExistsById($id)
     {
@@ -193,7 +193,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given cms page with id :id should not exist
+     * @Given CMS page with id :id should not exist
      */
     public function assertCmsPageDoesNotExistById($id)
     {
@@ -208,7 +208,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then cms page :reference does not exist
+     * @Then CMS page :reference does not exist
      */
     public function assertCmsPageDoesNotExistByReference($reference)
     {
@@ -226,7 +226,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^cms page "(.*)" indexation for search engines should be (enabled|disabled)?$/
+     * @Then /^CMS page "(.*)" indexation for search engines should be (enabled|disabled)?$/
      */
     public function assertIndexationStatus($reference, $status)
     {
@@ -244,7 +244,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^cms page "(.*)" should be (displayed|not displayed)?$/
+     * @Then /^CMS page "(.*)" should be (displayed|not displayed)?$/
      */
     public function assertDisplayStatus($reference, $status)
     {
@@ -262,7 +262,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^cms page "(.+)" "(.+)" in default language should be '([^']+)'$/
+     * @Then /^CMS page "(.+)" "(.+)" in default language should be '([^']+)'$/
      */
     public function assertFieldValue($reference, $field, $value)
     {
@@ -280,7 +280,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then cms page :reference :field field in default language should be empty
+     * @Then CMS page :reference :field field in default language should be empty
      */
     public function assertFieldIsEmpty($reference, $field)
     {
