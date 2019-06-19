@@ -26,7 +26,6 @@ Feature: CmsPage Management
     And cms page "cmspage-1" should be displayed
 
   Scenario: Adding new cms page with empty title should not be allowed
-    Given cms page "cmspage-2" does not exist
     When I add new cms page "cmspage-2" with empty title
     Then I should get error message 'Cms page contains invalid field values'
 
@@ -70,4 +69,4 @@ Feature: CmsPage Management
     Given cms page with id "1" exists
     When I delete cms page with id "1"
     Then cms page with id "1" should not exist
-    
+
