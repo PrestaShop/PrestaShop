@@ -38,6 +38,14 @@
   }
 }
 
+// Special case for customer page the table has too many columns to fit the screen so we allow an horizontal scroll
+.admincustomers {
+  .content-div {
+    width: fit-content;
+    max-width: fit-content;
+  }
+}
+
 .page-sidebar-closed:not(.mobile) {
   .content-div {
     padding-left: $size-navbar-width-mini + ($grid-gutter-width / 2);
