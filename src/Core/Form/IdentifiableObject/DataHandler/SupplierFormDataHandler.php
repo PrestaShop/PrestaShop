@@ -73,8 +73,8 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
             $data['name'],
             $data['address'],
             $data['city'],
-            $data['id_country'],
-            $data['is_enabled'],
+            (int) $data['id_country'],
+            (bool) $data['is_enabled'],
             $data['description'],
             $data['meta_title'],
             $data['meta_description'],
@@ -82,7 +82,7 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
             $data['shop_association'],
             $data['address2'],
             $data['post_code'],
-            $data['id_state'],
+            isset($data['id_state']) ? (int) $data['id_state'] : null,
             $data['phone'],
             $data['mobile_phone']
         ));
@@ -124,21 +124,23 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
      */
     private function fillCommandWithData(EditSupplierCommand $command, array $data)
     {
-        $command->setName((string) $data['name']);
+        $command->setName($data['name']);
         $command->setLocalizedDescriptions($data['description']);
         $command->setPhone($data['phone']);
-        $command->setMobilePhone($data['mobile_phone']);
         $command->setMobilePhone($data['mobile_phone']);
         $command->setAddress($data['address']);
         $command->setAddress2($data['address2']);
         $command->setPostCode($data['post_code']);
         $command->setCity($data['city']);
-        $command->setCountryId($data['id_country']);
-        $command->setStateId($data['id_state']);
+        $command->setCountryId((int) $data['id_country']);
         $command->setLocalizedMetaTitles($data['meta_title']);
         $command->setLocalizedMetaDescriptions($data['meta_description']);
         $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setEnabled((bool) $data['is_enabled']);
+
+        if (isset($data['id_state'])) {
+            $command->setStateId((int) $data['id_state']);
+        }
 
         if (isset($data['shop_association'])) {
             $shopAssociation = $data['shop_association'] ?: [];

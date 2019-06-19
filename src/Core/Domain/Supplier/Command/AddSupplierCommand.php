@@ -47,34 +47,14 @@ class AddSupplierCommand
     private $city;
 
     /**
-     * @var string|null
-     */
-    private $address2;
-
-    /**
      * @var int|null
      */
     private $countryId;
 
     /**
-     * @var string|null
+     * @var bool
      */
-    private $postCode;
-
-    /**
-     * @var int|null
-     */
-    private $stateId;
-
-    /**
-     * @var string|null
-     */
-    private $phone;
-
-    /**
-     * @var string|null
-     */
-    private $mobilePhone;
+    private $enabled;
 
     /**
      * @var string[]
@@ -97,31 +77,50 @@ class AddSupplierCommand
     private $localizedMetaKeywords;
 
     /**
-     * @var bool
-     */
-    private $enabled;
-
-    /**
      * @var array
      */
     private $shopAssociation;
 
     /**
+     * @var string|null
+     */
+    private $address2;
+
+    /**
+     * @var string|null
+     */
+    private $postCode;
+    /**
+     * @var int|null
+     */
+    private $stateId;
+
+    /**
+     * @var string|null
+     */
+    private $phone;
+
+    /**
+     * @var string|null
+     */
+    private $mobilePhone;
+
+    /**
      * @param string $name
-     * @param $address
-     * @param $countryId
-     * @param $city
+     * @param string $address
+     * @param int $countryId
+     * @param string $city
      * @param bool $enabled
      * @param string[] $localizedDescriptions
      * @param string[] $localizedMetaTitles
      * @param string[] $localizedMetaDescriptions
      * @param string[] $localizedMetaKeywords
      * @param array $shopAssociation
-     * @param null $address2
-     * @param null $postCode
-     * @param null $stateId
-     * @param null $phone
-     * @param null $mobilePhone
+     * @param string|null $address2
+     * @param string|null $postCode
+     * @param int|null $stateId
+     * @param string|null $phone
+     * @param string|null $mobilePhone
      */
     public function __construct(
         $name,
