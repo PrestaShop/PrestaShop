@@ -27,6 +27,9 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use CMS;
+use Configuration;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand;
@@ -62,8 +65,8 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
 
     public function __construct()
     {
-        $this->defaultLangId = \Configuration::get('PS_LANG_DEFAULT');
-        $this->defaultShopId = \Configuration::get('PS_SHOP_DEFAULT');
+        $this->defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+        $this->defaultShopId = Configuration::get('PS_SHOP_DEFAULT');
     }
 
     /**
@@ -72,23 +75,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     public function createCmsPage($reference, TableNode $node)
     {
         $data = $node->getRowsHash();
-        $command = new AddCmsPageCommand(
-            (int) $data['id_cms_category'],
-            [$this->defaultLangId => $data['meta_title']],
-            [$this->defaultLangId => $data['head_seo_title']],
-            [$this->defaultLangId => $data['meta_description']],
-            [$this->defaultLangId => $data['meta_keywords']],
-            [$this->defaultLangId => $data['link_rewrite']],
-            [$this->defaultLangId => $data['content']],
-            (bool) $data['indexation'],
-            (bool) $data['active'],
-            [$this->defaultShopId]
-        );
-
-        /** @var CmsPageId $cmsPageId */
-        $cmsPageId = $this->getCommandBus()->handle($command);
-
-        SharedStorage::getStorage()->set($reference, new \CMS($cmsPageId->getValue()));
+        $this->createCmsPageUsingCommand($reference, $data);
     }
 
     /**
@@ -96,12 +83,12 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      */
     public function createCmsPageWithEmptyTitle($reference)
     {
-        $rows = $this->getValidDataRowsForCmsPageCreation();
-        $rows['meta_title'] = '';
+        $data = $this->getValidDataForCmsPageCreation();
+        $data['meta_title'] = '';
 
         try {
-            $this->createCmsPage($reference, $this->getTableNodeFromRows($rows));
-        } catch (\Exception $e) {
+            $this->createCmsPageUsingCommand($reference, $data);
+        } catch (Exception $e) {
             $this->latestException = $e;
         }
     }
@@ -111,11 +98,11 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      */
     public function createCmsPageWithProvidedCategoryId($reference, $id)
     {
-        $rows = $this->getValidDataRowsForCmsPageCreation();
-        $rows['id_cms_category'] = (int) $id;
+        $data = $this->getValidDataForCmsPageCreation();
+        $data['id_cms_category'] = (int) $id;
 
         try {
-            $this->createCmsPage($reference, $this->getTableNodeFromRows($rows));
+            $this->createCmsPageUsingCommand($reference, $data);
         } catch (\Exception $e) {
             $this->latestException = $e;
         }
@@ -156,7 +143,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getCommandBus()->handle($command);
-        SharedStorage::getStorage()->set($reference, new \CMS($cmsId));
+        SharedStorage::getStorage()->set($reference, new CMS($cmsId));
     }
 
     /**
@@ -168,7 +155,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             $this->editCmsPage($reference, new TableNode([
                 ['content', $value],
             ]));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->latestException = $e;
         }
     }
@@ -182,7 +169,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             $this->editCmsPage($reference, new TableNode([
                 ['meta_title', ''],
             ]));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->latestException = $e;
         }
     }
@@ -231,7 +218,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             $this->getQueryBus()->handle($query);
 
             throw new NoExceptionAlthoughExpectedException('Cms page exists. Expected it to not exist');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof NoExceptionAlthoughExpectedException) {
                 throw $e;
             }
@@ -243,7 +230,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertIndexationStatus($reference, $status)
     {
-        /** @var \CMS $cmsPage */
+        /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($reference);
         $isEnabled = $status === 'enabled' ? true : false;
         if ($isEnabled !== (bool) $cmsPage->indexation) {
@@ -261,7 +248,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertDisplayStatus($reference, $status)
     {
-        /** @var \CMS $cmsPage */
+        /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($reference);
         $isEnabled = $status === 'displayed' ? true : false;
         if ($isEnabled !== (bool) $cmsPage->active) {
@@ -279,7 +266,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertFieldValue($reference, $field, $value)
     {
-        /** @var \CMS $cmsPage */
+        /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($reference);
         if ($cmsPage->$field[$this->defaultLangId] !== $value) {
             throw new RuntimeException(sprintf(
@@ -297,7 +284,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertFieldIsEmpty($reference, $field)
     {
-        /** @var \CMS $cmsPage */
+        /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($reference);
         if ($cmsPage->$field[$this->defaultLangId] !== '') {
             throw new RuntimeException(sprintf(
@@ -344,11 +331,36 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * Provides reusable valid data rows for cms creation.
+     * @param string $reference
+     * @param array $data
+     */
+    private function createCmsPageUsingCommand($reference, array $data)
+    {
+        $command = new AddCmsPageCommand(
+            (int) $data['id_cms_category'],
+            [$this->defaultLangId => $data['meta_title']],
+            [$this->defaultLangId => $data['head_seo_title']],
+            [$this->defaultLangId => $data['meta_description']],
+            [$this->defaultLangId => $data['meta_keywords']],
+            [$this->defaultLangId => $data['link_rewrite']],
+            [$this->defaultLangId => $data['content']],
+            (bool) $data['indexation'],
+            (bool) $data['active'],
+            [$this->defaultShopId]
+        );
+
+        /** @var CmsPageId $cmsPageId */
+        $cmsPageId = $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($reference, new \CMS($cmsPageId->getValue()));
+    }
+
+    /**
+     * Provides reusable valid data for cms creation.
      *
      * @return array
      */
-    private function getValidDataRowsForCmsPageCreation()
+    private function getValidDataForCmsPageCreation()
     {
         return [
             'id_cms_category' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
@@ -361,22 +373,5 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             'indexation' => 1,
             'active' => 1,
         ];
-    }
-
-    /**
-     * Formats TableNode from given data rows
-     *
-     * @param array $rows
-     *
-     * @return TableNode
-     */
-    private function getTableNodeFromRows(array $rows)
-    {
-        $formattedData = [];
-        foreach ($rows as $key => $value) {
-            $formattedData[] = [$key, $value];
-        }
-
-        return new TableNode($formattedData);
     }
 }
