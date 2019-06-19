@@ -44,7 +44,7 @@ class BulkDeleteCatalogPriceRuleCommand
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    public function __construct($catalogPriceRuleIds)
+    public function __construct(array $catalogPriceRuleIds)
     {
         $this->setCatalogPriceRuleIds($catalogPriceRuleIds);
     }
