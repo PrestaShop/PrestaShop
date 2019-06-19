@@ -118,7 +118,7 @@
     ],
     "require-dev": {
         "behat/behat": "^3.5",
-        "friendsofphp/php-cs-fixer": "^2.12",
+        "friendsofphp/php-cs-fixer": "^2.15.1",
         "johnkary/phpunit-speedtrap": "^1.1",
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",
