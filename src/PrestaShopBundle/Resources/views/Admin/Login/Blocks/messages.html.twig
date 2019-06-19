@@ -1,0 +1,86 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{# SSL-related warnings #}
+{% if isInsecureMode %}
+  <div class="alert alert-warning mt-1" role="alert">
+    <div class="alert-text">
+      <p>
+        {% if canAccessInsecureMode %}
+          {{ 'SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.'|trans({}, 'Admin.Login.Notification') }}
+        {% else %}
+          {{ 'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]'|trans({'[1]': '<a href="' ~ secureUrl ~ '">', '[/1]': '</a>'}, 'Admin.Login.Notification')|raw }}
+        {% endif %}
+      </p>
+    </div>
+  </div>
+{% endif %}
+
+{% if installDirectoryExists or not adminDirectoryRenamed %}
+  <div class="alert alert-danger mt-1" role="alert">
+
+    <div class="alert-text">
+      {{ 'For security reasons, you cannot connect to the back office until you have:'|trans({}, 'Admin.Login.Notification') }}
+      <ul>
+        {% if installDirectoryExists %}
+          <li>{{ 'deleted the /install folder'|trans({}, 'Admin.Login.Notification') }}</li>
+        {% endif %}
+        {% if not adminDirectoryRenamed %}
+          <li>{{ 'renamed the /admin folder (e.g. %s)'|trans({'%s': newAdminDirectoryName}, 'Admin.Login.Notification') }}</li>
+        {% endif %}
+      </ul>
+    </div>
+
+    {% if not adminDirectoryRenamed %}
+      <p>
+        <a href="{{ newAdminDirectoryUrl }}">
+          {{ 'Please then access this page by the new URL (e.g. %s)'|trans({'%s': newAdminDirectoryUrl}, 'Admin.Login.Notification') }}
+        </a>
+      </p>
+    {% endif %}
+  </div>
+{% endif %}
+
+{# Error messages from flashbag #}
+{% if app.session.flashbag.peek('error')|length() > 0 %}
+  <div class="alert alert-danger mt-1" role="alert">
+    <div class="alert-text">
+      {% for flashMessage in app.session.flashbag.get('error') %}
+        <p>{{ flashMessage|raw }}</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{# Success messages from flashbag #}
+{% if app.session.flashbag.peek('success')|length() > 0 %}
+  <div class="alert alert-success mt-1" role="alert">
+    <div class="alert-text">
+      {% for flashMessage in app.session.flashbag.get('success') %}
+        <p>{{ flashMessage|raw }}</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
