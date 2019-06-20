@@ -94,33 +94,4 @@ class ResetPasswordType extends AbstractType
             ->setAllowedTypes('email', 'string')
         ;
     }
-
-    /**
-     * @param int $maxLength
-     * @param int|null $minLength
-     *
-     * @return Length
-     */
-    private function getLengthConstraint($maxLength)
-    {
-        $options = [
-            'max' => $maxLength,
-            'maxMessage' => $this->trans(
-                'This field cannot be longer than %limit% characters',
-                ['%limit%' => $maxLength],
-                'Admin.Notifications.Error'
-            ),
-        ];
-
-        if (null !== $minLength) {
-            $options['min'] = $minLength;
-            $options['minMessage'] = $this->trans(
-                'This field cannot be shorter than %limit% characters',
-                ['%limit%' => $minLength],
-                'Admin.Notifications.Error'
-            );
-        }
-
-        return new Length($options);
-    }
 }
