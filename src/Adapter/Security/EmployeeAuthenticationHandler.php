@@ -122,6 +122,11 @@ final class EmployeeAuthenticationHandler implements EmployeeAuthenticationHandl
         $cookie->profile = $employee->id_profile;
         $cookie->passwd = $employee->passwd;
         $cookie->remote_addr = $employee->remote_addr;
+
+        if (!$authenticatedEmployee->getStayLoggedIn()) {
+            $cookie->last_activity = time();
+        }
+
         $cookie->write();
     }
 
