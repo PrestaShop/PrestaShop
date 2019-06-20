@@ -42,9 +42,6 @@ class AdminAccessControllerCore extends AdminController
         $this->lang = false;
         $this->context = Context::getContext();
 
-        // Blacklist AdminLogin
-        $this->accesses_black_list[] = Tab::getIdFromClassName('AdminLogin');
-
         parent::__construct();
     }
 
