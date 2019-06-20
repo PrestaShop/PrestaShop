@@ -22,6 +22,9 @@ security:
             logout:
                 path: /logout
                 handlers: [prestashop.adapter.security.employee_logout_listener]
+            remember_me:
+                secret: '%secret%'
+                remember_me_parameter: stay_logged_in
 
     access_control:
         # Login page is accessible for everyone
