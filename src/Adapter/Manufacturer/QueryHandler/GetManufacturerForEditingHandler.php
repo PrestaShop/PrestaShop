@@ -44,17 +44,10 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
      */
     private $imageTagSourceParser;
 
-    /**
-     * @var int
-     */
-    private $contextShopId;
-
     public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser,
-        $contextShopId
+        ImageTagSourceParserInterface $imageTagSourceParser
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
