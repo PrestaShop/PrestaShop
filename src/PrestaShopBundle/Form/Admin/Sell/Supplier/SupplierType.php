@@ -123,7 +123,7 @@ class SupplierType extends AbstractType
                         ),
                     ]),
                     new TypedRegex([
-                        'type' => 'catalog_name',
+                        'type' => TypedRegex::TYPE_CATALOG_NAME,
                     ]),
                 ],
             ])
@@ -144,72 +144,24 @@ class SupplierType extends AbstractType
             ])
             ->add('phone', TextType::class, [
                 'required' => false,
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => 'phone_number',
-                    ]),
-                    new Length([
-                        'max' => AddressSettings::MAX_PHONE_LENGTH,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => AddressSettings::MAX_PHONE_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
+                'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('mobile_phone', TextType::class, [
                 'required' => false,
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => 'phone_number',
-                    ]),
-                    new Length([
-                        'max' => AddressSettings::MAX_PHONE_LENGTH,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => AddressSettings::MAX_PHONE_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
+                'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('address', TextType::class, [
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => 'address',
-                    ]),
-                    new Length([
-                        'max' => AddressSettings::MAX_ADDRESS_LENGTH,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => AddressSettings::MAX_ADDRESS_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
+                'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('address2', TextType::class, [
                 'required' => false,
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => 'address',
-                    ]),
-                    new Length([
-                        'max' => AddressSettings::MAX_ADDRESS_LENGTH,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => AddressSettings::MAX_ADDRESS_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
+                'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('post_code', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new TypedRegex([
-                        'type' => 'post_code',
+                        'type' => TypedRegex::TYPE_POST_CODE,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_POST_CODE_LENGTH,
@@ -229,7 +181,7 @@ class SupplierType extends AbstractType
                         ),
                     ]),
                     new TypedRegex([
-                        'type' => 'city_name',
+                        'type' => TypedRegex::TYPE_CITY_NAME,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_CITY_NAME_LENGTH,
@@ -269,7 +221,7 @@ class SupplierType extends AbstractType
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
-                            'type' => 'generic_name',
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                         new Length([
                             'max' => SupplierSettings::MAX_META_TITLE_LENGTH,
@@ -288,7 +240,7 @@ class SupplierType extends AbstractType
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
-                            'type' => 'generic_name',
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                         new Length([
                             'max' => SupplierSettings::MAX_META_DESCRIPTION_LENGTH,
@@ -311,7 +263,7 @@ class SupplierType extends AbstractType
                     ],
                     'constraints' => [
                         new TypedRegex([
-                            'type' => 'generic_name',
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                         new Length([
                             'max' => SupplierSettings::MAX_META_KEYWORD_LENGTH,
@@ -355,5 +307,49 @@ class SupplierType extends AbstractType
             ])
             ->setAllowedTypes('country_id', ['integer', 'null'])
         ;
+    }
+
+    /**
+     * Provides reusable address constraints
+     *
+     * @return array
+     */
+    private function getAddressCommonConstraints()
+    {
+        return [
+            new TypedRegex([
+                'type' => TypedRegex::TYPE_ADDRESS,
+            ]),
+            new Length([
+                'max' => AddressSettings::MAX_ADDRESS_LENGTH,
+                'maxMessage' => $this->translator->trans(
+                    'This field cannot be longer than %limit% characters',
+                    ['%limit%' => AddressSettings::MAX_ADDRESS_LENGTH],
+                    'Admin.Notifications.Error'
+                ),
+            ]),
+        ];
+    }
+
+    /**
+     * Provides reusable phone constraints
+     *
+     * @return array
+     */
+    private function getPhoneCommonConstraints()
+    {
+        return [
+            new TypedRegex([
+                'type' => TypedRegex::TYPE_PHONE_NUMBER,
+            ]),
+            new Length([
+                'max' => AddressSettings::MAX_PHONE_LENGTH,
+                'maxMessage' => $this->translator->trans(
+                    'This field cannot be longer than %limit% characters',
+                    ['%limit%' => AddressSettings::MAX_PHONE_LENGTH],
+                    'Admin.Notifications.Error'
+                ),
+            ]),
+        ];
     }
 }
