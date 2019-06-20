@@ -81,7 +81,8 @@ final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthent
             array_merge(
                 [self::ROLE_EMPLOYEE],
                 Access::getRoles($employee->id_profile)
-            )
+            ),
+            $query->getStayLoggedIn()
         );
     }
 
