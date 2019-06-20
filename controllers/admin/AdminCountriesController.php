@@ -180,7 +180,7 @@ class AdminCountriesControllerCore extends AdminController
         ];
 
         foreach ($default_layout_tab as $line) {
-            $default_layout .= implode(' ', $line) . "\n";
+            $default_layout .= implode(' ', $line) . AddressFormat::FORMAT_NEW_LINE;
         }
 
         $this->fields_form = array(

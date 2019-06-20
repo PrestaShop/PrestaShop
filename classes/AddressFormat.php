@@ -29,6 +29,8 @@
  */
 class AddressFormatCore extends ObjectModel
 {
+    const FORMAT_NEW_LINE = "\n";
+
     /** @var int $id_address_format Address format */
     public $id_address_format;
 
@@ -217,7 +219,7 @@ class AddressFormatCore extends ObjectModel
         $fieldsValidate = Address::getFieldsValidate();
         $usedKeyList = array();
 
-        $multipleLineFields = explode(PHP_EOL, $this->format);
+        $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);
         if ($multipleLineFields && is_array($multipleLineFields)) {
             foreach ($multipleLineFields as $lineField) {
                 if (($patternsName = preg_split(self::_CLEANING_REGEX_, $lineField, -1, PREG_SPLIT_NO_EMPTY))) {
@@ -388,7 +390,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @return string
      */
-    public static function generateAddress(Address $address, $patternRules = array(), $newLine = PHP_EOL, $separator = ' ', $style = array())
+    public static function generateAddress(Address $address, $patternRules = array(), $newLine = self::FORMAT_NEW_LINE, $separator = ' ', $style = array())
     {
         $addressFields = AddressFormat::getOrderedAddressFields($address->id_country);
         $addressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($address, $addressFields);
@@ -430,7 +432,7 @@ class AddressFormatCore extends ObjectModel
         return AddressFormat::generateAddress(
             $params['address'],
             (isset($params['patternRules']) ? $params['patternRules'] : array()),
-            (isset($params['newLine']) ? $params['newLine'] : PHP_EOL),
+            (isset($params['newLine']) ? $params['newLine'] : self::FORMAT_NEW_LINE),
             (isset($params['separator']) ? $params['separator'] : ' '),
             (isset($params['style']) ? $params['style'] : array())
         );
