@@ -1,0 +1,3 @@
+_customer_threads:
+  resource: "customer_threads.yml"
+  prefix: /customer-threads/
