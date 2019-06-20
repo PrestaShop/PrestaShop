@@ -6,7 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierLogoThumbnailProvider'
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+      - '@prestashop.adapter.image_manager'
 
   prestashop.adapter.supplier.provider.supplier_address:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierAddressProvider'

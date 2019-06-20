@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
-use Context;
 use Supplier;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -62,11 +61,7 @@ final class SupplierImageUploader extends AbstractImageUploader
         $supplier = new Supplier($id);
         $supplier->deleteImage();
 
-        $currentLogo = _PS_TMP_IMG_DIR_ . 'supplier_mini_' . $id .
-            '_' .
-            Context::getContext()->shop->id .
-            '.jpg'
-        ;
+        $currentLogo = _PS_TMP_IMG_DIR_ . 'supplier_mini_' . $id . '.jpg';
 
         if (file_exists($currentLogo)) {
             unlink($currentLogo);
