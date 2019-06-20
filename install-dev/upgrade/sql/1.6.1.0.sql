@@ -170,11 +170,9 @@ ALTER TABLE `PREFIX_product_shop` ADD KEY `indexed` (`indexed`, `active`, `id_pr
 UPDATE `PREFIX_product_shop` SET `date_add` = NOW() WHERE `date_add` = "0000-00-00 00:00:00";
 
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`, `live_edit`) VALUES
-(NULL, 'actionAdminLoginControllerSetMedia', 'Set media on admin login page header', 'This hook is called after adding media to admin login page header', '1', '0'),
 (NULL, 'actionOrderEdited', 'Order edited', 'This hook is called when an order is edited.', '1', '0'),
 (NULL, 'displayAdminNavBarBeforeEnd', 'Admin Nav-bar before end', 'Called before the end of the nav-bar.', '1', '0'),
-(NULL, 'displayAdminAfterHeader', 'Admin after header', 'Hook called just after the header of the backoffice.', '1', '0'),
-(NULL, 'displayAdminLogin', 'Admin login', 'Hook called just after login of the backoffice.', '1', '0');
+(NULL, 'displayAdminAfterHeader', 'Admin after header', 'Hook called just after the header of the backoffice.', '1', '0');
 
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `id_customer_2` (`id_customer`,`active`,`highlight`,`date_to`);
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `group_restriction_2` (`group_restriction`,`active`,`highlight`,`date_to`);
