@@ -575,8 +575,8 @@ abstract class PaymentModuleCore extends Module
                             '{firstname}' => $this->context->customer->firstname,
                             '{lastname}' => $this->context->customer->lastname,
                             '{email}' => $this->context->customer->email,
-                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
-                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
+                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, PHP_EOL),
+                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, PHP_EOL),
                             '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
                                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                                 'lastname' => '<span style="font-weight:bold;">%s</span>',
@@ -750,7 +750,7 @@ abstract class PaymentModuleCore extends Module
             $r_values[] = implode(' ', $tmp_values);
         }
 
-        $out = implode("\n", $r_values);
+        $out = implode(PHP_EOL, $r_values);
 
         return $out;
     }
