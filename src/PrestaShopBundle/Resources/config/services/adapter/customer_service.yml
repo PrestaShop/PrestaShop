@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.customer_service.query_handler.get_customer_thread_for_viewing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler\GetCustomerThreadForViewingHandler'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing'

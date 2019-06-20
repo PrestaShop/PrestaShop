@@ -26,7 +26,71 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+
 class CustomerThreadView
 {
+    /**
+     * @var CustomerThreadId
+     */
+    private $customerThreadId;
 
+    /**
+     * @var array
+     */
+    private $actions;
+
+    /**
+     * @var CustomerInformation
+     */
+    private $customerInformation;
+
+    /**
+     * @var string
+     */
+    private $contactName;
+
+    public function __construct(
+        CustomerThreadId $customerThreadId,
+        array $actions,
+        CustomerInformation $customerInformation,
+        $contactName
+    ) {
+        $this->customerThreadId = $customerThreadId;
+        $this->actions = $actions;
+        $this->customerInformation = $customerInformation;
+        $this->contactName = $contactName;
+    }
+
+    /**
+     * @return CustomerThreadId
+     */
+    public function getCustomerThreadId()
+    {
+        return $this->customerThreadId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActions()
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @return CustomerInformation
+     */
+    public function getCustomerInformation()
+    {
+        return $this->customerInformation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContactName()
+    {
+        return $this->contactName;
+    }
 }
