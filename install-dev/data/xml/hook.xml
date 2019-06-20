@@ -536,11 +536,6 @@
       <title>Change the default template of current controller</title>
       <description/>
     </hook>
-    <hook id="actionAdminLoginControllerSetMedia">
-      <name>actionAdminLoginControllerSetMedia</name>
-      <title>Set media on admin login page header</title>
-      <description>This hook is called after adding media to admin login page header</description>
-    </hook>
     <hook id="actionOrderEdited">
       <name>actionOrderEdited</name>
       <title>Order edited</title>
