@@ -50,16 +50,23 @@ class CustomerThreadView
      */
     private $contactName;
 
+    /**
+     * @var array
+     */
+    private $messages;
+
     public function __construct(
         CustomerThreadId $customerThreadId,
         array $actions,
         CustomerInformation $customerInformation,
-        $contactName
+        $contactName,
+        array $messages
     ) {
         $this->customerThreadId = $customerThreadId;
         $this->actions = $actions;
         $this->customerInformation = $customerInformation;
         $this->contactName = $contactName;
+        $this->messages = $messages;
     }
 
     /**
@@ -92,5 +99,13 @@ class CustomerThreadView
     public function getContactName()
     {
         return $this->contactName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 }

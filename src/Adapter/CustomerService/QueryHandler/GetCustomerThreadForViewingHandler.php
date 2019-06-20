@@ -79,16 +79,14 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
         $this->context->cookie->{'customer_threadFilter_cl!id_contact'} = $customerThread->id_contact;
 
-        $employees = Employee::getEmployees();
-        $messages = $this->getCustomerThreadMessages($query->getCustomerThreadId());
-
         $nextCustomerThreadId = $this->getNextCustomerThreadId($query->getCustomerThreadId());
 
         return new CustomerThreadView(
             $query->getCustomerThreadId(),
             $this->getAvailableActions($customerThread),
             $this->getCustomerInformation($customerThread),
-            $this->getContactName($customerThread)
+            $this->getContactName($customerThread),
+            $this->getCustomerThreadMessages($query->getCustomerThreadId())
         );
     }
 
@@ -124,6 +122,8 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                     ]);
                 }
             }
+
+            $messages[$key]['type'] = $message['id_employee'] ? 'employee' : 'customer';
         }
 
         return $messages;
