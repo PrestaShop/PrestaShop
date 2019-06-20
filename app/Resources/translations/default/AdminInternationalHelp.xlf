@@ -250,7 +250,7 @@
       <trans-unit id="c7c838899b96b2b17ea954d2578cf541">
         <source>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</source>
         <target>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</target>
-        <note>Line: 44</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="4ef5571f164a6a7fcc9f4625d14e260b">
         <source>ISO code (e.g. USD for Dollars, EUR for Euros, etc.).</source>

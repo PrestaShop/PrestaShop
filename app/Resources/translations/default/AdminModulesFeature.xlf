@@ -19,20 +19,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/productcomments/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="25131b831e5832d70365d17471b6326d">
-        <source>Discover all modules</source>
-        <target>Discover all modules</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="31edfec531c02c0cfe522ed5ca726e2f">
-        <source>Want to go further?</source>
-        <target>Want to go further?</target>
-        <note>Line: 31</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_buybuttonlite/ps_buybuttonlite.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="76e60dee2f9ea84713034839f1974d60">
@@ -68,6 +54,16 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
   </file>
   <file original="modules/watermark/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="25131b831e5832d70365d17471b6326d">
+        <source>Discover all modules</source>
+        <target>Discover all modules</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="31edfec531c02c0cfe522ed5ca726e2f">
+        <source>Want to go further?</source>
+        <target>Want to go further?</target>
+        <note>Line: 31</note>
+      </trans-unit>
       <trans-unit id="7c6a169b9017895a118d7cb18b7b788e">
         <source>To go further:</source>
         <target>To go further:</target>
