@@ -6371,7 +6371,7 @@ class ProductCore extends ObjectModel
                 $orderred[] = $row['id_attribute'];
             }
 
-            while ($idProductAttribute === false && count($orderred) > 0) {
+            while ($idProductAttribute === false && count($orderred) > 1) {
                 array_pop($orderred);
                 $idProductAttribute = Db::getInstance()->getValue(
                     '
