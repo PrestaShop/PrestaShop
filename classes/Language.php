@@ -1214,15 +1214,22 @@ class LanguageCore extends ObjectModel
     {
         $lang_pack = self::getLangDetails($iso);
         if (!empty($lang_pack['locale'])) {
-            //Update locale field if empty (manually created, or imported without it)
-            $language = new Language(Language::getIdByIso($iso));
-            if ($language->id && empty($language->locale)) {
-                $language->locale = $lang_pack['locale'];
-                $language->save();
+            //Check that DB settings are available to avoid a bug during installation
+            if (defined(_DB_SERVER_)) {
+                //Update locale field if empty (manually created, or imported without it)
+                $language = new Language(Language::getIdByIso($iso));
+                if ($language->id && empty($language->locale)) {
+                    $language->locale = $lang_pack['locale'];
+                    $language->save();
+                }
             }
 
             self::installSfLanguagePack($lang_pack['locale'], $errors);
-            Language::updateMultilangTable($iso);
+            //Check that DB settings are available to avoid a bug during installation
+            if (defined(_DB_SERVER_)) {
+                Language::updateMultilangTable($iso);
+            }
+
             self::generateEmailsLanguagePack($lang_pack, $errors, false);
         }
     }
