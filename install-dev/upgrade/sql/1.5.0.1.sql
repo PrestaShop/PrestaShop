@@ -583,6 +583,8 @@ ALTER TABLE `PREFIX_order_slip` ADD COLUMN `shipping_cost_amount` DECIMAL(10,2) 
 ALTER TABLE `PREFIX_order_slip` ADD COLUMN `partial` TINYINT(1) NOT NULL AFTER `shipping_cost_amount`;
 ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount` DECIMAL(10,2) NOT NULL AFTER `product_quantity`;
 
+INSERT INTO `PREFIX_tab` (`id_parent`, `class_name`, `position`) VALUES (-1, 'AdminLogin', 0);
+
 CREATE TABLE `PREFIX_hook_alias` (
   `id_hook_alias` int(10) unsigned NOT NULL auto_increment,
   `alias` varchar(64) NOT NULL,
