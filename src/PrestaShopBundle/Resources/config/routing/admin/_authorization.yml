@@ -7,6 +7,7 @@ _admin_login:
     defaults:
         _controller: PrestaShopBundle:Admin\Authorization:login
         _legacy_controller: AdminLogin:submitLogin
+        _legacy_link: AdminLogin
 
 _admin_forgot_password:
     path: /forgot
@@ -14,6 +15,7 @@ _admin_forgot_password:
     defaults:
         _controller: PrestaShopBundle:Admin\Authorization:forgotPassword
         _legacy_controller: AdminLogin:submitForgot
+        _legacy_link: AdminLogin:submitForgot
 
 _admin_reset_password:
     path: /reset/{employeeId}/{resetToken}
@@ -21,6 +23,7 @@ _admin_reset_password:
     defaults:
         _controller: PrestaShopBundle:Admin\Authorization:resetPassword
         _legacy_controller: AdminLogin:submitReset
+        _legacy_link: AdminLogin:submitReset
         _legacy_parameters:
             employeeId: id_employee
             resetToken: reset_token
