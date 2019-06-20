@@ -517,7 +517,7 @@ class AddressFormatCore extends ObjectModel
     public static function getOrderedAddressFields($idCountry = 0, $splitAll = false, $cleaned = false)
     {
         $out = array();
-        $fieldSet = explode(PHP_EOL, AddressFormat::getAddressCountryFormat($idCountry));
+        $fieldSet = explode(AddressFormat::FORMAT_NEW_LINE, AddressFormat::getAddressCountryFormat($idCountry));
         foreach ($fieldSet as $fieldItem) {
             if ($splitAll) {
                 if ($cleaned) {
@@ -593,7 +593,7 @@ class AddressFormatCore extends ObjectModel
             $out = $this->getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
         }
         if (Country::isNeedDniByCountryId($idCountry) && false === strpos($out, 'dni')) {
-            $out .= PHP_EOL . 'dni';
+            $out .= AddressFormat::FORMAT_NEW_LINE . 'dni';
         }
 
         return $out;
