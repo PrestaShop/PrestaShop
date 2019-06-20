@@ -246,7 +246,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public static function getLegacyControllers()
     {
         return [
-            ['/Integration/index.php?controller=AdminLogin', 'AdminLogin'],
             ['/Integration/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
             ['/Integration/index.php?controller=AdminModules', 'AdminModules'],
             ['/Integration/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],

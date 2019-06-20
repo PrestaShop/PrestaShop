@@ -68,17 +68,17 @@ ALTER TABLE `PREFIX_tax_rule`
 	ADD `behavior` INT NOT NULL AFTER `zipcode_to`,
 	ADD `description` VARCHAR( 100 ) NOT NULL AFTER `id_tax`;
 
-INSERT INTO `PREFIX_tax_rule` 
-	(`id_tax_rules_group`, `id_country`, `id_state`, `id_tax`, 
-	`behavior`, `zipcode_from`, `zipcode_to`, `id_county`, 
+INSERT INTO `PREFIX_tax_rule`
+	(`id_tax_rules_group`, `id_country`, `id_state`, `id_tax`,
+	`behavior`, `zipcode_from`, `zipcode_to`, `id_county`,
 	`description`, `state_behavior`, `county_behavior`)
-	SELECT r.`id_tax_rules_group`, r.`id_country`, r.`id_state`, r.`id_tax`, 
-	0, z.`from_zip_code`, z.`to_zip_code`, r.`id_county`, 
+	SELECT r.`id_tax_rules_group`, r.`id_country`, r.`id_state`, r.`id_tax`,
+	0, z.`from_zip_code`, z.`to_zip_code`, r.`id_county`,
 	r.`description`, r.`state_behavior`, r.county_behavior
-	FROM 
-		`PREFIX_tax_rule` r 
-		INNER JOIN 
-		`PREFIX_county_zip_code` z 
+	FROM
+		`PREFIX_tax_rule` r
+		INNER JOIN
+		`PREFIX_county_zip_code` z
 	ON (z.`id_county` = r.`id_county`);
 
 UPDATE `PREFIX_tax_rule` SET `behavior` = GREATEST(`state_behavior`, `county_behavior`);
@@ -266,7 +266,7 @@ ALTER TABLE `PREFIX_carrier`
 
 ALTER TABLE `PREFIX_cart_product`
 	ADD COLUMN `id_address_delivery` int(10) UNSIGNED DEFAULT 0 AFTER `date_add`;
-	
+
 UPDATE `PREFIX_cart_product` SET id_address_delivery = 0;
 
 ALTER TABLE `PREFIX_cart` ADD COLUMN `allow_seperated_package` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `gift_message`;
@@ -374,7 +374,7 @@ INSERT INTO `PREFIX_cart_rule` (
 	`gift_product`,
 	`active`,
 	`date_add`,
-	`date_upd` 
+	`date_upd`
 ) (
 	SELECT
 		`id_discount`,
@@ -404,7 +404,7 @@ INSERT INTO `PREFIX_cart_rule` (
 		0,
 		`active`,
 		`date_add`,
-		`date_upd` 
+		`date_upd`
 	FROM `PREFIX_discount`
 );
 
@@ -518,7 +518,7 @@ UPDATE `PREFIX_hook` SET `name` = 'actionAttributeDelete' WHERE `name` = 'afterD
 UPDATE `PREFIX_hook` SET `name` = 'actionAttributeSave' WHERE `name` = 'afterSaveAttribute';
 UPDATE `PREFIX_hook` SET `name` = 'actionTaxManager' WHERE `name` = 'taxManager';
 
-ALTER TABLE `PREFIX_order_detail_tax` 
+ALTER TABLE `PREFIX_order_detail_tax`
 ADD `unit_amount` DECIMAL(16, 6) NOT NULL AFTER `id_tax`,
 ADD `total_amount` DECIMAL(16, 6) NOT NULL AFTER `unit_amount`;
 
@@ -582,8 +582,6 @@ ALTER TABLE `PREFIX_order_slip` ADD COLUMN `amount` DECIMAL(10,2) NOT NULL AFTER
 ALTER TABLE `PREFIX_order_slip` ADD COLUMN `shipping_cost_amount` DECIMAL(10,2) NOT NULL AFTER `amount`;
 ALTER TABLE `PREFIX_order_slip` ADD COLUMN `partial` TINYINT(1) NOT NULL AFTER `shipping_cost_amount`;
 ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount` DECIMAL(10,2) NOT NULL AFTER `product_quantity`;
-
-INSERT INTO `PREFIX_tab` (`id_parent`, `class_name`, `position`) VALUES (-1, 'AdminLogin', 0);
 
 CREATE TABLE `PREFIX_hook_alias` (
   `id_hook_alias` int(10) unsigned NOT NULL auto_increment,
