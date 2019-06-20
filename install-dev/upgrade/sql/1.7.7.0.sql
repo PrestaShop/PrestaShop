@@ -12,3 +12,5 @@ ALTER TABLE `PREFIX_supply_order_detail` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_stock` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_product_attribute` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_product` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
+DELETE FROM `PREFIX_tab` WHERE `class_name` = 'AdminLogin';
+DELETE FROM `PREFIX_hook` WHERE `name` = 'actionAdminLoginControllerSetMedia';
