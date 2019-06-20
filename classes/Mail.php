@@ -151,34 +151,38 @@ class MailCore extends ObjectModel
             $idShop = Context::getContext()->shop->id;
         }
 
-        $keepGoing = array_reduce(
-            Hook::exec(
-                'actionEmailSendBefore',
-                [
-                    'idLang' => &$idLang,
-                    'template' => &$template,
-                    'subject' => &$subject,
-                    'templateVars' => &$templateVars,
-                    'to' => &$to,
-                    'toName' => &$toName,
-                    'from' => &$from,
-                    'fromName' => &$fromName,
-                    'fileAttachment' => &$fileAttachment,
-                    'mode_smtp' => &$mode_smtp,
-                    'templatePath' => &$templatePath,
-                    'die' => &$die,
-                    'idShop' => &$idShop,
-                    'bcc' => &$bcc,
-                    'replyTo' => &$replyTo,
-                ],
-                null,
-                true
-            ),
-            function ($carry, $item) {
-                return ($item === false) ? false : $carry;
-            },
+        $keepGoing = Hook::exec(
+            'actionEmailSendBefore',
+            [
+                'idLang' => &$idLang,
+                'template' => &$template,
+                'subject' => &$subject,
+                'templateVars' => &$templateVars,
+                'to' => &$to,
+                'toName' => &$toName,
+                'from' => &$from,
+                'fromName' => &$fromName,
+                'fileAttachment' => &$fileAttachment,
+                'mode_smtp' => &$mode_smtp,
+                'templatePath' => &$templatePath,
+                'die' => &$die,
+                'idShop' => &$idShop,
+                'bcc' => &$bcc,
+                'replyTo' => &$replyTo,
+            ],
+            null,
             true
         );
+
+        if ($keepGoing) {
+            $keepGoing = array_reduce(
+                $keepGoing,
+                function ($carry, $item) {
+                    return ($item === false) ? false : $carry;
+                },
+                true
+            );
+        }
 
         if (!$keepGoing) {
             return true;

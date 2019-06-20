@@ -1154,7 +1154,7 @@ class LanguageCore extends ObjectModel
             return;
         }
 
-        $mailTheme = Configuration::get('PS_MAIL_THEME');
+        $mailTheme = Configuration::get('PS_MAIL_THEME', null, null, null, 'modern');
         /** @var GenerateThemeMailTemplatesCommand $generateCommand */
         $generateCommand = new GenerateThemeMailTemplatesCommand(
             $mailTheme,
