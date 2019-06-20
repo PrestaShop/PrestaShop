@@ -77,16 +77,16 @@ class TypedRegexValidator extends ConstraintValidator
     private function getPattern($type)
     {
         $typePatterns = [
-            'name' => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
-            'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            'generic_name' => $this->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
-            'city_name' => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
-            'address' => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
-            'post_code' => '/^[a-zA-Z 0-9-]+$/',
-            'phone_number' => '/^[+0-9. ()\/-]*$/',
-            'message' => '/[<>{}]/i',
-            'language_iso_code' => IsoCode::PATTERN,
-            'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            TypedRegex::TYPE_NAME => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
+            TypedRegex::TYPE_CATALOG_NAME => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
+            TypedRegex::TYPE_GENERIC_NAME => $this->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
+            TypedRegex::TYPE_CITY_NAME => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
+            TypedRegex::TYPE_ADDRESS => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
+            TypedRegex::TYPE_POST_CODE => '/^[a-zA-Z 0-9-]+$/',
+            TypedRegex::TYPE_PHONE_NUMBER => '/^[+0-9. ()\/-]*$/',
+            TypedRegex::TYPE_MESSAGE => '/[<>{}]/i',
+            TypedRegex::TYPE_LANGUAGE_ISO_CODE => IsoCode::PATTERN,
+            TypedRegex::TYPE_LANGUAGE_CODE => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
         ];
 
         if (isset($typePatterns[$type])) {
