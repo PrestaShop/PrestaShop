@@ -58,6 +58,9 @@
   </div>
 </div>
 
+{{ form_widget(loginForm.redirect_url) }}
+{{ form_widget(loginForm._token) }}
+
 <div class="form-group-row mt-4">
   <button class="btn btn-primary w-100 text-uppercase js-hover-preston-wink">
     {{ 'Log in'|trans({}, 'Admin.Login.Feature') }}
