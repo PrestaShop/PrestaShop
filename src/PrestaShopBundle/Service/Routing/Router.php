@@ -89,6 +89,6 @@ class Router extends BaseRouter
         $tokenizedQuery = http_build_query($queryParams, '', '&');
 
         // Replace old query string with the new tokenized one
-        return $query ? str_replace($query, $tokenizedQuery, $url) : $url.'?'.$tokenizedQuery;
+        return $query ? str_replace($query, $tokenizedQuery, $url) : $url . '?' . $tokenizedQuery;
     }
 }
