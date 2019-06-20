@@ -49,6 +49,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
      */
     public static function getMigratedControllers()
     {
+        // Structure: 'route' => ['expected_url', 'legacy_controller', 'action', 'params']
         return [
             'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
             'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'update'],
@@ -237,6 +238,11 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_themes_adapt_to_rtl_languages' => ['/improve/design/themes/adapt-to-rtl-languages', 'AdminThemes', 'submitGenerateRTL'],
             'admin_theme_customize_layouts' => ['/improve/design/themes/customize-layouts', 'AdminThemes', 'submitConfigureLayouts'],
             'admin_themes_reset_layouts' => ['/improve/design/themes/prestashop_theme/reset-layouts', 'AdminThemes', 'resetToDefaults', ['theme_name' => 'prestashop_theme']],
+
+            '_admin_login' => ['/', 'AdminLogin'],
+            '_admin_forgot_password' => ['/forgot', 'AdminLogin', 'submitForgot'],
+            '_admin_reset_password' => ['/reset/1/secret_token', 'AdminLogin', 'submitForgot', ['id_employee' => 1, 'reset_token' => 'secret_token']],
+            '_admin_logout' => ['/logout', 'AdminLogin', 'logout'],
         ];
     }
 
