@@ -18,3 +18,5 @@ DELETE `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
 
 /* Set optin field value to 0 in employee table */
 ALTER TABLE `PREFIX_employee` MODIFY COLUMN `optin` tinyint(1) unsigned DEFAULT NULL;
+DELETE FROM `PREFIX_tab` WHERE `class_name` = 'AdminLogin';
+DELETE FROM `PREFIX_hook` WHERE `name` = 'actionAdminLoginControllerSetMedia';
