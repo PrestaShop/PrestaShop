@@ -89,7 +89,12 @@ class AccessDeniedListener
             }
         } else {
             // Redirect to login page
-            $event->setResponse(new RedirectResponse($this->router->generate('_admin_login')));
+            $event->setResponse(new RedirectResponse($this->router->generate(
+                '_admin_login',
+                [
+                    'redirect' => $event->getRequest()->getUri(),
+                ]
+            )));
         }
     }
 

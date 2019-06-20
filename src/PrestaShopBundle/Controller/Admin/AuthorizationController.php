@@ -68,7 +68,9 @@ class AuthorizationController extends FrameworkBundleAdminController
     {
         $authenticationUtils = $this->get('security.authentication_utils');
         $authenticationError = $authenticationUtils->getLastAuthenticationError();
-        $loginForm = $this->createForm(LoginType::class);
+        $loginForm = $this->createForm(LoginType::class, [
+            'redirect_url' => $request->query->get('redirect'),
+        ]);
 
         if (null !== $authenticationError) {
             $this->addFlash(
