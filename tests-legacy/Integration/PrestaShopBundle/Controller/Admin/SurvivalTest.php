@@ -174,6 +174,9 @@ class SurvivalTest extends WebTestCase
             'admin_themes_import' => ['Add new theme', 'admin_themes_import'],
             'admin_mail_theme_index' => ['Email Theme', 'admin_mail_theme_index'],
             'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
+            '_admin_login' => ['Login', '_admin_login'],
+            '_admin_forgot_password' => ['Forgot password (login)', '_admin_forgot_password'],
+            '_admin_logout' => ['Logout', '_admin_logout'],
         ];
     }
 
