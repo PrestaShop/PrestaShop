@@ -148,7 +148,7 @@ class AuthorizationController extends FrameworkBundleAdminController
     {
         try {
             /** @var PasswordResettingEmployee $employee */
-            $employee = $this->getQueryBus()->handle(new GetEmployeeForPasswordReset((int)$employeeId));
+            $employee = $this->getQueryBus()->handle(new GetEmployeeForPasswordReset((int) $employeeId));
         } catch (DomainException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 

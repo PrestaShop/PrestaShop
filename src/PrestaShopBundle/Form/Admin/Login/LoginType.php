@@ -50,12 +50,12 @@ class LoginType extends AbstractType
             ->add('email', EmailType::class, [
                 'attr' => [
                     'placeholder' => 'test@example.com',
-                ]
+                ],
             ])
             ->add('password', PasswordType::class, [
                 'attr' => [
                     'placeholder' => $this->trans('Password', [], 'Admin.Global'),
-                ]
+                ],
             ])
             ->add('stay_logged_in', CheckboxType::class, [
                 'required' => false,

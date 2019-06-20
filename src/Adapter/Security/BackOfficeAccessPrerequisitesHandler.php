@@ -84,7 +84,7 @@ final class BackOfficeAccessPrerequisitesHandler implements BackOfficeAccessPrer
         );
 
         try {
-            $this->filesystem->rename($this->adminDir.'/../admin/', $this->adminDir.'/../'.$newName, true);
+            $this->filesystem->rename($this->adminDir . '/../admin/', $this->adminDir . '/../' . $newName, true);
         } catch (IOException $e) {
             throw new UnableToRenameAdminDirectoryException(
                 $newName,

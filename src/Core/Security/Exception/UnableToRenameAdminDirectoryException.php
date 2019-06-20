@@ -44,7 +44,7 @@ class UnableToRenameAdminDirectoryException extends Exception
      * @param int $code
      * @param Exception|null $previous
      */
-    public function __construct($destinationName, $message = "", $code = 0, $previous = null)
+    public function __construct($destinationName, $message = '', $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->destinationName = $destinationName;
