@@ -31,13 +31,16 @@ use Context;
 use Currency;
 use Customer;
 use CustomerThread;
+use DateTime;
 use Employee;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerThreadForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use Product;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -81,39 +84,12 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
         $nextCustomerThreadId = $this->getNextCustomerThreadId($query->getCustomerThreadId());
 
-        $contacts = Contact::getContacts($this->context->language->id);
-
-        if ($customerThread->id_customer) {
-            $customer = new Customer($customerThread->id_customer);
-            $orders = Order::getCustomerOrders($customer->id);
-
-            if ($orders && count($orders)) {
-                $totalOk = 0;
-                $ordersOk = [];
-
-                foreach ($orders as $key => $order) {
-                    if ($order['valid']) {
-                        $ordersOk[] = $order;
-                        $totalOk += $order['total_paid_real'] / $order['conversion_rate'];
-                    }
-
-                    $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
-                    $orders[$key]['total_paid_real'] = Tools::displayPrice(
-                        $order['total_paid_real'],
-                        new Currency((int) $order['id_currency'])
-                    );
-                }
-            }
-
-            $products = $customer->getBoughtProducts();
-            if ($products && count($products)) {
-                foreach ($products as $key => $product) {
-                    $products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
-                }
-            }
-        }
-
-        return new CustomerThreadView();
+        return new CustomerThreadView(
+            $query->getCustomerThreadId(),
+            $this->getAvailableActions($customerThread),
+            $this->getCustomerInformation($customerThread),
+            $this->getContactName($customerThread)
+        );
     }
 
     /**
@@ -143,10 +119,9 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                 if (Validate::isLoadedObject($product)) {
                     $messages[$key]['product_name'] = $product->name;
                     $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts', true, [], [
-                            'updateproduct' => 1,
-                            'id_product' => (int) $product->id,
-                        ]
-                    );
+                        'updateproduct' => 1,
+                        'id_product' => (int) $product->id,
+                    ]);
                 }
             }
         }
@@ -215,26 +190,30 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
             $content .= Tools::safeOutput($message['message']);
 
-            $timeline[$message['date_add']][] = array(
+            $timeline[$message['date_add']][] = [
                 'arrow' => 'left',
                 'background_color' => '',
                 'icon' => 'icon-envelope',
                 'content' => $content,
                 'date' => $message['date_add'],
-            );
+            ];
         }
 
         $order = new Order((int) $orderId);
+
         if (Validate::isLoadedObject($order)) {
             $order_history = $order->getHistory($this->context->language->id);
             foreach ($order_history as $history) {
-                $link_order = $this->context->link->getAdminLink('AdminOrders') . '&vieworder&id_order=' . (int) $order->id;
+                $link_order = $this->context->link->getAdminLink('AdminOrders', true, [], [
+                    'vieworder' => 1,
+                     'id_order' => (int) $order->id
+                ]);
 
-                $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->trans('Order', array(), 'Admin.Global') . ' #' . (int) $order->id . '</a><br/><br/>';
+                $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->translator->trans('Order', [], 'Admin.Global') . ' #' . (int) $order->id . '</a><br/><br/>';
 
-                $content .= '<span>' . $this->trans('Status:', array(), 'Admin.Catalog.Feature') . ' ' . $history['ostate_name'] . '</span>';
+                $content .= '<span>' . $this->translator->trans('Status:', [], 'Admin.Catalog.Feature') . ' ' . $history['ostate_name'] . '</span>';
 
-                $timeline[$history['date_add']][] = array(
+                $timeline[$history['date_add']][] = [
                     'arrow' => 'right',
                     'alt' => true,
                     'background_color' => $history['color'],
@@ -242,12 +221,133 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                     'content' => $content,
                     'date' => $history['date_add'],
                     'see_more_link' => $link_order,
-                );
+                ];
             }
         }
 
         krsort($timeline);
 
         return $timeline;
+    }
+
+    /**
+     * @param CustomerThread $thread
+     *
+     * @return array
+     */
+    private function getAvailableActions(CustomerThread $thread)
+    {
+        $actions = [];
+
+        if ($thread->status !== 'closed') {
+            $actions[CustomerThreadStatus::CLOSED] = [
+                'label' => $this->translator->trans('Mark as "handled"', [], 'Admin.Catalog.Feature'),
+                'value' => CustomerThreadStatus::CLOSED,
+            ];
+        } else {
+            $actions[CustomerThreadStatus::OPEN] = [
+                'label' => $this->translator->trans('Re-open', [], 'Admin.Catalog.Feature'),
+                'value' => CustomerThreadStatus::OPEN,
+            ];
+        }
+
+        if ($thread->status !== 'pending1') {
+            $actions[CustomerThreadStatus::PENDING_1] = [
+                'label' => $this->translator->trans(
+                    'Mark as "pending 1" (will be answered later)',
+                    [],
+                    'Admin.Catalog.Feature'
+                ),
+                'value' => CustomerThreadStatus::PENDING_1,
+            ];
+        } else {
+            $actions[CustomerThreadStatus::PENDING_1] = [
+                'label' => $this->translator->trans('Disable pending status', [], 'Admin.Catalog.Feature'),
+                'value' => CustomerThreadStatus::PENDING_1,
+            ];
+        }
+
+        if ($thread->status !== 'pending2') {
+            $actions[CustomerThreadStatus::PENDING_2] = [
+                'label' => $this->translator->trans(
+                    'Mark as "pending 2" (will be answered later)',
+                    [],
+                    'Admin.Catalog.Feature'
+                ),
+                'value' => CustomerThreadStatus::PENDING_2,
+            ];
+        } else {
+            $actions[CustomerThreadStatus::PENDING_2] = [
+                'label' => $this->translator->trans('Disable pending status', [], 'Admin.Catalog.Feature'),
+                'value' => CustomerThreadStatus::PENDING_2,
+            ];
+        }
+
+        return $actions;
+    }
+
+    /**
+     * @param CustomerThread $thread
+     *
+     * @return CustomerInformation
+     */
+    private function getCustomerInformation(CustomerThread $thread)
+    {
+        if (!$thread->id_customer) {
+            return new CustomerInformation(null, null, null, $thread->email, null, null, null);
+        }
+
+        $customer = new Customer($thread->id_customer);
+        $orders = Order::getCustomerOrders($customer->id);
+
+        $totalOk = 0;
+        $ordersOk = [];
+
+        if ($orders && count($orders)) {
+            foreach ($orders as $key => $order) {
+                if ($order['valid']) {
+                    $ordersOk[] = $order;
+                    $totalOk += $order['total_paid_real'] / $order['conversion_rate'];
+                }
+
+                $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
+                $orders[$key]['total_paid_real'] = Tools::displayPrice(
+                    $order['total_paid_real'],
+                    new Currency((int) $order['id_currency'])
+                );
+            }
+        }
+
+        return new CustomerInformation(
+            $customer->id,
+            $customer->firstname,
+            $customer->lastname,
+            $thread->email,
+            count($ordersOk),
+            $totalOk ? Tools::displayPrice($totalOk, $this->context->currency) : $totalOk,
+            (new DateTime($customer->date_add))->format($this->context->language->date_format_lite)
+        );
+    }
+
+    /**
+     * @param CustomerThread $thread
+     *
+     * @return string|null
+     */
+    private function getContactName(CustomerThread $thread)
+    {
+        $contacts = Contact::getContacts($this->context->language->id);
+
+        $contact = null;
+
+        foreach ($contacts as $c) {
+            if ($c['id_contact'] == $thread->id_contact) {
+                $contact = $c['name'];
+
+                break;
+            }
+        }
+
+        return $contact;
     }
 }

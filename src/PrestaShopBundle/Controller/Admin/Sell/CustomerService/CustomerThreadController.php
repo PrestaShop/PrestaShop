@@ -26,15 +26,27 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Response;
 
-class CustomerServiceController extends FrameworkBundleAdminController
+class CustomerThreadController extends FrameworkBundleAdminController
 {
     /**
      * @param int $customerThreadId
+     *
+     * @return Response
      */
     public function viewAction($customerThreadId)
     {
+        /** @var CustomerThreadView $customerThreadView */
+        $customerThreadView = $this->getQueryBus()->handle(new GetCustomerThreadForViewing((int) $customerThreadId));
 
+        dump($customerThreadView);
+
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/view.html.twig', [
+            'customerThreadView' => $customerThreadView,
+        ]);
     }
 }

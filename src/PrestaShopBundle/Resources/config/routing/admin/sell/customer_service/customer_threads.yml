@@ -1,0 +1,9 @@
+admin_customer_threads_view:
+  path: /{customerThreadId}/view
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/CustomerThread:view
+    _legacy_controller: AdminCustomerThreads
+#    _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
