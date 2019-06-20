@@ -49,7 +49,8 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
 
         $locale = $this->language->getLanguage($this->session->lang)->locale;
         if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale . '/Install.' . $locale . '.xlf')) {
-            Language::downloadAndInstallLanguagePack($this->session->lang, _PS_VERSION_, null, false);
+            Language::downloadLanguagePack($this->session->lang, _PS_VERSION_);
+            Language::installSfLanguagePack($locale);
             $this->clearCache();
         }
         if (Tools::getIsset('language') && is_dir(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale)) {
