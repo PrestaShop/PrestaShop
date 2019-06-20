@@ -44,6 +44,11 @@ class GetEmployeeForAuthentication
     private $email;
 
     /**
+     * @var bool
+     */
+    private $stayLoggedIn;
+
+    /**
      * This query cannot be constructed directly, because it can be built in two ways:
      * from employee ID or from email.
      * There are factory methods available for building this query instance.
@@ -82,6 +87,26 @@ class GetEmployeeForAuthentication
     public static function fromEmployeeId($employeeId)
     {
         return new self($employeeId);
+    }
+
+    /**
+     * @param bool $stayLoggedIn
+     *
+     * @return $this
+     */
+    public function setStayLoggedIn($stayLoggedIn)
+    {
+        $this->stayLoggedIn = $stayLoggedIn;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getStayLoggedIn()
+    {
+        return $this->stayLoggedIn;
     }
 
     /**

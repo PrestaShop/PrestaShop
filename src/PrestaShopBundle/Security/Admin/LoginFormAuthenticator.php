@@ -177,11 +177,13 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         /** @var UserInterface $user */
         $user = $token->getUser();
+        $form = $this->formFactory->create(LoginType::class);
+        $form->handleRequest($request);
+        $query = GetEmployeeForAuthentication::fromEmail($user->getUsername());
+        $query->setStayLoggedIn($form->getData()['stay_logged_in']);
 
         /** @var AuthenticatedEmployee $authenticatedEmployee */
-        $authenticatedEmployee = $this->queryBus->handle(
-            GetEmployeeForAuthentication::fromEmail($user->getUsername())
-        );
+        $authenticatedEmployee = $this->queryBus->handle($query);
 
         $this->authenticationHandler->setAuthenticationCredentials($authenticatedEmployee);
 
