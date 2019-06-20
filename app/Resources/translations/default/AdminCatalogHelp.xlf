@@ -877,11 +877,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <target>To add "tags", click inside the field, write something, and then press "Enter".</target>
         <note>Line: 86</note>
       </trans-unit>
-      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
-        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
-        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
-        <note>Line: 88</note>
-      </trans-unit>
     </body>
   </file>
 </xliff>
