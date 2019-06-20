@@ -26,12 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
-use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Supplier\AbstractSupplierHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryHandler\GetSupplierForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
 /**
@@ -83,30 +81,22 @@ final class GetSupplierForEditingHandler extends AbstractSupplierHandler impleme
             $supplier->meta_keywords,
             (bool) $supplier->active,
             $supplier->getAssociatedShops(),
-            $this->getLogoImage($supplierId)
+            $this->getLogoImage($supplierId->getValue())
         );
     }
 
     /**
-     * @param SupplierId $supplierId
+     * @param int $imageId
      *
      * @return array|null
      */
-    private function getLogoImage(SupplierId $supplierId)
+    private function getLogoImage($imageId)
     {
-        $pathToImage = _PS_SUPP_IMG_DIR_ . $supplierId->getValue() . '.jpg';
-        $imageTag = ImageManager::thumbnail(
-            $pathToImage,
-            'supplier_' . $supplierId->getValue() . '_' . $this->contextShopId . '.jpg',
-            350,
-            'jpg',
-            true,
-            true
-        );
+        $imagePath = _PS_SUPP_IMG_DIR_ . $imageId . '.jpg';
+        $imageTag = $this->getTmpImageTag($imagePath, $imageId, 'supplier');
+        $imageSize = $this->getImageSize($imagePath);
 
-        $imageSize = file_exists($pathToImage) ? filesize($pathToImage) / 1000 : '';
-
-        if (empty($imageTag) || empty($imageSize)) {
+        if (empty($imageTag) || null === $imageSize) {
             return null;
         }
 
