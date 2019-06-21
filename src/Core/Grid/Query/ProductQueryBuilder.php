@@ -106,6 +106,13 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
+        $availableFilters = [
+            'name',
+            'reference',
+            'category',
+            'active',
+        ];
+
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'product', 'p')
@@ -167,6 +174,40 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         */
         $qb->setParameter('id_shop', $this->contextShopId);
         $qb->setParameter('id_lang', $this->contextLanguageId);
+
+        foreach ($filters as $filterName => $filter) {
+            if (!in_array($filterName, $availableFilters, true)) {
+                continue;
+            }
+
+            if ('active' === $filterName) {
+                $qb->andWhere('ps.`active` = :active');
+                $qb->setParameter('active', $filter);
+
+                continue;
+            }
+
+            if ('name' === $filterName) {
+                $qb->andWhere('pl.`name` LIKE :name');
+                $qb->setParameter('name', '%' . $filter . '%');
+
+                continue;
+            }
+
+            if ('reference' === $filterName) {
+                $qb->andWhere('p.`reference` LIKE :reference');
+                $qb->setParameter('reference', '%' . $filter . '%');
+
+                continue;
+            }
+
+            if ('category' === $filterName) {
+                $qb->andWhere('cl.`name` LIKE :category');
+                $qb->setParameter('category', '%' . $filter . '%');
+
+                continue;
+            }
+        }
 
         return $qb;
     }

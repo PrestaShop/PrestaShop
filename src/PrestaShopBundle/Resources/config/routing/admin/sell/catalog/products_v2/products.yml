@@ -1,9 +1,18 @@
 admin_products_index:
   path: /
-  methods: [GET, POST]
+  methods: GET
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:index'
     _legacy_controller: AdminProducts
+
+admin_products_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminProducts
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.product
+    redirectRoute: admin_products_index
 
 admin_products_toggle_status:
   path: /{productId}/toggle-status
