@@ -26,13 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Security;
 
-use PrestaShop\PrestaShop\Core\Security\Exception\UnableToRenameAdminDirectoryException;
-
 /**
- * Describes a service that handles back office access prerequisites,
+ * Describes a service that checks back office access prerequisites,
  * such as renaming "admin" directory and checking existence of "install" directory.
  */
-interface BackOfficeAccessPrerequisitesHandlerInterface
+interface BackOfficeAccessPrerequisitesCheckerInterface
 {
     /**
      * Checks if admin directory is renamed, or is it still with the default name.
@@ -40,15 +38,6 @@ interface BackOfficeAccessPrerequisitesHandlerInterface
      * @return bool
      */
     public function isAdminDirectoryRenamed();
-
-    /**
-     * Renames admin directory to a random name.
-     *
-     * @return string name of the renamed directory
-     *
-     * @throws UnableToRenameAdminDirectoryException
-     */
-    public function renameAdminDirectory();
 
     /**
      * Checks if install directory exists.
