@@ -509,7 +509,7 @@ class ThemeController extends AbstractAdminController
                     'Admin.Modules.Notification',
                     [
                         '%action%' => strtolower($this->trans('Install', 'Admin.Actions')),
-                        '%module%' => $e->getModuleName(),
+                        '%module%' => ($e instanceof FailedToEnableThemeModuleException) ? $e->getModuleName() : '',
                         '%error_details%' => $e->getMessage(),
                     ]
                 ),
