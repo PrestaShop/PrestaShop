@@ -865,3 +865,9 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.min_max:
+        class: 'PrestaShopBundle\Form\Admin\Type\MinMaxType'
+        public: true
+        tags:
+          - { name: form.type }
