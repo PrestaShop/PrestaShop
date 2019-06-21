@@ -47,7 +47,7 @@ module.exports = {
       cms_category_form: '//*[@id="cms_page_category_grid"]',
       position_module_form: '//*[@id="module-positions-form"]',
       image_type_form: '//*[@id="form-image_type"]',
-      configuration_link_form: '//*[@id="configuration_form"]',
+      new_block_button: '//*[@id="page-header-desc-configuration-add"]',
       menu_module_name: '(//*[@id="psthemecusto"]//div[@data-module_name="menu"])[2]',
       download_theme_button: '//*[@id="download_child_theme"]',
       prestashop_content_div: '//*[@id="prestastore-content"]',

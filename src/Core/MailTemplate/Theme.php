@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollectionInterface;
 
 /**
@@ -47,6 +48,7 @@ class Theme implements ThemeInterface
     public function __construct($name)
     {
         $this->name = $name;
+        $this->layouts = new LayoutCollection();
     }
 
     /**

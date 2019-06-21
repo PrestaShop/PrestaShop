@@ -28,10 +28,16 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
+    /**
+     * @var \Exception|null
+     */
+    protected $lastException;
+
     /**
      * @return CommandBusInterface
      */
@@ -46,5 +52,19 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getQueryBus()
     {
         return CommonFeatureContext::getContainer()->get('prestashop.core.query_bus');
+    }
+
+    /**
+     * @param string $expectedError
+     */
+    protected function assertLastErrorIs($expectedError)
+    {
+        if (!$this->lastException instanceof $expectedError) {
+            throw new RuntimeException(sprintf(
+                'Last error should be "%s", but got "%s"',
+                $expectedError,
+                $this->lastException ? get_class($this->lastException) : 'null'
+            ));
+        }
     }
 }

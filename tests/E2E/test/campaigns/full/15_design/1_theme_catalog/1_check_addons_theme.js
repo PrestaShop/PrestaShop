@@ -21,7 +21,7 @@ scenario('Check the addons theme in the Back Office', () => {
     test('should go to "Theme & logo" page', () => {
       return promise
         .then(() => client.waitForVisibleAndClick(Menu.Improve.Design.design_menu, 1000))
-        .then(() => client.waitForExistAndClick(Menu.Improve.Design.theme_logo_submenu, 1000));
+        .then(() => client.waitForExistAndClick(Menu.Improve.Design.theme_catalog_submenu, 1000));
     });
     test('should check then close the "Symfony" toolbar', () => {
       return promise

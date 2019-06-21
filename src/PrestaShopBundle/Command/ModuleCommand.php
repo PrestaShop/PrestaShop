@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Command;
 
+use Employee;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -82,6 +84,14 @@ class ModuleCommand extends ContainerAwareCommand
         $this->input = $input;
         $this->output = $output;
         require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+        /** @var LegacyContext $legacyContext */
+        $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
+        //We need to have an employee or the module hooks don't work
+        //see LegacyHookSubscriber
+        if (!$legacyContext->getContext()->employee) {
+            //Even a non existing employee is fine
+            $legacyContext->getContext()->employee = new Employee(42);
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

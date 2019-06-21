@@ -26,7 +26,7 @@ scenario('Check sort module by "Name"', () => {
      * This error is based on the bug described in this ticket
      * https://github.com/PrestaShop/ps_mbo/issues/82
      **/
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Name', 'displayName', 'data-name', false, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Name', 'name', 'data-name', false, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Increasing price', 'price', 'data-price', true, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Decreasing price', 'price-desc', 'data-price', true, false);
     /**
@@ -39,7 +39,7 @@ scenario('Check sort module by "Name"', () => {
     test('should select "Administration" from categories list', async () => {
       await client.waitForExistAndClick(ModulePage.categories_list);
       await client.getTextInVar(ModulePage.categories_option_number_span.replace('%CAT', 'Administration'), "category_modules_number");
-      await client.getAttributeInVar(ModulePage.categories_by_name_option.replace('%CAT', 'Administration'), 'data-category-display-ref-menu', 'categoryRef');
+      await client.getAttributeInVar(ModulePage.categories_by_name_option.replace('%CAT', 'Administration'), 'data-category-ref', 'categoryRef');
       await client.waitForExistAndClick(ModulePage.categories_option_link.replace('%CAT', 'Administration'));
     });
     test('should get module number', () => client.getModuleNumber(ModulePage.modules_number_span, 'modules_number'));
@@ -48,7 +48,7 @@ scenario('Check sort module by "Name"', () => {
      * This error is based on the bug described in this ticket
      * https://github.com/PrestaShop/ps_mbo/issues/82
      **/
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Name', 'displayName', 'data-name', false, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Name', 'name', 'data-name', false, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Increasing price', 'price', 'data-price', true, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Decreasing price', 'price-desc', 'data-price', true, false);
     test('should verify if the modules displayed are only modules of the selected category', () => client.checkNumberModule(ModulePage.modules_number_span, tab['modules_number']));

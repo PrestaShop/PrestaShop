@@ -126,7 +126,11 @@ module.exports = {
       test('should check the category friendly url', () => client.checkAttributeValue(CategorySubMenu.simplify_URL_input, 'value', categoryData.friendly_url + date_time));
       test('should click on "Save" button', () => client.scrollWaitForExistAndClick(CategorySubMenu.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'Successful update.','contain'));
-      test('should click on "Reset" button', () => client.scrollWaitForExistAndClick(CategorySubMenu.reset_button));
+      test('should click on "Reset" button', () => {
+        return promise
+          .then(() => client.pause(1000))
+          .then(() => client.scrollWaitForExistAndClick(CategorySubMenu.reset_button));
+      });
       test('should wait for load',() => client.pause(1500));
     }, 'category');
   },

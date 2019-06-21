@@ -6,6 +6,9 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
+const maintenance_messages = {en: 'We have currently disabled our shop and will be back really soon.',
+  fr: 'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.'};
+
 scenario('Configure shop in the Back Office', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -23,17 +26,21 @@ scenario('Configure shop in the Back Office', () => {
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Successful update."));
     test('should click on "Maintenance" tab', () => client.waitForExistAndClick(Menu.Configure.ShopParameters.maintenance_tab));
     test('should set the "Enable shop" parameter to "NO"', () => client.waitForExistAndClick(ShopParameters.enable_shop.replace("%ID", '0')));
-    test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 1), 'We are currently disabled our shop and will be back really soon.'));
+    test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 1), maintenance_messages.en));
     test('should switch to the "French" language', () => client.waitForExistAndClick(ShopParameters.language_option.replace("%LANG", 'Fr').replace("%ID", "1")));
-    test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 2), 'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.'));
+    test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 2), maintenance_messages.fr));
     test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.save_button));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Successful update."));
     test('should go to the front office', () => {
       return promise
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
-        .then(() => client.switchWindow(1));
+        .then(() => client.switchWindow(1))
     });
-    test('should check that the shop is disabled', () => client.checkTextValue(ShopParameters.maintenance_message, 'Nous avons actuellement désactivé notre boutique et serons de retour très bientôt.', 'contain'));
+    test('should check that the shop is disabled', () => {
+      return promise
+        .then(() => client.getText(ShopParameters.maintenance_message))
+        .then((text) => expect(Object.values(maintenance_messages)).to.include(text))
+    });
   }, 'common_client');
 
   scenario('Enable shop in the Back Office', client => {

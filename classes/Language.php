@@ -1073,13 +1073,8 @@ class LanguageCore extends ObjectModel
         if (Language::downloadLanguagePack($iso, $version, $errors)) {
             if ($install) {
                 Language::installLanguagePack($iso, $params, $errors);
-                Language::updateMultilangTable($iso);
             } else {
-                $lang_pack = self::getLangDetails($iso);
-                if (!empty($lang_pack['locale'])) {
-                    self::installSfLanguagePack($lang_pack['locale'], $errors);
-                    self::generateEmailsLanguagePack($lang_pack, $errors, false);
-                }
+                Language::updateLanguagePack($iso, $errors);
             }
         }
 
@@ -1209,9 +1204,27 @@ class LanguageCore extends ObjectModel
 
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
+        self::updateMultilangTable($iso);
         self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return count($errors) ? $errors : true;
+    }
+
+    public static function updateLanguagePack($iso, &$errors = array())
+    {
+        $lang_pack = self::getLangDetails($iso);
+        if (!empty($lang_pack['locale'])) {
+            //Update locale field if empty (manually created, or imported without it)
+            $language = new Language(Language::getIdByIso($iso));
+            if ($language->id && empty($language->locale)) {
+                $language->locale = $lang_pack['locale'];
+                $language->save();
+            }
+
+            self::installSfLanguagePack($lang_pack['locale'], $errors);
+            Language::updateMultilangTable($iso);
+            self::generateEmailsLanguagePack($lang_pack, $errors, false);
+        }
     }
 
     /**

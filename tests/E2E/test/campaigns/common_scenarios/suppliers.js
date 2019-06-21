@@ -15,7 +15,7 @@ module.exports = {
       test('should set the "Meta description" input', () => client.waitAndSetValue(Suppliers.meta_description_input, supplierData.metaDescription));
       test('should click on "Activate" button', () => client.waitForExistAndClick(Suppliers.active_button));
       test('should click on "Save" button', () => client.waitForExistAndClick(Suppliers.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, 'Successful creation.','contain'));
     }, 'common_client');
   },
 };

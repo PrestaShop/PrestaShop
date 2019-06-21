@@ -33,6 +33,8 @@
 
   <div class="card-block row">
     <div class="card-text">
+      {{ form_errors(taxForm) }}
+
       {% set nameHint %}
         {{ 'Tax name to display in carts and on invoices (e.g. "VAT").'|trans({}, 'Admin.International.Help') }}
         {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}

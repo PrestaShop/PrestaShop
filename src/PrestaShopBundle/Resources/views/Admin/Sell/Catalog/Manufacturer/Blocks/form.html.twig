@@ -33,6 +33,8 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
+      {{ form_errors(manufacturerForm) }}
+
       {% set invalidCatalogNameHint %}
         {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
       {% endset %}

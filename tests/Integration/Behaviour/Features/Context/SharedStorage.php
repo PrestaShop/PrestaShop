@@ -77,4 +77,14 @@ class SharedStorage
     {
         $this->storage[$key] = $resource;
     }
+
+    /**
+     * @param string $key
+     */
+    public function clear($key)
+    {
+        if (isset($this->storage[$key])) {
+            unset($this->storage[$key]);
+        }
+    }
 }

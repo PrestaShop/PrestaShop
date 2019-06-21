@@ -53,6 +53,7 @@ final class PersistFiltersBuilder extends AbstractRepositoryFiltersBuilder
         }
 
         $filtersToSave = $filters->all();
+        unset($filtersToSave['offset']);
 
         if (!empty($filterId)) {
             $this->adminFilterRepository->createOrUpdateByEmployeeAndFilterId(

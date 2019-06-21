@@ -26,14 +26,16 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
@@ -134,10 +136,10 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $categoryForm->getData()['id_parent'],
+                    'categoryId' => $categoryForm->getData()['id_parent'],
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -183,10 +185,10 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                    'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -239,6 +241,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             $categoryFormOptions = [
                 'id_category' => (int) $categoryId,
+                'subcategories' => $editableCategory->getSubCategories(),
             ];
 
             $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
@@ -250,10 +253,10 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $categoryForm->getData()['id_parent'],
+                    'categoryId' => $categoryForm->getData()['id_parent'],
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -316,10 +319,10 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                    'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -448,9 +451,11 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $command = new ToggleCategoryStatusCommand((int) $categoryId);
+            $isEnabled = $this->getQueryBus()->handle(new GetCategoryIsEnabled((int) $categoryId));
 
-            $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle(
+                new SetCategoryIsEnabledCommand((int) $categoryId, !$isEnabled)
+            );
 
             $response = [
                 'status' => true,
@@ -715,7 +720,10 @@ class CategoryController extends FrameworkBundleAdminController
             ];
         }
 
-        $categoryId = $request->query->get('id_category', $this->configuration->getInt('PS_HOME_CATEGORY'));
+        $categoryId = $request->attributes->get('categoryId');
+        if (empty($categoryId)) {
+            $categoryId = $this->configuration->getInt('PS_HOME_CATEGORY');
+        }
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_categories_create', ['id_parent' => $categoryId]),
@@ -727,7 +735,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get translated error messsages for category exceptions
+     * Get translated error messages for category exceptions
      *
      * @return array
      */

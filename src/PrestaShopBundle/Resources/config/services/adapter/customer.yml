@@ -12,11 +12,11 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing'
 
-  prestashop.adapter.customer.command_handler.save_private_note_for_customer:
-    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SavePrivateNoteForCustomerHandler'
+  prestashop.adapter.customer.command_handler.set_private_note_about_customer_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SetPrivateNoteAboutCustomerHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand'
 
   prestashop.adapter.customer.command_handler.transform_guest_to_customer:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\TransformGuestToCustomerHandler'

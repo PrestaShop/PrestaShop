@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
@@ -162,7 +163,7 @@ class TaxController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_taxes_index');
             }
-        } catch (TaxException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -201,7 +202,7 @@ class TaxController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_taxes_index');
             }
-        } catch (TaxException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof TaxNotFoundException) {

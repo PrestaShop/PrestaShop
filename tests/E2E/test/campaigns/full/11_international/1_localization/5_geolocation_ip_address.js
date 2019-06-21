@@ -24,11 +24,11 @@ scenario('"Geolocation by IP Address"', () => {
           .then(() => client.getFileName(tab["link"]))
           .then(() => client.unzipFile(global.downloadsFolderPath, global.downloadedFileName));
       });
-      test('should Put the file in /app/Resources/geoip', () => client.moveFile(global.downloadsFolderPath, global.downloadedFileName, "../../app/Resources/geoip"));
+      test('should Put the file in /app/Resources/geoip', () => client.moveFile(global.downloadsFolderPath, global.downloadedFileName, global.shopPath + "/app/Resources/geoip"));
       test('should change the value of the geolocation by IP Address to "Yes"', () => client.waitForExistAndClick(Localization.Geolocation.ip_address_yes_label));
       test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Geolocation.save_geolocation_ip_address_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Geolocation.alert_panel.replace("%B", "alert-success"), "Update successful"));
-      test('should delete the file from /app/Resources/geoip', () => client.deleteFile(global.downloadedFileName, "../../app/Resources/geoip"));
+      test('should delete the file from /app/Resources/geoip', () => client.deleteFile(global.downloadedFileName, global.shopPath + "/app/Resources/geoip"));
       test('should change the value of the geolocation by IP Address to "No"', () => client.waitForExistAndClick(Localization.Geolocation.ip_address_no_label));
       test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Geolocation.save_geolocation_ip_address_button));
     }, 'international');

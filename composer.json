@@ -57,7 +57,7 @@
         "prestashop/ps_customersignin": "^2",
         "prestashop/ps_customtext": "^4",
         "prestashop/ps_emailsubscription": "^2",
-        "prestashop/ps_facetedsearch": "^2",
+        "prestashop/ps_facetedsearch": "^3",
         "prestashop/ps_faviconnotificationbo": "^2",
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_imageslider": "^3",
@@ -118,7 +118,7 @@
     ],
     "require-dev": {
         "behat/behat": "^3.5",
-        "friendsofphp/php-cs-fixer": "^2.12",
+        "friendsofphp/php-cs-fixer": "^2.15.1",
         "johnkary/phpunit-speedtrap": "^1.1",
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",

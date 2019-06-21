@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Endpoints;
 
-use Context;
 use Tools;
 
 /**

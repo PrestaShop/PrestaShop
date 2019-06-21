@@ -9,6 +9,7 @@ const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const stockCommonScenarios = require('../../common_scenarios/stock');
 const commonProduct = require('../../common_scenarios/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 let dateFormat = require('dateformat');
 let dateSystem = dateFormat(new Date(), 'yyyy-mm-dd');
@@ -36,7 +37,7 @@ scenario('Update quantity of a product', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'stocks');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   for (let i = 0; i < 3; i++) {
     commonProduct.createProduct(AddProductPage, productData[i]);
   }
@@ -88,7 +89,7 @@ scenario('Update quantity of a product', () => {
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "5", "-", "Employee Edition", productData[2].reference, dateSystem, productData[2].name + date_time);
   }, 'stocks');
 
-  scenario('Enter a decimal quantity with "." for one product in the field and save by the "Check" sign', client => {
+  scenario('Enter a decimal quantity with "." for one product in the field and save by the "Check" sign (issue #9616)', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
     test('should set the "Quantity" of the first product to 10.5', () => client.modifyProductQuantity(Stock, 1, 10.5));
     test('should click on "Check" button', () => client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 1)));
@@ -100,7 +101,7 @@ scenario('Update quantity of a product', () => {
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, 0, 'equal', 'unchanged', Stock, 1);
   }, 'stocks');
 
-  scenario('Enter a decimal quantity with "," for one product in the field  and save by the "Check" sign', client => {
+  scenario('Enter a decimal quantity with "," for one product in the field  and save by the "Check" sign (issue #9616)', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
     test('should set the "Quantity" of the first product to 10,5', () => client.modifyProductQuantity(Stock, 1, '10,5', true));
     test('should click on "Check" button', () => client.waitForExistAndClick(Stock.save_product_quantity_button.replace('%I', 1)));
@@ -113,9 +114,12 @@ scenario('Update quantity of a product', () => {
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, 0, 'equal', 'unchanged', Stock, 1);
   }, 'stocks');
 
-  scenario('Enter a decimal quantity with "." for one product in the field and save by the "Apply new quantity" button', client => {
+  scenario('Enter a decimal quantity with "." for one product in the field and save by the "Apply new quantity" button (issue #9616)', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
-    test('should set the "Quantity" of the first product to 10.5', () => client.modifyProductQuantity(Stock, 1, 10.5));
+    test('should set the "Quantity" of the first product to 10.5', () => {
+      return promise
+        .then(() => client.modifyProductQuantity(Stock, 1, 10.5))
+    });
     test('should click on "Apply new quantity" button', () => client.waitForExistAndClick(Stock.group_apply_button));
 
     /**
@@ -126,9 +130,12 @@ scenario('Update quantity of a product', () => {
     stockCommonScenarios.checkAvailableAndPhysicalQuantity(client, 0, 'equal', 'unchanged', Stock, 1);
   }, 'stocks');
 
-  scenario('Enter a decimal quantity with "," for one product in the field and save by the "Apply new quantity" button', client => {
+  scenario('Enter a decimal quantity with "," for one product in the field and save by the "Apply new quantity" button (issue #9616)', client => {
     stockCommonScenarios.goToStockPageAndSortByProduct(client, Menu, Stock);
-    test('should set the "Quantity" of the first product to 10,5', () => client.modifyProductQuantity(Stock, 1, '10,5', true));
+    test('should set the "Quantity" of the first product to 10,5', () => {
+      return promise
+        .then(() => client.modifyProductQuantity(Stock, 1, '10,5', true))
+    });
     test('should click on "Apply new quantity" button', () => client.waitForExistAndClick(Stock.group_apply_button));
     /**
      * This scenario is based on the bug described in this ticket

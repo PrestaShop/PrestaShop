@@ -1,10 +1,13 @@
 admin_categories_index:
-    path: /
+    path: /{categoryId}
     methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:index
         _legacy_controller: AdminCategories
         _legacy_link: AdminCategories
+        categoryId: null
+    requirements:
+        categoryId: '\d+'
 
 admin_categories_search:
     path: /search
@@ -16,7 +19,7 @@ admin_categories_search:
         gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.category
         redirectRoute: admin_categories_index
         redirectQueryParamsToKeep:
-            - 'id_category'
+            - 'categoryId'
 
 admin_categories_bulk_enable_status:
     path: /bulk-status-enable

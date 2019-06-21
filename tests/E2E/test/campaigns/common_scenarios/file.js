@@ -99,7 +99,7 @@ module.exports = {
           .then(() => client.isVisible(Files.filter_reset_button, 3000))
           .then(() => client.resetButton(Files.filter_reset_button));
       });
-      }, 'file');
+    }, 'file');
   },
   viewFile: function (folderPath, filename, file) {
     scenario('View the created "File"', client => {
@@ -128,7 +128,7 @@ module.exports = {
       if (existingFile) {
         test('should click on "Preview" button', () => client.waitForExistAndClick(AddProductPage.preview_buttons, 1000));
         test('should go to the Front Office', () => client.switchWindow(id));
-        common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productData.name + global.date_time);
+        common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
         test('should click on "Attachments" tab', () => client.scrollWaitForExistAndClick(productPage.attachments_tab, 50));
         test('should check the existence of the file', () => {
           for (let i = 0; i < productData.options.filename.length; i++) {
@@ -222,18 +222,48 @@ module.exports = {
           .then(() => client.isVisible(Files.empty_list, 1000))
           .then(() => client.getFilesNumber('table-attachment', 1000));
       });
-      test('should check "Filter file by ' + filterBy + '"', () => {
-        if (global.filesNumber > 0) {
-          for (let j = 0; j < global.filesNumber; j++) {
-            promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
+
+      if (filterBy === 'associated') {
+        test('should check "Filter file by ' + filterBy + '" (issue #9607)', () => {
+          if (global.filesNumber > 0) {
+            for (let j = 0; j < global.filesNumber; j++) {
+              promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
+            }
+            return promise
+              .then(() => client.checkFilterFile(searchValue));
+          } else {
+            return Promise.reject(new Error('No Records Found')).then(expect(global.filesNumber).to.be.at.most(0));
           }
-          // Issue: 9607
-          return promise
-            .then(() => client.checkFilterFile(searchValue));
-        } else {
-          return Promise.reject(new Error('No Records Found')).then(expect(global.filesNumber).to.be.at.most(0));
-        }
-      });
+        });
+      }
+
+      else if (filterBy === 'size') {
+        test('should check "Filter file by ' + filterBy + '" (issue #11054)', () => {
+          if (global.filesNumber > 0) {
+            for (let j = 0; j < global.filesNumber; j++) {
+              promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
+            }
+            return promise
+              .then(() => client.checkFilterFile(searchValue));
+          } else {
+            return Promise.reject(new Error('No Records Found')).then(expect(global.filesNumber).to.be.at.most(0));
+          }
+        });
+      }
+
+      else {
+        test('should check "Filter file by ' + filterBy + '" (issue #11054)', () => {
+          if (global.filesNumber > 0) {
+            for (let j = 0; j < global.filesNumber; j++) {
+              promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
+            }
+            return promise
+              .then(() => client.checkFilterFile(searchValue));
+          } else {
+            return Promise.reject(new Error('No Records Found')).then(expect(global.filesNumber).to.be.at.most(0));
+          }
+        });
+      }
     }, 'file');
   }
 };

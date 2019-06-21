@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f87418ad16c41cc273e0979bf1125c6d",
+    "content-hash": "720a72c48509aa6b279f8d5e5142a36b",
     "packages": [
         {
             "name": "analog/analog",
@@ -3593,25 +3593,39 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v2.2.0",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "ff3cb50836afbba5bf1ae2fd286ea9a48072aeea"
+                "reference": "e2b6045ddf3421bda6474b4834d97495c9c106ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/ff3cb50836afbba5bf1ae2fd286ea9a48072aeea",
-                "reference": "ff3cb50836afbba5bf1ae2fd286ea9a48072aeea",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/e2b6045ddf3421bda6474b4834d97495c9c106ba",
+                "reference": "e2b6045ddf3421bda6474b4834d97495c9c106ba",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "doctrine/collections": "^1.4",
+                "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.0"
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "mockery/mockery": "^1.2",
+                "phpunit/phpunit": "~5.7",
+                "prestashop/php-coding-standards": "dev-master"
             },
             "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\FacetedSearch\\Controller\\": "src/Controller/",
+                    "PrestaShop\\Module\\FacetedSearch\\": "src/",
+                    "PrestaShop\\Module\\FacetedSearch\\Tests\\": "tests/php/FacetedSearch"
+                },
+                "classmap": [
+                    "ps_facetedsearch.php"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
@@ -3624,7 +3638,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2018-09-03T10:34:18+00:00"
+            "time": "2019-06-19T09:39:30+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -6733,16 +6747,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.14.2",
+            "version": "v2.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "ff401e58261ffc5934a58f795b3f95b355e276cb"
+                "reference": "20064511ab796593a3990669eff5f5b535001f7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/ff401e58261ffc5934a58f795b3f95b355e276cb",
-                "reference": "ff401e58261ffc5934a58f795b3f95b355e276cb",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/20064511ab796593a3990669eff5f5b535001f7c",
+                "reference": "20064511ab796593a3990669eff5f5b535001f7c",
                 "shasum": ""
             },
             "require": {
@@ -6770,11 +6784,11 @@
                 "mikey179/vfsstream": "^1.6",
                 "php-coveralls/php-coveralls": "^2.1",
                 "php-cs-fixer/accessible-object": "^1.0",
-                "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.0.1",
-                "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.0.1",
+                "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.1",
+                "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.1",
                 "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1",
-                "phpunitgoodpractices/traits": "^1.5.1",
-                "symfony/phpunit-bridge": "^4.0"
+                "phpunitgoodpractices/traits": "^1.8",
+                "symfony/phpunit-bridge": "^4.3"
             },
             "suggest": {
                 "ext-mbstring": "For handling non-UTF8 characters in cache signature.",
@@ -6817,7 +6831,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2019-02-17T17:44:13+00:00"
+            "time": "2019-06-01T10:32:12+00:00"
         },
         {
             "name": "johnkary/phpunit-speedtrap",

@@ -84,7 +84,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_customers_create' => ['/sell/customers/new', 'AdminCustomers', 'addcustomer'],
             'admin_customers_edit' => ['/sell/customers/42/edit', 'AdminCustomers', 'updatecustomer', ['id_customer' => 42]],
             'admin_customers_view' => ['/sell/customers/42/view', 'AdminCustomers', 'viewcustomer', ['id_customer' => 42]],
-            'admin_customers_save_private_note' => ['/sell/customers/42/save-private-note', 'AdminCustomers', 'updateCustomerNote', ['id_customer' => 42]],
+            'admin_customers_save_private_note' => ['/sell/customers/42/set-private-note', 'AdminCustomers', 'updateCustomerNote', ['id_customer' => 42]],
             'admin_customers_toggle_status' => ['/sell/customers/42/toggle-status', 'AdminCustomers', 'statuscustomer', ['id_customer' => 42]],
             'admin_customers_transform_guest_to_customer' => ['/sell/customers/42/transform-guest-to-customer', 'AdminCustomers', 'guesttocustomer', ['id_customer' => 42]],
             'admin_customers_toggle_newsletter_subscription' => ['/sell/customers/42/toggle-newsletter-subscription', 'AdminCustomers', 'changeNewsletterVal', ['id_customer' => 42]],
@@ -227,6 +227,16 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_international_translations_export_theme' => ['/improve/international/translations/export', 'AdminTranslations', 'submitExport'],
             'admin_international_translations_add_update_language' => ['/improve/international/translations/add-update-language', 'AdminTranslations', 'submitAddLanguage'],
             'admin_international_translations_copy_language' => ['/improve/international/translations/copy', 'AdminTranslations', 'submitCopyLang'],
+
+            'admin_themes_index' => ['/improve/design/themes/', 'AdminThemes'],
+            'admin_themes_upload_logos' => ['/improve/design/themes/upload-logos', 'AdminThemes', 'submitOptionsconfiguration'],
+            'admin_themes_export_current' => ['/improve/design/themes/export', 'AdminThemes', 'exporttheme'],
+            'admin_themes_import' => ['/improve/design/themes/import', 'AdminThemes', 'importtheme'],
+            'admin_themes_enable' => ['/improve/design/themes/prestashop_theme/enable', 'AdminThemes', 'enableTheme', ['theme_name' => 'prestashop_theme']],
+            'admin_themes_delete' => ['/improve/design/themes/prestashop_theme/delete', 'AdminThemes', 'deleteTheme', ['theme_name' => 'prestashop_theme']],
+            'admin_themes_adapt_to_rtl_languages' => ['/improve/design/themes/adapt-to-rtl-languages', 'AdminThemes', 'submitGenerateRTL'],
+            'admin_theme_customize_layouts' => ['/improve/design/themes/customize-layouts', 'AdminThemes', 'submitConfigureLayouts'],
+            'admin_themes_reset_layouts' => ['/improve/design/themes/prestashop_theme/reset-layouts', 'AdminThemes', 'resetToDefaults', ['theme_name' => 'prestashop_theme']],
         ];
     }
 

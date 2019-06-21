@@ -1527,12 +1527,11 @@ class CategoryCore extends ObjectModel
 
         $categories = null;
         $idCurrent = $this->id;
-        if (count(Category::getCategoriesWithoutParent()) > 1
-            && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')
-            && count(Shop::getShops(true, null, true)) !== 1) {
-            $context->shop->id_category = (int) Configuration::get('PS_ROOT_CATEGORY');
-        } elseif (!$context->shop->id) {
+        if (!$context->shop->id) {
             $context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+        }
+        if (count(Category::getCategoriesWithoutParent()) > 1) {
+            $context->shop->id_category = (int) Configuration::get('PS_ROOT_CATEGORY');
         }
         $idShop = $context->shop->id;
 

@@ -85,6 +85,17 @@ function getProductUpdateUrl() {
 }
 
 /**
+ * @param {string} errorMessage
+ */
+function showErrorNextToAddtoCartButton(errorMessage) {
+  if (errorMessage === undefined) {
+    errorMessage = 'An error occurred while processing your request';
+  }
+
+  showError($('#product-availability'), errorMessage);
+}
+
+/**
  * Update the product html
  *
  * @param {string} event
@@ -105,7 +116,7 @@ function updateProduct(event, eventType, updateUrl) {
 
   // Can not get product ajax url
   if (updateUrl === null) {
-    showError($('#product-availability'), 'An error occurred while processing your request');
+    showErrorNextToAddtoCartButton();
 
     return;
   }
@@ -154,7 +165,7 @@ function updateProduct(event, eventType, updateUrl) {
         if (textStatus !== 'abort'
             && $('section#main > .ajax-error').length === 0
         ) {
-          showError($('#product-availability'), 'An error occurred while processing your request');
+          showErrorNextToAddtoCartButton();
         }
       },
       success(data, textStatus, errorThrown) {
@@ -210,7 +221,7 @@ function replaceAddToCartSections(data) {
   });
 
   if ($productAddToCart === null) {
-    showError($('#product-availability'), 'An error occurred while processing your request');
+    showErrorNextToAddtoCartButton();
   }
   const $addProductToCart = $('.product-add-to-cart');
   const productAvailabilitySelector = '.add';
@@ -318,7 +329,7 @@ $(document).ready(() => {
       productUpdateUrl => updateProduct(event, eventType, productUpdateUrl)
     ).fail(() => {
       if ($('section#main > .ajax-error').length === 0) {
-        showError($('#product-availability'), 'An error occurred while processing your request');
+        showErrorNextToAddtoCartButton();
       }
     });
   });
@@ -359,5 +370,13 @@ $(document).ready(() => {
     const $quantityWantedInput = $('#quantity_wanted');
     //Force value to 1, it will automatically trigger updateProduct and reset the appropriate min value if needed
     $quantityWantedInput.val(1);
+  });
+
+  prestashop.on('showErrorNextToAddtoCartButton', (event) => {
+    if (!event || !event.errorMessage) {
+      return;
+    }
+
+    showErrorNextToAddtoCartButton(event.errorMessage);
   });
 });

@@ -19,6 +19,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {HomePage} = require('../../../selectors/FO/home_page');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let data = require('../../../datas/product-data');
 let common = require('../../../common.webdriverio');
 let promise = Promise.resolve();
@@ -56,6 +57,7 @@ scenario('Create virtual Product in the Back Office', () => {
     test('should open browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Test1: create "Currency"', () => {
     commonCurrencySenarios.accessToCurrencies();
     commonCurrencySenarios.createCurrency('Successful creation.', currencyData);

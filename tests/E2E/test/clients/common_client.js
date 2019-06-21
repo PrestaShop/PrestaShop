@@ -603,6 +603,11 @@ class CommonClient {
       .refresh();
   }
 
+  deleteCookieWithoutRefresh() {
+    return this.client
+      .deleteCookie()
+  }
+
   middleClick(selector, globalVisibility = true, pause = 2000) {
     if (globalVisibility) {
       return this.client
@@ -921,6 +926,23 @@ class CommonClient {
         if(isXpath) document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.removeAttribute(attributeName);
         else document.querySelector(selector).removeAttribute(attributeName);
       }, selector, attributeName, isXpath);
+  }
+
+  /**
+   * Select/unselect all options in link Widget creation test
+   * @param selectorList, selector to click on
+   * @param i, position if the options
+   * @return {Promise<*>}
+   */
+  async selectAllOptionsLinkWidget(selectorList, i = 1) {
+    return this.client
+      .isVisible(selectorList.replace('%POS', i))
+      .then(async (isVisible) => {
+        if (isVisible) {
+          await this.scrollWaitForExistAndClick(selectorList.replace('%POS', i));
+          await this.selectAllOptionsLinkWidget(selectorList, i + 1)
+        }
+      });
   }
 }
 
