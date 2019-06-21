@@ -115,7 +115,7 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $this->addFlash(
                     'success',
                     $this->trans(
-                        'Please, check your mailbox. A link to reset your password has been sent to you.',
+                        'Check your mailbox and click on the link to reset your password.',
                         'Admin.Login.Notification'
                     )
                 );
