@@ -89,5 +89,4 @@ final class AdminDirectoryRenamer implements AdminDirectoryRenamerInterface
 
         return $newName;
     }
-
 }
