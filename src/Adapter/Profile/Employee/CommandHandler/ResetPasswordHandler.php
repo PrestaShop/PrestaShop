@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\ResetPasswordHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordInformationMissingException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordTokenExpiredException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\UnableToResetPasswordException;
 use Shop;
