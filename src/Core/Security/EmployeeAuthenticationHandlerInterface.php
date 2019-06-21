@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Security;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 
 /**
  * Contract for service that handles employee authentication.
@@ -36,14 +36,14 @@ interface EmployeeAuthenticationHandlerInterface
     /**
      * Renew authentication credentials.
      *
-     * @param AuthenticatedEmployee $authenticatedEmployee
+     * @param EmployeeForAuthentication $employeeForAuthentication
      */
-    public function renewAuthenticationCredentials(AuthenticatedEmployee $authenticatedEmployee);
+    public function renewAuthenticationCredentials(EmployeeForAuthentication $employeeForAuthentication);
 
     /**
      * Set the authentication credentials.
      *
-     * @param AuthenticatedEmployee $authenticatedEmployee
+     * @param EmployeeForAuthentication $employeeForAuthentication
      */
-    public function setAuthenticationCredentials(AuthenticatedEmployee $authenticatedEmployee);
+    public function setAuthenticationCredentials(EmployeeForAuthentication $employeeForAuthentication);
 }

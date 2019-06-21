@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -553,13 +553,13 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     private function renewAuthenticationCredentials($employeeId)
     {
-        /** @var AuthenticatedEmployee $authenticatedEmployee */
-        $authenticatedEmployee = $this->getQueryBus()->handle(
+        /** @var EmployeeForAuthentication $employeeForAuthentication */
+        $employeeForAuthentication = $this->getQueryBus()->handle(
             GetEmployeeForAuthentication::fromEmployeeId($employeeId)
         );
 
         $authenticationHandler = $this->get('prestashop.adapter.security.employee_authentication_handler');
-        $authenticationHandler->renewAuthenticationCredentials($authenticatedEmployee);
+        $authenticationHandler->renewAuthenticationCredentials($employeeForAuthentication);
     }
 
     /**
