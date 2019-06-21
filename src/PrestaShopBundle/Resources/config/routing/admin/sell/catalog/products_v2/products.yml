@@ -3,33 +3,39 @@ admin_products_index:
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:index'
+    _legacy_controller: AdminProducts
 
 admin_products_toggle_status:
   path: /{productId}/toggle-status
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:toggle'
+    _legacy_controller: AdminProducts
 
 admin_products_preview:
   path: /{productId}/preview
   methods: GET
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:preview'
+    _legacy_controller: AdminProducts
 
 admin_products_edit:
   path: /{productId}/edit
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:edit'
+    _legacy_controller: AdminProducts
 
 admin_products_duplicate:
   path: /{productId}/duplicate
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:duplicateProduct'
+    _legacy_controller: AdminProducts
 
 admin_products_delete:
   path: /{productId}/delete
   methods: DELETE
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:delete'
+    _legacy_controller: AdminProducts
