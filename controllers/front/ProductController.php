@@ -429,6 +429,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart'),
             'product_additional_info' => $this->render('catalog/_partials/product-additional-info'),
             'product_images_modal' => $this->render('catalog/_partials/product-images-modal'),
+            'product_flags' => $this->render('catalog/_partials/product-flags'),
             'product_url' => $this->context->link->getProductLink(
                 $product['id_product'],
                 null,
