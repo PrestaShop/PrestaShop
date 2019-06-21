@@ -24,38 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Security\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Exception\SecurityException;
-
-/**
- * Thrown when renaming admin directory fails
- */
-class UnableToRenameAdminDirectoryException extends SecurityException
+final class AuthorizationOptions
 {
-    /**
-     * @var string
-     */
-    private $destinationName;
+    const DEFAULT_EMPLOYEE_ROLE = 'ROLE_EMPLOYEE';
 
     /**
-     * @param string $destinationName
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
+     * Not supposed to be instantiated.
      */
-    public function __construct($destinationName, $message = '', $code = 0, $previous = null)
+    private function __construct()
     {
-        parent::__construct($message, $code, $previous);
-        $this->destinationName = $destinationName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDestinationName()
-    {
-        return $this->destinationName;
     }
 }

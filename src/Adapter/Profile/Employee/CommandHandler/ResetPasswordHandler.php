@@ -105,7 +105,7 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
         ;
 
         if (!$employeeFound) {
-            throw new EmployeeNotFoundException();
+            throw new EmployeeNotFoundException(null, 'Employee could not be found by given email.');
         }
 
         $timeExpression = sprintf(
@@ -116,11 +116,11 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
         $canResetPassword = (strtotime($timeExpression) - time()) <= 0;
 
         if (!$canResetPassword) {
-            throw new PasswordResetTooFrequentException();
+            throw new PasswordResetTooFrequentException('You cannot reset your password so frequently.');
         }
 
         if ($employee->getValidResetPasswordToken() !== $command->getResetToken()) {
-            throw new ResetPasswordTokenExpiredException();
+            throw new ResetPasswordTokenExpiredException('Reset password token has expired.');
         }
 
         $employee->passwd = $this->hashing->hash($command->getNewPlainPassword());
@@ -149,14 +149,14 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
         );
 
         if (!$mailWasSent) {
-            throw new UnableToResetPasswordException();
+            throw new UnableToResetPasswordException('Password reset email could not be sent.');
         }
 
         // Update employee only if the mail can be sent
         Shop::setContext(Shop::CONTEXT_SHOP, (int) min($employee->getAssociatedShops()));
 
         if (!$employee->update()) {
-            throw new UnableToResetPasswordException();
+            throw new UnableToResetPasswordException('Employee\'s password could not be updated.');
         }
 
         $employee->removeResetPasswordToken(); // Delete temporary reset token

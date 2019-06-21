@@ -33,9 +33,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
 
 /**
- * Employee logout listener cleans up after employee logs out of back office.
+ * Employee logout handler cleans up after employee logs out of back office.
  */
-final class EmployeeLogoutListener implements LogoutHandlerInterface
+final class EmployeeLogoutHandler implements LogoutHandlerInterface
 {
     /**
      * @var LegacyContext

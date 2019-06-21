@@ -26,18 +26,12 @@
 
 namespace LegacyTests\PrestaShopBundle\Mock;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PageVoter extends BaseVoter
 {
-    public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage)
-    {
-    }
-
     public function onKernelRequest(GetResponseEvent $event)
     {
         return true;

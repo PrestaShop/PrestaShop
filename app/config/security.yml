@@ -21,7 +21,7 @@ security:
                     - prestashop.security.admin.login_form_authenticator
             logout:
                 path: /logout
-                handlers: [prestashop.adapter.security.employee_logout_listener]
+                handlers: [prestashop.adapter.security.employee_logout_handler]
             remember_me:
                 secret: '%secret%'
                 remember_me_parameter: stay_logged_in
