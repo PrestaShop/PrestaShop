@@ -151,7 +151,7 @@ class MailCore extends ObjectModel
             $idShop = Context::getContext()->shop->id;
         }
 
-        $keepGoing = Hook::exec(
+        $hookBeforeEmailResult = Hook::exec(
             'actionEmailSendBefore',
             [
                 'idLang' => &$idLang,
@@ -174,9 +174,11 @@ class MailCore extends ObjectModel
             true
         );
 
-        if ($keepGoing) {
+        if ($hookBeforeEmailResult === null) {
+            $keepGoing = false;
+        } else {
             $keepGoing = array_reduce(
-                $keepGoing,
+                $hookBeforeEmailResult,
                 function ($carry, $item) {
                     return ($item === false) ? false : $carry;
                 },
