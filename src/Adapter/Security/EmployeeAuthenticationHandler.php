@@ -102,7 +102,7 @@ final class EmployeeAuthenticationHandler implements EmployeeAuthenticationHandl
     /**
      * {@inheritdoc}
      */
-    public function setAuthenticationCredentials(EmployeeForAuthentication $employeeForAuthentication)
+    public function setAuthenticationCredentials(EmployeeForAuthentication $employeeForAuthentication, $stayLoggedIn)
     {
         $employee = new Employee($employeeForAuthentication->getEmployeeId()->getValue());
 
@@ -123,7 +123,7 @@ final class EmployeeAuthenticationHandler implements EmployeeAuthenticationHandl
         $cookie->passwd = $employee->passwd;
         $cookie->remote_addr = $employee->remote_addr;
 
-        if (!$employeeForAuthentication->getStayLoggedIn()) {
+        if (!$stayLoggedIn) {
             $cookie->last_activity = time();
         }
 
