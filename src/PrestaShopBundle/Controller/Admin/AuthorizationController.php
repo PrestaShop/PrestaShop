@@ -203,18 +203,19 @@ class AuthorizationController extends FrameworkBundleAdminController
         $tools = $this->get('prestashop.adapter.tools');
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
         $secureModeChecker = $this->get('prestashop.adapter.security.secure_mode_checker');
-        $boAccessPrerequisitesHandler = $this->get(
-            'prestashop.adapter.security.backoffice_access_prerequisites_handler'
+        $boAccessPrerequisitesChecker = $this->get(
+            'prestashop.adapter.security.backoffice_access_prerequisites_checker'
         );
+        $adminDirectoryRenamer = $this->get('prestashop.adapter.security.admin_directory_renamer');
         $isInsecureMode = false;
         $canAccessInsecureMode = false;
-        $installDirectoryExists = $boAccessPrerequisitesHandler->installDirectoryExists();
-        $adminDirectoryRenamed = $boAccessPrerequisitesHandler->isAdminDirectoryRenamed();
+        $installDirectoryExists = $boAccessPrerequisitesChecker->installDirectoryExists();
+        $adminDirectoryRenamed = $boAccessPrerequisitesChecker->isAdminDirectoryRenamed();
         $newAdminDirectoryName = '';
 
         if (!$adminDirectoryRenamed) {
             try {
-                $newAdminDirectoryName = $boAccessPrerequisitesHandler->renameAdminDirectory();
+                $newAdminDirectoryName = $adminDirectoryRenamer->renameToRandomName();
 
                 return $this->redirect(sprintf(
                     '%s/%s/%s/',

@@ -26,24 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Security\BackOfficeAccessPrerequisitesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Security\Exception\UnableToRenameAdminDirectoryException;
-use Symfony\Component\Filesystem\Exception\IOException;
+use PrestaShop\PrestaShop\Core\Security\BackOfficeAccessPrerequisitesCheckerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-final class BackOfficeAccessPrerequisitesHandler implements BackOfficeAccessPrerequisitesHandlerInterface
+/**
+ * Class responsible for checking if back office access prerequisites are met.
+ */
+final class BackOfficeAccessPrerequisitesChecker implements BackOfficeAccessPrerequisitesCheckerInterface
 {
     /**
      * @var string
      */
     private $adminDir;
-
-    /**
-     * @var Tools
-     */
-    private $tools;
 
     /**
      * @var Filesystem
@@ -52,13 +47,11 @@ final class BackOfficeAccessPrerequisitesHandler implements BackOfficeAccessPrer
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param Tools $tools
      * @param Filesystem $filesystem
      */
-    public function __construct(ConfigurationInterface $configuration, Tools $tools, Filesystem $filesystem)
+    public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem)
     {
         $this->adminDir = $configuration->get('_PS_ADMIN_DIR_');
-        $this->tools = $tools;
         $this->filesystem = $filesystem;
     }
 
@@ -70,31 +63,6 @@ final class BackOfficeAccessPrerequisitesHandler implements BackOfficeAccessPrer
         return basename($this->adminDir) != 'admin'
             || !$this->filesystem->exists($this->adminDir . '/../admin/')
         ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function renameAdminDirectory()
-    {
-        $newName = sprintf(
-            'admin%03d%s/',
-            mt_rand(0, 999),
-            strtolower($this->tools->generatePassword(6))
-        );
-
-        try {
-            $this->filesystem->rename($this->adminDir . '/../admin/', $this->adminDir . '/../' . $newName, true);
-        } catch (IOException $e) {
-            throw new UnableToRenameAdminDirectoryException(
-                $newName,
-                $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
-
-        return $newName;
     }
 
     /**
