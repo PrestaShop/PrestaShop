@@ -30,7 +30,7 @@ _admin_reset_password:
     requirements:
         employeeId: \d+
 
-_admin_logout:
+admin_logout:
     path: /logout
     defaults:
         _legacy_link: AdminLogin:logout
