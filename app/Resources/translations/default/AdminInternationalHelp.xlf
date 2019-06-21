@@ -236,15 +236,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/LanguageGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5009286a303ef99a9b58979e866476a1">
-        <source>Search date format</source>
-        <target>Search date format</target>
-        <note>Line: 242</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c7c838899b96b2b17ea954d2578cf541">
