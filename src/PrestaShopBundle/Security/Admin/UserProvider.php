@@ -43,7 +43,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 /**
  * Responsible for retrieving Employee entities for the Symfony security components.
  */
-class UserProvider implements UserProviderInterface
+final class UserProvider implements UserProviderInterface
 {
     /**
      * @var Context

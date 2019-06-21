@@ -27,11 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Security\Exception;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Exception\SecurityException;
 
 /**
  * Thrown when renaming admin directory fails
  */
-class UnableToRenameAdminDirectoryException extends Exception
+class UnableToRenameAdminDirectoryException extends SecurityException
 {
     /**
      * @var string

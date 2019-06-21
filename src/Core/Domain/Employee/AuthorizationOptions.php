@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,27 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\PrestaShopBundle\Mock;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee;
 
-use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
-class PageVoter extends BaseVoter
+final class AuthorizationOptions
 {
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        return true;
-    }
+    const DEFAULT_EMPLOYEE_ROLE = 'ROLE_EMPLOYEE';
 
     /**
-     * @param string $attribute
-     * @param mixed $subject
-     * @param TokenInterface $token
-     * @return bool
+     * Not supposed to be instantiated.
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    private function __construct()
     {
-        return true;
     }
 }
