@@ -2,9 +2,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Catalog\Category\DeleteCategoriesBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -115,6 +121,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'price_tax_included',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -247,5 +254,81 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('actions')
             )
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add(
+                (new LinkGridAction('import'))
+                    ->setName($this->trans('Import', [], 'Admin.Actions'))
+                    ->setIcon('cloud_upload')
+                    ->setOptions([
+                        'route' => 'admin_import',
+                        'route_params' => [
+                            'import_type' => 'products',
+                        ],
+                    ])
+            )
+            ->add(
+                (new LinkGridAction('export'))
+                    ->setName($this->trans('Export', [], 'Admin.Actions'))
+                    ->setIcon('cloud_download')
+                    ->setOptions([
+                        'route' => 'admin_products_export',
+                    ])
+            )
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                    ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                    ->setIcon('refresh')
+            )
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                    ->setIcon('code')
+            )
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                    ->setIcon('storage')
+            );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
+                    ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_products_bulk_enable_status',
+                    ])
+            )
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
+                    ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_products_bulk_disable_status',
+                    ])
+            )
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_products_bulk_delete',
+                        'confirm_message' => $this->trans(
+                            'These products will be deleted for good. Please confirm.',
+                            [],
+                            'Admin.Catalog.Feature'
+                        ),
+                    ])
+            );
     }
 }

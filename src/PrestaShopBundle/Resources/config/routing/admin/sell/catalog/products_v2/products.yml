@@ -48,3 +48,31 @@ admin_products_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:delete'
     _legacy_controller: AdminProducts
+
+admin_products_export:
+  path: /export
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:export'
+    _legacy_controller: AdminProducts
+
+admin_products_bulk_enable_status:
+  path: /bulk-enable-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:bulkEnable'
+    _legacy_controller: AdminProducts
+
+admin_products_bulk_disable_status:
+  path: /bulk-disable-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:bulkDisable'
+    _legacy_controller: AdminProducts
+
+admin_products_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:bulkDelete'
+    _legacy_controller: AdminProducts
