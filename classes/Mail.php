@@ -182,6 +182,8 @@ class MailCore extends ObjectModel
                 },
                 true
             );
+        } elseif (is_array($keepGoing) && empty($keepGoing)) {
+            $keepGoing = true;
         }
 
         if (!$keepGoing) {
