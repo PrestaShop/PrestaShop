@@ -92,10 +92,6 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
      */
     public function handle(ResetPasswordCommand $command)
     {
-        if (empty($command->getResetToken()) || empty(trim($command->getEmail()->getValue()))) {
-            throw new ResetPasswordInformationMissingException();
-        }
-
         $employee = new Employee();
 
         // Legacy condition. Employee object is loaded in $employee->getByEmail() call, so it must go first.
