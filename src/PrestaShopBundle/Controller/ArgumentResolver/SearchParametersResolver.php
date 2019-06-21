@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\ArgumentResolver;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Search\ControllerAction;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
@@ -104,11 +104,11 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         $this->employee = $this->getEmployee($tokenStorage);
 
         if (null !== $this->employee) {
-            /** @var AuthenticatedEmployee $authenticatedEmployee */
-            $authenticatedEmployee = $queryBus->handle(
+            /** @var EmployeeForAuthentication $employeeForAuthentication */
+            $employeeForAuthentication = $queryBus->handle(
                 GetEmployeeForAuthentication::fromEmail($this->employee->getUsername())
             );
-            $this->employeeId = $authenticatedEmployee->getEmployeeId()->getValue();
+            $this->employeeId = $employeeForAuthentication->getEmployeeId()->getValue();
         }
     }
 

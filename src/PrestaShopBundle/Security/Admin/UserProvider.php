@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AuthenticatingEmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -96,14 +96,14 @@ final class UserProvider implements UserProviderInterface
         }
 
         try {
-            /** @var AuthenticatedEmployee $authenticatedEmployee */
-            $authenticatedEmployee = $this->queryBus->handle(
+            /** @var EmployeeForAuthentication $employeeForAuthentication */
+            $employeeForAuthentication = $this->queryBus->handle(
                 GetEmployeeForAuthentication::fromEmail($username)
             );
             $employee = new Employee(
-                new LegacyEmployee($authenticatedEmployee->getEmployeeId()->getValue())
+                new LegacyEmployee($employeeForAuthentication->getEmployeeId()->getValue())
             );
-            $employee->setRoles($authenticatedEmployee->getRoles());
+            $employee->setRoles($employeeForAuthentication->getRoles());
 
             $cachedEmployee->set($employee);
             $this->cache->save($cachedEmployee);
