@@ -176,7 +176,7 @@ class SurvivalTest extends WebTestCase
             'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
             '_admin_login' => ['Login', '_admin_login'],
             '_admin_forgot_password' => ['Forgot password (login)', '_admin_forgot_password'],
-            '_admin_logout' => ['Logout', '_admin_logout'],
+            'admin_logout' => ['Logout', 'admin_logout'],
         ];
     }
 
