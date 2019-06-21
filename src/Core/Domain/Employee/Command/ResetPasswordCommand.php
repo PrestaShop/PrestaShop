@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordInformationMissingException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
@@ -62,6 +63,14 @@ class ResetPasswordCommand
      */
     public function __construct($employeeId, $email, $resetToken, $newPlainPassword)
     {
+        if (empty($this->resetToken)) {
+            throw new ResetPasswordInformationMissingException('Reset token cannot be empty.');
+        }
+
+        if (empty(trim($email))) {
+            throw new ResetPasswordInformationMissingException('Employee email cannot be empty.');
+        }
+
         $this->employeeId = new EmployeeId($employeeId);
         $this->resetToken = $resetToken;
         $this->email = new Email($email);
