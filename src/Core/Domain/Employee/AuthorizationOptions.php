@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee;
 
+/**
+ * Constants related to authorization are defined in this class.
+ */
 final class AuthorizationOptions
 {
     const DEFAULT_EMPLOYEE_ROLE = 'ROLE_EMPLOYEE';
