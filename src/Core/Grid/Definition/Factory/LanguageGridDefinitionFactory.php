@@ -189,7 +189,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search ID', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search ID', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('id_lang')
@@ -199,7 +199,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search name', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search name', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('name')
@@ -209,7 +209,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search iso code', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search ISO code', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('iso_code')
@@ -219,7 +219,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search code', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search code', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('language_code')
@@ -229,7 +229,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search date format', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search date format', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('date_format_lite')

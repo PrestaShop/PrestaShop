@@ -5,41 +5,41 @@
       <trans-unit id="93ba210a7ea13de4214e57bf9d3f0096">
         <source>Deleted account</source>
         <target>Deleted account</target>
-        <note>Line: 64</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/productcomments/controllers/front/PostComment.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a57bec7b463ef587df33a67b97799ef0">
-        <source>You need to be logged in to post your review.</source>
-        <target>You need to be logged in to post your review.</target>
-        <note>Line: 39</note>
+      <trans-unit id="26474f5707c33bcb467e9012ea7dbc55">
+        <source>You need to be [1]logged in[/1] or [2]create an account[/2] to post your review.</source>
+        <target>You need to be [1]logged in[/1] or [2]create an account[/2] to post your review.</target>
+        <note>Line: 40</note>
       </trans-unit>
       <trans-unit id="dd7164fb6342eb2622b10568c0240bbf">
         <source>You are not allowed to post a review at the moment, please try again later.</source>
         <target>You are not allowed to post a review at the moment, please try again later.</target>
-        <note>Line: 57</note>
+        <note>Line: 66</note>
       </trans-unit>
       <trans-unit id="95ba76c5c7b555be8efe6a3da26f0e4e">
         <source>Title cannot be empty</source>
         <target>Title cannot be empty</target>
-        <note>Line: 135</note>
+        <note>Line: 144</note>
       </trans-unit>
       <trans-unit id="6860ebb8b4811bad4d66ee12171d9919">
         <source>Title cannot be more than %s characters</source>
         <target>Title cannot be more than %s characters</target>
-        <note>Line: 137</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="eb51e9ce995a1a8ca09f3a4369bb8720">
         <source>Customer name cannot be empty</source>
         <target>Customer name cannot be empty</target>
-        <note>Line: 142</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="8928e4374410046ab21285fc9090ee19">
         <source>Customer name cannot be more than %s characters</source>
         <target>Customer name cannot be more than %s characters</target>
-        <note>Line: 144</note>
+        <note>Line: 153</note>
       </trans-unit>
     </body>
   </file>
@@ -62,51 +62,17 @@
       <trans-unit id="198645056f217f726ff1dc6e65ccc322">
         <source>Cannot find the requested product review.</source>
         <target>Cannot find the requested product review.</target>
-        <note>Line: 65</note>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="4ab403bbf7563d87b327f2a9b2e04baa">
         <source>This feature is not enabled.</source>
         <target>This feature is not enabled.</target>
         <note>Line: 38</note>
       </trans-unit>
-      <trans-unit id="0e3eaf2fbd1f85499a5a881dbf1c5984">
-        <source>You need to be logged in to give your appreciation of a review.</source>
-        <target>You need to be logged in to give your appreciation of a review.</target>
-        <note>Line: 48</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/productcomments/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7c6a169b9017895a118d7cb18b7b788e">
-        <source>To go further:</source>
-        <target>To go further:</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="580606daf13bbe3d496f8f7ceba14fd5">
-        <source>Customer reviews</source>
-        <target>Customer reviews</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="c3782cf09e0f24e3a31a2dda9d9de9b9">
-        <source>Addons Marketplace</source>
-        <target>Addons Marketplace</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="8dfee3bf98003885d5cb116483d9a0a3">
-        <source>Display customer reviews on your store!</source>
-        <target>Display customer reviews on your store!</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="0019c3a3aab2c6cd6a2b4e2b9c4d204e">
-        <source>Customer reviews reassure your visitors and help you improve conversion! Encourage your customers to leave a review, display them, and do not forget to use rich snippets to show your products’ satisfaction ratings on search engines: they will be more visible!</source>
-        <target>Customer reviews reassure your visitors and help you improve conversion! Encourage your customers to leave a review, display them, and do not forget to use rich snippets to show your products’ satisfaction ratings on search engines: they will be more visible!</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="25131b831e5832d70365d17471b6326d">
-        <source>Discover all modules</source>
-        <target>Discover all modules</target>
-        <note>Line: 46</note>
+      <trans-unit id="9104797eca16236af6aaf8d857728a3d">
+        <source>You need to be [1]logged in[/1] or [2]create an account[/2] to give your appreciation of a review.</source>
+        <target>You need to be [1]logged in[/1] or [2]create an account[/2] to give your appreciation of a review.</target>
+        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
