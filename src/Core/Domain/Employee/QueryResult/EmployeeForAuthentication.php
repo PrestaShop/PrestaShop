@@ -65,18 +65,12 @@ class EmployeeForAuthentication
     private $roles;
 
     /**
-     * @var bool
-     */
-    private $stayLoggedIn;
-
-    /**
      * @param EmployeeId $employeeId
      * @param Email $email
      * @param string $hashedPassword
      * @param string $defaultPageUrl
      * @param int $profileId
      * @param array $roles
-     * @param bool $stayLoggedIn
      */
     public function __construct(
         EmployeeId $employeeId,
@@ -84,8 +78,7 @@ class EmployeeForAuthentication
         $hashedPassword,
         $defaultPageUrl,
         $profileId,
-        array $roles,
-        $stayLoggedIn = true
+        array $roles
     ) {
         $this->employeeId = $employeeId;
         $this->defaultPageUrl = $defaultPageUrl;
@@ -93,7 +86,6 @@ class EmployeeForAuthentication
         $this->hashedPassword = $hashedPassword;
         $this->profileId = $profileId;
         $this->roles = $roles;
-        $this->stayLoggedIn = $stayLoggedIn;
     }
 
     /**
@@ -142,13 +134,5 @@ class EmployeeForAuthentication
     public function getRoles()
     {
         return $this->roles;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getStayLoggedIn()
-    {
-        return $this->stayLoggedIn;
     }
 }
