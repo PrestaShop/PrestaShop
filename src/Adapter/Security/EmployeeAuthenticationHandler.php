@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Security\EmployeeAuthenticationHandlerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -90,21 +90,21 @@ final class EmployeeAuthenticationHandler implements EmployeeAuthenticationHandl
     /**
      * {@inheritdoc}
      */
-    public function renewAuthenticationCredentials(AuthenticatedEmployee $authenticatedEmployee)
+    public function renewAuthenticationCredentials(EmployeeForAuthentication $employeeForAuthentication)
     {
-        $email = $authenticatedEmployee->getEmail()->getValue();
+        $email = $employeeForAuthentication->getEmail()->getValue();
 
         $this->updateEmailInCookie($email);
-        $this->updatePasswordInCookie($authenticatedEmployee->getHashedPassword());
+        $this->updatePasswordInCookie($employeeForAuthentication->getHashedPassword());
         $this->updateSecurityToken($email);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setAuthenticationCredentials(AuthenticatedEmployee $authenticatedEmployee)
+    public function setAuthenticationCredentials(EmployeeForAuthentication $employeeForAuthentication)
     {
-        $employee = new Employee($authenticatedEmployee->getEmployeeId()->getValue());
+        $employee = new Employee($employeeForAuthentication->getEmployeeId()->getValue());
 
         // Assign logged in employee to the context
         $this->legacyContext->getContext()->employee = $employee;
@@ -123,7 +123,7 @@ final class EmployeeAuthenticationHandler implements EmployeeAuthenticationHandl
         $cookie->passwd = $employee->passwd;
         $cookie->remote_addr = $employee->remote_addr;
 
-        if (!$authenticatedEmployee->getStayLoggedIn()) {
+        if (!$employeeForAuthentication->getStayLoggedIn()) {
             $cookie->last_activity = time();
         }
 

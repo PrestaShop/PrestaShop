@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Stores data of an authenticated employee.
+ * Stores data of an employee for authentication.
  */
-class AuthenticatedEmployee
+class EmployeeForAuthentication
 {
     /**
      * @var string

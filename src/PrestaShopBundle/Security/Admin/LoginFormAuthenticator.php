@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Security\Admin;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Security\EmployeeAuthenticationHandlerInterface;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
 use Psr\Log\LoggerInterface;
@@ -183,11 +183,11 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $query = GetEmployeeForAuthentication::fromEmail($user->getUsername());
         $query->setStayLoggedIn($formData['stay_logged_in']);
 
-        /** @var AuthenticatedEmployee $authenticatedEmployee */
-        $authenticatedEmployee = $this->queryBus->handle($query);
-        $this->authenticationHandler->setAuthenticationCredentials($authenticatedEmployee);
+        /** @var EmployeeForAuthentication $employeeForAuthentication */
+        $employeeForAuthentication = $this->queryBus->handle($query);
+        $this->authenticationHandler->setAuthenticationCredentials($employeeForAuthentication);
 
-        return new RedirectResponse($formData['redirect_url'] ?? $authenticatedEmployee->getDefaultPageUrl());
+        return new RedirectResponse($formData['redirect_url'] ?? $employeeForAuthentication->getDefaultPageUrl());
     }
 
     /**

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\AuthenticatedEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 
 /**
  * Interface for service that gets employee data for authentication.
@@ -37,7 +37,7 @@ interface GetEmployeeForAuthenticationHandlerInterface
     /**
      * @param GetEmployeeForAuthentication $query
      *
-     * @return AuthenticatedEmployee
+     * @return EmployeeForAuthentication
      */
     public function handle(GetEmployeeForAuthentication $query);
 }
