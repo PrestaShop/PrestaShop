@@ -52,4 +52,24 @@ class ProductController extends FrameworkBundleAdminController
     {
 //        todo: implement
     }
+
+    public function exportAction()
+    {
+//        todo: implement
+    }
+
+    public function bulkEnable()
+    {
+//        todo: implement
+    }
+
+    public function bulkDisable()
+    {
+//        todo: implement
+    }
+
+    public function bulkDelete()
+    {
+//        todo: implement
+    }
 }
