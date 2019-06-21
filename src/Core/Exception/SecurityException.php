@@ -24,38 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Security\Exception;
-
-use Exception;
-use PrestaShop\PrestaShop\Core\Exception\SecurityException;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
 /**
- * Thrown when renaming admin directory fails
+ * Thrown in security context
  */
-class UnableToRenameAdminDirectoryException extends SecurityException
+class SecurityException extends CoreException
 {
-    /**
-     * @var string
-     */
-    private $destinationName;
-
-    /**
-     * @param string $destinationName
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
-     */
-    public function __construct($destinationName, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-        $this->destinationName = $destinationName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDestinationName()
-    {
-        return $this->destinationName;
-    }
 }
