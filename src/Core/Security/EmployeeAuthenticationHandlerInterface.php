@@ -44,6 +44,7 @@ interface EmployeeAuthenticationHandlerInterface
      * Set the authentication credentials.
      *
      * @param EmployeeForAuthentication $employeeForAuthentication
+     * @param bool $stayLoggedIn indicates whether the employee should stay logged in after inactivity period
      */
-    public function setAuthenticationCredentials(EmployeeForAuthentication $employeeForAuthentication);
+    public function setAuthenticationCredentials(EmployeeForAuthentication $employeeForAuthentication, $stayLoggedIn);
 }
