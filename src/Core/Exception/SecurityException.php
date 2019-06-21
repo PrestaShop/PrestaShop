@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,27 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\PrestaShopBundle\Mock;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
-use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
-class PageVoter extends BaseVoter
+/**
+ * Thrown in security context
+ */
+class SecurityException extends CoreException
 {
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        return true;
-    }
-
-    /**
-     * @param string $attribute
-     * @param mixed $subject
-     * @param TokenInterface $token
-     * @return bool
-     */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
-    {
-        return true;
-    }
 }

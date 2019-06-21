@@ -11,8 +11,8 @@ services:
       - '@prestashop.static_cache.adapter'
       - '@request_stack'
 
-  prestashop.adapter.security.employee_logout_listener:
-    class: PrestaShop\PrestaShop\Adapter\Security\EmployeeLogoutListener
+  prestashop.adapter.security.employee_logout_handler:
+    class: PrestaShop\PrestaShop\Adapter\Security\EmployeeLogoutHandler
     arguments:
       - '@prestashop.adapter.legacy.context'
 

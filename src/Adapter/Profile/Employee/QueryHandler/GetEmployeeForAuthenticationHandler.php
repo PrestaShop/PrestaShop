@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler;
 use Access;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AuthenticatingEmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeForAuthenticationHandlerInterface;
@@ -42,8 +43,6 @@ use PrestaShopException;
  */
 final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthenticationHandlerInterface
 {
-    const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
-
     /**
      * @var LegacyContext
      */
@@ -79,7 +78,7 @@ final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthent
             $this->context->getAdminLink($employee->getDefaultTabClassName()),
             (int) $employee->id_profile,
             array_merge(
-                [self::ROLE_EMPLOYEE],
+                [AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE],
                 Access::getRoles($employee->id_profile)
             ),
             $query->getStayLoggedIn()
