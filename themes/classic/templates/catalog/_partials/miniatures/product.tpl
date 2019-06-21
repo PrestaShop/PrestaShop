@@ -82,6 +82,7 @@
         {/block}
       </div>
 
+      <!-- @todo: use include file='catalog/_partials/product-flags.tpl'} -->
       {block name='product_flags'}
         <ul class="product-flags">
           {foreach from=$product.flags item=flag}
