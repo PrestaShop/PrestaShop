@@ -242,7 +242,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             '_admin_login' => ['/', 'AdminLogin'],
             '_admin_forgot_password' => ['/forgot', 'AdminLogin', 'submitForgot'],
             '_admin_reset_password' => ['/reset/1/secret_token', 'AdminLogin', 'submitForgot', ['id_employee' => 1, 'reset_token' => 'secret_token']],
-            '_admin_logout' => ['/logout', 'AdminLogin', 'logout'],
+            'admin_logout' => ['/logout', 'AdminLogin', 'logout'],
         ];
     }
 

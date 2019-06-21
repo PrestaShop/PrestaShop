@@ -178,7 +178,7 @@ class SurvivalTest extends WebTestCase
             'admin_order_messages_create' => ['Add new', 'admin_order_messages_create'],
             '_admin_login' => ['Login', '_admin_login'],
             '_admin_forgot_password' => ['Forgot password (login)', '_admin_forgot_password'],
-            '_admin_logout' => ['Logout', '_admin_logout'],
+            'admin_logout' => ['Logout', 'admin_logout'],
         ];
     }
 
