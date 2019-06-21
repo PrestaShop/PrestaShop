@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class LocaleTest extends TestCase
 {
@@ -196,7 +197,7 @@ class LocaleTest extends TestCase
      */
     public function testGetNumberSymbolsByNumberingSystemWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->cldrLocale->getNumberSymbolsByNumberingSystem('foobar');
     }
@@ -228,7 +229,7 @@ class LocaleTest extends TestCase
      */
     public function testGetDecimalPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->cldrLocale->getDecimalPattern('foobar');
     }
@@ -260,7 +261,7 @@ class LocaleTest extends TestCase
      */
     public function testGetPercentPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->cldrLocale->getPercentPattern('foobar');
     }
@@ -292,7 +293,7 @@ class LocaleTest extends TestCase
      */
     public function testGetCurrencyPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->cldrLocale->getCurrencyPattern('foobar');
     }

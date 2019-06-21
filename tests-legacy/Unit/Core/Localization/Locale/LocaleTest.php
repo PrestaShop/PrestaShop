@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class LocaleTest extends TestCase
 {
@@ -130,7 +131,7 @@ class LocaleTest extends TestCase
      */
     public function testFormatNumberWithInvalidRawNumber()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->cldrLocale->formatNumber('foobar');
     }
@@ -215,7 +216,7 @@ class LocaleTest extends TestCase
      */
     public function testFormatNumberWithInvalidPriceData($number, $currency)
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->cldrLocale->formatPrice($number, $currency);
     }

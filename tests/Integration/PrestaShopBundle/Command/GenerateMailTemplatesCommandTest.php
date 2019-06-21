@@ -32,6 +32,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Console\Exception\RuntimeException;
 
 class GenerateMailTemplatesCommandTest extends KernelTestCase
 {
@@ -47,7 +48,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
     public function testMissingArguments()
     {
-        $this->setExpectedException(\Symfony\Component\Console\Exception\RuntimeException::class, 'Not enough arguments (missing: "theme, locale").');
+        $this->setExpectedException(RuntimeException::class, 'Not enough arguments (missing: "theme, locale").');
 
         $application = new Application(static::$kernel);
 

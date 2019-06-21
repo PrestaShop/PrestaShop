@@ -28,6 +28,7 @@ namespace LegacyTests\Unit\Core\Localization\Currency;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class CurrencyTest extends TestCase
 {
@@ -134,7 +135,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetSymbolWithUnknownLocaleCode()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->currency->getSymbol('foobar');
     }
@@ -177,7 +178,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetNameWithUnknownLocaleCode()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->currency->getName('foobar');
     }

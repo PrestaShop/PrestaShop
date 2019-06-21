@@ -150,7 +150,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetCurrencyWithUnknownCode()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->currencyRepository->getCurrency('foo', 'bar');
     }

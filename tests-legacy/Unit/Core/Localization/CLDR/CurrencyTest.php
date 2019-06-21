@@ -141,7 +141,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetSymbolsWithInvalidSymbolType()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
         $this->cldrCurrency->getSymbol('foobar');
     }
