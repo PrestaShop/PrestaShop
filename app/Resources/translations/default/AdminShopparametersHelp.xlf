@@ -298,7 +298,7 @@
       <trans-unit id="259b411f284388d228a30c1e2ed0c61d">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
         <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
-        <note>Line: 351</note>
+        <note>Line: 364</note>
       </trans-unit>
       <trans-unit id="01d2aac5d20787a1e873f2bdc79b514a">
         <source>Search this word instead.</source>
@@ -558,17 +558,17 @@
       <trans-unit id="9cd9efd3eb168071eb0a199972c54aab">
         <source>Contact name (e.g. Customer Support).</source>
         <target>Contact name (e.g. Customer Support).</target>
-        <note>Line: 39</note>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="daedf9c5c8f38ac4cf641f3fb3e1bdc4">
         <source>Emails will be sent to this address.</source>
         <target>Emails will be sent to this address.</target>
-        <note>Line: 44</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="0f28459fa87b1b3ce6e8b17932f08c3a">
         <source>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</source>
         <target>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</target>
-        <note>Line: 49</note>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
@@ -659,37 +659,37 @@
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
-        <note>Line: 64</note>
+        <note>Line: 71</note>
       </trans-unit>
       <trans-unit id="219985722a429b6aaceef7d363e6a565">
         <source>Name of the related page.</source>
         <target>Name of the related page.</target>
-        <note>Line: 38</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="14bc1d17bbcf8fb45debf11fb7c5f80b">
         <source>Title of this page.</source>
         <target>Title of this page.</target>
-        <note>Line: 42</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="79c06fd4269a36582767dc4525699148">
         <source>A short description of your shop.</source>
         <target>A short description of your shop.</target>
-        <note>Line: 52</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="d9f600637f31b203b55f6c91dabd4fde">
         <source>List of keywords for search engines.</source>
         <target>List of keywords for search engines.</target>
-        <note>Line: 62</note>
+        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="99de37a1ed381af8c01ccb18f70b1427">
         <source>For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php</source>
         <target>For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php</target>
-        <note>Line: 73</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="7aa534250fe76a40d96078a07b6f44e8">
         <source>Only letters and hyphens are allowed.</source>
         <target>Only letters and hyphens are allowed.</target>
-        <note>Line: 74</note>
+        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>
@@ -824,7 +824,7 @@
       <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
         <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
         <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
-        <note>Line: 61</note>
+        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>

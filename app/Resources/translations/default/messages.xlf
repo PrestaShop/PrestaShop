@@ -320,7 +320,7 @@
       <trans-unit id="0071aa279bd1583754a544277740f047">
         <source>Delete item #</source>
         <target>Delete item #</target>
-        <note>Line: 108</note>
+        <note>Line: 112</note>
       </trans-unit>
     </body>
   </file>
@@ -1016,7 +1016,7 @@
       <trans-unit id="83057027f6b988dd2dbe422f6f3ddd21">
         <source>No module was found for this hook.</source>
         <target>No module was found for this hook.</target>
-        <note>Line: 157</note>
+        <note>Line: 161</note>
       </trans-unit>
     </body>
   </file>
@@ -1135,42 +1135,42 @@
       <trans-unit id="e5bd639f4d74cf2c52afada77086f788">
         <source>Process a standard refund</source>
         <target>Process a standard refund</target>
-        <note>Line: 902</note>
+        <note>Line: 905</note>
       </trans-unit>
       <trans-unit id="c4b689eeebf8e942907a1cc1d086dba6">
         <source>Process a partial refund</source>
         <target>Process a partial refund</target>
-        <note>Line: 903</note>
+        <note>Line: 906</note>
       </trans-unit>
       <trans-unit id="cc61945cbbf46721a053467c395c666f">
         <source>Refunded</source>
         <target>Refunded</target>
-        <note>Line: 931</note>
+        <note>Line: 934</note>
       </trans-unit>
       <trans-unit id="6a5efd211a422296eab4adc476c98f0e">
         <source>Return products</source>
         <target>Return products</target>
-        <note>Line: 1196</note>
+        <note>Line: 1199</note>
       </trans-unit>
       <trans-unit id="74c06eb18eeb118d7b3c623d0c717290">
         <source>Refund products</source>
         <target>Refund products</target>
-        <note>Line: 1196</note>
+        <note>Line: 1199</note>
       </trans-unit>
       <trans-unit id="4b8def9be8f45a8d6baea36b26868965">
         <source>Cancel products</source>
         <target>Cancel products</target>
-        <note>Line: 1196</note>
+        <note>Line: 1199</note>
       </trans-unit>
       <trans-unit id="867343577fa1f33caa632a19543bd252">
         <source>Keywords</source>
         <target>Keywords</target>
-        <note>Line: 1265</note>
+        <note>Line: 1268</note>
       </trans-unit>
       <trans-unit id="6416e8cb5fc0a208d94fa7f5a300dbc4">
         <source>Warehouse</source>
         <target>Warehouse</target>
-        <note>Line: 930</note>
+        <note>Line: 933</note>
       </trans-unit>
     </body>
   </file>
@@ -1179,7 +1179,7 @@
       <trans-unit id="f2bbdf9f72c085adc4d0404e370f0f4c">
         <source>Attribute</source>
         <target>Attribute</target>
-        <note>Line: 79</note>
+        <note>Line: 83</note>
       </trans-unit>
     </body>
   </file>
@@ -1896,47 +1896,47 @@
       <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
         <source>Please fill at least one field to perform a search in this list.</source>
         <target>Please fill at least one field to perform a search in this list.</target>
-        <note>Line: 108</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
         <source>Refresh list</source>
         <target>Refresh list</target>
-        <note>Line: 152</note>
+        <note>Line: 157</note>
       </trans-unit>
       <trans-unit id="dbcd43f8ba2bafd1bccc57fe9c8b5d7b">
         <source>Show SQL query</source>
         <target>Show SQL query</target>
-        <note>Line: 161</note>
+        <note>Line: 166</note>
       </trans-unit>
       <trans-unit id="351b6d570b6ba15fe66e85c1eaf9ec64">
         <source>Export to SQL Manager</source>
         <target>Export to SQL Manager</target>
-        <note>Line: 166</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="4493e821e06072415518bd7ae4077996">
         <source>Shop group</source>
         <target>Shop group</target>
-        <note>Line: 305</note>
+        <note>Line: 310</note>
       </trans-unit>
       <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
         <source>To</source>
         <target>To</target>
-        <note>Line: 345</note>
+        <note>Line: 350</note>
       </trans-unit>
       <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
         <source>and stay</source>
         <target>and stay</target>
-        <note>Line: 198</note>
+        <note>Line: 203</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
-        <note>Line: 338</note>
+        <note>Line: 343</note>
       </trans-unit>
       <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
         <source>Reset</source>
         <target>Reset</target>
-        <note>Line: 397</note>
+        <note>Line: 402</note>
       </trans-unit>
     </body>
   </file>
@@ -2499,197 +2499,197 @@
       <trans-unit id="ec211f7c20af43e742bf2570c3cb84f9">
         <source>Add</source>
         <target>Add</target>
-        <note>Line: 598</note>
+        <note>Line: 615</note>
       </trans-unit>
       <trans-unit id="7dce122004969d56ae2e0245cb754d35">
         <source>Edit</source>
         <target>Edit</target>
-        <note>Line: 654</note>
+        <note>Line: 671</note>
       </trans-unit>
       <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
         <source>List</source>
         <target>List</target>
-        <note>Line: 609</note>
+        <note>Line: 626</note>
       </trans-unit>
       <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
         <source>View details</source>
         <target>View details</target>
-        <note>Line: 615</note>
+        <note>Line: 632</note>
       </trans-unit>
       <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
         <source>Options</source>
         <target>Options</target>
-        <note>Line: 620</note>
+        <note>Line: 637</note>
       </trans-unit>
       <trans-unit id="92a8f0b9d28a89b480bd1d29f46f0484">
         <source>Generator</source>
         <target>Generator</target>
-        <note>Line: 625</note>
+        <note>Line: 642</note>
       </trans-unit>
       <trans-unit id="ef61fb324d729c341ea8ab9901e23566">
         <source>Add new</source>
         <target>Add new</target>
-        <note>Line: 1649</note>
+        <note>Line: 1666</note>
       </trans-unit>
       <trans-unit id="4351cfebe4b61d8aa5efa1d020710005">
         <source>View</source>
         <target>View</target>
-        <note>Line: 666</note>
+        <note>Line: 683</note>
       </trans-unit>
       <trans-unit id="a6105c0a611b41b08f1209506350279e">
         <source>yes</source>
         <target>yes</target>
-        <note>Line: 693</note>
+        <note>Line: 710</note>
       </trans-unit>
       <trans-unit id="7fa3b767c460b54a2be4d49030b349c7">
         <source>no</source>
         <target>no</target>
-        <note>Line: 693</note>
+        <note>Line: 710</note>
       </trans-unit>
       <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
         <source>%s: %s</source>
         <target>%s: %s</target>
-        <note>Line: 717</note>
+        <note>Line: 734</note>
       </trans-unit>
       <trans-unit id="921d54865f8169b84c90d4335c256494">
         <source>filter by %s</source>
         <target>filter by %s</target>
-        <note>Line: 724</note>
+        <note>Line: 741</note>
       </trans-unit>
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>Line: 4067</note>
+        <note>Line: 4090</note>
       </trans-unit>
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
         <target>%s addition</target>
-        <note>Line: 1162</note>
+        <note>Line: 1179</note>
       </trans-unit>
       <trans-unit id="0919680b340ae0ac8d1a804c4c69b0ba">
         <source>%s modification</source>
         <target>%s modification</target>
-        <note>Line: 1262</note>
+        <note>Line: 1279</note>
       </trans-unit>
       <trans-unit id="f7931413dee107ddf5289c8886baf7ec">
         <source>Edit: %s</source>
         <target>Edit: %s</target>
-        <note>Line: 1569</note>
+        <note>Line: 1586</note>
       </trans-unit>
       <trans-unit id="0095a9fa74d1713e43e370a7d7846224">
         <source>Export</source>
         <target>Export</target>
-        <note>Line: 1654</note>
+        <note>Line: 1671</note>
       </trans-unit>
       <trans-unit id="4668a49dfb4ba4ff7fa8019e7e5c28af">
         <source>Recommended Modules</source>
         <target>Recommended Modules</target>
-        <note>Line: 2202</note>
+        <note>Line: 2219</note>
       </trans-unit>
       <trans-unit id="ee77ea46b0c548ed60eadf31bdd68613">
         <source>Bad SQL query</source>
         <target>Bad SQL query</target>
-        <note>Line: 2422</note>
+        <note>Line: 2439</note>
       </trans-unit>
       <trans-unit id="431accab7897f05b0424e002ca30391d">
         <source>Operational</source>
         <target>Operational</target>
-        <note>Line: 2692</note>
+        <note>Line: 2709</note>
       </trans-unit>
       <trans-unit id="fb381d41e52b0dc68e684c01decfe2ec">
         <source>Degraded Performance</source>
         <target>Degraded Performance</target>
-        <note>Line: 2693</note>
+        <note>Line: 2710</note>
       </trans-unit>
       <trans-unit id="7c30b2ec6e5e59c7c327f7098fe36f36">
         <source>Partial Outage</source>
         <target>Partial Outage</target>
-        <note>Line: 2694</note>
+        <note>Line: 2711</note>
       </trans-unit>
       <trans-unit id="b101c07e257875658c454fe5caef1db0">
         <source>Major Outage</source>
         <target>Major Outage</target>
-        <note>Line: 2695</note>
+        <note>Line: 2712</note>
       </trans-unit>
       <trans-unit id="ea4788705e6873b424c65e91c2846b19">
         <source>Cancel</source>
         <target>Cancel</target>
-        <note>Line: 1616</note>
+        <note>Line: 1633</note>
       </trans-unit>
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
         <source>Save</source>
         <target>Save</target>
-        <note>Line: 1641</note>
+        <note>Line: 1658</note>
       </trans-unit>
       <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
         <source>Do you really want to uninstall this module?</source>
         <target>Do you really want to uninstall this module?</target>
-        <note>Line: 4369</note>
+        <note>Line: 4392</note>
       </trans-unit>
       <trans-unit id="b2f31ef3065bf40b2da9fa8525c6adb9">
         <source>Disable this module</source>
         <target>Disable this module</target>
-        <note>Line: 4371</note>
+        <note>Line: 4394</note>
       </trans-unit>
       <trans-unit id="668c99c1164d5348f99c0878770b53a8">
         <source>Enable this module for all shops</source>
         <target>Enable this module for all shops</target>
-        <note>Line: 4372</note>
+        <note>Line: 4395</note>
       </trans-unit>
       <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
         <source>Disable</source>
         <target>Disable</target>
-        <note>Line: 4373</note>
+        <note>Line: 4396</note>
       </trans-unit>
       <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
         <source>Enable</source>
         <target>Enable</target>
-        <note>Line: 4374</note>
+        <note>Line: 4397</note>
       </trans-unit>
       <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
         <source>Disable on mobiles</source>
         <target>Disable on mobiles</target>
-        <note>Line: 4375</note>
+        <note>Line: 4398</note>
       </trans-unit>
       <trans-unit id="2ef92962bd1ac0c81675f10568ad5cca">
         <source>Disable on tablets</source>
         <target>Disable on tablets</target>
-        <note>Line: 4376</note>
+        <note>Line: 4399</note>
       </trans-unit>
       <trans-unit id="5e3ffb3123b3f23a33804d41e38745a0">
         <source>Disable on computers</source>
         <target>Disable on computers</target>
-        <note>Line: 4377</note>
+        <note>Line: 4400</note>
       </trans-unit>
       <trans-unit id="862e2caedb77ba14d86f180ca7fa90a8">
         <source>Display on mobiles</source>
         <target>Display on mobiles</target>
-        <note>Line: 4378</note>
+        <note>Line: 4401</note>
       </trans-unit>
       <trans-unit id="732ebdb0f33a8153b51ac58cac8f3563">
         <source>Display on tablets</source>
         <target>Display on tablets</target>
-        <note>Line: 4379</note>
+        <note>Line: 4402</note>
       </trans-unit>
       <trans-unit id="7f0f7c79f1d7b01b1d8a89f392e93d36">
         <source>Display on computers</source>
         <target>Display on computers</target>
-        <note>Line: 4380</note>
+        <note>Line: 4403</note>
       </trans-unit>
       <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
         <source>Configure</source>
         <target>Configure</target>
-        <note>Line: 4382</note>
+        <note>Line: 4405</note>
       </trans-unit>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
         <target>Delete</target>
-        <note>Line: 4383</note>
+        <note>Line: 4406</note>
       </trans-unit>
       <trans-unit id="85687c63fd82afbc21632f288e53a6e4">
         <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
         <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
-        <note>Line: 4387</note>
+        <note>Line: 4410</note>
       </trans-unit>
     </body>
   </file>
@@ -2707,7 +2707,7 @@
       <trans-unit id="193cfc9be3b995831c6af2fea6650e60">
         <source>Page</source>
         <target>Page</target>
-        <note>Line: 151</note>
+        <note>Line: 159</note>
       </trans-unit>
     </body>
   </file>

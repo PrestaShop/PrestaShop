@@ -345,7 +345,7 @@ class ModuleManager implements AddonManagerInterface
         $result = $module->onUninstall();
 
         if ($result && $this->actionParams->get('deletion', false)) {
-            $result &= $this->removeModuleFromDisk($name);
+            $result = $result && $this->removeModuleFromDisk($name);
         }
 
         $this->checkAndClearCache($result);

@@ -23,47 +23,47 @@
       <trans-unit id="e9d71289fdbe4799d4fe91ccc17be0af">
         <source>The thumbnails were successfully regenerated.</source>
         <target>The thumbnails were successfully regenerated.</target>
-        <note>Line: 461</note>
+        <note>Line: 478</note>
       </trans-unit>
       <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
         <source>Comment successfully added.</source>
         <target>Comment successfully added.</target>
-        <note>Line: 463</note>
+        <note>Line: 480</note>
       </trans-unit>
       <trans-unit id="1b73f0da557b7b0773d0fc6b5fd0a3b4">
         <source>Successful upload.</source>
         <target>Successful upload.</target>
-        <note>Line: 470</note>
+        <note>Line: 487</note>
       </trans-unit>
       <trans-unit id="759d07e8bdf6d3a5863ed521009b3ac1">
         <source>Duplication was completed successfully.</source>
         <target>Duplication was completed successfully.</target>
-        <note>Line: 471</note>
+        <note>Line: 488</note>
       </trans-unit>
       <trans-unit id="13f1ce18a02ac5293cf5a4274f9300de">
         <source>The selected images have successfully been moved.</source>
         <target>The selected images have successfully been moved.</target>
-        <note>Line: 477</note>
+        <note>Line: 494</note>
       </trans-unit>
       <trans-unit id="714903406a224ca68890e377ea111388">
         <source>Your cover image selection has been saved.</source>
         <target>Your cover image selection has been saved.</target>
-        <note>Line: 478</note>
+        <note>Line: 495</note>
       </trans-unit>
       <trans-unit id="b2266c7007fff254b1a9373f8a648a1c">
         <source>The image's shop association has been modified.</source>
         <target>The image's shop association has been modified.</target>
-        <note>Line: 479</note>
+        <note>Line: 496</note>
       </trans-unit>
       <trans-unit id="3a627484fcb2a5d110b44a390d5ee7c1">
         <source>A zone has been assigned to the selection successfully.</source>
         <target>A zone has been assigned to the selection successfully.</target>
-        <note>Line: 480</note>
+        <note>Line: 497</note>
       </trans-unit>
       <trans-unit id="be3af9d697c193da1a7dbfcf195050ea">
         <source>Successful upgrade.</source>
         <target>Successful upgrade.</target>
-        <note>Line: 481</note>
+        <note>Line: 498</note>
       </trans-unit>
     </body>
   </file>
@@ -131,22 +131,22 @@
       <trans-unit id="9dcfab12c54723f05853ee9d1581ce67">
         <source>Successfully overwrote email templates for theme %s with locale %s</source>
         <target>Successfully overwrote email templates for theme %s with locale %s</target>
-        <note>Line: 141</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="fee15218c634e6df3e3409b28730db7c">
         <source>Successfully generated email templates for theme %s with locale %s</source>
         <target>Successfully generated email templates for theme %s with locale %s</target>
-        <note>Line: 153</note>
+        <note>Line: 157</note>
       </trans-unit>
       <trans-unit id="65a97071cf50d7bcca3efd2c8d3a5ccc">
         <source>Email theme configuration saved successfully</source>
         <target>Email theme configuration saved successfully</target>
-        <note>Line: 210</note>
+        <note>Line: 214</note>
       </trans-unit>
       <trans-unit id="807ca4c2efc56c5ccb79b408d828283a">
         <source>Test email for layout %layout% was successfully sent to %email%</source>
         <target>Test email for layout %layout% was successfully sent to %email%</target>
-        <note>Line: 331</note>
+        <note>Line: 335</note>
       </trans-unit>
     </body>
   </file>
@@ -155,12 +155,12 @@
       <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
         <source>Your theme has been correctly exported: %path%</source>
         <target>Your theme has been correctly exported: %path%</target>
-        <note>Line: 174</note>
+        <note>Line: 185</note>
       </trans-unit>
       <trans-unit id="6483df61619946ebf2427ba360df7ce5">
         <source>The settings have been successfully updated.</source>
         <target>The settings have been successfully updated.</target>
-        <note>Line: 142</note>
+        <note>Line: 147</note>
       </trans-unit>
     </body>
   </file>
@@ -193,7 +193,7 @@
       <trans-unit id="893a9104a7f0ebd94a7f4171d1996c7d">
         <source>The image was successfully deleted.</source>
         <target>The image was successfully deleted.</target>
-        <note>Line: 395</note>
+        <note>Line: 412</note>
       </trans-unit>
     </body>
   </file>

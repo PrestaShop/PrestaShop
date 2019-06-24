@@ -71,9 +71,9 @@
   </file>
   <file original="src/Core/Team/Employee/Configuration/EmployeeOptionsConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1631100eb02c7bc530561a42ea228355">
-        <source>You can't change the value of this configuration field in the context of this shop .</source>
-        <target>You can't change the value of this configuration field in the context of this shop .</target>
+      <trans-unit id="69163c4320b04b309f70f6ab6096657a">
+        <source>You cannot change the value of this configuration field in the context of this shop.</source>
+        <target>You cannot change the value of this configuration field in the context of this shop.</target>
         <note>Line: 75</note>
       </trans-unit>
     </body>
@@ -83,7 +83,7 @@
       <trans-unit id="5887e86df08049bc0eab95e975e057c4">
         <source>Please select theme's import source.</source>
         <target>Please select theme's import source.</target>
-        <note>Line: 218</note>
+        <note>Line: 229</note>
       </trans-unit>
     </body>
   </file>

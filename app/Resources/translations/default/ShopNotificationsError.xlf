@@ -188,57 +188,57 @@
       <trans-unit id="897bbb78781eb767eee3a4ac3e820185">
         <source>You must enter a voucher code.</source>
         <target>You must enter a voucher code.</target>
-        <note>Line: 243</note>
+        <note>Line: 244</note>
       </trans-unit>
       <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
         <source>The voucher code is invalid.</source>
         <target>The voucher code is invalid.</target>
-        <note>Line: 249</note>
+        <note>Line: 250</note>
       </trans-unit>
       <trans-unit id="d21c3bf7d25db04b73e7e269aef555fe">
         <source>This voucher does not exist.</source>
         <target>This voucher does not exist.</target>
-        <note>Line: 264</note>
+        <note>Line: 265</note>
       </trans-unit>
       <trans-unit id="8b84452c494aa9106d26b20c9df0e431">
         <source>You must add %quantity% minimum quantity</source>
         <target>You must add %quantity% minimum quantity</target>
-        <note>Line: 509</note>
+        <note>Line: 510</note>
       </trans-unit>
       <trans-unit id="9730e222894d4568ed4cd2de30cb233a">
         <source>Null quantity.</source>
         <target>Null quantity.</target>
-        <note>Line: 370</note>
+        <note>Line: 371</note>
       </trans-unit>
       <trans-unit id="dfbe69c6d9568ecb0e65e7b32ed92a3a">
         <source>Product not found</source>
         <target>Product not found</target>
-        <note>Line: 376</note>
+        <note>Line: 377</note>
       </trans-unit>
       <trans-unit id="cb0b5b032f2426b3fe341460320b5a8e">
         <source>This product (%product%) is no longer available.</source>
         <target>This product (%product%) is no longer available.</target>
-        <note>Line: 613</note>
+        <note>Line: 614</note>
       </trans-unit>
       <trans-unit id="9a7c79186c1ff1cd48b31ed6caf6ff48">
         <source>The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.</source>
         <target>The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.</target>
-        <note>Line: 606</note>
+        <note>Line: 607</note>
       </trans-unit>
       <trans-unit id="feb34b89eb5bf8066025f508b9b86ab2">
         <source>The minimum purchase order quantity for the product %product% is %quantity%.</source>
         <target>The minimum purchase order quantity for the product %product% is %quantity%.</target>
-        <note>Line: 447</note>
+        <note>Line: 448</note>
       </trans-unit>
       <trans-unit id="84a7c3aeebf09d169aca8555be640bbf">
         <source>Please fill in all of the required fields, and then save your customizations.</source>
         <target>Please fill in all of the required fields, and then save your customizations.</target>
-        <note>Line: 474</note>
+        <note>Line: 475</note>
       </trans-unit>
       <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
         <source>You already have the maximum quantity available for this product.</source>
         <target>You already have the maximum quantity available for this product.</target>
-        <note>Line: 515</note>
+        <note>Line: 516</note>
       </trans-unit>
     </body>
   </file>

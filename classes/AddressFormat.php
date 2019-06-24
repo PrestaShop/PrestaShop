@@ -29,6 +29,8 @@
  */
 class AddressFormatCore extends ObjectModel
 {
+    const FORMAT_NEW_LINE = "\n";
+
     /** @var int $id_address_format Address format */
     public $id_address_format;
 
@@ -217,7 +219,7 @@ class AddressFormatCore extends ObjectModel
         $fieldsValidate = Address::getFieldsValidate();
         $usedKeyList = array();
 
-        $multipleLineFields = explode("\n", $this->format);
+        $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);
         if ($multipleLineFields && is_array($multipleLineFields)) {
             foreach ($multipleLineFields as $lineField) {
                 if (($patternsName = preg_split(self::_CLEANING_REGEX_, $lineField, -1, PREG_SPLIT_NO_EMPTY))) {
@@ -388,7 +390,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @return string
      */
-    public static function generateAddress(Address $address, $patternRules = array(), $newLine = "\r\n", $separator = ' ', $style = array())
+    public static function generateAddress(Address $address, $patternRules = array(), $newLine = self::FORMAT_NEW_LINE, $separator = ' ', $style = array())
     {
         $addressFields = AddressFormat::getOrderedAddressFields($address->id_country);
         $addressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($address, $addressFields);
@@ -430,7 +432,7 @@ class AddressFormatCore extends ObjectModel
         return AddressFormat::generateAddress(
             $params['address'],
             (isset($params['patternRules']) ? $params['patternRules'] : array()),
-            (isset($params['newLine']) ? $params['newLine'] : "\r\n"),
+            (isset($params['newLine']) ? $params['newLine'] : self::FORMAT_NEW_LINE),
             (isset($params['separator']) ? $params['separator'] : ' '),
             (isset($params['style']) ? $params['style'] : array())
         );
@@ -515,7 +517,7 @@ class AddressFormatCore extends ObjectModel
     public static function getOrderedAddressFields($idCountry = 0, $splitAll = false, $cleaned = false)
     {
         $out = array();
-        $fieldSet = explode(PHP_EOL, AddressFormat::getAddressCountryFormat($idCountry));
+        $fieldSet = explode(AddressFormat::FORMAT_NEW_LINE, AddressFormat::getAddressCountryFormat($idCountry));
         foreach ($fieldSet as $fieldItem) {
             if ($splitAll) {
                 if ($cleaned) {
@@ -591,7 +593,7 @@ class AddressFormatCore extends ObjectModel
             $out = $this->getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
         }
         if (Country::isNeedDniByCountryId($idCountry) && false === strpos($out, 'dni')) {
-            $out .= PHP_EOL . 'dni';
+            $out .= AddressFormat::FORMAT_NEW_LINE . 'dni';
         }
 
         return $out;
