@@ -3355,7 +3355,7 @@ exit;
      */
     public static function nl2br($str)
     {
-        return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
+        return str_replace(array("\r\n", "\r", "\n", AddressFormat::FORMAT_NEW_LINE, PHP_EOL), '<br />', $str);
     }
 
     /**

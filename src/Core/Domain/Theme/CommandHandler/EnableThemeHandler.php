@@ -86,9 +86,17 @@ final class EnableThemeHandler implements EnableThemeHandlerInterface
 
         if (!$this->themeManager->enable($plainThemeName)) {
             $errors = $this->themeManager->getErrors($plainThemeName);
-            $error = is_array($errors) ? reset($errors) : '';
 
-            throw new CannotEnableThemeException(reset($error));
+            if (is_array($errors)) {
+                $error = reset($errors);
+            } elseif ($errors) {
+                $error = $errors;
+            } else {
+                // handle bad error usecases
+                $error = '';
+            }
+
+            throw new CannotEnableThemeException($error);
         }
 
         $this->smartyCacheClearer->clear();

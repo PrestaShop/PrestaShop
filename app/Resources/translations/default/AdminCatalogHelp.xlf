@@ -277,12 +277,12 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       <trans-unit id="643544fd7876fa0f017ba6233f46b4c3">
         <source>To add "tags," click inside the field, write something, and then press "Enter."</source>
         <target>To add "tags," click inside the field, write something, and then press "Enter."</target>
-        <note>Line: 388</note>
+        <note>Line: 396</note>
       </trans-unit>
       <trans-unit id="b7d8f05036844ad562ed08715bb480b4">
         <source>Company name for this brand</source>
         <target>Company name for this brand</target>
-        <note>Line: 515</note>
+        <note>Line: 523</note>
       </trans-unit>
     </body>
   </file>
@@ -334,12 +334,12 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       <trans-unit id="88fe88f4033791ef6f38fbb7f7c58f04">
         <source>To have a different title from the category name, enter it here.</source>
         <target>To have a different title from the category name, enter it here.</target>
-        <note>Line: 133</note>
+        <note>Line: 136</note>
       </trans-unit>
       <trans-unit id="0a7ca3ce7cde025a585cd02d7382b48f">
         <source>To have a different description than your category summary in search results page, write it here.</source>
         <target>To have a different description than your category summary in search results page, write it here.</target>
-        <note>Line: 166</note>
+        <note>Line: 169</note>
       </trans-unit>
     </body>
   </file>
@@ -826,42 +826,42 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       <trans-unit id="d4be87a5a7a7e9bf633dc6d356968333">
         <source>Click on "Displayed" to index the category on your shop.</source>
         <target>Click on "Displayed" to index the category on your shop.</target>
-        <note>Line: 42</note>
+        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="42f9ee5026d32792987af851a2ea0343">
         <source>This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.</source>
         <target>This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.</target>
-        <note>Line: 80</note>
+        <note>Line: 82</note>
       </trans-unit>
       <trans-unit id="c5d262df2fa3b92141eb8bb37b1fb9b7">
         <source>Displays a small image in the parent category's page, if the theme allows it.</source>
         <target>Displays a small image in the parent category's page, if the theme allows it.</target>
-        <note>Line: 95</note>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="9cbbbb4e43f08deda211ff24e6fd542f">
         <source>The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.</source>
         <target>The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.</target>
-        <note>Line: 119</note>
+        <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="09e2683b6b92b326691cd992f6e5684b">
         <source>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</source>
         <target>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</target>
-        <note>Line: 152</note>
+        <note>Line: 166</note>
       </trans-unit>
       <trans-unit id="53d98bd116f47fdfe15c8eb4525c5e99">
         <source>You now have three default customer groups.</source>
         <target>You now have three default customer groups.</target>
-        <note>Line: 165</note>
+        <note>Line: 179</note>
       </trans-unit>
       <trans-unit id="463848257c086c4816d9f4c020a8d19e">
         <source>Mark all of the customer groups which you would like to have access to this category.</source>
         <target>Mark all of the customer groups which you would like to have access to this category.</target>
-        <note>Line: 157</note>
+        <note>Line: 171</note>
       </trans-unit>
-      <trans-unit id="5c5e72eebcde206a52ce9117b00cf8de">
-        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1]. Then, configure your menu module.]]></source>
-        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1]. Then, configure your menu module.]]></target>
-        <note>Line: 46</note>
+      <trans-unit id="19318118b1173f172418b3282cb037d7">
+        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></source>
+        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></target>
+        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>
@@ -870,7 +870,7 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       <trans-unit id="0205bdbccc495138a109bd8710053565">
         <source>Upload a brand logo from your computer.</source>
         <target>Upload a brand logo from your computer.</target>
-        <note>Line: 58</note>
+        <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="8ed6ad2c4486cdf4c66666671a6d4bf5">
         <source>To add "tags", click inside the field, write something, and then press "Enter".</source>

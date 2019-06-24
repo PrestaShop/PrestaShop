@@ -47,42 +47,42 @@
       <trans-unit id="9bbf45a624c880d590d7b6796e5a7a9c">
         <source>The module was successfully downloaded.</source>
         <target>The module was successfully downloaded.</target>
-        <note>Line: 460</note>
+        <note>Line: 477</note>
       </trans-unit>
       <trans-unit id="6832d3339f3238558d9e290f4ff36bb8">
         <source>Module(s) installed successfully.</source>
         <target>Module(s) installed successfully.</target>
-        <note>Line: 464</note>
+        <note>Line: 481</note>
       </trans-unit>
       <trans-unit id="0be078b247fde4986e320cd2684e7ab9">
         <source>Module(s) uninstalled successfully.</source>
         <target>Module(s) uninstalled successfully.</target>
-        <note>Line: 465</note>
+        <note>Line: 482</note>
       </trans-unit>
       <trans-unit id="7f31b58c32d9112f9bb160a481f6a911">
         <source>Module reset successfully.</source>
         <target>Module reset successfully.</target>
-        <note>Line: 473</note>
+        <note>Line: 490</note>
       </trans-unit>
       <trans-unit id="3270965aab0523dca0351cefc83e40b0">
         <source>Module deleted successfully.</source>
         <target>Module deleted successfully.</target>
-        <note>Line: 474</note>
+        <note>Line: 491</note>
       </trans-unit>
       <trans-unit id="35a596598c0477aea67abfa33b053697">
         <source>Successfully signed in to PrestaShop Addons.</source>
         <target>Successfully signed in to PrestaShop Addons.</target>
-        <note>Line: 484</note>
+        <note>Line: 501</note>
       </trans-unit>
       <trans-unit id="cf28eac3f0fdd7e3d2d705282948f2b9">
         <source>Error found : %1$s in country_module_list.xml file.</source>
         <target>Error found : %1$s in country_module_list.xml file.</target>
-        <note>Line: 2247</note>
+        <note>Line: 2264</note>
       </trans-unit>
       <trans-unit id="ce7d2844bfe39db351171add1d7348cd">
         <source>Error found : %1$s in must_have_module_list.xml file.</source>
         <target>Error found : %1$s in must_have_module_list.xml file.</target>
-        <note>Line: 2262</note>
+        <note>Line: 2279</note>
       </trans-unit>
     </body>
   </file>
@@ -402,22 +402,22 @@
       <trans-unit id="63bc456afcd9d4c6285718e34ee8fed9">
         <source>This module has already been transplanted to this hook.</source>
         <target>This module has already been transplanted to this hook.</target>
-        <note>Line: 86</note>
+        <note>Line: 94</note>
       </trans-unit>
       <trans-unit id="9ce4606635f2118f9d10d1f323f73fe2">
         <source>This module cannot be transplanted to this hook.</source>
         <target>This module cannot be transplanted to this hook.</target>
-        <note>Line: 88</note>
+        <note>Line: 96</note>
       </trans-unit>
       <trans-unit id="0ce2f4a4f40a2d23525b5b02bcfe611f">
         <source>An error occurred while transplanting the module to its hook.</source>
         <target>An error occurred while transplanting the module to its hook.</target>
-        <note>Line: 180</note>
+        <note>Line: 188</note>
       </trans-unit>
       <trans-unit id="b7d38f9dd64d92d6132e0c520a2d68a8">
         <source>Please select a module to unhook.</source>
         <target>Please select a module to unhook.</target>
-        <note>Line: 213</note>
+        <note>Line: 221</note>
       </trans-unit>
     </body>
   </file>
@@ -457,9 +457,9 @@ Comment: Confirm uninstall</note>
         <target>Error while loading file of module %module%. %error_message%</target>
         <note>Line: 252</note>
       </trans-unit>
-      <trans-unit id="36afe9cd7ae90209b47f81a9a6fc51fb">
-        <source>Parse error detected in main class of module %module%! %parse_error%</source>
-        <target>Parse error detected in main class of module %module%! %parse_error%</target>
+      <trans-unit id="97aaa428796fc523aae22098428c8a6f">
+        <source>Parse error detected in main class of module %module%: %parse_error%</source>
+        <target>Parse error detected in main class of module %module%: %parse_error%</target>
         <note>Line: 228</note>
       </trans-unit>
     </body>
@@ -614,36 +614,32 @@ Comment: Confirm uninstall</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Command/ModuleCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
         <source>Cannot %action% module %module%. %error_details%</source>
         <target>Cannot %action% module %module%. %error_details%</target>
-        <note>Line: 294</note>
+        <note>Line: 180</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Command/ModuleCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
         <source>%action% action on module %module% succeeded.</source>
         <target>%action% action on module %module% succeeded.</target>
-        <note>Line: 156</note>
+        <note>Line: 166</note>
       </trans-unit>
       <trans-unit id="6867740141667a3da88ac51e48ed1d9d">
         <source>Unknown module action. It must be one of these values: %actions%</source>
         <target>Unknown module action. It must be one of these values: %actions%</target>
-        <note>Line: 98</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="e92af04f3580fee9164214abd4b621a4">
         <source>Validation of configuration details failed:</source>
         <target>Validation of configuration details failed:</target>
-        <note>Line: 130</note>
+        <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="87167266fbdef818ec8508ea125915aa">
         <source>Configuration successfully applied.</source>
         <target>Configuration successfully applied.</target>
-        <note>Line: 142</note>
+        <note>Line: 152</note>
       </trans-unit>
     </body>
   </file>

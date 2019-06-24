@@ -107,7 +107,7 @@
 			<section class="dash_links panel">
 				<h3><i class="icon-link"></i> {l s="We stay by your side!" d='Admin.Dashboard.Feature'}</h3>
 					<dl>
-						<dt><a href="{$help_center_link}" class="_blank">{l s="Help Center" d='Admin.Dashboard.Feature'}</a></dt>
+						<dt><a href="{$help_center_link}" class="_blank">{l s="Help Center" d='Admin.Global'}</a></dt>
 						<dd>{l s="Documentation, support, experts, training... PrestaShop and all of its community are here to guide you" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
