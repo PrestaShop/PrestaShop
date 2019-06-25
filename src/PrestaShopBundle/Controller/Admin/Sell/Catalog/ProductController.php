@@ -25,6 +25,8 @@ class ProductController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
             'productGrid' => $this->presentGrid($productGrid),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminProducts'),
         ]);
     }
 
