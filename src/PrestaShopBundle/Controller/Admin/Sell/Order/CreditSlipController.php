@@ -109,13 +109,14 @@ class CreditSlipController extends FrameworkBundleAdminController
      *
      * @param int $creditSlipId
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function generatePdfAction($creditSlipId)
     {
         try {
             $creditSlipId = new CreditSlipId((int) $creditSlipId);
-            die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF([$creditSlipId]));
+
+            return new Response($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF([$creditSlipId]));
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
