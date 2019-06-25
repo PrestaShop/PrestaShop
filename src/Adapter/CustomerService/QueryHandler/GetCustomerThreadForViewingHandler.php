@@ -137,22 +137,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     /**
      * @param CustomerThreadId $customerThreadId
      *
-     * @return CustomerThreadId|null
-     */
-    private function getNextCustomerThreadId(CustomerThreadId $customerThreadId)
-    {
-        $nextCustomerThreadId = CustomerThread::getNextThread($customerThreadId->getValue());
-
-        if (!$nextCustomerThreadId) {
-            return null;
-        }
-
-        return new CustomerThreadId((int) $nextCustomerThreadId);
-    }
-
-    /**
-     * @param CustomerThreadId $customerThreadId
-     *
      * @return CustomerThread
      */
     private function getCustomerThread(CustomerThreadId $customerThreadId)
@@ -211,7 +195,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             foreach ($order_history as $history) {
                 $link_order = $this->context->link->getAdminLink('AdminOrders', true, [], [
                     'vieworder' => 1,
-                     'id_order' => (int) $order->id
+                    'id_order' => (int) $order->id
                 ]);
 
                 $content = sprintf(
@@ -291,7 +275,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
         } else {
             $actions[CustomerThreadStatus::PENDING_1] = [
                 'label' => $this->translator->trans('Disable pending status', [], 'Admin.Catalog.Feature'),
-                'value' => CustomerThreadStatus::PENDING_1,
+                'value' => CustomerThreadStatus::OPEN,
             ];
         }
 
@@ -307,7 +291,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
         } else {
             $actions[CustomerThreadStatus::PENDING_2] = [
                 'label' => $this->translator->trans('Disable pending status', [], 'Admin.Catalog.Feature'),
-                'value' => CustomerThreadStatus::PENDING_2,
+                'value' => CustomerThreadStatus::OPEN,
             ];
         }
 
