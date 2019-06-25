@@ -130,7 +130,7 @@ class CreditSlipController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function generatePdfByDateAction(Request $request)
     {
@@ -145,7 +145,7 @@ class CreditSlipController extends FrameworkBundleAdminController
                     new DateTime($dateRange['to'])
                 ));
 
-                die($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds));
+                return new Response($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds));
             } catch (CoreException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
