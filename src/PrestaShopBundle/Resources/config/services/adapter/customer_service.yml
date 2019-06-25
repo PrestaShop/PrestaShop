@@ -9,3 +9,11 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing'
+
+  prestashop.adapter.customer_service.query_handler.get_customer_service_signature_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServiceSignatureHandler'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature'

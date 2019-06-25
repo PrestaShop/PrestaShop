@@ -58,7 +58,7 @@
 
               </span>
 
-              {% if message.product_name %}
+              {% if message.product_name is defined %}
                 <a href="{{ message.product_link}}">
                   {{ 'Product'|trans({}, 'Admin.Global') }}
                   {{ message.product_name }}

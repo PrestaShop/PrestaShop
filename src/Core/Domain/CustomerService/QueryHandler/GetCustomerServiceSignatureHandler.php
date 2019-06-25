@@ -24,45 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 
-class ReplyToCustomerThreadCommand
+final class GetCustomerServiceSignatureHandler implements GetCustomerServiceSignatureHandlerInterface
 {
     /**
-     * @var CustomerThreadId
+     * @var ConfigurationInterface
      */
-    private $customerThreadId;
+    private $configuration;
 
     /**
-     * @var string
+     * @param ConfigurationInterface $configuration
      */
-    private $replyMessage;
-
-    /**
-     * @param int $customerThreadId
-     * @param string $replyMessage
-     */
-    public function __construct($customerThreadId, $replyMessage)
+    public function __construct(ConfigurationInterface $configuration)
     {
-        $this->customerThreadId = new CustomerThreadId($customerThreadId);
-        $this->replyMessage = $replyMessage;
+        $this->configuration = $configuration;
     }
 
     /**
-     * @return CustomerThreadId
+     * {@inheritdoc}
      */
-    public function getCustomerThreadId()
+    public function handle(GetCustomerServiceSignature $query)
     {
-        return $this->customerThreadId;
-    }
+        $signature = $this->configuration->get('PS_CUSTOMER_SERVICE_SIGNATURE');
 
-    /**
-     * @return string
-     */
-    public function getReplyMessage()
-    {
-        return $this->replyMessage;
+        return str_replace(
+            '\r\n', '\\n',
+            $signature[$query->getLanguageId()->getValue()]
+        );
     }
 }

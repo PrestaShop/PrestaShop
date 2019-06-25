@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInform
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use Product;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -83,6 +84,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
         return new CustomerThreadView(
             $query->getCustomerThreadId(),
+            new LanguageId((int) $customerThread->id_lang),
             $this->getAvailableActions($customerThread),
             $this->getCustomerInformation($customerThread),
             $this->getContactName($customerThread),

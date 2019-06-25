@@ -160,7 +160,7 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
                 $language->locale
             ),
             $params,
-            $command->getReplyMessage(),
+            $customerThread->email,
             null,
             $fromEmail,
             $fromName,

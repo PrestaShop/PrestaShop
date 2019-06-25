@@ -882,3 +882,11 @@ services:
           - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
+
+    form.type.customer_service.reply_to_customer_thread:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType'
+        public: true
+        arguments:
+          - '@translator'
+        tags:
+          - { name: form.type }
