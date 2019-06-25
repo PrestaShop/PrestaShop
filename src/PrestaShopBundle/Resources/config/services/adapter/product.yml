@@ -78,3 +78,8 @@ services:
           - '@prestashop.core.localization.locale.repository'
           - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
           - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+
+    prestashop.adapter.product.product_url_provider:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\ProductUrlProvider'
+        arguments:
+          - '@=service("prestashop.adapter.legacy.context").getContext().link'
