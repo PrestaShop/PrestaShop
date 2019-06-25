@@ -4456,8 +4456,8 @@ class ProductCore extends ObjectModel
         if (!empty($results)) {
             foreach ($results as $result) {
                 Db::getInstance()->update(
-                    'product_shop', 
-                    array('id_tax_rules_group' => (int) $result['id_tax_rules_group']), 
+                    'product_shop',
+                    array('id_tax_rules_group' => (int) $result['id_tax_rules_group']),
                     'id_product=' . (int) $id_product_new . ' AND id_shop = ' . (int) $result['id_shop']
                 );
             }
