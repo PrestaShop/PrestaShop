@@ -86,6 +86,10 @@
       {{ ps.form_group_row(catalogPriceRuleForm.reduction.value, {}, {
         'label': 'Reduction'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
+
+      {% block catalog_price_rule_form_rest %}
+        {{ form_rest(catalogPriceRuleForm) }}
+      {% endblock %}
     </div>
   </div>
   <div class="card-footer">
