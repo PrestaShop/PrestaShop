@@ -17,3 +17,13 @@ admin_customer_threads_reply:
   #    _legacy_link: AdminCustomerThreads
   requirements:
     customerThreadId: \d+
+
+admin_customer_threads_update_status:
+  path: /{customerThreadId}/update-status/{newStatus}
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/CustomerThread:updateStatus
+    _legacy_controller: AdminCustomerThreads
+  #    _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+

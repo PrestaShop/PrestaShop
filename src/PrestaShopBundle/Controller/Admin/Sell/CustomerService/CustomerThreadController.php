@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
@@ -101,6 +102,30 @@ class CustomerThreadController extends FrameworkBundleAdminController
         foreach ($replyToCustomerThreadForm->getErrors(true) as $error) {
             $this->addFlash('error', $error->getMessage());
         }
+
+        return $this->redirectToRoute('admin_customer_threads_view', [
+            'customerThreadId' => $customerThreadId,
+        ]);
+    }
+
+    /**
+     * Update customer thread status
+     *
+     * @param int $customerThreadId
+     * @param string $newStatus
+     *
+     * @return RedirectResponse
+     */
+    public function updateStatusAction($customerThreadId, $newStatus)
+    {
+        $this->getCommandBus()->handle(
+            new UpdateCustomerThreadStatusCommand((int) $customerThreadId, $newStatus)
+        );
+
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
 
         return $this->redirectToRoute('admin_customer_threads_view', [
             'customerThreadId' => $customerThreadId,
