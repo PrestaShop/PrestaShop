@@ -106,6 +106,9 @@ class CatalogPriceRuleType extends AbstractType
         $this->taxInclusionChoices = $taxInclusionChoices;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $dateTimeFormat = 'YYYY-MM-DD HH:mm:ss';

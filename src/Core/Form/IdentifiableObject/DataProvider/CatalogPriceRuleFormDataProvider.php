@@ -39,15 +39,14 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
     /**
      * @var CommandBusInterface
      */
-    private $bus;
+    private $queryBus;
 
     /**
-     * @param CommandBusInterface $bus
+     * @param CommandBusInterface $queryBus
      */
-    public function __construct(
-        CommandBusInterface $bus
-    ) {
-        $this->bus = $bus;
+    public function __construct(CommandBusInterface $queryBus)
+    {
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -56,7 +55,7 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
     public function getData($catalogPriceRuleId)
     {
         /** @var editableCatalogPriceRule $editableCatalogPriceRule */
-        $editableCatalogPriceRule = $this->bus->handle(new GetCatalogPriceRuleForEditing((int) $catalogPriceRuleId));
+        $editableCatalogPriceRule = $this->queryBus->handle(new GetCatalogPriceRuleForEditing((int) $catalogPriceRuleId));
 
         $price = $editableCatalogPriceRule->getPrice();
         $leaveInitialPrice = false;
