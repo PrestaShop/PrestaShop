@@ -183,8 +183,6 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('active' === $filterName) {
                 $qb->andWhere("p.active = :$filterName");
                 $qb->setParameter($filterName, $filterValue);
-
-                continue;
             }
         }
     }
