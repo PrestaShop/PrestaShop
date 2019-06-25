@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -89,10 +90,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('name'))
+                (new LinkColumn('name'))
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'name',
+                        'route' => 'admin_product_edit',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
                     ])
             )
             ->add(
@@ -110,18 +114,24 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('price_tax_excluded'))
+                (new LinkColumn('price_tax_excluded'))
                     ->setName($this->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'price_tax_excluded',
+                        'route' => 'admin_product_edit_price',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
                     ])
             )
             ->add(
-                (new DataColumn('price_tax_included'))
+                (new LinkColumn('price_tax_included'))
                     ->setName($this->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'price_tax_included',
                         'sortable' => false,
+                        'route' => 'admin_product_edit_price',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
                     ])
             )
             ->add(
@@ -188,10 +198,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         if ($this->isStockManagementEnabled) {
             $columns->addAfter(
                 'price_tax_included',
-                (new DataColumn('quantity'))
+                (new LinkColumn('quantity'))
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
+                        'route' => 'admin_product_edit_quantity',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
                     ])
             );
         }

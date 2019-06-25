@@ -42,7 +42,29 @@ class ProductController extends FrameworkBundleAdminController
 
     public function editAction($productId)
     {
-//        todo: implement
+        return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
+    }
+
+    public function editQuantityAction($productId)
+    {
+        $response = $this->redirectToRoute('admin_product_form', [
+            'id' => $productId,
+        ]);
+
+        return $response->setTargetUrl(
+            $response->getTargetUrl() . '#tab-step3'
+        );
+    }
+
+    public function editPriceAction($productId)
+    {
+        $response = $this->redirectToRoute('admin_product_form', [
+            'id' => $productId,
+        ]);
+
+        return $response->setTargetUrl(
+            $response->getTargetUrl() . '#tab-step2'
+        );
     }
 
     public function duplicateProductAction($productId)
