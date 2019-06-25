@@ -14,12 +14,41 @@ admin_products_search:
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.product
     redirectRoute: admin_products_index
 
+admin_product_edit:
+  path: /{productId}/edit
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:edit'
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_product_edit_quantity:
+  path: /{productId}/edit-quantity
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:editQuantity'
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_product_edit_price:
+  path: /{productId}/edit-price
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:editPrice'
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
 admin_products_toggle_status:
   path: /{productId}/toggle-status
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:toggle'
     _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
 
 admin_products_preview:
   path: /{productId}/preview
@@ -27,6 +56,8 @@ admin_products_preview:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:preview'
     _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
 
 admin_products_edit:
   path: /{productId}/edit
@@ -34,6 +65,8 @@ admin_products_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:edit'
     _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
 
 admin_products_duplicate:
   path: /{productId}/duplicate
@@ -41,6 +74,8 @@ admin_products_duplicate:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:duplicateProduct'
     _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
 
 admin_products_delete:
   path: /{productId}/delete
@@ -48,6 +83,8 @@ admin_products_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:delete'
     _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
 
 admin_products_export:
   path: /export
