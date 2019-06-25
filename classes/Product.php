@@ -4443,7 +4443,7 @@ class ProductCore extends ObjectModel
 
         return Db::getInstance()->insert('product_tag', $data);
     }
-    
+
     public static function duplicateTaxes($id_product_old, $id_product_new)
     {
         $query = new DbQuery();
