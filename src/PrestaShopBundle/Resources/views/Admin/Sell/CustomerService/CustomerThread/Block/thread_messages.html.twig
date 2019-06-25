@@ -27,6 +27,11 @@
   <div class="col">
     <ul class="list-unstyled ml-5">
       {% for message in customerThreadView.messages %}
+        {% if not loop.first %}
+          <li>
+            <hr class="mb-3 mt-0">
+          </li>
+        {% endif %}
         <li class="media">
           {% if message.type == 'customer' %}
             <i class="material-icons" style="font-size: 48px;">
@@ -60,7 +65,7 @@
                 </a>
               {% endif %}
             </h4>
-            <p style="border-left: 2px solid #ccc;" class="pl-2">{{ message.message|raw }}</p>
+            <p style="border-left: 2px solid #ccc;" class="pl-2">{{ message.message|nl2br }}</p>
           </div>
         </li>
       {% endfor %}

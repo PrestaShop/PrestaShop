@@ -52,8 +52,10 @@
           {% endif %}
         </h2>
         <p>
-          {{ 'To:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          <span class="badge badge-primary rounded">{{ customerThreadView.contactName }}</span>
+          {% if customerThreadView.contactName is not empty %}
+            {{ 'To:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            <span class="badge badge-primary rounded">{{ customerThreadView.contactName }}</span>
+          {% endif %}
         </p>
       </div>
 
@@ -74,7 +76,10 @@
     {% endif %}
 
     <p class="text-muted">
-      {{ 'Customer since: %s'|trans({'%s': customerThreadView.customerInformation.customerSinceDate}, 'Admin.Orderscustomers.Feature') }}
+      {{ 'Customer since: %s'|trans(
+        {'%s': customerThreadView.customerInformation.customerSinceDate},
+        'Admin.Orderscustomers.Feature'
+      ) }}
     </p>
   </div>
 </div>
