@@ -2,6 +2,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +36,18 @@ class ProductController extends FrameworkBundleAdminController
 
     public function toggleAction($productId)
     {
-//        todo: implement
+        try {
+            $this->getCommandBus()->handle(new ToggleProductStatusCommand((int) $productId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_products_index');
     }
 
     /**
@@ -106,5 +121,22 @@ class ProductController extends FrameworkBundleAdminController
     public function bulkDelete()
     {
 //        todo: implement
+    }
+
+    /**
+     * Gets error message mapping.
+     */
+    private function getErrorMessages()
+    {
+        return [
+            ProductNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotToggleProductException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            )
+        ];
     }
 }
