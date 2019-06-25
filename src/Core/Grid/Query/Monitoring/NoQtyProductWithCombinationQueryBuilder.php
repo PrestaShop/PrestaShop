@@ -54,7 +54,7 @@ final class NoQtyProductWithCombinationQueryBuilder extends AbstractProductQuery
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria);
-        $qb->select('COUNT(p.id_product)');
+        $qb->select('COUNT(DISTINCT p.id_product)');
 
         return $qb;
     }
