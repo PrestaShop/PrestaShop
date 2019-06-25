@@ -1,4 +1,5 @@
 @reset-database-before-feature
+#./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s tax
 Feature: Manage tax
   As a employee
   I must be able to correctly add, edit and delete tax
