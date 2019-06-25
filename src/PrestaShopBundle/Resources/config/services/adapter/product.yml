@@ -83,3 +83,9 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\ProductUrlProvider'
         arguments:
           - '@=service("prestashop.adapter.legacy.context").getContext().link'
+
+    prestashop.adapter.product.command_handler.toggle_product_status_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\CommandHandler\ToggleProductStatusHandler'
+        tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand
