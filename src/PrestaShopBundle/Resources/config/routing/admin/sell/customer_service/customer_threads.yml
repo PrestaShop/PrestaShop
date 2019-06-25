@@ -7,3 +7,13 @@ admin_customer_threads_view:
 #    _legacy_link: AdminCustomerThreads
   requirements:
     customerThreadId: \d+
+
+admin_customer_threads_reply:
+  path: /{customerThreadId}/reply
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/CustomerThread:reply
+    _legacy_controller: AdminCustomerThreads
+  #    _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
