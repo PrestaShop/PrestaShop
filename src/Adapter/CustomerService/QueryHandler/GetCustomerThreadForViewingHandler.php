@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNo
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerThreadForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadTimeline;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadTimelineItem;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
@@ -80,7 +82,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
         $this->context->cookie->{'customer_threadFilter_cl!id_contact'} = $customerThread->id_contact;
 
-        $nextCustomerThreadId = $this->getNextCustomerThreadId($query->getCustomerThreadId());
         $messages = $this->getCustomerThreadMessages($query->getCustomerThreadId());
 
         return new CustomerThreadView(
@@ -178,7 +179,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
             if (!$message['private']) {
                 $content .= sprintf(
-                    '%s <span class="badge">%s</span><br/>',
+                    '%s <span class="badge badge-primary rounded">%s</span><br/>',
                     $this->translator->trans('Message to: ', [], 'Admin.Catalog.Feature'),
                     !$message['id_employee'] ? $message['subject'] : $message['customer_name']
                 );
@@ -186,7 +187,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
             if (Validate::isLoadedObject($product)) {
                 $content .= sprintf(
-                    '<br/>%s<span class="label label-info">%s</span><br/><br/>',
+                    '<br/>%s<span class="badge badge-primary-hover rounded">%s</span><br/><br/>',
                     $this->translator->trans('Product: ', [], 'Admin.Catalog.Feature'),
                     $product->name
                 );
@@ -197,7 +198,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             $timeline[$message['date_add']][] = [
                 'arrow' => 'left',
                 'background_color' => '',
-                'icon' => 'icon-envelope',
+                'icon' => 'email',
                 'content' => $content,
                 'date' => $message['date_add'],
             ];
@@ -213,15 +214,24 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                      'id_order' => (int) $order->id
                 ]);
 
-                $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->translator->trans('Order', [], 'Admin.Global') . ' #' . (int) $order->id . '</a><br/><br/>';
+                $content = sprintf(
+                    '<a class="badge badge-primary rounded" target="_blank" href="%s">%s #%d</a><br/><br/>',
+                    Tools::safeOutput($link_order),
+                    $this->translator->trans('Order', [], 'Admin.Global'),
+                    $order->id
+                );
 
-                $content .= '<span>' . $this->translator->trans('Status:', [], 'Admin.Catalog.Feature') . ' ' . $history['ostate_name'] . '</span>';
+                $content .= sprintf(
+                    '<span>%s %s</span>',
+                    $this->translator->trans('Status:', [], 'Admin.Catalog.Feature'),
+                    $history['ostate_name']
+                );
 
                 $timeline[$history['date_add']][] = [
                     'arrow' => 'right',
                     'alt' => true,
                     'background_color' => $history['color'],
-                    'icon' => 'icon-credit-card',
+                    'icon' => 'credit_card',
                     'content' => $content,
                     'date' => $history['date_add'],
                     'see_more_link' => $link_order,
@@ -231,7 +241,21 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
         krsort($timeline);
 
-        return $timeline;
+        $timelineItems = [];
+
+        foreach ($timeline as $items) {
+            foreach ($items as $item) {
+                $timelineItems[] = new CustomerThreadTimelineItem(
+                    $item['content'],
+                    $item['icon'],
+                    $item['arrow'],
+                    $item['date'],
+                    isset($item['background_color']) ? $item['background_color'] : null
+                );
+            }
+        }
+
+        return new CustomerThreadTimeline($timelineItems);
     }
 
     /**

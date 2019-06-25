@@ -62,7 +62,7 @@ class CustomerThreadView
     private $languageId;
 
     /**
-     * @var array
+     * @var CustomerThreadTimeline
      */
     private $timeline;
 
@@ -73,7 +73,7 @@ class CustomerThreadView
         CustomerInformation $customerInformation,
         $contactName,
         array $messages,
-        array $timeline
+        CustomerThreadTimeline $timeline
     ) {
         $this->customerThreadId = $customerThreadId;
         $this->actions = $actions;
@@ -133,7 +133,7 @@ class CustomerThreadView
     }
 
     /**
-     * @return array
+     * @return CustomerThreadTimeline
      */
     public function getTimeline()
     {
