@@ -27,7 +27,6 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Configuration;
 use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
@@ -37,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoun
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
@@ -59,8 +59,8 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 
     public function __construct()
     {
-        $this->defaultLangId = Configuration::get('PS_LANG_DEFAULT');
-        $this->defaultShopId = Configuration::get('PS_SHOP_DEFAULT');
+        $this->defaultLangId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT');
+        $this->defaultShopId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_DEFAULT');
     }
 
     /**
