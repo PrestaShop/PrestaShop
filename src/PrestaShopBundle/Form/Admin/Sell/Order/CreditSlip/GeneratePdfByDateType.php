@@ -88,6 +88,9 @@ final class GeneratePdfByDateType extends CommonAbstractType
             ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
