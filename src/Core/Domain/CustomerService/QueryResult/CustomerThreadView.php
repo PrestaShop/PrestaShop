@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 class CustomerThreadView
 {
@@ -55,8 +56,14 @@ class CustomerThreadView
      */
     private $messages;
 
+    /**
+     * @var LanguageId
+     */
+    private $languageId;
+
     public function __construct(
         CustomerThreadId $customerThreadId,
+        LanguageId $languageId,
         array $actions,
         CustomerInformation $customerInformation,
         $contactName,
@@ -67,6 +74,7 @@ class CustomerThreadView
         $this->customerInformation = $customerInformation;
         $this->contactName = $contactName;
         $this->messages = $messages;
+        $this->languageId = $languageId;
     }
 
     /**
@@ -107,5 +115,13 @@ class CustomerThreadView
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId()
+    {
+        return $this->languageId;
     }
 }

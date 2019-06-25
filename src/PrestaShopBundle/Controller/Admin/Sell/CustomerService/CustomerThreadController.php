@@ -26,9 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CustomerThreadController extends FrameworkBundleAdminController
@@ -43,10 +48,60 @@ class CustomerThreadController extends FrameworkBundleAdminController
         /** @var CustomerThreadView $customerThreadView */
         $customerThreadView = $this->getQueryBus()->handle(new GetCustomerThreadForViewing((int) $customerThreadId));
 
-        dump($customerThreadView);
+        /** @var string $customerServiceSignature */
+        $customerServiceSignature = $this->getQueryBus()->handle(
+            new GetCustomerServiceSignature($customerThreadView->getLanguageId()->getValue())
+        );
+
+        $replyToCustomerThreadForm = $this->createForm(ReplyToCustomerThreadType::class, [
+            'reply_message' => $customerServiceSignature,
+        ]);
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/view.html.twig', [
             'customerThreadView' => $customerThreadView,
+            'employeeAvatarUrl' => $this->getContext()->employee->getImage(),
+            'customerServiceSignature' => $customerServiceSignature,
+            'replyToCustomerThreadForm' => $replyToCustomerThreadForm->createView(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $customerThreadId
+     *
+     * @return RedirectResponse
+     */
+    public function replyAction(Request $request, $customerThreadId)
+    {
+        $replyToCustomerThreadForm = $this->createForm(ReplyToCustomerThreadType::class);
+        $replyToCustomerThreadForm->handleRequest($request);
+
+        if ($replyToCustomerThreadForm->isSubmitted() && $replyToCustomerThreadForm->isValid()) {
+            $data = $replyToCustomerThreadForm->getData();
+
+            $this->getCommandBus()->handle(
+                new ReplyToCustomerThreadCommand((int) $customerThreadId, $data['reply_message'])
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans(
+                    'The message was successfully sent to the customer.',
+                    'Admin.Orderscustomers.Notification'
+                )
+            );
+
+            return $this->redirectToRoute('admin_customer_threads_view', [
+                'customerThreadId' => $customerThreadId,
+            ]);
+        }
+
+        foreach ($replyToCustomerThreadForm->getErrors(true) as $error) {
+            $this->addFlash('error', $error->getMessage());
+        }
+
+        return $this->redirectToRoute('admin_customer_threads_view', [
+            'customerThreadId' => $customerThreadId,
         ]);
     }
 }

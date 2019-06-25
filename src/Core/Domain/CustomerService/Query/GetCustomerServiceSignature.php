@@ -24,45 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
-class ReplyToCustomerThreadCommand
+class GetCustomerServiceSignature
 {
     /**
-     * @var CustomerThreadId
+     * @var LanguageId
      */
-    private $customerThreadId;
+    private $languageId;
 
     /**
-     * @var string
+     * @param int $languageId
      */
-    private $replyMessage;
-
-    /**
-     * @param int $customerThreadId
-     * @param string $replyMessage
-     */
-    public function __construct($customerThreadId, $replyMessage)
+    public function __construct($languageId)
     {
-        $this->customerThreadId = new CustomerThreadId($customerThreadId);
-        $this->replyMessage = $replyMessage;
+        $this->languageId = new LanguageId($languageId);
     }
 
     /**
-     * @return CustomerThreadId
+     * @return LanguageId
      */
-    public function getCustomerThreadId()
+    public function getLanguageId()
     {
-        return $this->customerThreadId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReplyMessage()
-    {
-        return $this->replyMessage;
+        return $this->languageId;
     }
 }

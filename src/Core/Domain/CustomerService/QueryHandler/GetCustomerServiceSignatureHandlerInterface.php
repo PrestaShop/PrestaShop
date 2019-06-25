@@ -24,45 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 
-class ReplyToCustomerThreadCommand
+interface GetCustomerServiceSignatureHandlerInterface
 {
     /**
-     * @var CustomerThreadId
-     */
-    private $customerThreadId;
-
-    /**
-     * @var string
-     */
-    private $replyMessage;
-
-    /**
-     * @param int $customerThreadId
-     * @param string $replyMessage
-     */
-    public function __construct($customerThreadId, $replyMessage)
-    {
-        $this->customerThreadId = new CustomerThreadId($customerThreadId);
-        $this->replyMessage = $replyMessage;
-    }
-
-    /**
-     * @return CustomerThreadId
-     */
-    public function getCustomerThreadId()
-    {
-        return $this->customerThreadId;
-    }
-
-    /**
+     * @param GetCustomerServiceSignature $query
+     *
      * @return string
      */
-    public function getReplyMessage()
-    {
-        return $this->replyMessage;
-    }
+    public function handle(GetCustomerServiceSignature $query);
 }
