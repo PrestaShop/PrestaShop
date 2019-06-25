@@ -101,6 +101,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\WebserviceKeyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext
+
         tax:
             paths:
                 features: Features/Scenario/Tax
@@ -169,3 +170,10 @@ default:
               - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+
+        product:
+            paths:
+                features: Features/Scenario/Product
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
