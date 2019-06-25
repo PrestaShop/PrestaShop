@@ -1,40 +1,45 @@
 @reset-database-before-feature
+#./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s manufacturer
 Feature: Manufacturer management
   As a employee
   I must be able to correctly add, edit and delete manufacturer
 
   Scenario: Adding new manufacturer
     When I add new manufacturer "manufacturer-3" with following properties:
-      | name             | test-name                         |
-      | short_description| desc example for testing purposes |
-      | description      |                                   |
-      | meta_title       | title test                        |
-      | meta_description |                                   |
-      | meta_keywords    | these, are, some, keywords, foo   |
-      | enabled          | 0                                 |
-    Then manufacturer "manufacturer-3" name should be "test-name"
-    And manufacturer "manufacturer-3" "short_description" in default language should be "desc example for testing purposes"
-    And manufacturer "manufacturer-3" "description" field in default language should be empty
-    And manufacturer "manufacturer-3" "meta_title" in default language should be "title test"
+      | name             | best-shoes                         |
+      | short_description| Makes best shoes in Europe         |
+      | description      | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare.|
+      | meta_title       | Perfect quality shoes              |
+      | meta_description |                                    |
+      | meta_keywords    | Boots, shoes, slippers             |
+      | enabled          | 1                                  |
+    Then manufacturer "manufacturer-3" name should be "best-shoes"
+    And manufacturer "manufacturer-3" "short_description" in default language should be "Makes best shoes in Europe"
+    And manufacturer "manufacturer-3" "description" in default language should be "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare."
+    And manufacturer "manufacturer-3" "meta_title" in default language should be "Perfect quality shoes"
     And manufacturer "manufacturer-3" "meta_description" field in default language should be empty
-    And manufacturer "manufacturer-3" "meta_keywords" in default language should be "these, are, some, keywords, foo"
-    And manufacturer "manufacturer-3" should be disabled
+    And manufacturer "manufacturer-3" "meta_keywords" in default language should be "Boots, shoes, slippers"
+    And manufacturer "manufacturer-3" should be enabled
+
+  Scenario: Adding manufacturer with empty name should not be allowed
+    When I add new manufacturer "manufacturer-4" with empty name
+    Then I should get error message 'Manufacturer contains invalid field values'
 
   Scenario: Editing manufacturer
     When I edit manufacturer "manufacturer-3" with following properties:
-      | name             | test-name-edited2                                  |
-      | short_description| edited description testing                         |
-      | meta_description | meta description field filled after edit action    |
-      | meta_keywords    |                                                    |
-      | enabled          | 1                                                  |
-      | shop_association | 1,2,3                                              |
-    Then manufacturer "manufacturer-3" name should be "test-name-edited2"
-    And manufacturer "manufacturer-3" "short_description" in default language should be "edited description testing"
+      | name             | worst-shoes                                |
+      | short_description| Worst slippers in EU                       |
+      | meta_title       | Worst quality shoes                        |
+      | description      |                                            |
+      | meta_description | You'd better walk bare foot                |
+      | enabled          | 0                                          |
+    Then manufacturer "manufacturer-3" name should be "worst-shoes"
+    And manufacturer "manufacturer-3" "short_description" in default language should be "Worst slippers in EU"
     And manufacturer "manufacturer-3" "description" field in default language should be empty
-    And manufacturer "manufacturer-3" "meta_title" in default language should be "title test"
-    And manufacturer "manufacturer-3" "meta_description" in default language should be "meta description field filled after edit action"
-    And manufacturer "manufacturer-3" "meta_keywords" field in default language should be empty
-    And manufacturer "manufacturer-3" should be enabled
+    And manufacturer "manufacturer-3" "meta_title" in default language should be "Worst quality shoes"
+    And manufacturer "manufacturer-3" "meta_description" in default language should be "You'd better walk bare foot"
+    And manufacturer "manufacturer-3" "meta_keywords" in default language should be "Boots, shoes, slippers"
+    And manufacturer "manufacturer-3" should be disabled
 
   Scenario: Deleting manufacturer
     Given manufacturer with id "3" exists

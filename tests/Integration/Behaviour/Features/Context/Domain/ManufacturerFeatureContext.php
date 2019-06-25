@@ -32,6 +32,7 @@ use Manufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
@@ -51,6 +52,11 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      */
     private $defaultShopId;
 
+    /**
+     * Used for storing latest thrown exception
+     */
+    private $latestException;
+
     public function __construct()
     {
         $this->defaultLangId = Configuration::get('PS_LANG_DEFAULT');
@@ -64,23 +70,21 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $node->getRowsHash();
 
-        $command = new AddManufacturerCommand(
-            $data['name'],
-            $data['enabled'],
-            [$this->defaultLangId => $data['short_description']],
-            [$this->defaultLangId => $data['description']],
-            [$this->defaultLangId => $data['meta_title']],
-            [$this->defaultLangId => $data['meta_description']],
-            [$this->defaultLangId => $data['meta_keywords']],
-            [$this->defaultShopId]
-        );
+        $this->createManufacturerUsingCommand($reference, $data);
+    }
 
-        /**
-         * @var ManufacturerId
-         */
-        $manufacturerId = $this->getCommandBus()->handle($command);
-
-        SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId->getValue()));
+    /**
+     * @When I add new manufacturer :manufacturer with empty name
+     */
+    public function createManufacturerWithEmptyName($reference)
+    {
+        $data = $this->getValidDataForManufacturerCreation();
+        try {
+            $data['name'] = '';
+            $this->createManufacturerUsingCommand($reference, $data);
+        } catch (ManufacturerException $e) {
+            $this->latestException = $e;
+        }
     }
 
     /**
@@ -189,14 +193,14 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
-        $expectedStatus === 'enabled' ? $expectedStatusBool = true : $expectedStatusBool = false;
-        $actualStatusBool = (bool) $manufacturer->active;
+        $expectedStatus === 'enabled' ? $isEnabled = true : $isEnabled = false;
+        $actualStatus = (bool) $manufacturer->active;
 
-        if ($actualStatusBool !== $expectedStatusBool) {
+        if ($actualStatus !== $isEnabled) {
             throw new RuntimeException(sprintf(
                 'Manufacturer "%s" is %s, but it was expected to be %s',
                 $reference,
-                $actualStatusBool ? 'enabled' : 'disabled',
+                $actualStatus ? 'enabled' : 'disabled',
                 $expectedStatus
             ));
         }
@@ -223,5 +227,60 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
             throw new NoExceptionAlthoughExpectedException(sprintf('Manufacturer with id %s exists', $id));
         } catch (ManufacturerNotFoundException $e) {
         }
+    }
+
+    /**
+     * @Then /^I should get error message '(.+)'$/
+     */
+    public function assertExceptionWasThrown($message)
+    {
+        if ($this->latestException instanceof \Exception) {
+            if ($this->latestException->getMessage() !== $message) {
+                throw new RuntimeException(sprintf(
+                        'Got error message "%s", but expected %s', $this->latestException->getMessage(), $message)
+                );
+            }
+
+            return true;
+        }
+        throw new NoExceptionAlthoughExpectedException('No exception was thrown in latest result');
+    }
+
+    /**
+     * @param $reference
+     * @param array $data
+     */
+    private function createManufacturerUsingCommand($reference, array $data)
+    {
+        $command = new AddManufacturerCommand(
+            $data['name'],
+            $data['enabled'],
+            [$this->defaultLangId => $data['short_description']],
+            [$this->defaultLangId => $data['description']],
+            [$this->defaultLangId => $data['meta_title']],
+            [$this->defaultLangId => $data['meta_description']],
+            [$this->defaultLangId => $data['meta_keywords']],
+            [$this->defaultShopId]
+        );
+
+        /**
+         * @var ManufacturerId
+         */
+        $manufacturerId = $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId->getValue()));
+    }
+
+    private function getValidDataForManufacturerCreation()
+    {
+        return [
+            'name' => 'best-shoes',
+            'short_description' => 'Makes best shoes in Europe',
+            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare.',
+            'meta_title' => 'Perfect quality shoes',
+            'meta_description' => '',
+            'meta_keywords' => 'Boots, shoes, slippers',
+            'enabled' => 1,
+        ];
     }
 }
