@@ -3,6 +3,7 @@ GitHub contributors:
 - (d)oekia
 - 0kph
 - 123monsite-regis
+- 202 ecommerce
 - 1RV34
 - Abdelaziz JRIBI
 - Adam
@@ -482,6 +483,7 @@ GitHub contributors:
 - Oleg Rumyancev
 - Olivier Bonvalet
 - Olivier Monaco
+- OneDotIT
 - Oskar Andersson
 - Otto Nascarella
 - Pablo Borowicz
