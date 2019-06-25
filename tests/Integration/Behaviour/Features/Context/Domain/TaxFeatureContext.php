@@ -211,7 +211,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         if ($this->latestException instanceof Exception) {
             if ($this->latestException->getMessage() !== $message) {
                 throw new RuntimeException(sprintf(
-                        'Got error message "%s", but expected %s', $this->latestException->getMessage(), $message)
+                        'Got error message "%s", but expected "%s"', $this->latestException->getMessage(), $message)
                 );
             }
 
