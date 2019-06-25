@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 use Doctrine\DBAL\Driver\Connection;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 
 final class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadStatusHandlerInterface
 {

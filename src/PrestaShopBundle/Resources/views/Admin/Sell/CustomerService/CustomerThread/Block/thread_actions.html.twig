@@ -26,7 +26,10 @@
 <div class="card">
   <div class="card-body">
     {% for action in customerThreadView.actions %}
-      <form action="" class="d-inline">
+      <form action="{{ path('admin_customer_threads_update_status', {
+        'customerThreadId': customerThreadView.customerThreadId.value,
+        'newStatus': action.value
+      }) }}" method="post" class="d-inline">
         <button class="btn btn-outline-secondary">{{ action.label }}</button>
       </form>
     {% endfor %}
