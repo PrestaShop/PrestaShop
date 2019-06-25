@@ -61,13 +61,19 @@ class CustomerThreadView
      */
     private $languageId;
 
+    /**
+     * @var array
+     */
+    private $timeline;
+
     public function __construct(
         CustomerThreadId $customerThreadId,
         LanguageId $languageId,
         array $actions,
         CustomerInformation $customerInformation,
         $contactName,
-        array $messages
+        array $messages,
+        array $timeline
     ) {
         $this->customerThreadId = $customerThreadId;
         $this->actions = $actions;
@@ -75,6 +81,7 @@ class CustomerThreadView
         $this->contactName = $contactName;
         $this->messages = $messages;
         $this->languageId = $languageId;
+        $this->timeline = $timeline;
     }
 
     /**
@@ -123,5 +130,13 @@ class CustomerThreadView
     public function getLanguageId()
     {
         return $this->languageId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTimeline()
+    {
+        return $this->timeline;
     }
 }

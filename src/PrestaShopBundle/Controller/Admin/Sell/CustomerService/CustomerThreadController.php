@@ -57,6 +57,8 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'reply_message' => $customerServiceSignature,
         ]);
 
+        dump($customerThreadView);
+
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/view.html.twig', [
             'customerThreadView' => $customerThreadView,
             'employeeAvatarUrl' => $this->getContext()->employee->getImage(),

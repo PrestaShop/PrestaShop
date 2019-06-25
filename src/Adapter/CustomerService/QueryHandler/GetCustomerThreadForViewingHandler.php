@@ -81,6 +81,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
         $this->context->cookie->{'customer_threadFilter_cl!id_contact'} = $customerThread->id_contact;
 
         $nextCustomerThreadId = $this->getNextCustomerThreadId($query->getCustomerThreadId());
+        $messages = $this->getCustomerThreadMessages($query->getCustomerThreadId());
 
         return new CustomerThreadView(
             $query->getCustomerThreadId(),
@@ -88,7 +89,8 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             $this->getAvailableActions($customerThread),
             $this->getCustomerInformation($customerThread),
             $this->getContactName($customerThread),
-            $this->getCustomerThreadMessages($query->getCustomerThreadId())
+            $messages,
+            $this->getTimeline($messages, $customerThread)
         );
     }
 
@@ -165,7 +167,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
         return $customerThread;
     }
 
-    public function getTimeline(array $messages, $orderId)
+    private function getTimeline(array $messages, CustomerThread $customerThread)
     {
         $timeline = [];
 
@@ -201,7 +203,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             ];
         }
 
-        $order = new Order((int) $orderId);
+        $order = new Order((int) $customerThread->id_order);
 
         if (Validate::isLoadedObject($order)) {
             $order_history = $order->getHistory($this->context->language->id);
