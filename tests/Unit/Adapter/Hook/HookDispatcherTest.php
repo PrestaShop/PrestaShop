@@ -53,8 +53,8 @@ class HookDispatcherTest extends TestCase
 
         $this->hookDispatcherMock
             ->expects($this->once())
-            ->with([$lowerCasedEventName], $eventName, $this->hookEventMock)
             ->method('doDispatch')
+            ->with([$lowerCasedEventName], $eventName, $this->hookEventMock)
         ;
 
         $this->hookDispatcherMock->dispatch($eventName, $this->hookEventMock);
