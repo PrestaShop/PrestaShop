@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use RuntimeException;
 use Tax;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
@@ -58,7 +59,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
 
     public function __construct()
     {
-        $this->defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+        $this->defaultLangId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT');
     }
 
     /**
