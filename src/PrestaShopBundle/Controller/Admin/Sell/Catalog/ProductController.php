@@ -35,9 +35,20 @@ class ProductController extends FrameworkBundleAdminController
 //        todo: implement
     }
 
+    /**
+     * Previews product in front page.
+     *
+     * @param $productId
+     *
+     * @todo: open in new window
+     *
+     * @return Response
+     */
     public function previewAction($productId)
     {
-//        todo: implement
+        return $this->redirect(
+            $this->get('prestashop.adapter.product.product_url_provider')->getUrl($productId)
+        );
     }
 
     public function editAction($productId)
