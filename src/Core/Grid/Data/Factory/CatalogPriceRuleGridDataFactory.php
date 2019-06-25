@@ -87,7 +87,7 @@ final class CatalogPriceRuleGridDataFactory implements GridDataFactoryInterface
                     $value = '--';
                 }
             }
-
+            //@todo: take amount from Reduction VO. PR #13716
             $priceRule['reduction_type'] === 'amount' ?
                 $priceRule['reduction_type'] = $this->translator->trans('Amount', [], 'Admin.Global') :
                 $priceRule['reduction_type'] = $this->translator->trans('Percentage', [], 'Admin.Global');
