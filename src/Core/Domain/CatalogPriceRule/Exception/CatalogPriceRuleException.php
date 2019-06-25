@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception;
 
-use DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
  * Base exception for CatalogPriceRule subdomain
