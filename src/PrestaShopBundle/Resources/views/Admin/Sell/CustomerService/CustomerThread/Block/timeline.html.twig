@@ -29,110 +29,30 @@
   </h3>
   <div class="card-body">
     <div class="timeline">
-      <article class="timeline-item">
-        <div class="timeline-caption">
-          <div class="timeline-panel arrow arrow-left">
-            <span class="timeline-icon">
-              <i class="material-icons">person</i>
-            </span>
+      {% for timelineItem in customerThreadView.timeline.timelineItems %}
+        <article class="timeline-item {% if timelineItem.arrow == 'right' %}alt{% endif %}">
+          <div class="timeline-caption">
+            <div class="timeline-panel arrow arrow-{{ timelineItem.arrow }}">
+              <span class="timeline-icon"
+                    {% if timelineItem.color %}style="background-color: {{ timelineItem.color }}"{% endif %}
+              >
+                <i class="material-icons text-white">{{ timelineItem.icon }}</i>
+              </span>
 
-            <span class="timeline-date">
-              06/18/2019 - 08:44
-            </span>
+              <span class="timeline-date">
+                <i class="material-icons" style="font-size: 16px;">calendar_today</i>
+                {{ format_date(timelineItem.date) }}
+                <i class="material-icons" style="font-size: 16px;">access_time</i>
+                {{ timelineItem.date|date('H:i') }}
+              </span>
 
-            <span>
-              Message to:  <span class="badge"></span>
-              <br>
-
-              <br>
-
-              Product: <span class="label label-info">The adventure begins Framed poster</span>
-
-              <br>
-
-              <br>wtf
-            </span>
+              <span>
+                {{ timelineItem.content|raw|nl2br }}
+              </span>
+            </div>
           </div>
-        </div>
-      </article>
-      <article class="timeline-item">
-        <div class="timeline-caption">
-          <div class="timeline-panel arrow arrow-left">
-            <span class="timeline-icon">
-              <i class="material-icons">person</i>
-            </span>
-
-            <span class="timeline-date">
-              06/18/2019 - 08:44
-            </span>
-
-            <span>
-              Message to:  <span class="badge"></span>
-              <br>
-
-              <br>
-
-              Product: <span class="label label-info">The adventure begins Framed poster</span>
-
-              <br>
-
-              <br>wtf
-            </span>
-          </div>
-        </div>
-      </article>
-      <article class="timeline-item alt">
-        <div class="timeline-caption">
-          <div class="timeline-panel arrow arrow-right">
-            <span class="timeline-icon">
-              <i class="material-icons">person</i>
-            </span>
-
-            <span class="timeline-date">
-              06/18/2019 - 08:44
-            </span>
-
-            <span>
-              Message to:  <span class="badge"></span>
-              <br>
-
-              <br>
-
-              Product: <span class="label label-info">The adventure begins Framed poster</span>
-
-              <br>
-
-              <br>wtf
-            </span>
-          </div>
-        </div>
-      </article>
-      <article class="timeline-item">
-        <div class="timeline-caption">
-          <div class="timeline-panel arrow arrow-left">
-            <span class="timeline-icon">
-              <i class="material-icons">person</i>
-            </span>
-
-            <span class="timeline-date">
-              06/18/2019 - 08:44
-            </span>
-
-            <span>
-              Message to:  <span class="badge"></span>
-              <br>
-
-              <br>
-
-              Product: <span class="label label-info">The adventure begins Framed poster</span>
-
-              <br>
-
-              <br>wtf
-            </span>
-          </div>
-        </div>
-      </article>
+        </article>
+      {% endfor %}
     </div>
   </div>
 </div>

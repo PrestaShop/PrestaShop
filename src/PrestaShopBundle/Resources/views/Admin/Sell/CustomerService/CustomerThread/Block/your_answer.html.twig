@@ -45,6 +45,10 @@
           {{ form_widget(replyToCustomerThreadForm.reply_message, {'attr': {'rows': 5}}) }}
         </div>
       </div>
+
+      <div class="d-none">
+        {{ form_widget(replyToCustomerThreadForm._token) }}
+      </div>
     </div>
 
     <div class="card-footer">
