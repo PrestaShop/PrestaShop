@@ -54,8 +54,13 @@
                 {{ message.employee_name }}
               {% endif %}
 
-              <span class="text-muted font-weight-normal">
-
+              <span class="text-muted">
+                <i class="material-icons text-muted" style="font-size: 16px;">calendar_today</i>
+                -
+                {{ format_date(message.date_add) }}
+                <i class="material-icons text-muted" style="font-size: 16px;">access_time</i>
+                -
+                {{ message.date_add|date('H:i') }}
               </span>
 
               {% if message.product_name is defined %}
