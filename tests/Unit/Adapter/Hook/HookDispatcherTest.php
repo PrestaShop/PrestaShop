@@ -48,11 +48,12 @@ class HookDispatcherTest extends TestCase
         $this->hookDispatcherMock
             ->method('getListeners')
             ->with($lowerCasedEventName)
-            ->willReturn($lowerCasedEventName)
+            ->willReturn([$lowerCasedEventName])
         ;
 
         $this->hookDispatcherMock
             ->expects($this->once())
+            ->with([$lowerCasedEventName], $eventName, $this->hookEventMock)
             ->method('doDispatch')
         ;
 
