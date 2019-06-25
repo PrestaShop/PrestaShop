@@ -554,7 +554,13 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function prepareProductArrayForAjaxReturn(array $products)
     {
         $filter = $this->get('prestashop.core.filter.front_end_object.search_result_product_collection');
-
+        $filterQueue = $filter->getQueue();
+		foreach ($filterQueue as $productSearchFilter) {
+			if ($productSearchFilter instanceof PrestaShop\PrestaShop\Core\Filter\FrontEndObject\SearchResultProductFilter) {
+				$productSearchFilter->whitelist(['category_name','manufacturer_name']);
+			}
+		}
+        
         return $filter->filter($products);
     }
 
