@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,18 +22,30 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% block carrier_form_steps_navigation %}
-  <ul class="d-flex justify-content-between">
-    <li href="" class="d-inline btn btn-block btn-primary js-step-switch" data-step="1">
-      {{ 'General settings'|trans({}, 'Admin.Global') }}
-    </li>
-    <li href="" class="d-inline btn btn-block btn-outline-info js-step-switch" data-step="2">
-      {{ 'MultiStore'|trans({}, 'Admin.Global') }}
-    </li>
-    <li href="" class="d-inline btn btn-block btn-outline-info js-step-switch" data-step="3">
-      {{ 'Shipping locations and costs'|trans({}, 'Admin.Global') }}
-    </li>
-  </ul>
-{% endblock %}
+namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class ZoneCheckType extends AbstractType
+{
+    private $zones;
+
+    public function __construct()
+    {
+        //@todo: for testing
+        $this->zones = ['africa' => 'Africa', 'europe' => 'Europe', 'asia' => 'Asia'];
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        foreach ($this->zones as $name => $zone) {
+            $builder->add($name, CheckboxType::class, [
+                'label' => false,
+            ]);
+        }
+    }
+}

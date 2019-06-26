@@ -35,12 +35,16 @@
     </div>
     <div class="card-text">
 
-      <div id="carrier_step_general" class="js-carrier-step-1 carrier-step carrier-step-active">
+      <div class="js-carrier-step-1 carrier-step carrier-step-active">
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_general.html.twig' %}
       </div>
 
-      <div id="carrier_step_multi_shop" class="js-carrier-step-2 carrier-step">
+      <div class="js-carrier-step-2 carrier-step">
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_multi_shop.html.twig' %}
+      </div>
+
+      <div class="js-carrier-step-3 carrier-step">
+        {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_shipping.html.twig' %}
       </div>
 
       {% block carrier_form_rest %}

@@ -25,7 +25,7 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{% block carrier_form_step_general %}
+{% block carrier_form_step_multishop %}
   {{ ps.form_group_row(carrierForm.step_multi_shop.shop_association, {}, {
     'label': 'Shop association'|trans({}, 'Admin.Global'),
   }) }}
