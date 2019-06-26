@@ -192,11 +192,10 @@ class CMSCategoryCore extends ObjectModel
         }
 
         $sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
-				FROM `' . _DB_PREFIX_ . 'cms` c
-				' . Shop::addSqlAssociation('cms', 'c') . '
-				JOIN `' . _DB_PREFIX_ . 'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
-				WHERE `id_cms_category` = ' . (int) $current . '
-				AND cl.`id_lang` = ' . (int) $id_lang . ($active ? ' AND c.`active` = 1' : '') . '
+				FROM `'._DB_PREFIX_.'cms` c
+				'.Shop::addSqlAssociation('cms', 'c').'
+				JOIN `'._DB_PREFIX_.'cms_lang` cl ON (c.`id_cms` = cl.`id_cms` AND cl.`id_shop` = '. (int) Context::getContext()->shop->id .' AND cl.`id_lang` = '.(int)$id_lang.')
+				WHERE `id_cms_category` = '.(int)$current . ($active ? ' AND c.`active` = 1' : '').'
 				GROUP BY c.id_cms
 				ORDER BY c.`position`';
         $category['cms'] = Db::getInstance()->executeS($sql);
