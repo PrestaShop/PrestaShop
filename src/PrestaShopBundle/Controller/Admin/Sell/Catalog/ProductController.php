@@ -4,7 +4,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDisableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
@@ -104,7 +106,18 @@ class ProductController extends FrameworkBundleAdminController
 
     public function deleteAction($productId)
     {
-//        todo: implement
+        try {
+            $this->getCommandBus()->handle(new DeleteProductCommand((int) $productId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_products_index');
     }
 
     public function exportAction()
@@ -112,6 +125,7 @@ class ProductController extends FrameworkBundleAdminController
 //        todo: implement
     }
 
+    //todo: check called hooks - each action has a hook in legacy. Ask if we need so much hooks
     public function bulkEnableAction(Request $request)
     {
         $productIds = $this->getProductsIdsFromBulkAction($request);
@@ -173,6 +187,10 @@ class ProductController extends FrameworkBundleAdminController
             ),
             CannotDisableProductException::class => $this->trans(
                 'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+            CannotDeleteProductException::class => $this->trans(
+                'An error occurred while deleting the object.',
                 'Admin.Notifications.Error'
             ),
         ];
