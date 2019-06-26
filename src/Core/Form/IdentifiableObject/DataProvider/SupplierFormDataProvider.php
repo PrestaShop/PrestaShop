@@ -39,7 +39,7 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
     /**
      * @var CommandBusInterface
      */
-    private $bus;
+    private $queryBus;
 
     /**
      * @var bool
@@ -57,18 +57,18 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
     private $contextCountryId;
 
     /**
-     * @param CommandBusInterface $bus
+     * @param CommandBusInterface $queryBus
      * @param $multistoreEnabled
      * @param int[] $defaultShopAssociation
      * @param int $contextCountryId
      */
     public function __construct(
-        CommandBusInterface $bus,
+        CommandBusInterface $queryBus,
         $multistoreEnabled,
         array $defaultShopAssociation,
         $contextCountryId
     ) {
-        $this->bus = $bus;
+        $this->queryBus = $queryBus;
         $this->multistoreEnabled = $multistoreEnabled;
         $this->defaultShopAssociation = $defaultShopAssociation;
         $this->contextCountryId = $contextCountryId;
@@ -82,7 +82,7 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
     public function getData($supplierId)
     {
         /** @var EditableSupplier $editableSupplier */
-        $editableSupplier = $this->bus->handle(new GetSupplierForEditing((int) $supplierId));
+        $editableSupplier = $this->queryBus->handle(new GetSupplierForEditing((int) $supplierId));
 
         $data = [
             'name' => $editableSupplier->getName(),

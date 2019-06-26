@@ -41,7 +41,7 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
     /**
      * @var CommandBusInterface
      */
-    private $bus;
+    private $commandBus;
     /**
      * @var ImageUploaderInterface
      */
@@ -55,7 +55,7 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
         CommandBusInterface $commandBus,
         ImageUploaderInterface $imageUploader
     ) {
-        $this->bus = $commandBus;
+        $this->commandBus = $commandBus;
         $this->imageUploader = $imageUploader;
     }
 
@@ -69,7 +69,7 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
         }
 
         /** @var SupplierId $supplierId */
-        $supplierId = $this->bus->handle(new AddSupplierCommand(
+        $supplierId = $this->commandBus->handle(new AddSupplierCommand(
             $data['name'],
             $data['address'],
             $data['city'],
@@ -113,7 +113,7 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
         $command = new EditSupplierCommand($supplierId);
         $this->fillCommandWithData($command, $data);
 
-        $this->bus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     /**
