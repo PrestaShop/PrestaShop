@@ -16,6 +16,8 @@ use Product;
 
 /**
  * Gets modified data for product grid.
+ *
+ * @internal
  */
 final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
 {

@@ -2,8 +2,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDisableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -112,8 +114,7 @@ class ProductController extends FrameworkBundleAdminController
 
     public function bulkEnableAction(Request $request)
     {
-        $productIds = $request->request->get('product_bulk');
-        $productIds = array_map(function ($item){ return (int) $item; }, $productIds);
+        $productIds = $this->getProductsIdsFromBulkAction($request);
 
         try {
             $this->getCommandBus()->handle(new BulkEnableProductStatusCommand($productIds));
@@ -129,9 +130,22 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_products_index');
     }
 
-    public function bulkDisableAction()
+    public function bulkDisableAction(Request $request)
     {
-//        todo: implement
+        $productIds = $this->getProductsIdsFromBulkAction($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDisableProductStatusCommand($productIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_products_index');
     }
 
     public function bulkDeleteAction()
@@ -157,6 +171,24 @@ class ProductController extends FrameworkBundleAdminController
                 'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
             ),
+            CannotDisableProductException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
         ];
+    }
+
+    /**
+     * Gets product ids from bulk action selection.
+     *
+     * @param Request $request
+     *
+     * @return int[]
+     */
+    private function getProductsIdsFromBulkAction(Request $request)
+    {
+        $productIds = $request->request->get('product_bulk');
+
+        return array_map(static function ($item){ return (int) $item; }, $productIds);
     }
 }

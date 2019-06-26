@@ -2,27 +2,27 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkEnableProductStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDisableProductStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDisableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShopException;
 use Product;
 
 /**
- * bulk enables product status.
+ * bulk disable product status.
  *
  * @internal
  */
-final class BulkEnableProductStatusHandler implements BulkEnableProductStatusHandlerInterface
+final class BulkDisableProductStatusHandler implements BulkDisableProductStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws ProductNotFoundException
-     * @throws CannotEnableProductException
+     * @throws CannotDisableProductException
      */
-    public function handle(BulkEnableProductStatusCommand $command)
+    public function handle(BulkDisableProductStatusCommand $command)
     {
         foreach ($command->getProductIds() as $productId) {
             $entity = new Product($productId->getValue());
@@ -33,21 +33,21 @@ final class BulkEnableProductStatusHandler implements BulkEnableProductStatusHan
                 );
             }
 
-            $entity->active = true;
+            $entity->active = false;
 
             try {
                 if (false === $entity->update()) {
-                    throw new CannotEnableProductException(
+                    throw new CannotDisableProductException(
                         sprintf(
-                            'Failed to enable product with given id %s',
+                            'Failed to disable product with given id %s',
                             $productId->getValue()
                         )
                     );
                 }
             } catch (PrestaShopException $exception) {
-                throw new CannotEnableProductException(
+                throw new CannotDisableProductException(
                     sprintf(
-                        'An unexpected error occurred when trying to enable product with id %s',
+                        'An unexpected error occurred when trying to disable product with id %s',
                         $productId->getValue()
                     ),
                     0,

@@ -14,11 +14,9 @@ Feature: Product management
 
   Scenario: Bulk enable products
     Given product "product1" with id product "1" exists
-    Given product "product2" with id product "2" exists
+    And product "product2" with id product "2" exists
     When I toggle status of product "product1"
-    When I toggle status of product "product2"
-    Then product "product1" should have status "0"
-    Then product "product2" should have status "0"
+    And I toggle status of product "product2"
     When I bulk enable products "product2,product1"
     Then product "product1" should have status "1"
-    Then product "product2" should have status "1"
+    And product "product2" should have status "1"
