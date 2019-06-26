@@ -66,10 +66,11 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkEnableProducts($productReferences)
     {
+        $storage = SharedStorage::getStorage();
         $ids = [];
         foreach (explode(',', $productReferences) as $productReference) {
             /** @var Product $productFromStorage */
-            $productFromStorage = SharedStorage::getStorage()->get($productReference);
+            $productFromStorage = $storage->get($productReference);
 
             $ids[] = (int) $productFromStorage->id;
         }

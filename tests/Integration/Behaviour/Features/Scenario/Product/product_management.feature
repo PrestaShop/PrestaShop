@@ -19,6 +19,6 @@ Feature: Product management
     When I toggle status of product "product2"
     Then product "product1" should have status "0"
     Then product "product2" should have status "0"
-    When I bulk enable products "product1,product2"
+    When I bulk enable products "product2,product1"
     Then product "product1" should have status "1"
     Then product "product2" should have status "1"
