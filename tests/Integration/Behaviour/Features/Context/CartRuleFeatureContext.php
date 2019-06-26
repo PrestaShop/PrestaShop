@@ -215,6 +215,26 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" is disabled$/
+     */
+    public function cartRuleDisabled($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->active = 0;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" is enabled/
+     */
+    public function cartRuleEnabled($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->active = 1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
      * @Then /^cart rule "(.+)" cannot be applied to my cart$/
      */
     public function cartRuleNamedCannotBeAppliedToMyCart($cartRuleName)

@@ -187,4 +187,15 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
             );
         }
     }
+
+    /**
+     * @Then /^cart should propose carriers?$/
+     */
+    public function calculateCartCarrierCount()
+    {
+        $deliveryOptionList = $this->getCurrentCart()->getDeliveryOptionList();
+        if (empty($deliveryOptionList)) {
+            throw new \RuntimeException('Expects some carriers to be proposed, got none');
+        }
+    }
 }

@@ -149,3 +149,29 @@ Feature: Cart calculation with cart rules giving gift
     Then cart shipping fees should be 2.0
     Then my cart total should be 151.0 tax included
     Then my cart total using previous calculation method should be 151.0 tax included
+
+  # issue #11172, but this test does not break with the bug :/
+  Scenario: adding in BO a without-code cart rule does not break existing free shipping cart rule
+    Given I have an empty default cart
+    Given there is a product in the catalog named "product1" with a price of 151.0 and 1000 items in stock
+    Given there is a zone named "zone1"
+    Given there is a country named "country1" and iso code "FR" in zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is an address named "address1" with postcode "1" in state "state1"
+    Given there is a carrier named "carrier1"
+    Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 150
+    Given carrier "carrier1" applies shipping fees of 0.0 in zone "zone1" for price between 150 and 1000
+    Given there is a cart rule named "cartrule2" that applies no discount with priority 2, quantity of 1000 and quantity per user 1000
+    Given cart rule "cartrule2" has a discount code "foo2"
+    Given cart rule "cartrule2" offers free shipping
+    Given there is a cart rule named "cartrule11" that applies a percent discount of 10.0% with priority 2, quantity of 1000 and quantity per user 1000
+    Given cart rule "cartrule11" is disabled
+    When I add 1 item of product "product1" in my cart
+    When I use the discount "cartrule2"
+    When I select address "address1" in my cart
+    Then cart should propose carriers
+    Then my cart total should be 151.0 tax included
+    Given cart rule "cartrule11" is enabled
+    Then cart should propose carriers
+    Then my cart total should be 135.9 tax included
+
