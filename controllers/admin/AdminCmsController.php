@@ -205,7 +205,7 @@ class AdminCmsControllerCore extends AdminController
                     'name' => 'meta_keywords',
                     'lang' => true,
                     'hint' => array(
-                        $this->trans('To add "tags" click in the field, write something, and then press "Enter."', array(), 'Admin.Design.Help'),
+                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                     ),
                 ),

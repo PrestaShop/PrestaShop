@@ -263,7 +263,7 @@ class AdminSuppliersControllerCore extends AdminController
                     'lang' => true,
                     'col' => 6,
                     'hint' => array(
-                        $this->trans('To add "tags" click in the field, write something and then press "Enter".', array(), 'Admin.Catalog.Help'),
+                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                     ),
                 ),

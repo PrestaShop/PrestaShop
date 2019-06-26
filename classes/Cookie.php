@@ -298,6 +298,7 @@ class CookieCore
 
             // Get cookie checksum
             $tmpTab = explode('¤', $content);
+            // remove the checksum which is the last element
             array_pop($tmpTab);
             $content_for_checksum = implode('¤', $tmpTab) . '¤';
             $checksum = crc32($this->_salt . $content_for_checksum);
@@ -386,10 +387,11 @@ class CookieCore
             return;
         }
 
-        $cookie = '';
+        $previousChecksum = $cookie = '';
 
         // Serialize cookie content
         if (isset($this->_content['checksum'])) {
+            $previousChecksum = $this->_content['checksum'];
             unset($this->_content['checksum']);
         }
         foreach ($this->_content as $key => $value) {
@@ -397,7 +399,12 @@ class CookieCore
         }
 
         // Add checksum to cookie
-        $cookie .= 'checksum|' . crc32($this->_salt . $cookie);
+        $newChecksum = crc32($this->_salt . $cookie);
+        // do not set cookie if the checksum is the same: it means the content has not changed!
+        if ($previousChecksum === $newChecksum) {
+            return;
+        }
+        $cookie .= 'checksum|' . $newChecksum;
         $this->_modified = false;
         // Cookies are encrypted for evident security reasons
         return $this->encryptAndSetCookie($cookie);

@@ -34,27 +34,27 @@
       <trans-unit id="0a4dbce7e33277b97c5f5667715e0b46">
         <source>Please select a module</source>
         <target>Please select a module</target>
-        <note>Line: 42</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="0b08e9b451b556f1bdd62b285ee2a9df">
         <source>Select a module above before choosing from available hooks</source>
         <target>Select a module above before choosing from available hooks</target>
-        <note>Line: 55</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="74cd700f9b419dd789dc7d8d1cbf49ef">
         <source>Please specify the files for which you do not want the module to be displayed.</source>
         <target>Please specify the files for which you do not want the module to be displayed.</target>
-        <note>Line: 81</note>
+        <note>Line: 85</note>
       </trans-unit>
       <trans-unit id="07b7dbb810d745fc3891d68448f3f213">
         <source>Please input each filename, separated by a comma (",").</source>
         <target>Please input each filename, separated by a comma (",").</target>
-        <note>Line: 82</note>
+        <note>Line: 86</note>
       </trans-unit>
       <trans-unit id="804a997021a16e79a9e6ef9a2bf39e3d">
         <source>You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.</source>
         <target>You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.</target>
-        <note>Line: 83</note>
+        <note>Line: 87</note>
       </trans-unit>
     </body>
   </file>
@@ -63,7 +63,7 @@
       <trans-unit id="3ed349365d718a59eadb9df9d5c339f2">
         <source>To add "tags" click in the field, write something, and then press "Enter."</source>
         <target>To add "tags" click in the field, write something, and then press "Enter."</target>
-        <note>Line: 200</note>
+        <note>Line: 208</note>
       </trans-unit>
     </body>
   </file>
@@ -181,7 +181,7 @@
       <trans-unit id="a06929291c19a7718975cb8c24dea961">
         <source>E.g. address, addresses, attachment</source>
         <target>E.g. address, addresses, attachment</target>
-        <note>Line: 428</note>
+        <note>Line: 436</note>
       </trans-unit>
     </body>
   </file>
@@ -214,12 +214,12 @@
       <trans-unit id="2acc315907b6b57c444b1885666f5bdd">
         <source>Used in the h1 page tag, and as the default title tag value.</source>
         <target>Used in the h1 page tag, and as the default title tag value.</target>
-        <note>Line: 44</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="27043bc0eeca71692edf6c51fef16ee0">
         <source>Used to override the title tag value. If left blank, the default title value is used.</source>
         <target>Used to override the title tag value. If left blank, the default title value is used.</target>
-        <note>Line: 50</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -270,7 +270,12 @@
       <trans-unit id="0705d2ffde737b9365c1f84715f6f66f">
         <source>By default, existing email template files are not modified to avoid deleting any modification you may have done. Enable this option to force the overwrite.</source>
         <target>By default, existing email template files are not modified to avoid deleting any modification you may have done. Enable this option to force the overwrite.</target>
-        <note>Line: 74</note>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="d8533de1b9f083f6a42b644fea80a6a0">
+        <source>No emails were detected in any theme folder so this field is disabled.</source>
+        <target>No emails were detected in any theme folder so this field is disabled.</target>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -352,12 +357,12 @@ Once you click on "Adapt to RTL", any RTL-specific file that you might have adde
       <trans-unit id="ff8ff5e54a1832486773ec48b8f8175d">
         <source>You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.</source>
         <target>You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.</target>
-        <note>Line: 284</note>
+        <note>Line: 286</note>
       </trans-unit>
       <trans-unit id="d97ccb3e617d930d52ffd95e5db2c101">
         <source>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</source>
         <target>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</target>
-        <note>Line: 285</note>
+        <note>Line: 287</note>
       </trans-unit>
     </body>
   </file>

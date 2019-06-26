@@ -239,7 +239,7 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param string $themeName The technical theme name
      *
-     * @return array|false
+     * @return array|string|bool
      */
     public function getErrors($themeName)
     {
