@@ -3,6 +3,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Tester\Exception\PendingException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
 use Product;
 use RuntimeException;
@@ -31,16 +32,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I toggle status of product "([^"]*)"$/
-     */
-    public function toggleStatus($storageReference)
-    {
-        /** @var Product $currency */
-        $product = SharedStorage::getStorage()->get($storageReference);
-        $this->getCommandBus()->handle(new ToggleProductStatusCommand((int) $product->id));
-    }
-
-    /**
      * @Then /^product "([^"]*)" should have status "([^"]*)"$/
      */
     public function assertProductShouldHaveStatus($storageReference, $expectedStatus)
@@ -58,5 +49,31 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         }
+    }
+
+    /**
+     * @When /^I toggle status of product "([^"]*)"$/
+     */
+    public function toggleStatus($storageReference)
+    {
+        /** @var Product $currency */
+        $product = SharedStorage::getStorage()->get($storageReference);
+        $this->getCommandBus()->handle(new ToggleProductStatusCommand((int) $product->id));
+    }
+
+    /**
+     * @When /^I bulk enable products "([^"]*)"$/
+     */
+    public function bulkEnableProducts($productReferences)
+    {
+        $ids = [];
+        foreach (explode(',', $productReferences) as $productReference) {
+            /** @var Product $productFromStorage */
+            $productFromStorage = SharedStorage::getStorage()->get($productReference);
+
+            $ids[] = (int) $productFromStorage->id;
+        }
+
+        $this->getCommandBus()->handle(new BulkEnableProductStatusCommand($ids));
     }
 }

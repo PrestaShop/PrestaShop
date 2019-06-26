@@ -2,7 +2,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -108,17 +110,31 @@ class ProductController extends FrameworkBundleAdminController
 //        todo: implement
     }
 
-    public function bulkEnable()
+    public function bulkEnableAction(Request $request)
+    {
+        $productIds = $request->request->get('product_bulk');
+        $productIds = array_map(function ($item){ return (int) $item; }, $productIds);
+
+        try {
+            $this->getCommandBus()->handle(new BulkEnableProductStatusCommand($productIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_products_index');
+    }
+
+    public function bulkDisableAction()
     {
 //        todo: implement
     }
 
-    public function bulkDisable()
-    {
-//        todo: implement
-    }
-
-    public function bulkDelete()
+    public function bulkDeleteAction()
     {
 //        todo: implement
     }
@@ -136,7 +152,11 @@ class ProductController extends FrameworkBundleAdminController
             CannotToggleProductException::class => $this->trans(
                 'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
-            )
+            ),
+            CannotEnableProductException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }

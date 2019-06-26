@@ -11,3 +11,14 @@ Feature: Product management
     Then product "product1" should have status "0"
     When I toggle status of product "product1"
     Then product "product1" should have status "1"
+
+  Scenario: Bulk enable products
+    Given product "product1" with id product "1" exists
+    Given product "product2" with id product "2" exists
+    When I toggle status of product "product1"
+    When I toggle status of product "product2"
+    Then product "product1" should have status "0"
+    Then product "product2" should have status "0"
+    When I bulk enable products "product1,product2"
+    Then product "product1" should have status "1"
+    Then product "product2" should have status "1"
