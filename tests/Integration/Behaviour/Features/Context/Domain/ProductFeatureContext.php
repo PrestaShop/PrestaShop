@@ -37,8 +37,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var Product $currency */
         $product = SharedStorage::getStorage()->get($storageReference);
-
-        $this->getCommandBus(new ToggleProductStatusCommand((int) $product->id));
+        $this->getCommandBus()->handle(new ToggleProductStatusCommand((int) $product->id));
     }
 
     /**
@@ -46,8 +45,9 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertProductShouldHaveStatus($storageReference, $expectedStatus)
     {
-        /** @var Product $currency */
-        $product = SharedStorage::getStorage()->get($storageReference);
+        /** @var Product $productFromStorage */
+        $productFromStorage = SharedStorage::getStorage()->get($storageReference);
+        $product = new Product($productFromStorage->id);
 
         if ((int) $product->active !== (int) $expectedStatus) {
             throw new RuntimeException(
