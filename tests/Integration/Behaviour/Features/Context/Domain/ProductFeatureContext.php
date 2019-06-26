@@ -56,7 +56,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function toggleStatus($storageReference)
     {
-        /** @var Product $currency */
+        /** @var Product $product */
         $product = SharedStorage::getStorage()->get($storageReference);
         $this->getCommandBus()->handle(new ToggleProductStatusCommand((int) $product->id));
     }

@@ -11,6 +11,8 @@ use Product;
 
 /**
  * Toggles product status on or off.
+ *
+ * @internal
  */
 final class ToggleProductStatusHandler implements ToggleProductStatusHandlerInterface
 {
