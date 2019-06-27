@@ -866,3 +866,12 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.feature:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
+        arguments:
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
