@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 
 /**
  * Provides data for feature forms.
@@ -68,10 +70,12 @@ final class FeatureFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        //@todo
+        /** @var EditableFeature $editableFeature */
+        $editableFeature = $this->queryBus->handle(new GetFeatureForEditing((int) $id));
+
         return [
-            'name' => [],
-            'shop_association' => $this->defaultShopAssociation,
+            'name' => $editableFeature->getName(),
+            'shop_association' => $editableFeature->getShopAssociationIds(),
         ];
     }
 

@@ -6,3 +6,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\AddFeatureHandler
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand }
+
+  prestashop.adapter.feature.query_handler.get_feature_for_editing:
+    class: PrestaShop\PrestaShop\Adapter\Feature\QueryHandler\GetFeatureForEditingHandler
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing }

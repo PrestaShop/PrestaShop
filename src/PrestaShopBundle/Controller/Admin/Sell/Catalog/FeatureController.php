@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,9 +68,55 @@ class FeatureController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
             'featureForm' => $featureForm->createView(),
+            'featureId' => null,
         ]);
     }
 
+    /**
+     * Edit feature action.
+     *
+     * @param int $featureId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction($featureId, Request $request)
+    {
+        try {
+            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int)$featureId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            // @todo change route to features index when it's migrated
+            return $this->redirectToRoute('admin_features_create');
+        }
+
+        $featureFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_form_builder');
+        $featureFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_form_handler');
+
+        $featureForm = $featureFormBuilder->getFormFor($featureId);
+        $featureForm->handleRequest($request);
+
+        try {
+            $handlerResult = $featureFormHandler->handleFor($featureId, $featureForm);
+
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_features_edit', [
+                    'featureId' => $featureId,
+                ]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
+            'featureForm' => $featureForm->createView(),
+            'editableFeature' => $editableFeature,
+            'contextLangId' => $this->configuration->get('PS_LANG_DEFAULT'),
+        ]);
+    }
 
     /**
      * Get translated error messages for feature exceptions
