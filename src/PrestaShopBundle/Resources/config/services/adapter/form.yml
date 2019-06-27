@@ -38,3 +38,6 @@ services:
 
   prestashop.adapter.form.choice_provider.country_state_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.employee_name_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\EmployeeNameByIdChoiceProvider'
