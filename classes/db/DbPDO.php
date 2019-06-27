@@ -358,22 +358,27 @@ class DbPDOCore extends Db
             return false;
         }
 
-        if ($engine === null) {
-            $engine = 'MyISAM';
+        $enginesToTest = ['InnoDB', 'MyISAM'];
+        if ($engine !== null) {
+            $enginesToTest = [$engine];
         }
 
-        $result = $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
-			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
-        if (!$result) {
-            $error = $link->errorInfo();
+        foreach ($enginesToTest as $engineToTest) {
+            $result = $link->query('
+            CREATE TABLE `' . $prefix . 'test` (
+                `test` tinyint(1) unsigned NOT NULL
+            ) ENGINE=' . $engineToTest);
 
-            return $error[2];
+            if ($result) {
+                $link->query('DROP TABLE `' . $prefix . 'test`');
+
+                return true;
+            }
         }
-        $link->query('DROP TABLE `' . $prefix . 'test`');
 
-        return true;
+        $error = $link->errorInfo();
+
+        return $error[2];
     }
 
     /**
