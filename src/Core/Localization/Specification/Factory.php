@@ -59,6 +59,7 @@ class Factory
     {
         $decimalPattern = $cldrLocale->getDecimalPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
+        // Use positive pattern to retrieve information
         $positivePattern = $this->getPositivePattern($decimalPattern);
 
         return new NumberSpecification(
