@@ -866,3 +866,11 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.improve.shipping.carrier.zone_range:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\ZoneRangeType'
+      public: true
+      arguments:
+        - '@=service("prestashop.adapter.form.choice_provider.zones_choice_provider").getChoices()'
+      tags:
+        - { name: form.type }

@@ -29,11 +29,10 @@ namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Defines form part for carrier shipping locations and costs step
+ * Defines form part for carrier create/edit action Shipping step
  */
 class CarrierStepShippingType extends AbstractType
 {
@@ -56,21 +55,7 @@ class CarrierStepShippingType extends AbstractType
             ->add('out_of_range', ChoiceType::class, [
                 'choices' => [],
             ])
-            ->add('zone_checks', ZoneCheckType::class)
-            ->add('zone_range_inputs', CollectionType::class, [
-                'entry_type' => ZoneRangeInputType::class,
-                'entry_options' => [
-                    'label' => false,
-                    'attr' => [
-                        'class' => 'js-form-block-count',
-                    ],
-                ],
-                'data' => [
-                    ['africa' => ''],
-                ],
-                'allow_add' => true,
-                'allow_delete' => true,
-            ])
+            ->add('zone_ranges', ZoneRangeType::class)
         ;
     }
 }

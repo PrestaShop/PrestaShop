@@ -29,23 +29,27 @@ namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Defines zones checkbox form part for carrier create/edit action Shipping step
+ */
 class ZoneCheckType extends AbstractType
 {
-    private $zones;
-
-    public function __construct()
-    {
-        //@todo: for testing
-        $this->zones = ['africa' => 'Africa', 'europe' => 'Europe', 'asia' => 'Asia'];
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        foreach ($this->zones as $name => $zone) {
-            $builder->add($name, CheckboxType::class, [
-                'label' => $zone,
+        foreach ($options['zones'] as $zone) {
+            $builder->add($zone['id_zone'], CheckboxType::class, [
+                'label' => $zone['name'],
             ]);
         }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setRequired([
+            'zones',
+        ]);
     }
 }

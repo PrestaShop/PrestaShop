@@ -24,22 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Zone;
 
 /**
- * Defines form for carrier shipping cost ranges.
+ * Provides world regions. In PrestaShop context it is known as zones.
  */
-class CarrierShippingCostRange extends AbstractType
+final class ZonesChoiceProvider implements FormChoiceProviderInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * Get choices.
+     *
+     * @return array
+     */
+    public function getChoices()
     {
-        $builder
-            ->add('use_range', CheckboxType::class, [
-                'label' => false,
-            ]);
+        return Zone::getZones(false, true);
     }
 }

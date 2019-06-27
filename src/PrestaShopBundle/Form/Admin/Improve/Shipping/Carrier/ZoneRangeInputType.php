@@ -29,23 +29,28 @@ namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Defines zones range input form part for carrier create/edit action Shipping step
+ */
 class ZoneRangeInputType extends AbstractType
 {
-    private $zones;
-
-    public function __construct()
-    {
-        //@todo: for testing
-        $this->zones = ['africa' => 'Africa', 'europe' => 'Europe', 'asia' => 'Asia'];
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        foreach ($this->zones as $name => $zone) {
-            $builder->add($name, TextType::class, [
+        foreach ($options['zones'] as $zone) {
+            $builder->add($zone['id_zone'], TextType::class, [
                 'label' => false,
             ]);
         }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setRequired([
+            'zones',
+        ]);
     }
 }

@@ -27,13 +27,27 @@ const $ = window.$;
 
 export default class StepVisibilityHandler {
   constructor(stepSwitchSelector, stepClassPrefix, activeStepClass) {
-    $(document).on('click', stepSwitchSelector, event => this.switchStep(event, activeStepClass, stepClassPrefix));
+    $(document).on('click', stepSwitchSelector, event => this.showStep(
+      event,
+      activeStepClass,
+      stepClassPrefix,
+      stepSwitchSelector,
+    ));
+
+    return {};
   }
 
-  switchStep(event, activeStepClass, stepClassPrefix) {
+  showStep(event, activeStepClass, stepClassPrefix, stepSwitchSelector) {
     const $this = $(event.currentTarget);
     const stepToShow = $this.data('step');
+    this.activateButton(stepSwitchSelector, $this);
+
     $(`.${activeStepClass}`).removeClass(activeStepClass);
     $(stepClassPrefix + stepToShow).addClass(activeStepClass);
+  }
+
+  activateButton(switchSelector, target) {
+    $(document).find(switchSelector).removeClass('active');
+    target.addClass('active');
   }
 }

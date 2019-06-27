@@ -46,19 +46,44 @@
     'label': 'Out of range behavior'|trans({}, 'Admin.Global'),
   }) }}
 
-  <table>
+  Ranges
+  <div class="row">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-8">
+          Will be applied when the weight is	>=
+        </div>
+        <div class="col-4">
+          {{ form_widget(carrierForm.step_shipping.zone_ranges.applied_from) }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-8">
+          Will be applied when the weight is	<
+        </div>
+        <div class="col-4">
+          {{ form_widget(carrierForm.step_shipping.zone_ranges.applied_to) }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table table-responsive table-responsive-sm table-striped table-sm">
     <tbody class="ranges"
-      data-prototype='{{ form_widget(carrierForm.step_shipping.zone_range_inputs.vars.prototype) }}'
+      data-prototype='{{ form_widget(carrierForm.step_shipping.zone_ranges.zone_range_inputs.vars.prototype) }}'
     >
       <tr>
-        <td>{{ form_widget(carrierForm.step_shipping.zone_checks) }}</td>
-        <td>{{ form_widget(carrierForm.step_shipping.zone_range_inputs) }}</td>
+        <td>{{ form_widget(carrierForm.step_shipping.zone_ranges.zone_checks) }}</td>
+        <td>{{ form_widget(carrierForm.step_shipping.zone_ranges.zone_range_inputs) }}</td>
       </tr>
     </tbody>
   </table>
 
   <button type="button" class="js-add-range btn btn-outline-primary">
-    Add range
+    {{ 'Add new range'|trans({}, 'Admin.Global') }}
   </button>
 {% endblock %}
 

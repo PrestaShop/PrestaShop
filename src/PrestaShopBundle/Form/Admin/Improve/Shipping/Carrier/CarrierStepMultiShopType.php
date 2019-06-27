@@ -31,7 +31,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Defines form part for add/edit carrier multi shop step
+ * Defines form part for add/edit carrier multi-shop step
  */
 class CarrierStepMultiShopType extends AbstractType
 {

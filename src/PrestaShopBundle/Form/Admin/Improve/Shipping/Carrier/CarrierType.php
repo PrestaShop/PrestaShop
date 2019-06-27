@@ -30,7 +30,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Defines form for carrier add/edit actions
+ * Defines form for carrier create/edit actions
  */
 class CarrierType extends AbstractType
 {

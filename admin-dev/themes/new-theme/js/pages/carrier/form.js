@@ -29,6 +29,6 @@ import AddRangeHandler from './add-range-handler.js';
 const $ = window.$;
 
 $(document).ready(() => {
-  new StepVisibilityHandler('.js-step-switch', '.js-carrier-step-', 'carrier-step-active');
+  new StepVisibilityHandler('.js-step-switch', '.js-carrier-step-', 'carrier-step-active', 'active');
   new AddRangeHandler();
 });

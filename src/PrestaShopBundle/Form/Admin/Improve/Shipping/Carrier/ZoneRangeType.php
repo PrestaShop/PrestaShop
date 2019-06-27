@@ -26,25 +26,59 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Defines form part for add/edit carrier general-settings step
+ * Defines cost ranges form part for carriers create/edit action Shipping step.
  */
-class CarrierStepGeneralType extends AbstractType
+class ZoneRangeType extends AbstractType
 {
+    /**
+     * @var array
+     */
+    private $zones;
+
+    /**
+     * @param array $zones
+     */
+    public function __construct(array $zones)
+    {
+        $this->zones = $zones;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('transit_time', TranslatableType::class)
-            ->add('speed_grade', NumberType::class)
-            ->add('logo', FileType::class)
-            ->add('tracking_url', TextType::class);
+            ->add('applied_from', TextType::class)
+            ->add('applied_to', TextType::class)
+            ->add('zone_checks', ZoneCheckType::class, [
+                'zones' => $this->zones,
+            ])
+            ->add('zone_range_inputs', CollectionType::class, [
+                'entry_type' => ZoneRangeInputType::class,
+                'entry_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'class' => 'js-form-block-count',
+                    ],
+                    'zones' => $this->zones,
+                ],
+                'data' => [$this->getDefaultData()],
+                'allow_add' => true,
+                'allow_delete' => true,
+            ]);
+    }
+
+    public function getDefaultData()
+    {
+        $defaultData = [];
+        foreach ($this->zones as $zone) {
+            $defaultData[$zone['id_zone']] = '';
+        }
+
+        return $defaultData;
     }
 }
