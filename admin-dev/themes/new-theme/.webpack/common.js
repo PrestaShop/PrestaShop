@@ -52,6 +52,7 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    customer_thread_view: './js/pages/customer-thread/view.js'
   },
   output: {
     path: path.resolve(__dirname, '../public'),
