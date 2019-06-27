@@ -59,16 +59,17 @@ class Factory
     {
         $decimalPattern = $cldrLocale->getDecimalPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
+        $positivePattern = $this->getPositivePattern($decimalPattern);
 
         return new NumberSpecification(
-            $this->getPositivePattern($decimalPattern),
+            $positivePattern,
             $this->getNegativePattern($decimalPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
             $maxFractionDigits,
-            $this->getMinFractionDigits($decimalPattern),
+            $this->getMinFractionDigits($positivePattern),
             $numberGroupingUsed,
-            $this->getPrimaryGroupSize($decimalPattern),
-            $this->getSecondaryGroupSize($decimalPattern)
+            $this->getPrimaryGroupSize($positivePattern),
+            $this->getSecondaryGroupSize($positivePattern)
         );
     }
 
