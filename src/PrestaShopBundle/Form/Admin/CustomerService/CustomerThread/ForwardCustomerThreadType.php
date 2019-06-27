@@ -65,6 +65,7 @@ class ForwardCustomerThreadType extends AbstractType
         $builder
             ->add('employee_id', ChoiceType::class, [
                 'choices' => $employeeChoices,
+                'translation_domain' => false,
             ])
             ->add('someone_else_email', EmailType::class, [
                 'required' => false,
