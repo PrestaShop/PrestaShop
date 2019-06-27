@@ -24,49 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+namespace PrestaShop\PrestaShop\Adapter\Feature\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use Feature;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\QueryHandler\GetFeatureForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 
 /**
- * Handles data of submitted Feature form.
+ * Handles get feature for editing query.
  */
-final class FeatureFormDataHandler implements FormDataHandlerInterface
+final class GetFeatureForEditingHandler implements GetFeatureForEditingHandlerInterface
 {
     /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
-     * @param CommandBusInterface $commandBus
-     */
-    public function __construct(CommandBusInterface $commandBus)
-    {
-        $this->commandBus = $commandBus;
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function create(array $data)
+    public function handle(GetFeatureForEditing $query)
     {
-        /** @var FeatureId $featureId */
-        $featureId = $this->commandBus->handle(new AddFeatureCommand(
-            $data['name'],
-            $data['shop_association'] ?? []
-        ));
+        $feature = new Feature($query->getFeatureId()->getValue());
 
-        return $featureId->getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update($id, array $data)
-    {
-        //@todo
+        return new EditableFeature(
+            $query->getFeatureId(),
+            $feature->name,
+            $feature->getAssociatedShops()
+        );
     }
 }

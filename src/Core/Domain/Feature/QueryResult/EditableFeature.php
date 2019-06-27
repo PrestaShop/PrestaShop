@@ -24,49 +24,63 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
- * Handles data of submitted Feature form.
+ * Stores feature data that's needed for editing.
  */
-final class FeatureFormDataHandler implements FormDataHandlerInterface
+class EditableFeature
 {
     /**
-     * @var CommandBusInterface
+     * @var FeatureId
      */
-    private $commandBus;
+    private $featureId;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @var string[]
      */
-    public function __construct(CommandBusInterface $commandBus)
+    private $name;
+
+    /**
+     * @var int[]
+     */
+    private $shopAssociationIds;
+
+    /**
+     * @param FeatureId $featureId
+     * @param string[] $name
+     * @param int[] $shopAssociationIds
+     */
+    public function __construct(FeatureId $featureId, array $name, array $shopAssociationIds)
     {
-        $this->commandBus = $commandBus;
+        $this->featureId = $featureId;
+        $this->name = $name;
+        $this->shopAssociationIds = $shopAssociationIds;
     }
 
     /**
-     * {@inheritdoc}
+     * @return FeatureId
      */
-    public function create(array $data)
+    public function getFeatureId()
     {
-        /** @var FeatureId $featureId */
-        $featureId = $this->commandBus->handle(new AddFeatureCommand(
-            $data['name'],
-            $data['shop_association'] ?? []
-        ));
-
-        return $featureId->getValue();
+        return $this->featureId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
-    public function update($id, array $data)
+    public function getName()
     {
-        //@todo
+        return $this->name;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopAssociationIds()
+    {
+        return $this->shopAssociationIds;
     }
 }
