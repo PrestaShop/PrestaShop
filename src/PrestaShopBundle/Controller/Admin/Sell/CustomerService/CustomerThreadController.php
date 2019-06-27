@@ -65,8 +65,6 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'reply_message' => $customerServiceSignature,
         ]);
 
-        dump($customerThreadView);
-
         $forwardCustomerThreadForm = $this->createForm(ForwardCustomerThreadType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/view.html.twig', [
@@ -125,6 +123,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
                 )
             );
         } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
 
         return $this->redirectToRoute('admin_customer_threads_view', [
@@ -152,6 +151,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
 
         return $this->redirectToRoute('admin_customer_threads_view', [
@@ -214,11 +214,8 @@ class CustomerThreadController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle($command);
 
             $this->addFlash('success', $this->trans('Message forwarded to', 'Admin.Catalog.Feature'));
-
-            return $this->redirectToRoute('admin_customer_threads_view', [
-                'customerThreadId' => $customerThreadId,
-            ]);
         } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
 
         return $this->redirectToRoute('admin_customer_threads_view', [
