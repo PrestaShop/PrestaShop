@@ -421,6 +421,7 @@ class DbMySQLiCore extends Db
             
             if ($result) {
                 $link->query('DROP TABLE `' . $prefix . 'test`');
+                
                 return true;
             }
         }
