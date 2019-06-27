@@ -35,12 +35,9 @@
 
         <li class="media">
           {% if message.type == 'customer' %}
-            <i class="material-icons" style="font-size: 48px;">person</i>
+            <i class="material-icons thread-message-icon">person</i>
           {% else %}
-            <img class="rounded-circle"
-                 src="{{ message.employeeImage }}"
-                 style="width: 48px; height: 48px;"
-            >
+            <img class="rounded-circle thread-message-employee-image" src="{{ message.employeeImage }}">
           {% endif %}
 
           <div class="media-body ml-2">
@@ -54,30 +51,30 @@
               {% endif %}
 
               <span class="text-muted">
-                <i class="material-icons text-muted" style="font-size: 16px;">calendar_today</i>
+                <i class="material-icons text-muted font-16">calendar_today</i>
                 -
                 {{ format_date(message.date) }}
-                <i class="material-icons text-muted" style="font-size: 16px;">access_time</i>
+                <i class="material-icons text-muted font-16">access_time</i>
                 -
                 {{ message.date|date('H:i') }}
               </span>
 
               {% if message.attachmentFile %}
-                <i class="material-icons" style="font-size: 16px;">attachment</i>
+                <i class="material-icons font-16">attachment</i>
                 <a href="{{ message.attachmentFile }}" target="_blank">
                   {{ 'Attachment'|trans({}, 'Admin.Catalog.Feature') }}
                 </a>
               {% endif %}
 
               {% if message.productId %}
-                <i class="material-icons" style="font-size: 16px;">library_books</i>
+                <i class="material-icons font-16">library_books</i>
                 <a href="{{ path('admin_product_form', {'id': message.productId}) }}">
                   {{ 'Product'|trans({}, 'Admin.Global') }}
                   {{ message.productName }}
                 </a>
               {% endif %}
             </h4>
-            <p style="border-left: 2px solid #ccc;" class="pl-2">{{ message.message|nl2br }}</p>
+            <p class="pl-2 thread-message">{{ message.message|nl2br }}</p>
           </div>
         </li>
       {% endfor %}
