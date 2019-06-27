@@ -80,8 +80,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     {
         $customerThread = $this->getCustomerThread($query->getCustomerThreadId());
 
-        $this->context->cookie->{'customer_threadFilter_cl!id_contact'} = $customerThread->id_contact;
-
         $messages = $this->getCustomerThreadMessages($query->getCustomerThreadId());
 
         return new CustomerThreadView(
@@ -121,10 +119,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
                 if (Validate::isLoadedObject($product)) {
                     $messages[$key]['product_name'] = $product->name;
-                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts', true, [], [
-                        'updateproduct' => 1,
-                        'id_product' => (int) $product->id,
-                    ]);
                 }
             }
 

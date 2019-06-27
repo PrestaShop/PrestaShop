@@ -32,11 +32,10 @@
             <hr class="mb-3 mt-0">
           </li>
         {% endif %}
+
         <li class="media">
           {% if message.type == 'customer' %}
-            <i class="material-icons" style="font-size: 48px;">
-              person
-            </i>
+            <i class="material-icons" style="font-size: 48px;">person</i>
           {% else %}
             <img class="rounded-circle"
                  src="{{ message.employee_image }}"
@@ -63,8 +62,16 @@
                 {{ message.date_add|date('H:i') }}
               </span>
 
-              {% if message.product_name is defined %}
-                <a href="{{ message.product_link}}">
+              {% if message.file_name is defined %}
+                <i class="material-icons" style="font-size: 16px;">attachment</i>
+                <a href="{{ message.file_name }}" target="_blank">
+                  {{ 'Attachment'|trans({}, 'Admin.Catalog.Feature') }}
+                </a>
+              {% endif %}
+
+              {% if message.id_product %}
+                <i class="material-icons" style="font-size: 16px;">library_books</i>
+                <a href="{{ path('admin_product_form', {'id': message.id_product}) }}">
                   {{ 'Product'|trans({}, 'Admin.Global') }}
                   {{ message.product_name }}
                 </a>
