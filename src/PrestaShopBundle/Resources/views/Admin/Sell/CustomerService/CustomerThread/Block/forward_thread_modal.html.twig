@@ -6,7 +6,12 @@
      aria-hidden="true"
 >
   <div class="modal-dialog" role="document">
-    {{ form_start(forwardCustomerThreadForm, {'attr': {'class': 'form-horizontal'}}) }}
+    {{ form_start(forwardCustomerThreadForm, {
+      'action': path('admin_customer_threads_forward', {
+        'customerThreadId': customerThreadView.customerThreadId.value
+      }),
+      'attr': {'class': 'form-horizontal'}
+    }) }}
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="forwardThreadModalLabel">
