@@ -26,15 +26,14 @@
 <div class="row mt-4">
   <div class="col">
     <div class="media">
-
       {% if customerThreadView.customerInformation.customerId %}
         <a href="{{ path('admin_customers_view', {'customerId': customerThreadView.customerInformation.customerId}) }}">
-          <i class="material-icons" style="font-size: 68px;">
+          <i class="material-icons thread-customer-icon">
             person
           </i>
         </a>
       {% else %}
-        <i class="material-icons" style="font-size: 68px;">
+        <i class="material-icons thread-customer-icon">
           person
         </i>
       {% endif %}
