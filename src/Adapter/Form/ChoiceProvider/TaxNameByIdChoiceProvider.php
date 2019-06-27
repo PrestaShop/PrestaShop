@@ -24,20 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Tax;
 
 /**
- * Defines form part for add/edit carrier multi-shop step
+ * Provides tax choices in key => value pairs where key is localized tax name and value is tax id.
  */
-class CarrierStepMultiShopType extends AbstractType
+final class TaxNameByIdChoiceProvider implements FormChoiceProviderInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * @param $contextLangId
+     */
+    public function __construct($contextLangId)
     {
-        $builder
-            ->add('shop_association', ShopChoiceTreeType::class);
+        $this->contextLangId = $contextLangId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        $taxes = Tax::getTaxes($this->contextLangId);
+
+        $taxesById = [];
+        foreach ($taxes as $tax) {
+            $taxesById[$tax['name']] = $tax['id_tax'];
+        }
+
+        return $taxesById;
     }
 }

@@ -26,19 +26,50 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Defines form for carrier create/edit actions
+ * Defines form part for carrier create/edit action Shipping step
  */
-class CarrierType extends AbstractType
+class StepShippingType extends AbstractType
 {
+    /**
+     * @var array
+     */
+    private $taxChoices;
+
+    /**
+     * @param array $taxChoices
+     */
+    public function __construct(
+        array $taxChoices
+    ) {
+        $this->taxChoices = $taxChoices;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('step_general', StepGeneralType::class)
-            ->add('step_multi_shop', StepMultiShopType::class)
-            ->add('step_shipping', StepShippingType::class);
+            ->add('cost_handling', SwitchType::class)
+            ->add('is_free_shipping', SwitchType::class)
+            ->add('billing_type', ChoiceType::class, [
+                'multiple' => true,
+                'expanded' => true,
+                'choices' => [
+                    'test1' => 'test1',
+                    'test2' => 'test2',
+                ],
+            ])
+            ->add('tax', ChoiceType::class, [
+                'choices' => $this->taxChoices,
+            ])
+            ->add('out_of_range', ChoiceType::class, [
+                'choices' => [],
+            ])
+            ->add('zone_ranges', ZoneRangeType::class)
+        ;
     }
 }

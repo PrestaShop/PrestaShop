@@ -26,36 +26,25 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Defines form part for carrier create/edit action Shipping step
+ * Defines form part for add/edit carrier general-settings step
  */
-class CarrierStepShippingType extends AbstractType
+class StepGeneralType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cost_handling', SwitchType::class)
-            ->add('is_free_shipping', SwitchType::class)
-            ->add('billing_type', ChoiceType::class, [
-                'multiple' => true,
-                'expanded' => true,
-                'choices' => [
-                    'test1' => 'test1',
-                    'test2' => 'test2',
-                ],
-            ])
-            ->add('tax', ChoiceType::class, [
-                'choices' => [],
-            ])
-            ->add('out_of_range', ChoiceType::class, [
-                'choices' => [],
-            ])
-            ->add('zone_ranges', ZoneRangeType::class)
-        ;
+            ->add('name', TextType::class)
+            ->add('transit_time', TranslatableType::class)
+            ->add('speed_grade', NumberType::class)
+            ->add('logo', FileType::class)
+            ->add('tracking_url', TextType::class);
     }
 }

@@ -874,3 +874,11 @@ services:
         - '@=service("prestashop.adapter.form.choice_provider.zones_choice_provider").getChoices()'
       tags:
         - { name: form.type }
+
+    form.type.improve.shipping.carrier.step_shipping:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepShippingType'
+      public: true
+      arguments:
+        - '@=service("prestashop.adapter.form.choice_provider.tax_name_by_id_choice_provider").getChoices()'
+      tags:
+        - { name: form.type }

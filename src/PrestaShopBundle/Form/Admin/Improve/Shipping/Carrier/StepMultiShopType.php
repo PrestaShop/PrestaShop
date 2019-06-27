@@ -26,25 +26,18 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Defines form part for add/edit carrier general-settings step
+ * Defines form part for add/edit carrier multi-shop step
  */
-class CarrierStepGeneralType extends AbstractType
+class StepMultiShopType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('transit_time', TranslatableType::class)
-            ->add('speed_grade', NumberType::class)
-            ->add('logo', FileType::class)
-            ->add('tracking_url', TextType::class);
+            ->add('shop_association', ShopChoiceTreeType::class);
     }
 }

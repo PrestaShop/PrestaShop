@@ -35,9 +35,7 @@ use Zone;
 final class ZonesChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * Get choices.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getChoices()
     {
