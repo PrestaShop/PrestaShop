@@ -40,14 +40,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Manages page under "Sell > Customer Service > Customer Service"
+ */
 class CustomerThreadController extends FrameworkBundleAdminController
 {
     /**
+     * @param Request $request
      * @param int $customerThreadId
      *
      * @return Response
      */
-    public function viewAction($customerThreadId)
+    public function viewAction(Request $request, $customerThreadId)
     {
         /** @var CustomerThreadView $customerThreadView */
         $customerThreadView = $this->getQueryBus()->handle(new GetCustomerThreadForViewing((int) $customerThreadId));
@@ -71,10 +75,15 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'customerServiceSignature' => $customerServiceSignature,
             'replyToCustomerThreadForm' => $replyToCustomerThreadForm->createView(),
             'forwardCustomerThreadForm' => $forwardCustomerThreadForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('View', 'Admin.Actions'),
         ]);
     }
 
     /**
+     * Reply to customer thread
+     *
      * @param Request $request
      * @param int $customerThreadId
      *
@@ -85,9 +94,25 @@ class CustomerThreadController extends FrameworkBundleAdminController
         $replyToCustomerThreadForm = $this->createForm(ReplyToCustomerThreadType::class);
         $replyToCustomerThreadForm->handleRequest($request);
 
-        if ($replyToCustomerThreadForm->isSubmitted() && $replyToCustomerThreadForm->isValid()) {
-            $data = $replyToCustomerThreadForm->getData();
+        if (!$replyToCustomerThreadForm->isSubmitted()) {
+            return $this->redirectToRoute('admin_customer_threads_view', [
+                'customerThreadId' => $customerThreadId,
+            ]);
+        }
 
+        if (!$replyToCustomerThreadForm->isValid()) {
+            foreach ($replyToCustomerThreadForm->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
+
+            return $this->redirectToRoute('admin_customer_threads_view', [
+                'customerThreadId' => $customerThreadId,
+            ]);
+        }
+
+        $data = $replyToCustomerThreadForm->getData();
+
+        try {
             $this->getCommandBus()->handle(
                 new ReplyToCustomerThreadCommand((int) $customerThreadId, $data['reply_message'])
             );
@@ -99,14 +124,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification'
                 )
             );
-
-            return $this->redirectToRoute('admin_customer_threads_view', [
-                'customerThreadId' => $customerThreadId,
-            ]);
-        }
-
-        foreach ($replyToCustomerThreadForm->getErrors(true) as $error) {
-            $this->addFlash('error', $error->getMessage());
+        } catch (DomainException $e) {
         }
 
         return $this->redirectToRoute('admin_customer_threads_view', [
@@ -124,14 +142,17 @@ class CustomerThreadController extends FrameworkBundleAdminController
      */
     public function updateStatusAction($customerThreadId, $newStatus)
     {
-        $this->getCommandBus()->handle(
-            new UpdateCustomerThreadStatusCommand((int) $customerThreadId, $newStatus)
-        );
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateCustomerThreadStatusCommand((int) $customerThreadId, $newStatus)
+            );
 
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-        );
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (DomainException $e) {
+        }
 
         return $this->redirectToRoute('admin_customer_threads_view', [
             'customerThreadId' => $customerThreadId,
