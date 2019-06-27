@@ -165,6 +165,14 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
         return $customerThread;
     }
 
+    /**
+     * Get customer thread messages in timeline
+     *
+     * @param array $messages
+     * @param CustomerThread $customerThread
+     *
+     * @return CustomerThreadTimeline
+     */
     private function getTimeline(array $messages, CustomerThread $customerThread)
     {
         $timeline = [];

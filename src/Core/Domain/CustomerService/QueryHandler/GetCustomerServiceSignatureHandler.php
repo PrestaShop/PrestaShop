@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 
+/**
+ * @internal
+ */
 final class GetCustomerServiceSignatureHandler implements GetCustomerServiceSignatureHandlerInterface
 {
     /**
