@@ -39,7 +39,6 @@ class CarrierStepShippingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $zones = ['zone1'];
         $builder
             ->add('cost_handling', SwitchType::class)
             ->add('is_free_shipping', SwitchType::class)
@@ -57,17 +56,20 @@ class CarrierStepShippingType extends AbstractType
             ->add('out_of_range', ChoiceType::class, [
                 'choices' => [],
             ])
-            ->add('zone_checks', CollectionType::class, [
-                'entry_type' => ZoneCheckType::class,
-                'data' => [
-                    $zones,
-                ],
-            ])
+            ->add('zone_checks', ZoneCheckType::class)
             ->add('zone_range_inputs', CollectionType::class, [
                 'entry_type' => ZoneRangeInputType::class,
-                'data' => [
-                    $zones,
+                'entry_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'class' => 'js-form-block-count',
+                    ],
                 ],
+                'data' => [
+                    ['africa' => ''],
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
             ])
         ;
     }

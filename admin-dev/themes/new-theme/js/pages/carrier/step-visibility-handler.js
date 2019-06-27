@@ -26,16 +26,14 @@
 const $ = window.$;
 
 export default class StepVisibilityHandler {
-  constructor() {
-    const stepSwitchSelector = '.js-step-switch';
-    const activeStepClass = 'carrier-step-active';
-    $(document).on('click', stepSwitchSelector, event => this.switchStep(event, activeStepClass));
+  constructor(stepSwitchSelector, stepClassPrefix, activeStepClass) {
+    $(document).on('click', stepSwitchSelector, event => this.switchStep(event, activeStepClass, stepClassPrefix));
   }
 
-  switchStep(event, activeStepClass) {
+  switchStep(event, activeStepClass, stepClassPrefix) {
     const $this = $(event.currentTarget);
     const stepToShow = $this.data('step');
     $(`.${activeStepClass}`).removeClass(activeStepClass);
-    $(`.js-carrier-step-${stepToShow}`).addClass(activeStepClass);
+    $(stepClassPrefix + stepToShow).addClass(activeStepClass);
   }
 }

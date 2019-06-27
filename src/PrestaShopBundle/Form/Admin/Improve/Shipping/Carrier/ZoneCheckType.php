@@ -44,7 +44,7 @@ class ZoneCheckType extends AbstractType
     {
         foreach ($this->zones as $name => $zone) {
             $builder->add($name, CheckboxType::class, [
-                'label' => false,
+                'label' => $zone,
             ]);
         }
     }

@@ -47,20 +47,18 @@
   }) }}
 
   <table>
-    <thead>
-      <th></th>
-    </thead>
-    <tbody>
-    {% for range_checkbox in carrierForm.step_shipping.zone_checks%}
-      {% for range_input in carrierForm.step_shipping.zone_range_inputs %}
-        <tr>
-          <td>{{ form_widget(range_checkbox) }}</td>
-          <td>{{ form_widget(range_input) }}</td>
-        </tr>
-      {% endfor %}
-    {% endfor %}
-      </tbody>
-    <a href="#" class="js-add-range">add</a>
+    <tbody class="ranges"
+      data-prototype='{{ form_widget(carrierForm.step_shipping.zone_range_inputs.vars.prototype) }}'
+    >
+      <tr>
+        <td>{{ form_widget(carrierForm.step_shipping.zone_checks) }}</td>
+        <td>{{ form_widget(carrierForm.step_shipping.zone_range_inputs) }}</td>
+      </tr>
+    </tbody>
   </table>
 
+  <button type="button" class="js-add-range btn btn-outline-primary">
+    Add range
+  </button>
 {% endblock %}
+
