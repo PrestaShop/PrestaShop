@@ -884,3 +884,11 @@ services:
         - '@=service("prestashop.core.form.choice_provider.carrier_out_of_range_behavior").getChoices()'
       tags:
         - { name: form.type }
+
+    form.type.improve.shipping.carrier.step_properties_and_groups:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepPropertiesAndGroups'
+      public: true
+      arguments:
+        - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+      tags:
+        - { name: form.type }

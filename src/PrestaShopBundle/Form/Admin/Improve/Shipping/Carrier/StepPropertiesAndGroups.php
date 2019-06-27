@@ -26,20 +26,42 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
+use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Defines form for carrier create/edit actions
+ * Defines form part for create/edit carrier Properties and group access step
  */
-class CarrierType extends AbstractType
+class StepPropertiesAndGroups extends AbstractType
 {
+    /**
+     * @var array
+     */
+    private $customerGroupChoices;
+
+    /**
+     * @param array $customerGroupChoices
+     */
+    public function __construct(array $customerGroupChoices)
+    {
+        $this->customerGroupChoices = $customerGroupChoices;
+    }
+
+    /**
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('step_general', StepGeneralType::class)
-            ->add('step_multi_shop', StepMultiShopType::class)
-            ->add('step_shipping', StepShippingType::class)
-            ->add('step_properties_and_access', StepPropertiesAndGroups::class);
+            ->add('max_width', NumberType::class)
+            ->add('max_height', NumberType::class)
+            ->add('max_depth', NumberType::class)
+            ->add('max_weight', NumberType::class)
+            ->add('group_association', MaterialChoiceTableType::class, [
+                'choices' => $this->customerGroupChoices,
+            ])
+        ;
     }
 }
