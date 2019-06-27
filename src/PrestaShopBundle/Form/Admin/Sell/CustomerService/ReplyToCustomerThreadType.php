@@ -70,7 +70,7 @@ class ReplyToCustomerThreadType extends AbstractType
                             [],
                             'Admin.Notifications.Error'
                         ),
-                    ])
+                    ]),
                 ],
             ])
         ;
