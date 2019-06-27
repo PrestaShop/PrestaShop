@@ -146,8 +146,8 @@ table .column-filters td:last-child .grid-reset-button {
       }
     }
   }
-  .table-responsive {
-    overflow-x: inherit;
+  .table-responsive .row {
+    margin: 0;
   }
 }
 
