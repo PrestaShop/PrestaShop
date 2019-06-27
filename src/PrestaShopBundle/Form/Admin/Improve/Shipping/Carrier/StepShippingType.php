@@ -42,12 +42,20 @@ class StepShippingType extends AbstractType
     private $taxChoices;
 
     /**
+     * @var array
+     */
+    private $outOfRangeBehaviorChoices;
+
+    /**
      * @param array $taxChoices
+     * @param array $outOfRangeBehaviorChoices
      */
     public function __construct(
-        array $taxChoices
+        array $taxChoices,
+        array $outOfRangeBehaviorChoices
     ) {
         $this->taxChoices = $taxChoices;
+        $this->outOfRangeBehaviorChoices = $outOfRangeBehaviorChoices;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -56,7 +64,6 @@ class StepShippingType extends AbstractType
             ->add('cost_handling', SwitchType::class)
             ->add('is_free_shipping', SwitchType::class)
             ->add('billing_type', ChoiceType::class, [
-                'multiple' => true,
                 'expanded' => true,
                 'choices' => [
                     'test1' => 'test1',
@@ -67,7 +74,7 @@ class StepShippingType extends AbstractType
                 'choices' => $this->taxChoices,
             ])
             ->add('out_of_range', ChoiceType::class, [
-                'choices' => [],
+                'choices' => $this->outOfRangeBehaviorChoices,
             ])
             ->add('zone_ranges', ZoneRangeType::class)
         ;
