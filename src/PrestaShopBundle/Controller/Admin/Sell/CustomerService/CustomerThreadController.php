@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSi
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,11 +61,14 @@ class CustomerThreadController extends FrameworkBundleAdminController
 
         dump($customerThreadView);
 
+        $forwardCustomerThreadForm = $this->createForm(ForwardCustomerThreadType::class);
+
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/view.html.twig', [
             'customerThreadView' => $customerThreadView,
             'employeeAvatarUrl' => $this->getContext()->employee->getImage(),
             'customerServiceSignature' => $customerServiceSignature,
             'replyToCustomerThreadForm' => $replyToCustomerThreadForm->createView(),
+            'forwardCustomerThreadForm' => $forwardCustomerThreadForm->createView(),
         ]);
     }
 
