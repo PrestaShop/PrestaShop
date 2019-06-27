@@ -24,49 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\Query;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
- * Handles data of submitted Feature form.
+ * Retrieves feature data for editing
  */
-final class FeatureFormDataHandler implements FormDataHandlerInterface
+class GetFeatureForEditing
 {
     /**
-     * @var CommandBusInterface
+     * @var FeatureId
      */
-    private $commandBus;
+    private $featureId;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @param int $featureId
      */
-    public function __construct(CommandBusInterface $commandBus)
+    public function __construct($featureId)
     {
-        $this->commandBus = $commandBus;
+        $this->featureId = new FeatureId($featureId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return FeatureId
      */
-    public function create(array $data)
+    public function getFeatureId()
     {
-        /** @var FeatureId $featureId */
-        $featureId = $this->commandBus->handle(new AddFeatureCommand(
-            $data['name'],
-            $data['shop_association'] ?? []
-        ));
-
-        return $featureId->getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update($id, array $data)
-    {
-        //@todo
+        return $this->featureId;
     }
 }
