@@ -10,7 +10,7 @@
       <trans-unit id="882ed1e831a6175e4a3dd2c09faa225c">
         <source>I would like my order to be gift wrapped %cost%</source>
         <target>I would like my order to be gift wrapped %cost%</target>
-        <note>Line: 182</note>
+        <note>Line: 184</note>
       </trans-unit>
     </body>
   </file>
@@ -185,7 +185,7 @@
       <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
         <source>Tax</source>
         <target>Tax</target>
-        <note>Line: 168</note>
+        <note>Line: 177</note>
       </trans-unit>
     </body>
   </file>
@@ -352,17 +352,17 @@ File: themes/StarterTheme/templates/checkout/order-confirmation.tpl:62</note>
       <trans-unit id="0ab608f7e0d1501be457f7646c1e57c0">
         <source>Promo code</source>
         <target>Promo code</target>
-        <note>Line: 54</note>
+        <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="3111382b0f345f39639de6e580a94933">
         <source>Have a promo code?</source>
         <target>Have a promo code?</target>
-        <note>Line: 46</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="d3d2e617335f08df83599665eef8a418">
         <source>Close</source>
         <target>Close</target>
-        <note>Line: 76</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>

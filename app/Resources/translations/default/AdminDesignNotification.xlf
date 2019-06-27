@@ -5,7 +5,7 @@
       <trans-unit id="feede4b4294c44c907966ddd76e23614">
         <source>Your page will be saved as a draft</source>
         <target>Your page will be saved as a draft</target>
-        <note>Line: 55</note>
+        <note>Line: 59</note>
       </trans-unit>
     </body>
   </file>
@@ -33,7 +33,7 @@
       <trans-unit id="307cd46da080d0ad19ec342feb2aa6d6">
         <source>If you want to order/move the following data, please select a shop from the shop list.</source>
         <target>If you want to order/move the following data, please select a shop from the shop list.</target>
-        <note>Line: 34</note>
+        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>
@@ -51,7 +51,7 @@
       <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
         <source>No items found</source>
         <target>No items found</target>
-        <note>Line: 316</note>
+        <note>Line: 324</note>
       </trans-unit>
     </body>
   </file>
@@ -199,7 +199,7 @@
       <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
         <source>The page Category cannot be moved here.</source>
         <target>The page Category cannot be moved here.</target>
-        <note>Line: 1101</note>
+        <note>Line: 1135</note>
       </trans-unit>
     </body>
   </file>
@@ -208,27 +208,27 @@
       <trans-unit id="4a9fdf95b29176bd9260016655a80852">
         <source>Your RTL stylesheets has been generated successfully</source>
         <target>Your RTL stylesheets has been generated successfully</target>
-        <note>Line: 335</note>
+        <note>Line: 358</note>
       </trans-unit>
       <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
         <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
         <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
-        <note>Line: 362</note>
+        <note>Line: 385</note>
       </trans-unit>
-      <trans-unit id="0e8ea2c717a31a3efd2fd99c5782be88">
-        <source>There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.</source>
-        <target>There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.</target>
-        <note>Line: 484</note>
+      <trans-unit id="0933caade58197a4ff60c27077f67604">
+        <source>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</source>
+        <target>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</target>
+        <note>Line: 483</note>
       </trans-unit>
       <trans-unit id="2cca9f161ea0cc1102ad4be82b15cbfb">
         <source>Failed to delete theme. Make sure you have permissions and theme is not used.</source>
         <target>Failed to delete theme. Make sure you have permissions and theme is not used.</target>
-        <note>Line: 539</note>
+        <note>Line: 530</note>
       </trans-unit>
       <trans-unit id="05c176b8092b42c554d570513026207c">
         <source>Cannot adapt theme to RTL languages.</source>
         <target>Cannot adapt theme to RTL languages.</target>
-        <note>Line: 561</note>
+        <note>Line: 552</note>
       </trans-unit>
     </body>
   </file>

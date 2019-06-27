@@ -480,7 +480,7 @@ class ThemeController extends AbstractAdminController
     {
         return [
             ImportedThemeAlreadyExistsException::class => $this->trans(
-                'There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.',
+                'There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.',
                 'Admin.Design.Notification',
                 [
                     '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
@@ -509,7 +509,7 @@ class ThemeController extends AbstractAdminController
                     'Admin.Modules.Notification',
                     [
                         '%action%' => strtolower($this->trans('Install', 'Admin.Actions')),
-                        '%module%' => $e->getModuleName(),
+                        '%module%' => ($e instanceof FailedToEnableThemeModuleException) ? $e->getModuleName() : '',
                         '%error_details%' => $e->getMessage(),
                     ]
                 ),

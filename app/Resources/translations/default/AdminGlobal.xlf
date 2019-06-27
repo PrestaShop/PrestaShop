@@ -157,6 +157,11 @@
         <target>To</target>
         <note>Line: 74</note>
       </trans-unit>
+      <trans-unit id="efdaf9f44ce968366fa78277263abc1d">
+        <source>Help Center</source>
+        <target>Help Center</target>
+        <note>Line: 110</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -219,12 +224,12 @@
       <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
         <source>Modules</source>
         <target>Modules</target>
-        <note>Line: 87</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="6ff9dd0d34f65181173c1e4bc39939de">
         <source>Selection</source>
         <target>Selection</target>
-        <note>Line: 173</note>
+        <note>Line: 177</note>
       </trans-unit>
     </body>
   </file>
@@ -412,12 +417,12 @@
       <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
         <source>Message</source>
         <target>Message</target>
-        <note>Line: 862</note>
+        <note>Line: 865</note>
       </trans-unit>
       <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1">
         <source>Messages</source>
         <target>Messages</target>
-        <note>Line: 786</note>
+        <note>Line: 789</note>
       </trans-unit>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
@@ -437,17 +442,17 @@
       <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
         <source>Taxes</source>
         <target>Taxes</target>
-        <note>Line: 1118</note>
+        <note>Line: 1121</note>
       </trans-unit>
       <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
         <source>Tax included</source>
         <target>Tax included</target>
-        <note>Line: 911</note>
+        <note>Line: 914</note>
       </trans-unit>
       <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
         <source>Tax excluded</source>
         <target>Tax excluded</target>
-        <note>Line: 909</note>
+        <note>Line: 912</note>
       </trans-unit>
     </body>
   </file>
@@ -497,7 +502,7 @@
       <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
         <source>Type</source>
         <target>Type</target>
-        <note>Line: 80</note>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -614,12 +619,12 @@
       <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
         <source>Enabled</source>
         <target>Enabled</target>
-        <note>Line: 25</note>
+        <note>Line: 31</note>
       </trans-unit>
       <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
         <source>Disabled</source>
         <target>Disabled</target>
-        <note>Line: 25</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -637,7 +642,7 @@
       <trans-unit id="9f82518d468b9fee614fcc92f76bb163">
         <source>Shop</source>
         <target>Shop</target>
-        <note>Line: 303</note>
+        <note>Line: 308</note>
       </trans-unit>
     </body>
   </file>
@@ -1120,37 +1125,46 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/watermark/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c3782cf09e0f24e3a31a2dda9d9de9b9">
+        <source>Addons Marketplace</source>
+        <target>Addons Marketplace</target>
+        <note>Line: 37</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/watermark/watermark.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d634d88aed3a993de014b8dc3524b9f3">
         <source>Allowed image formats are: .gif, .jpg, .png</source>
         <target>Allowed image formats are: .gif, .jpg, .png</target>
-        <note>Line: 489</note>
+        <note>Line: 488</note>
       </trans-unit>
       <trans-unit id="945d5e233cf7d6240f6b783b36a374ff">
         <source>Left</source>
         <target>Left</target>
-        <note>Line: 507</note>
+        <note>Line: 506</note>
       </trans-unit>
       <trans-unit id="b1ca34f82e83c52b010f86955f264e05">
         <source>Middle</source>
         <target>Middle</target>
-        <note>Line: 535</note>
+        <note>Line: 534</note>
       </trans-unit>
       <trans-unit id="92b09c7c48c520c3c55e497875da437c">
         <source>Right</source>
         <target>Right</target>
-        <note>Line: 515</note>
+        <note>Line: 514</note>
       </trans-unit>
       <trans-unit id="a4ffdcf0dc1f31b9acaf295d75b51d00">
         <source>Top</source>
         <target>Top</target>
-        <note>Line: 531</note>
+        <note>Line: 530</note>
       </trans-unit>
       <trans-unit id="2ad9d63b69c4a10a5cc9cad923133bc4">
         <source>Bottom</source>
         <target>Bottom</target>
-        <note>Line: 539</note>
+        <note>Line: 538</note>
       </trans-unit>
     </body>
   </file>
@@ -1460,17 +1474,17 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="4d3d769b812b6faa6b76e1a8abaece2d">
         <source>Active</source>
         <target>Active</target>
-        <note>Line: 218</note>
+        <note>Line: 220</note>
       </trans-unit>
       <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
         <source>Last name</source>
         <target>Last name</target>
-        <note>Line: 46</note>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
         <target>First name</target>
-        <note>Line: 42</note>
+        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>
@@ -1479,7 +1493,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="be8545ae7ab0276e15898aae7acfbd7a">
         <source>Resource</source>
         <target>Resource</target>
-        <note>Line: 60</note>
+        <note>Line: 62</note>
       </trans-unit>
     </body>
   </file>
@@ -1559,7 +1573,17 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="b78a3223503896721cca1303f776159b">
         <source>Title</source>
         <target>Title</target>
-        <note>Line: 43</note>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="98c7393cffa2aced4ce47240790dd450">
+        <source>SEO preview</source>
+        <target>SEO preview</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="4bc7d3555cc5e7252eb5389afdf80668">
+        <source>Here is a preview of how your page will appear in search engine results.</source>
+        <target>Here is a preview of how your page will appear in search engine results.</target>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
@@ -1591,7 +1615,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="9d55fc80bbb875322aa67fd22fc98469">
         <source>Shop association</source>
         <target>Shop association</target>
-        <note>Line: 58</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="dfcfc43722eef1eab1e4a12e50a068b1">
         <source>Currencies</source>
@@ -1721,37 +1745,37 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="41c2fff4867cc204120f001e7af20f7a">
         <source>Mobile phone</source>
         <target>Mobile phone</target>
-        <note>Line: 85</note>
+        <note>Line: 86</note>
       </trans-unit>
       <trans-unit id="fe66abce284ec8589e7d791185b5c442">
         <source>Home phone</source>
         <target>Home phone</target>
-        <note>Line: 81</note>
+        <note>Line: 82</note>
       </trans-unit>
       <trans-unit id="783cb853aae6984e51583b3bb80c09d2">
         <source>Address (2)</source>
         <target>Address (2)</target>
-        <note>Line: 57</note>
+        <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="c6e2a9b2d1979c244d18c7e9fbf9a86f">
         <source>Zip/postal code</source>
         <target>Zip/postal code</target>
-        <note>Line: 61</note>
+        <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="57d056ed0984166336b7879c2af3657f">
         <source>City</source>
         <target>City</target>
-        <note>Line: 65</note>
+        <note>Line: 66</note>
       </trans-unit>
       <trans-unit id="46a2a41cc6e552044816a2d04634545d">
         <source>State</source>
         <target>State</target>
-        <note>Line: 76</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
         <source>Other</source>
         <target>Other</target>
-        <note>Line: 93</note>
+        <note>Line: 94</note>
       </trans-unit>
     </body>
   </file>
@@ -1825,7 +1849,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
         <source>Social title</source>
         <target>Social title</target>
-        <note>Line: 41</note>
+        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>
@@ -1867,7 +1891,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="894e565fb7d7a1d846211b1cddf4428c">
         <source>%count% errors</source>
         <target>%count% errors</target>
-        <note>Line: 214</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>

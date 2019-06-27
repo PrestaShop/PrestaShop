@@ -225,7 +225,7 @@ class ModuleDataProvider
         } catch (PhpParser\Error $exception) {
             $this->logger->critical(
                 $this->translator->trans(
-                    'Parse error detected in main class of module %module%! %parse_error%',
+                    'Parse error detected in main class of module %module%: %parse_error%',
                     array(
                         '%module%' => $name,
                         '%parse_error%' => $exception->getMessage(),
