@@ -35,6 +35,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 
+/**
+ * Builds form for forwarding customer thread
+ */
 class ForwardCustomerThreadType extends AbstractType
 {
     /**
@@ -57,6 +60,9 @@ class ForwardCustomerThreadType extends AbstractType
         $this->employeeChoiceProvider = $employeeChoiceProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $employeeChoices = $this->employeeChoiceProvider->getChoices();

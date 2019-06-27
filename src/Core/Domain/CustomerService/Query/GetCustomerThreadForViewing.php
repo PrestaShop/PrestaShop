@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
 
+/**
+ * Gets customer thread for viewing
+ */
 class GetCustomerThreadForViewing
 {
     /**

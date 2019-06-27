@@ -28,7 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 
-class CustomerThreadStatus
+/**
+ * Status that customer thread can have
+ */
+final class CustomerThreadStatus
 {
     const OPEN = 'open';
     const CLOSED = 'closed';

@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
 
+/**
+ * Reply to given customer thread
+ */
 class ReplyToCustomerThreadCommand
 {
     /**

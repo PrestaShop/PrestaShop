@@ -34,9 +34,17 @@
           <strong>#{{ customerThreadView.customerThreadId.value }}</strong>
         </h3>
         <div class="card-body">
-          {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/thread_actions.html.twig' %}
-          {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/customer_information.html.twig' %}
-          {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/thread_messages.html.twig' %}
+          {% block customer_thread_actions %}
+            {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/thread_actions.html.twig' %}
+          {% endblock %}
+
+          {% block customer_information %}
+            {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/customer_information.html.twig' %}
+          {% endblock %}
+
+          {% block customer_thread_messages %}
+            {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/thread_messages.html.twig' %}
+          {% endblock %}
         </div>
       </div>
     </div>
@@ -44,13 +52,17 @@
 
   <div class="row">
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/your_answer.html.twig' %}
+      {% block customer_thread_reply %}
+        {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/your_answer.html.twig' %}
+      {% endblock %}
     </div>
   </div>
 
   <div class="row">
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/timeline.html.twig' %}
+      {% block customer_thread_timeline %}
+        {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/timeline.html.twig' %}
+      {% endblock %}
     </div>
   </div>
 {% endblock %}

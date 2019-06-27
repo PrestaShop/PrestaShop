@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
+/**
+ * Gets signature for replying in customer thread
+ */
 class GetCustomerServiceSignature
 {
     /**

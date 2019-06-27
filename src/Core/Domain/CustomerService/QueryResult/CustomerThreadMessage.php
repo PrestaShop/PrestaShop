@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult;
 
+/**
+ * Carries data for single customer thread message
+ */
 class CustomerThreadMessage
 {
     /**
