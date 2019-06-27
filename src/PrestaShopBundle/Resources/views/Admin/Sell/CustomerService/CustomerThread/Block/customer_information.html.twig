@@ -42,7 +42,7 @@
       <div class="media-body">
         <h2 class="mt-0 mb-0">
           {% if customerThreadView.customerInformation.firstName %}
-            <a href="#">
+            <a href="{{ path('admin_customers_view', {'customerId': customerThreadView.customerInformation.customerId}) }}">
               {{ customerThreadView.customerInformation.firstName }}
               {{ customerThreadView.customerInformation.lastName }}
               <small class="text-muted">({{ customerThreadView.customerInformation.email }})</small>
