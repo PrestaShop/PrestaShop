@@ -26,3 +26,11 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand'
+
+  prestashop.adapter.customer_service.command_handler.reply_to_customer_thread_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\ReplyToCustomerThreadHandler'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand'
