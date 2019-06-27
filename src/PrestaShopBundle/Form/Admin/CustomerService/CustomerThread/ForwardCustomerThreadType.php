@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Email;
 
 class ForwardCustomerThreadType extends AbstractType
 {
@@ -67,6 +68,15 @@ class ForwardCustomerThreadType extends AbstractType
             ])
             ->add('someone_else_email', EmailType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Email([
+                        'message' => $this->translator->trans(
+                            'The email address is invalid.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
             ])
             ->add('comment', TextareaType::class, [
                 'required' => false,

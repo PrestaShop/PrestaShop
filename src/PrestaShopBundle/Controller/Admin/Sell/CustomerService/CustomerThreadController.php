@@ -26,11 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
@@ -130,6 +132,73 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'success',
             $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
         );
+
+        return $this->redirectToRoute('admin_customer_threads_view', [
+            'customerThreadId' => $customerThreadId,
+        ]);
+    }
+
+    /**
+     * Forward customer thread to another employee
+     *
+     * @param Request $request
+     * @param int $customerThreadId
+     *
+     * @return RedirectResponse
+     */
+    public function forwardAction(Request $request, $customerThreadId)
+    {
+        $forwardCustomerThreadForm = $this->createForm(ForwardCustomerThreadType::class);
+        $forwardCustomerThreadForm->handleRequest($request);
+
+        if (!$forwardCustomerThreadForm->isSubmitted()) {
+            return $this->redirectToRoute('admin_customer_threads_view', [
+                'customerThreadId' => $customerThreadId,
+            ]);
+        }
+
+        if (!$forwardCustomerThreadForm->isValid()) {
+            foreach ($forwardCustomerThreadForm->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
+
+            return $this->redirectToRoute('admin_customer_threads_view', [
+                'customerThreadId' => $customerThreadId,
+            ]);
+        }
+
+        $data = $forwardCustomerThreadForm->getData();
+
+        if (!$data['employee_id'] && empty($data['someone_else_email'])) {
+            $this->addFlash('error', $this->trans('The email address is invalid.', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_customer_threads_view', [
+                'customerThreadId' => $customerThreadId,
+            ]);
+        }
+
+        $command = $data['employee_id'] ?
+            ForwardCustomerThreadCommand::toAnotherEmployee(
+                (int) $customerThreadId,
+                (int) $data['employee_id'],
+                $data['comment']
+            ) :
+            ForwardCustomerThreadCommand::toSomeoneElse(
+                (int) $customerThreadId,
+                $data['someone_else_email'],
+                $data['comment']
+            );
+
+        try {
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash('success', $this->trans('Message forwarded to', 'Admin.Catalog.Feature'));
+
+            return $this->redirectToRoute('admin_customer_threads_view', [
+                'customerThreadId' => $customerThreadId,
+            ]);
+        } catch (DomainException $e) {
+        }
 
         return $this->redirectToRoute('admin_customer_threads_view', [
             'customerThreadId' => $customerThreadId,

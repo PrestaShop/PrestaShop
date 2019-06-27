@@ -58,13 +58,13 @@ class ForwardCustomerThreadCommand
     /**
      * Creates command for forwarding customer thread for another employee
      *
-     * @param int $employeeId
      * @param int $customerThreadId
+     * @param int $employeeId
      * @param string $comment
      *
      * @return self
      */
-    public static function toAnotherEmployee($employeeId, $customerThreadId, $comment)
+    public static function toAnotherEmployee($customerThreadId, $employeeId, $comment)
     {
         $command = new self();
         $command->employeeId = new EmployeeId($employeeId);
@@ -77,13 +77,13 @@ class ForwardCustomerThreadCommand
     /**
      * Creates command for forwarding customer thread for someone else (not employee)
      *
-     * @param string $email
      * @param int $customerThreadId
+     * @param string $email
      * @param string $comment
      *
      * @return ForwardCustomerThreadCommand
      */
-    public static function toSomeoneElse($email, $customerThreadId, $comment)
+    public static function toSomeoneElse($customerThreadId, $email, $comment)
     {
         $command = new self();
         $command->email = new Email($email);

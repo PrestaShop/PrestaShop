@@ -27,3 +27,13 @@ admin_customer_threads_update_status:
   #    _legacy_link: AdminCustomerThreads
   requirements:
     customerThreadId: \d+
+
+admin_customer_threads_forward:
+  path: /{customerThreadId}/forward
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/CustomerThread:forward
+    _legacy_controller: AdminCustomerThreads
+    #    _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
