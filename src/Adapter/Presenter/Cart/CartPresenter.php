@@ -511,10 +511,14 @@ class CartPresenter implements PresenterInterface
                     $value = 0;
                 } else {
                     // convert to default currency
+                    $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
                     $value /= $currencyFrom->conversion_rate;
-                    // convert to destination currency
-                    $value *= $currencyTo->conversion_rate;
+                    if ($defaultCurrencyId == $currencyTo->id) {
+                        // convert to destination currency
+                        $value *= $currencyTo->conversion_rate;
+                    }
                 }
+                // following will do currency conversion to current one
                 $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($value);
             }
 
