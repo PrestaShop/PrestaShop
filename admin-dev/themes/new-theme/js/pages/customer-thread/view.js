@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +21,23 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="card">
-  <div class="card-body">
-    {% for action in customerThreadView.actions %}
-      <form action="{{ path('admin_customer_threads_update_status', {
-        'customerThreadId': customerThreadView.customerThreadId.value,
-        'newStatus': action.value
-      }) }}" method="post" class="d-inline">
-        <button class="btn btn-outline-secondary">{{ action.label }}</button>
-      </form>
-    {% endfor %}
+import CustomerThreadViewPageMap from './customer-thread-view-page-map';
 
-    <button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#forwardThreadModal">
-      {{ 'Forward this discussion to another employee'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    </button>
+const $ = window.$;
 
-    {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/forward_thread_modal.html.twig' %}
-  </div>
-</div>
+$(() => {
+  $(CustomerThreadViewPageMap.forwardEmployeeInput).on('change', (event) => {
+    const $someoneElseEmailInput = $(CustomerThreadViewPageMap.forwardSomeoneElseEmailInput);
+    const $someElseEmailFormGroup = $someoneElseEmailInput.closest('.form-group');
+
+    const employeeId = $(event.currentTarget).val();
+
+    if (parseInt(employeeId) === 0) {
+      $someElseEmailFormGroup.removeClass('d-none');
+    } else {
+      $someElseEmailFormGroup.addClass('d-none');
+    }
+  });
+});

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,33 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="card">
-  <div class="card-body">
-    {% for action in customerThreadView.actions %}
-      <form action="{{ path('admin_customer_threads_update_status', {
-        'customerThreadId': customerThreadView.customerThreadId.value,
-        'newStatus': action.value
-      }) }}" method="post" class="d-inline">
-        <button class="btn btn-outline-secondary">{{ action.label }}</button>
-      </form>
-    {% endfor %}
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-    <button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#forwardThreadModal">
-      {{ 'Forward this discussion to another employee'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    </button>
+use Employee;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-    {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/forward_thread_modal.html.twig' %}
-  </div>
-</div>
+/**
+ * @internal
+ */
+final class EmployeeNameByIdChoiceProvider implements FormChoiceProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        $employees = Employee::getEmployees();
+
+        $choices = [];
+
+        foreach ($employees as $employee) {
+            $name = sprintf('%s. %s', substr($employee['firstname'], 0, 1), $employee['lastname']);
+
+            $choices[$name] = (int) $employee['id_employee'];
+        }
+
+        return $choices;
+    }
+}

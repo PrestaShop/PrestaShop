@@ -54,3 +54,9 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/customer_thread_view.bundle.js') }}"></script>
+{% endblock %}
