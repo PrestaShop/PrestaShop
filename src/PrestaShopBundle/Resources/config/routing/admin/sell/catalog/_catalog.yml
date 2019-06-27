@@ -13,3 +13,7 @@ _suppliers:
 _manufacturers:
     resource: "manufacturer.yml"
     prefix: /brands
+
+_features:
+    resource: "features.yml"
+    prefix: /features
