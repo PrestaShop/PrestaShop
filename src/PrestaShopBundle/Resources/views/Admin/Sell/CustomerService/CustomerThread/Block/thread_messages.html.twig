@@ -38,7 +38,7 @@
             <i class="material-icons" style="font-size: 48px;">person</i>
           {% else %}
             <img class="rounded-circle"
-                 src="{{ message.employee_image }}"
+                 src="{{ message.employeeImage }}"
                  style="width: 48px; height: 48px;"
             >
           {% endif %}
@@ -48,32 +48,32 @@
               <i class="material-icons text-muted">reply</i>
 
               {% if message.type == 'customer' %}
-                {{ message.customer_name }}
+                {{ message.customerName }}
               {% else %}
-                {{ message.employee_name }}
+                {{ message.employeeName }}
               {% endif %}
 
               <span class="text-muted">
                 <i class="material-icons text-muted" style="font-size: 16px;">calendar_today</i>
                 -
-                {{ format_date(message.date_add) }}
+                {{ format_date(message.date) }}
                 <i class="material-icons text-muted" style="font-size: 16px;">access_time</i>
                 -
-                {{ message.date_add|date('H:i') }}
+                {{ message.date|date('H:i') }}
               </span>
 
-              {% if message.file_name is defined %}
+              {% if message.attachmentFile %}
                 <i class="material-icons" style="font-size: 16px;">attachment</i>
-                <a href="{{ message.file_name }}" target="_blank">
+                <a href="{{ message.attachmentFile }}" target="_blank">
                   {{ 'Attachment'|trans({}, 'Admin.Catalog.Feature') }}
                 </a>
               {% endif %}
 
-              {% if message.id_product %}
+              {% if message.productId %}
                 <i class="material-icons" style="font-size: 16px;">library_books</i>
-                <a href="{{ path('admin_product_form', {'id': message.id_product}) }}">
+                <a href="{{ path('admin_product_form', {'id': message.productId}) }}">
                   {{ 'Product'|trans({}, 'Admin.Global') }}
-                  {{ message.product_name }}
+                  {{ message.productName }}
                 </a>
               {% endif %}
             </h4>

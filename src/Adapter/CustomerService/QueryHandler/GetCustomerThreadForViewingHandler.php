@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNo
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerThreadForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadTimeline;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadTimelineItem;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
@@ -80,7 +81,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     {
         $customerThread = $this->getCustomerThread($query->getCustomerThreadId());
 
-        $messages = $this->getCustomerThreadMessages($query->getCustomerThreadId());
+        $messages = CustomerThread::getMessageCustomerThreads($query->getCustomerThreadId()->getValue());
 
         return new CustomerThreadView(
             $query->getCustomerThreadId(),
@@ -88,44 +89,62 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             $this->getAvailableActions($customerThread),
             $this->getCustomerInformation($customerThread),
             $this->getContactName($customerThread),
-            $messages,
+            $this->getCustomerThreadMessages($messages),
             $this->getTimeline($messages, $customerThread)
         );
     }
 
     /**
-     * @param CustomerThreadId $customerThreadId
+     * @param array $messages
      *
-     * @return array
+     * @return CustomerThreadMessage[]
      */
-    private function getCustomerThreadMessages(CustomerThreadId $customerThreadId)
+    private function getCustomerThreadMessages(array $messages)
     {
-        $messages = CustomerThread::getMessageCustomerThreads($customerThreadId->getValue());
+        $threadMessages = [];
 
         foreach ($messages as $key => $message) {
+            $employeeImage = null;
+
             if ($message['id_employee']) {
                 $employee = new Employee($message['id_employee']);
-                $messages[$key]['employee_image'] = $employee->getImage();
+                $employeeImage = $employee->getImage();
             }
 
+            $attachmentFile = null;
+
             if (isset($message['file_name']) && $message['file_name'] != '') {
-                $messages[$key]['file_name'] = _THEME_PROD_PIC_DIR_ . $message['file_name'];
-            } else {
-                unset($messages[$key]['file_name']);
+                $attachmentFile = _THEME_PROD_PIC_DIR_ . $message['file_name'];
             }
+
+            $productId = null;
+            $productName = null;
 
             if ($message['id_product']) {
                 $product = new Product((int) $message['id_product'], false, $this->context->language->id);
 
                 if (Validate::isLoadedObject($product)) {
-                    $messages[$key]['product_name'] = $product->name;
+                    $productId = (int) $product->id;
+                    $productName = $product->name;
                 }
             }
 
-            $messages[$key]['type'] = $message['id_employee'] ? 'employee' : 'customer';
+            $type = $message['id_employee'] ? 'employee' : 'customer';
+
+            $threadMessages[] = new CustomerThreadMessage(
+                $type,
+                $message['message'],
+                $message['date_add'],
+                $employeeImage,
+                $message['employee_name'],
+                $message['customer_name'],
+                $attachmentFile,
+                $productId,
+                $productName
+            );
         }
 
-        return $messages;
+        return $threadMessages;
     }
 
     /**
