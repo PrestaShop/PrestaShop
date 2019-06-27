@@ -17,3 +17,12 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature'
+
+  prestashop.adapter.customer_service.command_handler.forward_customer_thread_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\ForwardCustomerThreadHandler'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+      - '@prestashop.adapter.legacy.configuration'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand'
