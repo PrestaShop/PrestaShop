@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult;
 
+/**
+ * Carries data about customer for customer thread
+ */
 class CustomerInformation
 {
     /**

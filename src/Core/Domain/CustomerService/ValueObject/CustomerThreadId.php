@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 
+/**
+ * Defines customer thread id
+ */
 class CustomerThreadId
 {
     /**
