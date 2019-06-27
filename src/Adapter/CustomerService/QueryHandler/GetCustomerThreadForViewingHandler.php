@@ -208,7 +208,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             foreach ($order_history as $history) {
                 $link_order = $this->context->link->getAdminLink('AdminOrders', true, [], [
                     'vieworder' => 1,
-                    'id_order' => (int) $order->id
+                    'id_order' => (int) $order->id,
                 ]);
 
                 $content = sprintf(
