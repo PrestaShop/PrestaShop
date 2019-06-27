@@ -214,3 +214,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierOutOfRangeBehaviorChoiceProvider'
     arguments:
       - '@translator'
+
+  prestashop.core.form.choice_provider.shipping_method:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShippingMethodChoiceProvider'
+    arguments:
+      - '@translator'

@@ -24,27 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Defines form part for add/edit carrier general-settings step
+ * Provides shipping method choices in translated name => value pairs.
  */
-class StepGeneralType extends AbstractType
+final class ShippingMethodChoiceProvider implements FormChoiceProviderInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
     {
-        $builder
-            ->add('name', TranslatableType::class)
-            ->add('transit_time', TranslatableType::class)
-            ->add('speed_grade', NumberType::class)
-            ->add('logo', FileType::class)
-            ->add('tracking_url', TextType::class);
+        $this->translator = $translator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        return [
+            $this->translator->trans('According to total price.', [], 'Admin.Shipping.Feature') => 2,
+            $this->translator->trans('According to total weight.', [], 'Admin.Shipping.Feature') => 1,
+        ];
     }
 }
