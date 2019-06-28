@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,24 +21,12 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
+import TranslatableInput from "../../components/translatable-input";
+import ChoiceTree from "../../components/form/choice-tree";
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
-        featureId: null,
-        featureForm: featureForm
-      } %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form_javascripts.html.twig' %}
-{% endblock %}
+$(() => {
+  new TranslatableInput();
+  new ChoiceTree('#feature_shop_association').enableAutoCheckChildren();
+});

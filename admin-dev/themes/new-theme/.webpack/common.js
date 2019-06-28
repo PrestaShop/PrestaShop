@@ -68,7 +68,6 @@ module.exports = {
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
-    currency: './js/pages/currency',
     themes: './js/pages/themes',
     profiles: './js/pages/profiles',
     sql_manager: './js/pages/sql-manager',
@@ -76,7 +75,6 @@ module.exports = {
     supplier: './js/pages/supplier',
     supplier_form: './js/pages/supplier/supplier-form.js',
     tax: './js/pages/tax',
-    themes: './js/pages/themes',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
@@ -85,6 +83,7 @@ module.exports = {
     order: './js/pages/order',
     order_create: './js/pages/order/create.js',
     catalog_price_rule: './js/pages/catalog-price-rule',
+    feature_form: './js/pages/feature/form',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
