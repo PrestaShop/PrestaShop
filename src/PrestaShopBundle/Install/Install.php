@@ -154,8 +154,8 @@ class Install extends AbstractInstall
             return false;
         }
 
-        $secret = Tools::passwdGen(56);
-        $cookie_key = defined('_COOKIE_KEY_') ? _COOKIE_KEY_ : Tools::passwdGen(56);
+        $secret = Tools::passwdGen(64);
+        $cookie_key = defined('_COOKIE_KEY_') ? _COOKIE_KEY_ : Tools::passwdGen(64);
         $cookie_iv = defined('_COOKIE_IV_') ? _COOKIE_IV_ : Tools::passwdGen(32);
         $database_port = null;
 
