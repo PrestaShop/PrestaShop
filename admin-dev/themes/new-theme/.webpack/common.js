@@ -53,6 +53,7 @@ module.exports = {
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
     error: './js/pages/error',
+    feature_form: './js/pages/feature/form',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

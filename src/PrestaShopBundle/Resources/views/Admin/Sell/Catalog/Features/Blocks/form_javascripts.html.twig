@@ -23,22 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
-
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
-        featureId: null,
-        featureForm: featureForm
-      } %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form_javascripts.html.twig' %}
+{% block feature_javascript_block %}
+  <script src="{{ asset('themes/new-theme/public/feature_form.bundle.js') }}"></script>
 {% endblock %}
