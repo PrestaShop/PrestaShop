@@ -866,3 +866,29 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.improve.shipping.carrier.zone_range:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\ZoneRangeType'
+      public: true
+      arguments:
+        - '@=service("prestashop.adapter.form.choice_provider.zones_choice_provider").getChoices()'
+      tags:
+        - { name: form.type }
+
+    form.type.improve.shipping.carrier.step_shipping:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepShippingType'
+      public: true
+      arguments:
+        - '@=service("prestashop.adapter.form.choice_provider.tax_name_by_id_choice_provider").getChoices()'
+        - '@=service("prestashop.core.form.choice_provider.shipping_method").getChoices()'
+        - '@=service("prestashop.core.form.choice_provider.carrier_out_of_range_behavior").getChoices()'
+      tags:
+        - { name: form.type }
+
+    form.type.improve.shipping.carrier.step_properties_and_groups:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepPropertiesAndGroups'
+      public: true
+      arguments:
+        - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+      tags:
+        - { name: form.type }

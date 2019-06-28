@@ -1,0 +1,6 @@
+admin_carriers_create:
+  path: carriers/new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Carrier:create'
+    _legacy_controller: AdminCarriers

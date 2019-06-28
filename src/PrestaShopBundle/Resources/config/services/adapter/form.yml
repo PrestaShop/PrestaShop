@@ -38,3 +38,11 @@ services:
 
   prestashop.adapter.form.choice_provider.country_state_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.zones_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZonesChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.tax_name_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxNameByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
