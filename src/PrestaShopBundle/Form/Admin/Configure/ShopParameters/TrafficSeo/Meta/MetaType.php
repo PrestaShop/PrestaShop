@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
+use PrestaShop\PrestaShop\Core\Domain\Meta\SeoSettings;
+use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
@@ -35,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -101,8 +104,13 @@ class MetaType extends AbstractType
                 'choice_translation_domain' => false,
             ])
             ->add('page_title', TranslatableType::class, [
+                'type' => TextWithRecommendedLengthType::class,
                 'required' => false,
                 'options' => [
+                    'recommended_length' => SeoSettings::RECOMMENDED_TITLE_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_TITLE_LENGTH,
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
@@ -112,13 +120,28 @@ class MetaType extends AbstractType
                                 'Admin.Notifications.Error'
                             ),
                         ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_TITLE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                [
+                                    '%limit%' => SeoSettings::MAX_TITLE_LENGTH,
+                                ],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                     ],
-                    'required' => false,
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
                 'required' => false,
+                'type' => TextWithRecommendedLengthType::class,
                 'options' => [
+                    'required' => false,
+                    'recommended_length' => SeoSettings::RECOMMENDED_DESCRIPTION_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
@@ -128,8 +151,17 @@ class MetaType extends AbstractType
                                 'Admin.Notifications.Error'
                             ),
                         ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                [
+                                    '%limit%' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                                ],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                     ],
-                    'required' => false,
                 ],
             ])
             ->add('meta_keywords', TranslatableType::class, [
