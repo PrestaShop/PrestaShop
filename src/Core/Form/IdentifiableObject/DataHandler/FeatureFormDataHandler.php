@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
@@ -67,6 +68,13 @@ final class FeatureFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        //@todo
+        $command = new EditFeatureCommand($id);
+        $command->setLocalizedNames($data['name']);
+
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
+
+        $this->commandBus->handle($command);
     }
 }

@@ -111,7 +111,7 @@ class FeatureController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/edit.html.twig', [
             'featureForm' => $featureForm->createView(),
             'editableFeature' => $editableFeature,
             'contextLangId' => $this->configuration->get('PS_LANG_DEFAULT'),
