@@ -28,40 +28,43 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
 use Feature;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\AddFeatureHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\EditFeatureHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
 
 /**
- * Handles adding of features using legacy logic.
+ * Handles feature editing.
  */
-final class AddFeatureHandler extends AbstractObjectModelHandler implements AddFeatureHandlerInterface
+final class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatureHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(AddFeatureCommand $command)
+    public function handle(EditFeatureCommand $command)
     {
-        $feature = new Feature();
+        $feature = new Feature($command->getFeatureId()->getValue());
 
-        $feature->name = $command->getLocalizedNames();
+        if (null !== $command->getLocalizedNames()) {
+            $feature->name = $command->getLocalizedNames();
+        }
+
+        if (null !== $command->getAssociatedShopIds()) {
+            $this->associateWithShops($feature, $command->getAssociatedShopIds());
+        }
 
         if (false === $feature->validateFields(false)) {
-            throw new FeatureConstraintException('Invalid feature data');
+            throw new FeatureException('Invalid data when updating feature');
         }
 
         if (false === $feature->validateFieldsLang(false)) {
-            throw new FeatureConstraintException('Invalid feature data');
+            throw new FeatureException('Invalid data when updating feature');
         }
 
-        if (false === $feature->add()) {
-            throw new CannotAddFeatureException('Unable to create new feature');
+        if (false === $feature->update()) {
+            throw new CannotEditFeatureException(
+                sprintf('Failed to edit Feature with id "%s".', $feature->id)
+            );
         }
-
-        $this->associateWithShops($feature, $command->getShopAssociation());
-
-        return new FeatureId($feature->id);
     }
 }

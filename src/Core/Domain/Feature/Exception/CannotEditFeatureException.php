@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,19 +22,13 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set layoutTitle = 'Edit: %value%'|trans({'%value%': editableFeature.name[contextLangId]}, 'Admin.Catalog.Feature') %}
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
-        featureId: editableFeature.featureId.getValue,
-        featureForm: featureForm
-      } %}
-    </div>
-  </div>
-{% endblock %}
+/**
+ * Thrown when feature cannot be edited.
+ */
+class CannotEditFeatureException extends FeatureException
+{
+}
