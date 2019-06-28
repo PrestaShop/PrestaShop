@@ -47,6 +47,12 @@ class FeatureController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
+        if (!$this->isFeatureEnabled()) {
+            return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
+                'showDisabledFeatureWarning' => true,
+            ]);
+        }
+
         $featureFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_form_builder');
         $featureFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_form_handler');
 
@@ -68,7 +74,6 @@ class FeatureController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
             'featureForm' => $featureForm->createView(),
-            'featureId' => null,
         ]);
     }
 
@@ -91,6 +96,13 @@ class FeatureController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_features_create');
         }
 
+        if (!$this->isFeatureEnabled()) {
+            return $this->renderEditForm([
+                'showDisabledFeatureWarning' => true,
+                'editableFeature' => $editableFeature,
+            ]);
+        }
+
         $featureFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_form_builder');
         $featureFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_form_handler');
 
@@ -111,9 +123,22 @@ class FeatureController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/edit.html.twig', [
+        return $this->renderEditForm([
             'featureForm' => $featureForm->createView(),
             'editableFeature' => $editableFeature,
+        ]);
+    }
+
+    /**
+     * Render feature edit form
+     *
+     * @param array $parameters
+     *
+     * @return Response
+     */
+    private function renderEditForm(array $parameters = [])
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/edit.html.twig', $parameters + [
             'contextLangId' => $this->configuration->get('PS_LANG_DEFAULT'),
         ]);
     }
@@ -130,5 +155,15 @@ class FeatureController extends FrameworkBundleAdminController
                 FeatureConstraintException::EMPTY_NAME => $this->trans('', 'Admin.Notifications.Error'),
             ],
         ];
+    }
+
+    /**
+     * Check if Features functionality is enabled in the shop.
+     *
+     * @return bool
+     */
+    private function isFeatureEnabled()
+    {
+        return $this->get('prestashop.adapter.feature.feature')->isActive();
     }
 }
