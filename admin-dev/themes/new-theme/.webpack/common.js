@@ -52,6 +52,7 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    feature_form: './js/pages/feature/form'
   },
   output: {
     path: path.resolve(__dirname, '../public'),

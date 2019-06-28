@@ -37,3 +37,8 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form_javascripts.html.twig' %}
+{% endblock %}
