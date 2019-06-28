@@ -301,7 +301,7 @@ class CookieCore
             // remove the checksum which is the last element
             array_pop($tmpTab);
             $content_for_checksum = implode('¤', $tmpTab) . '¤';
-            $checksum = crc32($this->_salt . $content_for_checksum);
+            $checksum = hash('sha256', $this->_salt . $content_for_checksum);
             //printf("\$checksum = %s<br />", $checksum);
 
             /* Unserialize cookie content */
@@ -399,7 +399,7 @@ class CookieCore
         }
 
         /* Add checksum to cookie */
-        $newChecksum = crc32($this->_salt . $cookie);
+        $newChecksum = hash('sha256', $this->_salt . $cookie);
         // do not set cookie if the checksum is the same: it means the content has not changed!
         if ($previousChecksum === $newChecksum) {
             return;
