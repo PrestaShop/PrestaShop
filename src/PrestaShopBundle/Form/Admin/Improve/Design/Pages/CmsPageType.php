@@ -30,10 +30,12 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Meta\SeoSettings;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -122,18 +124,24 @@ class CmsPageType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_title', TranslatableType::class, [
+                'type' => TextWithRecommendedLengthType::class,
                 'required' => false,
                 'options' => [
+                    'required' => false,
+                    'recommended_length' => SeoSettings::RECOMMENDED_TITLE_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_TITLE_LENGTH,
+                    ],
                     'constraints' => [
                         new TypedRegex([
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => 255,
+                            'max' => SeoSettings::MAX_TITLE_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
                                 'Admin.Notifications.Error',
-                                ['%limit%' => 255]
+                                ['%limit%' => SeoSettings::MAX_TITLE_LENGTH]
                             ),
                         ]),
                     ],
@@ -141,10 +149,26 @@ class CmsPageType extends TranslatorAwareType
             ])
             ->add('meta_description', TranslatableType::class, [
                 'required' => false,
+                'type' => TextWithRecommendedLengthType::class,
                 'options' => [
+                    'required' => false,
+                    'recommended_length' => SeoSettings::RECOMMENDED_DESCRIPTION_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                    ],
                     'constraints' => [
                         new TypedRegex([
                             'type' => 'generic_name',
+                        ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
