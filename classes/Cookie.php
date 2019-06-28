@@ -79,7 +79,7 @@ class CookieCore
         $this->_salt = $this->_standalone ? str_pad('', 32, md5('ps' . __FILE__)) : _COOKIE_IV_;
 
         if ($this->_standalone) {
-            $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString(Key::KEY_CURRENT_VERSION, str_pad($name, Key::KEY_BYTE_SIZE, __FILE__));
+            $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString(Key::KEY_CURRENT_VERSION, str_pad($name, Key::KEY_BYTE_SIZE, md5(__FILE__)));
             $this->cipherTool = new PhpEncryption($asciiSafeString);
         } else {
             $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
