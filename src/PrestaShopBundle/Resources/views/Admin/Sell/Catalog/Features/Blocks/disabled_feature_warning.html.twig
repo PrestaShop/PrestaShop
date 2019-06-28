@@ -23,26 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set layoutTitle = 'Add a new feature'|trans({}, 'Admin.Catalog.Feature') %}
-
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  {% if showDisabledFeatureWarning is defined and showDisabledFeatureWarning %}
-    {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig' %}
-  {% else %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
-          featureId: null,
-          featureForm: featureForm
-        } %}
-      </div>
-    </div>
-  {% endif %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form_javascripts.html.twig' %}
-{% endblock %}
+<div class="alert alert-warning" role="alert">
+  <p>
+    {{ 'This feature has been disabled. You can activate it here: %url%.'|trans({
+      '%url%': '<a href="' ~ path('admin_performance') ~ '#optional_features">' ~ 'Performance'|trans({}, 'Admin.Global') ~ '</a>'
+    }, 'Admin.Catalog.Notification')|raw }}
+  </p>
+</div>

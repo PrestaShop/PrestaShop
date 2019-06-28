@@ -28,14 +28,18 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
-        featureId: editableFeature.featureId.getValue,
-        featureForm: featureForm
-      } %}
+  {% if showDisabledFeatureWarning is defined and showDisabledFeatureWarning %}
+    {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig' %}
+  {% else %}
+    <div class="row justify-content-center">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
+          featureId: editableFeature.featureId.getValue,
+          featureForm: featureForm
+        } %}
+      </div>
     </div>
-  </div>
+  {% endif %}
 {% endblock %}
 
 {% block javascripts %}
