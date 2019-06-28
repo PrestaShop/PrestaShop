@@ -70,14 +70,11 @@
               {if $selected_delivery_option.logo}
                 <img src="{$selected_delivery_option.logo}" alt="{$selected_delivery_option.name}">
               {else}
-                &nbsp;
+                <span class="carrier-name">{$selected_delivery_option.name}</span>
               {/if}
             </div>
           </div>
-          <div class="col-md-4">
-            <span class="carrier-name">{$selected_delivery_option.name}</span>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-8">
             <span class="carrier-delay">{$selected_delivery_option.delay}</span>
           </div>
           <div class="col-md-2">
