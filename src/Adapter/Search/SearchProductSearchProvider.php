@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,24 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Search;
 
+use Hook;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
-use Symfony\Component\Translation\TranslatorInterface;
 use Search;
-use Hook;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 use Db;
 use Configuration;
@@ -54,12 +55,6 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
      * @var SortOrderFactory
      */
     private $sortOrderFactory;
-
-    /**
-     * @var Cache for weight word method
-     */
-    private static $cache = array();
-
 
     public function __construct(
         TranslatorInterface $translator
@@ -95,7 +90,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
 
             $count = $result['total'];
 
-            if(!$count) {
+            if (!$count) {
                 $result = Search::find(
                     $context->getIdLang(),
                     self::findClosestWeightestWords($context, $queryString),
@@ -119,7 +114,6 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 // deprecated since 1.7.x
                 'expr' => $queryString,
             ));
-
         } elseif (($tag = $query->getSearchTag())) {
             $queryString = urldecode($tag);
 
@@ -174,62 +168,64 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
     /**
      * @param ProductSearchContext $context
      * @param $queryString
+     *
      * @return string
      */
-    static function findClosestWeightestWords(ProductSearchContext $context, $queryString)
+    public static function findClosestWeightestWords(ProductSearchContext $context, $queryString)
     {
-        $distance          = array(); // cache levenshtein distance
-        $closestWords      = "";
+        $distance = array(); // cache levenshtein distance
+        $closestWords = "";
         $lenghtWordCoefMin = 0.7;
         $lenghtWordCoefMax = 1.5;
-        $MINWORDLEN        = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
-        $queries           = explode(' ', Search::sanitize($queryString, (int)$context->getIdLang(), false));
+        $MINWORDLEN = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
+        $queries = explode(' ', Search::sanitize($queryString, (int)$context->getIdLang(), false));
 
         foreach ($queries as $query)
         {
-            if(strlen($query) < $MINWORDLEN)
+            if(strlen($query) < $MINWORDLEN) {
                 continue;
+            }
+            
+            $targetLenghtMin = (int) (strlen($query) * $lenghtWordCoefMin);
+            $targetLenghtMax = (int) (strlen($query) * $lenghtWordCoefMax);
 
-            $targetLenghtMin = (int)(strlen($query) * $lenghtWordCoefMin);
-            $targetLenghtMax = (int)(strlen($query) * $lenghtWordCoefMax);
-
-            if($targetLenghtMin < $MINWORDLEN)
+            if($targetLenghtMin < $MINWORDLEN) {
                 $targetLenghtMin = $MINWORDLEN;
+            }
+                
 
             $sql = 'SELECT sw.`word`, SUM(weight) as weight
-                    FROM `'._DB_PREFIX_.'search_word` sw
-                    LEFT JOIN `'._DB_PREFIX_.'search_index` si ON (sw.`id_word` = si.`id_word`)
-                    WHERE sw.`id_lang` = '.(int)$context->getIdLang().'
-                    AND sw.`id_shop` = '.(int)$context->getIdShop().'
-                    AND LENGTH(sw.`word`) > '.$targetLenghtMin.'
-                    AND LENGTH(sw.`word`) < '.$targetLenghtMax.'
+                    FROM `' . _DB_PREFIX_ . 'search_word` sw
+                    LEFT JOIN `'  ._DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
+                    WHERE sw.`id_lang` = ' . (int) $context->getIdLang() . '
+                    AND sw.`id_shop` = ' . (int) $context->getIdShop() . '
+                    AND LENGTH(sw.`word`) > ' . $targetLenghtMin . '
+                    AND LENGTH(sw.`word`) < '  .$targetLenghtMax . '
                     GROUP BY sw.`word`;';
 
             $selectedWords = Db::getInstance()->executeS($sql);
 
             $closestWords .= array_reduce( $selectedWords, function($a, $b) use ($query, &$distance /* Cache */) {
 
-                if (!isset($distance[$a['word']]))
+                if (!isset($distance[$a['word']])) {
                     $distance[$a['word']] = levenshtein($a['word'], $query);
+                }
 
-                if (!isset($distance[$b['word']]))
+                if (!isset($distance[$b['word']])) {
                     $distance[$b['word']] = levenshtein($b['word'], $query);
+                }
 
-                if ($distance[$a['word']] < $distance[$b['word']])
-                {
+                if ($distance[$a['word']] < $distance[$b['word']]) {
                     return $a;
                 }
-                elseif ($distance[$a['word']] > $distance[$b['word']])
-                {
+                elseif ($distance[$a['word']] > $distance[$b['word']]) {
                     return $b;
-                }
-                else // if $distance[$a['word']] == $distance[$b['word']], sort by weight
-                {
+                } else { // if $distance[$a['word']] == $distance[$b['word']], sort by weight
                     return $a['weight'] > $b['weight'] ? $a : $b;
                 }
-            }, array ("word" => 'initial', "weight" => '0'))['word'];
+            }, array("word" => 'initial', "weight" => '0'))['word'];
 
-            if(next($queries)) {
+            if (next($queries)) {
                 unset($distance);
                 $closestWords .= ' ';
             }
