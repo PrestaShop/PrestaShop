@@ -47,12 +47,5 @@ SELECT `id_configuration`, l.`id_lang`, `value`
       )
   AND NOT EXISTS (SELECT 1 FROM `PREFIX_configuration_lang` WHERE `id_configuration` = c.`id_configuration`);
 
-/* Add field MPN to tables */
-ALTER TABLE `PREFIX_order_detail` ADD `product_mpn` VARCHAR(32) NULL AFTER `product_upc`;
-ALTER TABLE `PREFIX_supply_order_detail` ADD `mpn` VARCHAR(32) NULL AFTER `upc`;
-ALTER TABLE `PREFIX_stock` ADD `mpn` VARCHAR(32) NULL AFTER `upc`;
-ALTER TABLE `PREFIX_product_attribute` ADD `mpn` VARCHAR(32) NULL AFTER `upc`;
-ALTER TABLE `PREFIX_product` ADD `mpn` VARCHAR(32) NULL AFTER `upc`;
-
 /* PHP:ps_1760_update_configuration(); */;
 /* PHP:ps_1760_update_tabs(); */;
