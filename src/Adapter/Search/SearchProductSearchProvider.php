@@ -192,7 +192,6 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 $targetLenghtMin = $MINWORDLEN;
             }
                 
-
             $sql = 'SELECT sw.`word`, SUM(weight) as weight
                     FROM `' . _DB_PREFIX_ . 'search_word` sw
                     LEFT JOIN `'  ._DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
