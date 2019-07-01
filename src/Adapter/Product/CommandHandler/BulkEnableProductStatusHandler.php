@@ -33,6 +33,7 @@ final class BulkEnableProductStatusHandler implements BulkEnableProductStatusHan
                 );
             }
 
+            $entity->setFieldsToUpdate(['active' => true]);
             $entity->active = true;
 
             try {

@@ -3,6 +3,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Tester\Exception\PendingException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
 use Product;
@@ -76,5 +77,22 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getCommandBus()->handle(new BulkEnableProductStatusCommand($ids));
+    }
+
+    /**
+     * @When /^I bulk disable products "([^"]*)"$/
+     */
+    public function bulkDisableProducts($productReferences)
+    {
+        $storage = SharedStorage::getStorage();
+        $ids = [];
+        foreach (explode(',', $productReferences) as $productReference) {
+            /** @var Product $productFromStorage */
+            $productFromStorage = $storage->get($productReference);
+
+            $ids[] = (int) $productFromStorage->id;
+        }
+
+        $this->getCommandBus()->handle(new BulkDisableProductStatusCommand($ids));
     }
 }

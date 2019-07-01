@@ -32,8 +32,11 @@ final class ToggleProductStatusHandler implements ToggleProductStatusHandlerInte
             );
         }
 
+        $entity->setFieldsToUpdate(['active' => true]);
+        $entity->active = (bool) !$entity->active;
+
         try {
-            if (false === $entity->toggleStatus()) {
+            if (false === $entity->update()) {
                 throw new CannotToggleProductException(
                     sprintf(
                         'Failed to toggle product with id %s',
