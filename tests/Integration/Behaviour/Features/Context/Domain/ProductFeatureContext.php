@@ -2,18 +2,37 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Tester\Exception\PendingException;
+use Db;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
 use Product;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class ProductFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * This is used for TYPE_HTML type for object model field - in testing context this directory is not being
+     * created.
+     *
+     * @BeforeSuite
+     */
+    public static function enableHtmlPurifier($event)
+    {
+        $container = CommonFeatureContext::getContainer();
+
+        $purifierCacheDirectory = _PS_CACHE_DIR_ . 'purifier';
+        $filesystem = $container->get('filesystem');
+
+        if (!$filesystem->exists($purifierCacheDirectory)) {
+            $filesystem->mkdir($purifierCacheDirectory);
+        }
+    }
 
     /**
      * @Given /^product "([^"]*)" with id product "([^"]*)" exists$/
@@ -138,5 +157,39 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getCommandBus()->handle(new BulkDeleteProductCommand($ids));
+    }
+
+    /**
+     * @When /^duplicate product "([^"]*)"$/
+     */
+    public function duplicateProduct($productReferences)
+    {
+        /** @var Product $product */
+        $product = SharedStorage::getStorage()->get($productReferences);
+        $this->getCommandBus()->handle(new DuplicateProductCommand((int) $product->id));
+    }
+
+    /**
+     * @Then /^product with reference "([^"]*)" count is equal to "([^"]*)"$/
+     */
+    public function assertProductWithReferenceCountIsEqualTo($productReference, $expectedCount)
+    {
+        $sql = '
+          SELECT COUNT(p.`id_product`) FROM `' . _DB_PREFIX_ . 'product` p
+          WHERE p.`reference` = "' . $productReference . '"
+          ';
+
+        $productWithReferenceCount = (int) Db::getInstance()->getValue($sql);
+
+        if ($productWithReferenceCount !== (int) $expectedCount) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected product with reference %s to have %s count in database but got %s',
+                    $productReference,
+                    $expectedCount,
+                    $productWithReferenceCount
+                )
+            );
+        }
     }
 }

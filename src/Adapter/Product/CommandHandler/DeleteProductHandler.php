@@ -35,6 +35,8 @@ use Product;
 
 /**
  * Deletes product.
+ *
+ * @internal
  */
 final class DeleteProductHandler implements DeleteProductHandlerInterface
 {

@@ -102,7 +102,10 @@ class ProductController extends FrameworkBundleAdminController
 
     public function duplicateProductAction($productId)
     {
-//        todo: implement
+        $this->addFlash(
+            'success',
+            $this->trans('Product(s) successfully duplicated.', 'Admin.Catalog.Notification')
+        );
     }
 
     public function deleteAction($productId)
@@ -172,7 +175,7 @@ class ProductController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Product(s) successfully deleted.', 'Admin.Catalog.Notification')
             );
         } catch (ProductException $exception) {
             $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
