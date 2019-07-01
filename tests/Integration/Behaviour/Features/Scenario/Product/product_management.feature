@@ -32,3 +32,10 @@ Feature: Product management
     Given product "product3" with id product "3" exists
     When I delete product "product3"
     Then product with id "3" should not exist
+
+  Scenario: Bulk delete products
+    Given product "product4" with id product "4" exists
+    And product "product5" with id product "5" exists
+    When I bulk delete products "product4,product5"
+    Then product with id "4" should not exist
+    And product with id "5" should not exist
