@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductPreviewUrl;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -66,15 +67,13 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param $productId
      *
-     * @todo: open in new window
-     *
      * @return Response
      */
     public function previewAction($productId)
     {
-        return $this->redirect(
-            $this->get('prestashop.adapter.product.product_url_provider')->getUrl($productId)
-        );
+        $link = $this->getQueryBus()->handle(new GetProductPreviewUrl((int) $productId));
+
+        return $this->redirect($link);
     }
 
     public function editAction($productId)
