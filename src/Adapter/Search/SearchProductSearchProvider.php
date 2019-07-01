@@ -173,22 +173,21 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
     public static function findClosestWeightestWords(ProductSearchContext $context, $queryString)
     {
         $distance = array(); // cache levenshtein distance
-        $closestWords = "";
+        $closestWords = '';
         $lenghtWordCoefMin = 0.7;
         $lenghtWordCoefMax = 1.5;
-        $MINWORDLEN = (int)Configuration::get('PS_SEARCH_MINWORDLEN');
-        $queries = explode(' ', Search::sanitize($queryString, (int)$context->getIdLang(), false));
+        $MINWORDLEN = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
+        $queries = explode(' ', Search::sanitize($queryString, (int) $context->getIdLang(), false));
 
-        foreach ($queries as $query)
-        {
-            if(strlen($query) < $MINWORDLEN) {
+        foreach ($queries as $query) {
+            if (strlen($query) < $MINWORDLEN) {
                 continue;
             }
             
             $targetLenghtMin = (int) (strlen($query) * $lenghtWordCoefMin);
             $targetLenghtMax = (int) (strlen($query) * $lenghtWordCoefMax);
 
-            if($targetLenghtMin < $MINWORDLEN) {
+            if ($targetLenghtMin < $MINWORDLEN) {
                 $targetLenghtMin = $MINWORDLEN;
             }
                 
@@ -202,8 +201,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                     GROUP BY sw.`word`;';
 
             $selectedWords = Db::getInstance()->executeS($sql);
-
-            $closestWords .= array_reduce( $selectedWords, function($a, $b) use ($query, &$distance /* Cache */) {
+            $closestWords .= array_reduce($selectedWords, function($a, $b) use ($query, &$distance /* Cache */) {
 
                 if (!isset($distance[$a['word']])) {
                     $distance[$a['word']] = levenshtein($a['word'], $query);
@@ -218,7 +216,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 } else {
                     return $a['weight'] > $b['weight'] ? $a : $b;
                 }
-            }, array("word" => 'initial', "weight" => '0'))['word'];
+            }, array('word' => 'initial', 'weight' => '0'))['word'];
 
             if (next($queries)) {
                 unset($distance);
