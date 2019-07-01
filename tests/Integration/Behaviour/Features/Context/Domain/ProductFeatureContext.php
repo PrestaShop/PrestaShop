@@ -5,6 +5,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Behat\Tester\Exception\PendingException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
 use Product;
 use RuntimeException;
@@ -53,6 +54,20 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^product with id "([^"]*)" should not exist$/
+     */
+    public function assertProductWithIdShouldNotExist($productId)
+    {
+        $product = new Product($productId);
+
+        if ($product->id > 0) {
+            throw new RuntimeException(
+                sprintf('Expected product with id "%s" should not exist', $product->id)
+            );
+        }
+    }
+
+    /**
      * @When /^I toggle status of product "([^"]*)"$/
      */
     public function toggleStatus($storageReference)
@@ -94,5 +109,16 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getCommandBus()->handle(new BulkDisableProductStatusCommand($ids));
+    }
+
+    /**
+     * @When /^I delete product "([^"]*)"$/
+     */
+    public function deleteProduct($productReferences)
+    {
+        /** @var Product $product */
+        $product = SharedStorage::getStorage()->get($productReferences);
+
+        $this->getCommandBus()->handle(new DeleteProductCommand((int) $product->id));
     }
 }
