@@ -3,6 +3,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Tester\Exception\PendingException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
@@ -120,5 +121,22 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $product = SharedStorage::getStorage()->get($productReferences);
 
         $this->getCommandBus()->handle(new DeleteProductCommand((int) $product->id));
+    }
+
+    /**
+     * @When /^I bulk delete products "([^"]*)"$/
+     */
+    public function bulkDeleteProducts($productReferences)
+    {
+        $storage = SharedStorage::getStorage();
+        $ids = [];
+        foreach (explode(',', $productReferences) as $productReference) {
+            /** @var Product $productFromStorage */
+            $productFromStorage = $storage->get($productReference);
+
+            $ids[] = (int) $productFromStorage->id;
+        }
+
+        $this->getCommandBus()->handle(new BulkDeleteProductCommand($ids));
     }
 }

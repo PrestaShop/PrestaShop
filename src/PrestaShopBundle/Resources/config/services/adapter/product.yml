@@ -107,3 +107,9 @@ services:
         tags:
           - name: tactician.handler
             command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
+
+    prestashop.adapter.product.command_handler.bulk_delete_product_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDeleteProductHandler'
+        tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
