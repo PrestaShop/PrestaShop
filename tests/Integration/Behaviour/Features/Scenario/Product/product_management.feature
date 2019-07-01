@@ -44,3 +44,10 @@ Feature: Product management
     Given product "product1" with id product "1" exists
     When duplicate product "product1"
     Then product with reference "demo_1" count is equal to "2"
+
+  Scenario: Bulk duplicate products
+    Given product "product6" with id product "6" exists
+    And product "product7" with id product "7" exists
+    When bulk duplicate product "product6,product7"
+    Then product with reference "demo_11" count is equal to "2"
+    And product with reference "demo_12" count is equal to "2"

@@ -114,10 +114,18 @@ services:
           - name: tactician.handler
             command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
 
-    prestashop.adapter.product_command_handler.duplicate_product_handler:
+    prestashop.adapter.product.command_handler.duplicate_product_handler:
         class: 'PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler'
         arguments:
           - '@prestashop.adapter.admin.data_updater.product'
         tags:
           - name: tactician.handler
             command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
+
+    prestashop.adapter.product.command_handler.bulk_duplicate_product_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDuplicateProductHandler'
+        arguments:
+          - '@prestashop.adapter.admin.data_updater.product'
+        tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
