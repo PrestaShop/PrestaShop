@@ -77,6 +77,13 @@ admin_products_duplicate:
   requirements:
     productId: \d+
 
+admin_products_bulk_duplicate:
+  path: /bulk-duplicate
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:bulkDuplicateProducts'
+    _legacy_controller: AdminProducts
+
 admin_products_delete:
   path: /{productId}/delete
   methods: DELETE

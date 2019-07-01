@@ -332,6 +332,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new SubmitBulkAction('duplicate_selection'))
+                    ->setName($this->trans('Duplicate selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_products_bulk_duplicate',
+                    ])
+            )
+            ->add(
                 (new SubmitBulkAction('delete_selection'))
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([

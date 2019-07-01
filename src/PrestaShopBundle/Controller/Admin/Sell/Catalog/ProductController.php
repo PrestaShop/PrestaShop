@@ -4,6 +4,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
@@ -122,6 +123,24 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_product_form', [
             'id' => $productId->getValue(),
         ]);
+    }
+
+    public function bulkDuplicateProductsAction(Request $request)
+    {
+        $productIds = $this->getProductsIdsFromBulkAction($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDuplicateProductCommand($productIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Product(s) successfully duplicated.', 'Admin.Catalog.Notification')
+            );
+        } catch (ProductException $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_products_index');
     }
 
     public function deleteAction($productId)
