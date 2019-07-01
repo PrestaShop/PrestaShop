@@ -27,3 +27,8 @@ Feature: Product management
     When I bulk disable products "product2,product1"
     Then product "product1" should have status "0"
     And product "product2" should have status "0"
+
+  Scenario: Delete product
+    Given product "product3" with id product "3" exists
+    When I delete product "product3"
+    Then product with id "3" should not exist
