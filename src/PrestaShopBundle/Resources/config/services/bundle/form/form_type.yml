@@ -866,8 +866,10 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.min_max_filter:
-        class: 'PrestaShopBundle\Form\Admin\Type\MinMaxFilterType'
+    form.type.integer_min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType'
         public: true
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
