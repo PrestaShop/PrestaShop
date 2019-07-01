@@ -213,10 +213,10 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                     $distance[$b['word']] = levenshtein($b['word'], $query);
                 }
 
-                if ($distance[$a['word']] == $distance[$b['word']]) {
-                    return $a['weight'] > $b['weight'] ? $a : $b;
-                } else {
+                if ($distance[$a['word']] != $distance[$b['word']]) {
                     return $distance[$a['word']] < $distance[$b['word']] ? $a : $b;
+                } else {
+                    return $a['weight'] > $b['weight'] ? $a : $b;
                 }
             }, array("word" => 'initial', "weight" => '0'))['word'];
 
