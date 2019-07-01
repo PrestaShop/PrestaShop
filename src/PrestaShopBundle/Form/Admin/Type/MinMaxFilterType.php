@@ -9,9 +9,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form type defines to numeric input fields range from minimum to maximum.
+ * This form type defines to numeric input fields range from minimum to maximum for grid actions.
  */
-class MinMaxType extends AbstractType
+class MinMaxFilterType extends AbstractType
 {
     /**
      * {@inheritdoc}

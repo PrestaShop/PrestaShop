@@ -85,6 +85,17 @@ table .column-filters td:last-child .grid-reset-button {
 
 .grid {
   table.grid-table {
+    thead {
+      tr {
+        td {
+          .min-field,
+          .max-field {
+            display: inline-block;
+            width: 50px;
+          }
+        }
+      }
+    }
     tbody {
       tr {
         $tr: &;

@@ -866,8 +866,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.min_max:
-        class: 'PrestaShopBundle\Form\Admin\Type\MinMaxType'
+    form.type.min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\MinMaxFilterType'
         public: true
         tags:
           - { name: form.type }

@@ -781,20 +781,7 @@
   </small>
 {% endblock text_with_recommended_length_widget %}
 
-{% block min_max_widget %}
-  {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
-  <div class="row">
-    <div class="col">
-      {{ ps.form_group_row(form['min_field'], {}, {
-        'help': form['min_field'].vars.help
-      }) }}
-
-    </div>
-    <div class="col">
-      {{ ps.form_group_row(form['max_field'], {}, {
-        'help': form['max_field'].vars.help
-      }) }}
-    </div>
-  </div>
+{% block min_max_filter_widget %}
+  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
