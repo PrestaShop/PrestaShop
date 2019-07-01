@@ -39,3 +39,8 @@ Feature: Product management
     When I bulk delete products "product4,product5"
     Then product with id "4" should not exist
     And product with id "5" should not exist
+
+  Scenario: Duplicate product
+    Given product "product1" with id product "1" exists
+    When duplicate product "product1"
+    Then product with reference "demo_1" count is equal to "2"

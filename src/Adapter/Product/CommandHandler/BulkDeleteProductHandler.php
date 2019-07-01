@@ -8,6 +8,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductExcep
 use PrestaShopException;
 use Product;
 
+/**
+ * Deletes multiple products.
+ *
+ * @internal
+ */
 final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterface
 {
     /**
