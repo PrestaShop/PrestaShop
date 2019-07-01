@@ -6,13 +6,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDisableProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,10 +105,23 @@ class ProductController extends FrameworkBundleAdminController
 
     public function duplicateProductAction($productId)
     {
-        $this->addFlash(
-            'success',
-            $this->trans('Product(s) successfully duplicated.', 'Admin.Catalog.Notification')
-        );
+        try {
+            /** @var ProductId $productId */
+            $productId = $this->getCommandBus()->handle(new DuplicateProductCommand((int) $productId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Product(s) successfully duplicated.', 'Admin.Catalog.Notification')
+            );
+        } catch (ProductException $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_products_index');
+        }
+
+        return $this->redirectToRoute('admin_product_form', [
+            'id' => $productId->getValue(),
+        ]);
     }
 
     public function deleteAction($productId)
