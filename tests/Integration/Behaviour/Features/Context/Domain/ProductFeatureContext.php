@@ -2,9 +2,11 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Db;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
@@ -83,6 +85,30 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         if ($product->id > 0) {
             throw new RuntimeException(
                 sprintf('Expected product with id "%s" should not exist', $product->id)
+            );
+        }
+    }
+
+    /**
+     * @Then /^product with reference "([^"]*)" count is equal to "([^"]*)"$/
+     */
+    public function assertProductWithReferenceCountIsEqualTo($productReference, $expectedCount)
+    {
+        $sql = '
+          SELECT COUNT(p.`id_product`) FROM `' . _DB_PREFIX_ . 'product` p
+          WHERE p.`reference` = "' . $productReference . '"
+          ';
+
+        $productWithReferenceCount = (int) Db::getInstance()->getValue($sql);
+
+        if ($productWithReferenceCount !== (int) $expectedCount) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected product with reference %s to have %s count in database but got %s',
+                    $productReference,
+                    $expectedCount,
+                    $productWithReferenceCount
+                )
             );
         }
     }
@@ -170,26 +196,19 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^product with reference "([^"]*)" count is equal to "([^"]*)"$/
+     * @When /^bulk duplicate product "([^"]*)"$/
      */
-    public function assertProductWithReferenceCountIsEqualTo($productReference, $expectedCount)
+    public function bulkDuplicateProduct($productReferences)
     {
-        $sql = '
-          SELECT COUNT(p.`id_product`) FROM `' . _DB_PREFIX_ . 'product` p
-          WHERE p.`reference` = "' . $productReference . '"
-          ';
+        $storage = SharedStorage::getStorage();
+        $ids = [];
+        foreach (explode(',', $productReferences) as $productReference) {
+            /** @var Product $productFromStorage */
+            $productFromStorage = $storage->get($productReference);
 
-        $productWithReferenceCount = (int) Db::getInstance()->getValue($sql);
-
-        if ($productWithReferenceCount !== (int) $expectedCount) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expected product with reference %s to have %s count in database but got %s',
-                    $productReference,
-                    $expectedCount,
-                    $productWithReferenceCount
-                )
-            );
+            $ids[] = (int) $productFromStorage->id;
         }
+
+        $this->getCommandBus()->handle(new BulkDuplicateProductCommand($ids));
     }
 }
