@@ -20,3 +20,10 @@ Feature: Product management
     When I bulk enable products "product2,product1"
     Then product "product1" should have status "1"
     And product "product2" should have status "1"
+
+  Scenario: Bulk disable products
+    Given product "product1" with id product "1" exists
+    And product "product2" with id product "2" exists
+    When I bulk disable products "product2,product1"
+    Then product "product1" should have status "0"
+    And product "product2" should have status "0"
