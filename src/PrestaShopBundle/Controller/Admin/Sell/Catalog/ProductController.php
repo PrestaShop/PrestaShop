@@ -18,7 +18,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductPreviewUrl;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -158,9 +160,42 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_products_index');
     }
 
-    public function exportAction()
+    //todo: test with position
+    public function exportAction(ProductFilters $filters)
     {
-//        todo: implement
+        $productGridFactory = $this->get('prestashop.core.grid.factory.product');
+        $productGrid = $productGridFactory->getGrid($filters);
+
+        $columns = $productGrid->getDefinition()->getColumns();
+
+        $headers = [];
+
+        /**
+         * @var string $columnId
+         * @var ColumnInterface $column
+         */
+        foreach ($columns as $columnId => $column) {
+            $headers[$columnId] = $column->getName();
+        }
+
+        $data = [];
+        $iteration = 0;
+
+        /** @var array $record */
+        foreach ($productGrid->getData()->getRecords()->all() as $record) {
+            foreach ($record as $columnId => $columnValue) {
+                if (isset($headers[$columnId])) {
+                    $data[$iteration][$columnId] = $columnValue;
+                }
+            }
+
+            $iteration++;
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('product_' . date('Y-m-d_His') . '.csv');
     }
 
     //todo: check called hooks - each action has a hook in legacy. Ask if we need so much hooks
