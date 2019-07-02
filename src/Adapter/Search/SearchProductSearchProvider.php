@@ -55,6 +55,12 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
      */
     private $sortOrderFactory;
 
+    /**
+     * @const Limit of length word we want to compare in findClosestWeightestWords()
+     */
+    const LENGHTWORDCOEFMIN = 0.7;
+    const LENGHTWORDCOEFMAX = 1.5;
+
     public function __construct(
         TranslatorInterface $translator
     ) {
@@ -173,22 +179,20 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
     public static function findClosestWeightestWords(ProductSearchContext $context, $queryString)
     {
         $distance = array(); // cache levenshtein distance
-        $closestWords = '';
-        $lenghtWordCoefMin = 0.7;
-        $lenghtWordCoefMax = 1.5;
-        $MINWORDLEN = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
+        $closestWords = [];
+        $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
         $queries = explode(' ', Search::sanitize($queryString, (int) $context->getIdLang(), false));
 
         foreach ($queries as $query) {
-            if (strlen($query) < $MINWORDLEN) {
+            if (strlen($query) < $searchMinWordLength) {
                 continue;
             }
 
-            $targetLenghtMin = (int) (strlen($query) * $lenghtWordCoefMin);
-            $targetLenghtMax = (int) (strlen($query) * $lenghtWordCoefMax);
+            $targetLenghtMin = (int) (strlen($query) * self::LENGHTWORDCOEFMIN);
+            $targetLenghtMax = (int) (strlen($query) * self::LENGHTWORDCOEFMAX);
 
-            if ($targetLenghtMin < $MINWORDLEN) {
-                $targetLenghtMin = $MINWORDLEN;
+            if ($targetLenghtMin < $searchMinWordLength) {
+                $targetLenghtMin = $searchMinWordLength;
             }
 
             $sql = 'SELECT sw.`word`, SUM(weight) as weight
@@ -201,7 +205,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                     GROUP BY sw.`word`;';
 
             $selectedWords = Db::getInstance()->executeS($sql);
-            $closestWords .= array_reduce($selectedWords, function ($a, $b) use ($query, &$distance /* Cache */) {
+            $closestWords []= array_reduce($selectedWords, function ($a, $b) use ($query, &$distance /* Cache */) {
                 if (!isset($distance[$a['word']])) {
                     $distance[$a['word']] = levenshtein($a['word'], $query);
                 }
@@ -212,17 +216,14 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
 
                 if ($distance[$a['word']] != $distance[$b['word']]) {
                     return $distance[$a['word']] < $distance[$b['word']] ? $a : $b;
-                } else {
-                    return $a['weight'] > $b['weight'] ? $a : $b;
                 }
+                return $a['weight'] > $b['weight'] ? $a : $b;
+
             }, array('word' => 'initial', 'weight' => '0'))['word'];
 
-            if (next($queries)) {
-                unset($distance);
-                $closestWords .= ' ';
-            }
+            unset($distance);
         }
 
-        return $closestWords;
+        return implode(' ', $closestWords);
     }
 }
