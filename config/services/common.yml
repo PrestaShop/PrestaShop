@@ -14,5 +14,8 @@ services:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ['%database_prefix%']
 
+    prestashop.doctrine.ignore_foreign_keys_platform:
+        class: PrestaShopBundle\Doctrine\IgnoreForeignKeysPlatform
+
     annotation_reader:
         class: Doctrine\Common\Annotations\AnnotationReader

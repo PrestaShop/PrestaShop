@@ -107,5 +107,5 @@ services:
         class: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
         arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']
 
-    prestashop.core.ignore_foreign_keys_platform:
-        class: PrestaShopBundle\Doctrine\IgnoreForeignKeysPlatform
+    prestashop.doctrine.ignore_foreign_keys_platform:
+      class: PrestaShopBundle\Doctrine\IgnoreForeignKeysPlatform

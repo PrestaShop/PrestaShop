@@ -84,7 +84,7 @@ doctrine:
                 password: "%database_password%"
                 server_version: 5.1
                 charset:  UTF8
-                platform_service: prestashop.core.ignore_foreign_keys_platform
+                platform_service: prestashop.doctrine.ignore_foreign_keys_platform
                 # if using pdo_sqlite as your database driver:
                 #   1. add the path in parameters.yml
                 #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
