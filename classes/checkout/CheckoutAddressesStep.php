@@ -157,7 +157,9 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                     'Shop.Notifications.Error'
                 );
             }
-        } elseif (isset($requestParams['confirm-addresses'])) {
+        }
+
+        if (isset($requestParams['confirm-addresses'])) {
             if (isset($requestParams['id_address_delivery'])) {
                 $id_address = $requestParams['id_address_delivery'];
 
