@@ -23,6 +23,13 @@ admin_product_edit:
   requirements:
     productId: \d+
 
+admin_product_create:
+  path: /create
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Product:create'
+    _legacy_controller: AdminProducts
+
 admin_product_edit_quantity:
   path: /{productId}/edit-quantity
   methods: GET

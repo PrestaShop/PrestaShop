@@ -11,7 +11,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDisableProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -81,6 +80,11 @@ class ProductController extends FrameworkBundleAdminController
     public function editAction($productId)
     {
         return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
+    }
+
+    public function createAction()
+    {
+        return $this->redirectToRoute('admin_product_new');
     }
 
     public function editQuantityAction($productId)
@@ -161,6 +165,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     //todo: test with position
+    //todo: quite universal export logic - maybe we should create a service for csv export data retrieval?
     public function exportAction(ProductFilters $filters)
     {
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');

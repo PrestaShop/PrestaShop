@@ -25,6 +25,15 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% set layoutHeaderToolbarBtn = {
+  add_product: {
+    href: path('admin_product_create'),
+    desc: 'New product'|trans({}, 'Admin.Actions'),
+    icon: 'add_circle_outline',
+  }
+}
+%}
+
 {% block content %}
   {% block products_listing %}
     <div class="row">

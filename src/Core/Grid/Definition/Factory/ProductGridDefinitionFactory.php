@@ -195,7 +195,6 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
 
-        //todo: test on or off
         if ($this->isStockManagementEnabled) {
             $columns->addAfter(
                 'price_tax_included',
