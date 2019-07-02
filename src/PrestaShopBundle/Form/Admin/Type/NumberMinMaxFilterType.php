@@ -4,14 +4,14 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Defines the integer type two inputs of min and max value - designed to fit grid in grid filter.
+ * Defines the number type two inputs of min and max value - designed to fit grid in grid filter.
  */
-final class IntegerMinMaxFilterType extends AbstractType
+final class NumberMinMaxFilterType extends AbstractType
 {
     use TranslatorAwareTrait;
 
@@ -34,7 +34,6 @@ final class IntegerMinMaxFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         if (!isset($options['min_field_options']['attr']['placeholder'])) {
             $options['min_field_options']['attr']['placeholder'] = $this->trans('Min', [], 'Admin.Global');
         }
@@ -43,18 +42,7 @@ final class IntegerMinMaxFilterType extends AbstractType
             $options['max_field_options']['attr']['placeholder'] = $this->trans('Max', [], 'Admin.Global');
         }
 
-        if (!isset($options['min_field_options']['attr']['min'])) {
-            $options['min_field_options']['attr']['min'] = 0;
-        }
-
-        if (!isset($options['max_field_options']['attr']['min'])) {
-            $options['max_field_options']['attr']['min'] = 0;
-        }
-
-        $options['min_field_options']['attr']['step'] = 1;
-        $options['max_field_options']['attr']['step'] = 1;
-
-        $builder->add('min_field', IntegerType::class, $options['min_field_options']);
-        $builder->add('max_field', IntegerType::class, $options['max_field_options']);
+        $builder->add('min_field', NumberType::class, $options['min_field_options']);
+        $builder->add('max_field', NumberType::class, $options['max_field_options']);
     }
 }

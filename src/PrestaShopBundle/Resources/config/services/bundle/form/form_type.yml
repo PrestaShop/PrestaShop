@@ -873,3 +873,11 @@ services:
           - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
+
+    form.type.number_min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType'
+        public: true
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }

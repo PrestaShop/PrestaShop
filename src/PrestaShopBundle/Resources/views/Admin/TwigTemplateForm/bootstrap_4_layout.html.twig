@@ -785,3 +785,8 @@
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
+
+{% block number_min_max_filter_widget %}
+  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}
