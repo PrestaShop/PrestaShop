@@ -1,9 +1,9 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product
 @reset-database-before-feature
-Feature: Product management
+Feature: Product list domain management
   Prestashop allows BO users to manage products
   As a BO user
-  I must be able to creat, edit, delete products in my shop
+  I must be able to creat, edit, delete products, toggle, duplicate in my shop
 
   Scenario: Toggle product active status
     Given product "product1" with id product "1" exists
