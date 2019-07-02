@@ -19,24 +19,6 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class ProductFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * This is used for TYPE_HTML type for object model field - in testing context this directory is not being
-     * created.
-     *
-     * @BeforeSuite
-     */
-    public static function enableHtmlPurifier($event)
-    {
-        $container = CommonFeatureContext::getContainer();
-
-        $purifierCacheDirectory = _PS_CACHE_DIR_ . 'purifier';
-        $filesystem = $container->get('filesystem');
-
-        if (!$filesystem->exists($purifierCacheDirectory)) {
-            $filesystem->mkdir($purifierCacheDirectory);
-        }
-    }
-
-    /**
      * @Given /^product "([^"]*)" with id product "([^"]*)" exists$/
      */
     public function assertProductWithIdProductExists($storageReference, $productId)
