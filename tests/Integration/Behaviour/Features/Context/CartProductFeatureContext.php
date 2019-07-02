@@ -38,7 +38,7 @@ use Product;
 use SpecificPrice;
 use StockAvailable;
 
-class ProductFeatureContext extends AbstractPrestaShopFeatureContext
+class CartProductFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 

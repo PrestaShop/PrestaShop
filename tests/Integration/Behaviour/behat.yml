@@ -40,7 +40,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ContextFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CartProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\TaxFeatureContext
