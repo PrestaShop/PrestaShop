@@ -44,7 +44,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     protected $cartRules = [];
 
     /**
-     * @var ProductFeatureContext
+     * @var CartProductFeatureContext
      */
     protected $productFeatureContext;
 
@@ -79,7 +79,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+        $this->productFeatureContext = $scope->getEnvironment()->getContext(CartProductFeatureContext::class);
         $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
         $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
         $this->categoryFeatureContext = $scope->getEnvironment()->getContext(CategoryFeatureContext::class);

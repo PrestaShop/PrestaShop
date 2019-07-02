@@ -57,7 +57,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     protected $carrierFeatureContext;
 
     /**
-     * @var ProductFeatureContext
+     * @var CartProductFeatureContext
      */
     protected $productFeatureContext;
 
@@ -65,7 +65,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     public function before(BeforeScenarioScope $scope)
     {
         $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+        $this->productFeatureContext = $scope->getEnvironment()->getContext(CartProductFeatureContext::class);
     }
 
     /**
