@@ -34,7 +34,6 @@ final class IntegerMinMaxFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         if (!isset($options['min_field_options']['attr']['placeholder'])) {
             $options['min_field_options']['attr']['placeholder'] = $this->trans('Min', [], 'Admin.Global');
         }
