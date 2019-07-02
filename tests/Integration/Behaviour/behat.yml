@@ -176,5 +176,6 @@ default:
                 features: Features/Scenario/Product
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
