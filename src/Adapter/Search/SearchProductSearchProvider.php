@@ -217,8 +217,8 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 if ($distance[$a['word']] != $distance[$b['word']]) {
                     return $distance[$a['word']] < $distance[$b['word']] ? $a : $b;
                 }
+                
                 return $a['weight'] > $b['weight'] ? $a : $b;
-
             }, array('word' => 'initial', 'weight' => '0'))['word'];
 
             unset($distance);
