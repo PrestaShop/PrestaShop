@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,6 +62,7 @@ class ProductController extends FrameworkBundleAdminController
      *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
+     * @DemoRestricted(redirectRoute="admin_products_index")
      *
      * @param int $productId
      *
@@ -188,6 +190,7 @@ class ProductController extends FrameworkBundleAdminController
      *     redirectRoute="admin_products_index",
      *     message="You do not have permission to create this."
      * )
+     * @DemoRestricted(redirectRoute="admin_products_index")
      *
      * @param int $productId
      *
@@ -222,6 +225,7 @@ class ProductController extends FrameworkBundleAdminController
      *     redirectRoute="admin_products_index",
      *     message="You do not have permission to create this."
      * )
+     * @DemoRestricted(redirectRoute="admin_products_index")
      *
      * @param Request $request
      *
@@ -253,6 +257,7 @@ class ProductController extends FrameworkBundleAdminController
      *     redirectRoute="admin_products_index",
      *     message="You do not have permission to delete this."
      * )
+     * @DemoRestricted(redirectRoute="admin_products_index")
      *
      * @param int $productId
      *
@@ -332,6 +337,7 @@ class ProductController extends FrameworkBundleAdminController
      *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
+     * @DemoRestricted(redirectRoute="admin_products_index")
      *
      * @param Request $request
      *
@@ -363,6 +369,7 @@ class ProductController extends FrameworkBundleAdminController
      *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
+     * @DemoRestricted(redirectRoute="admin_products_index")
      *
      * @param Request $request
      *
@@ -394,6 +401,7 @@ class ProductController extends FrameworkBundleAdminController
      *     redirectRoute="admin_products_index",
      *     message="You do not have permission to delete this."
      * )
+     * @DemoRestricted(redirectRoute="admin_products_index")
      *
      * @param Request $request
      *
