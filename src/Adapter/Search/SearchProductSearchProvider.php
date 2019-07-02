@@ -183,26 +183,25 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
             if (strlen($query) < $MINWORDLEN) {
                 continue;
             }
-            
+
             $targetLenghtMin = (int) (strlen($query) * $lenghtWordCoefMin);
             $targetLenghtMax = (int) (strlen($query) * $lenghtWordCoefMax);
 
             if ($targetLenghtMin < $MINWORDLEN) {
                 $targetLenghtMin = $MINWORDLEN;
             }
-                
+
             $sql = 'SELECT sw.`word`, SUM(weight) as weight
                     FROM `' . _DB_PREFIX_ . 'search_word` sw
-                    LEFT JOIN `'  ._DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
+                    LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
                     WHERE sw.`id_lang` = ' . (int) $context->getIdLang() . '
                     AND sw.`id_shop` = ' . (int) $context->getIdShop() . '
                     AND LENGTH(sw.`word`) > ' . $targetLenghtMin . '
-                    AND LENGTH(sw.`word`) < '  .$targetLenghtMax . '
+                    AND LENGTH(sw.`word`) < ' . $targetLenghtMax . '
                     GROUP BY sw.`word`;';
 
             $selectedWords = Db::getInstance()->executeS($sql);
-            $closestWords .= array_reduce($selectedWords, function($a, $b) use ($query, &$distance /* Cache */) {
-
+            $closestWords .= array_reduce($selectedWords, function ($a, $b) use ($query, &$distance /* Cache */) {
                 if (!isset($distance[$a['word']])) {
                     $distance[$a['word']] = levenshtein($a['word'], $query);
                 }
