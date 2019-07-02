@@ -140,6 +140,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'img_shop',
                 'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
             )
+            ->andWhere('p.`state`=1')
         ;
 
         if ($this->isStockManagementEnabled) {
