@@ -21,6 +21,8 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,6 +32,10 @@ use Symfony\Component\HttpFoundation\Response;
 class ProductController extends FrameworkBundleAdminController
 {
     /**
+     * Shows products listing.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param ProductFilters $filters
      *
@@ -47,6 +53,19 @@ class ProductController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Changes products "enabled" or "disabled" state.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
     public function toggleAction($productId)
     {
         try {
@@ -66,7 +85,9 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Previews product in front page.
      *
-     * @param $productId
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $productId
      *
      * @return Response
      */
@@ -77,16 +98,53 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirect($link);
     }
 
+    /**
+     * Redirects to edit product form.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
     public function editAction($productId)
     {
         return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
     }
 
+    /**
+     * Redirects to product creation form.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @return RedirectResponse
+     */
     public function createAction()
     {
         return $this->redirectToRoute('admin_product_new');
     }
 
+    /**
+     * Redirects to step where product quantity can be edited.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
     public function editQuantityAction($productId)
     {
         $response = $this->redirectToRoute('admin_product_form', [
@@ -98,6 +156,19 @@ class ProductController extends FrameworkBundleAdminController
         );
     }
 
+    /**
+     * Redirects to step where product price can be edited.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
     public function editPriceAction($productId)
     {
         $response = $this->redirectToRoute('admin_product_form', [
@@ -109,6 +180,19 @@ class ProductController extends FrameworkBundleAdminController
         );
     }
 
+    /**
+     * Duplicates given product and creates new product from duplicate.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
     public function duplicateProductAction($productId)
     {
         try {
@@ -130,6 +214,19 @@ class ProductController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Duplicates multiple products.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkDuplicateProductsAction(Request $request)
     {
         $productIds = $this->getProductsIdsFromBulkAction($request);
@@ -148,6 +245,19 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_products_index');
     }
 
+    /**
+     * Deletes product.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
     public function deleteAction($productId)
     {
         try {
@@ -166,6 +276,15 @@ class ProductController extends FrameworkBundleAdminController
 
     //todo: test with position
     //todo: quite universal export logic - maybe we should create a service for csv export data retrieval?
+    /**
+     * Exports products to csv.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param ProductFilters $filters
+     *
+     * @return CsvResponse
+     */
     public function exportAction(ProductFilters $filters)
     {
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
@@ -204,6 +323,20 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     //todo: check called hooks - each action has a hook in legacy. Ask if we need so much hooks
+
+    /**
+     * Bulk enables products.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkEnableAction(Request $request)
     {
         $productIds = $this->getProductsIdsFromBulkAction($request);
@@ -222,6 +355,19 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_products_index');
     }
 
+    /**
+     * Bulk disables products.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkDisableAction(Request $request)
     {
         $productIds = $this->getProductsIdsFromBulkAction($request);
@@ -240,6 +386,19 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_products_index');
     }
 
+    /**
+     * Bulk deletes products.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkDeleteAction(Request $request)
     {
         $productIds = $this->getProductsIdsFromBulkAction($request);
@@ -260,6 +419,8 @@ class ProductController extends FrameworkBundleAdminController
 
     /**
      * Gets error message mapping.
+     *
+     * @return array
      */
     private function getErrorMessages()
     {
