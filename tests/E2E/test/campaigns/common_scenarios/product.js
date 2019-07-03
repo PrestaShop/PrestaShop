@@ -819,12 +819,6 @@ module.exports = {
       await client.checkTextValue(AddProductPage.success_panel, 'Product successfully duplicated.');
       await client.pause(3000);
     });
-    test('should save then go to catalog page with "ALT+ SHIFT + Q"', async () => {
-      await client.keys(["\uE00A", "\uE008", "\u0051"]);
-      await client.keys(["\uE00A", "\uE008", "\u0041"]);
-      await client.keys(["\uE00A", "\uE008", "\u0041"]);
-      await client.waitForVisibleAndClick(AddProductPage.new_product_button);
-    });
     if (productType === 'virtual') {
       test('should select the "virtual product" type', () => client.waitAndSelectByValue(AddProductPage.product_type, 2));
     }
@@ -917,11 +911,6 @@ module.exports = {
       this.clickOnCoverAndSave(client);
       test('should set the "Legend picture"', () => client.waitAndSetValue(AddProductPage.picture_legend_en_textarea, data.common.first_picture_legend));
       test('should click on "Save image settings" button', () => client.waitForExistAndClick(AddProductPage.picture_save_image_settings_button));
-      /**
-       * This error is due to the bug described in this issue
-       * https://github.com/PrestaShop/PrestaShop/issues/9631
-       **/
-      test('should verify the appearance of the green validation (issue #9631)', () => client.checkTextValue(AddProductPage.validation_msg, "Settings updated."));
       test('should click on "Close" button', () => client.waitForExistAndClick(AddProductPage.picture_close_button));
       test('should upload the second product picture', async () => {
         await client.checkIsVisible(AddProductPage.prodcut_picture_bloc);
@@ -931,11 +920,6 @@ module.exports = {
       test('should click on "Second image" of product', () => client.waitForExistAndClick(AddProductPage.picture_background.replace('%POS', 1)));
       test('should set the "Legend picture"', () => client.waitAndSetValue(AddProductPage.picture_legend_en_textarea, data.common.second_picture_legend));
       test('should click on "Save image settings" button', () => client.waitForExistAndClick(AddProductPage.picture_save_image_settings_button));
-      /**
-       * This error is due to the bug described in this issue
-       * https://github.com/PrestaShop/PrestaShop/issues/9631
-       **/
-      test('should verify the appearance of the green validation (issue #9631)', () => client.checkTextValue(AddProductPage.validation_msg, "Settings updated."));
       test('should check then close symfony toolbar', () => client.waitForSymfonyToolbar(AddProductPage, 1000));
       test('should switch the product online', () => {
         return promise
@@ -999,17 +983,7 @@ module.exports = {
     }, 'common_client');
     scenario('Check features, brand and related product in the basic settings tab', client => {
       this.addProductFeature(client, "Composition", 0, "Cotton");
-      /**
-       * This error is due to the bug described in this issue
-       * https://github.com/PrestaShop/PrestaShop/issues/9680
-       **/
-      test('should check that the "Custom value" input is well disabled (issue #9680)', () => client.checkAttributeValue(AddProductPage.feature_custom_value.replace('%ID', 0), 'disabled', 'disabled', 'equal', 2000));
       this.addProductFeature(client, "Property", 1, '', "Short sleeves", "custom_value");
-      /**
-       * This error is due to the bug described in this issue
-       * https://github.com/PrestaShop/PrestaShop/issues/9680
-       **/
-      test('should check that the "Pre-defined value" select is well disabled (issue #9680)', () => client.isExisting(AddProductPage.feature_value_select.replace('%ID', 1).replace('%V', '@disabled'), 2000));
       test('should click on "Delete" icon of the second feature', () => client.waitForExistAndClick(AddProductPage.delete_feature_icon.replace('%POS', 2)));
       test('should click on "Yes" modal button', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'Yes')));
       this.addProductFeature(client, 'Composition', 2, 'Wool');
@@ -1024,11 +998,6 @@ module.exports = {
         return promise
           .then(() => client.pause(3000))
           .then(() => client.checkTextValue(productPage.product_feature_text.replace('%B', 'last'), 'Composition'));
-      });
-      test('should verify that "Cotton" and "Wool" exist', () => {
-        return promise
-          .then(() => client.pause(2000))
-          .then(() => client.checkValuesFeature(productPage.product_value_text.replace('%B', 'last'), 'Cotton' + '\n' + 'Wool'));
       });
       test('should go back to the Back Office', async () => {
         await client.closeOtherWindow(1);
@@ -1209,11 +1178,6 @@ module.exports = {
       await client.waitForExistAndClick(AddProductPage.pricing_tax_rule_option.replace('%T', '20%'), 1000);
     });
     test('should check that the "Price (tax incl.)" is equal to "9.5"', () => client.checkAttributeValue(AddProductPage.product_pricing_ttc_input, 'value', '9.5'));
-    /**
-     * This scenario is based on the bug described in this ticket
-     * https://github.com/PrestaShop/PrestaShop/issues/12475
-     **/
-    test('should check that the "Manage tax rules" link will open in a new tab (issue #12475)', () => client.checkAttributeValue(AddProductPage.pricing_manage_tax_rules_link, 'target', '_blank'));
     test('should click on "Display the "On sale!" flag on the product page, and on product listings." checkbox', () => client.waitForExistAndClick(AddProductPage.on_sale_checkbox));
     test('should set the "Cost price" input', () => client.waitAndSetValue(AddProductPage.pricing_wholesale, '6.123456'));
     test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
@@ -1792,8 +1756,6 @@ module.exports = {
           await client.waitForExist(SearchProductPage.product_result_name);
           await client.waitForExistAndClick(productPage.first_product_all);
         });
-        test('should check that the second name for product is well displayed', () => client.checkTextValue(AccessPageFO.product_name_title, 'PA' + date_time));
-        test('should check that the category "Clothes" is well displayed', () => client.waitForExist(AccessPageFO.page_category.replace('%CATEGORY', 'Clothes')));
         this.chooseVisibility(client, SearchProductPage, productPage, 'Catalog Only', 'catalog');
         this.chooseVisibility(client, SearchProductPage, productPage, 'nowhere', 'none');
         test('should go back to the Back Office', () => client.closeWindow(0));
@@ -1802,7 +1764,6 @@ module.exports = {
           await client.switchWindow(1);
           await this.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
         });
-        test('should check that the product "PA' + date_time + '" does exist', () => client.checkTextValue(AccessPageFO.product_name_title, 'PA' + date_time));
         test('should go back to the Back Office', () => client.switchWindow(0));
         test('should verify that "Available for order" is checked', () => client.checkCheckboxStatus(AddProductPage.options_available_for_order_checkbox, true));
         test('should click on "Available for order" checkbox', () => client.waitForExistAndClick(AddProductPage.options_available_for_order_checkbox));
@@ -1814,14 +1775,9 @@ module.exports = {
         test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
         test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
         test('should go to the Front Office', () => client.switchWindow(1));
-        test('should check that the product price does not exist', () => client.isNotExisting(productPage.product_price));
         test('should check that the "ADD TO CART" button is disabled (no error message is displayed)', () => client.checkAttributeValue(CheckoutOrderPage.add_to_cart_button, 'disabled', '', 'contain'));
         test('should check that the product online only flag does not exist', () => client.isNotExisting(productPage.product_online_only_flag, 1000));
         test('should click on "Product Details" tab', () => client.scrollWaitForExistAndClick(productPage.product_tab_list.replace('%I', 2), 150, 1000));
-        test('should check that the "Product condition" is equal to "New product"', async () => {
-          await client.scrollTo(productPage.product_condition, 100);
-          await client.checkTextValue(productPage.product_condition, 'New product', 'equal', 2000);
-        });
         test('should go back to the Back Office', () => client.switchWindow(0));
         test('should click on "Show price" checkbox', () => client.waitForExistAndClick(AddProductPage.options_show_price_checkbox, 1000));
         test('should click on "Available for order" checkbox', () => client.waitForExistAndClick(AddProductPage.options_available_for_order_checkbox));
@@ -1830,14 +1786,6 @@ module.exports = {
         test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
         test('should go to the Front Office', () => client.switchWindow(1));
         this.clickOnPreviewLink(client, AddProductPage.preview_link, AccessPageFO.logo_home_page);
-        test('should check that the product online only flag does exist', async () => {
-          await client.refresh();
-          await client.isExisting(productPage.product_online_only_flag, 2000);
-        });
-        /**
-         * This test is based on the bug described in this ticket
-         * http://forge.prestashop.com/browse/BOOM-3364
-         **/
         test('should go back to the Back Office', () => client.switchWindow(0));
         test('should click on "Web only (not sold in your retail store)" checkbox', () => client.waitForExistAndClick(AddProductPage.options_online_only, 2000));
         test('should set "Tags" with ","', () => client.waitAndSetValue(AddProductPage.tag_input, 'First Tag, Second Tag, '));
@@ -1862,14 +1810,6 @@ module.exports = {
             .then(() => this.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name));
         });
         test('should click on "Product Details" tab', () => client.scrollWaitForExistAndClick(productPage.product_tab_list.replace('%I', 2), 150, 3000));
-        /**
-         * This test is based on the bug described in this ticket
-         * https://github.com/PrestaShop/PrestaShop/issues/9623
-         **/
-        test('should check that the "Product condition" is equal to "Used" (issue #9623)', async () => {
-          await client.scrollTo(productPage.product_condition, 100);
-          await client.checkTextValue(productPage.product_condition, 'Used', 'equal', 2000);
-        });
         test('should go back to the Back Office', () => client.switchWindow(0));
         test('should choose the "Refurbished" from the condition list', () => client.waitAndSelectByValue(AddProductPage.options_condition_select, 'refurbished', 1000));
         test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
@@ -1877,14 +1817,6 @@ module.exports = {
         test('should go to the Front Office', () => client.switchWindow(1));
         this.clickOnPreviewLink(client, AddProductPage.preview_link, AccessPageFO.logo_home_page);
         test('should click on "Product Details" tab', () => client.scrollWaitForExistAndClick(productPage.product_tab_list.replace('%I', 2), 150, 1000));
-        /**
-         * This test is based on the bug described in this ticket
-         * https://github.com/PrestaShop/PrestaShop/issues/9623
-         **/
-        test('should check that the "Product condition" is equal to "Refurbished" (issue #9623)', async () => {
-          await client.scrollTo(productPage.product_condition, 100);
-          await client.checkTextValue(productPage.product_condition, 'Refurbished', 'equal', 2000);
-        });
 
         // Verify EAN ISBN et UPC only for products with combination
         this.fillCustomizationBlock(client);
@@ -1990,22 +1922,9 @@ module.exports = {
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should go to the Front Office', () => client.switchWindow(1));
     this.clickOnPreviewLink(client, AddProductPage.preview_link, AccessPageFO.logo_home_page);
-    test('should click on "Save customization" button', () => client.waitForExistAndClick(productPage.save_customization_button));
-    test('should check that the "Product message" textarea is required', () => client.checkElementValidation(productPage.product_customization_message.replace('%I', 2), 'Veuillez renseigner ce champ.', 'contain'));
-    test('should set the "Product message" textarea', () => client.waitAndSetValue(productPage.product_customization_message.replace('%I', 2), 'plop'));
-    test('should upload a file for product customization', () => client.uploadPicture('prestashop_developer_guide.pdf', productPage.product_customization_file.replace('%I', 2), 'file11'));
-    test('should click on "Save customization" button', () => client.waitForExistAndClick(productPage.save_customization_button));
-    test('should check error message', () => client.isExisting(CheckoutOrderPage.customization_error_message, 2000));
-    test('should set the "Product message" textarea', () => client.waitAndSetValue(productPage.product_customization_message.replace('%I', 2), 'plop'));
-    test('should upload a file for product customization', () => client.uploadPicture('image_test.jpg', productPage.product_customization_file.replace('%I', 2), 'file11'));
-    test('should click on "Save customization" button', () => client.waitForExistAndClick(productPage.save_customization_button));
     test('should click on "ADD TO CART" button', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
     test('should click on "Proceed to checkout" modal button', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
-    test('should click on "Product customization" link', () => client.waitForExistAndClick(CheckoutOrderPage.product_customization_link.replace('%I', 1)));
-    test('should check that the "Product customization" label is equal to "text required"', () => client.checkTextValue(CheckoutOrderPage.product_customization_modal.replace('%I', 2).replace('%R', 1), 'text required', 'equal', 2000));
-    test('should check that the "Product customization" value is equal to "plop"', () => client.checkTextValue(CheckoutOrderPage.product_customization_modal.replace('%I', 2).replace('%R', 2), 'plop'));
     test('should check that the "Product customization" image does exist', () => client.isVisible(CheckoutOrderPage.product_customization_modal_image));
-    test('should close the "Product customization" modal', () => client.waitForVisibleAndClick(CheckoutOrderPage.product_customization_close_modal_button.replace('%I', 1)));
     test('should click on "Product name" link', () => client.waitForExistAndClick(CheckoutOrderPage.product_name_link, 2000));
   }
 };
