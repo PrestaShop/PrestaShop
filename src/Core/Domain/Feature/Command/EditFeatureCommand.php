@@ -66,7 +66,7 @@ class EditFeatureCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedNames()
     {
@@ -93,7 +93,7 @@ class EditFeatureCommand
     }
 
     /**
-     * @return null|int[]
+     * @return int[]|null
      */
     public function getAssociatedShopIds()
     {
