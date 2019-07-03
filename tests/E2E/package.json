@@ -14,7 +14,9 @@
     "install-upgrade-test": "node_modules/mocha/bin/mocha test/campaigns/install_upgrade/*",
     "specific-test": "node_modules/mocha/bin/mocha test/campaigns/$TEST_PATH",
     "sanity-check": "curl ${SELENIUM_PROTOCOL:=http://}${SELENIUM_HOST:=localhost}:${SELENIUM_PORT:=4444}/wd/hub/status | json_pp",
-    "concat-files-report": "cd email_sender && ../node_modules/gulp-cli/bin/gulp.js"
+    "concat-files-report": "cd email_sender && ../node_modules/gulp-cli/bin/gulp.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -38,7 +40,8 @@
     "selenium-standalone": "^6.14.0",
     "should": "^9.0",
     "webdriverio": "^4.14.1",
-    "window": "^1.0"
+    "window": "^1.0",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -52,5 +55,6 @@
     "nodemailer": "^4.0.1",
     "pdf-to-text": "0.0.6",
     "pdfkit": "^0.8.3"
-  }
+  },
+  "snyk": true
 }
