@@ -53,6 +53,10 @@ final class AddTaxHandler extends AbstractTaxHandler implements AddTaxHandlerInt
         $tax->active = $command->isEnabled();
 
         try {
+            if (false === $tax->validateFields(false) || false === $tax->validateFieldsLang(false)) {
+                throw new TaxException('Tax contains invalid field values');
+            }
+
             if (!$tax->save()) {
                 throw new TaxException(
                     sprintf('Cannot create tax with id "%s"', $tax->id)
