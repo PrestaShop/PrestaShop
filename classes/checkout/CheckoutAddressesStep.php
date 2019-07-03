@@ -71,25 +71,6 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             }
         }
 
-        if (isset($requestParams['id_address_delivery'])) {
-            $id_address = $requestParams['id_address_delivery'];
-
-            if ($this->getCheckoutSession()->getIdAddressDelivery() != $id_address) {
-                $this->setCurrent(true);
-                $this->getCheckoutProcess()->invalidateAllStepsAfterCurrent();
-            }
-
-            $this->getCheckoutSession()->setIdAddressDelivery($id_address);
-            if ($this->use_same_address) {
-                $this->getCheckoutSession()->setIdAddressInvoice($id_address);
-            }
-        }
-
-        if (isset($requestParams['id_address_invoice'])) {
-            $id_address = $requestParams['id_address_invoice'];
-            $this->getCheckoutSession()->setIdAddressInvoice($id_address);
-        }
-
         if (isset($requestParams['cancelAddress'])) {
             if ($requestParams['cancelAddress'] === 'invoice') {
                 if ($this->getCheckoutSession()->getCustomerAddressesCount() < 2) {
@@ -179,11 +160,40 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         }
 
         if (isset($requestParams['confirm-addresses'])) {
-            $this->setNextStepAsCurrent();
-            $this->setComplete(
-                $this->getCheckoutSession()->getIdAddressInvoice() &&
-                $this->getCheckoutSession()->getIdAddressDelivery()
-            );
+            if (isset($requestParams['id_address_delivery'])) {
+                $id_address = $requestParams['id_address_delivery'];
+
+                if (!Customer::customerHasAddress($this->getCheckoutSession()->getCustomer()->id, $id_address)) {
+                    $this->getCheckoutProcess()->setHasErrors(true);
+                } else {
+                    if ($this->getCheckoutSession()->getIdAddressDelivery() != $id_address) {
+                        $this->setCurrent(true);
+                        $this->getCheckoutProcess()->invalidateAllStepsAfterCurrent();
+                    }
+
+                    $this->getCheckoutSession()->setIdAddressDelivery($id_address);
+                    if ($this->use_same_address) {
+                        $this->getCheckoutSession()->setIdAddressInvoice($id_address);
+                    }
+                }
+            }
+
+            if (isset($requestParams['id_address_invoice'])) {
+                $id_address = $requestParams['id_address_invoice'];
+                if (!Customer::customerHasAddress($this->getCheckoutSession()->getCustomer()->id, $id_address)) {
+                    $this->getCheckoutProcess()->setHasErrors(true);
+                } else {
+                    $this->getCheckoutSession()->setIdAddressInvoice($id_address);
+                }
+            }
+
+            if (!$this->getCheckoutProcess()->hasErrors()) {
+                $this->setNextStepAsCurrent();
+                $this->setComplete(
+                    $this->getCheckoutSession()->getIdAddressInvoice() &&
+                    $this->getCheckoutSession()->getIdAddressDelivery()
+                );
+            }
         }
 
         $addresses_count = $this->getCheckoutSession()->getCustomerAddressesCount();
