@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\EditFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 
 /**
  * Handles feature editing.
@@ -54,11 +54,11 @@ final class EditFeatureHandler extends AbstractObjectModelHandler implements Edi
         }
 
         if (false === $feature->validateFields(false)) {
-            throw new FeatureException('Invalid data when updating feature');
+            throw new FeatureConstraintException('Invalid data when updating feature');
         }
 
         if (false === $feature->validateFieldsLang(false)) {
-            throw new FeatureException('Invalid data when updating feature');
+            throw new FeatureConstraintException('Invalid data when updating feature');
         }
 
         if (false === $feature->update()) {

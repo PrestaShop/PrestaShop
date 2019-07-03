@@ -17,3 +17,12 @@ Feature: Product feature management
     Given product feature with id "1" exists
     When I update product feature with id "1" name in default language to "My great feature"
     Then product feature with id "1" name in default language should be "My great feature"
+
+  Scenario: Updating product feature with empty name should not be allowed
+    Given product feature with id "1" exists
+    When I update product feature with id "1" name in default language to ""
+    Then I should get an error that feature name is invalid.
+
+  Scenario: Creating product feature with empty name should not be allowed
+    When I create product feature with empty name
+    Then I should get an error that feature name is invalid.

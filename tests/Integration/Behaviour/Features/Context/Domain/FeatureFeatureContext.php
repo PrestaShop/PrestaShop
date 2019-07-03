@@ -26,11 +26,14 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use Exception;
 use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
@@ -44,15 +47,8 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
      */
     public function createFeature($reference, TableNode $node)
     {
-        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
         $properties = $node->getRowsHash();
-
-        $command = new AddFeatureCommand(
-            [$defaultLanguageId => $properties['name']]
-        );
-
-        /** @var FeatureId $featureId */
-        $featureId = $this->getCommandBus()->handle($command);
+        $featureId = $this->createProductFeature($properties['name']);
 
         SharedStorage::getStorage()->set($reference, new Feature($featureId->getValue()));
     }
@@ -97,10 +93,15 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
         $featureNames = $editableFeature->getName();
         $featureNames[$defaultLanguageId] = $featureName;
-        $editFeatureCommand = new EditFeatureCommand($featureId);
-        $editFeatureCommand->setLocalizedNames($featureNames);
 
-        $this->getCommandBus()->handle($editFeatureCommand);
+        try {
+            $editFeatureCommand = new EditFeatureCommand($featureId);
+            $editFeatureCommand->setLocalizedNames($featureNames);
+
+            $this->getCommandBus()->handle($editFeatureCommand);
+        } catch (Exception $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -122,5 +123,41 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
                 $featureName
             ));
         }
+    }
+
+    /**
+     * @Then /^I should get an error that feature name is invalid\.$/
+     */
+    public function iShouldGetAnErrorThatFeatureNameIsInvalid()
+    {
+        $this->assertLastErrorIs(FeatureConstraintException::class);
+    }
+
+    /**
+     * @When /^I create product feature with empty name$/
+     */
+    public function iCreateProductFeatureWithEmptyName1()
+    {
+        try {
+            $this->createProductFeature('');
+        } catch (Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @param string $nameInDefaultLanguage
+     *
+     * @return FeatureId
+     */
+    private function createProductFeature($nameInDefaultLanguage)
+    {
+        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+
+        $command = new AddFeatureCommand(
+            [$defaultLanguageId => $nameInDefaultLanguage]
+        );
+
+        return $this->getCommandBus()->handle($command);
     }
 }
