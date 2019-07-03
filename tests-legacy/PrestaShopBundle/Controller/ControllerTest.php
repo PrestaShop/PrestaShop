@@ -178,7 +178,7 @@ class ControllerTest extends TestCase
             define('_DB_PREFIX_', $configuration['parameters']['database_prefix']);
         }
         if (!defined('_COOKIE_KEY_')) {
-            define('_COOKIE_KEY_', Tools::passwdGen(56));
+            define('_COOKIE_KEY_', Tools::passwdGen(64));
         }
         if (!defined('_PS_VERSION_')) {
             define('_PS_VERSION_', '1.7');
