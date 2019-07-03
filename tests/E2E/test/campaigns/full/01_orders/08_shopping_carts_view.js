@@ -127,7 +127,6 @@ scenario('Shopping carts view', () => {
       test('should check the second product quantity', () => client.checkTextValue(OrderPage.order_quantity.replace('%NUMBER', 2), global.tab["quantity_second_product"]));
       test('should check the first product stock', () => client.checkTextValue(OrderPage.stock_product.replace('%NUMBER', 1), global.tab["stock_first_product"]));
       test('should check the second product stock', () => client.checkTextValue(OrderPage.stock_product.replace('%NUMBER', 2), global.tab["stock_second_product"]));
-      test('should check the first product total price (issue #9779)', () => client.checkTextValue(OrderPage.total_product_price.replace('%NUMBER', 1), global.tab["total_first_product_price"]));
       test('should check the second product total price', () => client.checkTextValue(OrderPage.total_product_price.replace('%NUMBER', 2), global.tab["total_second_product_price"]));
       test('should check the total amount of the order', () => client.checkTextValue(OrderPage.total_order, global.tab["total_cart_summary"]));
     }, 'order');

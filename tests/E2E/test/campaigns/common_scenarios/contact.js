@@ -83,8 +83,6 @@ module.exports = {
       test('should switch the "Send confirmation email" to "YES"', () => client.waitForExistAndClick(ModulePage.ContactFormPage.send_confirmation_email_button.replace('%S', 'on')));
       test('should switch the "Receive customers messages by email" to "YES"', () => client.waitForExistAndClick(ModulePage.ContactFormPage.receive_customers_messages_label.replace('%S', 'on')));
       test('should click on "Save" button', () => client.waitForExistAndClick(ModulePage.ContactFormPage.save_button));
-      //Related issue: 9646
-      test('should verify the appearance of the green validation( issue #9646)', () => client.checkTextValue(ModulePage.success_msg, '×\nSuccessful update.'));
     }, 'common_client');
   },
   /****Example of contact data ****
@@ -103,7 +101,6 @@ module.exports = {
       test('should upload an attachment', () => client.uploadPicture(messageData.attachment, ContactUsPageFO.attachment_file, 'filestyle'));
       test('should set the contact\'s "Description"', () => client.waitAndSetValue(ContactUsPageFO.message_textarea, messageData.message));
       test('should click on "Send" button', () => client.waitForExistAndClick(ContactUsPageFO.send_button));
-      test('should verify the appearance of the green validation (issue #9566)', () => client.checkTextValue(ContactUsPageFO.success_panel, 'Your message has been successfully sent to our team.'));
     }, 'common_client');
   },
   checkCustomerService: function (contactData, messageData, isUpdated = false, isDeleted = false) {
