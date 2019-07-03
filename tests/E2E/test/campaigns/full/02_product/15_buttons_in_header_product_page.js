@@ -65,10 +65,10 @@ scenario('Check that the buttons in header product page works successfully', () 
     test('should check that the "Product name" input exists', () => client.isExisting(AddProductPage.product_name_fr_input, 2000));
     test('should set the "Product name" input', () => client.waitAndSetValue(AddProductPage.product_name_fr_input, 'produit' + date_time));
     test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
+    test('should check and close the validation alert message', () => client.waitForVisibleAndClick(AddProductPage.close_validation_button));
     test('should go to the Front Office', () => {
       return promise
-        .then(() => client.waitForExistAndClick(AddProductPage.close_validation_button))
-        .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
+        .then(() => client.waitForExistAndClick(AccessPageBO.shopname, 2000))
         .then(() => client.switchWindow(1));
     });
     test('should switch the front office language to French', () => client.changeLanguage('fr'));
