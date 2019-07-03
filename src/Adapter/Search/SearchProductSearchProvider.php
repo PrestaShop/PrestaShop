@@ -205,7 +205,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                     GROUP BY sw.`word`;';
 
             $selectedWords = Db::getInstance()->executeS($sql);
-            $closestWords []= array_reduce($selectedWords, function ($a, $b) use ($query, &$distance /* Cache */) {
+            $closestWords[] = array_reduce($selectedWords, function ($a, $b) use ($query, &$distance /* Cache */) {
                 if (!isset($distance[$a['word']])) {
                     $distance[$a['word']] = levenshtein($a['word'], $query);
                 }
@@ -217,7 +217,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 if ($distance[$a['word']] != $distance[$b['word']]) {
                     return $distance[$a['word']] < $distance[$b['word']] ? $a : $b;
                 }
-                
+
                 return $a['weight'] > $b['weight'] ? $a : $b;
             }, array('word' => 'initial', 'weight' => '0'))['word'];
 
