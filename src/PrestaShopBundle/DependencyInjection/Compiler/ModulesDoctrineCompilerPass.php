@@ -32,6 +32,8 @@ use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -85,12 +87,21 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
                 }
                 $modulePrefix = 'Module' . Inflector::camelize($moduleFolder->getFilename());
                 $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
-                $mappingPass = DoctrineOrmMappingsPass::createAnnotationMappingDriver([$moduleNamespace], [$moduleEntityDirectory], [], false, [$modulePrefix => $moduleNamespace]);
+                $mappingPass = $this->createAnnotationMappinDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix);
                 $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
             }
         }
 
         return $mappingsPassList;
+    }
+
+    private function createAnnotationMappinDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix)
+    {
+        $reader = new Reference('annotation_reader');
+        $driverDefinition = new Definition('Doctrine\ORM\Mapping\Driver\AnnotationDriver', [$reader, [$moduleEntityDirectory]]);
+        $driverDefinition->addMethodCall('addExcludePaths', [[$moduleEntityDirectory . '/index.php']]);
+
+        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, [$modulePrefix => $moduleNamespace]);
     }
 
     /**
