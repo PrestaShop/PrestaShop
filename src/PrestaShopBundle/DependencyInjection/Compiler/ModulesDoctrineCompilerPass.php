@@ -96,6 +96,11 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     }
 
     /**
+     * This method is derived from DoctrineOrmMappingsPass::createAnnotationMappingDriver, sadly the driver includes
+     * ALL the files present in the folder and as modules include an index.php file containing an exit statement the
+     * whole process was stopped. So we manually create the DoctrineOrmMappingsPass so that AnnotationDriver ignores
+     * the index.php file.
+     *
      * @param string $moduleNamespace
      * @param string $moduleEntityDirectory
      * @param string $modulePrefix
