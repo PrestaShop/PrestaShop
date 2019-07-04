@@ -57,14 +57,7 @@
         {block name='page_content_container'}
           <section class="page-content" id="content">
             {block name='page_content'}
-              <!-- @todo: use include file='catalog/_partials/product-flags.tpl'} -->
-              {block name='product_flags'}
-                <ul class="product-flags">
-                  {foreach from=$product.flags item=flag}
-                    <li class="product-flag {$flag.type}">{$flag.label}</li>
-                  {/foreach}
-                </ul>
-              {/block}
+              {include file='catalog/_partials/product-flags.tpl'}
 
               {block name='product_cover_thumbnails'}
                 {include file='catalog/_partials/product-cover-thumbnails.tpl'}
