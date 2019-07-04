@@ -26,28 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category;
 
+use PrestaShop\PrestaShop\Core\Domain\Meta\SeoSettings as ParentSeoSettings;
+
 /**
  * Defines settings for Category's SEO
+ *
+ * @deprecated since 1.7.7, to be removed in the next major
  */
-final class SeoSettings
+final class SeoSettings extends ParentSeoSettings
 {
-    /**
-     * Maximum length of SEO title (value is constrained by database)
-     */
-    const MAX_TITLE_LENGTH = 255;
-
-    /**
-     * Recommended length of SEO title
-     */
-    const RECOMMENDED_TITLE_LENGTH = 70;
-
-    /**
-     * Maximum length of SEO description (value is constrained by database)
-     */
-    const MAX_DESCRIPTION_LENGTH = 512;
-
-    /**
-     * Recommended length of SEO description
-     */
-    const RECOMMENDED_DESCRIPTION_LENGTH = 160;
 }

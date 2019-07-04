@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta;
 /**
  * Defines settings for SEO fields
  */
-final class SeoSettings
+class SeoSettings
 {
     /**
      * Maximum length of SEO title (value is constrained by database)
