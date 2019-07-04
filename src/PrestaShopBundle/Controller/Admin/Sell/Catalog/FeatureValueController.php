@@ -50,6 +50,12 @@ class FeatureValueController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request, $featureId)
     {
+        if (!$this->isFeatureEnabled()) {
+            return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValues/create.html.twig', [
+                'showDisabledFeatureWarning' => true,
+            ]);
+        }
+
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
         $form = $formBuilder->getForm([
@@ -87,6 +93,13 @@ class FeatureValueController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_feature_values_create', ['featureId' => $featureId]);
         }
 
+        if (!$this->isFeatureEnabled()) {
+            return $this->renderEditForm([
+                'showDisabledFeatureWarning' => true,
+                'editableFeatureValue' => $editableFeatureValue,
+            ]);
+        }
+
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.feature_value_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.feature_value_form_handler');
         $form = $formBuilder->getFormFor($featureValueId, [
@@ -110,11 +123,26 @@ class FeatureValueController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValues/edit.html.twig', [
+        return $this->renderEditForm([
             'featureValueForm' => $form->createView(),
             'editableFeatureValue' => $editableFeatureValue,
-            'contextLangId' => $this->configuration->getInt('PS_LANG_DEFAULT'),
         ]);
+    }
+
+    /**
+     * Renders feature value edit form.
+     *
+     * @param array $parameters
+     *
+     * @return Response
+     */
+    private function renderEditForm(array $parameters = [])
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValues/edit.html.twig',
+            $parameters + [
+                'contextLangId' => $this->configuration->get('PS_LANG_DEFAULT'),
+            ]
+        );
     }
 
     /**
@@ -140,5 +168,15 @@ class FeatureValueController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * Check if Features functionality is enabled in the shop.
+     *
+     * @return bool
+     */
+    private function isFeatureEnabled()
+    {
+        return $this->get('prestashop.adapter.feature.feature')->isActive();
     }
 }
