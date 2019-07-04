@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
 
 /**
  * Thrown in feature value context
  */
-class FeatureValueException extends DomainException
+class FeatureValueException extends FeatureException
 {
 }

@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Query\GetFeatureValueForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\QueryResult\EditableFeatureValue;
 
 /**
- * Thrown when feature value data is not valid
+ * Describes feature value for editing handler.
  */
-class FeatureValueConstraintException extends FeatureValueException
+interface GetFeatureValueForEditingHandlerInterface
 {
     /**
-     * Used when feature value is not valid
+     * @param GetFeatureValueForEditing $query
+     *
+     * @return EditableFeatureValue
      */
-    const INVALID_VALUE = 1;
-
-    /**
-     * Used when feature value is empty
-     */
-    const EMPTY_VALUE = 2;
+    public function handle(GetFeatureValueForEditing $query);
 }

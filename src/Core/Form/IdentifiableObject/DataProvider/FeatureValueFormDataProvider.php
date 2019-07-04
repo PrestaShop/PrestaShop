@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Query\GetFeatureValueForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\QueryResult\EditableFeatureValue;
 
 /**
  * Provides data for feature value add/edit form
@@ -50,10 +52,15 @@ final class FeatureValueFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData($addressId)
+    public function getData($featureValueId)
     {
-        //@todo
-        return [];
+        /** @var EditableFeatureValue $editableFeatureValue */
+        $editableFeatureValue = $this->queryBus->handle(new GetFeatureValueForEditing((int) $featureValueId));
+
+        return [
+            'featureId' => $editableFeatureValue->getFeatureId()->getValue(),
+            'value' => $editableFeatureValue->getValue(),
+        ];
     }
 
     /**
@@ -61,7 +68,6 @@ final class FeatureValueFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        //@todo
         return [];
     }
 }

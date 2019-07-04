@@ -24,6 +24,3 @@ _feature_values:
   prefix: /{featureId}/values
   requirements:
     featureId: '\d+'
-  defaults:
-    _legacy_parameters:
-      id_feature: featureId

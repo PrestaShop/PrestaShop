@@ -24,20 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Language\FeatureValueId;
 
 /**
- * Thrown when feature value data is not valid
+ * Retrieves feature value data for editing
  */
-class FeatureValueConstraintException extends FeatureValueException
+class GetFeatureValueForEditing
 {
     /**
-     * Used when feature value is not valid
+     * @var FeatureValueId
      */
-    const INVALID_VALUE = 1;
+    private $featureValueId;
 
     /**
-     * Used when feature value is empty
+     * @param int $featureValueId
      */
-    const EMPTY_VALUE = 2;
+    public function __construct($featureValueId)
+    {
+        $this->featureValueId = new FeatureValueId($featureValueId);
+    }
+
+    /**
+     * @return FeatureValueId
+     */
+    public function getFeatureValueId()
+    {
+        return $this->featureValueId;
+    }
 }

@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -22,22 +21,29 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Exception;
+{% set layoutTitle = 'Edit: %value%'|trans({'%value%': editableFeatureValue.value[contextLangId]}, 'Admin.Catalog.Feature') %}
 
-/**
- * Thrown when feature value data is not valid
- */
-class FeatureValueConstraintException extends FeatureValueException
-{
-    /**
-     * Used when feature value is not valid
-     */
-    const INVALID_VALUE = 1;
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-    /**
-     * Used when feature value is empty
-     */
-    const EMPTY_VALUE = 2;
-}
+{% block content %}
+  {% if showDisabledFeatureWarning is defined and showDisabledFeatureWarning %}
+    {#    @todo when features form is merged #}
+    {#    {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig' %}#}
+  {% else %}
+    <div class="row justify-content-center">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Catalog/Features/FeatureValues/Blocks/form.html.twig' with {
+          featureValueForm: featureValueForm,
+          featureValueId: editableFeatureValue.featureValueId.getValue
+        } %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+ {% block javascripts %}
+   {{ parent() }}
+   {% include '@PrestaShop/Admin/Sell/Catalog/Features/FeatureValues/Blocks/form_javascripts.html.twig' %}
+ {% endblock %}

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\EditFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
@@ -55,7 +56,7 @@ final class FeatureValueFormDataHandler implements FormDataHandlerInterface
     {
         /** @var FeatureId $featureId */
         $featureId = $this->commandBus->handle(new AddFeatureValueCommand(
-            $data['featureId'],
+            (int) $data['featureId'],
             $data['value']
         ));
 
@@ -65,8 +66,12 @@ final class FeatureValueFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function update($addressId, array $data)
+    public function update($id, array $data)
     {
-        //@todo
+        $command = new EditFeatureValueCommand((int) $id);
+        $command->setLocalizedValues($data['value']);
+        $command->setFeatureId((int) $data['featureId']);
+
+        $this->commandBus->handle($command);
     }
 }

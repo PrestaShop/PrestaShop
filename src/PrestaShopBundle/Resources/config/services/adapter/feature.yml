@@ -35,3 +35,18 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Feature\FeatureValue\CommandHandler\AddFeatureValueHandler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand }
+
+    prestashop.adapter.feature.feature_value.command_handler.add_feature_value_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Feature\FeatureValue\CommandHandler\AddFeatureValueHandler'
+        tags:
+            - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand }
+
+    prestashop.adapter.feature.feature_value.command_handler.edit_feature_value_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Feature\FeatureValue\CommandHandler\EditFeatureValueHandler'
+        tags:
+            - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\EditFeatureValueCommand }
+
+    prestashop.adapter.feature.feature_value.query_handler.get_feature_value_for_editing:
+      class: 'PrestaShop\PrestaShop\Adapter\Feature\FeatureValue\QueryHandler\GetFeatureValueForEditingHandler'
+      tags:
+        - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Query\GetFeatureValueForEditing }

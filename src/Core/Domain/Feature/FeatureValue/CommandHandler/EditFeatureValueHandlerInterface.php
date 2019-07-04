@@ -24,20 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\EditFeatureValueCommand;
 
 /**
- * Thrown when feature value data is not valid
+ * Handles command that edits feature value
  */
-class FeatureValueConstraintException extends FeatureValueException
+interface EditFeatureValueHandlerInterface
 {
     /**
-     * Used when feature value is not valid
+     * @param EditFeatureValueCommand $command
      */
-    const INVALID_VALUE = 1;
-
-    /**
-     * Used when feature value is empty
-     */
-    const EMPTY_VALUE = 2;
+    public function handle(EditFeatureValueCommand $command);
 }
