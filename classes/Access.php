@@ -356,6 +356,17 @@ class AccessCore extends ObjectModel
             $whereClauses[] = ' `slug` LIKE "' . $slugLike . '"';
         }
 
+        // We do not use Tab::recursiveTab which is risky during an upgrade
+        $idParent = (int) Db::getInstance()->getValue('
+            SELECT `id_parent`
+            FROM `' . _DB_PREFIX_ . 'tab`
+            WHERE `id_tab` = "' . (int) $idTab . '"
+        ');
+        // Add the same rights to the parent tab (don't do it in case of rights deletion)
+        if ($enabled && $idParent) {
+            $this->updateLgcAccess($idProfile, $idParent, $lgcAuth, $enabled, 0);
+        }
+
         if ($addFromParent == 1) {
             foreach (self::findSlugByIdParentTab($idTab) as $child) {
                 $child = self::sluggifyTab($child);
