@@ -111,6 +111,7 @@ class MetaType extends AbstractType
                     'attr' => [
                         'maxlength' => SeoSettings::MAX_TITLE_LENGTH,
                     ],
+                    'required' => false,
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
