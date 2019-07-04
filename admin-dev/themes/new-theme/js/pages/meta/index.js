@@ -40,7 +40,7 @@ import TranslatableInput from '../../components/translatable-input';
 import MetaPageNameOptionHandler from './meta-page-name-option-handler';
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import TextWithRecommendedLengthCounter from "../../components/form/text-with-recommended-length-counter";
+import TextWithRecommendedLengthCounter from '../../components/form/text-with-recommended-length-counter';
 
 const $ = window.$;
 

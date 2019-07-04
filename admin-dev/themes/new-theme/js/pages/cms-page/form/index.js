@@ -33,7 +33,7 @@ import textToLinkRewriteCopier from '../../../components/text-to-link-rewrite-co
 import TranslatableField from '../../../components/translatable-field';
 import TinyMCEEditor from '../../../components/tinymce-editor';
 import Serp from '../../../app/utils/serp/index';
-import TextWithRecommendedLengthCounter from "../../../components/form/text-with-recommended-length-counter";
+import TextWithRecommendedLengthCounter from '../../../components/form/text-with-recommended-length-counter';
 
 $(() => {
   new ChoiceTree('#cms_page_page_category_id');

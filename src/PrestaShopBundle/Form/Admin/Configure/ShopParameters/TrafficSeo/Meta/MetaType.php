@@ -111,6 +111,7 @@ class MetaType extends AbstractType
                     'attr' => [
                         'maxlength' => SeoSettings::MAX_TITLE_LENGTH,
                     ],
+                    'required' => false,
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
@@ -137,7 +138,6 @@ class MetaType extends AbstractType
                 'required' => false,
                 'type' => TextWithRecommendedLengthType::class,
                 'options' => [
-                    'required' => false,
                     'recommended_length' => SeoSettings::RECOMMENDED_DESCRIPTION_LENGTH,
                     'attr' => [
                         'maxlength' => SeoSettings::MAX_DESCRIPTION_LENGTH,
