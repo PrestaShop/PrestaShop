@@ -24,49 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Exception;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
- * Handles submitted feature value form data
+ * Thrown when feature value cannot be added
  */
-final class FeatureValueFormDataHandler implements FormDataHandlerInterface
+class CannotAddFeatureValueException extends FeatureValueException
 {
     /**
-     * @var CommandBusInterface
+     * @var FeatureId
      */
-    private $commandBus;
+    private $featureId;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @param FeatureId $featureId
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
      */
-    public function __construct(CommandBusInterface $commandBus)
+    public function __construct(FeatureId $featureId, $message = '', $code = 0, $previous = null)
     {
-        $this->commandBus = $commandBus;
+        parent::__construct($message, $code, $previous);
+
+        $this->featureId = $featureId;
     }
 
     /**
-     * {@inheritdoc]
+     * @return FeatureId
      */
-    public function create(array $data)
+    public function getFeatureId()
     {
-        /** @var FeatureId $featureId */
-        $featureId = $this->commandBus->handle(new AddFeatureValueCommand(
-            $data['featureId'],
-            $data['value']
-        ));
-
-        return $featureId->getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update($addressId, array $data)
-    {
-        //@todo
+        return $this->featureId;
     }
 }

@@ -24,49 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Language\FeatureValueId;
 
 /**
- * Handles submitted feature value form data
+ * Handles command that adds feature values.
  */
-final class FeatureValueFormDataHandler implements FormDataHandlerInterface
+interface AddFeatureValueHandlerInterface
 {
     /**
-     * @var CommandBusInterface
+     * @param AddFeatureValueCommand $command
+     *
+     * @return FeatureValueId
      */
-    private $commandBus;
-
-    /**
-     * @param CommandBusInterface $commandBus
-     */
-    public function __construct(CommandBusInterface $commandBus)
-    {
-        $this->commandBus = $commandBus;
-    }
-
-    /**
-     * {@inheritdoc]
-     */
-    public function create(array $data)
-    {
-        /** @var FeatureId $featureId */
-        $featureId = $this->commandBus->handle(new AddFeatureValueCommand(
-            $data['featureId'],
-            $data['value']
-        ));
-
-        return $featureId->getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update($addressId, array $data)
-    {
-        //@todo
-    }
+    public function handle(AddFeatureValueCommand $command);
 }

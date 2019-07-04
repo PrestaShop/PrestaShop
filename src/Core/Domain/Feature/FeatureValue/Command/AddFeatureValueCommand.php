@@ -24,49 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
- * Handles submitted feature value form data
+ * Adds new feature value
  */
-final class FeatureValueFormDataHandler implements FormDataHandlerInterface
+class AddFeatureValueCommand
 {
     /**
-     * @var CommandBusInterface
+     * @var FeatureId
      */
-    private $commandBus;
+    private $featureId;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @var array
      */
-    public function __construct(CommandBusInterface $commandBus)
+    private $localizedValues;
+
+    /**
+     * @param int $featureId
+     * @param array $localizedValues
+     */
+    public function __construct($featureId, array $localizedValues)
     {
-        $this->commandBus = $commandBus;
+        $this->featureId = new FeatureId($featureId);
+        $this->localizedValues = $localizedValues;
     }
 
     /**
-     * {@inheritdoc]
+     * @return FeatureId
      */
-    public function create(array $data)
+    public function getFeatureId()
     {
-        /** @var FeatureId $featureId */
-        $featureId = $this->commandBus->handle(new AddFeatureValueCommand(
-            $data['featureId'],
-            $data['value']
-        ));
-
-        return $featureId->getValue();
+        return $this->featureId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function update($addressId, array $data)
+    public function getLocalizedValues()
     {
-        //@todo
+        return $this->localizedValues;
     }
 }

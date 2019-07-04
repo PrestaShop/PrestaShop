@@ -24,49 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Language;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Exception\FeatureValueException;
 
 /**
- * Handles submitted feature value form data
+ * Class defining ID of a feature value.
  */
-final class FeatureValueFormDataHandler implements FormDataHandlerInterface
+class FeatureValueId
 {
     /**
-     * @var CommandBusInterface
+     * @var int
      */
-    private $commandBus;
+    private $featureValueId;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @param int $featureValueId
      */
-    public function __construct(CommandBusInterface $commandBus)
+    public function __construct($featureValueId)
     {
-        $this->commandBus = $commandBus;
+        if (!is_int($featureValueId) || 0 >= $featureValueId) {
+            throw new FeatureValueException(
+                sprintf('Invalid Feature Value id %s supplied', var_export($featureValueId, true))
+            );
+        }
+        $this->featureValueId = $featureValueId;
     }
 
     /**
-     * {@inheritdoc]
+     * @return int
      */
-    public function create(array $data)
+    public function getValue()
     {
-        /** @var FeatureId $featureId */
-        $featureId = $this->commandBus->handle(new AddFeatureValueCommand(
-            $data['featureId'],
-            $data['value']
-        ));
-
-        return $featureId->getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update($addressId, array $data)
-    {
-        //@todo
+        return $this->featureValueId;
     }
 }

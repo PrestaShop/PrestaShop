@@ -26,9 +26,37 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+
 /**
  * Thrown when feature could not be found
  */
 class FeatureNotFoundException extends FeatureException
 {
+    /**
+     * @var FeatureId
+     */
+    private $featureId;
+
+    /**
+     * @param FeatureId $featureId
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
+     */
+    public function __construct(FeatureId $featureId, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->featureId = $featureId;
+    }
+
+    /**
+     * @return FeatureId
+     */
+    public function getFeatureId()
+    {
+        return $this->featureId;
+    }
 }
