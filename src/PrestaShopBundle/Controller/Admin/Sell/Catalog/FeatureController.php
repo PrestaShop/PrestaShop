@@ -157,6 +157,11 @@ class FeatureController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     ['%field_name%' => $this->trans('Name', 'Admin.Global')]
                 ),
+                FeatureConstraintException::INVALID_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
+                ),
             ],
         ];
     }
