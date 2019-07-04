@@ -91,6 +91,7 @@ module.exports = {
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
     merchandise_return: './js/pages/merchandise-return',
+    feature_value_form: './js/pages/feature-value/form',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

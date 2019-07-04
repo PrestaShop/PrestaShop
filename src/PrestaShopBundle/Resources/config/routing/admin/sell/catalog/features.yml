@@ -17,3 +17,13 @@ admin_features_edit:
       id_feature: featureId
   requirements:
     featureId: \d+
+
+# Feature value routes
+_feature_values:
+  resource: 'feature_values.yml'
+  prefix: /{featureId}/values
+  requirements:
+    featureId: '\d+'
+  defaults:
+    _legacy_parameters:
+      id_feature: featureId

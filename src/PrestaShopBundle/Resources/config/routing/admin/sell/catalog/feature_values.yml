@@ -1,0 +1,8 @@
+admin_feature_values_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\FeatureValue:create
+    _legacy_controller: AdminFeatures:addfeature_value
+    #_legacy_link: AdminFeatures:addfeature_value
+
