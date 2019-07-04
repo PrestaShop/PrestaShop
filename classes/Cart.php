@@ -4281,6 +4281,14 @@ class CartCore extends ObjectModel
         $success = true;
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'cart_product` WHERE `id_cart` = ' . (int) $this->id);
 
+        foreach ($products as $key => $product) {
+            $currentProduct = new Product();
+            $currentProduct->hydrate($product);
+            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === 0) {
+                unset($products[$key]);
+            }
+        }
+        
         $orderId = Order::getIdByCartId((int) $this->id);
         $product_gift = array();
         if ($orderId) {
