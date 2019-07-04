@@ -28,6 +28,11 @@ services:
     form.type.product.translate:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslateType'
         parent: 'form.type.common_type'
+        arguments:
+            - '@router.default'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
+            - "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
         public: true
         tags:
             - { name: form.type }
