@@ -2,15 +2,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 
-use Configuration;
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
-use Product;
 
 /**
  * Decorates original grid data and returns modified prices for grid display as well as calculated price with taxes.
@@ -33,16 +32,23 @@ final class ProductPriceGridDataFactoryDecorator implements GridDataFactoryInter
     private $defaultCurrencyId;
 
     /**
+     * @var ProductDataProvider
+     */
+    private $productDataProvider;
+
+    /**
      * @param GridDataFactoryInterface $productGridDataFactory
      * @param Repository $localeRepository
      * @param string $contextLocale
      * @param int $defaultCurrencyId
+     * @param ProductDataProvider $productDataProvider
      */
     public function __construct(
         GridDataFactoryInterface $productGridDataFactory,
         Repository $localeRepository,
         $contextLocale,
-        $defaultCurrencyId
+        $defaultCurrencyId,
+        ProductDataProvider $productDataProvider
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -51,6 +57,7 @@ final class ProductPriceGridDataFactoryDecorator implements GridDataFactoryInter
         );
 
         $this->defaultCurrencyId = $defaultCurrencyId;
+        $this->productDataProvider = $productDataProvider;
     }
 
     /**
@@ -90,39 +97,11 @@ final class ProductPriceGridDataFactoryDecorator implements GridDataFactoryInter
             );
 
             $products[$i]['price_tax_included'] = $this->locale->formatPrice(
-                $this->getPriceWithTax($product),
+                $this->productDataProvider->getPriceWithTax($product['id_product']),
                 $currency->iso_code
             );
         }
 
         return $products;
-    }
-
-    /**
-     * Gets price with tax.
-     *
-     * @param array $product
-     *
-     * @return float
-     */
-    private function getPriceWithTax(array $product)
-    {
-        return Product::getPriceStatic(
-            $product['id_product'],
-            true,
-            null,
-            (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
-            null,
-            false,
-            true,
-            1,
-            true,
-            null,
-            null,
-            null,
-            $nothing,
-            true,
-            true
-        );
     }
 }
