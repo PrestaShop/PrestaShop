@@ -217,7 +217,10 @@ function smartyTranslate($params, $smarty)
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
-    $basename = basename($smarty->source->name, '.tpl');
+    $resourcePrefix = substr($smarty->source->resource, 0, strpos($smarty->source->resource, ':'));
+    $templatePrefix = substr($smarty->template_resource, 0, strpos($smarty->template_resource, ':'));
+    $filename = $resourcePrefix === $templatePrefix ? $smarty->source->resource : $smarty->template_resource;
+    $basename = basename($filename, '.tpl');
     $key = $basename.'_'.md5($string);
 
     if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
