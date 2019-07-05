@@ -70,14 +70,16 @@ services:
         arguments:
           - '@prestashop.core.image.parser.image_tag_source_parser'
 
-    prestashop.adapter.product.grid.data.factory.product_decorator:
-        class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator'
+    prestashop.adapter.product.grid.data.factory.product_price_grid_data_factory_decorator:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductPriceGridDataFactoryDecorator'
         arguments:
           - '@prestashop.core.grid.data.factory.product'
-          - '@prestashop.adapter.product.image_thumbnail_provider'
           - '@prestashop.core.localization.locale.repository'
           - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
           - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+
+    product.adapter.product.grid.data.factory.exportable_product_grid_data_decorator:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ExportableProductGridDataFactoryDecorator'
 
     prestashop.adapter.product.command_handler.toggle_product_status_handler:
         class: 'PrestaShop\PrestaShop\Adapter\Product\CommandHandler\ToggleProductStatusHandler'

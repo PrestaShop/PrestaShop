@@ -367,3 +367,9 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'product'
+
+    prestashop.core.grid.data.factory.product_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\ProductGridDataFactoryDecorator'
+      arguments:
+        - '@prestashop.adapter.product.grid.data.factory.product_price_grid_data_factory_decorator'
+        - '@prestashop.adapter.product.image_thumbnail_provider'
