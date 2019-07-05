@@ -114,7 +114,7 @@ swiftmailer:
     spool:     { type: memory }
 
 # Guzzle configuration
-love_oss_guzzle5:
+csa_guzzle:
     cache:
         enabled: true
         adapter: guzzle.cache
