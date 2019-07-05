@@ -53,7 +53,7 @@ final class AddFeatureHandler extends AbstractObjectModelHandler implements AddF
         }
 
         if (false === $feature->validateFieldsLang(false)) {
-            throw new FeatureConstraintException('Invalid feature data', FeatureConstraintException::EMPTY_NAME);
+            throw new FeatureConstraintException('Invalid feature data', FeatureConstraintException::INVALID_NAME);
         }
 
         if (false === $feature->add()) {
