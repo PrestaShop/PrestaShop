@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\EditFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 
 /**
  * Handles feature editing.
@@ -44,6 +45,10 @@ final class EditFeatureHandler extends AbstractObjectModelHandler implements Edi
     public function handle(EditFeatureCommand $command)
     {
         $feature = new Feature($command->getFeatureId()->getValue());
+
+        if (empty($feature->id)) {
+            throw new FeatureNotFoundException('Feature could not be found.');
+        }
 
         if (null !== $command->getLocalizedNames()) {
             $feature->name = $command->getLocalizedNames();

@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -151,6 +152,10 @@ class FeatureController extends FrameworkBundleAdminController
     private function getErrorMessages()
     {
         return [
+            FeatureNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
             FeatureConstraintException::class => [
                 FeatureConstraintException::EMPTY_NAME => $this->trans(
                     'The field %field_name% is required at least in your default language.',
