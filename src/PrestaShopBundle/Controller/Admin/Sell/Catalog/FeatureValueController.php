@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdExceptio
 use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Exception\FeatureValueConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Query\GetFeatureValueForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,6 +43,8 @@ class FeatureValueController extends FrameworkBundleAdminController
 {
     /**
      * Create feature value action.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $featureId
@@ -81,6 +84,17 @@ class FeatureValueController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Edit feature value action.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $featureId
+     * @param int $featureValueId
+     *
+     * @return Response
+     */
     public function editAction(Request $request, $featureId, $featureValueId)
     {
         try {
@@ -140,7 +154,7 @@ class FeatureValueController extends FrameworkBundleAdminController
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValues/edit.html.twig',
             $parameters + [
-                'contextLangId' => $this->configuration->get('PS_LANG_DEFAULT'),
+                'contextLangId' => $this->configuration->getInt('PS_LANG_DEFAULT'),
             ]
         );
     }
