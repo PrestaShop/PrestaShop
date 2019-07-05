@@ -42,7 +42,11 @@ function migrate_tabs_17()
     $moduleParents = array();
 
     foreach ($moduleTabs as $tab) {
-        $idParent = $tab['id_parent'];
+        $idParent = (int) $tab['id_parent'];
+        // Some module aren't related to a parent. We can safely ignore them.
+        if ($idParent === 0 || $idParent === -1) {
+            continue;
+        }
         $moduleParents[$idParent] = Db::getInstance()->getValue('SELECT class_name FROM '._DB_PREFIX_.'tab WHERE id_tab='.$idParent);
     }
 
@@ -62,9 +66,14 @@ function migrate_tabs_17()
     $install = new Install();
     $install->populateDatabase('tab');
 
+    $fallbackIdTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name="DEFAULT"');
     /* update remaining idParent */
     foreach($moduleParents as $idParent => $className) {
-        $idTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name='.pSQL($className));
+        $idTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name="'.pSQL($className).'"');
+        if (empty($idTab)) {
+            // Fallback on the DEFAULT
+            $idTab = $fallbackIdTab;
+        }
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'tab SET id_parent='.(int)$idTab.' WHERE id_parent='.(int)$idParent);
     }
 }

@@ -363,7 +363,7 @@ class AccessCore extends ObjectModel
             WHERE `id_tab` = "' . (int) $idTab . '"
         ');
         // Add the same rights to the parent tab (don't do it in case of rights deletion)
-        if ($enabled && $idParent) {
+        if ($enabled && $idParent > 0) {
             $this->updateLgcAccess($idProfile, $idParent, $lgcAuth, $enabled, 0);
         }
 
