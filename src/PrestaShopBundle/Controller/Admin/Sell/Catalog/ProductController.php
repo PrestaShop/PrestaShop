@@ -15,7 +15,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductExportableData;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductPreviewUrl;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductExportableData;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
@@ -279,8 +281,6 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_products_index');
     }
 
-    //todo: test with position
-    //todo: quite universal export logic - maybe we should create a service for csv export data retrieval?
     /**
      * Exports products to csv.
      *
@@ -292,42 +292,14 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function exportAction(ProductFilters $filters)
     {
-        $productGridFactory = $this->get('prestashop.core.grid.factory.product');
-        $productGrid = $productGridFactory->getGrid($filters);
-
-        $columns = $productGrid->getDefinition()->getColumns();
-
-        $headers = [];
-
-        /**
-         * @var string $columnId
-         * @var ColumnInterface $column
-         */
-        foreach ($columns as $columnId => $column) {
-            $headers[$columnId] = $column->getName();
-        }
-
-        $data = [];
-        $iteration = 0;
-
-        /** @var array $record */
-        foreach ($productGrid->getData()->getRecords()->all() as $record) {
-            foreach ($record as $columnId => $columnValue) {
-                if (isset($headers[$columnId])) {
-                    $data[$iteration][$columnId] = $columnValue;
-                }
-            }
-
-            $iteration++;
-        }
+        /** @var ProductExportableData $exportableData */
+        $exportableData = $this->getQueryBus()->handle(new GetProductExportableData($filters));
 
         return (new CsvResponse())
-            ->setData($data)
-            ->setHeadersData($headers)
+            ->setData($exportableData->getData())
+            ->setHeadersData($exportableData->getHeaders())
             ->setFileName('product_' . date('Y-m-d_His') . '.csv');
     }
-
-    //todo: check called hooks - each action has a hook in legacy. Ask if we need so much hooks
 
     /**
      * Bulk enables products.
