@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,6 +42,8 @@ class FeatureController extends FrameworkBundleAdminController
 {
     /**
      * Create feature action.
+     *
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -80,6 +83,8 @@ class FeatureController extends FrameworkBundleAdminController
 
     /**
      * Edit feature action.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $featureId
      * @param Request $request
