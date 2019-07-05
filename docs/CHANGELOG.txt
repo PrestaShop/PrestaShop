@@ -25,6 +25,26 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.6.0 RC 2 - (2019-07-05)
+####################################
+- Back Office:
+  - Bug fix:
+    - #14460: Ignore index.php files in Doctrine entities scanning
+    - #14401: Fix grid calendar
+
+- Front Office:
+  - Bug fix:
+    - #14444: Check if selected address belongs to user
+    - #14395: Classic theme force all type number to not have arrows
+
+- Core:
+  - Improvement:
+    - #14438: Testing the factory with number and price specifications
+  - Bug fix:
+    - #14453: Update facetedsearch to 3.0.6
+    - #14400: Wrong way to retrieve CLDR information
+
+####################################
 #   v1.7.6.0 RC 1 - (2019-06-25)
 ####################################
 - Back Office:
