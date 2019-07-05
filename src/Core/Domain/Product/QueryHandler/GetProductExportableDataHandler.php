@@ -97,9 +97,7 @@ final class GetProductExportableDataHandler implements GetProductExportableDataH
         $dataIteration = 0;
 
         foreach ($records as $columnRecord) {
-            foreach ($this->getRecord($columnRecord, $headerRowPosition) as list($position, $columnValue)) {
-                $data[$dataIteration][$position] = $columnValue;
-            }
+            $data[$dataIteration] = $this->getRecord($columnRecord, $headerRowPosition);
 
             ksort($data[$dataIteration]);
             $dataIteration++;
@@ -118,11 +116,14 @@ final class GetProductExportableDataHandler implements GetProductExportableDataH
      */
     private function getRecord(array $columnRecord, array $headerRowPosition)
     {
+        $data = [];
         foreach ($columnRecord as $columnId => $columnValue) {
             if (isset($headerRowPosition[$columnId])) {
                 $position = $headerRowPosition[$columnId];
-                yield [$position, $columnValue];
+                $data[$position] = $columnValue;
             }
         }
+
+        return $data;
     }
 }
