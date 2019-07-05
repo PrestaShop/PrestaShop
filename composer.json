@@ -26,7 +26,7 @@
         "ircmaxell/random-lib": "^1.2.0",
         "jakeasmith/http_build_url": "^1",
         "league/tactician-bundle": "^1.0",
-        "love-oss/guzzle-5-bundle": "^0.1.1",
+        "csa/guzzle-bundle": "~1.3",
         "matthiasmullie/minify": "~1.3.0",
         "mobiledetect/mobiledetectlib": "~2.8.22",
         "mrclay/minify": "~2.3.0",
@@ -112,6 +112,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/prestashop/php-cssjanus"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/prestashop/CsaGuzzleBundle"
         }
     ],
     "require-dev": {

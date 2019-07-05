@@ -8,7 +8,7 @@ services:
             - "%kernel.cache_dir%/doctrine"
 
     guzzle.cache:
-        class: LoveOSS\Guzzle5Bundle\GuzzleHttp\Cache\DoctrineAdapter
+        class: Csa\Bundle\GuzzleBundle\GuzzleHttp\Cache\DoctrineAdapter
         arguments:
             - "@doctrine.cache.provider"
             - "%prestashop.addons.api_client.ttl%"
