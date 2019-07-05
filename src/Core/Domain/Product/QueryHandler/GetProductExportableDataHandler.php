@@ -28,9 +28,8 @@ final class GetProductExportableDataHandler implements GetProductExportableDataH
     }
 
     /**
-     * todo: test with position
+     * todo: unit test with position
      * todo: quite universal export logic - maybe we should create a service for csv export data retrieval?
-     *
      * {@inheritdoc}
      */
     public function handle(GetProductExportableData $query)
