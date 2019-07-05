@@ -148,18 +148,12 @@ class TranslateType extends CommonAbstractType
      */
     private function getDefaultLocale(array $locales)
     {
-        if ($this->defaultFormLanguageId) {
-            // Searching for a locale that matches default form language
-            foreach ($locales as $locale) {
-                if ($locale['id_lang'] == $this->defaultFormLanguageId) {
-                    return $locale;
-                }
-            }
-        }
+        // If default form language is not available we will use default shop language
+        $languageId = $this->defaultFormLanguageId ?: $this->defaultShopLanguageId;
 
-        // Searching for locale that matches default shop language
+        // Searching for a locale that matches the selected language
         foreach ($locales as $locale) {
-            if ($locale['id_lang'] == $this->defaultShopLanguageId) {
+            if ($locale['id_lang'] == $languageId) {
                 return $locale;
             }
         }
