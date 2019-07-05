@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Configuration;
 use Context;
 use Image;
 use Product;
@@ -162,5 +163,33 @@ class ProductDataProvider
             'format' => $imageData->image_format,
             'base_image_url' => _THEME_PROD_DIR_ . $imageData->getImgPath(),
         ];
+    }
+
+    /**
+     * Gets price with tax.
+     *
+     * @param int $productId
+     *
+     * @return float
+     */
+    public function getPriceWithTax($productId)
+    {
+        return Product::getPriceStatic(
+            $productId,
+            true,
+            null,
+            (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+            null,
+            false,
+            true,
+            1,
+            true,
+            null,
+            null,
+            null,
+            $nothing,
+            true,
+            true
+        );
     }
 }
