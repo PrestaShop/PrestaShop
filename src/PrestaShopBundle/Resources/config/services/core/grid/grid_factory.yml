@@ -304,3 +304,11 @@ services:
           - '@prestashop.core.grid.data.factory.product_decorator'
           - '@prestashop.core.grid.filter.form_factory'
           - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.exportable_product:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+          - '@prestashop.core.grid.definition.product'
+          - '@product.adapter.product.grid.data.factory.exportable_product_grid_data_decorator'
+          - '@prestashop.core.grid.filter.form_factory'
+          - '@prestashop.core.hook.dispatcher'

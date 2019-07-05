@@ -69,7 +69,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb
             ->select('p.`id_product`, p.`reference`')
             ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`active`')
-            ->addSelect('pl.`name`')
+            ->addSelect('pl.`name` , pl.`link_rewrite`')
             ->addSelect('cl.`name` AS `category`')
             ->addSelect('img_shop.`id_image`')
         ;
