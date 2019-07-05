@@ -1,0 +1,28 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "Definition of Done - architecture - readme (à mettre à jour si nécessaire) - package.json - .git-ignore - test directory avec script.js (headless first) - tested locally / docker - Uimap (POM) - dockerfile - travis.yml (ajout de la sanity)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrestaShop/PrestaShop.git"
+  },
+  "keywords": [
+    "e2e"
+  ],
+  "author": "Prestashop",
+  "license": "OSL-3.0",
+  "bugs": {
+    "url": "https://github.com/PrestaShop/PrestaShop/issues"
+  },
+  "homepage": "https://github.com/PrestaShop/PrestaShop#readme",
+  "dependencies": {
+    "puppeteer": "^1.18.1"
+  }
+}
