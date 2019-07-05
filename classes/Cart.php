@@ -1712,7 +1712,7 @@ class CartCore extends ObjectModel
                 WHERE `id_cart` = ' . (int) $this->id . '
                 AND `id_product` = ' . (int) $id_product . '
                 AND `id_customization` = ' . (int) $id_customization .
-                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+                ($id_product_attribute != 0 ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
             );
         }
 
@@ -1723,7 +1723,7 @@ class CartCore extends ObjectModel
                 SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
                 WHERE `id_cart` = ' . (int) $this->id . '
                 AND `id_product` = ' . (int) $id_product .
-                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+                ($id_product_attribute != 0 ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
             );
         }
 
@@ -1732,7 +1732,7 @@ class CartCore extends ObjectModel
         DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
         WHERE `id_product` = ' . (int) $id_product . '
         AND `id_customization` = ' . (int) $id_customization .
-            (null !== $id_product_attribute ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '') . '
+            (0 !== $id_product_attribute ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '') . '
         AND `id_cart` = ' . (int) $this->id . '
         ' . ((int) $id_address_delivery ? 'AND `id_address_delivery` = ' . (int) $id_address_delivery : ''));
 
