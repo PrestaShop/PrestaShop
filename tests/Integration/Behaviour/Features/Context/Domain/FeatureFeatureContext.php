@@ -82,7 +82,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I update product feature with id "([^"]*)" name in default language to "([^"]*)"$/
+     * @When /^I update product feature with id "([^"]*)" field "name" in default language to "([^"]*)"$/
      */
     public function iUpdateProductFeatureWithIdNameTo($featureId, $featureName)
     {
@@ -104,7 +104,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^product feature with id "([^"]*)" name in default language should be "([^"]*)"$/
+     * @Then /^product feature with id "([^"]*)" field "name" in default language should be "([^"]*)"$/
      */
     public function productFeatureWithIdNameShouldBe($featureId, $featureName)
     {
