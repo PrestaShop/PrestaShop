@@ -146,11 +146,6 @@ module.exports = {
       test('should verify that the "City" input exist', () => client.waitForVisible(accountPage.city_input));
       test('should verify that the "Phone" input exist', () => client.waitForVisible(accountPage.phone_input));
       test('should verify that the "Country" list exist', () => client.waitForVisible(accountPage.country_list));
-      /**
-       * This error is due to the bug described in this issue
-       * https://github.com/PrestaShop/PrestaShop/issues/11166
-       **/
-      test('should verify that the "Birthday" list exist (issue #11166)', () => client.waitForVisible(accountPage.date_birthday_input));
     }, 'customer');
   },
   fillCustomerInfoFromAGuest: function (customerData, password = true) {
