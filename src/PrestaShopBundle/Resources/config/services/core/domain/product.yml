@@ -4,8 +4,6 @@ services:
 
   prestashop.core.domain.product.query_handler.get_product_exportabe_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductExportableDataHandler'
-    arguments:
-      - '@prestashop.core.grid.factory.exportable_product'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductExportableData'
