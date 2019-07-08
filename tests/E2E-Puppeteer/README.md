@@ -25,14 +25,16 @@ If you want to run the Install test you can run the script **test/linkchecker.js
 
 #### With default values
 
-```
-node test/linkchecker.js
+```bash
+cd test/
+node linkchecker.js
 ```
 
 #### With custom values
 
 ```bash
-URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" node test/linkchecker.js
+cd test/
+URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" node linkchecker.js
 ```
 
 #### Run with docker
