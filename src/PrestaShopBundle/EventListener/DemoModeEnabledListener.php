@@ -31,8 +31,10 @@ use Doctrine\Common\Util\ClassUtils;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use ReflectionClass;
 use ReflectionObject;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
@@ -115,7 +117,11 @@ class DemoModeEnabledListener
             return;
         }
 
-        $this->showNotificationMessage($demoRestricted);
+        $isXmlHttpRequest = $event->getRequest()->isXmlHttpRequest();
+
+        if (!$isXmlHttpRequest) {
+            $this->showNotificationMessage($demoRestricted);
+        }
 
         $routeParametersToKeep = $this->getQueryParamsFromRequestQuery(
             $demoRestricted->getRedirectQueryParamsToKeep(),
@@ -124,8 +130,17 @@ class DemoModeEnabledListener
 
         $url = $this->router->generate($demoRestricted->getRedirectRoute(), $routeParametersToKeep);
 
-        $event->setController(function () use ($url) {
-            return new RedirectResponse($url);
+        if ($isXmlHttpRequest) {
+            $response = new JsonResponse([
+                'status' => false,
+                'message' => $this->getErrorMessage($demoRestricted),
+            ], Response::HTTP_FORBIDDEN);
+        } else {
+            $response = new RedirectResponse($url);
+        }
+
+        $event->setController(function () use ($response) {
+            return $response;
         });
     }
 
@@ -138,11 +153,7 @@ class DemoModeEnabledListener
     {
         $this->session->getFlashBag()->add(
             'error',
-            $this->translator->trans(
-                $demoRestricted->getMessage(),
-                [],
-                $demoRestricted->getDomain()
-            )
+            $this->getErrorMessage($demoRestricted)
         );
     }
 
@@ -193,5 +204,21 @@ class DemoModeEnabledListener
         }
 
         return $result;
+    }
+
+    /**
+     * Gets error message from annotation.
+     *
+     * @param DemoRestricted $demoRestricted
+     *
+     * @return string
+     */
+    private function getErrorMessage(DemoRestricted $demoRestricted)
+    {
+        return $this->translator->trans(
+            $demoRestricted->getMessage(),
+            [],
+            $demoRestricted->getDomain()
+        );
     }
 }
