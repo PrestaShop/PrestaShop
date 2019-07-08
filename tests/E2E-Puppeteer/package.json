@@ -6,7 +6,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "run"
+    "test": "run",
+    "pretest": "eslint  --fix --ignore-path .gitignore ."
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,14 @@
   },
   "homepage": "https://github.com/PrestaShop/PrestaShop#readme",
   "dependencies": {
+    "eslint-config-prestashop": "0.0.2",
     "puppeteer": "^1.18.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-import": "^2.18.0"
   }
 }
