@@ -6,8 +6,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "run",
-    "pretest": "eslint  --fix --ignore-path .gitignore ."
+    "test": "node test/linkchecker.js",
+    "pretest": "npm run lint",
+    "lint": "eslint  --fix --ignore-path .gitignore ."
   },
   "repository": {
     "type": "git",
