@@ -189,6 +189,6 @@ services:
             - '@prestashop.core.merchandise_return.configuration.merchandise_return_options_configuration'
 
     prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider:
-      class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsFormDataProvider'
-      arguments:
-        - '@prestashop.core.credit_slip.credit_slip_options.configuration'
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.credit_slip.credit_slip_options.configuration'
