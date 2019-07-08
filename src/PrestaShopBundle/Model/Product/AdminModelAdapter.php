@@ -528,7 +528,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     {
         return array(
             'price' => $product->price,
-            'ecotax' => $product->ecotax,
+            'ecotax' => round($product->ecotax * (1 + $this->taxRuleDataProvider->getProductEcotaxRate() / 100), 2),
             'id_tax_rules_group' => isset($product->id_tax_rules_group)
                 ? (int) $product->id_tax_rules_group
                 : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
