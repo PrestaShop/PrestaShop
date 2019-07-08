@@ -57,7 +57,8 @@ const interceptRequestAndResponse = async (page) => {
 
 const checkStatusUrls = async (page, hrefs) => {
   // check urls
-  for (const href of hrefs) {
+  for (let i = 0; i < hrefs.length; i++) {
+    const href = hrefs[i];
     curHref = href;
     object[office].passed.push({url: href, date: new Date().getTime(), responses});
 
