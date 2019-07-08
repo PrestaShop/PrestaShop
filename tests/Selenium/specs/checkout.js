@@ -31,8 +31,6 @@ const existingCustomerScenario = Object.assign({}, guestScenario, {
 });
 
 const scenarios = [
-  existingCustomerScenario,
-  guestScenarioDifferentAddresses,
   registrationScenario
 ];
 
