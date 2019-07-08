@@ -26,16 +26,27 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_general %}
+  {% set nameHelp =
+    'Allowed characters: letters, spaces and "%special_chars%".'|trans({'%special_chars%' : '(),-'}, 'Admin.Shipping.Help')
+    ~ ' ' ~
+    "The carrier's name will be displayed during checkout." |trans({}, 'Admin.Shipping.Help')
+    ~ ' ' ~
+    'For in-store pickup, enter 0 to replace the carrier name with your shop name.'|trans({}, 'Admin.Shipping.Help')
+  %}
+
   {{ ps.form_group_row(carrierForm.step_general.name, {}, {
     'label': 'Carrier name'|trans({}, 'Admin.Global'),
+    'help': nameHelp
   }) }}
 
   {{ ps.form_group_row(carrierForm.step_general.transit_time, {}, {
     'label': 'Transit time'|trans({}, 'Admin.Global'),
+    'help': 'The delivery time will be displayed during checkout.'|trans({}, 'Admin.Shipping.Help')
   }) }}
 
   {{ ps.form_group_row(carrierForm.step_general.speed_grade, {}, {
     'label': 'Speed grade'|trans({}, 'Admin.Global'),
+    'help': 'Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.'|trans({}, 'Admin.Shipping.Help')
   }) }}
 
   {{ ps.form_group_row(carrierForm.step_general.logo, {}, {
@@ -44,5 +55,7 @@
 
   {{ ps.form_group_row(carrierForm.step_general.tracking_url, {}, {
     'label': 'Tracking url'|trans({}, 'Admin.Global'),
+    'help': "Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number."
+    |trans({}, 'Admin.Shipping.Help')
   }) }}
 {% endblock %}
