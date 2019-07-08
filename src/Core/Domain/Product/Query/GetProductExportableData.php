@@ -2,31 +2,46 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-
 /**
  * Gets products exportable data.
  */
 class GetProductExportableData
 {
     /**
-     * @var SearchCriteriaInterface
+     * @var array
      */
-    private $searchCriteria;
+    private $columns;
 
     /**
-     * @param SearchCriteriaInterface $searchCriteria
+     * @var array
      */
-    public function __construct(SearchCriteriaInterface $searchCriteria)
-    {
-        $this->searchCriteria = $searchCriteria;
+    private $records;
+
+    /**
+     * @param array $columns
+     * @param array $records
+     */
+    public function __construct(
+        array $columns,
+        array $records
+    ) {
+        $this->columns = $columns;
+        $this->records = $records;
     }
 
     /**
-     * @return SearchCriteriaInterface
+     * @return array
      */
-    public function getSearchCriteria()
+    public function getColumns()
     {
-        return $this->searchCriteria;
+        return $this->columns;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRecords()
+    {
+        return $this->records;
     }
 }

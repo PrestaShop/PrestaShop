@@ -5,9 +5,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductExportableData;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductExportableData;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 
 /**
  * Gets products exportable data.
@@ -15,32 +13,14 @@ use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 final class GetProductExportableDataHandler implements GetProductExportableDataHandlerInterface
 {
     /**
-     * @var GridFactoryInterface
-     */
-    private $productGridFactory;
-
-    /**
-     * @param GridFactoryInterface $productGridFactory
-     */
-    public function __construct(GridFactoryInterface $productGridFactory)
-    {
-        $this->productGridFactory = $productGridFactory;
-    }
-
-    /**
-     * todo: unit test with position
      * todo: quite universal export logic - maybe we should create a service for csv export data retrieval?
      * {@inheritdoc}
      */
     public function handle(GetProductExportableData $query)
     {
-        $productGrid = $this->productGridFactory->getGrid($query->getSearchCriteria());
+        list($headers, $headerRowPosition) = $this->getHeaders($query->getColumns());
 
-        $columns = $productGrid->getDefinition()->getColumns();
-
-        list($headers, $headerRowPosition) = $this->getHeaders($columns);
-
-        $data = $this->getData($productGrid->getData()->getRecords()->all(), $headerRowPosition);
+        $data = $this->getData($query->getRecords(), $headerRowPosition);
 
         return new ProductExportableData(
             $headers,
@@ -52,11 +32,11 @@ final class GetProductExportableDataHandler implements GetProductExportableDataH
      * Collects actual headers with translatable names as they will be used as csv column.
      * Collects header key positions so the data can be assigned for the right column in later on processing
      *
-     * @param ColumnCollectionInterface $columns
+     * @param array $columns
      *
      * @return array
      */
-    private function getHeaders(ColumnCollectionInterface $columns)
+    private function getHeaders(array $columns)
     {
         $headers = [];
         $headerRowPosition = [];
@@ -67,13 +47,13 @@ final class GetProductExportableDataHandler implements GetProductExportableDataH
          * @var string $columnId
          * @var ColumnInterface $column
          */
-        foreach ($columns as $columnId => $column) {
-            if (in_array($columnId, $excludedColumns, true)) {
+        foreach ($columns as $column) {
+            if (in_array($column['id'], $excludedColumns, true)) {
                 continue;
             }
 
-            $headers[$columnId] = $column->getName();
-            $headerRowPosition[$columnId] = $headerIteration;
+            $headers[$column['id']] = $column['name'];
+            $headerRowPosition[$column['id']] = $headerIteration;
 
             $headerIteration++;
         }

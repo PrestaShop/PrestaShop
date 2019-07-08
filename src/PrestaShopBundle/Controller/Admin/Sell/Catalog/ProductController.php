@@ -292,8 +292,16 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function exportAction(ProductFilters $filters)
     {
+        $gridFactory = $this->get('prestashop.core.grid.factory.exportable_product')->getGrid($filters);
+        $columns = $gridFactory->getDefinition()->getColumns();
+
         /** @var ProductExportableData $exportableData */
-        $exportableData = $this->getQueryBus()->handle(new GetProductExportableData($filters));
+        $exportableData = $this->getQueryBus()->handle(
+            new GetProductExportableData(
+                $columns->toArray(),
+                $gridFactory->getData()->getRecords()->all()
+            )
+        );
 
         return (new CsvResponse())
             ->setData($exportableData->getData())
