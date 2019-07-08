@@ -28,22 +28,31 @@
 {% block carrier_form_step_properties_and_access %}
   {{ ps.form_group_row(carrierForm.step_properties_and_access.max_width, {}, {
     'label': 'Maximum package width (cm)'|trans({}, 'Admin.Global'),
+    'help': 'Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.'
+    |trans({}, 'Admin.Shipping.Help')
   }) }}
 
   {{ ps.form_group_row(carrierForm.step_properties_and_access.max_height, {}, {
     'label': 'Maximum package height (cm)'|trans({}, 'Admin.Global'),
+    'help': 'Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.'
+    |trans({}, 'Admin.Shipping.Help')
   }) }}
 
   {{ ps.form_group_row(carrierForm.step_properties_and_access.max_depth, {}, {
     'label': 'Maximum package depth (cm)'|trans({}, 'Admin.Global'),
+    'help': 'Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.'
+    |trans({}, 'Admin.Shipping.Help')
   }) }}
 
   {{ ps.form_group_row(carrierForm.step_properties_and_access.max_weight, {}, {
     'label': 'Maximum package weight (kg)'|trans({}, 'Admin.Global'),
+    'help': 'Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.'
+    |trans({}, 'Admin.Shipping.Help')
   }) }}
 
   {{ ps.form_group_row(carrierForm.step_properties_and_access.group_association, {}, {
     'label': 'Group access'|trans({}, 'Admin.Global'),
+    'help': 'Mark the groups that are allowed access to this carrier.'|trans({}, 'Admin.Shipping.Help')
   }) }}
 {% endblock %}
 
