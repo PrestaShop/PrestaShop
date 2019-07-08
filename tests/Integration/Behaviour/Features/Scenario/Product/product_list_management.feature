@@ -7,8 +7,4 @@ Feature: Product list management
 
   Scenario: Product list quantity column is not visible
     Given shop configuration for "PS_STOCK_MANAGEMENT" is set to 0
-    Then grid definition "prestashop.core.grid.definition.product" should not contain column with id "quantity"
-
-  Scenario: Product list quantity column is visible
-    Given shop configuration for "PS_STOCK_MANAGEMENT" is set to 1
-    Then grid definition "prestashop.core.grid.definition.product" should contain column with id "quantity"
+    Then product grid in BO should not contain column "quantity"

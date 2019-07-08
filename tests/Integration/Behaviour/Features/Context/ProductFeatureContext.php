@@ -28,35 +28,11 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^grid definition "([^"]*)" should contain column with id "([^"]*)"$/
+     * @Then /^product grid in BO should not contain column "([^"]*)"$/
      */
-    public function assertGridDefinitionShouldContainColumnWithId($gridDefinitionId, $columnId)
+    public function productGridInBOShouldNotContainColumn($columnId)
     {
-        /** @var GridDefinitionFactoryInterface $gridDefinition */
-        $gridDefinition = CommonFeatureContext::getContainer()->get($gridDefinitionId);
-
-        /** @var array $columns */
-        $columns = $gridDefinition->getDefinition()->getColumns()->toArray();
-        $columnIds = array_column($columns, 'id');
-
-        if (!in_array($columnId, $columnIds, true)) {
-            throw new RuntimeException(
-                sprintf(
-                    'For grid definition "%s" missing columnId "%s".',
-                    $gridDefinitionId,
-                    $columnId
-                )
-            );
-        }
-    }
-
-    /**
-     * @todo: ask why this part does not work.
-     *
-     * @Then /^grid definition "([^"]*)" should not contain column with id "([^"]*)"$/
-     */
-    public function assertGridDefinitionShouldNotContainColumnWithId($gridDefinitionId, $columnId)
-    {
+        $gridDefinitionId = 'prestashop.core.grid.definition.product';
         /** @var ProductGridDefinitionFactory $gridDefinition */
         $gridDefinition = CommonFeatureContext::getContainer()->get($gridDefinitionId);
 
