@@ -57,17 +57,18 @@ const interceptRequestAndResponse = async (page) => {
 
 const checkStatusUrls = async (page, hrefs) => {
   // check urls
-  await Promise.all(
-    hrefs.map(async (href) => {
-      curHref = href;
-      object[office].passed.push({url: href, date: new Date().getTime(), responses});
+  // eslint-disable-next-line
+  for (const href of hrefs) {
+    curHref = href;
+    object[office].passed.push({url: href, date: new Date().getTime(), responses});
 
-      if (!href.includes('mailto:') && href.includes(URL_FO)) {
-        await page.goto(href, {waitUntil: 'domcontentloaded'});
-      }
-      responses = [];
-    }),
-  );
+    if (!href.includes('mailto:') && href.includes(URL_FO)) {
+      // eslint-disable-next-line
+      await page.goto(href, {waitUntil: 'domcontentloaded'});
+    }
+
+    responses = [];
+  }
 
   object[office].totalRequests = numberRequests[office];
 };
