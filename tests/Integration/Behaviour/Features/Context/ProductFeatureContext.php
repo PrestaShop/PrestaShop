@@ -2,8 +2,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Tester\Exception\PendingException;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use RuntimeException;
 
