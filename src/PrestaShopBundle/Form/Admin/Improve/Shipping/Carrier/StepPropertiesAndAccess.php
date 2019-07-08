@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * Defines form part for create/edit carrier Properties and group access step
  */
-class StepPropertiesAndGroups extends AbstractType
+class StepPropertiesAndAccess extends AbstractType
 {
     /**
      * @var array

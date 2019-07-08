@@ -27,31 +27,36 @@
 
 {{ form_start(carrierForm) }}
 <div class="card">
+
   <div class="card-block row">
     <div class="card-block col-12">
-      <div id="carrier_steps_navigation" class="js-steps-navigation">
+      <div id="carrier_steps_navigation" class="js-form-steps-navigation">
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/steps_navigation.html.twig' %}
       </div>
     </div>
-    <div class="card-text">
 
-      <div class="js-carrier-step-1 carrier-step carrier-step-active">
+    <div class="card-text">
+      <div class="form-step js-form-step-1 form-step-active">
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_general.html.twig' %}
       </div>
 
-      <div class="js-carrier-step-2 carrier-step">
+      <div class="form-step js-form-step-2">
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_multi_shop.html.twig' %}
       </div>
 
-      <div class="js-carrier-step-3 carrier-step">
+      <div class="form-step js-form-step-3">
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_shipping.html.twig' %}
       </div>
 
+      <div class="form-step js-form-step-4">
+        {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_properties_and_access.html.twig' %}
+      </div>
       {% block carrier_form_rest %}
         {{ form_rest(carrierForm) }}
       {% endblock %}
     </div>
   </div>
+
   <div class="card-footer">
     {#@todo: admin_carriers_index#}
     <a href="{{ path('admin_carriers_create') }}" class="btn btn-outline-secondary">

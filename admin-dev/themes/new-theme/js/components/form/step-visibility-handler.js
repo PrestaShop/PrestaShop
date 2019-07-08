@@ -26,28 +26,28 @@
 const $ = window.$;
 
 export default class StepVisibilityHandler {
-  constructor(stepSwitchSelector, stepClassPrefix, activeStepClass) {
-    $(document).on('click', stepSwitchSelector, event => this.showStep(
-      event,
-      activeStepClass,
-      stepClassPrefix,
-      stepSwitchSelector,
-    ));
+  constructor(activeSwitcherClass) {
+    this.activeSwitcherClass = activeSwitcherClass;
+    this._handle();
 
     return {};
   }
 
-  showStep(event, activeStepClass, stepClassPrefix, stepSwitchSelector) {
-    const $this = $(event.currentTarget);
-    const stepToShow = $this.data('step');
-    this.activateButton(stepSwitchSelector, $this);
-
-    $(`.${activeStepClass}`).removeClass(activeStepClass);
-    $(stepClassPrefix + stepToShow).addClass(activeStepClass);
+  _handle() {
+    $(document).on('click', '.js-form-step-switch', event => this._showStep(event));
   }
 
-  activateButton(switchSelector, target) {
-    $(document).find(switchSelector).removeClass('active');
-    target.addClass('active');
+  _showStep(event) {
+    const $this = $(event.currentTarget);
+    const stepToShow = $this.data('step');
+    this._activateButton($this);
+
+    $('.form-step-active').removeClass('form-step-active');
+    $(`.js-form-step-${stepToShow}`).addClass('form-step-active');
+  }
+
+  _activateButton(target) {
+    $(document).find('.js-form-step-switch').removeClass(this.activeSwitcherClass);
+    target.addClass(this.activeSwitcherClass);
   }
 }

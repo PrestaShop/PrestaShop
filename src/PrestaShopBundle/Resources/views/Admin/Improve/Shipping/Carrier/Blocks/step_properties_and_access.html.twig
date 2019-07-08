@@ -1,4 +1,4 @@
-/**
+{#**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,14 +21,29 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-import StepVisibilityHandler from '../../components/form/step-visibility-handler.js';
-import AddRangeHandler from './add-range-handler.js';
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-const $ = window.$;
+{% block carrier_form_step_properties_and_access %}
+  {{ ps.form_group_row(carrierForm.step_properties_and_access.max_width, {}, {
+    'label': 'Maximum package width (cm)'|trans({}, 'Admin.Global'),
+  }) }}
 
-$(document).ready(() => {
-  new StepVisibilityHandler('active');
-  new AddRangeHandler();
-});
+  {{ ps.form_group_row(carrierForm.step_properties_and_access.max_height, {}, {
+    'label': 'Maximum package height (cm)'|trans({}, 'Admin.Global'),
+  }) }}
+
+  {{ ps.form_group_row(carrierForm.step_properties_and_access.max_depth, {}, {
+    'label': 'Maximum package depth (cm)'|trans({}, 'Admin.Global'),
+  }) }}
+
+  {{ ps.form_group_row(carrierForm.step_properties_and_access.max_weight, {}, {
+    'label': 'Maximum package weight (kg)'|trans({}, 'Admin.Global'),
+  }) }}
+
+  {{ ps.form_group_row(carrierForm.step_properties_and_access.group_association, {}, {
+    'label': 'Group access'|trans({}, 'Admin.Global'),
+  }) }}
+{% endblock %}
+
