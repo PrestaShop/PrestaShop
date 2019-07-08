@@ -217,9 +217,13 @@ function smartyTranslate($params, $smarty)
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
-    $resourcePrefix = substr($smarty->source->resource, 0, strpos($smarty->source->resource, ':'));
-    $templatePrefix = substr($smarty->template_resource, 0, strpos($smarty->template_resource, ':'));
-    $filename = $resourcePrefix === $templatePrefix ? $smarty->source->resource : $smarty->template_resource;
+    
+    // fix inheritance template filename in case of includes from different cross sources between theme, modules, ...
+    $filename = $smarty->template_resource;
+    if (!isset($smarty->inheritance->sourceStack[0]) || $filename === $smarty->inheritance->sourceStack[0]->resource) {
+        $filename = $smarty->source->name;
+    }
+
     $basename = basename($filename, '.tpl');
     $key = $basename.'_'.md5($string);
 
