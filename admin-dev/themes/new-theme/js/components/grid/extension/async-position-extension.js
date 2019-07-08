@@ -71,6 +71,7 @@ export default class AsyncPositionExtension {
     const positions = this._getRowsPositions(paginationOffset);
     const params = {positions};
 
+    this._updatePositionsForOriginalColumn();
     this._updatePosition(updateUrl, params);
   }
 
@@ -113,9 +114,52 @@ export default class AsyncPositionExtension {
         const rowId = $positionWrapper.data('id');
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
-        $positionWrapper.closest('tr').attr('id', id);
-        $positionWrapper.closest('td').addClass('js-drag-handle');
+
+        const $td = $positionWrapper.closest('td');
+        const $tr = $positionWrapper.closest('tr');
+
+        $tr.attr('id', id);
+        $td.addClass('js-drag-handle');
       });
+  }
+
+  /**
+   * Updates position for the column which actually is visible for the user.
+   * @private
+   */
+  _updatePositionsForOriginalColumn() {
+    this.grid.getContainer()
+      .find(`.js-grid-table .js-${this.grid.getId()}-position`)
+      .each((index, positionWrapper) => {
+        const $positionWrapper = $(positionWrapper);
+        const $tr = $positionWrapper.closest('tr');
+        const $td = $positionWrapper.closest('td');
+
+        const positionColumnId = this._getOriginalColumnId($td);
+        const displayPosition = parseInt(index, 10) + 1;
+        $tr.find(`td[class="${positionColumnId}"] div`).text(displayPosition.toString());
+      })
+  }
+
+  /**
+   * Gets original column id.
+   *
+   * @param $positionWrapper
+   *
+   * @return {string}
+   * @private
+   */
+  _getOriginalColumnId($positionWrapper) {
+    const classes = $positionWrapper.attr('class').split(/\s+/);
+    const classEndsWith = '_handle-type';
+
+    const foundClass = classes.find((item) => item.endsWith(classEndsWith));
+
+    if (typeof foundClass === 'undefined') {
+      return '';
+    }
+
+    return foundClass.replace(classEndsWith, '-type');
   }
 
   /**
@@ -144,6 +188,8 @@ export default class AsyncPositionExtension {
       const response = error.responseJSON;
 
       showErrorMessage(response.message);
+    }).always(() => {
+      this._addIdsToGridTableRows(true);
     });
   }
 }
