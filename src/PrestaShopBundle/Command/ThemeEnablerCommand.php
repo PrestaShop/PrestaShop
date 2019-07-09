@@ -33,6 +33,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Context;
 use Employee;
+use Validate;
 
 final class ThemeEnablerCommand extends ContainerAwareCommand
 {
@@ -64,7 +65,8 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
         $this
             ->setName('prestashop:theme:enable')
             ->setDescription('Manage your themes via command line')
-            ->addArgument('theme', InputArgument::REQUIRED, 'Module on which the action will be executed')
+            ->addArgument('theme', InputArgument::REQUIRED, 'Theme on which the action will be executed')
+            ->addArgument('shop', InputArgument::OPTIONAL, 'Shop id on which the action will be executed')
         ;
     }
 
@@ -75,7 +77,17 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
     {
         $io = new SymfonyStyle($input, $output);
         $theme = $input->getArgument('theme');
+        $shop = $input->getArgument('shop');
         $this->init($input, $output);
+
+        if ($shop !== NULL) {
+            if (Validate::isLoadedObject(new Shop($shop))) {
+                Context::getContext()->shop = new Shop($shop);
+            } else {
+                $io->error(sprintf('The selected shop id "%s" is invalid', $shop));
+                return self::RETURN_CODE_FAILED;
+            }
+        }
 
         $activationSuccess = $this->getContainer()
             ->get('prestashop.core.addon.theme.theme_manager')
