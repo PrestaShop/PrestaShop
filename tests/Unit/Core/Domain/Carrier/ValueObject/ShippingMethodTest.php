@@ -24,44 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
+namespace Tests\Unit\Core\Domain\Carrier\ValueObject;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 
-/**
- * Provides valid measure for carrier package size
- */
-final class PackageSizeMeasure
+class ShippingMethodTest extends TestCase
 {
     /**
-     * @var int
+     * @dataProvider getUndefinedMethods
      */
-    private $value;
-
-    /**
-     * @param int $value
-     *
-     * @throws CarrierConstraintException
-     */
-    public function __construct($value)
+    public function testItThrowsAnExceptionWhenUndefinedMethodIsGiven($undefinedMethod)
     {
-        $this->assertValueIsNonNegativeInteger($value);
-        $this->value = $value;
+        $this->expectException(CarrierConstraintException::class);
+        $this->expectExceptionCode(CarrierConstraintException::INVALID_SHIPPING_METHOD);
+
+        new ShippingMethod($undefinedMethod);
     }
 
-    /**
-     * @param int $value
-     *
-     * @throws CarrierConstraintException
-     */
-    private function assertValueIsNonNegativeInteger($value)
+    public function getUndefinedMethods()
     {
-        if (!is_int($value) || 0 > $value) {
-            throw new CarrierConstraintException(sprintf(
-                'Carrier package size "%s" is invalid. It should be non-negative integer.',
-                var_export($value, true)),
-                CarrierConstraintException::INVALID_SIZE_MEASURE
-            );
-        }
+        yield [''];
+        yield ['1'];
+        yield [5];
+        yield ['method'];
+        yield [null];
+        yield [false];
+        yield [[]];
+    }
+
+    public function testItReturnsRightMethodValue()
+    {
+        $shippingMethod = new ShippingMethod(ShippingMethod::SHIPPING_METHOD_PRICE);
+
+        $this->assertEquals(ShippingMethod::SHIPPING_METHOD_PRICE, $shippingMethod->getValue());
     }
 }
