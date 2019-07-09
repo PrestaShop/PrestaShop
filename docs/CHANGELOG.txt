@@ -25,6 +25,16 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.6.0 - (2019-07-09)
+####################################
+- Back Office:
+  - Bug fix:
+    - #14532: Check if index.php file exists before ignoring it (by @jolelievre)
+- Core:
+  - Refactoring:
+    - #14552: Use variable instead of recomputing (by @jolelievre)
+
+####################################
 #   v1.7.6.0 RC 2 - (2019-07-05)
 ####################################
 - Back Office:
