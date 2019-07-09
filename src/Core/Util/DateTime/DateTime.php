@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
+use RuntimeException;
+
 /**
  * Defines reusable values for DateTime
  */
@@ -37,9 +39,14 @@ final class DateTime
     const NULL_VALUE = '0000-00-00 00:00:00';
 
     /**
-     * This class is not supposed to be initialized as its purpose is to define constants
+     * This class only defines constants and has no reason to be initialized
      */
     public function __construct()
     {
+        throw new RuntimeException(sprintf(
+            'This class purpose is to define constants only. You might have mistaken the namespace with "%s"',
+                \DateTime::class
+            )
+        );
     }
 }
