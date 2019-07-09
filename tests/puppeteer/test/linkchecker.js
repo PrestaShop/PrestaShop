@@ -34,7 +34,14 @@ const object = {
   },
 };
 
-const getAllUrls = (page, selector) => page.$$eval(selector, as => as.map(a => a.href));
+const getAllUrls = async (page, selector) => {
+  const listUrls = await page.$$eval(selector, as => as.map(a => a.href));
+  //first check: remove perfect duplicates
+  await listUrls.filter(function(elem, pos) {
+    return listUrls.indexOf(elem) == pos;
+  });
+  return listUrls;
+}
 
 const interceptRequestAndResponse = async (page) => {
   await page.setRequestInterception(true);
@@ -63,7 +70,7 @@ const checkStatusUrls = async (page, hrefs) => {
     curHref = href;
     object[office].passed.push({url: href, date: new Date().getTime(), responses});
 
-    if (!href.includes('mailto:') && href.includes(URL_FO)) {
+    if (href.includes(URL_FO)) {
       // eslint-disable-next-line
       await page.goto(href, {waitUntil: 'domcontentloaded'});
       outputSameLine(` - ${i}/${hrefs.length} checked (${href})`);
@@ -97,7 +104,7 @@ const run = async () => {
   await page.goto(URL_BO, {waitUntil: 'networkidle0'});
   await loginBO(page);
   let urlList = await getAllUrls(page, selectorBO);
-  console.log(` - ${urlList.length} URL to crawl`);
+  await console.log(` - ${urlList.length} URL to crawl`);
   office = 'BO';
   object.BO.totalLinks = urlList.length;
   await checkStatusUrls(page, urlList);
