@@ -122,6 +122,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler'
         arguments:
           - '@prestashop.adapter.admin.data_updater.product'
+          - '@prestashop.core.hook.dispatcher'
         tags:
           - name: tactician.handler
             command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
