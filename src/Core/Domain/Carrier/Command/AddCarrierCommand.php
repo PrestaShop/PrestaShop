@@ -109,7 +109,7 @@ final class AddCarrierCommand
     private $associatedGroupIds;
 
     /**
-     * @var int[]|null
+     * @var int[]
      */
     private $associatedShopIds;
 
@@ -128,7 +128,7 @@ final class AddCarrierCommand
      * @param int $maxPackageDepth
      * @param float $maxPackageWeight
      * @param int[] $associatedGroupIds
-     * @param int[]|null $associatedShopIds
+     * @param int[] $associatedShopIds
      *
      * @throws CarrierConstraintException
      */
@@ -280,7 +280,7 @@ final class AddCarrierCommand
     }
 
     /**
-     * @return int[]|null
+     * @return int[]
      */
     public function getAssociatedShopIds()
     {
