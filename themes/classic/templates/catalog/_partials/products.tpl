@@ -23,11 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div id="js-product-list">
-  <div class="products row">
-    {foreach from=$listing.products item="product"}
-      {block name='product_miniature'}
-        {include file='catalog/_partials/miniatures/product.tpl' product=$product}
-      {/block}
+  <div class="products row" itemscope itemtype="http://schema.org/ItemList">
+    {foreach from=$listing.products item="product" key="position"}
+      <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+        <meta itemprop="position" content="{$position}" />
+        {include file="catalog/_partials/miniatures/product.tpl" product=$product}
+      </div>
     {/foreach}
   </div>
 
